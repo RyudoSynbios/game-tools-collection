@@ -1,0 +1,208 @@
+<script lang="ts">
+  import { beforeUpdate } from "svelte";
+
+  import AccessTimeIcon from "$lib/assets/AccessTime.svelte";
+  import Content from "$lib/components/Items/Content.svelte";
+  import { gameJson, isDebug } from "$lib/stores";
+  import { getBigInt, getInt } from "$lib/utils/bytes";
+  import { generateIdFromArray, getUtils } from "$lib/utils/format";
+  import { checkConditions } from "$lib/utils/validator";
+
+  import type { ItemIntCondition, ItemTab, ItemTabs } from "$lib/types";
+
+  export let item: ItemTabs;
+
+  type ItemTabtWithIndex = ItemTab & { index: number };
+
+  let selectedTab = 0;
+  let tabs: ItemTabtWithIndex[];
+  let previousId = "";
+  let previousSelectedTab = 0;
+
+  beforeUpdate(() => {
+    if (previousSelectedTab === selectedTab) {
+      const componentId = item.id || generateIdFromArray(tabs, "name");
+
+      if (componentId !== previousId) {
+        selectedTab = 0;
+
+        checkTab();
+      }
+
+      previousId = componentId;
+    }
+
+    previousSelectedTab = selectedTab;
+  });
+
+  function checkTab(): void {
+    if (selectedTab > tabs.length - 1) {
+      selectedTab = 0;
+    }
+
+    const firstTabAvailable = tabs.findIndex((tab) => !tab.disabled);
+
+    if (tabs[selectedTab].disabled && firstTabAvailable !== -1) {
+      selectedTab = firstTabAvailable;
+    }
+  }
+
+  function handleTabClick(index: number): void {
+    if (tabs[index] && !tabs[index].disabled) {
+      selectedTab = index;
+    }
+  }
+
+  $: {
+    let enumerationCount = 0;
+
+    tabs = item.items.reduce((tabs: ItemTabtWithIndex[], tab, index) => {
+      let newTab = { ...tab, index };
+
+      if (newTab.name === undefined) {
+        newTab.name = "";
+
+        if (item.enumeration) {
+          newTab.name = item.enumeration.replace(
+            "%d",
+            (enumerationCount + 1).toString(),
+          );
+        } else if (
+          item.resource &&
+          $gameJson.resources &&
+          $gameJson.resources[item.resource]
+        ) {
+          newTab.name =
+            ($gameJson.resources[item.resource][enumerationCount] as string) ||
+            "???";
+        }
+
+        enumerationCount += 1;
+      }
+
+      if (newTab.disableTabIf) {
+        if (typeof newTab.disableTabIf === "string") {
+          newTab.disabled = getUtils(newTab.disableTabIf, index);
+        } else {
+          newTab.disabled = checkConditions(
+            newTab.disableTabIf,
+            (condition: ItemIntCondition) => {
+              let int;
+
+              if (
+                condition.dataType !== "int64" &&
+                condition.dataType !== "uint64"
+              ) {
+                int = getInt(condition.offset, condition.dataType, {
+                  bigEndian: condition.bigEndian,
+                });
+              } else {
+                int = getBigInt(condition.offset, condition.dataType, {
+                  bigEndian: condition.bigEndian,
+                });
+              }
+
+              return int === condition.value;
+            },
+          );
+        }
+      }
+
+      if (newTab.hidden && !$isDebug) {
+        newTab.disabled = true;
+      }
+
+      if (newTab.planned) {
+        newTab.disabled = true;
+      }
+
+      tabs.push(newTab);
+
+      return tabs;
+    }, []);
+
+    if (item.enumerationOrder) {
+      tabs.sort((a, b) => {
+        const indexA = item.enumerationOrder?.indexOf(a.index) || -2;
+        const indexB = item.enumerationOrder?.indexOf(b.index) || -2;
+
+        return indexA - indexB;
+      });
+    }
+
+    checkTab();
+  }
+</script>
+
+<div class="gtc-tabs">
+  <div class="gtc-tabs-list">
+    {#each tabs as tab, index}
+      {#if !tab.hidden || $isDebug}
+        <div
+          class="gtc-tab"
+          class:gtc-tab-debug={tab.hidden}
+          class:gtc-tab-disabled={tab.disabled}
+          class:gtc-tab-highlight={index === selectedTab}
+          title={tab.planned ? "This feature is not yet available" : ""}
+          on:click={() => handleTabClick(index)}
+        >
+          {tab.name}
+          {#if tab.planned}
+            <AccessTimeIcon />
+          {/if}
+        </div>
+      {/if}
+    {/each}
+  </div>
+  <div class="gtc-tabs-content">
+    {#if !tabs[selectedTab].disabled}
+      <Content items={tabs[selectedTab].items} flex={tabs[selectedTab].flex} />
+    {:else}
+      <p>This save slot is not active</p>
+    {/if}
+  </div>
+</div>
+
+<style lang="postcss">
+  .gtc-tabs {
+    @apply flex-1;
+
+    & .gtc-tabs-list {
+      @apply flex flex-wrap bg-primary-700 rounded overflow-hidden;
+
+      & .gtc-tab {
+        @apply flex items-center px-4 py-2 text-sm cursor-pointer;
+
+        &:hover:not(.gtc-tab-debug):not(.gtc-tab-disabled):not(
+            .gtc-tab-highlight
+          ) {
+          @apply bg-primary-400 rounded;
+        }
+
+        &.gtc-tab-debug {
+          @apply text-orange-800 bg-orange-950;
+        }
+
+        &.gtc-tab-disabled {
+          @apply cursor-not-allowed bg-primary-400;
+        }
+
+        &.gtc-tab-highlight {
+          @apply text-white bg-primary-300 rounded;
+
+          &.gtc-tab-debug {
+            @apply text-orange-100 bg-orange-900;
+          }
+        }
+
+        & :global(svg) {
+          @apply ml-1 w-4;
+        }
+      }
+    }
+
+    & .gtc-tabs-content {
+      @apply pt-4;
+    }
+  }
+</style>

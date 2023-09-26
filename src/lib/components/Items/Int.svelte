@@ -1,0 +1,165 @@
+<script lang="ts">
+  import Autocomplete from "$lib/components/Autocomplete.svelte";
+  import Input from "$lib/components/Input.svelte";
+  import Select from "$lib/components/Select.svelte";
+  import {
+    dataView,
+    gameJson,
+    gameRegion,
+    gameUtils,
+    isDebug,
+  } from "$lib/stores";
+  import { getBigInt, getInt, setBigInt, setInt } from "$lib/utils/bytes";
+  import {
+    getIntMax,
+    getIntMin,
+    objToArrayKeyValue,
+    utilsExists,
+  } from "$lib/utils/format";
+
+  import type { ItemInt, ObjectKeyValue } from "$lib/types";
+
+  export let item: ItemInt;
+
+  function handleInputChange(event: Event): void {
+    let isOverrided = false;
+
+    if (utilsExists("overrideSetInt")) {
+      isOverrided = $gameUtils.overrideSetInt(
+        item,
+        (event.target as HTMLInputElement).value,
+      );
+    }
+
+    if (!isOverrided) {
+      if (item.dataType !== "int64" && item.dataType !== "uint64") {
+        setInt(
+          item.offset,
+          item.dataType,
+          (event.target as HTMLInputElement).value,
+          {
+            bigEndian: item.bigEndian,
+            binaryCodedDecimal: item.binaryCodedDecimal,
+            bit: item.bit,
+            operations: item.operations,
+          },
+        );
+      } else {
+        setBigInt(
+          item.offset,
+          item.dataType,
+          (event.target as HTMLInputElement).value,
+          { bigEndian: item.bigEndian },
+        );
+      }
+    }
+
+    if (utilsExists("afterSetInt")) {
+      $gameUtils.afterSetInt(item);
+    }
+  }
+
+  let min: number;
+  let max: number;
+  let value: bigint | number | string;
+  let options: ObjectKeyValue<string>[];
+
+  $: {
+    $dataView;
+
+    min = getIntMin(item);
+    max = getIntMax(item);
+
+    let isOverrided = false;
+
+    if (utilsExists("overrideGetInt")) {
+      [isOverrided, value] = $gameUtils.overrideGetInt(item);
+    }
+
+    if (!isOverrided) {
+      if (item.dataType !== "int64" && item.dataType !== "uint64") {
+        value = getInt(item.offset, item.dataType, {
+          bigEndian: item.bigEndian,
+          binaryCodedDecimal: item.binaryCodedDecimal,
+          bit: item.bit,
+          operations: item.operations,
+        });
+      } else {
+        value = getBigInt(item.offset, item.dataType, {
+          bigEndian: item.bigEndian,
+        });
+      }
+    }
+
+    if (item.leadingZeros) {
+      value = value.toString().padStart(item.leadingZeros + 1, "0");
+    }
+
+    options = [];
+
+    if (
+      item.resource &&
+      $gameJson.resources &&
+      $gameJson.resources[item.resource]
+    ) {
+      let resource;
+
+      if (Array.isArray($gameJson.resources[item.resource])) {
+        resource = $gameJson.resources[item.resource][$gameRegion];
+      } else {
+        resource = $gameJson.resources[item.resource];
+      }
+
+      const order =
+        ($gameJson.resourcesOrder && $gameJson.resourcesOrder[item.resource]) ||
+        [];
+
+      options = objToArrayKeyValue(resource, order);
+    }
+  }
+</script>
+
+{#if !item.hidden || $isDebug}
+  <div class="gtc-int" class:gtc-int-debug={item.hidden && $isDebug}>
+    {#if options.length === 0}
+      <Input
+        label={item.name}
+        type="number"
+        {min}
+        {max}
+        step={item.step || 1}
+        leadingZeros={item.leadingZeros}
+        {value}
+        disabled={item.disabled}
+        onChange={handleInputChange}
+      />
+    {:else if item.autocomplete}
+      <Autocomplete
+        label={item.name}
+        {value}
+        {options}
+        disabled={item.disabled}
+        onChange={handleInputChange}
+      />
+    {:else}
+      <Select
+        label={item.name}
+        {value}
+        {options}
+        disabled={item.disabled}
+        onChange={handleInputChange}
+      />
+    {/if}
+  </div>
+{/if}
+
+<style lang="postcss">
+  .gtc-int {
+    &.gtc-int-debug {
+      & :global(.gtc-input),
+      & :global(.gtc-select) {
+        @apply text-orange-800 bg-orange-950;
+      }
+    }
+  }
+</style>
