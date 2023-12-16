@@ -76,5 +76,13 @@
     "saveEditor": {
       "regions": ["🇪🇺", "🇺🇸", "🇯🇵", "🇦🇺"]
     }
+  },
+  {
+    "id": "super-street-fighter-ii-turbo-revival-gba",
+    "name": "Super Street Fighter II Turbo Revival",
+    "consoleId": "game-boy-advance",
+    "saveEditor": {
+      "regions": ["🇪🇺", "🇺🇸", "🇯🇵"]
+    }
   }
 ]
