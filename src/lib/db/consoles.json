@@ -33,5 +33,10 @@
     "id": "saturn",
     "name": "Sega Saturn",
     "manufacturerId": "sega"
+  },
+  {
+    "id": "playstation",
+    "name": "PlayStation",
+    "manufacturerId": "sony"
   }
 ]

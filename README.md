@@ -6,6 +6,7 @@
 | ----------------------------------------- | ------- | ---------- | --------------------------- |
 | Castlevania: Aria of Sorrow               | GBA     | Save       | EUR / USA / JAP             |
 | Castlevania: Circle of the Moon           | GBA     | Save / Rom | EUR / USA / JAP             |
+| Castlevania: Symphony of the Night        | PS      | Save       | EUR / USA / JAP             |
 | Donkey Kong Land                          | GB      | Save       | EUR / USA / JAP             |
 | Game & Watch Gallery 3                    | GBC     | Save       | EUR / USA / JAP / AUS       |
 | GoldenEye 007                             | N64     | Save       | EUR / USA / JAP             |
