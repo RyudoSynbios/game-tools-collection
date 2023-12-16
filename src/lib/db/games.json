@@ -27,6 +27,14 @@
     }
   },
   {
+    "id": "goldeneye-007-n64",
+    "name": "GoldenEye 007",
+    "consoleId": "nintendo-64",
+    "saveEditor": {
+      "regions": ["🇪🇺", "🇺🇸", "🇯🇵"]
+    }
+  },
+  {
     "id": "konami-krazy-racers-gba",
     "name": "Konami Krazy Racers",
     "consoleId": "game-boy-advance",
