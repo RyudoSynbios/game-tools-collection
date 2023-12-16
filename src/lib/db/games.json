@@ -132,5 +132,13 @@
     "saveEditor": {
       "regions": ["🇪🇺", "🇺🇸", "🇯🇵"]
     }
+  },
+  {
+    "id": "wario-land-super-mario-land-3-gb",
+    "name": "Wario Land: Super Mario Land 3",
+    "consoleId": "game-boy",
+    "saveEditor": {
+      "regions": ["🏳️"]
+    }
   }
 ]
