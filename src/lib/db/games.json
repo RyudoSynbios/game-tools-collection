@@ -1,5 +1,13 @@
 [
   {
+    "id": "akumajou-dracula-x-chi-no-rondo-pcecd",
+    "name": "Akumajou Dracula X: Chi no Rondo",
+    "consoleId": "pc-engine-cd",
+    "saveEditor": {
+      "regions": ["🇯🇵"]
+    }
+  },
+  {
     "id": "castlevania-aria-of-sorrow-gba",
     "name": "Castlevania: Aria of Sorrow",
     "consoleId": "game-boy-advance",

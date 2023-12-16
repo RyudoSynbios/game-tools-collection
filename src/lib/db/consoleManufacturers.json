@@ -1,5 +1,9 @@
 [
   {
+    "id": "nec",
+    "name": "NEC"
+  },
+  {
     "id": "nintendo",
     "name": "Nintendo"
   },

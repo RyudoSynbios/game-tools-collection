@@ -4,6 +4,7 @@
 
 | Games                                     | Console | Editor     | Region                      |
 | ----------------------------------------- | ------- | ---------- | --------------------------- |
+| Akumajou Dracula X: Chi no Rondo          | PCECD   | Save       | JAP                         |
 | Castlevania: Aria of Sorrow               | GBA     | Save       | EUR / USA / JAP             |
 | Castlevania: Circle of the Moon           | GBA     | Save / Rom | EUR / USA / JAP             |
 | Castlevania: Symphony of the Night        | PS      | Save       | EUR / USA / JAP             |

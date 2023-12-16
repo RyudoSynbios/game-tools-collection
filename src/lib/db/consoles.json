@@ -38,5 +38,10 @@
     "id": "playstation",
     "name": "PlayStation",
     "manufacturerId": "sony"
+  },
+  {
+    "id": "pc-engine-cd",
+    "name": "PC-Engine CD",
+    "manufacturerId": "nec"
   }
 ]
