@@ -30,6 +30,9 @@
     "id": "mystic-quest-legend-snes",
     "name": "Mystic Quest Legend",
     "consoleId": "super-nintendo",
+    "romEditor": {
+      "regions": ["🇪🇺", "🇺🇸", "🇯🇵", "🇫🇷", "🇩🇪"]
+    },
     "saveEditor": {
       "regions": ["🇪🇺", "🇺🇸", "🇯🇵", "🇫🇷", "🇩🇪"]
     }
