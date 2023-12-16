@@ -1,1 +1,7 @@
-[]
+[
+  {
+    "id": "game-boy-advance",
+    "name": "Game Boy Advance",
+    "manufacturerId": "nintendo"
+  }
+]
