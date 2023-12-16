@@ -4,6 +4,7 @@
 
 | Games                                     | Console | Editor     | Region                      |
 | ----------------------------------------- | ------- | ---------- | --------------------------- |
+| Castlevania: Aria of Sorrow               | GBA     | Save       | EUR / USA / JAP             |
 | Castlevania: Circle of the Moon           | GBA     | Save / Rom | EUR / USA / JAP             |
 | Donkey Kong Land                          | GB      | Save       | EUR / USA / JAP             |
 | Game & Watch Gallery 3                    | GBC     | Save       | EUR / USA / JAP / AUS       |

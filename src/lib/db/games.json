@@ -1,5 +1,13 @@
 [
   {
+    "id": "castlevania-aria-of-sorrow-gba",
+    "name": "Castlevania: Aria of Sorrow",
+    "consoleId": "game-boy-advance",
+    "saveEditor": {
+      "regions": ["🇪🇺", "🇺🇸", "🇯🇵"]
+    }
+  },
+  {
     "id": "castlevania-circle-of-the-moon-gba",
     "name": "Castlevania: Circle of the Moon",
     "consoleId": "game-boy-advance",
