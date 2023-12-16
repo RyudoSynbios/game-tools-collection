@@ -3,6 +3,9 @@
     "id": "castlevania-circle-of-the-moon-gba",
     "name": "Castlevania: Circle of the Moon",
     "consoleId": "game-boy-advance",
+    "romEditor": {
+      "regions": ["🇪🇺", "🇺🇸", "🇯🇵"]
+    },
     "saveEditor": {
       "regions": ["🇪🇺", "🇺🇸", "🇯🇵"]
     }

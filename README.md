@@ -2,6 +2,6 @@
 
 ---
 
-| Games                           | Console | Editor | Region          |
-| ------------------------------- | ------- | ------ | --------------- |
-| Castlevania: Circle of the Moon | GBA     | Save   | EUR / USA / JAP |
+| Games                           | Console | Editor     | Region          |
+| ------------------------------- | ------- | ---------- | --------------- |
+| Castlevania: Circle of the Moon | GBA     | Save / Rom | EUR / USA / JAP |
