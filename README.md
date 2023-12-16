@@ -4,6 +4,7 @@
 
 | Games                                     | Console | Editor     | Region                      |
 | ----------------------------------------- | ------- | ---------- | --------------------------- |
+| 1080° Snowboarding                        | N64     | Save       | EUR / USA / JAP             |
 | Akumajou Dracula X: Chi no Rondo          | PCECD   | Save       | JAP                         |
 | Castlevania: Aria of Sorrow               | GBA     | Save       | EUR / USA / JAP             |
 | Castlevania: Circle of the Moon           | GBA     | Save / Rom | EUR / USA / JAP             |

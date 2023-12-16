@@ -1,5 +1,13 @@
 [
   {
+    "id": "1080-snowboarding-n64",
+    "name": "1080° Snowboarding",
+    "consoleId": "nintendo-64",
+    "saveEditor": {
+      "regions": ["🇪🇺", "🇺🇸", "🇯🇵"]
+    }
+  },
+  {
     "id": "akumajou-dracula-x-chi-no-rondo-pcecd",
     "name": "Akumajou Dracula X: Chi no Rondo",
     "consoleId": "pc-engine-cd",
