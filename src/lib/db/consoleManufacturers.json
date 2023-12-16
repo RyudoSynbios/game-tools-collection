@@ -2,5 +2,9 @@
   {
     "id": "nintendo",
     "name": "Nintendo"
+  },
+  {
+    "id": "sega",
+    "name": "Sega"
   }
 ]

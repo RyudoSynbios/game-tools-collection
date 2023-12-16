@@ -17,5 +17,13 @@
     "saveEditor": {
       "regions": ["🇪🇺", "🇺🇸", "🇯🇵"]
     }
+  },
+  {
+    "id": "sonic-3-md",
+    "name": "Sonic 3",
+    "consoleId": "mega-drive",
+    "saveEditor": {
+      "regions": ["🇪🇺", "🇺🇸", "🇯🇵"]
+    }
   }
 ]

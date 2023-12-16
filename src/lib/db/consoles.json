@@ -3,5 +3,10 @@
     "id": "game-boy-advance",
     "name": "Game Boy Advance",
     "manufacturerId": "nintendo"
+  },
+  {
+    "id": "mega-drive",
+    "name": "Mega Drive",
+    "manufacturerId": "sega"
   }
 ]
