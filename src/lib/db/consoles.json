@@ -18,5 +18,10 @@
     "id": "mega-drive",
     "name": "Mega Drive",
     "manufacturerId": "sega"
+  },
+  {
+    "id": "saturn",
+    "name": "Sega Saturn",
+    "manufacturerId": "sega"
   }
 ]

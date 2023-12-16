@@ -38,6 +38,14 @@
     }
   },
   {
+    "id": "shining-force-3-scenario-1-saturn",
+    "name": "Shining Force 3: Scenario 1",
+    "consoleId": "saturn",
+    "saveEditor": {
+      "regions": ["🇪🇺", "🇺🇸", "🇯🇵"]
+    }
+  },
+  {
     "id": "sonic-3-md",
     "name": "Sonic 3",
     "consoleId": "mega-drive",
