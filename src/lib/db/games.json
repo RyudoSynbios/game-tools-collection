@@ -52,5 +52,13 @@
     "saveEditor": {
       "regions": ["🇪🇺", "🇺🇸", "🇯🇵"]
     }
+  },
+  {
+    "id": "super-smash-bros-n64",
+    "name": "Super Smash Bros.",
+    "consoleId": "nintendo-64",
+    "saveEditor": {
+      "regions": ["🇪🇺", "🇺🇸", "🇯🇵", "🇦🇺"]
+    }
   }
 ]
