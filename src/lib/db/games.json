@@ -27,6 +27,14 @@
     }
   },
   {
+    "id": "mystic-quest-legend-snes",
+    "name": "Mystic Quest Legend",
+    "consoleId": "super-nintendo",
+    "saveEditor": {
+      "regions": ["🇪🇺", "🇺🇸", "🇯🇵", "🇫🇷", "🇩🇪"]
+    }
+  },
+  {
     "id": "sonic-3-md",
     "name": "Sonic 3",
     "consoleId": "mega-drive",
