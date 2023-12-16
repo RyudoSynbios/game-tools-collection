@@ -67,6 +67,14 @@
     }
   },
   {
+    "id": "grandia-ps",
+    "name": "Grandia",
+    "consoleId": "playstation",
+    "saveEditor": {
+      "regions": ["🇪🇺", "🇺🇸", "🇯🇵", "🇫🇷", "🇩🇪"]
+    }
+  },
+  {
     "id": "konami-krazy-racers-gba",
     "name": "Konami Krazy Racers",
     "consoleId": "game-boy-advance",

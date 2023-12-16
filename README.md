@@ -12,6 +12,7 @@
 | Donkey Kong Land                          | GB      | Save       | EUR / USA / JAP             |
 | Game & Watch Gallery 3                    | GBC     | Save       | EUR / USA / JAP / AUS       |
 | GoldenEye 007                             | N64     | Save       | EUR / USA / JAP             |
+| Grandia                                   | PS      | Save       | EUR / USA / JAP / FRA / GER |
 | Konami Krazy Racers                       | GBA     | Save       | EUR / USA / JAP             |
 | Legend of Zelda, The: Link's Awakening DX | GBC     | Save       | EUR / USA / JAP / FRA / GER |
 | Mystic Quest Legend                       | SNES    | Save / Rom | EUR / USA / JAP / FRA / GER |
