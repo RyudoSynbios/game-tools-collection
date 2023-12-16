@@ -10,4 +10,12 @@
       "regions": ["🇪🇺", "🇺🇸", "🇯🇵"]
     }
   },
+  {
+    "id": "konami-krazy-racers-gba",
+    "name": "Konami Krazy Racers",
+    "consoleId": "game-boy-advance",
+    "saveEditor": {
+      "regions": ["🇪🇺", "🇺🇸", "🇯🇵"]
+    }
+  }
 ]
