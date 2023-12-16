@@ -1,5 +1,10 @@
 [
   {
+    "id": "game-boy",
+    "name": "Game Boy",
+    "manufacturerId": "nintendo"
+  },
+  {
     "id": "game-boy-color",
     "name": "Game Boy Color",
     "manufacturerId": "nintendo"
