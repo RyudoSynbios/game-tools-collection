@@ -267,14 +267,20 @@ export function parseContainer(
   }
 
   [...Array(item.instances).keys()].forEach((index: any) => {
-    let newSteps = [...steps, item.length * index];
+    let newSteps: number[] = [];
+
+    let isOverrided = false;
 
     if (utilsExists("overrideParseContainerItemsSteps")) {
-      newSteps = $gameUtils.overrideParseContainerItemsSteps(
+      [isOverrided, newSteps] = $gameUtils.overrideParseContainerItemsSteps(
+        item,
         steps,
-        item.length,
         index,
       );
+    }
+
+    if (!isOverrided) {
+      newSteps = [...steps, item.length * index];
     }
 
     const parsedSubitem: any = {
