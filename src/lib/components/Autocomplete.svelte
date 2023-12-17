@@ -258,7 +258,7 @@
       @apply flex items-center text-primary-900 bg-white;
 
       & input {
-        @apply pr-1;
+        @apply flex-1 pr-1;
 
         width: 164px;
       }

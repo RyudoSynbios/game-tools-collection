@@ -156,6 +156,7 @@
 <style lang="postcss">
   .gtc-int {
     &.gtc-int-debug {
+      & :global(.gtc-autocomplete),
       & :global(.gtc-input),
       & :global(.gtc-select) {
         @apply text-orange-800 bg-orange-950;
