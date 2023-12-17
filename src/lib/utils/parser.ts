@@ -297,6 +297,10 @@ export function parseContainer(
     };
 
     if (item.instanceType === "section") {
+      if (item.enumeration) {
+        parsedSubitem.name = item.enumeration.replace("%d", index + 1);
+      }
+
       parsedSubitem.type = "section";
     }
 
