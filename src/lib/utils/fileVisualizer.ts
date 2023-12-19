@@ -24,13 +24,13 @@ export function parseItem(
         if (!highlightedOffsets[flag.offset]) {
           highlightedOffsets[flag.offset] = {
             offset: flag.offset,
-            text: `${flag.bit}: ${flag.name || name}`,
+            text: `${item.name || ""} [${flag.bit}]: ${flag.name || name}`,
             type: item.type,
           };
         } else {
-          highlightedOffsets[flag.offset].text += `\n${flag.bit}: ${
-            flag.name || name
-          }`;
+          highlightedOffsets[flag.offset].text += `\n${item.name || ""} [${
+            flag.bit
+          }]: ${flag.name || name}`;
         }
       }
     });
