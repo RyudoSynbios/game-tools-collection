@@ -15,7 +15,7 @@
   onMount(() => {
     if (import.meta.env.MODE === "production") {
       console.log(
-        "%c Hey friendly developer! If you enter `window.localStorage.setItem('debug', 'true')` on the console, you'll have access to hidden properties like checksum, file visualizer and others debugging features!",
+        "%c Hey fellow developer! If you enter `window.localStorage.setItem('debug', 'true')` on the console, you'll have access to hidden properties like checksum, file visualizer and other debugging features!",
         "font-family:monospace;color:#1976d2;font-size:12px;",
       );
     }
