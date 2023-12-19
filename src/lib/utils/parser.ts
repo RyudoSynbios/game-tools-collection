@@ -38,7 +38,7 @@ export function enrichGameJson(): void {
   let steps: number[] = [];
 
   if (utilsExists("initSteps")) {
-    steps = [$gameUtils.initSteps($gameRegion)];
+    steps = $gameUtils.initSteps($gameRegion);
   }
 
   const items = $gameTemplate.items.reduce((items: Item[], item) => {

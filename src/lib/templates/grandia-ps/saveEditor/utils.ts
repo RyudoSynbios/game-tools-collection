@@ -14,12 +14,12 @@ import {
   usaValidator,
 } from "./template";
 
-export function initSteps(region: number): number {
+export function initSteps(region: number): number[] {
   if (region === 1 || region == 2) {
-    return 0x180;
+    return [0x180];
   }
 
-  return 0x0;
+  return [];
 }
 
 export function checkSlots(index: number): boolean {

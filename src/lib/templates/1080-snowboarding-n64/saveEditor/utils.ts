@@ -37,14 +37,14 @@ export function overrideGetRegions(dataView: DataView): string[] {
   return [];
 }
 
-export function initSteps(): number {
+export function initSteps(): number[] {
   const $dataView = get(dataView);
 
   if ($dataView.byteLength === 0x48800) {
-    return 0x20800;
+    return [0x20800];
   }
 
-  return 0x0;
+  return [];
 }
 
 export function overrideGetInt(

@@ -2,15 +2,15 @@ import { getInt, setInt } from "$lib/utils/bytes";
 
 import type { Item, ItemChecksum, ItemInt } from "$lib/types";
 
-export function initSteps(): number {
+export function initSteps(): number[] {
   const section1Saves = getInt(0xc, "uint32", { bigEndian: true });
   const section2Saves = getInt(0x10c, "uint32", { bigEndian: true });
 
   if (section2Saves > section1Saves) {
-    return 0x100;
+    return [0x100];
   }
 
-  return 0x0;
+  return [];
 }
 
 export function afterSetInt(item: Item): void {

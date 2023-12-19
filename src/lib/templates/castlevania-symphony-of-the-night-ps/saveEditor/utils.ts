@@ -10,12 +10,12 @@ import template, {
   usaValidator,
 } from "./template";
 
-export function initSteps(region: number): number {
+export function initSteps(region: number): number[] {
   if (region !== 0) {
-    return 0x100;
+    return [0x100];
   }
 
-  return 0x0;
+  return [];
 }
 
 export function checkSlots(index: number): boolean {
