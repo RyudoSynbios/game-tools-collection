@@ -82,7 +82,7 @@
   .gtc-bitflags {
     @apply mr-4 mb-4 p-2 w-fit bg-primary-700 rounded;
 
-    min-width: 200px;
+    min-width: 196px;
 
     &.gtc-bitflags-debug {
       @apply text-orange-800 bg-orange-950;
