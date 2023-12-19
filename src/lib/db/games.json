@@ -59,6 +59,14 @@
     }
   },
   {
+    "id": "golden-sun-gba",
+    "name": "Golden Sun",
+    "consoleId": "game-boy-advance",
+    "saveEditor": {
+      "regions": ["🇪🇺", "🇺🇸", "🇯🇵", "🇫🇷", "🇩🇪", "🇮🇹", "🇪🇸"]
+    }
+  },
+  {
     "id": "goldeneye-007-n64",
     "name": "GoldenEye 007",
     "consoleId": "nintendo-64",
