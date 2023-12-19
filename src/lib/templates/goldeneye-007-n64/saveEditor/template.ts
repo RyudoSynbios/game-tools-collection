@@ -10,10 +10,11 @@ const template: GameJson = {
   },
   items: [
     {
+      id: "slots",
       length: 0x60,
       type: "container",
       instanceType: "tabs",
-      instances: 5,
+      instances: 4,
       enumeration: "Slot %d",
       disableSubinstanceIf: [
         {

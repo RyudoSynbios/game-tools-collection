@@ -27,6 +27,24 @@ export function overrideGetRegions(dataView: DataView): string[] {
   return [];
 }
 
+export function overrideParseContainerItemsSteps(
+  item: ItemContainer,
+  steps: number[],
+  index: number,
+): [boolean, number[] | undefined] {
+  if (item.id === "slots") {
+    for (let i = 0x0; i < item.length * 0x10; i += item.length) {
+      const saveIndex = getInt(i + 0x28, "uint8");
+
+      if ((saveIndex & 0x7) === index && !(saveIndex & 0x80)) {
+        return [true, [...steps, i]];
+      }
+    }
+  }
+
+  return [false, undefined];
+}
+
 function getTime(offset: number, mode: string, timeUnit: TimeUnit): number {
   let int = 0;
   let byte1 = getInt(offset, "uint8");
