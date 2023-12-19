@@ -214,6 +214,10 @@ export interface ItemInt {
   step?: number;
   operations?: IntOperation[];
   resource?: string;
+  overrideStep?: {
+    parent: number;
+    step: number;
+  };
   autocomplete?: boolean;
   disabled?: boolean;
   hidden?: boolean;
