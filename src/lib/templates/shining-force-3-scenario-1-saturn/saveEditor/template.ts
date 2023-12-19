@@ -48,7 +48,7 @@ const template: GameJson = {
                 {
                   name: "Filename",
                   offset: 0x90,
-                  length: 0xa,
+                  length: 0x7,
                   type: "variable",
                   dataType: "string",
                   letterDataType: "uint8",
@@ -147,7 +147,7 @@ const template: GameJson = {
                                 {
                                   name: "Name",
                                   offset: 0x2658,
-                                  length: 0x8,
+                                  length: 0x7,
                                   type: "variable",
                                   dataType: "string",
                                   letterDataType: "uint8",
