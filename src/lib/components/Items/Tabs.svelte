@@ -65,7 +65,7 @@
         if (item.enumeration) {
           newTab.name = item.enumeration.replace(
             "%d",
-            (enumerationCount + 1).toString(),
+            `${enumerationCount + 1}`,
           );
         } else if (
           item.resource &&
