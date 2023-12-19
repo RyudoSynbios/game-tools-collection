@@ -62,7 +62,7 @@ export function enrichGameJson(): void {
   updateResources();
 }
 
-function getStep(steps: number[]) {
+export function getStep(steps: number[]) {
   return steps.reduce((total, step) => total + step, 0);
 }
 
@@ -93,6 +93,7 @@ export function parseItem(
   instanceId = "",
   instanceIndex = 0,
 ): Item {
+  const $gameUtils = get(gameUtils) as any;
   const $isDebug = get(isDebug);
 
   if ($isDebug) {
@@ -115,6 +116,10 @@ export function parseItem(
 
   if ((newItem as any).id !== undefined) {
     (newItem as any).id = (newItem as any).id.replace("%index%", instanceIndex);
+  }
+
+  if (utilsExists("overrideStep")) {
+    steps = $gameUtils.overrideStep(item, steps);
   }
 
   if ((newItem as any).offset !== undefined) {
