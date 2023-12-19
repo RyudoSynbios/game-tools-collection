@@ -272,27 +272,29 @@ export function parseContainer(
   }
 
   [...Array(item.instances).keys()].forEach((index: any) => {
-    let newSteps: number[] = [];
+    let instanceSteps: number[] = [];
 
     let isOverrided = false;
 
     if (utilsExists("overrideParseContainerItemsSteps")) {
-      [isOverrided, newSteps] = $gameUtils.overrideParseContainerItemsSteps(
-        item,
-        steps,
-        index,
-      );
+      [isOverrided, instanceSteps] =
+        $gameUtils.overrideParseContainerItemsSteps(item, steps, index);
     }
 
     if (!isOverrided) {
-      newSteps = [...steps, item.length * index];
+      instanceSteps = [...steps, item.length * index];
     }
 
     const parsedSubitem: any = {
       flex: item.flex,
       items: item.items
         ? item.items.reduce((results: any, subitem: any) => {
-            const parsedItem = parseItem(subitem, newSteps, instanceId, index);
+            const parsedItem = parseItem(
+              subitem,
+              instanceSteps,
+              instanceId,
+              index,
+            );
 
             results.push(parsedItem);
 
@@ -317,7 +319,7 @@ export function parseContainer(
       } else {
         disableSubinstanceIf = parseItem(
           item.disableSubinstanceIf,
-          newSteps,
+          instanceSteps,
           instanceId,
           instanceIndex,
         );
