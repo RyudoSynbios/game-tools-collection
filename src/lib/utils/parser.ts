@@ -448,6 +448,31 @@ export function checkMissingFields(item: Item): void {
   }
 }
 
+export function getItem(
+  id: string,
+  items: Item[] | undefined = undefined,
+): Item | undefined {
+  const $gameJson = get(gameJson);
+
+  if (items) {
+    return items.reduce((result: Item | undefined, item: Item) => {
+      if ("id" in item && item.id === id) {
+        return item;
+      } else if ("items" in item) {
+        const found = getItem(id, item.items as Item[]);
+
+        if (found) {
+          return found;
+        }
+      }
+
+      return result;
+    }, undefined);
+  } else {
+    return getItem(id, $gameJson.items);
+  }
+}
+
 export function updateResources(resource = ""): void {
   const $gameJson = get(gameJson);
   const $gameTemplate = get(gameTemplate);
