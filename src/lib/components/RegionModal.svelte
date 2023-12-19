@@ -17,7 +17,16 @@
     [],
   );
 
-  const order = ["Europe", "USA", "Japan", "France", "Germany", "Australia"];
+  const order = [
+    "Europe",
+    "USA",
+    "Japan",
+    "France",
+    "Germany",
+    "Italy",
+    "Spain",
+    "Australia",
+  ];
 
   regionsFormatted.sort(
     (a, b) => order.indexOf(a.name) - order.indexOf(b.name),
