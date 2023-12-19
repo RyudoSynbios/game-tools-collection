@@ -2,20 +2,6 @@ import { getBitflag, getInt } from "$lib/utils/bytes";
 
 import type { Item, ItemChecksum, ItemInt } from "$lib/types";
 
-export function generateChecksum(item: ItemChecksum): number {
-  let checksum = 0x10000;
-
-  for (
-    let i = item.control.offset;
-    i < item.control.offset + item.control.length;
-    i += 0x1
-  ) {
-    checksum -= getInt(i, "uint8");
-  }
-
-  return checksum;
-}
-
 export function overrideGetInt(
   item: Item,
 ): [boolean, number | string | undefined] {
@@ -45,4 +31,18 @@ export function overrideGetInt(
   }
 
   return [false, undefined];
+}
+
+export function generateChecksum(item: ItemChecksum): number {
+  let checksum = 0x10000;
+
+  for (
+    let i = item.control.offset;
+    i < item.control.offset + item.control.length;
+    i += 0x1
+  ) {
+    checksum -= getInt(i, "uint8");
+  }
+
+  return checksum;
 }
