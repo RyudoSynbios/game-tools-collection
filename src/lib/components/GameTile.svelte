@@ -126,6 +126,10 @@
         & .gtc-tile-editorlink {
           @apply text-white;
 
+          & div {
+            @apply flex items-center justify-center flex-wrap h-8;
+          }
+
           &:hover {
             @apply bg-primary-600;
           }
