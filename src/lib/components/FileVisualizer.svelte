@@ -3,10 +3,12 @@
 
   import { dataView, gameJson, isFileVisualizerOpen } from "$lib/stores";
   import {
+    addItem,
     parseItem,
-    type HighlightedOffset,
-    type HighlightedOffsets,
+    parseValidator,
   } from "$lib/utils/fileVisualizer";
+
+  import type { HighlightedOffsets } from "$lib/utils/fileVisualizer";
 
   let tooltipEl: HTMLDivElement;
 
@@ -42,6 +44,8 @@
   onMount(() => {
     dataLength = $dataView.byteLength;
 
+    parseValidator(highlightedOffsets);
+
     Object.values($gameJson.items).forEach((item) => {
       parseItem(highlightedOffsets, item);
     });
@@ -63,7 +67,8 @@
     <div class="gtc-filevisualizer-bytes">
       {#each [...Array(dataLength).keys()] as offset}
         <div
-          class="gtc-filevisualizer-hex{highlightedOffsets[offset] !== undefined
+          class="gtc-filevisualizer-hex{highlightedOffsets[offset] !==
+            undefined && highlightedOffsets[offset].dataType
             ? ` gtc-filevisualizer-hex-${highlightedOffsets[offset].dataType}`
             : ''}"
           class:gtc-filevisualizer-hex-bitflags={highlightedOffsets[offset]

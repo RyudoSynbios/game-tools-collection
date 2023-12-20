@@ -1,6 +1,9 @@
+import { get } from "svelte/store";
+
+import { gameJson } from "$lib/stores";
 import { dataTypeToLength } from "$lib/utils/bytes";
 
-import type { ContentType, DataType, Item } from "$lib/types";
+import type { ContentType, DataType, Item, ItemInt } from "$lib/types";
 
 export interface HighlightedOffset {
   offset: number;
@@ -13,6 +16,25 @@ export interface HighlightedOffsets {
   [key: number]: HighlightedOffset;
 }
 
+export function addItem(
+  highlightedOffsets: HighlightedOffsets,
+  offset: number,
+  text: string,
+  type: ContentType,
+  dataType?: DataType,
+) {
+  if (!highlightedOffsets[offset]) {
+    highlightedOffsets[offset] = {
+      offset,
+      text,
+      type,
+      dataType,
+    };
+  } else {
+    highlightedOffsets[offset].text += `\n${text}`;
+  }
+}
+
 export function parseItem(
   highlightedOffsets: HighlightedOffsets,
   item: Item,
@@ -21,17 +43,12 @@ export function parseItem(
   if (item.type === "bitflags") {
     item.flags.forEach((flag) => {
       if ("offset" in flag) {
-        if (!highlightedOffsets[flag.offset]) {
-          highlightedOffsets[flag.offset] = {
-            offset: flag.offset,
-            text: `${item.name || ""} [${flag.bit}]: ${flag.name || name}`,
-            type: item.type,
-          };
-        } else {
-          highlightedOffsets[flag.offset].text += `\n${item.name || ""} [${
-            flag.bit
-          }]: ${flag.name || name}`;
-        }
+        addItem(
+          highlightedOffsets,
+          flag.offset,
+          `${item.name || ""} [${flag.bit}]: ${flag.name || name}`,
+          item.type,
+        );
       }
     });
   } else if (item.type === "checksum" || item.type === "variable") {
@@ -51,20 +68,13 @@ export function parseItem(
         const isPartial =
           item.dataType === "lower4" || item.dataType === "upper4";
 
-        if (!highlightedOffsets[item.offset + i]) {
-          highlightedOffsets[item.offset + i] = {
-            offset: item.offset + i,
-            text: `${isPartial ? `${item.dataType}: ` : ""}${
-              item.name || name
-            }`,
-            type: item.type,
-            dataType: isPartial ? "uint8" : item.dataType,
-          };
-        } else {
-          highlightedOffsets[item.offset + i].text += `\n${
-            isPartial ? `${item.dataType}: ` : ""
-          }${item.name || name}`;
-        }
+        addItem(
+          highlightedOffsets,
+          item.offset + i,
+          `${isPartial ? `${item.dataType}: ` : ""}${item.name || name}`,
+          item.type,
+          isPartial ? "uint8" : item.dataType,
+        );
       }
     }
   } else if (item.type === "group" || item.type === "section") {
@@ -73,9 +83,83 @@ export function parseItem(
     });
   } else if (item.type === "list" || item.type === "tabs") {
     item.items.forEach((group) => {
+      if (
+        "disableElementIf" in group &&
+        group.disableElementIf &&
+        typeof group.disableElementIf !== "string" &&
+        !Array.isArray(group.disableElementIf)
+      ) {
+        parseItem(highlightedOffsets, {
+          ...(group.disableElementIf as ItemInt),
+          name: `disableElementIf value === ${group.disableElementIf.value.toHex(
+            2,
+          )}`,
+        });
+      }
+
+      if (
+        "disableTabIf" in group &&
+        group.disableTabIf &&
+        typeof group.disableTabIf !== "string" &&
+        !Array.isArray(group.disableTabIf)
+      ) {
+        parseItem(highlightedOffsets, {
+          ...(group.disableTabIf as ItemInt),
+          name: `disableTabIf value === ${group.disableTabIf.value.toHex(2)}`,
+        });
+      }
+
       group.items.forEach((subitem) => {
         parseItem(highlightedOffsets, subitem);
       });
     });
   }
+}
+
+export function parseCondition(
+  highlightedOffsets: HighlightedOffsets,
+  key: string,
+  condition: { [key: number]: any },
+) {
+  Object.values(condition).forEach((value) =>
+    value.forEach((item: { [key: number]: any }) => {
+      const offset = parseInt(Object.keys(item)[0]);
+      const length = item[offset].length;
+
+      for (let i = offset; i < offset + length; i += 1) {
+        addItem(
+          highlightedOffsets,
+          i,
+          `Validator (${key})`,
+          "variable",
+          "string",
+        );
+      }
+    }),
+  );
+}
+
+export function parseValidator(highlightedOffsets: HighlightedOffsets) {
+  const $gameJson = get(gameJson);
+
+  Object.entries($gameJson.validator.regions).forEach(([key, value]) => {
+    if (Array.isArray(value)) {
+      value.forEach((condition) =>
+        parseCondition(highlightedOffsets, key, condition),
+      );
+    } else if (Object.keys(value).length > 0) {
+      const offset = parseInt(Object.keys(value)[0]);
+      const length = value[offset].length;
+
+      for (let i = offset; i < offset + length; i += 1) {
+        addItem(
+          highlightedOffsets,
+          i,
+          `Validator (${key})`,
+          "variable",
+          "string",
+        );
+      }
+    }
+  });
 }
