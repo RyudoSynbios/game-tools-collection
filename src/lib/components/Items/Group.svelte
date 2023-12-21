@@ -58,7 +58,8 @@
         @apply items-start;
       }
 
-      & :global(.gtc-input) {
+      & :global(.gtc-input),
+      & :global(.gtc-select) {
         @apply m-0;
 
         & :global(input[type="number"]) {
