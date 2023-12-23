@@ -134,7 +134,7 @@ const template: GameJson = {
                       ],
                     },
                     {
-                      name: "Play Time (milliseconds)",
+                      name: "Play Time (Milliseconds)",
                       offset: 0x2410,
                       type: "variable",
                       dataType: "uint32",

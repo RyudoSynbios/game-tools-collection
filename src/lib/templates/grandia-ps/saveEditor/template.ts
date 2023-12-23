@@ -184,7 +184,7 @@ const template: GameJson = {
                       hidden: true,
                     },
                     {
-                      name: "Formation 1 (display)",
+                      name: "Formation 1 (Display)",
                       offset: 0x21ac,
                       type: "variable",
                       dataType: "uint8",
@@ -193,7 +193,7 @@ const template: GameJson = {
                       hidden: true,
                     },
                     {
-                      name: "Formation 2 (display)",
+                      name: "Formation 2 (Display)",
                       offset: 0x21ad,
                       type: "variable",
                       dataType: "uint8",
@@ -202,7 +202,7 @@ const template: GameJson = {
                       hidden: true,
                     },
                     {
-                      name: "Formation 3 (display)",
+                      name: "Formation 3 (Display)",
                       offset: 0x21ae,
                       type: "variable",
                       dataType: "uint8",
@@ -211,7 +211,7 @@ const template: GameJson = {
                       hidden: true,
                     },
                     {
-                      name: "Formation 4 (display)",
+                      name: "Formation 4 (Display)",
                       offset: 0x21af,
                       type: "variable",
                       dataType: "uint8",
