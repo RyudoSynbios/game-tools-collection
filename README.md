@@ -20,6 +20,7 @@ Link to the website: [https://game-tools-collection.com](https://game-tools-coll
 | Konami Krazy Racers                       | GBA      | Save       | EUR / USA / JAP                         |
 | Legend of Zelda, The: Link's Awakening DX | GBC      | Save       | EUR / USA / JAP / FRA / GER             |
 | Mystic Quest Legend                       | SNES     | Save / Rom | EUR / USA / JAP / FRA / GER             |
+| Rayman                                    | PS       | Save       | EUR / USA / JAP                         |
 | Shining Force 3: Scenario 1               | SATURN   | Save / Rom | EUR / USA / JAP                         |
 | Sonic 3                                   | MD       | Save       | EUR / USA / JAP                         |
 | Super Smash Bros.                         | N64      | Save       | EUR / USA / JAP / AUS                   |
