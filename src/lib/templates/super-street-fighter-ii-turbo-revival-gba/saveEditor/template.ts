@@ -34,7 +34,7 @@ const template: GameJson = {
           flex: true,
           items: [
             {
-              name: "Number of Saves",
+              name: "Save Count",
               offset: 0xc,
               type: "variable",
               dataType: "uint32",

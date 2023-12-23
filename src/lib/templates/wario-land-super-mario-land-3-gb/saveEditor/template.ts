@@ -53,7 +53,7 @@ const template: GameJson = {
                           flex: true,
                           items: [
                             {
-                              name: "Number of Completed Level",
+                              name: "Completed Level Count",
                               offset: 0xd,
                               type: "variable",
                               dataType: "uint8",

@@ -94,7 +94,7 @@ const template: GameJson = {
                       autocomplete: true,
                     },
                     {
-                      name: "Number of Saves",
+                      name: "Save Count",
                       offset: 0x45c,
                       type: "variable",
                       dataType: "uint16",

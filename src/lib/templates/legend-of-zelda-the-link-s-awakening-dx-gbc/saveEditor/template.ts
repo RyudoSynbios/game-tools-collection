@@ -103,7 +103,7 @@ const template: GameJson = {
                           max: 3,
                         },
                         {
-                          name: "Death Counts",
+                          name: "Death Count",
                           offset: 0x45c,
                           type: "variable",
                           dataType: "uint8",

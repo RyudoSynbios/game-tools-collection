@@ -163,7 +163,7 @@ const template: GameJson = {
                               ],
                             },
                             {
-                              name: "Number of Saves",
+                              name: "Save Count",
                               offset: 0xa,
                               type: "variable",
                               dataType: "uint16",
