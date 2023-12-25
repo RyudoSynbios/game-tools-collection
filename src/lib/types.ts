@@ -140,6 +140,7 @@ export interface ItemBoolean {
     parent: number;
     step: number;
   };
+  separator?: boolean;
   disabled?: boolean;
   hidden?: boolean;
 }

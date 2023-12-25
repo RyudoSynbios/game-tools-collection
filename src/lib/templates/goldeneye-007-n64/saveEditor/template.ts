@@ -539,6 +539,7 @@ const template: GameJson = {
                       offset: 0x29,
                       type: "variable",
                       dataType: "boolean",
+                      separator: true,
                     },
                     {
                       type: "section",

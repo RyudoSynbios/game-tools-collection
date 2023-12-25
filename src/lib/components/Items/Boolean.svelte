@@ -60,6 +60,9 @@
       disabled={item.disabled}
       onChange={handleInputChange}
     />
+    {#if item.separator}
+      <p />
+    {/if}
   </div>
 {/if}
 
@@ -69,6 +72,10 @@
       & :global(.gtc-checkbox) {
         @apply text-orange-800 bg-orange-950;
       }
+    }
+
+    & p {
+      @apply mb-2 text-sm font-bold;
     }
   }
 </style>
