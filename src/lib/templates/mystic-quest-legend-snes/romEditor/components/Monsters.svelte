@@ -182,8 +182,8 @@
                             offset: statsOffset + 0xc + index * 0xe,
                             bit: 3,
                             name: "Zombie",
+                            separator: true,
                           },
-                          { divider: true },
                           {
                             offset: statsOffset + 0xc + index * 0xe,
                             bit: 4,

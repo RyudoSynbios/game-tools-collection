@@ -19,7 +19,6 @@ import {
 import type {
   Item,
   ItemBitflag,
-  ItemBitflagDivider,
   ItemBitflags,
   ItemChecksum,
   ItemComponent,
@@ -168,18 +167,13 @@ export function parseItem(
 }
 
 export function parseBitflags(item: ItemBitflags, steps: number[]): any {
-  const flags = item.flags.reduce(
-    (flags: (ItemBitflag | ItemBitflagDivider)[], flag) => {
-      if (!("divider" in flag)) {
-        flag.offset += getStep(steps);
-      }
+  const flags = item.flags.reduce((flags: ItemBitflag[], flag) => {
+    flag.offset += getStep(steps);
 
-      flags.push(flag);
+    flags.push(flag);
 
-      return flags;
-    },
-    [],
-  );
+    return flags;
+  }, []);
 
   const parsedItem: ItemBitflags = {
     ...item,

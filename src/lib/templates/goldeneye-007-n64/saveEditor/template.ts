@@ -550,7 +550,6 @@ const template: GameJson = {
                           type: "bitflags",
                           noMargin: true,
                           flags: [
-                            { divider: true },
                             { offset: 0x2e, bit: 1, name: "Invincible" },
                             { offset: 0x30, bit: 3, name: "All Guns" },
                             { offset: 0x2f, bit: 2, name: "Bond Invisible" },
@@ -567,7 +566,6 @@ const template: GameJson = {
                           type: "bitflags",
                           noMargin: true,
                           flags: [
-                            { divider: true },
                             { offset: 0x2e, bit: 5, name: "Turbo Mode" },
                             { offset: 0x2f, bit: 1, name: "Fast Animation" },
                             { offset: 0x2f, bit: 4, name: "Slow Animation" },

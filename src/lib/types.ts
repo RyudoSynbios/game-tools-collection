@@ -108,19 +108,16 @@ export interface ItemBitflag {
   offset: number;
   bit: Bit;
   name: string;
+  separator?: boolean;
   disabled?: boolean;
   hidden?: boolean;
-}
-
-export interface ItemBitflagDivider {
-  divider: true;
 }
 
 export interface ItemBitflags {
   id?: string;
   name?: string;
   type: "bitflags";
-  flags: (ItemBitflag | ItemBitflagDivider)[];
+  flags: ItemBitflag[];
   noMargin?: boolean;
   reversed?: boolean;
   disabled?: boolean;

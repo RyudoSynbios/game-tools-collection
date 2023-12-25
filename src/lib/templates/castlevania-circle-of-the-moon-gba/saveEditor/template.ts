@@ -1534,16 +1534,15 @@ const template: GameJson = {
                           background: true,
                           items: [
                             {
-                              name: "Location Discovered",
-                              offset: 0xab,
-                              type: "variable",
-                              dataType: "boolean",
-                            },
-                            {
                               type: "bitflags",
                               noMargin: true,
                               flags: [
-                                { divider: true },
+                                {
+                                  offset: 0xab,
+                                  bit: 0,
+                                  name: "Location Discovered",
+                                  separator: true,
+                                },
                                 {
                                   offset: 0x22,
                                   bit: 1,
@@ -1558,14 +1557,14 @@ const template: GameJson = {
                                   offset: 0x33,
                                   bit: 4,
                                   name: "Dracula 2nd Defeated in Room 2",
+                                  separator: true,
                                 },
-                                { divider: true },
                                 {
                                   offset: 0x22,
                                   bit: 5,
                                   name: "Potion HP in Room 4",
+                                  separator: true,
                                 },
-                                { divider: true },
                                 {
                                   offset: 0x1c,
                                   bit: 2,
@@ -1595,16 +1594,15 @@ const template: GameJson = {
                           background: true,
                           items: [
                             {
-                              name: "Location Discovered",
-                              offset: 0xac,
-                              type: "variable",
-                              dataType: "boolean",
-                            },
-                            {
                               type: "bitflags",
                               noMargin: true,
                               flags: [
-                                { divider: true },
+                                {
+                                  offset: 0xac,
+                                  bit: 0,
+                                  name: "Location Discovered",
+                                  separator: true,
+                                },
                                 {
                                   offset: 0x31,
                                   bit: 0,
@@ -1619,8 +1617,8 @@ const template: GameJson = {
                                   offset: 0x31,
                                   bit: 1,
                                   name: "Double in Room 22",
+                                  separator: true,
                                 },
-                                { divider: true },
                                 {
                                   offset: 0x22,
                                   bit: 6,
@@ -1695,8 +1693,8 @@ const template: GameJson = {
                                   offset: 0x23,
                                   bit: 5,
                                   name: "Potion Hearts in Room 21",
+                                  separator: true,
                                 },
-                                { divider: true },
                                 {
                                   offset: 0x1c,
                                   bit: 5,
@@ -1716,22 +1714,21 @@ const template: GameJson = {
                           background: true,
                           items: [
                             {
-                              name: "Location Discovered",
-                              offset: 0xad,
-                              type: "variable",
-                              dataType: "boolean",
-                            },
-                            {
                               type: "bitflags",
                               noMargin: true,
                               flags: [
-                                { divider: true },
+                                {
+                                  offset: 0xad,
+                                  bit: 0,
+                                  name: "Location Discovered",
+                                  separator: true,
+                                },
                                 {
                                   offset: 0x21,
                                   bit: 2,
                                   name: "Green Statues Destroyed",
+                                  separator: true,
                                 },
-                                { divider: true },
                                 {
                                   offset: 0x24,
                                   bit: 6,
@@ -1751,8 +1748,8 @@ const template: GameJson = {
                                   offset: 0x25,
                                   bit: 0,
                                   name: "Potion Hearts in Room 6",
+                                  separator: true,
                                 },
-                                { divider: true },
                                 {
                                   offset: 0x1c,
                                   bit: 7,
@@ -1777,28 +1774,25 @@ const template: GameJson = {
                           background: true,
                           items: [
                             {
-                              name: "Location Discovered",
-                              offset: 0xae,
-                              type: "variable",
-                              dataType: "boolean",
-                            },
-                            {
-                              name: "Teleporter 1 Activated",
-                              offset: 0xa6,
-                              type: "variable",
-                              dataType: "boolean",
-                            },
-                            {
-                              name: "Teleporter 2 Activated",
-                              offset: 0xa7,
-                              type: "variable",
-                              dataType: "boolean",
-                            },
-                            {
                               type: "bitflags",
                               noMargin: true,
                               flags: [
-                                { divider: true },
+                                {
+                                  offset: 0xae,
+                                  bit: 0,
+                                  name: "Location Discovered",
+                                },
+                                {
+                                  offset: 0xa6,
+                                  bit: 0,
+                                  name: "Teleporter 1 Activated",
+                                },
+                                {
+                                  offset: 0xa7,
+                                  bit: 0,
+                                  name: "Teleporter 2 Activated",
+                                  separator: true,
+                                },
                                 {
                                   offset: 0x21,
                                   bit: 1,
@@ -1813,8 +1807,8 @@ const template: GameJson = {
                                   offset: 0x31,
                                   bit: 2,
                                   name: "Tackle in Room 8",
+                                  separator: true,
                                 },
-                                { divider: true },
                                 {
                                   offset: 0x25,
                                   bit: 2,
@@ -1879,8 +1873,8 @@ const template: GameJson = {
                                   offset: 0x26,
                                   bit: 3,
                                   name: "Potion Hearts in Room 22",
+                                  separator: true,
                                 },
-                                { divider: true },
                                 {
                                   offset: 0x1d,
                                   bit: 1,
@@ -1915,16 +1909,15 @@ const template: GameJson = {
                           background: true,
                           items: [
                             {
-                              name: "Location Discovered",
-                              offset: 0xaf,
-                              type: "variable",
-                              dataType: "boolean",
-                            },
-                            {
                               type: "bitflags",
                               noMargin: true,
                               flags: [
-                                { divider: true },
+                                {
+                                  offset: 0xaf,
+                                  bit: 0,
+                                  name: "Location Discovered",
+                                  separator: true,
+                                },
                                 {
                                   offset: 0x26,
                                   bit: 6,
@@ -1934,8 +1927,8 @@ const template: GameJson = {
                                   offset: 0x26,
                                   bit: 7,
                                   name: "Potion HP in Room 3",
+                                  separator: true,
                                 },
-                                { divider: true },
                                 {
                                   offset: 0x1d,
                                   bit: 4,
@@ -1955,16 +1948,15 @@ const template: GameJson = {
                           background: true,
                           items: [
                             {
-                              name: "Location Discovered",
-                              offset: 0xb0,
-                              type: "variable",
-                              dataType: "boolean",
-                            },
-                            {
                               type: "bitflags",
                               noMargin: true,
                               flags: [
-                                { divider: true },
+                                {
+                                  offset: 0xb0,
+                                  bit: 0,
+                                  name: "Location Discovered",
+                                  separator: true,
+                                },
                                 {
                                   offset: 0x32,
                                   bit: 5,
@@ -1974,8 +1966,8 @@ const template: GameJson = {
                                   offset: 0x31,
                                   bit: 3,
                                   name: "Kick Boots in Room 2",
+                                  separator: true,
                                 },
-                                { divider: true },
                                 {
                                   offset: 0x27,
                                   bit: 5,
@@ -2040,8 +2032,8 @@ const template: GameJson = {
                                   offset: 0x27,
                                   bit: 1,
                                   name: "Potion Hearts in Room 20",
+                                  separator: true,
                                 },
-                                { divider: true },
                                 {
                                   offset: 0x1e,
                                   bit: 0,
@@ -2076,22 +2068,20 @@ const template: GameJson = {
                           background: true,
                           items: [
                             {
-                              name: "Location Discovered",
-                              offset: 0xb1,
-                              type: "variable",
-                              dataType: "boolean",
-                            },
-                            {
-                              name: "Teleporter Activated",
-                              offset: 0xa8,
-                              type: "variable",
-                              dataType: "boolean",
-                            },
-                            {
                               type: "bitflags",
                               noMargin: true,
                               flags: [
-                                { divider: true },
+                                {
+                                  offset: 0xb1,
+                                  bit: 0,
+                                  name: "Location Discovered",
+                                },
+                                {
+                                  offset: 0xa8,
+                                  bit: 0,
+                                  name: "Teleporter Activated",
+                                  separator: true,
+                                },
                                 {
                                   offset: 0x28,
                                   bit: 7,
@@ -2106,8 +2096,8 @@ const template: GameJson = {
                                   offset: 0x28,
                                   bit: 6,
                                   name: "Potion Hearts in Room 7",
+                                  separator: true,
                                 },
-                                { divider: true },
                                 {
                                   offset: 0x1e,
                                   bit: 2,
@@ -2132,22 +2122,20 @@ const template: GameJson = {
                           background: true,
                           items: [
                             {
-                              name: "Location Discovered",
-                              offset: 0xb2,
-                              type: "variable",
-                              dataType: "boolean",
-                            },
-                            {
-                              name: "Teleporter Activated",
-                              offset: 0xa9,
-                              type: "variable",
-                              dataType: "boolean",
-                            },
-                            {
                               type: "bitflags",
                               noMargin: true,
                               flags: [
-                                { divider: true },
+                                {
+                                  offset: 0xb2,
+                                  bit: 0,
+                                  name: "Location Discovered",
+                                },
+                                {
+                                  offset: 0xa9,
+                                  bit: 0,
+                                  name: "Teleporter Activated",
+                                  separator: true,
+                                },
                                 {
                                   offset: 0x32,
                                   bit: 6,
@@ -2157,8 +2145,8 @@ const template: GameJson = {
                                   offset: 0x33,
                                   bit: 5,
                                   name: "Discussion with Hugh after Adramelech defeated in Room 21",
+                                  separator: true,
                                 },
-                                { divider: true },
                                 {
                                   offset: 0x29,
                                   bit: 0,
@@ -2223,8 +2211,8 @@ const template: GameJson = {
                                   offset: 0x29,
                                   bit: 3,
                                   name: "Potion Hearts in Room 13",
+                                  separator: true,
                                 },
-                                { divider: true },
                                 {
                                   offset: 0x1e,
                                   bit: 5,
@@ -2259,16 +2247,15 @@ const template: GameJson = {
                           background: true,
                           items: [
                             {
-                              name: "Location Discovered",
-                              offset: 0xb3,
-                              type: "variable",
-                              dataType: "boolean",
-                            },
-                            {
                               type: "bitflags",
                               noMargin: true,
                               flags: [
-                                { divider: true },
+                                {
+                                  offset: 0xb3,
+                                  bit: 0,
+                                  name: "Location Discovered",
+                                  separator: true,
+                                },
                                 {
                                   offset: 0x33,
                                   bit: 0,
@@ -2278,8 +2265,8 @@ const template: GameJson = {
                                   offset: 0x31,
                                   bit: 6,
                                   name: "Cleansing in Room 21",
+                                  separator: true,
                                 },
-                                { divider: true },
                                 {
                                   offset: 0x21,
                                   bit: 3,
@@ -2309,8 +2296,8 @@ const template: GameJson = {
                                   offset: 0x22,
                                   bit: 0,
                                   name: "Good placement of movable boxes in Room 15",
+                                  separator: true,
                                 },
-                                { divider: true },
                                 {
                                   offset: 0x2b,
                                   bit: 0,
@@ -2370,8 +2357,8 @@ const template: GameJson = {
                                   offset: 0x2b,
                                   bit: 7,
                                   name: "Potion Hearts in Room 24",
+                                  separator: true,
                                 },
-                                { divider: true },
                                 {
                                   offset: 0x1f,
                                   bit: 1,
@@ -2411,16 +2398,15 @@ const template: GameJson = {
                           background: true,
                           items: [
                             {
-                              name: "Location Discovered",
-                              offset: 0xb4,
-                              type: "variable",
-                              dataType: "boolean",
-                            },
-                            {
                               type: "bitflags",
                               noMargin: true,
                               flags: [
-                                { divider: true },
+                                {
+                                  offset: 0xb4,
+                                  bit: 0,
+                                  name: "Location Discovered",
+                                  separator: true,
+                                },
                                 {
                                   offset: 0x32,
                                   bit: 7,
@@ -2430,8 +2416,8 @@ const template: GameJson = {
                                   offset: 0x31,
                                   bit: 4,
                                   name: "Heavy Ring in Room 0",
+                                  separator: true,
                                 },
-                                { divider: true },
                                 {
                                   offset: 0x2c,
                                   bit: 4,
@@ -2476,8 +2462,8 @@ const template: GameJson = {
                                   offset: 0x2d,
                                   bit: 0,
                                   name: "Potion Hearts in Room 12",
+                                  separator: true,
                                 },
-                                { divider: true },
                                 {
                                   offset: 0x1f,
                                   bit: 5,
@@ -2513,12 +2499,12 @@ const template: GameJson = {
                               type: "variable",
                               dataType: "boolean",
                               resource: "undergroundWaterwayWater",
+                              separator: true,
                             },
                             {
                               type: "bitflags",
                               noMargin: true,
                               flags: [
-                                { divider: true },
                                 {
                                   offset: 0x1c,
                                   bit: 1,
@@ -2533,8 +2519,8 @@ const template: GameJson = {
                                   offset: 0x31,
                                   bit: 7,
                                   name: "Roc Wind in Room 15",
+                                  separator: true,
                                 },
-                                { divider: true },
                                 {
                                   offset: 0x2d,
                                   bit: 3,
@@ -2599,8 +2585,8 @@ const template: GameJson = {
                                   offset: 0x2e,
                                   bit: 2,
                                   name: "Potion Hearts in Room 11",
+                                  separator: true,
                                 },
-                                { divider: true },
                                 {
                                   offset: 0x1f,
                                   bit: 6,
@@ -2635,16 +2621,15 @@ const template: GameJson = {
                           background: true,
                           items: [
                             {
-                              name: "Location Discovered",
-                              offset: 0xb6,
-                              type: "variable",
-                              dataType: "boolean",
-                            },
-                            {
                               type: "bitflags",
                               noMargin: true,
                               flags: [
-                                { divider: true },
+                                {
+                                  offset: 0xb6,
+                                  bit: 0,
+                                  name: "Location Discovered",
+                                  separator: true,
+                                },
                                 {
                                   offset: 0x2f,
                                   bit: 3,
@@ -2684,8 +2669,8 @@ const template: GameJson = {
                                   offset: 0x2f,
                                   bit: 6,
                                   name: "Potion Hearts in Room 5",
+                                  separator: true,
                                 },
-                                { divider: true },
                                 {
                                   offset: 0x20,
                                   bit: 2,
@@ -2705,22 +2690,20 @@ const template: GameJson = {
                           background: true,
                           items: [
                             {
-                              name: "Location Discovered",
-                              offset: 0xb7,
-                              type: "variable",
-                              dataType: "boolean",
-                            },
-                            {
-                              name: "Teleporter Activated",
-                              offset: 0xaa,
-                              type: "variable",
-                              dataType: "boolean",
-                            },
-                            {
                               type: "bitflags",
                               noMargin: true,
                               flags: [
-                                { divider: true },
+                                {
+                                  offset: 0xb7,
+                                  bit: 0,
+                                  name: "Location Discovered",
+                                },
+                                {
+                                  offset: 0xaa,
+                                  bit: 0,
+                                  name: "Teleporter Activated",
+                                  separator: true,
+                                },
                                 {
                                   offset: 0x33,
                                   bit: 2,
@@ -2730,8 +2713,8 @@ const template: GameJson = {
                                   offset: 0x32,
                                   bit: 0,
                                   name: "Last Key in Room 0",
+                                  separator: true,
                                 },
-                                { divider: true },
                                 {
                                   offset: 0x30,
                                   bit: 0,
@@ -2771,8 +2754,8 @@ const template: GameJson = {
                                   offset: 0x30,
                                   bit: 5,
                                   name: "Potion Hearts in Room 19",
+                                  separator: true,
                                 },
-                                { divider: true },
                                 {
                                   offset: 0x20,
                                   bit: 3,
@@ -2812,16 +2795,15 @@ const template: GameJson = {
                           background: true,
                           items: [
                             {
-                              name: "Location Discovered",
-                              offset: 0xb8,
-                              type: "variable",
-                              dataType: "boolean",
-                            },
-                            {
                               type: "bitflags",
                               noMargin: true,
                               flags: [
-                                { divider: true },
+                                {
+                                  offset: 0xb8,
+                                  bit: 0,
+                                  name: "Location Discovered",
+                                  separator: true,
+                                },
                                 {
                                   offset: 0x33,
                                   bit: 3,
@@ -2831,14 +2813,14 @@ const template: GameJson = {
                                   offset: 0x22,
                                   bit: 4,
                                   name: "Lights to Dracula 2nd in Room 1",
+                                  separator: true,
                                 },
-                                { divider: true },
                                 {
                                   offset: 0x30,
                                   bit: 7,
                                   name: "Potion HP in Room 2",
+                                  separator: true,
                                 },
-                                { divider: true },
                                 {
                                   offset: 0x21,
                                   bit: 0,
@@ -2858,16 +2840,15 @@ const template: GameJson = {
                           background: true,
                           items: [
                             {
-                              name: "Location Discovered",
-                              offset: 0xb9,
-                              type: "variable",
-                              dataType: "boolean",
-                            },
-                            {
                               type: "bitflags",
                               noMargin: true,
                               flags: [
-                                { divider: true },
+                                {
+                                  offset: 0xb9,
+                                  bit: 0,
+                                  name: "Location Discovered",
+                                  separator: true,
+                                },
                                 { offset: 0x32, bit: 2, name: "Shining Armor" },
                               ],
                             },

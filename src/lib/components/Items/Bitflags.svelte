@@ -4,11 +4,7 @@
   import { getBitflag, setBitflag } from "$lib/utils/bytes";
   import { utilsExists } from "$lib/utils/format";
 
-  import type {
-    ItemBitflag,
-    ItemBitflagDivider,
-    ItemBitflags,
-  } from "$lib/types";
+  import type { ItemBitflag, ItemBitflags } from "$lib/types";
 
   export let item: ItemBitflags;
 
@@ -18,7 +14,8 @@
     if (utilsExists("overrideSetInt")) {
       isOverrided = $gameUtils.overrideSetInt(
         item,
-        (event.target as HTMLInputElement).value,
+        (event.target as HTMLInputElement).checked,
+        flag,
       );
     }
 
@@ -36,12 +33,32 @@
     }
   }
 
-  let flags: (ItemBitflag | ItemBitflagDivider)[];
+  let flags: ItemBitflag[];
 
   $: {
     $dataView;
 
-    flags = item.flags;
+    let isOverrided = false;
+
+    if (utilsExists("overrideGetInt")) {
+      [isOverrided, flags] = $gameUtils.overrideGetInt(item);
+    }
+
+    if (!isOverrided) {
+      flags = item.flags.reduce(
+        (flags: ItemBitflag[], flag) => {
+          flags.push({
+            ...flag,
+            checked: getBitflag(flag.offset, { reversed: item.reversed })[
+              flag.bit
+            ],
+          });
+
+          return flags;
+        },
+        [],
+      );
+    }
   }
 </script>
 
@@ -55,24 +72,21 @@
       <p>{@html item.name}</p>
     {/if}
     {#each flags as flag}
-      {#if !("divider" in flag)}
-        {#if !flag.hidden || $isDebug}
-          <div
-            class="gtc-bitflag"
-            class:gtc-bitflag-debug={flag.hidden && $isDebug}
-          >
-            <Checkbox
-              label={flag.name}
-              checked={getBitflag(flag.offset, { reversed: item.reversed })[
-                flag.bit
-              ]}
-              disabled={flag.disabled || item.disabled}
-              onChange={(event) => handleInputChange(flag, event)}
-            />
-          </div>
-        {/if}
-      {:else}
-        <p />
+      {#if !flag.hidden || $isDebug}
+        <div
+          class="gtc-bitflag"
+          class:gtc-bitflag-debug={flag.hidden && $isDebug}
+        >
+          <Checkbox
+            label={flag.name}
+            checked={flag.checked}
+            disabled={flag.disabled || item.disabled}
+            onChange={(event) => handleInputChange(flag, event)}
+          />
+          {#if flag.separator}
+            <p />
+          {/if}
+        </div>
       {/if}
     {/each}
   </div>
