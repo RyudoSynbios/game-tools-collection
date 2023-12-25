@@ -33,7 +33,7 @@
     }
   }
 
-  let flags: ItemBitflag[];
+  let flags: (ItemBitflag & { checked: boolean })[];
 
   $: {
     $dataView;
@@ -46,7 +46,7 @@
 
     if (!isOverrided) {
       flags = item.flags.reduce(
-        (flags: ItemBitflag[], flag) => {
+        (flags: (ItemBitflag & { checked: boolean })[], flag) => {
           flags.push({
             ...flag,
             checked: getBitflag(flag.offset, { reversed: item.reversed })[
