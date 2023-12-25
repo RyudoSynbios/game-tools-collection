@@ -12,6 +12,7 @@
     class="gtc-section"
     class:gtc-section-background={item.background}
     class:gtc-section-debug={item.hidden && $isDebug}
+    class:gtc-section-flex1={item.flex1}
     class:gtc-section-nomargin={item.noMargin}
   >
     {#if item.name}
@@ -37,6 +38,10 @@
 
     &.gtc-section-debug {
       @apply text-orange-800 bg-orange-950;
+    }
+
+    &.gtc-section-flex1 {
+      @apply flex-1;
     }
 
     &.gtc-section-nomargin {
