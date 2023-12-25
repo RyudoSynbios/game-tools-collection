@@ -6,7 +6,13 @@ import { objGetKey } from "$lib/utils/format";
 
 export function checkConditions(conditions: any, callback: any): boolean {
   if (!Array.isArray(conditions)) {
-    return callback(conditions);
+    if (conditions.$and || conditions.$or) {
+      return checkConditions([conditions], (subCondition: any) => {
+        return callback(subCondition);
+      });
+    } else {
+      return callback(conditions);
+    }
   } else if (conditions.length === 1) {
     const condition = conditions[0];
     const operand = objGetKey(condition, 0);
