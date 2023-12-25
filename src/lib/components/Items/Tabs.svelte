@@ -108,11 +108,7 @@
         }
       }
 
-      if (newTab.hidden && !$isDebug) {
-        newTab.disabled = true;
-      }
-
-      if (newTab.planned) {
+      if ((newTab.hidden || newTab.planned) && !$isDebug) {
         newTab.disabled = true;
       }
 
