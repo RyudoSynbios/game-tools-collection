@@ -67,7 +67,7 @@ export function getRegionIndex(region: string): number {
   return regionIndex;
 }
 
-export function getRegions(dataView: DataView): string[] {
+export function getRegions(dataView: DataView, shift = 0x0): string[] {
   const $gameTemplate = get(gameTemplate);
 
   const regions = Object.entries($gameTemplate.validator.regions).reduce(
@@ -78,20 +78,17 @@ export function getRegions(dataView: DataView): string[] {
           const array = condition[offset];
           const length = array.length;
 
-          let isValid = true;
-
           for (let i = offset; i < offset + length; i += 0x1) {
             if (i >= dataView.byteLength) {
-              isValid = false;
-
-              return;
+              return false;
             }
 
-            if (dataView.getUint8(i) !== array[i - offset]) {
-              isValid = false;
+            if (dataView.getUint8(i + shift) !== array[i - offset]) {
+              return false;
             }
           }
-          return isValid;
+
+          return true;
         })
       ) {
         regions.push(region);
