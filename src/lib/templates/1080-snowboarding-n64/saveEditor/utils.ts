@@ -15,18 +15,18 @@ import type {
 import template from "./template";
 
 export function overrideGetRegions(dataView: DataView): string[] {
-  let validatorOffset = 0x0;
+  let shift = 0x0;
 
   if (dataView.byteLength === 0x48800) {
-    validatorOffset += 0x20800;
+    shift += 0x20800;
   }
 
   const itemChecksum = clone(
     (template.items[0] as ItemSection).items[6],
   ) as ItemChecksum;
 
-  itemChecksum.offset += validatorOffset;
-  itemChecksum.control.offset += validatorOffset;
+  itemChecksum.offset += shift;
+  itemChecksum.control.offset += shift;
 
   const checksum = generateChecksum(itemChecksum, dataView);
 
@@ -122,7 +122,7 @@ export function overrideSetInt(item: Item, value: string): boolean {
 
     setString(
       itemString.offset,
-      2,
+      0x2,
       itemString.letterDataType,
       `${value[0]}${value[1]}`,
       itemString.fallback,
@@ -134,7 +134,7 @@ export function overrideSetInt(item: Item, value: string): boolean {
 
     setString(
       itemString.offset + 0x7,
-      1,
+      0x1,
       itemString.letterDataType,
       value[2],
       itemString.fallback,

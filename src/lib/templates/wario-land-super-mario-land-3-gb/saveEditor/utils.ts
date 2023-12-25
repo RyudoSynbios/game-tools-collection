@@ -1,12 +1,6 @@
 import { extractBit, getInt, setInt } from "$lib/utils/bytes";
 
-import type {
-  Item,
-  ItemBitflag,
-  ItemBitflags,
-  ItemChecksum,
-  ItemInt,
-} from "$lib/types";
+import type { Item, ItemBitflag, ItemBitflags, ItemChecksum } from "$lib/types";
 
 export function generateChecksum(item: ItemChecksum): number {
   let checksum = 0x0;

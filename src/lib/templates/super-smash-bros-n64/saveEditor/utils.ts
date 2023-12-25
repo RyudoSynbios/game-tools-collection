@@ -9,16 +9,16 @@ import type { ItemChecksum } from "$lib/types";
 import template from "./template";
 
 export function overrideGetRegions(dataView: DataView): string[] {
-  let validatorOffset = 0x0;
+  let shift = 0x0;
 
   if (dataView.byteLength === 0x48800) {
-    validatorOffset += 0x20800;
+    shift += 0x20800;
   }
 
   const itemChecksum = clone(template.items[0]) as ItemChecksum;
 
-  itemChecksum.offset += validatorOffset;
-  itemChecksum.control.offset += validatorOffset;
+  itemChecksum.offset += shift;
+  itemChecksum.control.offset += shift;
 
   const checksum = generateChecksum(itemChecksum, dataView);
 

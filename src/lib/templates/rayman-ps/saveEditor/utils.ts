@@ -87,7 +87,7 @@ export function afterSetInt(item: Item): void {
 
       setString(
         progression.offset,
-        3,
+        0x3,
         progression.letterDataType,
         `${int}`.padStart(3, "0"),
       );

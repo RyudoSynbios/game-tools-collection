@@ -481,7 +481,7 @@ export function setString(
   length: number,
   letterDataType: "uint8" | "uint16" | "uint24" | "uint32",
   value: string,
-  fallback = 0,
+  fallback = 0x0,
   options: StringOptions = {},
 ): void {
   const $gameJson = get(gameJson);
