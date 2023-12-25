@@ -81,6 +81,8 @@ export function extractBit(number: number, bit: Bit): boolean {
 }
 
 interface BooleanOptions {
+  on?: number;
+  off?: number;
   resource?: string;
 }
 
@@ -106,6 +108,15 @@ export function getBoolean(
     }
   }
 
+  if (options.on !== undefined && options.on === getInt(offset, "uint8")) {
+    return true;
+  } else if (
+    options.off !== undefined &&
+    options.off === getInt(offset, "uint8")
+  ) {
+    return false;
+  }
+
   return Boolean(getInt(offset, "uint8"));
 }
 
@@ -129,6 +140,10 @@ export function setBoolean(
       "uint8",
       $gameJson.resources[options.resource][value === true ? 1 : 0],
     );
+  } else if (options.on !== undefined && value) {
+    setInt(offset, "uint8", options.on);
+  } else if (options.off !== undefined && !value) {
+    setInt(offset, "uint8", options.off);
   } else {
     setInt(offset, "uint8", value === false ? 0 : 1);
   }

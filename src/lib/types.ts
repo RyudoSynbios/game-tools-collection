@@ -133,6 +133,8 @@ export interface ItemBoolean {
   offset: number;
   type: "variable";
   dataType: "boolean";
+  on?: number;
+  off?: number;
   resource?: string;
   overrideStep?: {
     parent: number;

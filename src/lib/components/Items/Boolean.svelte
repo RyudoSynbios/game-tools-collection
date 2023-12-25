@@ -20,6 +20,8 @@
 
     if (!isOverrided) {
       setBoolean(item.offset, (event.target as HTMLInputElement).checked, {
+        on: item.on,
+        off: item.off,
         resource: item.resource,
       });
     }
@@ -41,7 +43,11 @@
     }
 
     if (!isOverrided) {
-      checked = getBoolean(item.offset, { resource: item.resource });
+      checked = getBoolean(item.offset, {
+        on: item.on,
+        off: item.off,
+        resource: item.resource,
+      });
     }
   }
 </script>
