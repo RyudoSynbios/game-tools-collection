@@ -99,7 +99,11 @@ export function parseItem(
     checkMissingFields(item);
   }
 
-  const newItem = clone(item);
+  let newItem = clone(item);
+
+  if (utilsExists("overrideItem")) {
+    newItem = $gameUtils.overrideItem(newItem);
+  }
 
   if (Array.isArray(newItem)) {
     return newItem.map((obj) => {
