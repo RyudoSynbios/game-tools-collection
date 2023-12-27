@@ -121,22 +121,26 @@ export function parseCondition(
   key: string,
   condition: { [key: number]: any },
 ) {
-  Object.values(condition).forEach((value) =>
-    value.forEach((item: { [key: number]: any }) => {
-      const offset = parseInt(Object.keys(item)[0]);
-      const length = item[offset].length;
+  Object.values(condition).forEach((value) => {
+    value.forEach((item: { [key: number | string]: any }) => {
+      if (item.$and || item.$or) {
+        parseCondition(highlightedOffsets, key, item);
+      } else {
+        const offset = parseInt(Object.keys(item)[0]);
+        const length = item[offset].length;
 
-      for (let i = offset; i < offset + length; i += 1) {
-        addItem(
-          highlightedOffsets,
-          i,
-          `Validator (${key})`,
-          "variable",
-          "string",
-        );
+        for (let i = offset; i < offset + length; i += 1) {
+          addItem(
+            highlightedOffsets,
+            i,
+            `Validator (${key})`,
+            "variable",
+            "string",
+          );
+        }
       }
-    }),
-  );
+    });
+  });
 }
 
 export function parseValidator(highlightedOffsets: HighlightedOffsets) {
