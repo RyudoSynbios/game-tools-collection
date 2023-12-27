@@ -565,7 +565,7 @@ const template: GameJson = {
                           ],
                         },
                         {
-                          name: "Misc",
+                          name: "Miscellaneous",
                           flex: true,
                           items: [
                             {

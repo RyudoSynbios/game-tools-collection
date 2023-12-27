@@ -19,6 +19,7 @@ Link to the website: [https://game-tools-collection.com](https://game-tools-coll
 | Grandia                                   | PS       | Save       | EUR / USA / JAP / FRA / GER             |
 | Konami Krazy Racers                       | GBA      | Save       | EUR / USA / JAP                         |
 | Legend of Zelda, The: Link's Awakening DX | GBC      | Save       | EUR / USA / JAP / FRA / GER             |
+| Legend of Zelda, The: Majora's Mask       | N64      | Save       | EUR / USA / JAP                         |
 | Mystic Quest Legend                       | SNES     | Save / Rom | EUR / USA / JAP / FRA / GER             |
 | Rayman                                    | PS       | Save       | EUR / USA / JAP                         |
 | Shining Force 3: Scenario 1               | SATURN   | Save       | EUR / USA / JAP                         |

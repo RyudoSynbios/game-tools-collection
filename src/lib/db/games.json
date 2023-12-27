@@ -107,6 +107,14 @@
     }
   },
   {
+    "id": "legend-of-zelda-the-majora-s-mask-n64",
+    "name": "Legend of Zelda, The: Majora's Mask",
+    "consoleId": "nintendo-64",
+    "saveEditor": {
+      "regions": ["🇪🇺", "🇺🇸", "🇯🇵"]
+    }
+  },
+  {
     "id": "mystic-quest-legend-snes",
     "name": "Mystic Quest Legend",
     "consoleId": "super-nintendo",
