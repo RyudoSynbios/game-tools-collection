@@ -46,7 +46,7 @@ export function parseItem(
         addItem(
           highlightedOffsets,
           flag.offset,
-          `${item.name || ""} [${flag.bit}]: ${flag.name || name}`,
+          `${item.name || ""} [${flag.bit}]: ${flag.label || name}`,
           item.type,
         );
       }

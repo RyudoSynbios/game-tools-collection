@@ -78,7 +78,7 @@
           class:gtc-bitflag-debug={flag.hidden && $isDebug}
         >
           <Checkbox
-            label={flag.name}
+            label={flag.label}
             checked={flag.checked}
             disabled={flag.disabled || item.disabled}
             onChange={(event) => handleInputChange(flag, event)}

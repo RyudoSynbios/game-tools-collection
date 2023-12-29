@@ -425,31 +425,11 @@ const template: GameJson = {
                                   name: "Condition",
                                   type: "bitflags",
                                   flags: [
-                                    {
-                                      offset: 0x235b,
-                                      bit: 3,
-                                      name: "Poison",
-                                    },
-                                    {
-                                      offset: 0x235b,
-                                      bit: 4,
-                                      name: "Plague",
-                                    },
-                                    {
-                                      offset: 0x235b,
-                                      bit: 5,
-                                      name: "Move Block",
-                                    },
-                                    {
-                                      offset: 0x235b,
-                                      bit: 6,
-                                      name: "Magic Block",
-                                    },
-                                    {
-                                      offset: 0x235b,
-                                      bit: 7,
-                                      name: "Fallen",
-                                    },
+                                    { offset: 0x235b, bit: 3, label: "Poison" },
+                                    { offset: 0x235b, bit: 4, label: "Plague" },
+                                    { offset: 0x235b, bit: 5, label: "Move Block" },
+                                    { offset: 0x235b, bit: 6, label: "Magic Block" },
+                                    { offset: 0x235b, bit: 7, label: "Fallen" },
                                   ],
                                 },
                               ],

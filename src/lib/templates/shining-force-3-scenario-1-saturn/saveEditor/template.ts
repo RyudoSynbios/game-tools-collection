@@ -753,13 +753,9 @@ const template: GameJson = {
                 {
                   type: "bitflags",
                   flags: [
-                    {
-                      offset: 0x4d1,
-                      bit: 0,
-                      name: "Talk after Bulsome 4 talk",
-                    },
-                    { offset: 0x535, bit: 3, name: "Balsamo Inn Chest" },
-                    { offset: 0x54c, bit: 5, name: "Balsamo House 1 5 Gold" },
+                    { offset: 0x4d1, bit: 0, label: "Talk after Bulsome 4 talk" },
+                    { offset: 0x535, bit: 3, label: "Balsamo Inn Chest" },
+                    { offset: 0x54c, bit: 5, label: "Balsamo House 1 5 Gold" },
                   ],
                 },
               ],

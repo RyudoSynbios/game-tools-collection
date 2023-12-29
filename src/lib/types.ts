@@ -107,7 +107,7 @@ export interface GameJson {
 export interface ItemBitflag {
   offset: number;
   bit: Bit;
-  name: string;
+  label: string;
   separator?: boolean;
   disabled?: boolean;
   hidden?: boolean;
