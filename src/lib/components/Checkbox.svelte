@@ -8,7 +8,7 @@
 <label class="gtc-checkbox">
   <input type="checkbox" {checked} {disabled} on:change={onChange} />
   {#if label}
-    <span>{label}</span>
+    <span>{@html label}</span>
   {/if}
 </label>
 
