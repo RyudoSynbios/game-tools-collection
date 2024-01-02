@@ -138,7 +138,7 @@ export function setBoolean(
     setInt(
       offset,
       "uint8",
-      $gameJson.resources[options.resource][value === true ? 1 : 0],
+      $gameJson.resources[options.resource][value === true ? 1 : 0] as number,
     );
   } else if (options.on !== undefined && value) {
     setInt(offset, "uint8", options.on);
@@ -469,7 +469,11 @@ export function getString(
       $gameJson.resources[options.resource]
     ) {
       if (Array.isArray($gameJson.resources[options.resource])) {
-        resource = getRegionArray($gameJson.resources[options.resource]);
+        resource = getRegionArray(
+          $gameJson.resources[options.resource] as {
+            [key: number]: number | string;
+          }[],
+        );
       } else {
         resource = $gameJson.resources[options.resource];
       }
@@ -518,7 +522,11 @@ export function setString(
       $gameJson.resources[options.resource]
     ) {
       if (Array.isArray($gameJson.resources[options.resource])) {
-        resource = getRegionArray($gameJson.resources[options.resource]);
+        resource = getRegionArray(
+          $gameJson.resources[options.resource] as {
+            [key: number]: number | string;
+          }[],
+        );
       } else {
         resource = $gameJson.resources[options.resource];
       }

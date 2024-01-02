@@ -174,7 +174,7 @@ export interface ItemContainer {
   instances: number;
   instanceType: "section" | "tabs";
   enumeration?: string;
-  disableSubinstanceIf?: ItemIntCondition | string;
+  disableSubinstanceIf?: ItemIntCondition | LogicalOperator[] | string;
   prependSubinstance?: ItemTab[];
   appendSubinstance?: ItemTab[];
   enumerationOrder?: number[];
@@ -260,7 +260,7 @@ export interface ItemTab {
   id?: string;
   name: string;
   flex?: boolean;
-  disableTabIf?: ItemIntCondition | string;
+  disableTabIf?: ItemIntCondition | LogicalOperator[] | string;
   items: Item[];
   disabled?: boolean;
   hidden?: boolean;
@@ -276,4 +276,9 @@ export interface ItemTabs {
   resource?: string;
   items: ItemTab[];
   hidden?: boolean;
+}
+
+export interface LogicalOperator {
+  $and?: ItemIntCondition[] | LogicalOperator[];
+  $or?: ItemIntCondition[] | LogicalOperator[];
 }
