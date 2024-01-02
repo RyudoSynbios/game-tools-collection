@@ -277,6 +277,7 @@ export interface ItemString {
 }
 
 export interface ItemTab {
+  id?: string;
   name: string;
   flex?: boolean;
   disableTabIf?: ItemIntCondition | string;
