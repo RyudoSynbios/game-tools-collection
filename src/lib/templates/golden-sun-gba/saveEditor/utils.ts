@@ -207,16 +207,10 @@ export function afterSetInt(item: Item): void {
 
     for (let i = 0x0; i < 0x4; i += 0x1) {
       if (i < numberCharacters) {
-        console.log(
-          offset.toHex(),
-          (offset + 0x3f8 + i).toHex(),
-          (offset - 0x24 + i).toHex(),
-        );
         const int = getInt(offset + 0x3f8 + i, "uint8");
 
         setInt(offset - 0x24 + i, "uint8", int);
       } else {
-        console.log(offset.toHex(), (offset - 0x24 + i).toHex());
         setInt(offset - 0x24 + i, "uint8", 0xff);
       }
     }
