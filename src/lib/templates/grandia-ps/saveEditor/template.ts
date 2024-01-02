@@ -826,7 +826,7 @@ const template: GameJson = {
                                   dataType: "boolean",
                                   overrideStep: {
                                     parent: 1,
-                                    step: 0,
+                                    step: 0x0,
                                   },
                                 },
                                 {
@@ -837,7 +837,7 @@ const template: GameJson = {
                                   dataType: "boolean",
                                   overrideStep: {
                                     parent: 1,
-                                    step: 0,
+                                    step: 0x0,
                                   },
                                 },
                                 {
@@ -848,7 +848,7 @@ const template: GameJson = {
                                   dataType: "boolean",
                                   overrideStep: {
                                     parent: 1,
-                                    step: 0,
+                                    step: 0x0,
                                   },
                                 },
                                 {
@@ -859,7 +859,7 @@ const template: GameJson = {
                                   dataType: "boolean",
                                   overrideStep: {
                                     parent: 1,
-                                    step: 0,
+                                    step: 0x0,
                                   },
                                 },
                                 {
@@ -870,7 +870,7 @@ const template: GameJson = {
                                   dataType: "boolean",
                                   overrideStep: {
                                     parent: 1,
-                                    step: 0,
+                                    step: 0x0,
                                   },
                                 },
                                 {
@@ -881,7 +881,7 @@ const template: GameJson = {
                                   dataType: "boolean",
                                   overrideStep: {
                                     parent: 1,
-                                    step: 0,
+                                    step: 0x0,
                                   },
                                 },
                                 {
@@ -892,7 +892,7 @@ const template: GameJson = {
                                   dataType: "boolean",
                                   overrideStep: {
                                     parent: 1,
-                                    step: 0,
+                                    step: 0x0,
                                   },
                                 },
                                 {
@@ -903,7 +903,7 @@ const template: GameJson = {
                                   dataType: "boolean",
                                   overrideStep: {
                                     parent: 1,
-                                    step: 0,
+                                    step: 0x0,
                                   },
                                 },
                                 {
@@ -914,7 +914,7 @@ const template: GameJson = {
                                   dataType: "boolean",
                                   overrideStep: {
                                     parent: 1,
-                                    step: 0,
+                                    step: 0x0,
                                   },
                                 },
                                 {
@@ -925,7 +925,7 @@ const template: GameJson = {
                                   dataType: "boolean",
                                   overrideStep: {
                                     parent: 1,
-                                    step: 0,
+                                    step: 0x0,
                                   },
                                 },
                                 {
@@ -936,7 +936,7 @@ const template: GameJson = {
                                   dataType: "boolean",
                                   overrideStep: {
                                     parent: 1,
-                                    step: 0,
+                                    step: 0x0,
                                   },
                                 },
                                 {
@@ -947,7 +947,7 @@ const template: GameJson = {
                                   dataType: "boolean",
                                   overrideStep: {
                                     parent: 1,
-                                    step: 0,
+                                    step: 0x0,
                                   },
                                 },
                                 {
@@ -958,7 +958,7 @@ const template: GameJson = {
                                   dataType: "boolean",
                                   overrideStep: {
                                     parent: 1,
-                                    step: 0,
+                                    step: 0x0,
                                   },
                                 },
                                 {
@@ -969,7 +969,7 @@ const template: GameJson = {
                                   dataType: "boolean",
                                   overrideStep: {
                                     parent: 1,
-                                    step: 0,
+                                    step: 0x0,
                                   },
                                 },
                                 {
@@ -980,7 +980,7 @@ const template: GameJson = {
                                   dataType: "boolean",
                                   overrideStep: {
                                     parent: 1,
-                                    step: 0,
+                                    step: 0x0,
                                   },
                                 },
                                 {
@@ -991,7 +991,7 @@ const template: GameJson = {
                                   dataType: "boolean",
                                   overrideStep: {
                                     parent: 1,
-                                    step: 0,
+                                    step: 0x0,
                                   },
                                 },
                                 {
@@ -1002,7 +1002,7 @@ const template: GameJson = {
                                   dataType: "boolean",
                                   overrideStep: {
                                     parent: 1,
-                                    step: 0,
+                                    step: 0x0,
                                   },
                                 },
                                 {
@@ -1013,7 +1013,7 @@ const template: GameJson = {
                                   dataType: "boolean",
                                   overrideStep: {
                                     parent: 1,
-                                    step: 0,
+                                    step: 0x0,
                                   },
                                 },
                               ],
@@ -1031,7 +1031,7 @@ const template: GameJson = {
                                   dataType: "boolean",
                                   overrideStep: {
                                     parent: 1,
-                                    step: 0,
+                                    step: 0x0,
                                   },
                                 },
                                 {
@@ -1042,7 +1042,7 @@ const template: GameJson = {
                                   dataType: "boolean",
                                   overrideStep: {
                                     parent: 1,
-                                    step: 0,
+                                    step: 0x0,
                                   },
                                 },
                                 {
@@ -1053,7 +1053,7 @@ const template: GameJson = {
                                   dataType: "boolean",
                                   overrideStep: {
                                     parent: 1,
-                                    step: 0,
+                                    step: 0x0,
                                   },
                                 },
                                 {
@@ -1064,7 +1064,7 @@ const template: GameJson = {
                                   dataType: "boolean",
                                   overrideStep: {
                                     parent: 1,
-                                    step: 0,
+                                    step: 0x0,
                                   },
                                 },
                                 {
@@ -1075,7 +1075,7 @@ const template: GameJson = {
                                   dataType: "boolean",
                                   overrideStep: {
                                     parent: 1,
-                                    step: 0,
+                                    step: 0x0,
                                   },
                                 },
                                 {
@@ -1086,7 +1086,7 @@ const template: GameJson = {
                                   dataType: "boolean",
                                   overrideStep: {
                                     parent: 1,
-                                    step: 0,
+                                    step: 0x0,
                                   },
                                 },
                                 {
@@ -1097,7 +1097,7 @@ const template: GameJson = {
                                   dataType: "boolean",
                                   overrideStep: {
                                     parent: 1,
-                                    step: 0,
+                                    step: 0x0,
                                   },
                                 },
                                 {
@@ -1108,7 +1108,7 @@ const template: GameJson = {
                                   dataType: "boolean",
                                   overrideStep: {
                                     parent: 1,
-                                    step: 0,
+                                    step: 0x0,
                                   },
                                 },
                                 {
@@ -1119,7 +1119,7 @@ const template: GameJson = {
                                   dataType: "boolean",
                                   overrideStep: {
                                     parent: 1,
-                                    step: 0,
+                                    step: 0x0,
                                   },
                                 },
                                 {
@@ -1130,7 +1130,7 @@ const template: GameJson = {
                                   dataType: "boolean",
                                   overrideStep: {
                                     parent: 1,
-                                    step: 0,
+                                    step: 0x0,
                                   },
                                 },
                                 {
@@ -1141,7 +1141,7 @@ const template: GameJson = {
                                   dataType: "boolean",
                                   overrideStep: {
                                     parent: 1,
-                                    step: 0,
+                                    step: 0x0,
                                   },
                                 },
                                 {
@@ -1152,7 +1152,7 @@ const template: GameJson = {
                                   dataType: "boolean",
                                   overrideStep: {
                                     parent: 1,
-                                    step: 0,
+                                    step: 0x0,
                                   },
                                 },
                                 {
@@ -1163,7 +1163,7 @@ const template: GameJson = {
                                   dataType: "boolean",
                                   overrideStep: {
                                     parent: 1,
-                                    step: 0,
+                                    step: 0x0,
                                   },
                                 },
                                 {
@@ -1174,7 +1174,7 @@ const template: GameJson = {
                                   dataType: "boolean",
                                   overrideStep: {
                                     parent: 1,
-                                    step: 0,
+                                    step: 0x0,
                                   },
                                 },
                                 {
@@ -1185,7 +1185,7 @@ const template: GameJson = {
                                   dataType: "boolean",
                                   overrideStep: {
                                     parent: 1,
-                                    step: 0,
+                                    step: 0x0,
                                   },
                                 },
                                 {
@@ -1196,7 +1196,7 @@ const template: GameJson = {
                                   dataType: "boolean",
                                   overrideStep: {
                                     parent: 1,
-                                    step: 0,
+                                    step: 0x0,
                                   },
                                 },
                                 {
@@ -1207,7 +1207,7 @@ const template: GameJson = {
                                   dataType: "boolean",
                                   overrideStep: {
                                     parent: 1,
-                                    step: 0,
+                                    step: 0x0,
                                   },
                                 },
                                 {
@@ -1218,7 +1218,7 @@ const template: GameJson = {
                                   dataType: "boolean",
                                   overrideStep: {
                                     parent: 1,
-                                    step: 0,
+                                    step: 0x0,
                                   },
                                 },
                               ],
@@ -1236,7 +1236,7 @@ const template: GameJson = {
                                   dataType: "boolean",
                                   overrideStep: {
                                     parent: 1,
-                                    step: 0,
+                                    step: 0x0,
                                   },
                                 },
                                 {
@@ -1247,7 +1247,7 @@ const template: GameJson = {
                                   dataType: "boolean",
                                   overrideStep: {
                                     parent: 1,
-                                    step: 0,
+                                    step: 0x0,
                                   },
                                 },
                                 {
@@ -1258,7 +1258,7 @@ const template: GameJson = {
                                   dataType: "boolean",
                                   overrideStep: {
                                     parent: 1,
-                                    step: 0,
+                                    step: 0x0,
                                   },
                                 },
                                 {
@@ -1269,7 +1269,7 @@ const template: GameJson = {
                                   dataType: "boolean",
                                   overrideStep: {
                                     parent: 1,
-                                    step: 0,
+                                    step: 0x0,
                                   },
                                 },
                                 {
@@ -1280,7 +1280,7 @@ const template: GameJson = {
                                   dataType: "boolean",
                                   overrideStep: {
                                     parent: 1,
-                                    step: 0,
+                                    step: 0x0,
                                   },
                                 },
                                 {
@@ -1291,7 +1291,7 @@ const template: GameJson = {
                                   dataType: "boolean",
                                   overrideStep: {
                                     parent: 1,
-                                    step: 0,
+                                    step: 0x0,
                                   },
                                 },
                                 {
@@ -1302,7 +1302,7 @@ const template: GameJson = {
                                   dataType: "boolean",
                                   overrideStep: {
                                     parent: 1,
-                                    step: 0,
+                                    step: 0x0,
                                   },
                                 },
                                 {
@@ -1313,7 +1313,7 @@ const template: GameJson = {
                                   dataType: "boolean",
                                   overrideStep: {
                                     parent: 1,
-                                    step: 0,
+                                    step: 0x0,
                                   },
                                 },
                                 {
@@ -1324,7 +1324,7 @@ const template: GameJson = {
                                   dataType: "boolean",
                                   overrideStep: {
                                     parent: 1,
-                                    step: 0,
+                                    step: 0x0,
                                   },
                                 },
                                 {
@@ -1335,7 +1335,7 @@ const template: GameJson = {
                                   dataType: "boolean",
                                   overrideStep: {
                                     parent: 1,
-                                    step: 0,
+                                    step: 0x0,
                                   },
                                 },
                                 {
@@ -1346,7 +1346,7 @@ const template: GameJson = {
                                   dataType: "boolean",
                                   overrideStep: {
                                     parent: 1,
-                                    step: 0,
+                                    step: 0x0,
                                   },
                                 },
                                 {
@@ -1357,7 +1357,7 @@ const template: GameJson = {
                                   dataType: "boolean",
                                   overrideStep: {
                                     parent: 1,
-                                    step: 0,
+                                    step: 0x0,
                                   },
                                 },
                                 {
@@ -1368,7 +1368,7 @@ const template: GameJson = {
                                   dataType: "boolean",
                                   overrideStep: {
                                     parent: 1,
-                                    step: 0,
+                                    step: 0x0,
                                   },
                                 },
                                 {
@@ -1379,7 +1379,7 @@ const template: GameJson = {
                                   dataType: "boolean",
                                   overrideStep: {
                                     parent: 1,
-                                    step: 0,
+                                    step: 0x0,
                                   },
                                 },
                                 {
@@ -1390,7 +1390,7 @@ const template: GameJson = {
                                   dataType: "boolean",
                                   overrideStep: {
                                     parent: 1,
-                                    step: 0,
+                                    step: 0x0,
                                   },
                                 },
                               ],
@@ -1408,7 +1408,7 @@ const template: GameJson = {
                                   dataType: "boolean",
                                   overrideStep: {
                                     parent: 1,
-                                    step: 0,
+                                    step: 0x0,
                                   },
                                 },
                                 {
@@ -1419,7 +1419,7 @@ const template: GameJson = {
                                   dataType: "boolean",
                                   overrideStep: {
                                     parent: 1,
-                                    step: 0,
+                                    step: 0x0,
                                   },
                                 },
                                 {
@@ -1430,7 +1430,7 @@ const template: GameJson = {
                                   dataType: "boolean",
                                   overrideStep: {
                                     parent: 1,
-                                    step: 0,
+                                    step: 0x0,
                                   },
                                 },
                                 {
@@ -1441,7 +1441,7 @@ const template: GameJson = {
                                   dataType: "boolean",
                                   overrideStep: {
                                     parent: 1,
-                                    step: 0,
+                                    step: 0x0,
                                   },
                                 },
                                 {
@@ -1452,7 +1452,7 @@ const template: GameJson = {
                                   dataType: "boolean",
                                   overrideStep: {
                                     parent: 1,
-                                    step: 0,
+                                    step: 0x0,
                                   },
                                 },
                                 {
@@ -1463,7 +1463,7 @@ const template: GameJson = {
                                   dataType: "boolean",
                                   overrideStep: {
                                     parent: 1,
-                                    step: 0,
+                                    step: 0x0,
                                   },
                                 },
                                 {
@@ -1474,7 +1474,7 @@ const template: GameJson = {
                                   dataType: "boolean",
                                   overrideStep: {
                                     parent: 1,
-                                    step: 0,
+                                    step: 0x0,
                                   },
                                 },
                                 {
@@ -1485,7 +1485,7 @@ const template: GameJson = {
                                   dataType: "boolean",
                                   overrideStep: {
                                     parent: 1,
-                                    step: 0,
+                                    step: 0x0,
                                   },
                                 },
                                 {
@@ -1496,7 +1496,7 @@ const template: GameJson = {
                                   dataType: "boolean",
                                   overrideStep: {
                                     parent: 1,
-                                    step: 0,
+                                    step: 0x0,
                                   },
                                 },
                                 {
@@ -1507,7 +1507,7 @@ const template: GameJson = {
                                   dataType: "boolean",
                                   overrideStep: {
                                     parent: 1,
-                                    step: 0,
+                                    step: 0x0,
                                   },
                                 },
                                 {
@@ -1518,7 +1518,7 @@ const template: GameJson = {
                                   dataType: "boolean",
                                   overrideStep: {
                                     parent: 1,
-                                    step: 0,
+                                    step: 0x0,
                                   },
                                 },
                                 {
@@ -1529,7 +1529,7 @@ const template: GameJson = {
                                   dataType: "boolean",
                                   overrideStep: {
                                     parent: 1,
-                                    step: 0,
+                                    step: 0x0,
                                   },
                                 },
                                 {
@@ -1540,7 +1540,7 @@ const template: GameJson = {
                                   dataType: "boolean",
                                   overrideStep: {
                                     parent: 1,
-                                    step: 0,
+                                    step: 0x0,
                                   },
                                 },
                                 {
@@ -1551,7 +1551,7 @@ const template: GameJson = {
                                   dataType: "boolean",
                                   overrideStep: {
                                     parent: 1,
-                                    step: 0,
+                                    step: 0x0,
                                   },
                                 },
                                 {
@@ -1562,7 +1562,7 @@ const template: GameJson = {
                                   dataType: "boolean",
                                   overrideStep: {
                                     parent: 1,
-                                    step: 0,
+                                    step: 0x0,
                                   },
                                 },
                                 {
@@ -1573,7 +1573,7 @@ const template: GameJson = {
                                   dataType: "boolean",
                                   overrideStep: {
                                     parent: 1,
-                                    step: 0,
+                                    step: 0x0,
                                   },
                                 },
                                 {
@@ -1584,7 +1584,7 @@ const template: GameJson = {
                                   dataType: "boolean",
                                   overrideStep: {
                                     parent: 1,
-                                    step: 0,
+                                    step: 0x0,
                                   },
                                 },
                                 {
@@ -1595,7 +1595,7 @@ const template: GameJson = {
                                   dataType: "boolean",
                                   overrideStep: {
                                     parent: 1,
-                                    step: 0,
+                                    step: 0x0,
                                   },
                                 },
                                 {
@@ -1606,7 +1606,7 @@ const template: GameJson = {
                                   dataType: "boolean",
                                   overrideStep: {
                                     parent: 1,
-                                    step: 0,
+                                    step: 0x0,
                                   },
                                 },
                                 {
@@ -1617,7 +1617,7 @@ const template: GameJson = {
                                   dataType: "boolean",
                                   overrideStep: {
                                     parent: 1,
-                                    step: 0,
+                                    step: 0x0,
                                   },
                                 },
                                 {
@@ -1628,7 +1628,7 @@ const template: GameJson = {
                                   dataType: "boolean",
                                   overrideStep: {
                                     parent: 1,
-                                    step: 0,
+                                    step: 0x0,
                                   },
                                 },
                                 {
@@ -1639,7 +1639,7 @@ const template: GameJson = {
                                   dataType: "boolean",
                                   overrideStep: {
                                     parent: 1,
-                                    step: 0,
+                                    step: 0x0,
                                   },
                                 },
                                 {
@@ -1650,7 +1650,7 @@ const template: GameJson = {
                                   dataType: "boolean",
                                   overrideStep: {
                                     parent: 1,
-                                    step: 0,
+                                    step: 0x0,
                                   },
                                 },
                                 {
@@ -1661,7 +1661,7 @@ const template: GameJson = {
                                   dataType: "boolean",
                                   overrideStep: {
                                     parent: 1,
-                                    step: 0,
+                                    step: 0x0,
                                   },
                                 },
                                 {
@@ -1672,7 +1672,7 @@ const template: GameJson = {
                                   dataType: "boolean",
                                   overrideStep: {
                                     parent: 1,
-                                    step: 0,
+                                    step: 0x0,
                                   },
                                 },
                                 {
@@ -1683,7 +1683,7 @@ const template: GameJson = {
                                   dataType: "boolean",
                                   overrideStep: {
                                     parent: 1,
-                                    step: 0,
+                                    step: 0x0,
                                   },
                                 },
                                 {
@@ -1694,7 +1694,7 @@ const template: GameJson = {
                                   dataType: "boolean",
                                   overrideStep: {
                                     parent: 1,
-                                    step: 0,
+                                    step: 0x0,
                                   },
                                 },
                                 {
@@ -1705,7 +1705,7 @@ const template: GameJson = {
                                   dataType: "boolean",
                                   overrideStep: {
                                     parent: 1,
-                                    step: 0,
+                                    step: 0x0,
                                   },
                                 },
                                 {
@@ -1716,7 +1716,7 @@ const template: GameJson = {
                                   dataType: "boolean",
                                   overrideStep: {
                                     parent: 1,
-                                    step: 0,
+                                    step: 0x0,
                                   },
                                 },
                                 {
@@ -1727,7 +1727,7 @@ const template: GameJson = {
                                   dataType: "boolean",
                                   overrideStep: {
                                     parent: 1,
-                                    step: 0,
+                                    step: 0x0,
                                   },
                                 },
                                 {
@@ -1738,7 +1738,7 @@ const template: GameJson = {
                                   dataType: "boolean",
                                   overrideStep: {
                                     parent: 1,
-                                    step: 0,
+                                    step: 0x0,
                                   },
                                 },
                                 {
@@ -1749,7 +1749,7 @@ const template: GameJson = {
                                   dataType: "boolean",
                                   overrideStep: {
                                     parent: 1,
-                                    step: 0,
+                                    step: 0x0,
                                   },
                                 },
 
@@ -1761,7 +1761,7 @@ const template: GameJson = {
                                   dataType: "boolean",
                                   overrideStep: {
                                     parent: 1,
-                                    step: 0,
+                                    step: 0x0,
                                   },
                                 },
                                 {
@@ -1772,7 +1772,7 @@ const template: GameJson = {
                                   dataType: "boolean",
                                   overrideStep: {
                                     parent: 1,
-                                    step: 0,
+                                    step: 0x0,
                                   },
                                 },
                                 {
@@ -1783,7 +1783,7 @@ const template: GameJson = {
                                   dataType: "boolean",
                                   overrideStep: {
                                     parent: 1,
-                                    step: 0,
+                                    step: 0x0,
                                   },
                                 },
                                 {
@@ -1794,7 +1794,7 @@ const template: GameJson = {
                                   dataType: "boolean",
                                   overrideStep: {
                                     parent: 1,
-                                    step: 0,
+                                    step: 0x0,
                                   },
                                 },
                                 {
@@ -1805,7 +1805,7 @@ const template: GameJson = {
                                   dataType: "boolean",
                                   overrideStep: {
                                     parent: 1,
-                                    step: 0,
+                                    step: 0x0,
                                   },
                                 },
                                 {
@@ -1816,7 +1816,7 @@ const template: GameJson = {
                                   dataType: "boolean",
                                   overrideStep: {
                                     parent: 1,
-                                    step: 0,
+                                    step: 0x0,
                                   },
                                 },
                                 {
@@ -1827,7 +1827,7 @@ const template: GameJson = {
                                   dataType: "boolean",
                                   overrideStep: {
                                     parent: 1,
-                                    step: 0,
+                                    step: 0x0,
                                   },
                                 },
                                 {
@@ -1838,7 +1838,7 @@ const template: GameJson = {
                                   dataType: "boolean",
                                   overrideStep: {
                                     parent: 1,
-                                    step: 0,
+                                    step: 0x0,
                                   },
                                 },
                                 {
@@ -1849,7 +1849,7 @@ const template: GameJson = {
                                   dataType: "boolean",
                                   overrideStep: {
                                     parent: 1,
-                                    step: 0,
+                                    step: 0x0,
                                   },
                                 },
                                 {
@@ -1860,7 +1860,7 @@ const template: GameJson = {
                                   dataType: "boolean",
                                   overrideStep: {
                                     parent: 1,
-                                    step: 0,
+                                    step: 0x0,
                                   },
                                 },
                                 {
@@ -1871,7 +1871,7 @@ const template: GameJson = {
                                   dataType: "boolean",
                                   overrideStep: {
                                     parent: 1,
-                                    step: 0,
+                                    step: 0x0,
                                   },
                                 },
                                 {
@@ -1882,7 +1882,7 @@ const template: GameJson = {
                                   dataType: "boolean",
                                   overrideStep: {
                                     parent: 1,
-                                    step: 0,
+                                    step: 0x0,
                                   },
                                 },
                                 {
@@ -1893,7 +1893,7 @@ const template: GameJson = {
                                   dataType: "boolean",
                                   overrideStep: {
                                     parent: 1,
-                                    step: 0,
+                                    step: 0x0,
                                   },
                                 },
                                 {
@@ -1904,7 +1904,7 @@ const template: GameJson = {
                                   dataType: "boolean",
                                   overrideStep: {
                                     parent: 1,
-                                    step: 0,
+                                    step: 0x0,
                                   },
                                 },
                                 {
@@ -1915,7 +1915,7 @@ const template: GameJson = {
                                   dataType: "boolean",
                                   overrideStep: {
                                     parent: 1,
-                                    step: 0,
+                                    step: 0x0,
                                   },
                                 },
                               ],
