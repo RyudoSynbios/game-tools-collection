@@ -55,7 +55,8 @@ const template: GameJson = {
           name: "Survival",
           items: [
             {
-              type: "list",
+              type: "tabs",
+              vertical: true,
               items: [
                 {
                   name: "Break the car quickly",
@@ -329,7 +330,8 @@ const template: GameJson = {
           name: "Time Attack",
           items: [
             {
-              type: "list",
+              type: "tabs",
+              vertical: true,
               items: [
                 {
                   name: "Defeat 8 opponents",

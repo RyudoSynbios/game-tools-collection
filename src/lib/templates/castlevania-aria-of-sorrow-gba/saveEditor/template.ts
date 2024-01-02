@@ -214,7 +214,8 @@ const template: GameJson = {
               name: "Status",
               items: [
                 {
-                  type: "list",
+                  type: "tabs",
+                  vertical: true,
                   items: [
                     {
                       name: "General",
@@ -401,7 +402,8 @@ const template: GameJson = {
               name: "Souls",
               items: [
                 {
-                  type: "list",
+                  type: "tabs",
+                  vertical: true,
                   items: [
                     {
                       name: "Bullet Souls",
@@ -1227,7 +1229,8 @@ const template: GameJson = {
               name: "Inventory",
               items: [
                 {
-                  type: "list",
+                  type: "tabs",
+                  vertical: true,
                   items: [
                     {
                       name: "Weapons",

@@ -1,5 +1,5 @@
 <script lang="ts">
-  import List from "$lib/components/Items/List.svelte";
+  import Tabs from "$lib/components/Items/Tabs.svelte";
   import { gameJson } from "$lib/stores";
   import { getRegionArray } from "$lib/utils/format";
   import {
@@ -12,7 +12,7 @@
   } from "../template";
   import { pointerToOffset } from "../utils";
 
-  import type { ItemList } from "$lib/types";
+  import type { ItemTabs } from "$lib/types";
 
   let monsterNames: string[];
 
@@ -27,7 +27,7 @@
 
   const palettesOffset = pointerToOffset(pointerToMonsterPalettes);
 
-  let item: ItemList;
+  let item: ItemTabs;
 
   $: {
     $gameJson;
@@ -36,7 +36,8 @@
 
     item = {
       id: "monsters",
-      type: "list",
+      type: "tabs",
+      vertical: true,
       items: [...Array(81).keys()].map((index) => ({
         name: monsterNames[index],
         items: [
@@ -308,7 +309,7 @@
   }
 </script>
 
-<div><List {item} /></div>
+<div><Tabs {item} /></div>
 
 <style lang="postcss">
 </style>

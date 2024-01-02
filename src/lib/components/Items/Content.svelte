@@ -5,7 +5,6 @@
   import Component from "$lib/components/Items/Component.svelte";
   import Group from "$lib/components/Items/Group.svelte";
   import Int from "$lib/components/Items/Int.svelte";
-  import List from "$lib/components/Items/List.svelte";
   import Section from "$lib/components/Items/Section.svelte";
   import String from "$lib/components/Items/String.svelte";
   import Tabs from "$lib/components/Items/Tabs.svelte";
@@ -27,8 +26,6 @@
       <Component {item} />
     {:else if item.type === "group"}
       <Group {item} />
-    {:else if item.type === "list"}
-      <List {item} />
     {:else if item.type === "section"}
       <Section {item} />
     {:else if item.type === "tabs"}

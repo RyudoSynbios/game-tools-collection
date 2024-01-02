@@ -162,7 +162,8 @@ const template: GameJson = {
               name: "Levels",
               items: [
                 {
-                  type: "list",
+                  type: "tabs",
+                  vertical: true,
                   items: [
                     {
                       name: "Green Garden",

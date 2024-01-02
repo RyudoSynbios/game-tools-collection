@@ -269,9 +269,10 @@ const template: GameJson = {
                     {
                       length: 0x30,
                       type: "container",
-                      instanceType: "list",
+                      instanceType: "tabs",
                       instances: 8,
                       resource: "courses",
+                      vertical: true,
                       items: [
                         {
                           name: "1st Place",
@@ -496,9 +497,10 @@ const template: GameJson = {
                     {
                       length: 0x30,
                       type: "container",
-                      instanceType: "list",
+                      instanceType: "tabs",
                       instances: 8,
                       resource: "courses",
+                      vertical: true,
                       items: [
                         {
                           name: "1st Place",
@@ -639,9 +641,10 @@ const template: GameJson = {
                     {
                       length: 0x20,
                       type: "container",
-                      instanceType: "list",
+                      instanceType: "tabs",
                       instances: 3,
                       resource: "places",
+                      vertical: true,
                       items: [
                         {
                           type: "section",
@@ -743,7 +746,8 @@ const template: GameJson = {
           name: "Options",
           items: [
             {
-              type: "list",
+              type: "tabs",
+              vertical: true,
               items: [
                 {
                   name: "Sound",

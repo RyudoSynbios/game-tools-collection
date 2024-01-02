@@ -83,7 +83,8 @@ const template: GameJson = {
               name: "General",
               items: [
                 {
-                  type: "list",
+                  type: "tabs",
+                  vertical: true,
                   items: [
                     {
                       name: "General",
@@ -482,9 +483,10 @@ const template: GameJson = {
                 {
                   length: 0x14c,
                   type: "container",
-                  instanceType: "list",
+                  instanceType: "tabs",
                   instances: 8,
                   resource: "characters",
+                  vertical: true,
                   items: [
                     {
                       type: "tabs",

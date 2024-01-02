@@ -62,9 +62,10 @@ const template: GameJson = {
                     {
                       length: 0x20,
                       type: "container",
-                      instanceType: "list",
+                      instanceType: "tabs",
                       instances: 12,
                       resource: "characters",
+                      vertical: true,
                       flex: true,
                       items: [
                         {
@@ -98,9 +99,10 @@ const template: GameJson = {
                     {
                       length: 0x20,
                       type: "container",
-                      instanceType: "list",
+                      instanceType: "tabs",
                       instances: 12,
                       resource: "characters",
+                      vertical: true,
                       flex: true,
                       items: [
                         {
@@ -166,9 +168,10 @@ const template: GameJson = {
                     {
                       length: 0x20,
                       type: "container",
-                      instanceType: "list",
+                      instanceType: "tabs",
                       instances: 12,
                       resource: "characters",
+                      vertical: true,
                       flex: true,
                       items: [
                         {
@@ -238,9 +241,10 @@ const template: GameJson = {
             {
               length: 0x5c,
               type: "container",
-              instanceType: "list",
+              instanceType: "tabs",
               instances: 12,
               resource: "characters",
+              vertical: true,
               items: [
                 {
                   name: "Number of Kos against",

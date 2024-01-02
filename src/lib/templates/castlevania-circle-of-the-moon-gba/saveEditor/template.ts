@@ -137,7 +137,8 @@ const template: GameJson = {
               name: "Status",
               items: [
                 {
-                  type: "list",
+                  type: "tabs",
+                  vertical: true,
                   items: [
                     {
                       name: "General",
@@ -291,7 +292,8 @@ const template: GameJson = {
               name: "DSS",
               items: [
                 {
-                  type: "list",
+                  type: "tabs",
+                  vertical: true,
                   items: [
                     {
                       name: "DSS Action",
@@ -1054,7 +1056,8 @@ const template: GameJson = {
               name: "Inventory",
               items: [
                 {
-                  type: "list",
+                  type: "tabs",
+                  vertical: true,
                   items: [
                     {
                       name: "Equipment",
@@ -1513,7 +1516,8 @@ const template: GameJson = {
               name: "Events",
               items: [
                 {
-                  type: "list",
+                  type: "tabs",
+                  vertical: true,
                   items: [
                     {
                       name: "General",

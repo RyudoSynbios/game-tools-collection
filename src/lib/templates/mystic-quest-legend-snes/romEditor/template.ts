@@ -219,9 +219,10 @@ const template: GameJson = {
               pointerDataType: "uint16",
               length: 0x50,
               type: "container",
-              instanceType: "list",
+              instanceType: "tabs",
               instances: 9,
               resource: "characterNames",
+              vertical: true,
               items: [
                 {
                   type: "section",
@@ -507,9 +508,10 @@ const template: GameJson = {
               pointerDataType: "uint16",
               length: 0x4,
               type: "container",
-              instanceType: "list",
+              instanceType: "tabs",
               instances: 234,
               enumeration: "Group %d",
+              vertical: true,
               items: [
                 {
                   type: "section",
@@ -644,9 +646,10 @@ const template: GameJson = {
               instanceId: "battleBackgrounds",
               length: 0x3,
               type: "container",
-              instanceType: "list",
+              instanceType: "tabs",
               instances: 36,
               enumeration: "Background %d",
+              vertical: true,
               flex: true,
               items: [
                 {
@@ -711,9 +714,10 @@ const template: GameJson = {
               instanceId: "maps",
               length: 0x2,
               type: "container",
-              instanceType: "list",
+              instanceType: "tabs",
               instances: 255,
               enumeration: "Map %d",
+              vertical: true,
               flex: true,
               items: [
                 {

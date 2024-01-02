@@ -245,7 +245,8 @@ const template: GameJson = {
               name: "Status",
               items: [
                 {
-                  type: "list",
+                  type: "tabs",
+                  vertical: true,
                   items: [
                     {
                       name: "General",
@@ -484,7 +485,8 @@ const template: GameJson = {
               name: "Inventory",
               items: [
                 {
-                  type: "list",
+                  type: "tabs",
+                  vertical: true,
                   items: [
                     {
                       name: "Weapons",
@@ -2381,7 +2383,8 @@ const template: GameJson = {
               name: "Relics",
               items: [
                 {
-                  type: "list",
+                  type: "tabs",
+                  vertical: true,
                   items: [
                     {
                       name: "General",
@@ -2639,9 +2642,10 @@ const template: GameJson = {
                 {
                   length: 0xc,
                   type: "container",
-                  instanceType: "list",
+                  instanceType: "tabs",
                   instances: 7,
                   resource: "familiars",
+                  vertical: true,
                   flex: true,
                   items: [
                     {
@@ -3052,7 +3056,8 @@ const template: GameJson = {
               name: "System",
               items: [
                 {
-                  type: "list",
+                  type: "tabs",
+                  vertical: true,
                   items: [
                     {
                       name: "Button settings",

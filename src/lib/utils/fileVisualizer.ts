@@ -81,22 +81,8 @@ export function parseItem(
     item.items.forEach((subitem) => {
       parseItem(highlightedOffsets, subitem, item.name);
     });
-  } else if (item.type === "list" || item.type === "tabs") {
+  } else if (item.type === "tabs") {
     item.items.forEach((group) => {
-      if (
-        "disableElementIf" in group &&
-        group.disableElementIf &&
-        typeof group.disableElementIf !== "string" &&
-        !Array.isArray(group.disableElementIf)
-      ) {
-        parseItem(highlightedOffsets, {
-          ...(group.disableElementIf as ItemInt),
-          name: `disableElementIf value === ${group.disableElementIf.value.toHex(
-            2,
-          )}`,
-        });
-      }
-
       if (
         "disableTabIf" in group &&
         group.disableTabIf &&

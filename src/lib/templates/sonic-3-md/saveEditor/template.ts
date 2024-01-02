@@ -301,9 +301,10 @@ const template: GameJson = {
             {
               length: 0x10,
               type: "container",
-              instanceType: "list",
+              instanceType: "tabs",
               instances: 5,
               resource: "courses",
+              vertical: true,
               items: [
                 {
                   name: "1st Place",

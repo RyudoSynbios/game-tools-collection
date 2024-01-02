@@ -178,7 +178,8 @@ const template: GameJson = {
               flex: true,
               items: [
                 {
-                  type: "list",
+                  type: "tabs",
+                  vertical: true,
                   items: [
                     {
                       name: "Pink Plant Woods",

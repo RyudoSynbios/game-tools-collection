@@ -6,7 +6,6 @@ export type ContentType =
   | "component"
   | "container"
   | "group"
-  | "list"
   | "section"
   | "tabs"
   | "variable";
@@ -45,7 +44,6 @@ export type Item =
   | ItemContainer
   | ItemGroup
   | ItemInt
-  | ItemList
   | ItemSection
   | ItemString
   | ItemTabs;
@@ -174,12 +172,13 @@ export interface ItemContainer {
   type: "container";
   instanceId?: string;
   instances: number;
-  instanceType: "list" | "section" | "tabs";
+  instanceType: "section" | "tabs";
   enumeration?: string;
   disableSubinstanceIf?: ItemIntCondition | string;
-  prependSubinstance?: (ItemListElement | ItemTab)[];
-  appendSubinstance?: (ItemListElement | ItemTab)[];
+  prependSubinstance?: ItemTab[];
+  appendSubinstance?: ItemTab[];
   enumerationOrder?: number[];
+  vertical?: boolean;
   flex?: boolean;
   resource?: string;
   items: Item[];
@@ -231,25 +230,6 @@ export interface ItemIntCondition {
   value: number;
 }
 
-export interface ItemList {
-  id?: string;
-  type: "list";
-  enumeration?: string;
-  enumerationOrder?: number[];
-  resource?: string;
-  items: ItemListElement[];
-  hidden?: boolean;
-}
-
-export interface ItemListElement {
-  name: string;
-  flex?: boolean;
-  disableElementIf?: ItemIntCondition | string;
-  items: Item[];
-  disabled?: boolean;
-  hidden?: boolean;
-}
-
 export interface ItemSection {
   name?: string;
   type: "section";
@@ -290,6 +270,7 @@ export interface ItemTab {
 export interface ItemTabs {
   id?: string;
   type: "tabs";
+  vertical?: boolean;
   enumeration?: string;
   enumerationOrder?: number[];
   resource?: string;

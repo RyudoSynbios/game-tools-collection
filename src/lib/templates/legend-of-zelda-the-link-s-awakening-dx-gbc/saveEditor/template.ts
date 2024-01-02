@@ -52,7 +52,8 @@ const template: GameJson = {
               name: "General",
               items: [
                 {
-                  type: "list",
+                  type: "tabs",
+                  vertical: true,
                   items: [
                     {
                       name: "General",
@@ -220,7 +221,8 @@ const template: GameJson = {
               name: "Inventory",
               items: [
                 {
-                  type: "list",
+                  type: "tabs",
+                  vertical: true,
                   items: [
                     {
                       name: "Items",
@@ -621,9 +623,10 @@ const template: GameJson = {
                 {
                   length: 0x5,
                   type: "container",
-                  instanceType: "list",
+                  instanceType: "tabs",
                   instances: 9,
                   resource: "dungeons",
+                  vertical: true,
                   items: [
                     {
                       type: "section",

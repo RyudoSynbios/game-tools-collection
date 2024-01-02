@@ -129,7 +129,8 @@ const template: GameJson = {
               name: "General",
               items: [
                 {
-                  type: "list",
+                  type: "tabs",
+                  vertical: true,
                   items: [
                     {
                       name: "General",
@@ -463,7 +464,8 @@ const template: GameJson = {
               name: "Inventory",
               items: [
                 {
-                  type: "list",
+                  type: "tabs",
+                  vertical: true,
                   items: [
                     {
                       name: "Boss Remains",
@@ -1137,7 +1139,8 @@ const template: GameJson = {
               name: "Bombers",
               items: [
                 {
-                  type: "list",
+                  type: "tabs",
+                  vertical: true,
                   items: [
                     {
                       name: "General",
@@ -2309,7 +2312,8 @@ const template: GameJson = {
               name: "Dungeons",
               items: [
                 {
-                  type: "list",
+                  type: "tabs",
+                  vertical: true,
                   items: [
                     {
                       name: "Woodfall Temple",
@@ -2488,7 +2492,8 @@ const template: GameJson = {
               flex: true,
               items: [
                 {
-                  type: "list",
+                  type: "tabs",
+                  vertical: true,
                   items: [
                     {
                       name: "Miscellaneous",

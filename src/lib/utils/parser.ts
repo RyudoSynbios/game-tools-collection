@@ -230,6 +230,7 @@ export function parseContainer(
     enumeration: item.enumeration,
     enumerationOrder: item.enumerationOrder,
     resource: item.resource,
+    vertical: item.vertical,
     items: [],
   };
 
@@ -247,10 +248,11 @@ export function parseContainer(
     }
   }
 
-  if (["list", "tabs"].includes(item.instanceType) && item.prependSubinstance) {
+  if (item.instanceType === "tabs" && item.prependSubinstance) {
     item.prependSubinstance.forEach((subitem: any) => {
       parsedItem.items.push({
         name: subitem.name,
+        vertical: subitem.vertical,
         items: subitem.items
           ? subitem.items.reduce((results: any, subitem: any) => {
               const parsedItem = parseItem(
@@ -323,9 +325,7 @@ export function parseContainer(
         );
       }
 
-      if (item.instanceType === "list") {
-        parsedSubitem.disableElementIf = disableSubinstanceIf;
-      } else if (item.instanceType === "tabs") {
+      if (item.instanceType === "tabs") {
         parsedSubitem.disableTabIf = disableSubinstanceIf;
       }
     }
@@ -333,10 +333,11 @@ export function parseContainer(
     parsedItem.items.push(parsedSubitem);
   });
 
-  if (["list", "tabs"].includes(item.instanceType) && item.appendSubinstance) {
+  if (item.instanceType === "tabs" && item.appendSubinstance) {
     item.appendSubinstance.forEach((subitem: any) => {
       parsedItem.items.push({
         name: subitem.name,
+        vertical: subitem.vertical,
         items: subitem.items
           ? subitem.items.reduce((results: any, subitem: any) => {
               const parsedItem = parseItem(
@@ -370,7 +371,6 @@ export function checkMissingFields(item: Item): void {
       "component",
       "container",
       "group",
-      "list",
       "section",
       "tabs",
     ].includes(item.type) &&
@@ -380,7 +380,7 @@ export function checkMissingFields(item: Item): void {
   }
 
   if (
-    ["container", "group", "list", "section", "tabs"].includes(item.type) &&
+    ["container", "group", "section", "tabs"].includes(item.type) &&
     (item as any).items === undefined
   ) {
     errors.push("items");

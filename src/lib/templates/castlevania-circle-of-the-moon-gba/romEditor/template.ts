@@ -41,9 +41,10 @@ const template: GameJson = {
               pointerDataType: "uint24",
               length: 0x14,
               type: "container",
-              instanceType: "list",
+              instanceType: "tabs",
               instances: 142,
               resource: "monsterNames",
+              vertical: true,
               items: [
                 {
                   type: "section",

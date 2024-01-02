@@ -51,7 +51,8 @@ const template: GameJson = {
           name: "Records",
           items: [
             {
-              type: "list",
+              type: "tabs",
+              vertical: true,
               items: [
                 {
                   name: "Egg",

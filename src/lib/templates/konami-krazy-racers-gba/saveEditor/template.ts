@@ -435,7 +435,8 @@ const template: GameJson = {
               name: "Collectibles",
               items: [
                 {
-                  type: "list",
+                  type: "tabs",
+                  vertical: true,
                   items: [
                     {
                       name: "Ganbare Dochu 1",
@@ -784,7 +785,8 @@ const template: GameJson = {
               name: "Rumor Bills",
               items: [
                 {
-                  type: "list",
+                  type: "tabs",
+                  vertical: true,
                   items: [
                     {
                       name: "Unlocked",
@@ -988,12 +990,13 @@ const template: GameJson = {
             {
               length: 0x3c,
               type: "container",
-              instanceType: "list",
+              instanceType: "tabs",
               instances: 16,
               resource: "courses",
               enumerationOrder: [
                 1, 2, 13, 5, 8, 0, 9, 6, 11, 4, 10, 14, 3, 15, 12, 7,
               ],
+              vertical: true,
               items: [
                 {
                   name: "1st Place",

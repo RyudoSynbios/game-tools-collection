@@ -6,6 +6,7 @@
   import { gameJson, isDebug } from "$lib/stores";
   import { getBigInt, getInt } from "$lib/utils/bytes";
   import { generateIdFromArray, getUtils } from "$lib/utils/format";
+  import { scrollIntoViewIfNecessary } from "$lib/utils/ui";
   import { checkConditions } from "$lib/utils/validator";
 
   import type { ItemIntCondition, ItemTab, ItemTabs } from "$lib/types";
@@ -14,6 +15,10 @@
 
   type ItemTabtWithIndex = ItemTab & { index: number };
 
+  let rootEl: HTMLDivElement;
+  let ulEl: HTMLUListElement;
+  let innerHeight = 0;
+  let isFocused = false;
   let selectedTab = 0;
   let tabs: ItemTabtWithIndex[];
   let previousId = "";
@@ -53,7 +58,53 @@
     }
   }
 
+  function handleFocusOff(event: Event) {
+    if (!ulEl.contains(event.target as Element)) {
+      isFocused = false;
+    }
+  }
+
+  function handleFocusOn() {
+    isFocused = true;
+  }
+
+  function handleKeyDown(event: any): void {
+    if (!isFocused) {
+      return;
+    }
+
+    if (
+      event.key === "ArrowUp" ||
+      event.key === "ArrowRight" ||
+      event.key === "ArrowDown" ||
+      event.key === "ArrowLeft"
+    ) {
+      event.preventDefault();
+
+      if (event.key === "ArrowUp" || event.key === "ArrowLeft") {
+        handleTabClick(selectedTab - 1);
+      } else if (event.key === "ArrowRight" || event.key === "ArrowDown") {
+        handleTabClick(selectedTab + 1);
+      }
+
+      const selectedTabEl = ulEl?.children[selectedTab] as HTMLLIElement;
+
+      if (ulEl && selectedTabEl) {
+        scrollIntoViewIfNecessary(ulEl, selectedTabEl);
+      }
+    } else {
+      handleFocusOff(event);
+    }
+  }
+
   $: {
+    if (rootEl && item.vertical) {
+      const rootY = rootEl.getBoundingClientRect().y;
+      const rootHeight = innerHeight - rootY - 16;
+
+      rootEl.style.height = `${rootHeight}px`;
+    }
+
     let enumerationCount = 0;
 
     tabs = item.items.reduce((tabs: ItemTabtWithIndex[], tab, index) => {
@@ -130,11 +181,21 @@
   }
 </script>
 
-<div class="gtc-tabs">
-  <div class="gtc-tabs-list">
+<svelte:window
+  bind:innerHeight
+  on:click={handleFocusOff}
+  on:keydown={handleKeyDown}
+/>
+
+<div
+  class="gtc-tabs"
+  class:gtc-tabs-vertical={item.vertical}
+  bind:this={rootEl}
+>
+  <ul bind:this={ulEl} on:click={handleFocusOn}>
     {#each tabs as tab, index}
       {#if !tab.hidden || $isDebug}
-        <div
+        <li
           class="gtc-tab"
           class:gtc-tab-debug={tab.hidden}
           class:gtc-tab-disabled={tab.disabled}
@@ -146,10 +207,10 @@
           {#if tab.planned}
             <AccessTimeIcon />
           {/if}
-        </div>
+        </li>
       {/if}
     {/each}
-  </div>
+  </ul>
   <div class="gtc-tabs-content">
     {#if !tabs[selectedTab].disabled}
       <Content items={tabs[selectedTab].items} flex={tabs[selectedTab].flex} />
@@ -163,10 +224,10 @@
   .gtc-tabs {
     @apply flex-1;
 
-    & .gtc-tabs-list {
+    & > ul {
       @apply flex flex-wrap bg-primary-700 rounded overflow-hidden;
 
-      & .gtc-tab {
+      & > .gtc-tab {
         @apply flex items-center px-4 py-2 text-sm cursor-pointer;
 
         &:hover:not(.gtc-tab-debug):not(.gtc-tab-disabled):not(
@@ -191,14 +252,28 @@
           }
         }
 
-        & :global(svg) {
+        & > :global(svg) {
           @apply ml-1 w-4;
         }
       }
     }
 
-    & .gtc-tabs-content {
+    & > .gtc-tabs-content {
       @apply pt-4;
+    }
+
+    &.gtc-tabs-vertical {
+      @apply flex;
+
+      & > ul {
+        @apply block mr-4 no-scrollbar overflow-scroll;
+
+        min-width: 200px;
+      }
+
+      & > .gtc-tabs-content {
+        @apply flex-1 pt-0 overflow-scroll;
+      }
     }
   }
 </style>
