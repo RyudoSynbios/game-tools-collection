@@ -102,7 +102,7 @@ export function parseItem(
   let newItem = clone(item);
 
   if (utilsExists("overrideItem")) {
-    newItem = $gameUtils.overrideItem(newItem);
+    newItem = $gameUtils.overrideItem(newItem, instanceIndex);
   }
 
   if (Array.isArray(newItem)) {
