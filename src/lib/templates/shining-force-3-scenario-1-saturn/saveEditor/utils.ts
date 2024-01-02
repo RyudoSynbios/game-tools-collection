@@ -2,8 +2,11 @@ import { get } from "svelte/store";
 
 import { dataView } from "$lib/stores";
 import { getInt, setInt } from "$lib/utils/bytes";
+import { clone } from "$lib/utils/format";
 
-import type { Item, ItemChecksum, ItemInt } from "$lib/types";
+import type { Item, ItemChecksum, ItemInt, ItemTab } from "$lib/types";
+
+import template from "./template";
 
 export function beforeInitDataView(dataView: DataView): DataView {
   const array = [];
@@ -21,6 +24,52 @@ export function beforeInitDataView(dataView: DataView): DataView {
   uint8Array.set(array);
 
   return new DataView(uint8Array.buffer);
+}
+
+export function overrideItem(
+  item: Item & ItemTab,
+  instanceIndex: number,
+): Item | ItemTab {
+  if ("id" in item && item.id === "friendship") {
+    const itemTab = item as ItemTab;
+    const itemInt = itemTab.items[0] as ItemInt;
+
+    itemTab.items = [];
+
+    if (template.resources) {
+      let offset =
+        itemInt.offset + instanceIndex * (Math.max(0, instanceIndex - 1) / 2);
+
+      for (
+        let i = 0;
+        i < Object.keys(template.resources.characters).length - 1;
+        i += 1
+      ) {
+        const characterIndexReached = i >= instanceIndex;
+        const characterIndex = i + (characterIndexReached ? 1 : 0);
+        const newItemInt = clone(itemInt);
+
+        if (i > 0 && (!characterIndexReached || i === instanceIndex)) {
+          offset += 1;
+        }
+
+        if (characterIndexReached) {
+          offset += characterIndex - 1;
+        }
+
+        newItemInt.name = template.resources.characters[
+          characterIndex
+        ] as string;
+        newItemInt.offset = offset;
+
+        itemTab.items.push(newItemInt);
+      }
+    }
+
+    return itemTab;
+  }
+
+  return item;
 }
 
 export function afterSetInt(item: Item): void {

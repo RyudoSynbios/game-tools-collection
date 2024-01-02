@@ -565,6 +565,24 @@ const template: GameJson = {
                           ],
                         },
                         {
+                          id: "friendship",
+                          name: "Friendship",
+                          flex: true,
+                          items: [
+                            {
+                              name: "Dummy",
+                              offset: 0x80c,
+                              type: "variable",
+                              dataType: "uint8",
+                              max: 45,
+                              overrideStep: {
+                                parent: 1,
+                                step: 0x0,
+                              },
+                            },
+                          ],
+                        },
+                        {
                           name: "Miscellaneous",
                           flex: true,
                           items: [
