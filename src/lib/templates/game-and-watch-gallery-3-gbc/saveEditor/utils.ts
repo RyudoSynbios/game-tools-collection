@@ -9,9 +9,9 @@ export function overrideGetInt(
     const itemInt = item as ItemInt;
 
     const digit1 = getInt(itemInt.offset, "uint8");
-    const digit2 = getInt(itemInt.offset + 1, "uint8");
-    const digit3 = getInt(itemInt.offset + 2, "uint8");
-    const digit4 = getInt(itemInt.offset + 3, "uint8");
+    const digit2 = getInt(itemInt.offset + 0x1, "uint8");
+    const digit3 = getInt(itemInt.offset + 0x2, "uint8");
+    const digit4 = getInt(itemInt.offset + 0x3, "uint8");
 
     let int = 0;
 

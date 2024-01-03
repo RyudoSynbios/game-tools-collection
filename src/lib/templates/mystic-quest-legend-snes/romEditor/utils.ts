@@ -320,8 +320,8 @@ export function getMonsterSpriteSize(index: number): [number, number] {
 
   while (width + height === 0) {
     if (index <= getInt(spriteSizesOffset, "uint8")) {
-      width = getInt(spriteSizesOffset + 4, "uint8") * 8;
-      height = getInt(spriteSizesOffset + 5, "uint8") * 8;
+      width = getInt(spriteSizesOffset + 0x4, "uint8") * 8;
+      height = getInt(spriteSizesOffset + 0x5, "uint8") * 8;
     }
 
     spriteSizesOffset += 0x9;

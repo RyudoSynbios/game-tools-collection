@@ -22,49 +22,49 @@ const template: GameJson = {
             {
               $and: [
                 {
-                  offset: 0x0b4,
+                  offset: 0xb4,
                   type: "variable",
                   dataType: "uint8",
                   value: 0xff,
                 },
                 {
-                  offset: 0x0bc,
+                  offset: 0xbc,
                   type: "variable",
                   dataType: "uint8",
                   value: 0xff,
                 },
                 {
-                  offset: 0x0c4,
+                  offset: 0xc4,
                   type: "variable",
                   dataType: "uint8",
                   value: 0xff,
                 },
                 {
-                  offset: 0x0cc,
+                  offset: 0xcc,
                   type: "variable",
                   dataType: "uint8",
                   value: 0xff,
                 },
                 {
-                  offset: 0x0d4,
+                  offset: 0xd4,
                   type: "variable",
                   dataType: "uint8",
                   value: 0xff,
                 },
                 {
-                  offset: 0x0dc,
+                  offset: 0xdc,
                   type: "variable",
                   dataType: "uint8",
                   value: 0xff,
                 },
                 {
-                  offset: 0x0e4,
+                  offset: 0xe4,
                   type: "variable",
                   dataType: "uint8",
                   value: 0xff,
                 },
                 {
-                  offset: 0x0e6,
+                  offset: 0xe6,
                   type: "variable",
                   dataType: "uint8",
                   value: 0xff,

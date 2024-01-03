@@ -137,7 +137,7 @@
     // Tiles Chunks
 
     const tilemapCorrespondanceIndex =
-      getInt(mapSettingsOffset, "uint8") & 0x0f;
+      getInt(mapSettingsOffset, "uint8") & 0xf;
 
     const tileIndexOffset =
       tilesChunkOffset + tilemapCorrespondanceIndex * 0x200;
@@ -165,7 +165,7 @@
         const tilemapChunkIndex = Math.floor((tileIndex >> 4) / 2);
         const tilePosition =
           tileIndex &
-          (0x0f + ((tileIndex >> 4) - tilemapChunkIndex * 2) * 0x10);
+          (0xf + ((tileIndex >> 4) - tilemapChunkIndex * 2) * 0x10);
 
         let paletteIndex = 0;
 

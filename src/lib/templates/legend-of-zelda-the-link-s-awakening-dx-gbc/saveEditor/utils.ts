@@ -7,7 +7,7 @@ export function afterSetInt(item: Item): void {
     const itemInt = item as ItemInt;
 
     let health = getInt(itemInt.offset, "uint8");
-    const healthMax = getInt(itemInt.offset + 1, "uint8");
+    const healthMax = getInt(itemInt.offset + 0x1, "uint8");
 
     health = Math.min(health, healthMax * 8);
 
@@ -15,11 +15,11 @@ export function afterSetInt(item: Item): void {
   } else if ("id" in item && item.id === "healthMax") {
     const itemInt = item as ItemInt;
 
-    let health = getInt(itemInt.offset - 1, "uint8");
+    let health = getInt(itemInt.offset - 0x1, "uint8");
     const healthMax = getInt(itemInt.offset, "uint8");
 
     health = Math.min(health, healthMax * 8);
 
-    setInt(itemInt.offset - 1, "uint8", health);
+    setInt(itemInt.offset - 0x1, "uint8", health);
   }
 }

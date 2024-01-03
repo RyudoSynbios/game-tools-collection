@@ -27,7 +27,7 @@ export function afterSetInt(item: Item): void {
 
     const emeralds = getInt(flag.offset, "uint8").toBitCount();
 
-    setInt(flag.offset - 1, "uint8", emeralds);
+    setInt(flag.offset - 0x1, "uint8", emeralds);
   }
 }
 

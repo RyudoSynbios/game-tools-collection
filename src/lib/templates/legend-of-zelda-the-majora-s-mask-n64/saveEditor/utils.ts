@@ -348,7 +348,7 @@ export function afterSetInt(item: Item): void {
     const itemInt = item as ItemInt;
 
     let health = getInt(itemInt.offset, "uint16");
-    const healthMax = getInt(itemInt.offset + 2, "uint16");
+    const healthMax = getInt(itemInt.offset + 0x2, "uint16");
 
     health = Math.min(health, healthMax);
 
@@ -356,12 +356,12 @@ export function afterSetInt(item: Item): void {
   } else if ("id" in item && item.id === "healthMax") {
     const itemInt = item as ItemInt;
 
-    let health = getInt(itemInt.offset - 2, "uint16");
+    let health = getInt(itemInt.offset - 0x2, "uint16");
     const healthMax = getInt(itemInt.offset, "uint16");
 
     health = Math.min(health, healthMax);
 
-    setInt(itemInt.offset - 2, "uint16", health);
+    setInt(itemInt.offset - 0x2, "uint16", health);
 
     let int = 0;
 
@@ -376,7 +376,7 @@ export function afterSetInt(item: Item): void {
     const itemInt = item as ItemInt;
 
     let magic = getInt(itemInt.offset, "uint8");
-    const magicMax = getInt(itemInt.offset + 1, "uint8");
+    const magicMax = getInt(itemInt.offset + 0x1, "uint8");
 
     if (magicMax === 0x1) {
       magic = Math.min(48, magic);

@@ -36,34 +36,32 @@ export function overrideItem(
 
     itemTab.items = [];
 
-    if (template.resources) {
-      let offset =
-        itemInt.offset + instanceIndex * (Math.max(0, instanceIndex - 1) / 2);
+    let offset =
+      itemInt.offset + instanceIndex * (Math.max(0, instanceIndex - 1) / 2);
 
-      for (
-        let i = 0;
-        i < Object.keys(template.resources.characters).length - 1;
-        i += 1
-      ) {
-        const characterIndexReached = i >= instanceIndex;
-        const characterIndex = i + (characterIndexReached ? 1 : 0);
-        const newItemInt = clone(itemInt);
+    for (
+      let i = 0;
+      i < Object.keys(template.resources!.characters).length - 1;
+      i += 1
+    ) {
+      const characterIndexReached = i >= instanceIndex;
+      const characterIndex = i + (characterIndexReached ? 1 : 0);
+      const newItemInt = clone(itemInt);
 
-        if (i > 0 && (!characterIndexReached || i === instanceIndex)) {
-          offset += 1;
-        }
-
-        if (characterIndexReached) {
-          offset += characterIndex - 1;
-        }
-
-        newItemInt.name = template.resources.characters[
-          characterIndex
-        ] as string;
-        newItemInt.offset = offset;
-
-        itemTab.items.push(newItemInt);
+      if (i > 0 && (!characterIndexReached || i === instanceIndex)) {
+        offset += 1;
       }
+
+      if (characterIndexReached) {
+        offset += characterIndex - 1;
+      }
+
+      newItemInt.name = template.resources!.characters[
+        characterIndex
+      ] as string;
+      newItemInt.offset = offset;
+
+      itemTab.items.push(newItemInt);
     }
 
     return itemTab;
@@ -78,7 +76,7 @@ export function afterSetInt(item: Item): void {
 
     const value = getInt(itemInt.offset, "uint8");
 
-    setInt(itemInt.offset + 4, "uint8", value);
+    setInt(itemInt.offset + 0x4, "uint8", value);
   }
 }
 

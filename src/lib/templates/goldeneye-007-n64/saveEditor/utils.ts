@@ -14,9 +14,8 @@ import type {
 import template from "./template";
 
 export function overrideGetRegions(dataView: DataView): string[] {
-  const itemChecksum = clone(
-    (template.items[0] as ItemContainer).items[0],
-  ) as ItemChecksum;
+  const itemChecksum = (template.items[0] as ItemContainer)
+    .items[0] as ItemChecksum;
 
   const checksum = generateChecksum(itemChecksum, dataView);
 
@@ -48,7 +47,7 @@ export function overrideParseContainerItemsSteps(
 function getTime(offset: number, mode: string, timeUnit: TimeUnit): number {
   let int = 0;
   let byte1 = getInt(offset, "uint8");
-  let byte2 = getInt(offset + 1, "uint8");
+  let byte2 = getInt(offset + 0x1, "uint8");
 
   switch (mode) {
     case "time-1":
@@ -95,7 +94,7 @@ export function overrideGetInt(
   } else if ("id" in item && item.id === "ratio") {
     const itemInt = item as ItemInt;
 
-    const ratioCinema = getInt(itemInt.offset - 1, "bit", { bit: 3 });
+    const ratioCinema = getInt(itemInt.offset - 0x1, "bit", { bit: 3 });
 
     if (ratioCinema) {
       return [true, 0x8];
@@ -122,7 +121,7 @@ export function overrideSetInt(item: Item, value: string): boolean {
     base = Math.min(base, 1023); // seconds max
 
     let byte1 = getInt(itemInt.offset, "uint8");
-    let byte2 = getInt(itemInt.offset + 1, "uint8");
+    let byte2 = getInt(itemInt.offset + 0x1, "uint8");
 
     if (item.id === "time-1") {
       base <<= 6;
@@ -167,16 +166,16 @@ export function overrideSetInt(item: Item, value: string): boolean {
     const itemInt = item as ItemInt;
 
     const int = parseInt(value);
-    const controlStyle = getInt(itemInt.offset - 1, "uint8");
-    const ratioCinema = getInt(itemInt.offset - 1, "bit", { bit: 3 });
+    const controlStyle = getInt(itemInt.offset - 0x1, "uint8");
+    const ratioCinema = getInt(itemInt.offset - 0x1, "bit", { bit: 3 });
 
     if (int === 0x8 && !ratioCinema) {
-      setInt(itemInt.offset - 1, "uint8", controlStyle + 0x8);
+      setInt(itemInt.offset - 0x1, "uint8", controlStyle + 0x8);
       setInt(itemInt.offset, "bit", 0, { bit: 7 });
 
       return true;
     } else if (ratioCinema) {
-      setInt(itemInt.offset - 1, "uint8", controlStyle - 0x8);
+      setInt(itemInt.offset - 0x1, "uint8", controlStyle - 0x8);
       setInt(itemInt.offset, "bit", int, { bit: 7 });
 
       return true;

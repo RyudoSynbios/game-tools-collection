@@ -30,12 +30,12 @@ export function afterSetInt(item: Item): void {
 
     const worlds = [
       getInt(offset, "uint8"),
-      getInt(offset + 1, "uint8"),
-      getInt(offset + 5, "uint8"),
-      getInt(offset + 6, "uint8"),
-      getInt(offset + 7, "uint8"),
-      getInt(offset + 8, "uint8"),
-      getInt(offset + 9, "uint8"),
+      getInt(offset + 0x1, "uint8"),
+      getInt(offset + 0x5, "uint8"),
+      getInt(offset + 0x6, "uint8"),
+      getInt(offset + 0x7, "uint8"),
+      getInt(offset + 0x8, "uint8"),
+      getInt(offset + 0x9, "uint8"),
     ];
 
     worlds.forEach((world, index) => {
