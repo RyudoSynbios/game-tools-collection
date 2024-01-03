@@ -21,7 +21,10 @@ const template: GameJson = {
       offset: 0x12,
       type: "checksum",
       dataType: "uint16",
-      control: { offset: 0x14, length: 0x9b },
+      control: {
+        offset: 0x14,
+        length: 0x9b,
+      },
     },
     {
       length: 0x30,
