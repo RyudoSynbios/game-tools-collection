@@ -105,18 +105,6 @@ export function parseItem(
     newItem = $gameUtils.overrideItem(newItem, instanceIndex);
   }
 
-  if (Array.isArray(newItem)) {
-    return newItem.map((obj) => {
-      const key = objGetKey(obj, 0);
-
-      const parsedItems = obj[key].map((subitem: Item) =>
-        parseItem(subitem, steps, instanceId, instanceIndex),
-      );
-
-      return { [key]: parsedItems } as Item;
-    });
-  }
-
   if ((newItem as any).id !== undefined) {
     (newItem as any).id = (newItem as any).id.replace("%index%", instanceIndex);
   }
@@ -316,6 +304,23 @@ export function parseContainer(
 
       if (typeof item.disableSubinstanceIf === "string") {
         disableSubinstanceIf = item.disableSubinstanceIf;
+      } else if (Array.isArray(item.disableSubinstanceIf)) {
+        disableSubinstanceIf = item.disableSubinstanceIf.map((obj) => {
+          const operand = objGetKey(obj, 0);
+
+          if (operand === "$and" || operand === "$or") {
+            const parsedItems = obj[operand]!.map((subitem) =>
+              parseItem(
+                subitem as Item,
+                instanceSteps,
+                instanceId,
+                instanceIndex,
+              ),
+            );
+
+            return { [operand]: parsedItems };
+          }
+        });
       } else {
         disableSubinstanceIf = parseItem(
           item.disableSubinstanceIf,
