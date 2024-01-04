@@ -26,6 +26,7 @@
     "Italy",
     "Spain",
     "Australia",
+    "Canada",
   ];
 
   regionsFormatted.sort(
