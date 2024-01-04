@@ -62,7 +62,8 @@
       & :global(.gtc-select) {
         @apply m-0;
 
-        & :global(input[type="number"]) {
+        & :global(input[type="number"]),
+        & :global(select) {
           width: initial;
         }
       }
