@@ -345,87 +345,6 @@ const template: GameJson = {
                           ],
                         },
                         {
-                          name: "Quantites",
-                          type: "section",
-                          flex: true,
-                          items: [
-                            {
-                              name: "Magic Powder",
-                              offset: 0x451,
-                              type: "variable",
-                              dataType: "uint8",
-                              binaryCodedDecimal: true,
-                            },
-                            {
-                              name: "Bombs",
-                              offset: 0x452,
-                              type: "variable",
-                              dataType: "uint8",
-                              binaryCodedDecimal: true,
-                            },
-                            {
-                              name: "Arrows",
-                              offset: 0x44a,
-                              type: "variable",
-                              dataType: "uint8",
-                              binaryCodedDecimal: true,
-                            },
-                          ],
-                        },
-                        {
-                          name: "Max Quantites",
-                          type: "section",
-                          flex: true,
-                          items: [
-                            {
-                              name: "Magic Powder",
-                              offset: 0x47b,
-                              type: "variable",
-                              dataType: "uint8",
-                              binaryCodedDecimal: true,
-                            },
-                            {
-                              name: "Bombs",
-                              offset: 0x47c,
-                              type: "variable",
-                              dataType: "uint8",
-                              binaryCodedDecimal: true,
-                            },
-                            {
-                              name: "Arrows",
-                              offset: 0x47d,
-                              type: "variable",
-                              dataType: "uint8",
-                              binaryCodedDecimal: true,
-                            },
-                          ],
-                        },
-                        {
-                          name: "Items Power",
-                          type: "section",
-                          flex: true,
-                          items: [
-                            {
-                              name: "Sword Level",
-                              offset: 0x453,
-                              type: "variable",
-                              dataType: "uint8",
-                            },
-                            {
-                              name: "Shield Level",
-                              offset: 0x449,
-                              type: "variable",
-                              dataType: "uint8",
-                            },
-                            {
-                              name: "Power Bracelet Level",
-                              offset: 0x448,
-                              type: "variable",
-                              dataType: "uint8",
-                            },
-                          ],
-                        },
-                        {
                           type: "section",
                           flex: true,
                           items: [
@@ -441,29 +360,119 @@ const template: GameJson = {
                       ],
                     },
                     {
-                      name: "Ocarina",
+                      name: "Quantities",
+                      flex: true,
                       items: [
                         {
-                          name: "Ocarina",
-                          type: "section",
-                          flex: true,
+                          name: "Magic Powder",
+                          type: "group",
+                          mode: "fraction",
                           items: [
                             {
-                              name: "Selected Song",
-                              offset: 0x44f,
+                              id: "magicPowder",
+                              offset: 0x451,
                               type: "variable",
                               dataType: "uint8",
-                              resource: "songs",
+                              binaryCodedDecimal: true,
                             },
                             {
-                              name: "Unlocked Songs",
-                              type: "bitflags",
-                              flags: [
-                                { offset: 0x44e, bit: 2, label: "Ballad of the Wind Fish" },
-                                { offset: 0x44e, bit: 1, label: "Manbo's Mambo" },
-                                { offset: 0x44e, bit: 0, label: "Frog's Song of Soul" },
-                              ],
+                              id: "magicPowderMax",
+                              offset: 0x47b,
+                              type: "variable",
+                              dataType: "uint8",
+                              binaryCodedDecimal: true,
                             },
+                          ],
+                        },
+                        {
+                          name: "Bombs",
+                          type: "group",
+                          mode: "fraction",
+                          items: [
+                            {
+                              id: "bombs",
+                              offset: 0x452,
+                              type: "variable",
+                              dataType: "uint8",
+                              binaryCodedDecimal: true,
+                            },
+                            {
+                              id: "bombsMax",
+                              offset: 0x47c,
+                              type: "variable",
+                              dataType: "uint8",
+                              binaryCodedDecimal: true,
+                            },
+                          ],
+                        },
+                        {
+                          name: "Arrows",
+                          type: "group",
+                          mode: "fraction",
+                          items: [
+                            {
+                              id: "arrows",
+                              offset: 0x44a,
+                              type: "variable",
+                              dataType: "uint8",
+                              binaryCodedDecimal: true,
+                            },
+                            {
+                              id: "arrowsMax",
+                              offset: 0x47d,
+                              type: "variable",
+                              dataType: "uint8",
+                              binaryCodedDecimal: true,
+                            },
+                          ],
+                        },
+                      ],
+                    },
+                    {
+                      name: "Items Power",
+                      flex: true,
+                      items: [
+                        {
+                          name: "Sword Level",
+                          offset: 0x453,
+                          type: "variable",
+                          dataType: "uint8",
+                          max: 2,
+                        },
+                        {
+                          name: "Shield Level",
+                          offset: 0x449,
+                          type: "variable",
+                          dataType: "uint8",
+                          max: 2,
+                        },
+                        {
+                          name: "Bracelet Level",
+                          offset: 0x448,
+                          type: "variable",
+                          dataType: "uint8",
+                          max: 2,
+                        },
+                      ],
+                    },
+                    {
+                      name: "Ocarina",
+                      flex: true,
+                      items: [
+                        {
+                          name: "Selected Song",
+                          offset: 0x44f,
+                          type: "variable",
+                          dataType: "uint8",
+                          resource: "songs",
+                        },
+                        {
+                          name: "Unlocked Songs",
+                          type: "bitflags",
+                          flags: [
+                            { offset: 0x44e, bit: 2, label: "Ballad of the Wind Fish" },
+                            { offset: 0x44e, bit: 1, label: "Manbo's Mambo" },
+                            { offset: 0x44e, bit: 0, label: "Frog's Song of Soul" },
                           ],
                         },
                       ],
