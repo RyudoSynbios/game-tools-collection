@@ -99,6 +99,14 @@
     }
   },
   {
+    "id": "legend-of-zelda-the-a-link-to-the-past-snes",
+    "name": "Legend of Zelda, The: A Link to the Past",
+    "consoleId": "super-nintendo",
+    "saveEditor": {
+      "regions": ["🇪🇺", "🇺🇸", "🇯🇵", "🇫🇷", "🇩🇪", "🇨🇦"]
+    }
+  },
+  {
     "id": "legend-of-zelda-the-link-s-awakening-dx-gbc",
     "name": "Legend of Zelda, The: Link's Awakening DX",
     "consoleId": "game-boy-color",
