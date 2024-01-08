@@ -234,6 +234,7 @@ export function generateChecksum(
     if (item.id === "checksum1-2") {
       base -= 0xd8769a8;
     }
+
     checksum = base + ((checksum * 2) & 0xffffffff);
   }
 

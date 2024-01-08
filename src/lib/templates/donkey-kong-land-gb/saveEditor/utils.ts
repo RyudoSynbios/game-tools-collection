@@ -3,8 +3,8 @@ import { getInt } from "$lib/utils/bytes";
 import type { ItemChecksum } from "$lib/types";
 
 export function generateChecksum(item: ItemChecksum): number {
-  let checksumByte1 = 0x00;
-  let checksumByte2 = 0x00;
+  let checksumByte1 = 0x0;
+  let checksumByte2 = 0x0;
 
   for (
     let i = item.control.offset;
@@ -17,7 +17,5 @@ export function generateChecksum(item: ItemChecksum): number {
     }
   }
 
-  const checksum = (checksumByte1 << 8) + checksumByte2;
-
-  return checksum;
+  return (checksumByte1 << 8) + checksumByte2;
 }
