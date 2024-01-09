@@ -1,6 +1,6 @@
-import { getBitflag, getInt, setInt, setString } from "$lib/utils/bytes";
+import { getInt, setInt, setString } from "$lib/utils/bytes";
+import { checkPlaystationSlots } from "$lib/utils/common";
 import { getItem } from "$lib/utils/parser";
-import { checkPlaystationSlots } from "$lib/utils/validator";
 
 import type {
   Item,

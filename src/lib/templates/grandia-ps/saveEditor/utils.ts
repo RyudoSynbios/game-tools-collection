@@ -2,7 +2,7 @@ import { get } from "svelte/store";
 
 import { gameJson, gameRegion } from "$lib/stores";
 import { getInt, setInt, setString } from "$lib/utils/bytes";
-import { checkPlaystationSlots } from "$lib/utils/validator";
+import { checkPlaystationSlots } from "$lib/utils/common";
 
 import type { Bit, Item, ItemInt } from "$lib/types";
 
