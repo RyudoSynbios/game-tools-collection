@@ -231,6 +231,7 @@ export interface ItemIntCondition {
 }
 
 export interface ItemSection {
+  id?: string;
   name?: string;
   type: "section";
   background?: boolean;
