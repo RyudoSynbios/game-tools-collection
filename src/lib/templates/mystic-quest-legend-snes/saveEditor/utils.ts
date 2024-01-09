@@ -70,37 +70,21 @@ export function afterSetInt(item: Item): void {
 }
 
 export function generateChecksum(item: ItemChecksum): number {
-  let checksumByte1 = 0x00;
-  let checksumByte2 = 0x00;
+  let checksum = 0x0;
 
   for (
     let i = item.control.offset;
     i < item.control.offset + item.control.length;
-    i += 0x1
+    i += 0x2
   ) {
     if (i >= item.offset + 0x2) {
-      if (i % 2 === 0) {
-        checksumByte1 += getInt(i, "uint8");
-      } else {
-        checksumByte2 += getInt(i, "uint8");
-      }
+      checksum += getInt(i, "uint16");
     }
   }
 
-  let carry1 = 1;
-  let carry2 = 1;
-
-  while (carry1 + carry2 > 0) {
-    carry1 = checksumByte1 >> 8;
-    checksumByte1 -= carry1 << 8;
-    checksumByte2 += carry1;
-
-    carry2 = checksumByte2 >> 8;
-    checksumByte2 -= carry2 << 8;
-    checksumByte1 += carry2;
+  while (checksum > 0x10000) {
+    checksum = (checksum & 0xffff) + (checksum >> 16);
   }
-
-  const checksum = (checksumByte2 << 8) + checksumByte1;
 
   return checksum;
 }
