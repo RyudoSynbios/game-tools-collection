@@ -13,6 +13,7 @@
   import { getRegionIndex, getRegions } from "$lib/utils/validator";
 
   export let logo = "";
+  export let name = "";
 
   let inputEl: HTMLInputElement;
   let isDragging = false;
@@ -111,7 +112,7 @@
     on:dragover|preventDefault={handleDragOver}
     on:drop|preventDefault={handleDrop}
   >
-    <img src={logo} alt="logo" />
+    <img src={logo} alt={name} />
     {#if isDragging}
       <p>Drop the file here.</p>
     {:else if !$fileIsLoading}

@@ -6,11 +6,14 @@
 
 <div class="gtc-tile">
   <div class="gtc-tile-image">
-    <img src="/img/games/{game.id}/background.png" alt={game.id} />
+    <img
+      src="/img/games/{game.id}/background.png"
+      alt="{game.name} ({game.console.name})"
+    />
     <img
       class="gtc-tile-logo"
       src="/img/games/{game.id}/logo.png"
-      alt={game.id}
+      alt="{game.name} ({game.console.name})"
     />
   </div>
   <div class="gtc-tile-content">

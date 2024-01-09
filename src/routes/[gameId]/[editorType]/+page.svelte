@@ -99,11 +99,17 @@
 <div class="gtc-editor">
   {#if $dataView.byteLength === 0}
     <div class="gtc-editor-dropzone">
-      <Dropzone logo="/img/games/{game.id}/logo.png" />
+      <Dropzone
+        logo="/img/games/{game.id}/logo.png"
+        name="{game.name} ({game.console.name})"
+      />
     </div>
   {:else}
     <div class="gtc-editor-banner">
-      <img src="/img/games/{game.id}/logo.png" alt={game.id} />
+      <img
+        src="/img/games/{game.id}/logo.png"
+        alt="{game.name} ({game.console.name})"
+      />
       <div>
         {#if $isDebug}
           <button
