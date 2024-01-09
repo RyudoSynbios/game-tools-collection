@@ -1,6 +1,6 @@
 import { get } from "svelte/store";
 
-import { gameJson } from "$lib/stores";
+import { gameJson, gameRegion } from "$lib/stores";
 import { getInt, setInt, setString } from "$lib/utils/bytes";
 import { checkPlaystationSlots } from "$lib/utils/validator";
 
@@ -14,8 +14,10 @@ import {
   usaValidator,
 } from "./template";
 
-export function initSteps(region: number): number[] {
-  if (region === 1 || region == 2) {
+export function initSteps(): number[] {
+  const $gameRegion = get(gameRegion);
+
+  if ($gameRegion === 1 || $gameRegion == 2) {
     return [0x180];
   }
 

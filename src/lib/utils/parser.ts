@@ -28,7 +28,6 @@ import type {
 let checksums: ItemChecksum[];
 
 export function enrichGameJson(): void {
-  const $gameRegion = get(gameRegion);
   const $gameTemplate = get(gameTemplate);
   const $gameUtils = get(gameUtils) as any;
 
@@ -37,7 +36,7 @@ export function enrichGameJson(): void {
   let steps: number[] = [];
 
   if (utilsExists("initSteps")) {
-    steps = $gameUtils.initSteps($gameRegion);
+    steps = $gameUtils.initSteps();
   }
 
   const items = $gameTemplate.items.reduce((items: Item[], item) => {
