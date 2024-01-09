@@ -2,7 +2,7 @@ import { get } from "svelte/store";
 
 import { gameTemplate } from "$lib/stores";
 import { getInt } from "$lib/utils/bytes";
-import { objGetKey } from "$lib/utils/format";
+import { getObjKey } from "$lib/utils/format";
 
 export function checkConditions(conditions: any, callback: any): boolean {
   if (!Array.isArray(conditions)) {
@@ -15,7 +15,7 @@ export function checkConditions(conditions: any, callback: any): boolean {
     }
   } else if (conditions.length === 1) {
     const condition = conditions[0];
-    const operand = objGetKey(condition, 0);
+    const operand = getObjKey(condition, 0);
 
     if (operand === "$and" || operand === "$or") {
       if (operand === "$and") {
@@ -74,7 +74,7 @@ export function getRegions(dataView: DataView, shift = 0x0): string[] {
     (regions: string[], [region, conditions]) => {
       if (
         checkConditions(conditions, (condition: any) => {
-          const offset = parseInt(objGetKey(condition, 0));
+          const offset = parseInt(getObjKey(condition, 0));
           const array = condition[offset];
           const length = array.length;
 

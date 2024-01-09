@@ -10,9 +10,9 @@ import {
 import { getInt } from "$lib/utils/bytes";
 import {
   clone,
+  getObjKey,
   getRegionArray,
   getUtils,
-  objGetKey,
   utilsExists,
 } from "$lib/utils/format";
 
@@ -306,7 +306,7 @@ export function parseContainer(
         disableSubinstanceIf = item.disableSubinstanceIf;
       } else if (Array.isArray(item.disableSubinstanceIf)) {
         disableSubinstanceIf = item.disableSubinstanceIf.map((obj) => {
-          const operand = objGetKey(obj, 0);
+          const operand = getObjKey(obj, 0);
 
           if (operand === "$and" || operand === "$or") {
             const parsedItems = obj[operand]!.map((subitem) =>

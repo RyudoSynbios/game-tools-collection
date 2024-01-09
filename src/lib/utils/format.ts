@@ -93,7 +93,7 @@ export function getRegionArray<T>(array: T[]): T {
 }
 
 export function isPartial(operations: IntOperation[] = []): boolean {
-  return operations.some((operation) => objGetKey(operation, 0) === "convert");
+  return operations.some((operation) => getObjKey(operation, 0) === "convert");
 }
 
 export function makeOperations(
@@ -103,7 +103,7 @@ export function makeOperations(
 ): number {
   if (Array.isArray(operations)) {
     operations.forEach((operation) => {
-      const operationSymbol = objGetKey(operation, 0);
+      const operationSymbol = getObjKey(operation, 0);
 
       switch (operationSymbol) {
         case "+":
@@ -159,7 +159,7 @@ export function makeOperations(
   return value;
 }
 
-export function objGetKey(obj: Object, index: number): string {
+export function getObjKey(obj: Object, index: number): string {
   const keys = Object.keys(obj);
 
   if (keys.length >= index) {

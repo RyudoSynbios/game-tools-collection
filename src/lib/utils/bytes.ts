@@ -9,10 +9,10 @@ import {
   isDirty,
 } from "$lib/stores";
 import {
+  getObjKey,
   getRegionArray,
   isPartial,
   makeOperations,
-  objGetKey,
 } from "$lib/utils/format";
 
 import type { Bit, DataType, GameJson, IntOperation } from "$lib/types";
@@ -540,7 +540,7 @@ export function setString(
       let int = fallback;
 
       if (index !== -1) {
-        int = parseInt(objGetKey(resource, index));
+        int = parseInt(getObjKey(resource, index));
       }
 
       setInt(i, letterDataType, int);
