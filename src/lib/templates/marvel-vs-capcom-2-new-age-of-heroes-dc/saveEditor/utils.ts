@@ -9,7 +9,7 @@ import {
   generateVmuChecksum,
   isDciFile,
   vmuToDataView,
-} from "$lib/utils/common";
+} from "$lib/utils/common/dreamcast";
 import { getObjKey } from "$lib/utils/format";
 
 import type { Item, ItemChecksum, ItemInt, ItemSection } from "$lib/types";

@@ -10,7 +10,7 @@ import {
   setInt,
   setString,
 } from "$lib/utils/bytes";
-import { extractN64DexDriveHeader } from "$lib/utils/common";
+import { extractN64DexDriveHeader } from "$lib/utils/common/nintendo64";
 import { getStep } from "$lib/utils/parser";
 import { getRegions } from "$lib/utils/validator";
 

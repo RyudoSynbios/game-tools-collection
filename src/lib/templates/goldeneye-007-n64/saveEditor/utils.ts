@@ -1,7 +1,7 @@
 import Long from "long";
 
 import { getInt, setInt } from "$lib/utils/bytes";
-import { extractN64DexDriveHeader } from "$lib/utils/common";
+import { extractN64DexDriveHeader } from "$lib/utils/common/nintendo64";
 import { makeOperations } from "$lib/utils/format";
 
 import type {

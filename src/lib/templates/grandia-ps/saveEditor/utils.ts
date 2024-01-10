@@ -5,7 +5,7 @@ import { getInt, setInt, setString } from "$lib/utils/bytes";
 import {
   checkPlaystationSlots,
   extractPsDexDriveHeader,
-} from "$lib/utils/common";
+} from "$lib/utils/common/playstation";
 
 import type { Bit, Item, ItemInt } from "$lib/types";
 

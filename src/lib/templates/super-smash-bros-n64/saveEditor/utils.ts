@@ -2,7 +2,7 @@ import { get } from "svelte/store";
 
 import { dataView } from "$lib/stores";
 import { getInt } from "$lib/utils/bytes";
-import { extractN64DexDriveHeader } from "$lib/utils/common";
+import { extractN64DexDriveHeader } from "$lib/utils/common/nintendo64";
 import { clone } from "$lib/utils/format";
 
 import type { ItemChecksum } from "$lib/types";

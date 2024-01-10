@@ -1,5 +1,5 @@
 import { getInt, setInt } from "$lib/utils/bytes";
-import { extractN64DexDriveHeader } from "$lib/utils/common";
+import { extractN64DexDriveHeader } from "$lib/utils/common/nintendo64";
 
 import type { Item, ItemChecksum, ItemInt } from "$lib/types";
 

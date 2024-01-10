@@ -2,7 +2,7 @@ import { getInt, setInt, setString } from "$lib/utils/bytes";
 import {
   checkPlaystationSlots,
   extractPsDexDriveHeader,
-} from "$lib/utils/common";
+} from "$lib/utils/common/playstation";
 import { getItem } from "$lib/utils/parser";
 
 import type {

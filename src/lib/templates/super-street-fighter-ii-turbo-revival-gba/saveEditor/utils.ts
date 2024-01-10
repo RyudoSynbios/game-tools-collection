@@ -1,5 +1,5 @@
 import { getInt, setInt } from "$lib/utils/bytes";
-import { extractGbaGameSharkHeader } from "$lib/utils/common";
+import { extractGbaGameSharkHeader } from "$lib/utils/common/gameBoyAdvance";
 
 import type { Item, ItemChecksum, ItemInt } from "$lib/types";
 
