@@ -26,37 +26,62 @@ const template: GameJson = {
     regions: {
       europe: [
         {
-          $or: [...Array(15).keys()].map((index) => ({
-            [0x8a + index * 0x80]: europeValidator,
-          })),
+          $and: [
+            { 0x0: [0x4d, 0x43] },
+            {
+              $or: [...Array(15).keys()].map((index) => ({
+                [0x8a + index * 0x80]: europeValidator,
+              })),
+            },
+          ],
         },
       ],
       usa: [
         {
-          $or: [...Array(15).keys()].map((index) => ({
-            [0x8a + index * 0x80]: usaValidator,
-          })),
+          $and: [
+            { 0x0: [0x4d, 0x43] },
+            {
+              $or: [...Array(15).keys()].map((index) => ({
+                [0x8a + index * 0x80]: usaValidator,
+              })),
+            },
+          ],
         },
       ],
       japan: [
         {
-          $or: [...Array(15).keys()].map((index) => ({
-            [0x8a + index * 0x80]: japanValidator,
-          })),
+          $and: [
+            { 0x0: [0x4d, 0x43] },
+            {
+              $or: [...Array(15).keys()].map((index) => ({
+                [0x8a + index * 0x80]: japanValidator,
+              })),
+            },
+          ],
         },
       ],
       france: [
         {
-          $or: [...Array(15).keys()].map((index) => ({
-            [0x8a + index * 0x80]: franceValidator,
-          })),
+          $and: [
+            { 0x0: [0x4d, 0x43] },
+            {
+              $or: [...Array(15).keys()].map((index) => ({
+                [0x8a + index * 0x80]: franceValidator,
+              })),
+            },
+          ],
         },
       ],
       germany: [
         {
-          $or: [...Array(15).keys()].map((index) => ({
-            [0x8a + index * 0x80]: germanyValidator,
-          })),
+          $and: [
+            { 0x0: [0x4d, 0x43] },
+            {
+              $or: [...Array(15).keys()].map((index) => ({
+                [0x8a + index * 0x80]: germanyValidator,
+              })),
+            },
+          ],
         },
       ],
     },
