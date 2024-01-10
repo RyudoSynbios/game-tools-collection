@@ -19,7 +19,7 @@
   let inputEl: HTMLInputElement;
   let isDragging = false;
   let dataViewTmp: DataView | undefined;
-  let gameHeaderTmp: Uint8Array;
+  let gameHeaderTmp = new Uint8Array();
   let fileNameTmp = "";
   let regions: string[] = [];
   let error = "";
