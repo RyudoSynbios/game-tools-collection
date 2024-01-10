@@ -3,6 +3,7 @@ import { get } from "svelte/store";
 import {
   dataView,
   fileName,
+  gameHeader,
   gameJson,
   gameRegion,
   isDebug,
@@ -20,6 +21,7 @@ import type { Bit, DataType, GameJson, IntOperation } from "$lib/types";
 export function resetState(): void {
   dataView.set(new DataView(new ArrayBuffer(0)));
   fileName.set("");
+  gameHeader.set(new Uint8Array());
   gameJson.set({} as GameJson);
   gameRegion.set(-1);
   isDirty.set(false);

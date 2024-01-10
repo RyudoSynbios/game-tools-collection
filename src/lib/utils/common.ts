@@ -14,7 +14,7 @@ export function vmuToDataView(dataView: DataView): DataView {
   const blocks = dataView.byteLength / 0x200;
 
   if (blocks !== 256) {
-    return dataView;
+    return [dataView, new Uint8Array()];
   }
 
   for (let i = dataView.byteLength - 0x200; i >= 0; i -= 0x200) {
@@ -27,7 +27,7 @@ export function vmuToDataView(dataView: DataView): DataView {
 
   uint8Array.set(array);
 
-  return new DataView(uint8Array.buffer);
+  return [new DataView(uint8Array.buffer), new Uint8Array()];
 }
 
 export function dataViewToVmu(): ArrayBufferLike {

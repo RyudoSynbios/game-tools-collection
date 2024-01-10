@@ -8,7 +8,7 @@ import type { Item, ItemChecksum, ItemInt, ItemTab } from "$lib/types";
 
 import template from "./template";
 
-export function beforeInitDataView(dataView: DataView): DataView {
+export function beforeInitDataView(dataView: DataView): [DataView, Uint8Array] {
   const array = [];
 
   for (let i = 0x0; i < dataView.byteLength; i += 0x1) {
@@ -23,7 +23,7 @@ export function beforeInitDataView(dataView: DataView): DataView {
 
   uint8Array.set(array);
 
-  return new DataView(uint8Array.buffer);
+  return [new DataView(uint8Array.buffer), new Uint8Array()];
 }
 
 export function overrideItem(

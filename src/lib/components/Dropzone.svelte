@@ -4,6 +4,7 @@
     dataView,
     fileIsLoading,
     fileName,
+    gameHeader,
     gameRegion,
     gameTemplate,
     gameUtils,
@@ -18,6 +19,7 @@
   let inputEl: HTMLInputElement;
   let isDragging = false;
   let dataViewTmp: DataView | undefined;
+  let gameHeaderTmp: Uint8Array;
   let fileNameTmp = "";
   let regions: string[] = [];
   let error = "";
@@ -61,7 +63,8 @@
       fileNameTmp = file.name;
 
       if (utilsExists("beforeInitDataView")) {
-        dataViewTmp = $gameUtils.beforeInitDataView(dataViewTmp);
+        [dataViewTmp, gameHeaderTmp] =
+          $gameUtils.beforeInitDataView(dataViewTmp);
       }
 
       if (utilsExists("overrideGetRegions")) {
@@ -88,6 +91,7 @@
     if (regionIndex !== -1) {
       $dataView = dataViewTmp as DataView;
       $fileName = fileNameTmp;
+      $gameHeader = gameHeaderTmp;
       $gameRegion = regionIndex;
 
       enrichGameJson();

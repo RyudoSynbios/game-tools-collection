@@ -11,7 +11,7 @@ import { getObjKey } from "$lib/utils/format";
 
 import type { Item, ItemChecksum, ItemInt, ItemSection } from "$lib/types";
 
-export function beforeInitDataView(dataView: DataView): DataView {
+export function beforeInitDataView(dataView: DataView): [DataView, Uint8Array] {
   return vmuToDataView(dataView);
 }
 

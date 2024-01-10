@@ -14,6 +14,7 @@
     dataView,
     fileName,
     gameJson,
+    gameHeader,
     gameTemplate,
     gameUtils,
     isDebug,
@@ -67,6 +68,15 @@
 
     if (utilsExists("beforeSaving")) {
       buffer = $gameUtils.beforeSaving();
+    }
+
+    if ($gameHeader.byteLength > 0) {
+      const bufferHeadered = new Uint8Array([
+        ...$gameHeader,
+        ...new Uint8Array(buffer),
+      ]);
+
+      buffer = bufferHeadered.buffer;
     }
 
     const blob = new Blob([buffer], {
