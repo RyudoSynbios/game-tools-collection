@@ -7,7 +7,7 @@
 
 <div class="gtc-faq">
   <h1>FAQ</h1>
-  <h2>How can i repair my corrupted save?</h2>
+  <h2>- How can i repair my corrupted save?</h2>
   <p>
     Most games use checksums to validate if a save has been altered or not.
     Checksums are values calculated by making more or less complex operations on
@@ -25,7 +25,7 @@
     corrupted.
   </p>
   <h2>
-    Is it possible to load save files made with GameSharks or other products?
+    - Is it possible to load save files made with GameSharks or other products?
   </h2>
   <p>In most cases, yes.</p>
   <p>
@@ -37,6 +37,14 @@
     you can contact me at <a href="mailto:contact@game-tools-collection.com">
       contact@game-tools-collection.com
     </a>.
+  </p>
+  <h2>
+    - How can i edit PlayStation Classic save files (from PSP, PS Vita and
+    PlayStation 3)?
+  </h2>
+  <p>
+    At the moment, the tools does not support those kind of save files but you
+    can easily find softwares to convert your save to <strong>.mcr</strong> file.
   </p>
 </div>
 
