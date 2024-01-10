@@ -2,6 +2,7 @@ import { get } from "svelte/store";
 
 import { dataView } from "$lib/stores";
 import { getInt, getString, setInt, setString } from "$lib/utils/bytes";
+import { extractN64DexDriveHeader } from "$lib/utils/common";
 import { clone } from "$lib/utils/format";
 
 import type {
@@ -13,6 +14,10 @@ import type {
 } from "$lib/types";
 
 import template from "./template";
+
+export function beforeInitDataView(dataView: DataView): [DataView, Uint8Array] {
+  return extractN64DexDriveHeader(dataView);
+}
 
 export function overrideGetRegions(dataView: DataView): string[] {
   let shift = 0x0;

@@ -1,6 +1,11 @@
 import { getInt, setInt } from "$lib/utils/bytes";
+import { extractN64DexDriveHeader } from "$lib/utils/common";
 
 import type { Item, ItemChecksum, ItemInt } from "$lib/types";
+
+export function beforeInitDataView(dataView: DataView): [DataView, Uint8Array] {
+  return extractN64DexDriveHeader(dataView);
+}
 
 export function overrideGetInt(
   item: Item,

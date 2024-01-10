@@ -10,6 +10,7 @@ import {
   setInt,
   setString,
 } from "$lib/utils/bytes";
+import { extractN64DexDriveHeader } from "$lib/utils/common";
 import { getStep } from "$lib/utils/parser";
 import { getRegions } from "$lib/utils/validator";
 
@@ -21,6 +22,10 @@ import type {
   ItemInt,
   ItemString,
 } from "$lib/types";
+
+export function beforeInitDataView(dataView: DataView): [DataView, Uint8Array] {
+  return extractN64DexDriveHeader(dataView);
+}
 
 export function overrideGetRegions(dataView: DataView): string[] {
   let shift = 0x0;

@@ -1,7 +1,8 @@
 import Long from "long";
 
 import { getInt, setInt } from "$lib/utils/bytes";
-import { clone, makeOperations } from "$lib/utils/format";
+import { extractN64DexDriveHeader } from "$lib/utils/common";
+import { makeOperations } from "$lib/utils/format";
 
 import type {
   Item,
@@ -12,6 +13,10 @@ import type {
 } from "$lib/types";
 
 import template from "./template";
+
+export function beforeInitDataView(dataView: DataView): [DataView, Uint8Array] {
+  return extractN64DexDriveHeader(dataView);
+}
 
 export function overrideGetRegions(dataView: DataView): string[] {
   const itemChecksum = (template.items[0] as ItemContainer)
