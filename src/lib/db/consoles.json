@@ -25,6 +25,11 @@
     "manufacturerId": "nintendo"
   },
   {
+    "id": "dreamcast",
+    "name": "Dreamcast",
+    "manufacturerId": "sega"
+  },
+  {
     "id": "mega-drive",
     "name": "Mega Drive",
     "manufacturerId": "sega"

@@ -123,6 +123,14 @@
     }
   },
   {
+    "id": "marvel-vs-capcom-2-new-age-of-heroes-dc",
+    "name": "Marvel vs. Capcom 2: New Age of Heroes",
+    "consoleId": "dreamcast",
+    "saveEditor": {
+      "regions": ["🇪🇺", "🇺🇸", "🇯🇵"]
+    }
+  },
+  {
     "id": "mystic-quest-legend-snes",
     "name": "Mystic Quest Legend",
     "consoleId": "super-nintendo",
