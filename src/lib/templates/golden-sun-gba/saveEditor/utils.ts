@@ -1,7 +1,5 @@
-import { get } from "svelte/store";
-
-import { gameJson } from "$lib/stores";
 import { extractBit, getInt, setInt } from "$lib/utils/bytes";
+import { extractGbaGameSharkHeader } from "$lib/utils/common";
 import { getItem, getStep } from "$lib/utils/parser";
 
 import type {
@@ -13,6 +11,10 @@ import type {
   ItemContainer,
   ItemInt,
 } from "$lib/types";
+
+export function beforeInitDataView(dataView: DataView): [DataView, Uint8Array] {
+  return extractGbaGameSharkHeader(dataView);
+}
 
 export function overrideStep(item: Item, steps: number[]): number[] {
   if (

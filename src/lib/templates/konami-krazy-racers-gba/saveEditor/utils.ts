@@ -1,6 +1,11 @@
 import { getInt } from "$lib/utils/bytes";
+import { extractGbaGameSharkHeader } from "$lib/utils/common";
 
 import type { ItemChecksum } from "$lib/types";
+
+export function beforeInitDataView(dataView: DataView): [DataView, Uint8Array] {
+  return extractGbaGameSharkHeader(dataView);
+}
 
 export function generateChecksum(item: ItemChecksum): number {
   let checksum = 0xffff;

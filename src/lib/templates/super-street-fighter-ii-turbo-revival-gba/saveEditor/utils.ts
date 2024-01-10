@@ -1,6 +1,11 @@
 import { getInt, setInt } from "$lib/utils/bytes";
+import { extractGbaGameSharkHeader } from "$lib/utils/common";
 
 import type { Item, ItemChecksum, ItemInt } from "$lib/types";
+
+export function beforeInitDataView(dataView: DataView): [DataView, Uint8Array] {
+  return extractGbaGameSharkHeader(dataView);
+}
 
 export function initSteps(): number[] {
   const section1Saves = getInt(0xc, "uint32", { bigEndian: true });
