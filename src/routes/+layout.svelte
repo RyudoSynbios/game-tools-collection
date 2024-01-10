@@ -35,7 +35,10 @@
   <div class="gtc-header">
     <div class="gtc-header-inner">
       <a href="/">Game Tools Collection</a>
-      <a href="/about">About</a>
+      <div>
+        <a href="/faq">FAQ</a>
+        <a href="/about">About</a>
+      </div>
     </div>
   </div>
   <div class="gtc-body">
@@ -54,6 +57,10 @@
 
       & .gtc-header-inner {
         @apply relative mx-auto flex justify-between w-full max-w-7xl;
+
+        & div a:not(:last-child) {
+          @apply mr-4;
+        }
       }
     }
 
