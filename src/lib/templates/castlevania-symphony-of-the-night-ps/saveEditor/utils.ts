@@ -2,7 +2,10 @@ import { get } from "svelte/store";
 
 import { gameRegion } from "$lib/stores";
 import { getInt, getString, setInt, setString } from "$lib/utils/bytes";
-import { checkPlaystationSlots } from "$lib/utils/common";
+import {
+  checkPlaystationSlots,
+  extractPsDexDriveHeader,
+} from "$lib/utils/common";
 
 import type { Item, ItemInt, ItemString } from "$lib/types";
 
@@ -12,6 +15,10 @@ import template, {
   japanValidator,
   usaValidator,
 } from "./template";
+
+export function beforeInitDataView(dataView: DataView): [DataView, Uint8Array] {
+  return extractPsDexDriveHeader(dataView);
+}
 
 export function initSteps(): number[] {
   const $gameRegion = get(gameRegion);

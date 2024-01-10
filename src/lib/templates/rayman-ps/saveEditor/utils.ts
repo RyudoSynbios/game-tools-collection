@@ -1,5 +1,8 @@
 import { getInt, setInt, setString } from "$lib/utils/bytes";
-import { checkPlaystationSlots } from "$lib/utils/common";
+import {
+  checkPlaystationSlots,
+  extractPsDexDriveHeader,
+} from "$lib/utils/common";
 import { getItem } from "$lib/utils/parser";
 
 import type {
@@ -11,6 +14,10 @@ import type {
 } from "$lib/types";
 
 import { europeValidator, japanValidator, usaValidator } from "./template";
+
+export function beforeInitDataView(dataView: DataView): [DataView, Uint8Array] {
+  return extractPsDexDriveHeader(dataView);
+}
 
 export function checkSlots(index: number): boolean {
   return !checkPlaystationSlots(index, [
