@@ -96,9 +96,7 @@ export function vmuToDataView(dataView: DataView): DataView {
     }
   }
 
-  const uint8Array = new Uint8Array(array.length);
-
-  uint8Array.set(array);
+  const uint8Array = new Uint8Array(array);
 
   return [new DataView(uint8Array.buffer), new Uint8Array()];
 }
@@ -114,9 +112,7 @@ export function dataViewToVmu(): ArrayBufferLike {
     }
   }
 
-  const uint8Array = new Uint8Array(array.length);
-
-  uint8Array.set(array);
+  const uint8Array = new Uint8Array(array);
 
   return uint8Array.buffer;
 }
