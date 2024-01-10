@@ -1,32 +1,39 @@
 import type { GameJson } from "$lib/types";
 
+export const europeUsaValidator = [
+  0x4d, 0x56, 0x4c, 0x56, 0x53, 0x43, 0x50, 0x32, 0x5f, 0x53, 0x59, 0x53,
+];
+export const japanValidator = [
+  0x4d, 0x56, 0x4c, 0x56, 0x53, 0x2e, 0x43, 0x32, 0x5f, 0x53, 0x59, 0x53,
+];
+
 const template: GameJson = {
   validator: {
     regions: {
       europe_usa: [
         {
-          $or: [...Array(100).keys()].map((index) => ({
-            [0x400 + index * 0x20 + 0x4]: [
-              0x4d, 0x56, 0x4c, 0x56, 0x53, 0x43, 0x50, 0x32, 0x5f, 0x53, 0x59,
-              0x53,
-            ],
-          })),
+          $or: [
+            { 0x4: europeUsaValidator },
+            ...[...Array(100).keys()].map((index) => ({
+              [0x400 + index * 0x20 + 0x4]: europeUsaValidator,
+            })),
+          ],
         },
       ],
       japan: [
         {
-          $or: [...Array(100).keys()].map((index) => ({
-            [0x400 + index * 0x20 + 0x4]: [
-              0x4d, 0x56, 0x4c, 0x56, 0x53, 0x2e, 0x43, 0x32, 0x5f, 0x53, 0x59,
-              0x53,
-            ],
-          })),
+          $or: [
+            { 0x4: japanValidator },
+            ...[...Array(100).keys()].map((index) => ({
+              [0x400 + index * 0x20 + 0x4]: japanValidator,
+            })),
+          ],
         },
       ],
     },
     text: "Drag 'n' drop here or click to add a save file.",
     error:
-      "Not a valid save file.<br />Currently this save editor only works with 128 KB VMU raw dump (.bin files).",
+      "Not a valid save file.<br />Currently this save editor only works with DCI (.dci files) and 128 KB VMU raw dump (.bin files).",
   },
   items: [
     {

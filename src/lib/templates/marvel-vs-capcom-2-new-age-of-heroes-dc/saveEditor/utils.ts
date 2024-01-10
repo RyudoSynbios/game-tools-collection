@@ -3,8 +3,11 @@ import { get } from "svelte/store";
 import { dataView, gameRegion, gameTemplate } from "$lib/stores";
 import { getInt, setInt } from "$lib/utils/bytes";
 import {
+  dataViewToDci,
   dataViewToVmu,
+  dciToDataView,
   generateVmuChecksum,
+  isDciFile,
   vmuToDataView,
 } from "$lib/utils/common";
 import { getObjKey } from "$lib/utils/format";
@@ -12,6 +15,10 @@ import { getObjKey } from "$lib/utils/format";
 import type { Item, ItemChecksum, ItemInt, ItemSection } from "$lib/types";
 
 export function beforeInitDataView(dataView: DataView): [DataView, Uint8Array] {
+  if (isDciFile(dataView)) {
+    return dciToDataView(dataView);
+  }
+
   return vmuToDataView(dataView);
 }
 
@@ -19,6 +26,10 @@ export function initSteps(): number[] {
   const $dataView = get(dataView);
   const $gameRegion = get(gameRegion);
   const $gameTemplate = get(gameTemplate);
+
+  if (isDciFile()) {
+    return [0x20];
+  }
 
   const region = Object.values($gameTemplate.validator.regions)[$gameRegion];
 
@@ -134,5 +145,9 @@ export function generateChecksum(item: ItemChecksum): number {
 }
 
 export function beforeSaving(): ArrayBufferLike {
+  if (isDciFile()) {
+    return dataViewToDci();
+  }
+
   return dataViewToVmu();
 }
