@@ -22,48 +22,88 @@ const template: GameJson = {
     regions: {
       europe: [
         {
-          $and: [
-            { 0x0: [0x4d, 0x43] },
+          $or: [
             {
-              $or: [...Array(15).keys()].map((index) => ({
-                [0x8a + index * 0x80]: europeValidator,
-              })),
+              $and: [
+                { 0x0: [0x0, 0x56, 0x53, 0x50, 0x0] },
+                { 0x64: europeValidator },
+              ],
+            },
+            {
+              $and: [
+                { 0x0: [0x4d, 0x43] },
+                {
+                  $or: [...Array(15).keys()].map((index) => ({
+                    [0x8a + index * 0x80]: europeValidator,
+                  })),
+                },
+              ],
             },
           ],
         },
       ],
       usa: [
         {
-          $and: [
-            { 0x0: [0x4d, 0x43] },
+          $or: [
             {
-              $or: [...Array(15).keys()].map((index) => ({
-                [0x8a + index * 0x80]: usaValidator,
-              })),
+              $and: [
+                { 0x0: [0x0, 0x56, 0x53, 0x50, 0x0] },
+                { 0x64: usaValidator },
+              ],
+            },
+            {
+              $and: [
+                { 0x0: [0x4d, 0x43] },
+                {
+                  $or: [...Array(15).keys()].map((index) => ({
+                    [0x8a + index * 0x80]: usaValidator,
+                  })),
+                },
+              ],
             },
           ],
         },
       ],
       japan: [
         {
-          $and: [
-            { 0x0: [0x4d, 0x43] },
+          $or: [
             {
-              $or: [...Array(15).keys()].map((index) => ({
-                [0x8a + index * 0x80]: japanValidator,
-              })),
+              $and: [
+                { 0x0: [0x0, 0x56, 0x53, 0x50, 0x0] },
+                { 0x64: japanValidator },
+              ],
+            },
+            {
+              $and: [
+                { 0x0: [0x4d, 0x43] },
+                {
+                  $or: [...Array(15).keys()].map((index) => ({
+                    [0x8a + index * 0x80]: japanValidator,
+                  })),
+                },
+              ],
             },
           ],
         },
       ],
       asia: [
         {
-          $and: [
-            { 0x0: [0x4d, 0x43] },
+          $or: [
             {
-              $or: [...Array(15).keys()].map((index) => ({
-                [0x8a + index * 0x80]: asiaValidator,
-              })),
+              $and: [
+                { 0x0: [0x0, 0x56, 0x53, 0x50, 0x0] },
+                { 0x64: asiaValidator },
+              ],
+            },
+            {
+              $and: [
+                { 0x0: [0x4d, 0x43] },
+                {
+                  $or: [...Array(15).keys()].map((index) => ({
+                    [0x8a + index * 0x80]: asiaValidator,
+                  })),
+                },
+              ],
             },
           ],
         },

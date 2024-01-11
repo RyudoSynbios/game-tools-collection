@@ -4,6 +4,7 @@ import {
   getDexDriveHeaderShift,
   getVmpHeaderShift,
   isDexDriveHeader,
+  isPsvHeader,
   isVmpHeader,
 } from "$lib/utils/common/playstation";
 import { getItem } from "$lib/utils/parser";
@@ -26,6 +27,14 @@ export function initHeaderShift(dataView: DataView): number {
   }
 
   return 0x0;
+}
+
+export function initShifts(shifts: number[]): number[] {
+  if (isPsvHeader()) {
+    return [...shifts, -0x1f7c];
+  }
+
+  return shifts;
 }
 
 export function checkSlots(index: number): boolean {

@@ -7,6 +7,7 @@ import {
   getDexDriveHeaderShift,
   getVmpHeaderShift,
   isDexDriveHeader,
+  isPsvHeader,
   isVmpHeader,
 } from "$lib/utils/common/playstation";
 
@@ -32,7 +33,9 @@ export function initHeaderShift(dataView: DataView): number {
 export function initShifts(shifts: number[]): number[] {
   const $gameRegion = get(gameRegion);
 
-  if ($gameRegion !== 0) {
+  if (isPsvHeader()) {
+    return [...shifts, -0x1e7c];
+  } else if ($gameRegion !== 0) {
     return [...shifts, 0x100];
   }
 
