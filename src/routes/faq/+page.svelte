@@ -39,13 +39,10 @@
     </a>.
   </p>
   <h2>
-    - How can i edit PlayStation Classic save files (from PSP, PS Vita and
+    - Can i edit PlayStation Classic save files (from PSP, PS Vita and
     PlayStation 3)?
   </h2>
-  <p>
-    At the moment, the tools does not support those kind of save files but you
-    can easily find softwares to convert your save to <strong>.mcr</strong> file.
-  </p>
+  <p>Yes.</p>
 </div>
 
 <style lang="postcss">
