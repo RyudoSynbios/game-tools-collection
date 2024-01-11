@@ -12,7 +12,9 @@ import {
 } from "$lib/utils/bytes";
 import {
   getDexDriveHeaderShift,
+  getSrmHeaderShift,
   isDexDriveHeader,
+  isSrmFile,
 } from "$lib/utils/common/nintendo64";
 import { getShift } from "$lib/utils/parser";
 
@@ -26,8 +28,8 @@ import type {
 } from "$lib/types";
 
 export function initHeaderShift(dataView: DataView): number {
-  if (dataView.byteLength === 0x48800) {
-    return 0x28800;
+  if (isSrmFile(dataView)) {
+    return getSrmHeaderShift("fla");
   } else if (isDexDriveHeader(dataView)) {
     return getDexDriveHeaderShift();
   }

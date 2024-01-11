@@ -13,3 +13,18 @@ export function isDexDriveHeader(dataView: DataView) {
 export function getDexDriveHeaderShift(): number {
   return 0x1540;
 }
+
+export function isSrmFile(dataView: DataView) {
+  return dataView.byteLength === 0x48800;
+}
+
+export function getSrmHeaderShift(format: "eep" | "fla" | "sra"): number {
+  switch (format) {
+    case "eep":
+      return 0x0;
+    case "fla":
+      return 0x28800;
+    case "sra":
+      return 0x20800;
+  }
+}

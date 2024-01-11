@@ -3,7 +3,9 @@ import Long from "long";
 import { getInt, setInt } from "$lib/utils/bytes";
 import {
   getDexDriveHeaderShift,
+  getSrmHeaderShift,
   isDexDriveHeader,
+  isSrmFile,
 } from "$lib/utils/common/nintendo64";
 import { clone, makeOperations } from "$lib/utils/format";
 
@@ -18,7 +20,9 @@ import type {
 import template from "./template";
 
 export function initHeaderShift(dataView: DataView): number {
-  if (isDexDriveHeader(dataView)) {
+  if (isSrmFile(dataView)) {
+    return getSrmHeaderShift("eep");
+  } else if (isDexDriveHeader(dataView)) {
     return getDexDriveHeaderShift();
   }
 

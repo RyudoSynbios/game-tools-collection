@@ -1,7 +1,9 @@
 import { getInt } from "$lib/utils/bytes";
 import {
   getDexDriveHeaderShift,
+  getSrmHeaderShift,
   isDexDriveHeader,
+  isSrmFile,
 } from "$lib/utils/common/nintendo64";
 import { clone } from "$lib/utils/format";
 
@@ -10,8 +12,8 @@ import type { ItemChecksum } from "$lib/types";
 import template from "./template";
 
 export function initHeaderShift(dataView: DataView): number {
-  if (dataView.byteLength === 0x48800) {
-    return 0x20800;
+  if (isSrmFile(dataView)) {
+    return getSrmHeaderShift("sra");
   } else if (isDexDriveHeader(dataView)) {
     return getDexDriveHeaderShift();
   }
