@@ -2,8 +2,8 @@ import { get } from "svelte/store";
 
 import {
   dataView,
+  fileHeaderShift,
   fileName,
-  gameHeader,
   gameJson,
   gameRegion,
   isDebug,
@@ -21,7 +21,7 @@ import type { Bit, DataType, GameJson, IntOperation } from "$lib/types";
 export function resetState(): void {
   dataView.set(new DataView(new ArrayBuffer(0)));
   fileName.set("");
-  gameHeader.set(new Uint8Array());
+  fileHeaderShift.set(0x0);
   gameJson.set({} as GameJson);
   gameRegion.set(-1);
   isDirty.set(false);

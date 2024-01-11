@@ -1,21 +1,28 @@
 import { getInt, setInt } from "$lib/utils/bytes";
-import { extractGbaGameSharkHeader } from "$lib/utils/common/gameBoyAdvance";
+import {
+  getGameSharkHeaderShift,
+  isGameSharkHeader,
+} from "$lib/utils/common/gameBoyAdvance";
 
 import type { Item, ItemChecksum, ItemInt } from "$lib/types";
 
-export function beforeInitDataView(dataView: DataView): [DataView, Uint8Array] {
-  return extractGbaGameSharkHeader(dataView);
+export function initHeaderShift(dataView: DataView): number {
+  if (isGameSharkHeader(dataView)) {
+    return getGameSharkHeaderShift(dataView);
+  }
+
+  return 0x0;
 }
 
-export function initShifts(): number[] {
+export function initShifts(shifts: number[]): number[] {
   const section1Saves = getInt(0xc, "uint32", { bigEndian: true });
   const section2Saves = getInt(0x10c, "uint32", { bigEndian: true });
 
   if (section2Saves > section1Saves) {
-    return [0x100];
+    return [...shifts, 0x100];
   }
 
-  return [];
+  return shifts;
 }
 
 export function afterSetInt(item: Item): void {

@@ -1,10 +1,17 @@
 import { getInt, setInt } from "$lib/utils/bytes";
-import { extractN64DexDriveHeader } from "$lib/utils/common/nintendo64";
+import {
+  getDexDriveHeaderShift,
+  isDexDriveHeader,
+} from "$lib/utils/common/nintendo64";
 
 import type { Item, ItemChecksum, ItemInt } from "$lib/types";
 
-export function beforeInitDataView(dataView: DataView): [DataView, Uint8Array] {
-  return extractN64DexDriveHeader(dataView);
+export function initHeaderShift(dataView: DataView): number {
+  if (isDexDriveHeader(dataView)) {
+    return getDexDriveHeaderShift();
+  }
+
+  return 0x0;
 }
 
 export function overrideGetInt(

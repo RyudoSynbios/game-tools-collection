@@ -1,7 +1,8 @@
 import { getInt, setInt, setString } from "$lib/utils/bytes";
 import {
   checkPlaystationSlots,
-  extractPsDexDriveHeader,
+  getDexDriveHeaderShift,
+  isDexDriveHeader,
 } from "$lib/utils/common/playstation";
 import { getItem } from "$lib/utils/parser";
 
@@ -15,8 +16,12 @@ import type {
 
 import { europeValidator, japanValidator, usaValidator } from "./template";
 
-export function beforeInitDataView(dataView: DataView): [DataView, Uint8Array] {
-  return extractPsDexDriveHeader(dataView);
+export function initHeaderShift(dataView: DataView): number {
+  if (isDexDriveHeader(dataView)) {
+    return getDexDriveHeaderShift();
+  }
+
+  return 0x0;
 }
 
 export function checkSlots(index: number): boolean {

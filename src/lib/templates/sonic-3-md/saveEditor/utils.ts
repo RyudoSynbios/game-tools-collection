@@ -5,7 +5,7 @@ import { getInt, setInt } from "$lib/utils/bytes";
 
 import type { Item, ItemBitflag, ItemBitflags, ItemChecksum } from "$lib/types";
 
-export function beforeInitDataView(dataView: DataView): [DataView, Uint8Array] {
+export function beforeInitDataView(dataView: DataView): DataView {
   const array = [];
 
   for (let i = 0x0; i < dataView.byteLength; i += 0x1) {
@@ -16,7 +16,7 @@ export function beforeInitDataView(dataView: DataView): [DataView, Uint8Array] {
 
   const uint8Array = new Uint8Array(array);
 
-  return [new DataView(uint8Array.buffer), new Uint8Array()];
+  return new DataView(uint8Array.buffer);
 }
 
 export function afterSetInt(item: Item): void {

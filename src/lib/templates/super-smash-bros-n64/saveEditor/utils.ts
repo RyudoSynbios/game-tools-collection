@@ -1,25 +1,28 @@
-import { get } from "svelte/store";
-
-import { dataView } from "$lib/stores";
 import { getInt } from "$lib/utils/bytes";
-import { extractN64DexDriveHeader } from "$lib/utils/common/nintendo64";
+import {
+  getDexDriveHeaderShift,
+  isDexDriveHeader,
+} from "$lib/utils/common/nintendo64";
 import { clone } from "$lib/utils/format";
 
 import type { ItemChecksum } from "$lib/types";
 
 import template from "./template";
 
-export function beforeInitDataView(dataView: DataView): [DataView, Uint8Array] {
-  return extractN64DexDriveHeader(dataView);
-}
-
-export function overrideGetRegions(dataView: DataView): string[] {
-  let shift = 0x0;
-
+export function initHeaderShift(dataView: DataView): number {
   if (dataView.byteLength === 0x48800) {
-    shift += 0x20800;
+    return 0x20800;
+  } else if (isDexDriveHeader(dataView)) {
+    return getDexDriveHeaderShift();
   }
 
+  return 0x0;
+}
+
+export function overrideGetRegions(
+  dataView: DataView,
+  shift: number,
+): string[] {
   const itemChecksum = clone(template.items[0]) as ItemChecksum;
 
   itemChecksum.offset += shift;
@@ -29,16 +32,6 @@ export function overrideGetRegions(dataView: DataView): string[] {
 
   if (checksum === dataView.getUint32(itemChecksum.offset, true)) {
     return ["europe", "usa", "japan", "australia"];
-  }
-
-  return [];
-}
-
-export function initShifts(): number[] {
-  const $dataView = get(dataView);
-
-  if ($dataView.byteLength === 0x48800) {
-    return [0x20800];
   }
 
   return [];

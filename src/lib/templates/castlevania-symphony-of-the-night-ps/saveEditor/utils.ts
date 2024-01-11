@@ -4,7 +4,8 @@ import { gameRegion } from "$lib/stores";
 import { getInt, getString, setInt, setString } from "$lib/utils/bytes";
 import {
   checkPlaystationSlots,
-  extractPsDexDriveHeader,
+  getDexDriveHeaderShift,
+  isDexDriveHeader,
 } from "$lib/utils/common/playstation";
 
 import type { Item, ItemInt, ItemString } from "$lib/types";
@@ -16,18 +17,22 @@ import template, {
   usaValidator,
 } from "./template";
 
-export function beforeInitDataView(dataView: DataView): [DataView, Uint8Array] {
-  return extractPsDexDriveHeader(dataView);
+export function initHeaderShift(dataView: DataView): number {
+  if (isDexDriveHeader(dataView)) {
+    return getDexDriveHeaderShift();
+  }
+
+  return 0x0;
 }
 
-export function initShifts(): number[] {
+export function initShifts(shifts: number[]): number[] {
   const $gameRegion = get(gameRegion);
 
   if ($gameRegion !== 0) {
-    return [0x100];
+    return [...shifts, 0x100];
   }
 
-  return [];
+  return shifts;
 }
 
 export function checkSlots(index: number): boolean {

@@ -1,8 +1,11 @@
 import Long from "long";
 
 import { getInt, setInt } from "$lib/utils/bytes";
-import { extractN64DexDriveHeader } from "$lib/utils/common/nintendo64";
-import { makeOperations } from "$lib/utils/format";
+import {
+  getDexDriveHeaderShift,
+  isDexDriveHeader,
+} from "$lib/utils/common/nintendo64";
+import { clone, makeOperations } from "$lib/utils/format";
 
 import type {
   Item,
@@ -14,13 +17,23 @@ import type {
 
 import template from "./template";
 
-export function beforeInitDataView(dataView: DataView): [DataView, Uint8Array] {
-  return extractN64DexDriveHeader(dataView);
+export function initHeaderShift(dataView: DataView): number {
+  if (isDexDriveHeader(dataView)) {
+    return getDexDriveHeaderShift();
+  }
+
+  return 0x0;
 }
 
-export function overrideGetRegions(dataView: DataView): string[] {
-  const itemChecksum = (template.items[0] as ItemContainer)
+export function overrideGetRegions(
+  dataView: DataView,
+  shift: number,
+): string[] {
+  const itemChecksum = clone(template.items[0] as ItemContainer)
     .items[0] as ItemChecksum;
+
+  itemChecksum.offset += shift;
+  itemChecksum.control.offset += shift;
 
   const checksum = generateChecksum(itemChecksum, dataView);
 

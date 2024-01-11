@@ -19,7 +19,7 @@ export function isDciFile(
   return false;
 }
 
-export function dciToDataView(dataView: DataView): [DataView, Uint8Array] {
+export function dciToDataView(dataView: DataView): DataView {
   const array = [];
 
   for (let i = 0x0; i < 0x20; i += 0x1) {
@@ -37,7 +37,7 @@ export function dciToDataView(dataView: DataView): [DataView, Uint8Array] {
 
   const uint8Array = new Uint8Array(array);
 
-  return [new DataView(uint8Array.buffer), new Uint8Array()];
+  return new DataView(uint8Array.buffer);
 }
 
 export function dataViewToDci(): ArrayBufferLike {
@@ -63,13 +63,13 @@ export function dataViewToDci(): ArrayBufferLike {
   return uint8Array.buffer;
 }
 
-export function vmuToDataView(dataView: DataView): [DataView, Uint8Array] {
+export function vmuToDataView(dataView: DataView): DataView {
   const array = [];
 
   const blocks = dataView.byteLength / 0x200;
 
   if (blocks !== 256) {
-    return [dataView, new Uint8Array()];
+    return dataView;
   }
 
   for (let i = dataView.byteLength - 0x200; i >= 0; i -= 0x200) {
@@ -80,7 +80,7 @@ export function vmuToDataView(dataView: DataView): [DataView, Uint8Array] {
 
   const uint8Array = new Uint8Array(array);
 
-  return [new DataView(uint8Array.buffer), new Uint8Array()];
+  return new DataView(uint8Array.buffer);
 }
 
 export function dataViewToVmu(): ArrayBufferLike {

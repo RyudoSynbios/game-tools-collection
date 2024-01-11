@@ -1,5 +1,8 @@
 import { extractBit, getInt, setInt } from "$lib/utils/bytes";
-import { extractGbaGameSharkHeader } from "$lib/utils/common/gameBoyAdvance";
+import {
+  getGameSharkHeaderShift,
+  isGameSharkHeader,
+} from "$lib/utils/common/gameBoyAdvance";
 import { getItem, getShift } from "$lib/utils/parser";
 
 import type {
@@ -12,8 +15,12 @@ import type {
   ItemInt,
 } from "$lib/types";
 
-export function beforeInitDataView(dataView: DataView): [DataView, Uint8Array] {
-  return extractGbaGameSharkHeader(dataView);
+export function initHeaderShift(dataView: DataView): number {
+  if (isGameSharkHeader(dataView)) {
+    return getGameSharkHeaderShift(dataView);
+  }
+
+  return 0x0;
 }
 
 export function overrideShift(item: Item, shifts: number[]): number[] {

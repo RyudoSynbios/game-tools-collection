@@ -1,6 +1,7 @@
 import { get } from "svelte/store";
 
 import {
+  fileHeaderShift,
   gameJson,
   gameRegion,
   gameTemplate,
@@ -28,6 +29,7 @@ import type {
 let checksums: ItemChecksum[];
 
 export function enrichGameJson(): void {
+  const $fileHeaderShift = get(fileHeaderShift);
   const $gameTemplate = get(gameTemplate);
   const $gameUtils = get(gameUtils) as any;
 
@@ -35,8 +37,12 @@ export function enrichGameJson(): void {
 
   let shifts: number[] = [];
 
+  if ($fileHeaderShift > 0x0) {
+    shifts.push($fileHeaderShift);
+  }
+
   if (utilsExists("initShifts")) {
-    shifts = $gameUtils.initShifts();
+    shifts = $gameUtils.initShifts(shifts);
   }
 
   const items = $gameTemplate.items.reduce((items: Item[], item) => {

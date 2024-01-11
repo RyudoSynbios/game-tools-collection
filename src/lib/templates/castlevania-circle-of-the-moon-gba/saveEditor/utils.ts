@@ -1,10 +1,17 @@
 import { getInt } from "$lib/utils/bytes";
-import { extractGbaGameSharkHeader } from "$lib/utils/common/gameBoyAdvance";
+import {
+  getGameSharkHeaderShift,
+  isGameSharkHeader,
+} from "$lib/utils/common/gameBoyAdvance";
 
 import type { ItemChecksum } from "$lib/types";
 
-export function beforeInitDataView(dataView: DataView): [DataView, Uint8Array] {
-  return extractGbaGameSharkHeader(dataView);
+export function initHeaderShift(dataView: DataView): number {
+  if (isGameSharkHeader(dataView)) {
+    return getGameSharkHeaderShift(dataView);
+  }
+
+  return 0x0;
 }
 
 export function generateChecksum(item: ItemChecksum): number {

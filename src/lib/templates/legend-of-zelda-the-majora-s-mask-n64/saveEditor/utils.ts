@@ -1,6 +1,6 @@
 import { get } from "svelte/store";
 
-import { dataView, gameRegion } from "$lib/stores";
+import { gameRegion } from "$lib/stores";
 import {
   extractBit,
   getBoolean,
@@ -10,9 +10,11 @@ import {
   setInt,
   setString,
 } from "$lib/utils/bytes";
-import { extractN64DexDriveHeader } from "$lib/utils/common/nintendo64";
+import {
+  getDexDriveHeaderShift,
+  isDexDriveHeader,
+} from "$lib/utils/common/nintendo64";
 import { getShift } from "$lib/utils/parser";
-import { getRegions } from "$lib/utils/validator";
 
 import type {
   Item,
@@ -23,28 +25,14 @@ import type {
   ItemString,
 } from "$lib/types";
 
-export function beforeInitDataView(dataView: DataView): [DataView, Uint8Array] {
-  return extractN64DexDriveHeader(dataView);
-}
-
-export function overrideGetRegions(dataView: DataView): string[] {
-  let shift = 0x0;
-
+export function initHeaderShift(dataView: DataView): number {
   if (dataView.byteLength === 0x48800) {
-    shift += 0x28800;
+    return 0x28800;
+  } else if (isDexDriveHeader(dataView)) {
+    return getDexDriveHeaderShift();
   }
 
-  return getRegions(dataView, shift);
-}
-
-export function initShifts(): number[] {
-  const $dataView = get(dataView);
-
-  if ($dataView.byteLength === 0x48800) {
-    return [0x28800];
-  }
-
-  return [];
+  return 0x0;
 }
 
 export function overrideItem(item: Item): Item {

@@ -14,7 +14,7 @@ import { getObjKey } from "$lib/utils/format";
 
 import type { Item, ItemChecksum, ItemInt, ItemSection } from "$lib/types";
 
-export function beforeInitDataView(dataView: DataView): [DataView, Uint8Array] {
+export function beforeInitDataView(dataView: DataView): DataView {
   if (isDciFile(dataView)) {
     return dciToDataView(dataView);
   }
@@ -22,13 +22,13 @@ export function beforeInitDataView(dataView: DataView): [DataView, Uint8Array] {
   return vmuToDataView(dataView);
 }
 
-export function initShifts(): number[] {
+export function initShifts(shifts: number[]): number[] {
   const $dataView = get(dataView);
   const $gameRegion = get(gameRegion);
   const $gameTemplate = get(gameTemplate);
 
   if (isDciFile()) {
-    return [0x20];
+    return [...shifts, 0x20];
   }
 
   const region = Object.values($gameTemplate.validator.regions)[$gameRegion];
@@ -55,10 +55,10 @@ export function initShifts(): number[] {
     const saveOffset = parseInt(getObjKey(save, 0));
     const offset = (0xff - getInt(saveOffset - 0x2, "uint16")) * 0x200;
 
-    return [offset];
+    return [...shifts, offset];
   }
 
-  return [];
+  return shifts;
 }
 
 export function overrideItem(item: Item): Item {

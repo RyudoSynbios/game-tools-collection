@@ -1,7 +1,6 @@
 import { get } from "svelte/store";
 
 import { gameTemplate } from "$lib/stores";
-import { getInt } from "$lib/utils/bytes";
 import { getObjKey } from "$lib/utils/format";
 
 export function checkConditions(conditions: any, callback: any): boolean {

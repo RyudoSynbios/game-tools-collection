@@ -2,9 +2,9 @@
   import RegionModal from "$lib/components/RegionModal.svelte";
   import {
     dataView,
+    fileHeaderShift,
     fileIsLoading,
     fileName,
-    gameHeader,
     gameRegion,
     gameTemplate,
     gameUtils,
@@ -19,7 +19,7 @@
   let inputEl: HTMLInputElement;
   let isDragging = false;
   let dataViewTmp: DataView | undefined;
-  let gameHeaderTmp = new Uint8Array();
+  let fileHeaderShiftTmp = 0x0;
   let fileNameTmp = "";
   let regions: string[] = [];
   let error = "";
@@ -61,16 +61,23 @@
     fileReader.onload = (event: ProgressEvent<FileReader>) => {
       dataViewTmp = new DataView(event.target?.result as ArrayBufferLike);
       fileNameTmp = file.name;
+      fileHeaderShiftTmp = 0x0;
+
+      if (utilsExists("initHeaderShift")) {
+        fileHeaderShiftTmp = $gameUtils.initHeaderShift(dataViewTmp);
+      }
 
       if (utilsExists("beforeInitDataView")) {
-        [dataViewTmp, gameHeaderTmp] =
-          $gameUtils.beforeInitDataView(dataViewTmp);
+        dataViewTmp = $gameUtils.beforeInitDataView(dataViewTmp);
       }
 
       if (utilsExists("overrideGetRegions")) {
-        regions = $gameUtils.overrideGetRegions(dataViewTmp);
+        regions = $gameUtils.overrideGetRegions(
+          dataViewTmp,
+          fileHeaderShiftTmp,
+        );
       } else {
-        regions = getRegions(dataViewTmp as DataView);
+        regions = getRegions(dataViewTmp as DataView, fileHeaderShiftTmp);
       }
 
       if (regions.length === 1) {
@@ -90,8 +97,8 @@
 
     if (regionIndex !== -1) {
       $dataView = dataViewTmp as DataView;
+      $fileHeaderShift = fileHeaderShiftTmp;
       $fileName = fileNameTmp;
-      $gameHeader = gameHeaderTmp;
       $gameRegion = regionIndex;
 
       enrichGameJson();
