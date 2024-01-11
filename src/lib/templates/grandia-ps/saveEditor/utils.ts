@@ -5,6 +5,7 @@ import { getInt, setInt, setString } from "$lib/utils/bytes";
 import {
   checkPlaystationSlots,
   getDexDriveHeaderShift,
+  getPsvHeaderShift,
   getVmpHeaderShift,
   isDexDriveHeader,
   isPsvHeader,
@@ -35,8 +36,10 @@ export function initShifts(shifts: number[]): number[] {
   const $gameRegion = get(gameRegion);
 
   if (isPsvHeader()) {
-    return [...shifts, -0x1dfc];
-  } else if ($gameRegion === 1 || $gameRegion == 2) {
+    shifts = [...shifts, getPsvHeaderShift()];
+  }
+
+  if ($gameRegion === 1 || $gameRegion == 2) {
     return [...shifts, 0x180];
   }
 

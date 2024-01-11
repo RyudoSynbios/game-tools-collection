@@ -2,6 +2,7 @@ import { getInt, setInt, setString } from "$lib/utils/bytes";
 import {
   checkPlaystationSlots,
   getDexDriveHeaderShift,
+  getPsvHeaderShift,
   getVmpHeaderShift,
   isDexDriveHeader,
   isPsvHeader,
@@ -31,7 +32,7 @@ export function initHeaderShift(dataView: DataView): number {
 
 export function initShifts(shifts: number[]): number[] {
   if (isPsvHeader()) {
-    return [...shifts, -0x1f7c];
+    shifts = [...shifts, getPsvHeaderShift()];
   }
 
   return shifts;

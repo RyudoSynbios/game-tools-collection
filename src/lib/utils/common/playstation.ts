@@ -30,6 +30,10 @@ export function isPsvHeader() {
   });
 }
 
+export function getPsvHeaderShift(): number {
+  return -0x1f7c;
+}
+
 export function isVmpHeader(dataView: DataView) {
   const validator = [0x0, 0x50, 0x4d, 0x56, 0x80];
 
