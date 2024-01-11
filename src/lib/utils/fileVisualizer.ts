@@ -1,6 +1,6 @@
 import { get } from "svelte/store";
 
-import { gameJson } from "$lib/stores";
+import { fileHeaderShift, gameJson } from "$lib/stores";
 import { dataTypeToLength } from "$lib/utils/bytes";
 
 import type { ContentType, DataType, Item, ItemInt } from "$lib/types";
@@ -107,6 +107,8 @@ export function parseCondition(
   key: string,
   condition: { [key: number]: any },
 ) {
+  const $fileHeaderShift = get(fileHeaderShift);
+
   Object.values(condition).forEach((value) => {
     value.forEach((item: { [key: number | string]: any }) => {
       if (item.$and || item.$or) {
@@ -118,7 +120,7 @@ export function parseCondition(
         for (let i = offset; i < offset + length; i += 1) {
           addItem(
             highlightedOffsets,
-            i,
+            i + $fileHeaderShift,
             `Validator (${key})`,
             "variable",
             "string",
