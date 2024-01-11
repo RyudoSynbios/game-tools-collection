@@ -5,7 +5,9 @@ import { getInt, getString, setInt, setString } from "$lib/utils/bytes";
 import {
   checkPlaystationSlots,
   getDexDriveHeaderShift,
+  getVmpHeaderShift,
   isDexDriveHeader,
+  isVmpHeader,
 } from "$lib/utils/common/playstation";
 
 import type { Item, ItemInt, ItemString } from "$lib/types";
@@ -20,6 +22,8 @@ import template, {
 export function initHeaderShift(dataView: DataView): number {
   if (isDexDriveHeader(dataView)) {
     return getDexDriveHeaderShift();
+  } else if (isVmpHeader(dataView)) {
+    return getVmpHeaderShift();
   }
 
   return 0x0;

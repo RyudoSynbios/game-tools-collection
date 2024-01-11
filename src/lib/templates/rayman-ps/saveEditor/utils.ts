@@ -2,7 +2,9 @@ import { getInt, setInt, setString } from "$lib/utils/bytes";
 import {
   checkPlaystationSlots,
   getDexDriveHeaderShift,
+  getVmpHeaderShift,
   isDexDriveHeader,
+  isVmpHeader,
 } from "$lib/utils/common/playstation";
 import { getItem } from "$lib/utils/parser";
 
@@ -19,6 +21,8 @@ import { europeValidator, japanValidator, usaValidator } from "./template";
 export function initHeaderShift(dataView: DataView): number {
   if (isDexDriveHeader(dataView)) {
     return getDexDriveHeaderShift();
+  } else if (isVmpHeader(dataView)) {
+    return getVmpHeaderShift();
   }
 
   return 0x0;

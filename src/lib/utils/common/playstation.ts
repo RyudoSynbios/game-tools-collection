@@ -20,6 +20,20 @@ export function getDexDriveHeaderShift(): number {
   return 0xf40;
 }
 
+export function isVmpHeader(dataView: DataView) {
+  const validator = [0x0, 0x50, 0x4d, 0x56, 0x80];
+
+  return validator.every((hex, index) => {
+    if (dataView.getUint8(index) === hex) {
+      return true;
+    }
+  });
+}
+
+export function getVmpHeaderShift(): number {
+  return 0x80;
+}
+
 export function checkPlaystationSlots(
   index: number,
   validators: number[][],
