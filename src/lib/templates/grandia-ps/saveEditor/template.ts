@@ -850,9 +850,9 @@ const template: GameJson = {
                                   offset: 0x21c4,
                                   type: "variable",
                                   dataType: "boolean",
-                                  overrideStep: {
+                                  overrideShift: {
                                     parent: 1,
-                                    step: 0x0,
+                                    shift: 0x0,
                                   },
                                 },
                                 {
@@ -861,9 +861,9 @@ const template: GameJson = {
                                   offset: 0x21e0,
                                   type: "variable",
                                   dataType: "boolean",
-                                  overrideStep: {
+                                  overrideShift: {
                                     parent: 1,
-                                    step: 0x0,
+                                    shift: 0x0,
                                   },
                                 },
                                 {
@@ -872,9 +872,9 @@ const template: GameJson = {
                                   offset: 0x21c9,
                                   type: "variable",
                                   dataType: "boolean",
-                                  overrideStep: {
+                                  overrideShift: {
                                     parent: 1,
-                                    step: 0x0,
+                                    shift: 0x0,
                                   },
                                 },
                                 {
@@ -883,9 +883,9 @@ const template: GameJson = {
                                   offset: 0x21ca,
                                   type: "variable",
                                   dataType: "boolean",
-                                  overrideStep: {
+                                  overrideShift: {
                                     parent: 1,
-                                    step: 0x0,
+                                    shift: 0x0,
                                   },
                                 },
                                 {
@@ -894,9 +894,9 @@ const template: GameJson = {
                                   offset: 0x21db,
                                   type: "variable",
                                   dataType: "boolean",
-                                  overrideStep: {
+                                  overrideShift: {
                                     parent: 1,
-                                    step: 0x0,
+                                    shift: 0x0,
                                   },
                                 },
                                 {
@@ -905,9 +905,9 @@ const template: GameJson = {
                                   offset: 0x21dc,
                                   type: "variable",
                                   dataType: "boolean",
-                                  overrideStep: {
+                                  overrideShift: {
                                     parent: 1,
-                                    step: 0x0,
+                                    shift: 0x0,
                                   },
                                 },
                                 {
@@ -916,9 +916,9 @@ const template: GameJson = {
                                   offset: 0x21bd,
                                   type: "variable",
                                   dataType: "boolean",
-                                  overrideStep: {
+                                  overrideShift: {
                                     parent: 1,
-                                    step: 0x0,
+                                    shift: 0x0,
                                   },
                                 },
                                 {
@@ -927,9 +927,9 @@ const template: GameJson = {
                                   offset: 0x21bf,
                                   type: "variable",
                                   dataType: "boolean",
-                                  overrideStep: {
+                                  overrideShift: {
                                     parent: 1,
-                                    step: 0x0,
+                                    shift: 0x0,
                                   },
                                 },
                                 {
@@ -938,9 +938,9 @@ const template: GameJson = {
                                   offset: 0x21d0,
                                   type: "variable",
                                   dataType: "boolean",
-                                  overrideStep: {
+                                  overrideShift: {
                                     parent: 1,
-                                    step: 0x0,
+                                    shift: 0x0,
                                   },
                                 },
                                 {
@@ -949,9 +949,9 @@ const template: GameJson = {
                                   offset: 0x21cf,
                                   type: "variable",
                                   dataType: "boolean",
-                                  overrideStep: {
+                                  overrideShift: {
                                     parent: 1,
-                                    step: 0x0,
+                                    shift: 0x0,
                                   },
                                 },
                                 {
@@ -960,9 +960,9 @@ const template: GameJson = {
                                   offset: 0x21d1,
                                   type: "variable",
                                   dataType: "boolean",
-                                  overrideStep: {
+                                  overrideShift: {
                                     parent: 1,
-                                    step: 0x0,
+                                    shift: 0x0,
                                   },
                                 },
                                 {
@@ -971,9 +971,9 @@ const template: GameJson = {
                                   offset: 0x221b,
                                   type: "variable",
                                   dataType: "boolean",
-                                  overrideStep: {
+                                  overrideShift: {
                                     parent: 1,
-                                    step: 0x0,
+                                    shift: 0x0,
                                   },
                                 },
                                 {
@@ -982,9 +982,9 @@ const template: GameJson = {
                                   offset: 0x21b9,
                                   type: "variable",
                                   dataType: "boolean",
-                                  overrideStep: {
+                                  overrideShift: {
                                     parent: 1,
-                                    step: 0x0,
+                                    shift: 0x0,
                                   },
                                 },
                                 {
@@ -993,9 +993,9 @@ const template: GameJson = {
                                   offset: 0x21d7,
                                   type: "variable",
                                   dataType: "boolean",
-                                  overrideStep: {
+                                  overrideShift: {
                                     parent: 1,
-                                    step: 0x0,
+                                    shift: 0x0,
                                   },
                                 },
                                 {
@@ -1004,9 +1004,9 @@ const template: GameJson = {
                                   offset: 0x21d6,
                                   type: "variable",
                                   dataType: "boolean",
-                                  overrideStep: {
+                                  overrideShift: {
                                     parent: 1,
-                                    step: 0x0,
+                                    shift: 0x0,
                                   },
                                 },
                                 {
@@ -1015,9 +1015,9 @@ const template: GameJson = {
                                   offset: 0x21e4,
                                   type: "variable",
                                   dataType: "boolean",
-                                  overrideStep: {
+                                  overrideShift: {
                                     parent: 1,
-                                    step: 0x0,
+                                    shift: 0x0,
                                   },
                                 },
                                 {
@@ -1026,9 +1026,9 @@ const template: GameJson = {
                                   offset: 0x21e7,
                                   type: "variable",
                                   dataType: "boolean",
-                                  overrideStep: {
+                                  overrideShift: {
                                     parent: 1,
-                                    step: 0x0,
+                                    shift: 0x0,
                                   },
                                 },
                                 {
@@ -1037,9 +1037,9 @@ const template: GameJson = {
                                   offset: 0x222c,
                                   type: "variable",
                                   dataType: "boolean",
-                                  overrideStep: {
+                                  overrideShift: {
                                     parent: 1,
-                                    step: 0x0,
+                                    shift: 0x0,
                                   },
                                 },
                               ],
@@ -1055,9 +1055,9 @@ const template: GameJson = {
                                   offset: 0x21c5,
                                   type: "variable",
                                   dataType: "boolean",
-                                  overrideStep: {
+                                  overrideShift: {
                                     parent: 1,
-                                    step: 0x0,
+                                    shift: 0x0,
                                   },
                                 },
                                 {
@@ -1066,9 +1066,9 @@ const template: GameJson = {
                                   offset: 0x21c6,
                                   type: "variable",
                                   dataType: "boolean",
-                                  overrideStep: {
+                                  overrideShift: {
                                     parent: 1,
-                                    step: 0x0,
+                                    shift: 0x0,
                                   },
                                 },
                                 {
@@ -1077,9 +1077,9 @@ const template: GameJson = {
                                   offset: 0x21e2,
                                   type: "variable",
                                   dataType: "boolean",
-                                  overrideStep: {
+                                  overrideShift: {
                                     parent: 1,
-                                    step: 0x0,
+                                    shift: 0x0,
                                   },
                                 },
                                 {
@@ -1088,9 +1088,9 @@ const template: GameJson = {
                                   offset: 0x21cb,
                                   type: "variable",
                                   dataType: "boolean",
-                                  overrideStep: {
+                                  overrideShift: {
                                     parent: 1,
-                                    step: 0x0,
+                                    shift: 0x0,
                                   },
                                 },
                                 {
@@ -1099,9 +1099,9 @@ const template: GameJson = {
                                   offset: 0x21cd,
                                   type: "variable",
                                   dataType: "boolean",
-                                  overrideStep: {
+                                  overrideShift: {
                                     parent: 1,
-                                    step: 0x0,
+                                    shift: 0x0,
                                   },
                                 },
                                 {
@@ -1110,9 +1110,9 @@ const template: GameJson = {
                                   offset: 0x21dd,
                                   type: "variable",
                                   dataType: "boolean",
-                                  overrideStep: {
+                                  overrideShift: {
                                     parent: 1,
-                                    step: 0x0,
+                                    shift: 0x0,
                                   },
                                 },
                                 {
@@ -1121,9 +1121,9 @@ const template: GameJson = {
                                   offset: 0x21df,
                                   type: "variable",
                                   dataType: "boolean",
-                                  overrideStep: {
+                                  overrideShift: {
                                     parent: 1,
-                                    step: 0x0,
+                                    shift: 0x0,
                                   },
                                 },
                                 {
@@ -1132,9 +1132,9 @@ const template: GameJson = {
                                   offset: 0x21be,
                                   type: "variable",
                                   dataType: "boolean",
-                                  overrideStep: {
+                                  overrideShift: {
                                     parent: 1,
-                                    step: 0x0,
+                                    shift: 0x0,
                                   },
                                 },
                                 {
@@ -1143,9 +1143,9 @@ const template: GameJson = {
                                   offset: 0x21c0,
                                   type: "variable",
                                   dataType: "boolean",
-                                  overrideStep: {
+                                  overrideShift: {
                                     parent: 1,
-                                    step: 0x0,
+                                    shift: 0x0,
                                   },
                                 },
                                 {
@@ -1154,9 +1154,9 @@ const template: GameJson = {
                                   offset: 0x21c1,
                                   type: "variable",
                                   dataType: "boolean",
-                                  overrideStep: {
+                                  overrideShift: {
                                     parent: 1,
-                                    step: 0x0,
+                                    shift: 0x0,
                                   },
                                 },
                                 {
@@ -1165,9 +1165,9 @@ const template: GameJson = {
                                   offset: 0x21d2,
                                   type: "variable",
                                   dataType: "boolean",
-                                  overrideStep: {
+                                  overrideShift: {
                                     parent: 1,
-                                    step: 0x0,
+                                    shift: 0x0,
                                   },
                                 },
                                 {
@@ -1176,9 +1176,9 @@ const template: GameJson = {
                                   offset: 0x21d3,
                                   type: "variable",
                                   dataType: "boolean",
-                                  overrideStep: {
+                                  overrideShift: {
                                     parent: 1,
-                                    step: 0x0,
+                                    shift: 0x0,
                                   },
                                 },
                                 {
@@ -1187,9 +1187,9 @@ const template: GameJson = {
                                   offset: 0x21ba,
                                   type: "variable",
                                   dataType: "boolean",
-                                  overrideStep: {
+                                  overrideShift: {
                                     parent: 1,
-                                    step: 0x0,
+                                    shift: 0x0,
                                   },
                                 },
                                 {
@@ -1198,9 +1198,9 @@ const template: GameJson = {
                                   offset: 0x21bb,
                                   type: "variable",
                                   dataType: "boolean",
-                                  overrideStep: {
+                                  overrideShift: {
                                     parent: 1,
-                                    step: 0x0,
+                                    shift: 0x0,
                                   },
                                 },
                                 {
@@ -1209,9 +1209,9 @@ const template: GameJson = {
                                   offset: 0x21d8,
                                   type: "variable",
                                   dataType: "boolean",
-                                  overrideStep: {
+                                  overrideShift: {
                                     parent: 1,
-                                    step: 0x0,
+                                    shift: 0x0,
                                   },
                                 },
                                 {
@@ -1220,9 +1220,9 @@ const template: GameJson = {
                                   offset: 0x21d9,
                                   type: "variable",
                                   dataType: "boolean",
-                                  overrideStep: {
+                                  overrideShift: {
                                     parent: 1,
-                                    step: 0x0,
+                                    shift: 0x0,
                                   },
                                 },
                                 {
@@ -1231,9 +1231,9 @@ const template: GameJson = {
                                   offset: 0x21e5,
                                   type: "variable",
                                   dataType: "boolean",
-                                  overrideStep: {
+                                  overrideShift: {
                                     parent: 1,
-                                    step: 0x0,
+                                    shift: 0x0,
                                   },
                                 },
                                 {
@@ -1242,9 +1242,9 @@ const template: GameJson = {
                                   offset: 0x21e8,
                                   type: "variable",
                                   dataType: "boolean",
-                                  overrideStep: {
+                                  overrideShift: {
                                     parent: 1,
-                                    step: 0x0,
+                                    shift: 0x0,
                                   },
                                 },
                               ],
@@ -1260,9 +1260,9 @@ const template: GameJson = {
                                   offset: 0x21c7,
                                   type: "variable",
                                   dataType: "boolean",
-                                  overrideStep: {
+                                  overrideShift: {
                                     parent: 1,
-                                    step: 0x0,
+                                    shift: 0x0,
                                   },
                                 },
                                 {
@@ -1271,9 +1271,9 @@ const template: GameJson = {
                                   offset: 0x21c8,
                                   type: "variable",
                                   dataType: "boolean",
-                                  overrideStep: {
+                                  overrideShift: {
                                     parent: 1,
-                                    step: 0x0,
+                                    shift: 0x0,
                                   },
                                 },
                                 {
@@ -1282,9 +1282,9 @@ const template: GameJson = {
                                   offset: 0x21e3,
                                   type: "variable",
                                   dataType: "boolean",
-                                  overrideStep: {
+                                  overrideShift: {
                                     parent: 1,
-                                    step: 0x0,
+                                    shift: 0x0,
                                   },
                                 },
                                 {
@@ -1293,9 +1293,9 @@ const template: GameJson = {
                                   offset: 0x21e1,
                                   type: "variable",
                                   dataType: "boolean",
-                                  overrideStep: {
+                                  overrideShift: {
                                     parent: 1,
-                                    step: 0x0,
+                                    shift: 0x0,
                                   },
                                 },
                                 {
@@ -1304,9 +1304,9 @@ const template: GameJson = {
                                   offset: 0x21ce,
                                   type: "variable",
                                   dataType: "boolean",
-                                  overrideStep: {
+                                  overrideShift: {
                                     parent: 1,
-                                    step: 0x0,
+                                    shift: 0x0,
                                   },
                                 },
                                 {
@@ -1315,9 +1315,9 @@ const template: GameJson = {
                                   offset: 0x21de,
                                   type: "variable",
                                   dataType: "boolean",
-                                  overrideStep: {
+                                  overrideShift: {
                                     parent: 1,
-                                    step: 0x0,
+                                    shift: 0x0,
                                   },
                                 },
                                 {
@@ -1326,9 +1326,9 @@ const template: GameJson = {
                                   offset: 0x2219,
                                   type: "variable",
                                   dataType: "boolean",
-                                  overrideStep: {
+                                  overrideShift: {
                                     parent: 1,
-                                    step: 0x0,
+                                    shift: 0x0,
                                   },
                                 },
                                 {
@@ -1337,9 +1337,9 @@ const template: GameJson = {
                                   offset: 0x21c3,
                                   type: "variable",
                                   dataType: "boolean",
-                                  overrideStep: {
+                                  overrideShift: {
                                     parent: 1,
-                                    step: 0x0,
+                                    shift: 0x0,
                                   },
                                 },
                                 {
@@ -1348,9 +1348,9 @@ const template: GameJson = {
                                   offset: 0x21c2,
                                   type: "variable",
                                   dataType: "boolean",
-                                  overrideStep: {
+                                  overrideShift: {
                                     parent: 1,
-                                    step: 0x0,
+                                    shift: 0x0,
                                   },
                                 },
                                 {
@@ -1359,9 +1359,9 @@ const template: GameJson = {
                                   offset: 0x21d4,
                                   type: "variable",
                                   dataType: "boolean",
-                                  overrideStep: {
+                                  overrideShift: {
                                     parent: 1,
-                                    step: 0x0,
+                                    shift: 0x0,
                                   },
                                 },
                                 {
@@ -1370,9 +1370,9 @@ const template: GameJson = {
                                   offset: 0x21d5,
                                   type: "variable",
                                   dataType: "boolean",
-                                  overrideStep: {
+                                  overrideShift: {
                                     parent: 1,
-                                    step: 0x0,
+                                    shift: 0x0,
                                   },
                                 },
                                 {
@@ -1381,9 +1381,9 @@ const template: GameJson = {
                                   offset: 0x21bc,
                                   type: "variable",
                                   dataType: "boolean",
-                                  overrideStep: {
+                                  overrideShift: {
                                     parent: 1,
-                                    step: 0x0,
+                                    shift: 0x0,
                                   },
                                 },
                                 {
@@ -1392,9 +1392,9 @@ const template: GameJson = {
                                   offset: 0x21da,
                                   type: "variable",
                                   dataType: "boolean",
-                                  overrideStep: {
+                                  overrideShift: {
                                     parent: 1,
-                                    step: 0x0,
+                                    shift: 0x0,
                                   },
                                 },
                                 {
@@ -1403,9 +1403,9 @@ const template: GameJson = {
                                   offset: 0x21e6,
                                   type: "variable",
                                   dataType: "boolean",
-                                  overrideStep: {
+                                  overrideShift: {
                                     parent: 1,
-                                    step: 0x0,
+                                    shift: 0x0,
                                   },
                                 },
                                 {
@@ -1414,9 +1414,9 @@ const template: GameJson = {
                                   offset: 0x21e9,
                                   type: "variable",
                                   dataType: "boolean",
-                                  overrideStep: {
+                                  overrideShift: {
                                     parent: 1,
-                                    step: 0x0,
+                                    shift: 0x0,
                                   },
                                 },
                               ],
@@ -1432,9 +1432,9 @@ const template: GameJson = {
                                   offset: 0x21ea,
                                   type: "variable",
                                   dataType: "boolean",
-                                  overrideStep: {
+                                  overrideShift: {
                                     parent: 1,
-                                    step: 0x0,
+                                    shift: 0x0,
                                   },
                                 },
                                 {
@@ -1443,9 +1443,9 @@ const template: GameJson = {
                                   offset: 0x21eb,
                                   type: "variable",
                                   dataType: "boolean",
-                                  overrideStep: {
+                                  overrideShift: {
                                     parent: 1,
-                                    step: 0x0,
+                                    shift: 0x0,
                                   },
                                 },
                                 {
@@ -1454,9 +1454,9 @@ const template: GameJson = {
                                   offset: 0x21ec,
                                   type: "variable",
                                   dataType: "boolean",
-                                  overrideStep: {
+                                  overrideShift: {
                                     parent: 1,
-                                    step: 0x0,
+                                    shift: 0x0,
                                   },
                                 },
                                 {
@@ -1465,9 +1465,9 @@ const template: GameJson = {
                                   offset: 0x21ed,
                                   type: "variable",
                                   dataType: "boolean",
-                                  overrideStep: {
+                                  overrideShift: {
                                     parent: 1,
-                                    step: 0x0,
+                                    shift: 0x0,
                                   },
                                 },
                                 {
@@ -1476,9 +1476,9 @@ const template: GameJson = {
                                   offset: 0x21f0,
                                   type: "variable",
                                   dataType: "boolean",
-                                  overrideStep: {
+                                  overrideShift: {
                                     parent: 1,
-                                    step: 0x0,
+                                    shift: 0x0,
                                   },
                                 },
                                 {
@@ -1487,9 +1487,9 @@ const template: GameJson = {
                                   offset: 0x21ef,
                                   type: "variable",
                                   dataType: "boolean",
-                                  overrideStep: {
+                                  overrideShift: {
                                     parent: 1,
-                                    step: 0x0,
+                                    shift: 0x0,
                                   },
                                 },
                                 {
@@ -1498,9 +1498,9 @@ const template: GameJson = {
                                   offset: 0x21f1,
                                   type: "variable",
                                   dataType: "boolean",
-                                  overrideStep: {
+                                  overrideShift: {
                                     parent: 1,
-                                    step: 0x0,
+                                    shift: 0x0,
                                   },
                                 },
                                 {
@@ -1509,9 +1509,9 @@ const template: GameJson = {
                                   offset: 0x21ee,
                                   type: "variable",
                                   dataType: "boolean",
-                                  overrideStep: {
+                                  overrideShift: {
                                     parent: 1,
-                                    step: 0x0,
+                                    shift: 0x0,
                                   },
                                 },
                                 {
@@ -1520,9 +1520,9 @@ const template: GameJson = {
                                   offset: 0x21f2,
                                   type: "variable",
                                   dataType: "boolean",
-                                  overrideStep: {
+                                  overrideShift: {
                                     parent: 1,
-                                    step: 0x0,
+                                    shift: 0x0,
                                   },
                                 },
                                 {
@@ -1531,9 +1531,9 @@ const template: GameJson = {
                                   offset: 0x21f3,
                                   type: "variable",
                                   dataType: "boolean",
-                                  overrideStep: {
+                                  overrideShift: {
                                     parent: 1,
-                                    step: 0x0,
+                                    shift: 0x0,
                                   },
                                 },
                                 {
@@ -1542,9 +1542,9 @@ const template: GameJson = {
                                   offset: 0x21f4,
                                   type: "variable",
                                   dataType: "boolean",
-                                  overrideStep: {
+                                  overrideShift: {
                                     parent: 1,
-                                    step: 0x0,
+                                    shift: 0x0,
                                   },
                                 },
                                 {
@@ -1553,9 +1553,9 @@ const template: GameJson = {
                                   offset: 0x21f5,
                                   type: "variable",
                                   dataType: "boolean",
-                                  overrideStep: {
+                                  overrideShift: {
                                     parent: 1,
-                                    step: 0x0,
+                                    shift: 0x0,
                                   },
                                 },
                                 {
@@ -1564,9 +1564,9 @@ const template: GameJson = {
                                   offset: 0x21f6,
                                   type: "variable",
                                   dataType: "boolean",
-                                  overrideStep: {
+                                  overrideShift: {
                                     parent: 1,
-                                    step: 0x0,
+                                    shift: 0x0,
                                   },
                                 },
                                 {
@@ -1575,9 +1575,9 @@ const template: GameJson = {
                                   offset: 0x21f7,
                                   type: "variable",
                                   dataType: "boolean",
-                                  overrideStep: {
+                                  overrideShift: {
                                     parent: 1,
-                                    step: 0x0,
+                                    shift: 0x0,
                                   },
                                 },
                                 {
@@ -1586,9 +1586,9 @@ const template: GameJson = {
                                   offset: 0x21f8,
                                   type: "variable",
                                   dataType: "boolean",
-                                  overrideStep: {
+                                  overrideShift: {
                                     parent: 1,
-                                    step: 0x0,
+                                    shift: 0x0,
                                   },
                                 },
                                 {
@@ -1597,9 +1597,9 @@ const template: GameJson = {
                                   offset: 0x21fd,
                                   type: "variable",
                                   dataType: "boolean",
-                                  overrideStep: {
+                                  overrideShift: {
                                     parent: 1,
-                                    step: 0x0,
+                                    shift: 0x0,
                                   },
                                 },
                                 {
@@ -1608,9 +1608,9 @@ const template: GameJson = {
                                   offset: 0x21fe,
                                   type: "variable",
                                   dataType: "boolean",
-                                  overrideStep: {
+                                  overrideShift: {
                                     parent: 1,
-                                    step: 0x0,
+                                    shift: 0x0,
                                   },
                                 },
                                 {
@@ -1619,9 +1619,9 @@ const template: GameJson = {
                                   offset: 0x21fa,
                                   type: "variable",
                                   dataType: "boolean",
-                                  overrideStep: {
+                                  overrideShift: {
                                     parent: 1,
-                                    step: 0x0,
+                                    shift: 0x0,
                                   },
                                 },
                                 {
@@ -1630,9 +1630,9 @@ const template: GameJson = {
                                   offset: 0x21f9,
                                   type: "variable",
                                   dataType: "boolean",
-                                  overrideStep: {
+                                  overrideShift: {
                                     parent: 1,
-                                    step: 0x0,
+                                    shift: 0x0,
                                   },
                                 },
                                 {
@@ -1641,9 +1641,9 @@ const template: GameJson = {
                                   offset: 0x21fc,
                                   type: "variable",
                                   dataType: "boolean",
-                                  overrideStep: {
+                                  overrideShift: {
                                     parent: 1,
-                                    step: 0x0,
+                                    shift: 0x0,
                                   },
                                 },
                                 {
@@ -1652,9 +1652,9 @@ const template: GameJson = {
                                   offset: 0x21fb,
                                   type: "variable",
                                   dataType: "boolean",
-                                  overrideStep: {
+                                  overrideShift: {
                                     parent: 1,
-                                    step: 0x0,
+                                    shift: 0x0,
                                   },
                                 },
                                 {
@@ -1663,9 +1663,9 @@ const template: GameJson = {
                                   offset: 0x21ff,
                                   type: "variable",
                                   dataType: "boolean",
-                                  overrideStep: {
+                                  overrideShift: {
                                     parent: 1,
-                                    step: 0x0,
+                                    shift: 0x0,
                                   },
                                 },
                                 {
@@ -1674,9 +1674,9 @@ const template: GameJson = {
                                   offset: 0x2201,
                                   type: "variable",
                                   dataType: "boolean",
-                                  overrideStep: {
+                                  overrideShift: {
                                     parent: 1,
-                                    step: 0x0,
+                                    shift: 0x0,
                                   },
                                 },
                                 {
@@ -1685,9 +1685,9 @@ const template: GameJson = {
                                   offset: 0x2200,
                                   type: "variable",
                                   dataType: "boolean",
-                                  overrideStep: {
+                                  overrideShift: {
                                     parent: 1,
-                                    step: 0x0,
+                                    shift: 0x0,
                                   },
                                 },
                                 {
@@ -1696,9 +1696,9 @@ const template: GameJson = {
                                   offset: 0x2202,
                                   type: "variable",
                                   dataType: "boolean",
-                                  overrideStep: {
+                                  overrideShift: {
                                     parent: 1,
-                                    step: 0x0,
+                                    shift: 0x0,
                                   },
                                 },
                                 {
@@ -1707,9 +1707,9 @@ const template: GameJson = {
                                   offset: 0x2203,
                                   type: "variable",
                                   dataType: "boolean",
-                                  overrideStep: {
+                                  overrideShift: {
                                     parent: 1,
-                                    step: 0x0,
+                                    shift: 0x0,
                                   },
                                 },
                                 {
@@ -1718,9 +1718,9 @@ const template: GameJson = {
                                   offset: 0x2204,
                                   type: "variable",
                                   dataType: "boolean",
-                                  overrideStep: {
+                                  overrideShift: {
                                     parent: 1,
-                                    step: 0x0,
+                                    shift: 0x0,
                                   },
                                 },
                                 {
@@ -1729,9 +1729,9 @@ const template: GameJson = {
                                   offset: 0x2205,
                                   type: "variable",
                                   dataType: "boolean",
-                                  overrideStep: {
+                                  overrideShift: {
                                     parent: 1,
-                                    step: 0x0,
+                                    shift: 0x0,
                                   },
                                 },
                                 {
@@ -1740,9 +1740,9 @@ const template: GameJson = {
                                   offset: 0x2206,
                                   type: "variable",
                                   dataType: "boolean",
-                                  overrideStep: {
+                                  overrideShift: {
                                     parent: 1,
-                                    step: 0x0,
+                                    shift: 0x0,
                                   },
                                 },
                                 {
@@ -1751,9 +1751,9 @@ const template: GameJson = {
                                   offset: 0x2207,
                                   type: "variable",
                                   dataType: "boolean",
-                                  overrideStep: {
+                                  overrideShift: {
                                     parent: 1,
-                                    step: 0x0,
+                                    shift: 0x0,
                                   },
                                 },
                                 {
@@ -1762,9 +1762,9 @@ const template: GameJson = {
                                   offset: 0x2208,
                                   type: "variable",
                                   dataType: "boolean",
-                                  overrideStep: {
+                                  overrideShift: {
                                     parent: 1,
-                                    step: 0x0,
+                                    shift: 0x0,
                                   },
                                 },
                                 {
@@ -1773,9 +1773,9 @@ const template: GameJson = {
                                   offset: 0x2209,
                                   type: "variable",
                                   dataType: "boolean",
-                                  overrideStep: {
+                                  overrideShift: {
                                     parent: 1,
-                                    step: 0x0,
+                                    shift: 0x0,
                                   },
                                 },
 
@@ -1785,9 +1785,9 @@ const template: GameJson = {
                                   offset: 0x220a,
                                   type: "variable",
                                   dataType: "boolean",
-                                  overrideStep: {
+                                  overrideShift: {
                                     parent: 1,
-                                    step: 0x0,
+                                    shift: 0x0,
                                   },
                                 },
                                 {
@@ -1796,9 +1796,9 @@ const template: GameJson = {
                                   offset: 0x220b,
                                   type: "variable",
                                   dataType: "boolean",
-                                  overrideStep: {
+                                  overrideShift: {
                                     parent: 1,
-                                    step: 0x0,
+                                    shift: 0x0,
                                   },
                                 },
                                 {
@@ -1807,9 +1807,9 @@ const template: GameJson = {
                                   offset: 0x220f,
                                   type: "variable",
                                   dataType: "boolean",
-                                  overrideStep: {
+                                  overrideShift: {
                                     parent: 1,
-                                    step: 0x0,
+                                    shift: 0x0,
                                   },
                                 },
                                 {
@@ -1818,9 +1818,9 @@ const template: GameJson = {
                                   offset: 0x220c,
                                   type: "variable",
                                   dataType: "boolean",
-                                  overrideStep: {
+                                  overrideShift: {
                                     parent: 1,
-                                    step: 0x0,
+                                    shift: 0x0,
                                   },
                                 },
                                 {
@@ -1829,9 +1829,9 @@ const template: GameJson = {
                                   offset: 0x2210,
                                   type: "variable",
                                   dataType: "boolean",
-                                  overrideStep: {
+                                  overrideShift: {
                                     parent: 1,
-                                    step: 0x0,
+                                    shift: 0x0,
                                   },
                                 },
                                 {
@@ -1840,9 +1840,9 @@ const template: GameJson = {
                                   offset: 0x2212,
                                   type: "variable",
                                   dataType: "boolean",
-                                  overrideStep: {
+                                  overrideShift: {
                                     parent: 1,
-                                    step: 0x0,
+                                    shift: 0x0,
                                   },
                                 },
                                 {
@@ -1851,9 +1851,9 @@ const template: GameJson = {
                                   offset: 0x2213,
                                   type: "variable",
                                   dataType: "boolean",
-                                  overrideStep: {
+                                  overrideShift: {
                                     parent: 1,
-                                    step: 0x0,
+                                    shift: 0x0,
                                   },
                                 },
                                 {
@@ -1862,9 +1862,9 @@ const template: GameJson = {
                                   offset: 0x2214,
                                   type: "variable",
                                   dataType: "boolean",
-                                  overrideStep: {
+                                  overrideShift: {
                                     parent: 1,
-                                    step: 0x0,
+                                    shift: 0x0,
                                   },
                                 },
                                 {
@@ -1873,9 +1873,9 @@ const template: GameJson = {
                                   offset: 0x2215,
                                   type: "variable",
                                   dataType: "boolean",
-                                  overrideStep: {
+                                  overrideShift: {
                                     parent: 1,
-                                    step: 0x0,
+                                    shift: 0x0,
                                   },
                                 },
                                 {
@@ -1884,9 +1884,9 @@ const template: GameJson = {
                                   offset: 0x2216,
                                   type: "variable",
                                   dataType: "boolean",
-                                  overrideStep: {
+                                  overrideShift: {
                                     parent: 1,
-                                    step: 0x0,
+                                    shift: 0x0,
                                   },
                                 },
                                 {
@@ -1895,9 +1895,9 @@ const template: GameJson = {
                                   offset: 0x2217,
                                   type: "variable",
                                   dataType: "boolean",
-                                  overrideStep: {
+                                  overrideShift: {
                                     parent: 1,
-                                    step: 0x0,
+                                    shift: 0x0,
                                   },
                                 },
                                 {
@@ -1906,9 +1906,9 @@ const template: GameJson = {
                                   offset: 0x2218,
                                   type: "variable",
                                   dataType: "boolean",
-                                  overrideStep: {
+                                  overrideShift: {
                                     parent: 1,
-                                    step: 0x0,
+                                    shift: 0x0,
                                   },
                                 },
                                 {
@@ -1917,9 +1917,9 @@ const template: GameJson = {
                                   offset: 0x220d,
                                   type: "variable",
                                   dataType: "boolean",
-                                  overrideStep: {
+                                  overrideShift: {
                                     parent: 1,
-                                    step: 0x0,
+                                    shift: 0x0,
                                   },
                                 },
                                 {
@@ -1928,9 +1928,9 @@ const template: GameJson = {
                                   offset: 0x220e,
                                   type: "variable",
                                   dataType: "boolean",
-                                  overrideStep: {
+                                  overrideShift: {
                                     parent: 1,
-                                    step: 0x0,
+                                    shift: 0x0,
                                   },
                                 },
                                 {
@@ -1939,9 +1939,9 @@ const template: GameJson = {
                                   offset: 0x2211,
                                   type: "variable",
                                   dataType: "boolean",
-                                  overrideStep: {
+                                  overrideShift: {
                                     parent: 1,
-                                    step: 0x0,
+                                    shift: 0x0,
                                   },
                                 },
                               ],

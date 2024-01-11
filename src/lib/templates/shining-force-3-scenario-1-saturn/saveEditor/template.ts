@@ -576,9 +576,9 @@ const template: GameJson = {
                               type: "variable",
                               dataType: "uint8",
                               max: 45,
-                              overrideStep: {
+                              overrideShift: {
                                 parent: 1,
-                                step: 0x0,
+                                shift: 0x0,
                               },
                             },
                           ],

@@ -7,7 +7,7 @@ export function beforeInitDataView(dataView: DataView): [DataView, Uint8Array] {
   return extractGbaGameSharkHeader(dataView);
 }
 
-export function initSteps(): number[] {
+export function initShifts(): number[] {
   const section1Saves = getInt(0xc, "uint32", { bigEndian: true });
   const section2Saves = getInt(0x10c, "uint32", { bigEndian: true });
 

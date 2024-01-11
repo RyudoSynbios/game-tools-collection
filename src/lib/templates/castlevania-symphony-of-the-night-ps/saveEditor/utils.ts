@@ -20,7 +20,7 @@ export function beforeInitDataView(dataView: DataView): [DataView, Uint8Array] {
   return extractPsDexDriveHeader(dataView);
 }
 
-export function initSteps(): number[] {
+export function initShifts(): number[] {
   const $gameRegion = get(gameRegion);
 
   if ($gameRegion !== 0) {

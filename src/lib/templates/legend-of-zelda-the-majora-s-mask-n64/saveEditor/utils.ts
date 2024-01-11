@@ -11,7 +11,7 @@ import {
   setString,
 } from "$lib/utils/bytes";
 import { extractN64DexDriveHeader } from "$lib/utils/common/nintendo64";
-import { getStep } from "$lib/utils/parser";
+import { getShift } from "$lib/utils/parser";
 import { getRegions } from "$lib/utils/validator";
 
 import type {
@@ -37,7 +37,7 @@ export function overrideGetRegions(dataView: DataView): string[] {
   return getRegions(dataView, shift);
 }
 
-export function initSteps(): number[] {
+export function initShifts(): number[] {
   const $dataView = get(dataView);
 
   if ($dataView.byteLength === 0x48800) {
@@ -87,15 +87,15 @@ export function overrideItem(item: Item): Item {
   return item;
 }
 
-export function overrideParseContainerItemsSteps(
+export function overrideParseContainerItemsShifts(
   item: ItemContainer,
-  steps: number[],
+  shifts: number[],
   index: number,
 ): [boolean, number[] | undefined] {
   const $gameRegion = get(gameRegion);
 
   if (item.id === "slots" && $gameRegion !== 2 && index !== 2) {
-    const step = getStep(steps);
+    const shift = getShift(shifts);
 
     let offset = 0x0;
 
@@ -105,17 +105,17 @@ export function overrideParseContainerItemsSteps(
       offset = 0x10000;
     }
 
-    const isValid = getInt(step + offset + 0x24, "uint8") === 0x44;
+    const isValid = getInt(shift + offset + 0x24, "uint8") === 0x44;
 
     if (isValid) {
-      return [true, [...steps, offset]];
+      return [true, [...shifts, offset]];
     }
   } else if (item.id === "slots" && $gameRegion !== 2 && index === 2) {
-    const step = getStep(steps);
+    const shift = getShift(shifts);
 
-    const offset = step + 0x18000;
+    const offset = shift + 0x18000;
 
-    return [true, [...steps, offset]];
+    return [true, [...shifts, offset]];
   }
 
   return [false, undefined];

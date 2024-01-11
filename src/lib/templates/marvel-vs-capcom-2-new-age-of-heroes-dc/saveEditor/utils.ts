@@ -22,7 +22,7 @@ export function beforeInitDataView(dataView: DataView): [DataView, Uint8Array] {
   return vmuToDataView(dataView);
 }
 
-export function initSteps(): number[] {
+export function initShifts(): number[] {
   const $dataView = get(dataView);
   const $gameRegion = get(gameRegion);
   const $gameTemplate = get(gameTemplate);

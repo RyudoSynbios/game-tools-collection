@@ -31,9 +31,9 @@ export function overrideGetRegions(dataView: DataView): string[] {
   return [];
 }
 
-export function overrideParseContainerItemsSteps(
+export function overrideParseContainerItemsShifts(
   item: ItemContainer,
-  steps: number[],
+  shifts: number[],
   index: number,
 ): [boolean, number[] | undefined] {
   if (item.id === "slots") {
@@ -41,7 +41,7 @@ export function overrideParseContainerItemsSteps(
       const saveIndex = getInt(i + 0x28, "uint8");
 
       if ((saveIndex & 0x7) === index && !(saveIndex & 0x80)) {
-        return [true, [...steps, i]];
+        return [true, [...shifts, i]];
       }
     }
   }

@@ -33,14 +33,14 @@ export function enrichGameJson(): void {
 
   checksums = [];
 
-  let steps: number[] = [];
+  let shifts: number[] = [];
 
-  if (utilsExists("initSteps")) {
-    steps = $gameUtils.initSteps();
+  if (utilsExists("initShifts")) {
+    shifts = $gameUtils.initShifts();
   }
 
   const items = $gameTemplate.items.reduce((items: Item[], item) => {
-    items.push(parseItem(item, steps));
+    items.push(parseItem(item, shifts));
 
     return items;
   }, []);
@@ -60,25 +60,25 @@ export function enrichGameJson(): void {
   updateResources();
 }
 
-export function getStep(steps: number[]) {
-  return steps.reduce((total, step) => total + step, 0);
+export function getShift(shifts: number[]) {
+  return shifts.reduce((total, shift) => total + shift, 0);
 }
 
-function getOverridedStep(
-  steps: number[],
+function getOverridedShift(
+  shifts: number[],
   parent: number,
-  step: number,
-  stepIndex: number,
+  shift: number,
+  shiftIndex: number,
 ) {
-  const parentIndex = steps.length - parent;
+  const parentIndex = shifts.length - parent;
 
-  return steps.reduce((total, value, index) => {
+  return shifts.reduce((total, value, index) => {
     let newTotal = total;
 
     if (index < parentIndex) {
       newTotal += value;
     } else if (index === parentIndex) {
-      newTotal += stepIndex * step;
+      newTotal += shiftIndex * shift;
     }
 
     return newTotal;
@@ -87,7 +87,7 @@ function getOverridedStep(
 
 export function parseItem(
   item: Item,
-  steps: number[],
+  shifts: number[],
   instanceId = "",
   instanceIndex = 0,
 ): Item {
@@ -108,43 +108,48 @@ export function parseItem(
     (newItem as any).id = (newItem as any).id.replace("%index%", instanceIndex);
   }
 
-  if (utilsExists("overrideStep")) {
-    steps = $gameUtils.overrideStep(item, steps);
+  if (utilsExists("overrideShift")) {
+    shifts = $gameUtils.overrideShift(item, shifts);
   }
 
   if ((newItem as any).offset !== undefined) {
-    if ((newItem as any).overrideStep) {
-      const { parent, step } = (newItem as any).overrideStep;
+    if ((newItem as any).overrideShift) {
+      const { parent, shift } = (newItem as any).overrideShift;
 
-      (newItem as any).offset += getOverridedStep(
-        steps,
+      (newItem as any).offset += getOverridedShift(
+        shifts,
         parent,
-        step,
+        shift,
         instanceIndex,
       );
     } else {
-      (newItem as any).offset += getStep(steps);
+      (newItem as any).offset += getShift(shifts);
     }
   }
 
   if (newItem.type === "bitflags") {
-    return parseBitflags(newItem, steps);
+    return parseBitflags(newItem, shifts);
   } else if (newItem.type === "checksum") {
     if (newItem.control.offset !== undefined) {
-      newItem.control.offset = getStep(steps) + newItem.control.offset;
+      newItem.control.offset = getShift(shifts) + newItem.control.offset;
     }
 
     checksums.push(newItem as ItemChecksum);
   } else if (newItem.type === "component") {
-    return parseComponent(newItem, steps, instanceId, instanceIndex);
+    return parseComponent(newItem, shifts, instanceId, instanceIndex);
   } else if (newItem.type === "container") {
-    return parseContainer(newItem, steps, instanceId, instanceIndex);
+    return parseContainer(newItem, shifts, instanceId, instanceIndex);
   }
 
   if ((newItem as any).items) {
     (newItem as any).items = (newItem as any).items.reduce(
       (results: Item[], subitem: Item) => {
-        const parsedItem = parseItem(subitem, steps, instanceId, instanceIndex);
+        const parsedItem = parseItem(
+          subitem,
+          shifts,
+          instanceId,
+          instanceIndex,
+        );
 
         results.push(parsedItem);
 
@@ -157,9 +162,9 @@ export function parseItem(
   return newItem;
 }
 
-export function parseBitflags(item: ItemBitflags, steps: number[]): any {
+export function parseBitflags(item: ItemBitflags, shifts: number[]): any {
   const flags = item.flags.reduce((flags: ItemBitflag[], flag) => {
-    flag.offset += getStep(steps);
+    flag.offset += getShift(shifts);
 
     flags.push(flag);
 
@@ -176,7 +181,7 @@ export function parseBitflags(item: ItemBitflags, steps: number[]): any {
 
 export function parseComponent(
   item: ItemComponent,
-  steps: number[],
+  shifts: number[],
   instanceId: string,
   instanceIndex: number,
 ): any {
@@ -201,7 +206,7 @@ export function parseComponent(
 
 export function parseContainer(
   item: ItemContainer,
-  steps: number[],
+  shifts: number[],
   instanceId: string,
   instanceIndex: number,
 ): any {
@@ -229,9 +234,9 @@ export function parseContainer(
     }
 
     if (utilsExists("pointerToOffset")) {
-      steps = [$gameUtils.pointerToOffset(pointer)];
+      shifts = [$gameUtils.pointerToOffset(pointer)];
     } else {
-      steps = [getInt(pointer as number, (item as any).pointerDataType)];
+      shifts = [getInt(pointer as number, (item as any).pointerDataType)];
     }
   }
 
@@ -244,7 +249,7 @@ export function parseContainer(
           ? subitem.items.reduce((results: any, subitem: any) => {
               const parsedItem = parseItem(
                 subitem,
-                steps,
+                shifts,
                 instanceId,
                 instanceIndex,
               );
@@ -259,17 +264,17 @@ export function parseContainer(
   }
 
   [...Array(item.instances).keys()].forEach((index: any) => {
-    let instanceSteps: number[] = [];
+    let instanceShifts: number[] = [];
 
     let isOverrided = false;
 
-    if (utilsExists("overrideParseContainerItemsSteps")) {
-      [isOverrided, instanceSteps] =
-        $gameUtils.overrideParseContainerItemsSteps(item, steps, index);
+    if (utilsExists("overrideParseContainerItemsShifts")) {
+      [isOverrided, instanceShifts] =
+        $gameUtils.overrideParseContainerItemsShifts(item, shifts, index);
     }
 
     if (!isOverrided) {
-      instanceSteps = [...steps, item.length * index];
+      instanceShifts = [...shifts, item.length * index];
     }
 
     const parsedSubitem: any = {
@@ -278,7 +283,7 @@ export function parseContainer(
         ? item.items.reduce((results: any, subitem: any) => {
             const parsedItem = parseItem(
               subitem,
-              instanceSteps,
+              instanceShifts,
               instanceId,
               index,
             );
@@ -311,7 +316,7 @@ export function parseContainer(
             const parsedItems = obj[operand]!.map((subitem) =>
               parseItem(
                 subitem as Item,
-                instanceSteps,
+                instanceShifts,
                 instanceId,
                 instanceIndex,
               ),
@@ -323,7 +328,7 @@ export function parseContainer(
       } else {
         disableSubinstanceIf = parseItem(
           item.disableSubinstanceIf,
-          instanceSteps,
+          instanceShifts,
           instanceId,
           instanceIndex,
         );
@@ -346,7 +351,7 @@ export function parseContainer(
           ? subitem.items.reduce((results: any, subitem: any) => {
               const parsedItem = parseItem(
                 subitem,
-                steps,
+                shifts,
                 instanceId,
                 instanceIndex,
               );

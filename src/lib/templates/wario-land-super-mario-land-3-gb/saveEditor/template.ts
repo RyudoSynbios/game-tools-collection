@@ -25,9 +25,9 @@ const template: GameJson = {
         {
           name: "Checksum",
           offset: 0xc0,
-          overrideStep: {
+          overrideShift: {
             parent: 1,
-            step: 0x1,
+            shift: 0x1,
           },
           type: "checksum",
           dataType: "uint8",

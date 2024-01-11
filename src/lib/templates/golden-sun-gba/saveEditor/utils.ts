@@ -1,6 +1,6 @@
 import { extractBit, getInt, setInt } from "$lib/utils/bytes";
 import { extractGbaGameSharkHeader } from "$lib/utils/common/gameBoyAdvance";
-import { getItem, getStep } from "$lib/utils/parser";
+import { getItem, getShift } from "$lib/utils/parser";
 
 import type {
   Bit,
@@ -16,7 +16,7 @@ export function beforeInitDataView(dataView: DataView): [DataView, Uint8Array] {
   return extractGbaGameSharkHeader(dataView);
 }
 
-export function overrideStep(item: Item, steps: number[]): number[] {
+export function overrideShift(item: Item, shifts: number[]): number[] {
   if (
     "id" in item &&
     (item.id === "checksumSection2" ||
@@ -25,7 +25,7 @@ export function overrideStep(item: Item, steps: number[]): number[] {
   ) {
     const itemInt = item as ItemInt;
 
-    let offset = getStep(steps);
+    let offset = getShift(shifts);
 
     if (item.id === "checksumSection2") {
       offset += itemInt.offset - 0x1;
@@ -50,12 +50,12 @@ export function overrideStep(item: Item, steps: number[]): number[] {
     }
   }
 
-  return steps;
+  return shifts;
 }
 
-export function overrideParseContainerItemsSteps(
+export function overrideParseContainerItemsShifts(
   item: ItemContainer,
-  steps: number[],
+  shifts: number[],
   index: number,
 ): [boolean, number[] | undefined] {
   if (item.id === "slots") {
@@ -65,7 +65,7 @@ export function overrideParseContainerItemsSteps(
       const saveIndex = getInt(i + 0x7, "uint8");
 
       if (saveIndex === index) {
-        return [true, [...steps, i]];
+        return [true, [...shifts, i]];
       }
 
       if (saveIndex === 0x10) {
@@ -73,7 +73,7 @@ export function overrideParseContainerItemsSteps(
       }
     }
 
-    return [true, [...steps, invalidOffset]];
+    return [true, [...shifts, invalidOffset]];
   }
 
   return [false, undefined];

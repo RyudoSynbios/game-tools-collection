@@ -922,9 +922,9 @@ const template: GameJson = {
                                   offset: 0x28,
                                   type: "variable",
                                   dataType: "uint8",
-                                  overrideStep: {
+                                  overrideShift: {
                                     parent: 1,
-                                    step: 0x0,
+                                    shift: 0x0,
                                   },
                                   hidden: true,
                                 },
@@ -933,9 +933,9 @@ const template: GameJson = {
                                   offset: 0x29,
                                   type: "variable",
                                   dataType: "uint8",
-                                  overrideStep: {
+                                  overrideShift: {
                                     parent: 1,
-                                    step: 0x0,
+                                    shift: 0x0,
                                   },
                                   hidden: true,
                                 },
@@ -944,9 +944,9 @@ const template: GameJson = {
                                   offset: 0x2a,
                                   type: "variable",
                                   dataType: "uint8",
-                                  overrideStep: {
+                                  overrideShift: {
                                     parent: 1,
-                                    step: 0x0,
+                                    shift: 0x0,
                                   },
                                   hidden: true,
                                 },
@@ -955,9 +955,9 @@ const template: GameJson = {
                                   offset: 0x2b,
                                   type: "variable",
                                   dataType: "uint8",
-                                  overrideStep: {
+                                  overrideShift: {
                                     parent: 1,
-                                    step: 0x0,
+                                    shift: 0x0,
                                   },
                                   hidden: true,
                                 },

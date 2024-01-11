@@ -131,9 +131,9 @@ export interface ItemBoolean {
   on?: number;
   off?: number;
   resource?: string;
-  overrideStep?: {
+  overrideShift?: {
     parent: number;
-    step: number;
+    shift: number;
   };
   separator?: boolean;
   disabled?: boolean;
@@ -151,9 +151,9 @@ export interface ItemChecksum {
     offset: number;
     length: number;
   };
-  overrideStep?: {
+  overrideShift?: {
     parent: number;
-    step: number;
+    shift: number;
   };
   hidden?: boolean;
 }
@@ -213,9 +213,9 @@ export interface ItemInt {
   step?: number;
   operations?: IntOperation[];
   resource?: string;
-  overrideStep?: {
+  overrideShift?: {
     parent: number;
-    step: number;
+    shift: number;
   };
   autocomplete?: boolean;
   disabled?: boolean;
