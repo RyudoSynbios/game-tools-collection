@@ -15,8 +15,10 @@ export function initHeaderShift(dataView: DataView): number {
 }
 
 export function initShifts(shifts: number[]): number[] {
-  const section1Saves = getInt(0xc, "uint32", { bigEndian: true });
-  const section2Saves = getInt(0x10c, "uint32", { bigEndian: true });
+  const shift = getShift(shifts);
+
+  const section1Saves = getInt(shift + 0xc, "uint32", { bigEndian: true });
+  const section2Saves = getInt(shift + 0x10c, "uint32", { bigEndian: true });
 
   if (section2Saves > section1Saves) {
     return [...shifts, 0x100];
