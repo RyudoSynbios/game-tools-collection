@@ -1,4 +1,5 @@
 import { getInt, setInt } from "$lib/utils/bytes";
+import { formatChecksum } from "$lib/utils/checksum";
 
 import type { Item, ItemChecksum, ItemInt } from "$lib/types";
 
@@ -86,5 +87,5 @@ export function generateChecksum(item: ItemChecksum): number {
     checksum = (checksum & 0xffff) + (checksum >> 16);
   }
 
-  return checksum;
+  return formatChecksum(checksum, item.dataType);
 }

@@ -1,20 +1,7 @@
 import { extractBit, getInt, setInt } from "$lib/utils/bytes";
+import { formatChecksum } from "$lib/utils/checksum";
 
 import type { Item, ItemBitflag, ItemBitflags, ItemChecksum } from "$lib/types";
-
-export function generateChecksum(item: ItemChecksum): number {
-  let checksum = 0x0;
-
-  for (
-    let i = item.control.offset;
-    i < item.control.offset + item.control.length;
-    i += 0x1
-  ) {
-    checksum += getInt(i, "uint8");
-  }
-
-  return checksum;
-}
 
 export function afterSetInt(item: Item): void {
   if ("id" in item && item.id?.match(/level-/)) {
@@ -54,4 +41,18 @@ export function afterSetInt(item: Item): void {
 
     setInt(offset + 0x2, "uint8", int, { binaryCodedDecimal: true });
   }
+}
+
+export function generateChecksum(item: ItemChecksum): number {
+  let checksum = 0x0;
+
+  for (
+    let i = item.control.offset;
+    i < item.control.offset + item.control.length;
+    i += 0x1
+  ) {
+    checksum += getInt(i, "uint8");
+  }
+
+  return formatChecksum(checksum, item.dataType);
 }

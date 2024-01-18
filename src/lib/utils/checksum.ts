@@ -3,12 +3,30 @@ import { get } from "svelte/store";
 import { gameJson, gameUtils, isDebug } from "$lib/stores";
 import {
   dataTypeToLength,
+  dataTypeToValue,
   getBigInt,
   getInt,
   setBigInt,
   setInt,
 } from "$lib/utils/bytes";
 import { utilsExists } from "$lib/utils/format";
+
+import type { DataType } from "$lib/types";
+
+export function formatChecksum(
+  checksum: number,
+  dataType: Exclude<DataType, "bit" | "boolean" | "string">,
+): number {
+  const mask = dataTypeToValue(dataType);
+
+  checksum &= mask;
+
+  if (checksum < 0) {
+    checksum += mask + 0x1;
+  }
+
+  return checksum;
+}
 
 export function updateChecksums(): void {
   const $gameJson = get(gameJson);

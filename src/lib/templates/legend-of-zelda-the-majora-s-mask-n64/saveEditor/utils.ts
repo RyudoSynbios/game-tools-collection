@@ -10,6 +10,7 @@ import {
   setInt,
   setString,
 } from "$lib/utils/bytes";
+import { formatChecksum } from "$lib/utils/checksum";
 import {
   getDexDriveHeaderShift,
   getSrmHeaderShift,
@@ -445,5 +446,5 @@ export function generateChecksum(item: ItemChecksum): number {
     }
   }
 
-  return checksum;
+  return formatChecksum(checksum, item.dataType);
 }

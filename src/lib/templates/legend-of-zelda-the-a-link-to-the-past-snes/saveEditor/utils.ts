@@ -2,6 +2,7 @@ import { get } from "svelte/store";
 
 import { gameRegion } from "$lib/stores";
 import { getInt, setInt, setString } from "$lib/utils/bytes";
+import { formatChecksum } from "$lib/utils/checksum";
 import { clone } from "$lib/utils/format";
 
 import type {
@@ -160,7 +161,5 @@ export function generateChecksum(
     checksum -= getInt(i, "uint16", {}, dataView);
   }
 
-  checksum &= 0xffff;
-
-  return checksum;
+  return formatChecksum(checksum, item.dataType);
 }

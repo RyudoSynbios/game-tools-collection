@@ -2,6 +2,7 @@ import { get } from "svelte/store";
 
 import { fileHeaderShift } from "$lib/stores";
 import { extractBit, getInt, setInt } from "$lib/utils/bytes";
+import { formatChecksum } from "$lib/utils/checksum";
 import {
   getGameSharkHeaderShift,
   isGameSharkHeader,
@@ -313,5 +314,5 @@ export function generateChecksum(item: ItemChecksum): number {
     checksum += getInt(i, "uint8");
   }
 
-  return checksum;
+  return formatChecksum(checksum, item.dataType);
 }

@@ -1,8 +1,10 @@
 import { getInt, setInt } from "$lib/utils/bytes";
+import { formatChecksum } from "$lib/utils/checksum";
 import {
   getGameSharkHeaderShift,
   isGameSharkHeader,
 } from "$lib/utils/common/gameBoyAdvance";
+import { getShift } from "$lib/utils/parser";
 
 import type { Item, ItemChecksum, ItemInt } from "$lib/types";
 
@@ -50,5 +52,5 @@ export function generateChecksum(item: ItemChecksum): number {
     }
   }
 
-  return checksum;
+  return formatChecksum(checksum, item.dataType);
 }

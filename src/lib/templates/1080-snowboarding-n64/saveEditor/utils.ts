@@ -1,4 +1,5 @@
 import { getInt, getString, setInt, setString } from "$lib/utils/bytes";
+import { formatChecksum } from "$lib/utils/checksum";
 import {
   getDexDriveHeaderShift,
   getSrmHeaderShift,
@@ -216,7 +217,7 @@ export function generateChecksum(
   }
 
   if (item.id?.match(/-1/)) {
-    checksum = 0xf251f205 - (checksum & 0xffffffff);
+    checksum = 0xf251f205 - checksum;
   } else if (item.id?.match(/-2/)) {
     let base = 0xec5bc9a8;
 
@@ -224,8 +225,8 @@ export function generateChecksum(
       base -= 0xd8769a8;
     }
 
-    checksum = base + ((checksum * 2) & 0xffffffff);
+    checksum = base + checksum * 2;
   }
 
-  return checksum;
+  return formatChecksum(checksum, item.dataType);
 }

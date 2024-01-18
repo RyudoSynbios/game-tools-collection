@@ -2,6 +2,7 @@ import { get } from "svelte/store";
 
 import { dataView } from "$lib/stores";
 import { getInt, setInt } from "$lib/utils/bytes";
+import { formatChecksum } from "$lib/utils/checksum";
 import { clone } from "$lib/utils/format";
 
 import type { Item, ItemChecksum, ItemInt, ItemTab } from "$lib/types";
@@ -91,7 +92,7 @@ export function generateChecksum(item: ItemChecksum): number {
     checksum += getInt(i, "uint8");
   }
 
-  return checksum;
+  return formatChecksum(checksum, item.dataType);
 }
 
 export function beforeSaving(): ArrayBufferLike {

@@ -2,6 +2,7 @@ import { get } from "svelte/store";
 
 import { dataView, gameRegion, gameTemplate } from "$lib/stores";
 import { getInt, setInt } from "$lib/utils/bytes";
+import { formatChecksum } from "$lib/utils/checksum";
 import {
   dataViewToDci,
   dataViewToVmu,
@@ -141,7 +142,9 @@ export function generateChecksum(item: ItemChecksum): number {
   checksum1 &= 0xffff;
   checksum2 &= 0xffff;
 
-  return checksum1 + (checksum2 << 16);
+  const checksum = checksum1 + (checksum2 << 16);
+
+  return formatChecksum(checksum, item.dataType);
 }
 
 export function beforeSaving(): ArrayBufferLike {
