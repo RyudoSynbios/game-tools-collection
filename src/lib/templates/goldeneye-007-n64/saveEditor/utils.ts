@@ -1,6 +1,8 @@
 import Long from "long";
+import { get } from "svelte/store";
 
 import { getInt, setInt } from "$lib/utils/bytes";
+import { fileHeaderShift } from "$lib/stores";
 import {
   getDexDriveHeaderShift,
   getSrmHeaderShift,
@@ -53,9 +55,11 @@ export function overrideParseContainerItemsShifts(
   shifts: number[],
   index: number,
 ): [boolean, number[] | undefined] {
+  const $fileHeaderShift = get(fileHeaderShift);
+
   if (item.id === "slots") {
     for (let i = 0x0; i < item.length * 0x10; i += item.length) {
-      const saveIndex = getInt(i + 0x28, "uint8");
+      const saveIndex = getInt($fileHeaderShift + i + 0x28, "uint8");
 
       if ((saveIndex & 0x7) === index && !(saveIndex & 0x80)) {
         return [true, [...shifts, i]];
