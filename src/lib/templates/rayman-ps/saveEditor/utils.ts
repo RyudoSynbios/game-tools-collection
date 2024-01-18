@@ -1,6 +1,9 @@
+import { get } from "svelte/store";
+
+import { fileHeaderShift, gameRegion, gameTemplate } from "$lib/stores";
 import { getInt, setInt, setString } from "$lib/utils/bytes";
 import {
-  checkPlaystationSlots,
+  customGetRegions,
   getDexDriveHeaderShift,
   getPsvHeaderShift,
   getVmpHeaderShift,
@@ -8,17 +11,17 @@ import {
   isPsvHeader,
   isVmpHeader,
 } from "$lib/utils/common/playstation";
+import { getObjKey } from "$lib/utils/format";
 import { getItem } from "$lib/utils/parser";
 
 import type {
   Item,
   ItemBitflag,
   ItemBitflags,
+  ItemContainer,
   ItemInt,
   ItemString,
 } from "$lib/types";
-
-import { europeValidator, japanValidator, usaValidator } from "./template";
 
 export function initHeaderShift(dataView: DataView): number {
   if (isDexDriveHeader(dataView)) {
@@ -38,12 +41,60 @@ export function initShifts(shifts: number[]): number[] {
   return shifts;
 }
 
-export function checkSlots(index: number): boolean {
-  return !checkPlaystationSlots(index, [
-    europeValidator,
-    japanValidator,
-    usaValidator,
-  ]);
+export function overrideGetRegions(
+  dataView: DataView,
+  shift: number,
+): string[] {
+  return customGetRegions(dataView, shift);
+}
+
+export function overrideParseContainerItemsShifts(
+  item: ItemContainer,
+  shifts: number[],
+  index: number,
+): [boolean, number[] | undefined] {
+  const $fileHeaderShift = get(fileHeaderShift);
+  const $gameRegion = get(gameRegion);
+  const $gameTemplate = get(gameTemplate);
+
+  const validator: number[] =
+    $gameTemplate.validator.regions[
+      getObjKey($gameTemplate.validator.regions, $gameRegion)
+    ][0];
+
+  if (item.id === "slots") {
+    if (isPsvHeader()) {
+      if (index === 0) {
+        return [false, undefined];
+      } else {
+        return [true, [-1]];
+      }
+    }
+
+    let validCount = 0;
+
+    for (let i = 1; i < 16; i += 1) {
+      const offset = $fileHeaderShift + i * 0x80;
+
+      const isValid = validator.every((hex, j) => {
+        if (getInt(offset + 0xa + j, "uint8") === hex) {
+          return true;
+        }
+      });
+
+      if (isValid && getInt(offset, "uint8") === 0x51) {
+        if (index === validCount) {
+          return [true, [...shifts, i * 0x2000]];
+        }
+
+        validCount += 1;
+      }
+    }
+
+    return [true, [-1]];
+  }
+
+  return [false, undefined];
 }
 
 export function afterSetInt(item: Item): void {

@@ -1,96 +1,38 @@
 import type { GameJson } from "$lib/types";
 
-export const europeValidator = [
-  0x42, 0x45, 0x53, 0x4c, 0x45, 0x53, 0x2d, 0x30, 0x30, 0x30, 0x34, 0x39,
-];
-export const usaValidator = [
-  0x42, 0x49, 0x53, 0x4c, 0x55, 0x53, 0x2d, 0x30, 0x30, 0x30, 0x30, 0x35,
-];
-export const japanValidator = [
-  0x42, 0x49, 0x53, 0x4c, 0x50, 0x53, 0x2d, 0x30, 0x30, 0x30, 0x32, 0x36,
-];
-
 const template: GameJson = {
   validator: {
     regions: {
-      europe: [
-        {
-          $or: [
-            {
-              $and: [
-                { 0x0: [0x0, 0x56, 0x53, 0x50, 0x0] },
-                { 0x64: europeValidator },
-              ],
-            },
-            {
-              $and: [
-                { 0x0: [0x4d, 0x43] },
-                {
-                  $or: [...Array(15).keys()].map((index) => ({
-                    [0x8a + index * 0x80]: europeValidator,
-                  })),
-                },
-              ],
-            },
-          ],
-        },
-      ],
-      usa: [
-        {
-          $or: [
-            {
-              $and: [
-                { 0x0: [0x0, 0x56, 0x53, 0x50, 0x0] },
-                { 0x64: usaValidator },
-              ],
-            },
-            {
-              $and: [
-                { 0x0: [0x4d, 0x43] },
-                {
-                  $or: [...Array(15).keys()].map((index) => ({
-                    [0x8a + index * 0x80]: usaValidator,
-                  })),
-                },
-              ],
-            },
-          ],
-        },
-      ],
-      japan: [
-        {
-          $or: [
-            {
-              $and: [
-                { 0x0: [0x0, 0x56, 0x53, 0x50, 0x0] },
-                { 0x64: japanValidator },
-              ],
-            },
-            {
-              $and: [
-                { 0x0: [0x4d, 0x43] },
-                {
-                  $or: [...Array(15).keys()].map((index) => ({
-                    [0x8a + index * 0x80]: japanValidator,
-                  })),
-                },
-              ],
-            },
-          ],
-        },
-      ],
+      europe: {
+        0x0: [
+          0x42, 0x45, 0x53, 0x4c, 0x45, 0x53, 0x2d, 0x30, 0x30, 0x30, 0x34,
+          0x39,
+        ],
+      },
+      usa: {
+        0x0: [
+          0x42, 0x49, 0x53, 0x4c, 0x55, 0x53, 0x2d, 0x30, 0x30, 0x30, 0x30,
+          0x35,
+        ],
+      },
+      japan: {
+        0x0: [
+          0x42, 0x49, 0x53, 0x4c, 0x50, 0x53, 0x2d, 0x30, 0x30, 0x30, 0x32,
+          0x36,
+        ],
+      },
     },
     text: "Drag 'n' drop here or click to add a save file.",
     error: "Not a valid save file.",
   },
   items: [
     {
+      id: "slots",
       length: 0x2000,
       type: "container",
       instanceType: "tabs",
-      instances: 15,
+      instances: 3,
       enumeration: "Slot %d",
-      disableSubinstanceIf: "checkSlots()",
       items: [
         {
           type: "tabs",
@@ -104,7 +46,7 @@ const template: GameJson = {
                   items: [
                     {
                       name: "Filename",
-                      offset: 0x200b,
+                      offset: 0xb,
                       length: 0x3,
                       type: "variable",
                       dataType: "string",
@@ -116,7 +58,7 @@ const template: GameJson = {
                     {
                       id: "progression-%index%",
                       name: "Progression",
-                      offset: 0x200f,
+                      offset: 0xf,
                       length: 0x3,
                       type: "variable",
                       dataType: "string",
@@ -131,14 +73,14 @@ const template: GameJson = {
                   items: [
                     {
                       name: "Continues",
-                      offset: 0x2200,
+                      offset: 0x200,
                       type: "variable",
                       dataType: "uint8",
                       max: 99,
                     },
                     {
                       name: "Lifes",
-                      offset: 0x2400,
+                      offset: 0x400,
                       type: "variable",
                       dataType: "uint8",
                       max: 99,
@@ -150,7 +92,7 @@ const template: GameJson = {
                       items: [
                         {
                           id: "health",
-                          offset: 0x2480,
+                          offset: 0x480,
                           type: "variable",
                           dataType: "uint8",
                           operations: [{ "+": 1 }],
@@ -159,7 +101,7 @@ const template: GameJson = {
                         },
                         {
                           id: "healthMax",
-                          offset: 0x2409,
+                          offset: 0x409,
                           type: "variable",
                           dataType: "uint8",
                           resource: "health",
@@ -168,7 +110,7 @@ const template: GameJson = {
                     },
                     {
                       name: "Tins",
-                      offset: 0x2406,
+                      offset: 0x406,
                       type: "variable",
                       dataType: "uint8",
                       max: 99,
@@ -181,7 +123,7 @@ const template: GameJson = {
                   items: [
                     {
                       name: "Current Level",
-                      offset: 0x3080,
+                      offset: 0x1080,
                       type: "variable",
                       dataType: "uint8",
                       resource: "levels",
@@ -189,7 +131,7 @@ const template: GameJson = {
                     },
                     {
                       name: "Position X (Camera)",
-                      offset: 0x3100,
+                      offset: 0x1100,
                       type: "variable",
                       dataType: "uint8",
                       hidden: true,
@@ -203,15 +145,15 @@ const template: GameJson = {
                       name: "Unlocked Powers",
                       type: "bitflags",
                       flags: [
-                        { offset: 0x2300, bit: 0, label: "Punch" },
-                        { offset: 0x2300, bit: 1, label: "Hang" },
-                        { offset: 0x2300, bit: 2, label: "Helicopter" },
-                        { offset: 0x2300, bit: 3, label: "???", hidden: true },
-                        { offset: 0x2300, bit: 4, label: "???", hidden: true },
-                        { offset: 0x2300, bit: 5, label: "???", hidden: true },
-                        { offset: 0x2300, bit: 6, label: "???", hidden: true },
-                        { offset: 0x2300, bit: 7, label: "Grab" },
-                        { offset: 0x2301, bit: 0, label: "Run" },
+                        { offset: 0x300, bit: 0, label: "Punch" },
+                        { offset: 0x300, bit: 1, label: "Hang" },
+                        { offset: 0x300, bit: 2, label: "Helicopter" },
+                        { offset: 0x300, bit: 3, label: "???", hidden: true },
+                        { offset: 0x300, bit: 4, label: "???", hidden: true },
+                        { offset: 0x300, bit: 5, label: "???", hidden: true },
+                        { offset: 0x300, bit: 6, label: "???", hidden: true },
+                        { offset: 0x300, bit: 7, label: "Grab" },
+                        { offset: 0x301, bit: 0, label: "Run" },
                       ],
                     },
                   ],
@@ -232,7 +174,7 @@ const template: GameJson = {
                         {
                           id: "total-level-1-%index%",
                           name: "Unlock + Electoons",
-                          offset: 0x2280,
+                          offset: 0x280,
                           type: "variable",
                           dataType: "uint8",
                           hidden: true,
@@ -241,13 +183,13 @@ const template: GameJson = {
                           id: "level-1-%index%",
                           type: "bitflags",
                           flags: [
-                            { offset: 0x2280, bit: 0, label: "Unlocked", separator: true },
-                            { offset: 0x2521, bit: 6, label: "Cage 1" },
-                            { offset: 0x2529, bit: 2, label: "Cage 2" },
-                            { offset: 0x2529, bit: 4, label: "Cage 3" },
-                            { offset: 0x2529, bit: 5, label: "Cage 4" },
-                            { offset: 0x256a, bit: 5, label: "Cage 5" },
-                            { offset: 0x256a, bit: 7, label: "Cage 6" },
+                            { offset: 0x280, bit: 0, label: "Unlocked", separator: true },
+                            { offset: 0x521, bit: 6, label: "Cage 1" },
+                            { offset: 0x529, bit: 2, label: "Cage 2" },
+                            { offset: 0x529, bit: 4, label: "Cage 3" },
+                            { offset: 0x529, bit: 5, label: "Cage 4" },
+                            { offset: 0x56a, bit: 5, label: "Cage 5" },
+                            { offset: 0x56a, bit: 7, label: "Cage 6" },
                           ],
                         },
                       ],
@@ -258,7 +200,7 @@ const template: GameJson = {
                         {
                           id: "total-level-2-%index%",
                           name: "Unlock + Electoons",
-                          offset: 0x2281,
+                          offset: 0x281,
                           type: "variable",
                           dataType: "uint8",
                           hidden: true,
@@ -267,13 +209,13 @@ const template: GameJson = {
                           id: "level-2-%index%",
                           type: "bitflags",
                           flags: [
-                            { offset: 0x2281, bit: 0, label: "Unlocked", separator: true },
-                            { offset: 0x2583, bit: 0, label: "Cage 1" },
-                            { offset: 0x2584, bit: 3, label: "Cage 2" },
-                            { offset: 0x2584, bit: 5, label: "Cage 3" },
-                            { offset: 0x2584, bit: 6, label: "Cage 4" },
-                            { offset: 0x2584, bit: 7, label: "Cage 5" },
-                            { offset: 0x25c3, bit: 6, label: "Cage 6" },
+                            { offset: 0x281, bit: 0, label: "Unlocked", separator: true },
+                            { offset: 0x583, bit: 0, label: "Cage 1" },
+                            { offset: 0x584, bit: 3, label: "Cage 2" },
+                            { offset: 0x584, bit: 5, label: "Cage 3" },
+                            { offset: 0x584, bit: 6, label: "Cage 4" },
+                            { offset: 0x584, bit: 7, label: "Cage 5" },
+                            { offset: 0x5c3, bit: 6, label: "Cage 6" },
                           ],
                         },
                       ],
@@ -284,7 +226,7 @@ const template: GameJson = {
                         {
                           id: "total-level-3-%index%",
                           name: "Unlock + Electoons",
-                          offset: 0x2282,
+                          offset: 0x282,
                           type: "variable",
                           dataType: "uint8",
                           hidden: true,
@@ -293,13 +235,13 @@ const template: GameJson = {
                           id: "level-3-%index%",
                           type: "bitflags",
                           flags: [
-                            { offset: 0x2282, bit: 0, label: "Unlocked", separator: true },
-                            { offset: 0x2600, bit: 4, label: "Cage 1" },
-                            { offset: 0x2600, bit: 5, label: "Cage 2" },
-                            { offset: 0x2626, bit: 1, label: "Cage 3" },
-                            { offset: 0x2627, bit: 7, label: "Cage 4" },
-                            { offset: 0x2648, bit: 1, label: "Cage 5" },
-                            { offset: 0x2648, bit: 2, label: "Cage 6" },
+                            { offset: 0x282, bit: 0, label: "Unlocked", separator: true },
+                            { offset: 0x600, bit: 4, label: "Cage 1" },
+                            { offset: 0x600, bit: 5, label: "Cage 2" },
+                            { offset: 0x626, bit: 1, label: "Cage 3" },
+                            { offset: 0x627, bit: 7, label: "Cage 4" },
+                            { offset: 0x648, bit: 1, label: "Cage 5" },
+                            { offset: 0x648, bit: 2, label: "Cage 6" },
                           ],
                         },
                       ],
@@ -310,7 +252,7 @@ const template: GameJson = {
                         {
                           id: "total-level-4-%index%",
                           name: "Unlock + Electoons",
-                          offset: 0x2283,
+                          offset: 0x283,
                           type: "variable",
                           dataType: "uint8",
                           hidden: true,
@@ -319,13 +261,13 @@ const template: GameJson = {
                           id: "level-4-%index%",
                           type: "bitflags",
                           flags: [
-                            { offset: 0x2283, bit: 0, label: "Unlocked", separator: true },
-                            { offset: 0x2667, bit: 2, label: "Cage 1" },
-                            { offset: 0x2667, bit: 3, label: "Cage 2" },
-                            { offset: 0x2667, bit: 6, label: "Cage 3" },
-                            { offset: 0x2689, bit: 0, label: "Cage 4" },
-                            { offset: 0x2689, bit: 1, label: "Cage 5" },
-                            { offset: 0x2689, bit: 3, label: "Cage 6" },
+                            { offset: 0x283, bit: 0, label: "Unlocked", separator: true },
+                            { offset: 0x667, bit: 2, label: "Cage 1" },
+                            { offset: 0x667, bit: 3, label: "Cage 2" },
+                            { offset: 0x667, bit: 6, label: "Cage 3" },
+                            { offset: 0x689, bit: 0, label: "Cage 4" },
+                            { offset: 0x689, bit: 1, label: "Cage 5" },
+                            { offset: 0x689, bit: 3, label: "Cage 6" },
                           ],
                         },
                       ],
@@ -336,7 +278,7 @@ const template: GameJson = {
                         {
                           id: "total-level-5-%index%",
                           name: "Unlock + Electoons",
-                          offset: 0x2284,
+                          offset: 0x284,
                           type: "variable",
                           dataType: "uint8",
                           hidden: true,
@@ -345,13 +287,13 @@ const template: GameJson = {
                           id: "level-5-%index%",
                           type: "bitflags",
                           flags: [
-                            { offset: 0x2284, bit: 0, label: "Unlocked", separator: true },
-                            { offset: 0x27aa, bit: 0, label: "Cage 1" },
-                            { offset: 0x27d3, bit: 5, label: "Cage 2" },
-                            { offset: 0x27e8, bit: 3, label: "Cage 3" },
-                            { offset: 0x2810, bit: 3, label: "Cage 4" },
-                            { offset: 0x2832, bit: 0, label: "Cage 5" },
-                            { offset: 0x2832, bit: 1, label: "Cage 6" },
+                            { offset: 0x284, bit: 0, label: "Unlocked", separator: true },
+                            { offset: 0x7aa, bit: 0, label: "Cage 1" },
+                            { offset: 0x7d3, bit: 5, label: "Cage 2" },
+                            { offset: 0x7e8, bit: 3, label: "Cage 3" },
+                            { offset: 0x810, bit: 3, label: "Cage 4" },
+                            { offset: 0x832, bit: 0, label: "Cage 5" },
+                            { offset: 0x832, bit: 1, label: "Cage 6" },
                           ],
                         },
                       ],
@@ -362,7 +304,7 @@ const template: GameJson = {
                         {
                           id: "total-level-6-%index%",
                           name: "Unlock + Electoons",
-                          offset: 0x2285,
+                          offset: 0x285,
                           type: "variable",
                           dataType: "uint8",
                           hidden: true,
@@ -371,13 +313,13 @@ const template: GameJson = {
                           id: "level-6-%index%",
                           type: "bitflags",
                           flags: [
-                            { offset: 0x2285, bit: 0, label: "Unlocked", separator: true },
-                            { offset: 0x2860, bit: 2, label: "Cage 1" },
-                            { offset: 0x2860, bit: 4, label: "Cage 2" },
-                            { offset: 0x2860, bit: 5, label: "Cage 3" },
-                            { offset: 0x288f, bit: 7, label: "Cage 4" },
-                            { offset: 0x28a1, bit: 0, label: "Cage 5" },
-                            { offset: 0x28a1, bit: 2, label: "Cage 6" },
+                            { offset: 0x285, bit: 0, label: "Unlocked", separator: true },
+                            { offset: 0x860, bit: 2, label: "Cage 1" },
+                            { offset: 0x860, bit: 4, label: "Cage 2" },
+                            { offset: 0x860, bit: 5, label: "Cage 3" },
+                            { offset: 0x88f, bit: 7, label: "Cage 4" },
+                            { offset: 0x8a1, bit: 0, label: "Cage 5" },
+                            { offset: 0x8a1, bit: 2, label: "Cage 6" },
                           ],
                         },
                       ],
@@ -388,7 +330,7 @@ const template: GameJson = {
                         {
                           id: "total-level-7-%index%",
                           name: "Unlock + Electoons",
-                          offset: 0x2286,
+                          offset: 0x286,
                           type: "variable",
                           dataType: "uint8",
                           hidden: true,
@@ -397,13 +339,13 @@ const template: GameJson = {
                           id: "level-7-%index%",
                           type: "bitflags",
                           flags: [
-                            { offset: 0x2286, bit: 0, label: "Unlocked", separator: true },
-                            { offset: 0x2900, bit: 2, label: "Cage 1" },
-                            { offset: 0x2900, bit: 4, label: "Cage 2" },
-                            { offset: 0x2900, bit: 5, label: "Cage 3" },
-                            { offset: 0x2900, bit: 7, label: "Cage 4" },
-                            { offset: 0x2920, bit: 3, label: "Cage 5" },
-                            { offset: 0x2920, bit: 6, label: "Cage 6" },
+                            { offset: 0x286, bit: 0, label: "Unlocked", separator: true },
+                            { offset: 0x900, bit: 2, label: "Cage 1" },
+                            { offset: 0x900, bit: 4, label: "Cage 2" },
+                            { offset: 0x900, bit: 5, label: "Cage 3" },
+                            { offset: 0x900, bit: 7, label: "Cage 4" },
+                            { offset: 0x920, bit: 3, label: "Cage 5" },
+                            { offset: 0x920, bit: 6, label: "Cage 6" },
                           ],
                         },
                       ],
@@ -414,7 +356,7 @@ const template: GameJson = {
                         {
                           id: "total-level-8-%index%",
                           name: "Unlock + Electoons",
-                          offset: 0x2287,
+                          offset: 0x287,
                           type: "variable",
                           dataType: "uint8",
                           hidden: true,
@@ -423,13 +365,13 @@ const template: GameJson = {
                           id: "level-8-%index%",
                           type: "bitflags",
                           flags: [
-                            { offset: 0x2287, bit: 0, label: "Unlocked", separator: true },
-                            { offset: 0x2954, bit: 2, label: "Cage 1" },
-                            { offset: 0x2954, bit: 3, label: "Cage 2" },
-                            { offset: 0x2954, bit: 4, label: "Cage 3" },
-                            { offset: 0x2954, bit: 5, label: "Cage 4" },
-                            { offset: 0x2954, bit: 6, label: "Cage 5" },
-                            { offset: 0x2954, bit: 7, label: "Cage 6" },
+                            { offset: 0x287, bit: 0, label: "Unlocked", separator: true },
+                            { offset: 0x954, bit: 2, label: "Cage 1" },
+                            { offset: 0x954, bit: 3, label: "Cage 2" },
+                            { offset: 0x954, bit: 4, label: "Cage 3" },
+                            { offset: 0x954, bit: 5, label: "Cage 4" },
+                            { offset: 0x954, bit: 6, label: "Cage 5" },
+                            { offset: 0x954, bit: 7, label: "Cage 6" },
                           ],
                         },
                       ],
@@ -440,7 +382,7 @@ const template: GameJson = {
                         {
                           id: "total-level-9-%index%",
                           name: "Unlock + Electoons",
-                          offset: 0x2288,
+                          offset: 0x288,
                           type: "variable",
                           dataType: "uint8",
                           hidden: true,
@@ -449,13 +391,13 @@ const template: GameJson = {
                           id: "level-9-%index%",
                           type: "bitflags",
                           flags: [
-                            { offset: 0x2288, bit: 0, label: "Unlocked", separator: true },
-                            { offset: 0x29ea, bit: 1, label: "Cage 1" },
-                            { offset: 0x29ea, bit: 2, label: "Cage 2" },
-                            { offset: 0x29eb, bit: 4, label: "Cage 3" },
-                            { offset: 0x29eb, bit: 5, label: "Cage 4" },
-                            { offset: 0x29eb, bit: 6, label: "Cage 5" },
-                            { offset: 0x29eb, bit: 7, label: "Cage 6" },
+                            { offset: 0x288, bit: 0, label: "Unlocked", separator: true },
+                            { offset: 0x9ea, bit: 1, label: "Cage 1" },
+                            { offset: 0x9ea, bit: 2, label: "Cage 2" },
+                            { offset: 0x9eb, bit: 4, label: "Cage 3" },
+                            { offset: 0x9eb, bit: 5, label: "Cage 4" },
+                            { offset: 0x9eb, bit: 6, label: "Cage 5" },
+                            { offset: 0x9eb, bit: 7, label: "Cage 6" },
                           ],
                         },
                       ],
@@ -466,7 +408,7 @@ const template: GameJson = {
                         {
                           id: "total-level-10-%index%",
                           name: "Unlock + Electoons",
-                          offset: 0x2289,
+                          offset: 0x289,
                           type: "variable",
                           dataType: "uint8",
                           hidden: true,
@@ -475,13 +417,13 @@ const template: GameJson = {
                           id: "level-10-%index%",
                           type: "bitflags",
                           flags: [
-                            { offset: 0x2289, bit: 0, label: "Unlocked", separator: true },
-                            { offset: 0x2a37, bit: 6, label: "Cage 1" },
-                            { offset: 0x2a44, bit: 5, label: "Cage 2" },
-                            { offset: 0x2a44, bit: 6, label: "Cage 3" },
-                            { offset: 0x2a69, bit: 0, label: "Cage 4" },
-                            { offset: 0x2a69, bit: 1, label: "Cage 5" },
-                            { offset: 0x2a6a, bit: 6, label: "Cage 6" },
+                            { offset: 0x289, bit: 0, label: "Unlocked", separator: true },
+                            { offset: 0xa37, bit: 6, label: "Cage 1" },
+                            { offset: 0xa44, bit: 5, label: "Cage 2" },
+                            { offset: 0xa44, bit: 6, label: "Cage 3" },
+                            { offset: 0xa69, bit: 0, label: "Cage 4" },
+                            { offset: 0xa69, bit: 1, label: "Cage 5" },
+                            { offset: 0xa6a, bit: 6, label: "Cage 6" },
                           ],
                         },
                       ],
@@ -492,7 +434,7 @@ const template: GameJson = {
                         {
                           id: "total-level-11-%index%",
                           name: "Unlock + Electoons",
-                          offset: 0x228a,
+                          offset: 0x28a,
                           type: "variable",
                           dataType: "uint8",
                           hidden: true,
@@ -501,13 +443,13 @@ const template: GameJson = {
                           id: "level-11-%index%",
                           type: "bitflags",
                           flags: [
-                            { offset: 0x228a, bit: 0, label: "Unlocked", separator: true },
-                            { offset: 0x2a90, bit: 0, label: "Cage 1" },
-                            { offset: 0x2a90, bit: 1, label: "Cage 2" },
-                            { offset: 0x2aa5, bit: 7, label: "Cage 3" },
-                            { offset: 0x2ac6, bit: 1, label: "Cage 4" },
-                            { offset: 0x2af3, bit: 0, label: "Cage 5" },
-                            { offset: 0x2af4, bit: 7, label: "Cage 6" },
+                            { offset: 0x28a, bit: 0, label: "Unlocked", separator: true },
+                            { offset: 0xa90, bit: 0, label: "Cage 1" },
+                            { offset: 0xa90, bit: 1, label: "Cage 2" },
+                            { offset: 0xaa5, bit: 7, label: "Cage 3" },
+                            { offset: 0xac6, bit: 1, label: "Cage 4" },
+                            { offset: 0xaf3, bit: 0, label: "Cage 5" },
+                            { offset: 0xaf4, bit: 7, label: "Cage 6" },
                           ],
                         },
                       ],
@@ -518,7 +460,7 @@ const template: GameJson = {
                         {
                           id: "total-level-12-%index%",
                           name: "Unlock + Electoons",
-                          offset: 0x228b,
+                          offset: 0x28b,
                           type: "variable",
                           dataType: "uint8",
                           hidden: true,
@@ -527,13 +469,13 @@ const template: GameJson = {
                           id: "level-12-%index%",
                           type: "bitflags",
                           flags: [
-                            { offset: 0x228b, bit: 0, label: "Unlocked", separator: true },
-                            { offset: 0x2b93, bit: 3, label: "Cage 1" },
-                            { offset: 0x2b93, bit: 4, label: "Cage 2" },
-                            { offset: 0x2bb2, bit: 3, label: "Cage 3" },
-                            { offset: 0x2bcf, bit: 1, label: "Cage 4" },
-                            { offset: 0x2bcf, bit: 2, label: "Cage 5" },
-                            { offset: 0x2bd0, bit: 7, label: "Cage 6" },
+                            { offset: 0x28b, bit: 0, label: "Unlocked", separator: true },
+                            { offset: 0xb93, bit: 3, label: "Cage 1" },
+                            { offset: 0xb93, bit: 4, label: "Cage 2" },
+                            { offset: 0xbb2, bit: 3, label: "Cage 3" },
+                            { offset: 0xbcf, bit: 1, label: "Cage 4" },
+                            { offset: 0xbcf, bit: 2, label: "Cage 5" },
+                            { offset: 0xbd0, bit: 7, label: "Cage 6" },
                           ],
                         },
                       ],
@@ -544,7 +486,7 @@ const template: GameJson = {
                         {
                           id: "total-level-13-%index%",
                           name: "Unlock + Electoons",
-                          offset: 0x228c,
+                          offset: 0x28c,
                           type: "variable",
                           dataType: "uint8",
                           hidden: true,
@@ -553,13 +495,13 @@ const template: GameJson = {
                           id: "level-13-%index%",
                           type: "bitflags",
                           flags: [
-                            { offset: 0x228c, bit: 0, label: "Unlocked", separator: true },
-                            { offset: 0x2c17, bit: 0, label: "Cage 1" },
-                            { offset: 0x2c18, bit: 7, label: "Cage 2" },
-                            { offset: 0x2c2a, bit: 0, label: "Cage 3" },
-                            { offset: 0x2c2a, bit: 2, label: "Cage 4" },
-                            { offset: 0x2c4b, bit: 1, label: "Cage 5" },
-                            { offset: 0x2c4c, bit: 7, label: "Cage 6" },
+                            { offset: 0x28c, bit: 0, label: "Unlocked", separator: true },
+                            { offset: 0xc17, bit: 0, label: "Cage 1" },
+                            { offset: 0xc18, bit: 7, label: "Cage 2" },
+                            { offset: 0xc2a, bit: 0, label: "Cage 3" },
+                            { offset: 0xc2a, bit: 2, label: "Cage 4" },
+                            { offset: 0xc4b, bit: 1, label: "Cage 5" },
+                            { offset: 0xc4c, bit: 7, label: "Cage 6" },
                           ],
                         },
                       ],
@@ -570,7 +512,7 @@ const template: GameJson = {
                         {
                           id: "total-level-14-%index%",
                           name: "Unlock + Electoons",
-                          offset: 0x228d,
+                          offset: 0x28d,
                           type: "variable",
                           dataType: "uint8",
                           hidden: true,
@@ -579,13 +521,13 @@ const template: GameJson = {
                           id: "level-14-%index%",
                           type: "bitflags",
                           flags: [
-                            { offset: 0x228d, bit: 0, label: "Unlocked", separator: true },
-                            { offset: 0x2c68, bit: 2, label: "Cage 1" },
-                            { offset: 0x2c68, bit: 3, label: "Cage 2" },
-                            { offset: 0x2c81, bit: 0, label: "Cage 3" },
-                            { offset: 0x2c81, bit: 2, label: "Cage 4" },
-                            { offset: 0x2cb3, bit: 4, label: "Cage 5" },
-                            { offset: 0x2cb3, bit: 5, label: "Cage 6" },
+                            { offset: 0x28d, bit: 0, label: "Unlocked", separator: true },
+                            { offset: 0xc68, bit: 2, label: "Cage 1" },
+                            { offset: 0xc68, bit: 3, label: "Cage 2" },
+                            { offset: 0xc81, bit: 0, label: "Cage 3" },
+                            { offset: 0xc81, bit: 2, label: "Cage 4" },
+                            { offset: 0xcb3, bit: 4, label: "Cage 5" },
+                            { offset: 0xcb3, bit: 5, label: "Cage 6" },
                           ],
                         },
                       ],
@@ -596,7 +538,7 @@ const template: GameJson = {
                         {
                           id: "total-level-15-%index%",
                           name: "Unlock + Electoons",
-                          offset: 0x228e,
+                          offset: 0x28e,
                           type: "variable",
                           dataType: "uint8",
                           hidden: true,
@@ -605,13 +547,13 @@ const template: GameJson = {
                           id: "level-15-%index%",
                           type: "bitflags",
                           flags: [
-                            { offset: 0x228e, bit: 0, label: "Unlocked", separator: true },
-                            { offset: 0x2d2c, bit: 1, label: "Cage 1" },
-                            { offset: 0x2d2c, bit: 4, label: "Cage 2" },
-                            { offset: 0x2d2c, bit: 5, label: "Cage 3" },
-                            { offset: 0x2d4b, bit: 0, label: "Cage 4" },
-                            { offset: 0x2d4c, bit: 6, label: "Cage 5" },
-                            { offset: 0x2d4c, bit: 7, label: "Cage 6" },
+                            { offset: 0x28e, bit: 0, label: "Unlocked", separator: true },
+                            { offset: 0xd2c, bit: 1, label: "Cage 1" },
+                            { offset: 0xd2c, bit: 4, label: "Cage 2" },
+                            { offset: 0xd2c, bit: 5, label: "Cage 3" },
+                            { offset: 0xd4b, bit: 0, label: "Cage 4" },
+                            { offset: 0xd4c, bit: 6, label: "Cage 5" },
+                            { offset: 0xd4c, bit: 7, label: "Cage 6" },
                           ],
                         },
                       ],
@@ -622,7 +564,7 @@ const template: GameJson = {
                         {
                           id: "total-level-16-%index%",
                           name: "Unlock + Electoons",
-                          offset: 0x228f,
+                          offset: 0x28f,
                           type: "variable",
                           dataType: "uint8",
                           hidden: true,
@@ -631,13 +573,13 @@ const template: GameJson = {
                           id: "level-16-%index%",
                           type: "bitflags",
                           flags: [
-                            { offset: 0x228f, bit: 0, label: "Unlocked", separator: true },
-                            { offset: 0x2d87, bit: 3, label: "Cage 1" },
-                            { offset: 0x2db1, bit: 1, label: "Cage 2" },
-                            { offset: 0x2db1, bit: 3, label: "Cage 3" },
-                            { offset: 0x2db1, bit: 4, label: "Cage 4" },
-                            { offset: 0x2de0, bit: 6, label: "Cage 5" },
-                            { offset: 0x2e07, bit: 4, label: "Cage 6" },
+                            { offset: 0x28f, bit: 0, label: "Unlocked", separator: true },
+                            { offset: 0xd87, bit: 3, label: "Cage 1" },
+                            { offset: 0xdb1, bit: 1, label: "Cage 2" },
+                            { offset: 0xdb1, bit: 3, label: "Cage 3" },
+                            { offset: 0xdb1, bit: 4, label: "Cage 4" },
+                            { offset: 0xde0, bit: 6, label: "Cage 5" },
+                            { offset: 0xe07, bit: 4, label: "Cage 6" },
                           ],
                         },
                       ],
@@ -648,7 +590,7 @@ const template: GameJson = {
                         {
                           id: "total-level-17-%index%",
                           name: "Unlock + Electoons",
-                          offset: 0x2290,
+                          offset: 0x290,
                           type: "variable",
                           dataType: "uint8",
                           hidden: true,
@@ -657,13 +599,13 @@ const template: GameJson = {
                           id: "level-17-%index%",
                           type: "bitflags",
                           flags: [
-                            { offset: 0x2290, bit: 0, label: "Unlocked", separator: true },
-                            { offset: 0x2e20, bit: 1, label: "Cage 1" },
-                            { offset: 0x2e20, bit: 2, label: "Cage 2" },
-                            { offset: 0x2e20, bit: 3, label: "Cage 3" },
-                            { offset: 0x2e20, bit: 4, label: "Cage 4" },
-                            { offset: 0x2e20, bit: 5, label: "Cage 5" },
-                            { offset: 0x2e20, bit: 6, label: "Cage 6" },
+                            { offset: 0x290, bit: 0, label: "Unlocked", separator: true },
+                            { offset: 0xe20, bit: 1, label: "Cage 1" },
+                            { offset: 0xe20, bit: 2, label: "Cage 2" },
+                            { offset: 0xe20, bit: 3, label: "Cage 3" },
+                            { offset: 0xe20, bit: 4, label: "Cage 4" },
+                            { offset: 0xe20, bit: 5, label: "Cage 5" },
+                            { offset: 0xe20, bit: 6, label: "Cage 6" },
                           ],
                         },
                       ],
@@ -674,7 +616,7 @@ const template: GameJson = {
                         {
                           type: "bitflags",
                           flags: [
-                            { offset: 0x2291, bit: 0, label: "Unlocked" }
+                            { offset: 0x291, bit: 0, label: "Unlocked" }
                           ],
                         },
                       ],
@@ -685,7 +627,7 @@ const template: GameJson = {
                         {
                           type: "bitflags",
                           flags: [
-                            { offset: 0x2292, bit: 0, label: "Unlocked" },
+                            { offset: 0x292, bit: 0, label: "Unlocked" }
                           ],
                         },
                       ],
@@ -696,7 +638,7 @@ const template: GameJson = {
                         {
                           type: "bitflags",
                           flags: [
-                            { offset: 0x2293, bit: 0, label: "Unlocked" },
+                            { offset: 0x293, bit: 0, label: "Unlocked" }
                           ],
                         },
                       ],
@@ -707,7 +649,7 @@ const template: GameJson = {
                         {
                           type: "bitflags",
                           flags: [
-                            { offset: 0x2294, bit: 0, label: "Unlocked" },
+                            { offset: 0x294, bit: 0, label: "Unlocked" }
                           ],
                         },
                       ],
@@ -718,7 +660,7 @@ const template: GameJson = {
                         {
                           type: "bitflags",
                           flags: [
-                            { offset: 0x2295, bit: 0, label: "Unlocked" },
+                            { offset: 0x295, bit: 0, label: "Unlocked" }
                           ],
                         },
                       ],
@@ -729,7 +671,7 @@ const template: GameJson = {
                         {
                           type: "bitflags",
                           flags: [
-                            { offset: 0x2296, bit: 0, label: "Unlocked" },
+                            { offset: 0x296, bit: 0, label: "Unlocked" }
                           ],
                         },
                       ],
@@ -740,7 +682,7 @@ const template: GameJson = {
                         {
                           type: "bitflags",
                           flags: [
-                            { offset: 0x2297, bit: 0, label: "Unlocked" },
+                            { offset: 0x297, bit: 0, label: "Unlocked" }
                           ],
                         },
                       ],

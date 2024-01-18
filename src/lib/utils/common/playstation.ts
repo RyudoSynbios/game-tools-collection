@@ -1,8 +1,20 @@
 import { get } from "svelte/store";
 
-import { fileHeaderShift } from "$lib/stores";
+import { gameTemplate } from "$lib/stores";
+import { getInt } from "$lib/utils/bytes";
+import { getRegions } from "$lib/utils/validator";
 
-import { getInt } from "../bytes";
+export function isMcr(dataView: DataView, shift = 0x0): boolean {
+  if (
+    dataView.byteLength >= 0x20000 &&
+    getInt(shift + 0x0, "uint8", {}, dataView) === 0x4d &&
+    getInt(shift + 0x1, "uint8", {}, dataView) === 0x43
+  ) {
+    return true;
+  }
+
+  return false;
+}
 
 export function isDexDriveHeader(dataView: DataView) {
   const validator = [
@@ -10,7 +22,7 @@ export function isDexDriveHeader(dataView: DataView) {
   ];
 
   return validator.every((hex, index) => {
-    if (dataView.getUint8(index) === hex) {
+    if (getInt(index, "uint8", {}, dataView) === hex) {
       return true;
     }
   });
@@ -20,25 +32,25 @@ export function getDexDriveHeaderShift(): number {
   return 0xf40;
 }
 
-export function isPsvHeader() {
+export function isPsvHeader(dataView?: DataView) {
   const validator = [0x0, 0x56, 0x53, 0x50, 0x0];
 
   return validator.every((hex, index) => {
-    if (getInt(index, "uint8") === hex) {
+    if (getInt(index, "uint8", {}, dataView) === hex) {
       return true;
     }
   });
 }
 
 export function getPsvHeaderShift(): number {
-  return -0x1f7c;
+  return 0x84;
 }
 
 export function isVmpHeader(dataView: DataView) {
   const validator = [0x0, 0x50, 0x4d, 0x56, 0x80];
 
   return validator.every((hex, index) => {
-    if (dataView.getUint8(index) === hex) {
+    if (getInt(index, "uint8", {}, dataView) === hex) {
       return true;
     }
   });
@@ -48,32 +60,33 @@ export function getVmpHeaderShift(): number {
   return 0x80;
 }
 
-export function checkPlaystationSlots(
-  index: number,
-  validators: number[][],
-): boolean {
-  const $fileHeaderShift = get(fileHeaderShift);
+export function customGetRegions(dataView: DataView, shift: number): string[] {
+  const $gameTemplate = get(gameTemplate);
 
-  if (index === 0 && isPsvHeader()) {
-    return true;
-  }
+  const overridedRegions = Object.entries(
+    $gameTemplate.validator.regions,
+  ).reduce(
+    (
+      regions: { [key: string]: { [key: number]: any } },
+      [region, condition],
+    ) => {
+      const validator = Object.values(condition)[0];
 
-  const offset = $fileHeaderShift + (index + 1) * 0x80 + 0xa;
-  const length = validators[0].length;
+      if (isPsvHeader(dataView)) {
+        regions[region] = { 0x64: validator };
+      } else if (isMcr(dataView, shift)) {
+        regions[region] = [
+          {
+            $or: [...Array(15).keys()].map((index) => ({
+              [0x8a + index * 0x80]: validator,
+            })),
+          },
+        ];
+      }
+      return regions;
+    },
+    {},
+  );
 
-  for (let i = offset; i < offset + length; i += 0x1) {
-    if (
-      validators.every(
-        (validator) => getInt(i, "uint8") !== validator[i - offset],
-      )
-    ) {
-      return false;
-    }
-  }
-
-  if (getInt(offset - 0xa, "uint8") !== 0x51) {
-    return false;
-  }
-
-  return true;
+  return getRegions(dataView, shift, overridedRegions);
 }

@@ -1,9 +1,14 @@
 import { get } from "svelte/store";
 
-import { gameJson, gameRegion } from "$lib/stores";
+import {
+  fileHeaderShift,
+  gameJson,
+  gameRegion,
+  gameTemplate,
+} from "$lib/stores";
 import { getInt, setInt, setString } from "$lib/utils/bytes";
 import {
-  checkPlaystationSlots,
+  customGetRegions,
   getDexDriveHeaderShift,
   getPsvHeaderShift,
   getVmpHeaderShift,
@@ -11,16 +16,9 @@ import {
   isPsvHeader,
   isVmpHeader,
 } from "$lib/utils/common/playstation";
+import { getObjKey } from "$lib/utils/format";
 
-import type { Bit, Item, ItemInt } from "$lib/types";
-
-import {
-  europeValidator,
-  franceValidator,
-  germanyValidator,
-  japanValidator,
-  usaValidator,
-} from "./template";
+import type { Bit, Item, ItemContainer, ItemInt } from "$lib/types";
 
 export function initHeaderShift(dataView: DataView): number {
   if (isDexDriveHeader(dataView)) {
@@ -46,14 +44,72 @@ export function initShifts(shifts: number[]): number[] {
   return shifts;
 }
 
-export function checkSlots(index: number): boolean {
-  return !checkPlaystationSlots(index, [
-    europeValidator,
-    japanValidator,
-    usaValidator,
-    franceValidator,
-    germanyValidator,
-  ]);
+export function overrideItem(item: Item): Item {
+  const $gameRegion = get(gameRegion);
+
+  if (
+    "id" in item &&
+    item.id === "playTime" &&
+    ($gameRegion === 1 || $gameRegion === 2)
+  ) {
+    const itemInt = item as ItemInt;
+
+    itemInt.operations![0] = { "/": 60 };
+
+    return itemInt;
+  }
+
+  return item;
+}
+
+export function overrideParseContainerItemsShifts(
+  item: ItemContainer,
+  shifts: number[],
+  index: number,
+): [boolean, number[] | undefined] {
+  const $fileHeaderShift = get(fileHeaderShift);
+  const $gameRegion = get(gameRegion);
+  const $gameTemplate = get(gameTemplate);
+
+  const validator: number[] =
+    $gameTemplate.validator.regions[
+      getObjKey($gameTemplate.validator.regions, $gameRegion)
+    ][0];
+
+  if (item.id === "slots") {
+    if (isPsvHeader()) {
+      if (index === 0) {
+        return [false, undefined];
+      } else {
+        return [true, [-1]];
+      }
+    }
+
+    for (let i = 1; i < 16; i += 1) {
+      const offset = $fileHeaderShift + i * 0x80;
+
+      const isValid = [...validator, 0x30, 0x30 + index].every((hex, j) => {
+        if (getInt(offset + 0xa + j, "uint8") === hex) {
+          return true;
+        }
+      });
+
+      if (isValid && getInt(offset, "uint8") === 0x51) {
+        return [true, [...shifts, i * 0x2000]];
+      }
+    }
+
+    return [true, [-1]];
+  }
+
+  return [false, undefined];
+}
+
+export function overrideGetRegions(
+  dataView: DataView,
+  shift: number,
+): string[] {
+  return customGetRegions(dataView, shift);
 }
 
 export function overrideGetInt(item: Item): [boolean, boolean | undefined] {
