@@ -1,3 +1,6 @@
+import { get } from "svelte/store";
+
+import { fileHeaderShift } from "$lib/stores";
 import { extractBit, getInt, setInt } from "$lib/utils/bytes";
 import {
   getGameSharkHeaderShift,
@@ -24,6 +27,8 @@ export function initHeaderShift(dataView: DataView): number {
 }
 
 export function overrideShift(item: Item, shifts: number[]): number[] {
+  const $fileHeaderShift = get(fileHeaderShift);
+
   if (
     "id" in item &&
     (item.id === "checksumSection2" ||
@@ -48,10 +53,10 @@ export function overrideShift(item: Item, shifts: number[]): number[] {
 
     if (index <= 5) {
       for (let i = 0x0; i < 0x1000 * 0x10; i += 0x1000) {
-        const saveIndex = getInt(i + 0x7, "uint8");
+        const saveIndex = getInt($fileHeaderShift + i + 0x7, "uint8");
 
         if (saveIndex === index) {
-          return [i];
+          return [$fileHeaderShift, i];
         }
       }
     }
@@ -65,11 +70,13 @@ export function overrideParseContainerItemsShifts(
   shifts: number[],
   index: number,
 ): [boolean, number[] | undefined] {
+  const $fileHeaderShift = get(fileHeaderShift);
+
   if (item.id === "slots") {
     let invalidOffset = 0x0;
 
     for (let i = 0x0; i < item.length * 0x10; i += item.length) {
-      const saveIndex = getInt(i + 0x7, "uint8");
+      const saveIndex = getInt($fileHeaderShift + i + 0x7, "uint8");
 
       if (saveIndex === index) {
         return [true, [...shifts, i]];
