@@ -53,6 +53,12 @@
   }
 
   function handleUploadedFile(file: File): void {
+    if (file.size === 0) {
+      error = $gameTemplate.validator.error;
+
+      return;
+    }
+
     isDragging = false;
     $fileIsLoading = true;
 
