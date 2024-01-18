@@ -31,9 +31,9 @@ const template: GameJson = {
               name: "Unlocked Modes",
               type: "bitflags",
               flags: [
-                { offset: 0xb, bit: 1, label: "Shooter Mode Unlocked" },
                 { offset: 0xb, bit: 2, label: "Magician Mode Unlocked" },
                 { offset: 0xb, bit: 3, label: "Fighter Mode Unlocked" },
+                { offset: 0xb, bit: 1, label: "Shooter Mode Unlocked" },
                 { offset: 0xb, bit: 4, label: "Thief Mode Unlocked" },
                 { offset: 0xb, bit: 5, label: "All modes completed" },
               ],
@@ -2259,6 +2259,9 @@ const template: GameJson = {
       0: 0x0,
       1: 0x3,
     },
+  },
+  resourcesOrder: {
+    modes: [0x0, 0x2, 0x3, 0x1, 0x4],
   },
 };
 
