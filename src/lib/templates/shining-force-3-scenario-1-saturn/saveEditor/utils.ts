@@ -12,7 +12,7 @@ export function beforeInitDataView(dataView: DataView): DataView {
   const array = [];
 
   for (let i = 0x0; i < dataView.byteLength; i += 0x1) {
-    if (i >= 0xc0 && i % 0x40 === 0 && dataView.getUint8(i) === 0) {
+    if (i >= 0xc0 && i !== 0x3840 && i % 0x40 === 0 && dataView.getUint8(i) === 0) {
       i += 0x3;
     } else {
       array.push(dataView.getUint8(i));
