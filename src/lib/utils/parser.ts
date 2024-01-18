@@ -285,6 +285,7 @@ export function parseContainer(
 
     const parsedSubitem: any = {
       flex: item.flex,
+      disabled: getShift(instanceShifts) === -1,
       items: item.items
         ? item.items.reduce((results: any, subitem: any) => {
             const parsedItem = parseItem(
