@@ -211,18 +211,21 @@ export function getInt(
   offset: number,
   dataType: Exclude<DataType, "boolean" | "int64" | "uint64" | "string">,
   options: IntOptions = {},
+  dataViewTmp?: DataView,
 ): number {
-  const $dataView = get(dataView);
+  const $dataView =
+    dataViewTmp && dataViewTmp.byteLength > 0 ? dataViewTmp : get(dataView);
 
   if (
-    offset < 0 ||
+    $dataView.byteLength === 0x0 ||
+    offset < 0x0 ||
     offset + dataTypeToLength(dataType) - 1 > $dataView.byteLength
   ) {
     console.error(
       `Tried to read bytes past the end of a buffer at index ${offset} of ${$dataView.byteLength}`,
     );
 
-    return 0;
+    return 0x0;
   }
 
   let int = 0;
@@ -284,7 +287,8 @@ export function setInt(
   const $isDebug = get(isDebug);
 
   if (
-    offset < 0 ||
+    $dataView.byteLength === 0x0 ||
+    offset < 0x0 ||
     offset + dataTypeToLength(dataType) - 1 > $dataView.byteLength
   ) {
     console.error(
@@ -375,11 +379,14 @@ export function getBigInt(
   offset: number,
   dataType: "int64" | "uint64",
   options: BigIntOptions = {},
+  dataViewTmp?: DataView,
 ): bigint {
-  const $dataView = get(dataView);
+  const $dataView =
+    dataViewTmp && dataViewTmp.byteLength > 0 ? dataViewTmp : get(dataView);
 
   if (
-    offset < 0 ||
+    $dataView.byteLength === 0x0 ||
+    offset < 0x0 ||
     offset + dataTypeToLength(dataType) - 1 > $dataView.byteLength
   ) {
     console.error(
@@ -413,7 +420,8 @@ export function setBigInt(
   const $isDebug = get(isDebug);
 
   if (
-    offset < 0 ||
+    $dataView.byteLength === 0x0 ||
+    offset < 0x0 ||
     offset + dataTypeToLength(dataType) - 1 > $dataView.byteLength
   ) {
     console.error(

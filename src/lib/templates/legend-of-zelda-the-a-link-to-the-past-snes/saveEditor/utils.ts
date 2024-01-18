@@ -25,7 +25,7 @@ export function overrideGetRegions(dataView: DataView): string[] {
 
     const checksum = generateChecksum(itemChecksum, dataView);
 
-    if (checksum === dataView.getUint16(itemChecksum.offset, true)) {
+    if (checksum === getInt(itemChecksum.offset, "uint16", {}, dataView)) {
       return ["europe_usa", "japan", "france_canada", "germany"];
     }
   }
@@ -157,11 +157,7 @@ export function generateChecksum(
     i < item.control.offset + item.control.length;
     i += 0x2
   ) {
-    if (dataView.byteLength > 0) {
-      checksum -= dataView.getUint16(i, true);
-    } else {
-      checksum -= getInt(i, "uint16");
-    }
+    checksum -= getInt(i, "uint16", {}, dataView);
   }
 
   checksum &= 0xffff;

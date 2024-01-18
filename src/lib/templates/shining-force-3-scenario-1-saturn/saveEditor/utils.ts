@@ -12,10 +12,12 @@ export function beforeInitDataView(dataView: DataView): DataView {
   const array = [];
 
   for (let i = 0x0; i < dataView.byteLength; i += 0x1) {
-    if (i >= 0xc0 && i !== 0x3840 && i % 0x40 === 0 && dataView.getUint8(i) === 0) {
+    const int = getInt(i, "uint8", {}, dataView);
+
+    if (i >= 0xc0 && i !== 0x3840 && i % 0x40 === 0 && int === 0) {
       i += 0x3;
     } else {
-      array.push(dataView.getUint8(i));
+      array.push(int);
     }
   }
 
@@ -100,13 +102,13 @@ export function beforeSaving(): ArrayBufferLike {
   let j = 0x0;
 
   for (let i = 0x0; i < $dataView.byteLength; i += 0x1) {
-    if (i >= 0xc0 && j % 0x40 === 0 && $dataView.getUint8(i) !== 0x80) {
+    if (i >= 0xc0 && j % 0x40 === 0 && getInt(i, "uint8") !== 0x80) {
       array.push(0x0, 0x0, 0x0, 0x0);
 
       j += 0x4;
     }
 
-    array.push($dataView.getUint8(i));
+    array.push(getInt(i, "uint8"));
 
     j += 0x1;
   }

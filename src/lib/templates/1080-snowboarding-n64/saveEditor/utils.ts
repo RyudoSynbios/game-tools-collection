@@ -40,7 +40,7 @@ export function overrideGetRegions(
 
   const checksum = generateChecksum(itemChecksum, dataView);
 
-  if (checksum === dataView.getUint32(itemChecksum.offset, true)) {
+  if (checksum === getInt(itemChecksum.offset, "uint32", {}, dataView)) {
     return ["europe", "usa_japan"];
   }
 
@@ -192,25 +192,18 @@ export function generateChecksum(
     const offsets = [0x188, 0x1f0, 0x210, 0x228];
 
     offsets.forEach((offset) => {
-      if (dataView.byteLength > 0) {
-        checksum += dataView.getUint32(
-          item.offset + offset - (item.id === "checksum1-2" ? 0x4 : 0x0),
-          true,
-        );
-        checksum += dataView.getUint32(
-          item.offset + offset + (item.id === "checksum1-1" ? 0x4 : 0x0),
-          true,
-        );
-      } else {
-        checksum += getInt(
-          item.offset + offset - (item.id === "checksum1-2" ? 0x4 : 0x0),
-          "uint32",
-        );
-        checksum += getInt(
-          item.offset + offset + (item.id === "checksum1-1" ? 0x4 : 0x0),
-          "uint32",
-        );
-      }
+      checksum += getInt(
+        item.offset + offset - (item.id === "checksum1-2" ? 0x4 : 0x0),
+        "uint32",
+        {},
+        dataView,
+      );
+      checksum += getInt(
+        item.offset + offset + (item.id === "checksum1-1" ? 0x4 : 0x0),
+        "uint32",
+        {},
+        dataView,
+      );
     });
   } else {
     for (
@@ -218,11 +211,7 @@ export function generateChecksum(
       i < item.control.offset + item.control.length;
       i += 0x4
     ) {
-      if (dataView.byteLength > 0) {
-        checksum += dataView.getUint32(i);
-      } else {
-        checksum += getInt(i, "uint32");
-      }
+      checksum += getInt(i, "uint32", {}, dataView);
     }
   }
 

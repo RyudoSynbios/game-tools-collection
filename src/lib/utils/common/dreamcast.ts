@@ -1,16 +1,14 @@
 import { get } from "svelte/store";
 
 import { dataView } from "$lib/stores";
+import { getInt } from "$lib/utils/bytes";
 
 import type { ItemChecksum } from "$lib/types";
-
-import { getInt } from "../bytes";
 
 export function isDciFile(
   dataView = new DataView(new ArrayBuffer(0)),
 ): boolean {
-  const firstHex =
-    dataView.byteLength > 0 ? dataView.getUint8(0x0) : getInt(0x0, "uint8");
+  const firstHex = getInt(0x0, "uint8", {}, dataView);
 
   if (dataView.byteLength !== 0x20000 && firstHex === 0x33) {
     return true;
@@ -23,15 +21,15 @@ export function dciToDataView(dataView: DataView): DataView {
   const array = [];
 
   for (let i = 0x0; i < 0x20; i += 0x1) {
-    array.push(dataView.getUint8(i));
+    array.push(getInt(i, "uint8", {}, dataView));
   }
 
   for (let i = 0x20; i < dataView.byteLength; i += 0x4) {
     array.push(
-      dataView.getUint8(i + 0x3),
-      dataView.getUint8(i + 0x2),
-      dataView.getUint8(i + 0x1),
-      dataView.getUint8(i),
+      getInt(i + 0x3, "uint8", {}, dataView),
+      getInt(i + 0x2, "uint8", {}, dataView),
+      getInt(i + 0x1, "uint8", {}, dataView),
+      getInt(i, "uint8", {}, dataView),
     );
   }
 
@@ -74,7 +72,7 @@ export function vmuToDataView(dataView: DataView): DataView {
 
   for (let i = dataView.byteLength - 0x200; i >= 0; i -= 0x200) {
     for (let j = 0x0; j < 0x200; j += 0x1) {
-      array.push(dataView.getUint8(i + j));
+      array.push(getInt(i + j, "uint8", {}, dataView));
     }
   }
 

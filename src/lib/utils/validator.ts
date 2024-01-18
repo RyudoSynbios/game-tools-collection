@@ -1,6 +1,7 @@
 import { get } from "svelte/store";
 
 import { gameTemplate } from "$lib/stores";
+import { getInt } from "$lib/utils/bytes";
 import { getObjKey } from "$lib/utils/format";
 
 export function checkConditions(conditions: any, callback: any): boolean {
@@ -42,37 +43,40 @@ export function getRegionIndex(region: string): number {
   return regionIndex;
 }
 
-export function getRegions(dataView: DataView, shift = 0x0): string[] {
+export function getRegions(
+  dataView: DataView,
+  shift = 0x0,
+  overridedRegions?: { [key: string]: { [key: number]: any } },
+): string[] {
   const $gameTemplate = get(gameTemplate);
 
-  const regions = Object.entries($gameTemplate.validator.regions).reduce(
-    (regions: string[], [region, conditions]) => {
-      if (
-        checkConditions(conditions, (condition: any) => {
-          const offset = parseInt(getObjKey(condition, 0));
-          const array = condition[offset];
-          const length = array.length;
+  const regions = Object.entries(
+    overridedRegions || $gameTemplate.validator.regions,
+  ).reduce((regions: string[], [region, conditions]) => {
+    if (
+      checkConditions(conditions, (condition: any) => {
+        const offset = parseInt(getObjKey(condition, 0));
+        const array = condition[offset];
+        const length = array.length;
 
-          for (let i = offset; i < offset + length; i += 0x1) {
-            if (i >= dataView.byteLength) {
-              return false;
-            }
-
-            if (dataView.getUint8(i + shift) !== array[i - offset]) {
-              return false;
-            }
+        for (let i = offset; i < offset + length; i += 0x1) {
+          if (i >= dataView.byteLength) {
+            return false;
           }
 
-          return true;
-        })
-      ) {
-        regions.push(region);
-      }
+          if (getInt(i + shift, "uint8", {}, dataView) !== array[i - offset]) {
+            return false;
+          }
+        }
 
-      return regions;
-    },
-    [],
-  );
+        return true;
+      })
+    ) {
+      regions.push(region);
+    }
+
+    return regions;
+  }, []);
 
   return regions;
 }

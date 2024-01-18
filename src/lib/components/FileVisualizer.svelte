@@ -2,6 +2,7 @@
   import { onDestroy, onMount } from "svelte";
 
   import { dataView, gameJson, isFileVisualizerOpen } from "$lib/stores";
+  import { getInt } from "$lib/utils/bytes";
   import { parseItem, parseValidator } from "$lib/utils/fileVisualizer";
 
   import type { HighlightedOffsets } from "$lib/utils/fileVisualizer";
@@ -140,7 +141,7 @@
                   ]?.type === "bitflags"}
                   on:mousemove={(event) => handleMouseMove(event, row + offset)}
                 >
-                  {$dataView.getUint8(row + offset).toHex(2)}
+                  {getInt(row + offset, "uint8").toHex(2)}
                 </div>
               {/each}
             </div>

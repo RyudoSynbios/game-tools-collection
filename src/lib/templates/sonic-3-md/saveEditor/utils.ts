@@ -10,7 +10,7 @@ export function beforeInitDataView(dataView: DataView): DataView {
 
   for (let i = 0x0; i < dataView.byteLength; i += 0x1) {
     if (i % 0x2 !== 0) {
-      array.push(dataView.getUint8(i));
+      array.push(getInt(i, "uint8", {}, dataView));
     }
   }
 
@@ -70,7 +70,7 @@ export function beforeSaving(): ArrayBufferLike {
       j += 0x1;
     }
 
-    array.push($dataView.getUint8(i));
+    array.push(getInt(i, "uint8"));
 
     j += 0x1;
   }

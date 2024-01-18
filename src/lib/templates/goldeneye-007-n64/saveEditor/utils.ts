@@ -1,8 +1,8 @@
 import Long from "long";
 import { get } from "svelte/store";
 
-import { getInt, setInt } from "$lib/utils/bytes";
 import { fileHeaderShift } from "$lib/stores";
+import { getBigInt, getInt, setInt } from "$lib/utils/bytes";
 import {
   getDexDriveHeaderShift,
   getSrmHeaderShift,
@@ -43,7 +43,10 @@ export function overrideGetRegions(
 
   const checksum = generateChecksum(itemChecksum, dataView);
 
-  if (checksum === dataView.getBigUint64(itemChecksum.offset)) {
+  if (
+    checksum ===
+    getBigInt(itemChecksum.offset, "uint64", { bigEndian: true }, dataView)
+  ) {
     return ["europe_usa_japan"];
   }
 
@@ -243,13 +246,7 @@ export function generateChecksum(
     i < item.control.offset + item.control.length;
     i += 0x1, shift += 7
   ) {
-    let int = 0x0;
-
-    if (dataView.byteLength > 0) {
-      int = dataView.getUint8(i);
-    } else {
-      int = getInt(i, "uint8");
-    }
+    const int = getInt(i, "uint8", {}, dataView);
 
     polynormal = getHash(int, polynormal, shift);
 
@@ -263,13 +260,7 @@ export function generateChecksum(
     i >= item.control.offset;
     i -= 0x1, shift += 3
   ) {
-    let int = 0x0;
-
-    if (dataView.byteLength > 0) {
-      int = dataView.getUint8(i);
-    } else {
-      int = getInt(i, "uint8");
-    }
+    const int = getInt(i, "uint8", {}, dataView);
 
     polynormal = getHash(int, polynormal, shift);
 

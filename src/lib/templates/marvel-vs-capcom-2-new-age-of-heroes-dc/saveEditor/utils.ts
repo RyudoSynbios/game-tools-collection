@@ -43,7 +43,7 @@ export function initShifts(shifts: number[]): number[] {
         return false;
       }
 
-      if ($dataView.getUint8(i) !== array[i - offset]) {
+      if (getInt(i, "uint8") !== array[i - offset]) {
         return false;
       }
     }
