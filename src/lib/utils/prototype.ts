@@ -1,6 +1,6 @@
 import { decToHex } from "hex2dec";
 
-import { extractBit } from "./bytes";
+import { extractBit } from "$lib/utils/bytes";
 
 // DataView prototype adapted from https://gist.github.com/tjmehta/7e0f0d2aca966c71e70a453d0786f938
 
