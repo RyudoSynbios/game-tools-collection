@@ -82,7 +82,7 @@ export function overrideParseContainerItemsShifts(
         return [true, [...shifts, i]];
       }
 
-      if (saveIndex === 0x10) {
+      if (saveIndex === 0x10 || saveIndex === 0xff) {
         invalidOffset = i;
       }
     }
