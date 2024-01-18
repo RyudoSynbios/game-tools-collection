@@ -25,7 +25,9 @@ import type {
   ItemChecksum,
   ItemContainer,
   ItemInt,
+  ItemSection,
   ItemString,
+  ItemTab,
 } from "$lib/types";
 
 export function initHeaderShift(dataView: DataView): number {
@@ -38,7 +40,7 @@ export function initHeaderShift(dataView: DataView): number {
   return 0x0;
 }
 
-export function overrideItem(item: Item): Item {
+export function overrideItem(item: Item): Item | ItemTab {
   const $gameRegion = get(gameRegion);
 
   if ("id" in item && item.id === "checksum" && $gameRegion === 2) {
@@ -55,6 +57,12 @@ export function overrideItem(item: Item): Item {
     }
 
     return itemString;
+  } else if ("id" in item && item.id === "owlFile" && $gameRegion === 2) {
+    const itemTab = item as ItemTab;
+
+    itemTab.disabled = true;
+
+    return itemTab;
   } else if ("id" in item && item.id === "mask" && $gameRegion === 2) {
     const itemBoolean = item as ItemBoolean;
 

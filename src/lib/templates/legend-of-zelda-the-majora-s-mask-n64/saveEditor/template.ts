@@ -331,6 +331,7 @@ const template: GameJson = {
                       ],
                     },
                     {
+                      id: "owlFile",
                       name: "Owl File",
                       flex: true,
                       items: [
