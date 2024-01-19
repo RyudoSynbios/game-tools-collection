@@ -228,7 +228,7 @@
       @apply flex flex-wrap bg-primary-700 rounded overflow-hidden;
 
       & > .gtc-tab {
-        @apply flex items-center px-4 py-2 text-sm cursor-pointer;
+        @apply flex items-center px-4 py-2 h-9 text-sm cursor-pointer;
 
         &:hover:not(.gtc-tab-debug):not(.gtc-tab-disabled):not(
             .gtc-tab-highlight
