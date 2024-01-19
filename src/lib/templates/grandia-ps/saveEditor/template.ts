@@ -83,6 +83,7 @@ const template: GameJson = {
                           ],
                           leadingZeros: 1,
                           max: 59,
+                          test: true,
                         },
                         {
                           id: "playTime",
@@ -95,6 +96,7 @@ const template: GameJson = {
                           ],
                           leadingZeros: 1,
                           max: 59,
+                          test: true,
                         },
                       ],
                     },

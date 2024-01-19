@@ -60,6 +60,7 @@ const template: GameJson = {
                       letterDataType: "uint8",
                       fallback: 0x20,
                       resource: "letters",
+                      test: true,
                     },
                     {
                       name: "Icon",

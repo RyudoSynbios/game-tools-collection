@@ -96,6 +96,7 @@ const template: GameJson = {
                           dataType: "uint32",
                           max: 9999,
                           leadingZeros: 3,
+                          test: true,
                         },
                         {
                           id: "score-4",
@@ -167,6 +168,7 @@ const template: GameJson = {
                           dataType: "uint32",
                           max: 9999,
                           leadingZeros: 3,
+                          test: true,
                         },
                         {
                           id: "score-4",
@@ -320,6 +322,7 @@ const template: GameJson = {
                           dataType: "uint32",
                           max: 9999,
                           leadingZeros: 3,
+                          test: true,
                         },
                         {
                           id: "score-4",

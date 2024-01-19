@@ -40,6 +40,7 @@ const template: GameJson = {
               dataType: "uint32",
               bigEndian: true,
               disabled: true,
+              test: true,
             },
             {
               name: "VS Point",
@@ -48,6 +49,7 @@ const template: GameJson = {
               dataType: "uint16",
               bigEndian: true,
               max: 9999,
+              test: true,
             },
           ],
         },

@@ -1,11 +1,13 @@
 <script lang="ts">
   import ExpandMoreIcon from "$lib/assets/ExpandMore.svelte";
+  import { isDebug } from "$lib/stores";
   import { scrollIntoViewIfNecessary } from "$lib/utils/ui";
 
   export let label = "";
   export let value: bigint | number | string;
   export let options: { key: string; value: string }[];
   export let disabled = false;
+  export let test = false;
   export let onChange: (event: Event) => void;
 
   let rootEl: HTMLDivElement;
@@ -213,6 +215,7 @@
     <input
       value={valueDisplayed}
       {disabled}
+      data-test={$isDebug && test ? true : null}
       bind:this={inputEl}
       on:input={handleFilter}
       on:focus={handleFocusOn}

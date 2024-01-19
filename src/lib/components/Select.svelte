@@ -1,8 +1,11 @@
 <script lang="ts">
+  import { isDebug } from "$lib/stores";
+
   export let label = "";
   export let value: bigint | number | string;
   export let options: { key: string; value: string }[];
   export let disabled = false;
+  export let test = false;
   export let onChange: (event: Event) => void;
 </script>
 
@@ -10,7 +13,12 @@
   {#if label}
     <p>{label}</p>
   {/if}
-  <select {value} {disabled} on:change={onChange}>
+  <select
+    {value}
+    {disabled}
+    data-test={$isDebug && test ? true : null}
+    on:change={onChange}
+  >
     {#each options as option}
       <option value={parseInt(option.key)}>
         {option.value}

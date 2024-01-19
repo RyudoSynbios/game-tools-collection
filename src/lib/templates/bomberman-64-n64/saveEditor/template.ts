@@ -844,6 +844,7 @@ const template: GameJson = {
                       letterDataType: "uint8",
                       fallback: 0xf,
                       resource: "letters",
+                      test: true,
                     },
                   ],
                 },

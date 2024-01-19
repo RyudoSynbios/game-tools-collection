@@ -1,6 +1,8 @@
 <script lang="ts">
-  import { dataView } from "$lib/stores";
   import type { HTMLInputTypeAttribute } from "svelte/elements";
+
+  import { dataView } from "$lib/stores";
+  import { isDebug } from "$lib/stores";
 
   export let label = "";
   export let type: HTMLInputTypeAttribute;
@@ -11,6 +13,8 @@
   export let leadingZeros = 0;
   export let value: bigint | number | string;
   export let disabled = false;
+  export let checksum: boolean | null = null;
+  export let test = false;
   export let onChange: (event: Event) => void;
 
   let inputEl: HTMLInputElement;
@@ -77,6 +81,8 @@
     {maxlength}
     {step}
     {disabled}
+    data-checksum={checksum}
+    data-test={$isDebug && test ? true : null}
     bind:this={inputEl}
     on:change={onChange}
     on:input={handleInput}

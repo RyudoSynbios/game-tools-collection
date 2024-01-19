@@ -65,6 +65,7 @@
       maxlength={item.length / dataTypeToLength(item.letterDataType)}
       {value}
       disabled={item.disabled}
+      test={item.test}
       onChange={handleInputChange}
     />
   </div>

@@ -67,6 +67,7 @@ const template: GameJson = {
                   dataType: "string",
                   letterDataType: "uint8",
                   resource: "letters",
+                  test: true,
                 },
                 {
                   name: "Play Time",

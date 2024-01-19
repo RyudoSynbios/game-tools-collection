@@ -54,6 +54,7 @@ const template: GameJson = {
                       disabled: true,
                       fallback: 0x20,
                       resource: "letters",
+                      test: true,
                     },
                     {
                       id: "progression-%index%",

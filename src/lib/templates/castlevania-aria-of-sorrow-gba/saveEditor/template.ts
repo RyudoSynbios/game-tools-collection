@@ -48,6 +48,7 @@ const template: GameJson = {
               type: "variable",
               dataType: "uint8",
               resource: "languages",
+              test: true,
             },
             {
               name: "Unlocked Modes",
@@ -79,6 +80,7 @@ const template: GameJson = {
                       dataType: "string",
                       letterDataType: "uint8",
                       resource: "letters",
+                      test: true,
                     },
                     {
                       name: "Difficulty",

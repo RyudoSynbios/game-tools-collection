@@ -72,6 +72,7 @@ const template: GameJson = {
                           dataType: "uint8",
                           max: 99,
                           leadingZeros: 1,
+                          test: true,
                         },
                         {
                           offset: 0xa1d,
@@ -79,6 +80,7 @@ const template: GameJson = {
                           dataType: "uint8",
                           max: 59,
                           leadingZeros: 1,
+                          test: true,
                         },
                         {
                           offset: 0xa1e,
@@ -86,6 +88,7 @@ const template: GameJson = {
                           dataType: "uint8",
                           max: 59,
                           leadingZeros: 1,
+                          test: true,
                         },
                       ],
                     },

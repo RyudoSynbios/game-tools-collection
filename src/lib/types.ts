@@ -220,6 +220,7 @@ export interface ItemInt {
   autocomplete?: boolean;
   disabled?: boolean;
   hidden?: boolean;
+  test?: boolean;
 }
 
 export interface ItemIntCondition {
@@ -255,6 +256,7 @@ export interface ItemString {
   resource?: string;
   disabled?: boolean;
   hidden?: boolean;
+  test?: boolean;
 }
 
 export interface ItemTab {

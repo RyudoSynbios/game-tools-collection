@@ -150,6 +150,7 @@ const template: GameJson = {
                               letterDataType: "uint8",
                               fallback: 0x3e,
                               resource: "letters",
+                              test: true,
                             },
                             {
                               name: "Three Day Reset Count",
@@ -378,6 +379,7 @@ const template: GameJson = {
                               ],
                               leadingZeros: 1,
                               max: 23,
+                              test: true,
                             },
                             {
                               offset: 0xe,
@@ -394,6 +396,7 @@ const template: GameJson = {
                               ],
                               leadingZeros: 1,
                               max: 59,
+                              test: true,
                             },
                           ],
                         },

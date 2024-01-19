@@ -29,7 +29,14 @@
 </script>
 
 <div class="gtc-checksum">
-  <Input label={item.name} type="text" {value} disabled onChange={() => {}} />
+  <Input
+    label={item.name}
+    type="text"
+    {value}
+    disabled
+    checksum
+    onChange={() => {}}
+  />
 </div>
 
 <style lang="postcss">

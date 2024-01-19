@@ -108,6 +108,7 @@ const template: GameJson = {
                               dataType: "string",
                               letterDataType: "uint8",
                               resource: "letters",
+                              test: true,
                             },
                             {
                               name: "Play Time",
@@ -160,6 +161,7 @@ const template: GameJson = {
                                   ],
                                   leadingZeros: 1,
                                   max: 59,
+                                  test: true,
                                 },
                               ],
                             },
@@ -294,6 +296,7 @@ const template: GameJson = {
                                   ],
                                   leadingZeros: 1,
                                   max: 59,
+                                  test: true,
                                 },
                               ],
                             },

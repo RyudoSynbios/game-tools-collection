@@ -119,6 +119,7 @@ const template: GameJson = {
                       type: "variable",
                       dataType: "uint8",
                       resource: "sonic3Characters",
+                      test: true,
                     },
                     {
                       name: "Zone",
@@ -126,6 +127,7 @@ const template: GameJson = {
                       type: "variable",
                       dataType: "uint8",
                       resource: "sonic3Zones",
+                      test: true,
                     },
                     {
                       name: "Next Special Stage",
@@ -233,6 +235,7 @@ const template: GameJson = {
                       type: "variable",
                       dataType: "upper4",
                       resource: "sonic3&KnucklesCharacters",
+                      test: true,
                     },
                     {
                       name: "Zone",
@@ -240,6 +243,7 @@ const template: GameJson = {
                       type: "variable",
                       dataType: "uint8",
                       resource: "sonic3&KnucklesZones",
+                      test: true,
                     },
                     {
                       name: "Giant Rings Collected",

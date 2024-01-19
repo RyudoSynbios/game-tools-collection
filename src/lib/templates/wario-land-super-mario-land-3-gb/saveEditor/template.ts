@@ -75,6 +75,7 @@ const template: GameJson = {
                               dataType: "uint24",
                               binaryCodedDecimal: true,
                               bigEndian: true,
+                              test: true,
                             },
                             {
                               name: "Current Course",
@@ -103,6 +104,7 @@ const template: GameJson = {
                               type: "variable",
                               dataType: "uint8",
                               binaryCodedDecimal: true,
+                              test: true,
                             },
                             {
                               name: "Power Up",

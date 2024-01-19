@@ -131,6 +131,7 @@
         leadingZeros={item.leadingZeros}
         {value}
         disabled={item.disabled}
+        test={item.test}
         onChange={handleInputChange}
       />
     {:else if item.autocomplete}
@@ -139,6 +140,7 @@
         {value}
         {options}
         disabled={item.disabled}
+        test={item.test}
         onChange={handleInputChange}
       />
     {:else}
@@ -147,6 +149,7 @@
         {value}
         {options}
         disabled={item.disabled}
+        test={item.test}
         onChange={handleInputChange}
       />
     {/if}

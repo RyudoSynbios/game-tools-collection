@@ -76,6 +76,7 @@ const template: GameJson = {
                       dataType: "uint8",
                       max: 17,
                       leadingZeros: 1,
+                      test: true,
                     },
                     {
                       id: "time-1",
@@ -84,6 +85,7 @@ const template: GameJson = {
                       dataType: "uint8",
                       max: 59,
                       leadingZeros: 1,
+                      test: true,
                     },
                   ],
                 },
