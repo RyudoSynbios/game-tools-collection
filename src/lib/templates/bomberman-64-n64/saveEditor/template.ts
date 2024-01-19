@@ -15,7 +15,6 @@ const template: GameJson = {
   },
   items: [
     {
-      id: "slots",
       length: 0x90,
       type: "container",
       instanceType: "tabs",
