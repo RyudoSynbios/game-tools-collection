@@ -219,7 +219,7 @@ export function getInt(
   if (
     $dataView.byteLength === 0x0 ||
     offset < 0x0 ||
-    offset + dataTypeToLength(dataType) - 1 > $dataView.byteLength
+    offset + dataTypeToLength(dataType) - 1 > $dataView.byteLength - 1
   ) {
     console.error(
       `Tried to read bytes past the end of a buffer at index ${offset} of ${$dataView.byteLength}`,
@@ -289,7 +289,7 @@ export function setInt(
   if (
     $dataView.byteLength === 0x0 ||
     offset < 0x0 ||
-    offset + dataTypeToLength(dataType) - 1 > $dataView.byteLength
+    offset + dataTypeToLength(dataType) - 1 > $dataView.byteLength - 1
   ) {
     console.error(
       `Tried to write bytes past the end of a buffer at index ${offset} of ${$dataView.byteLength}`,
@@ -387,7 +387,7 @@ export function getBigInt(
   if (
     $dataView.byteLength === 0x0 ||
     offset < 0x0 ||
-    offset + dataTypeToLength(dataType) - 1 > $dataView.byteLength
+    offset + dataTypeToLength(dataType) - 1 > $dataView.byteLength - 1
   ) {
     console.error(
       `Tried to write bytes past the end of a buffer at index ${offset} of ${$dataView.byteLength}`,
@@ -422,7 +422,7 @@ export function setBigInt(
   if (
     $dataView.byteLength === 0x0 ||
     offset < 0x0 ||
-    offset + dataTypeToLength(dataType) - 1 > $dataView.byteLength
+    offset + dataTypeToLength(dataType) - 1 > $dataView.byteLength - 1
   ) {
     console.error(
       `Tried to read bytes past the end of a buffer at index ${offset} of ${$dataView.byteLength}`,
