@@ -37,25 +37,32 @@ const template: GameJson = {
   },
   items: [
     {
-      name: "Checksum",
-      offset: 0x9a4,
-      type: "checksum",
-      dataType: "uint32",
-      control: {
-        offset: 0x280,
-        length: 0x728,
-      },
-    },
-    {
-      id: "checksumVmu",
-      name: "Checksum VMU",
-      offset: 0x46,
-      type: "checksum",
-      dataType: "uint16",
-      control: {
-        offset: 0x0,
-        length: 0x9a8,
-      },
+      type: "section",
+      flex: true,
+      hidden: true,
+      items: [
+        {
+          name: "Checksum",
+          offset: 0x9a4,
+          type: "checksum",
+          dataType: "uint32",
+          control: {
+            offset: 0x280,
+            length: 0x728,
+          },
+        },
+        {
+          id: "checksumVmu",
+          name: "Checksum VMU",
+          offset: 0x46,
+          type: "checksum",
+          dataType: "uint16",
+          control: {
+            offset: 0x0,
+            length: 0x9a8,
+          },
+        },
+      ],
     },
     {
       type: "tabs",
