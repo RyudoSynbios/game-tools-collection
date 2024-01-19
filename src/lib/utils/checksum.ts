@@ -42,10 +42,14 @@ export function updateChecksums(): void {
       previousChecksum = getInt(item.offset, item.dataType, {
         bigEndian: item.bigEndian,
       }).toHex(hexLength);
+
+      setInt(item.offset, item.dataType, 0x0);
     } else {
       previousChecksum = getBigInt(item.offset, item.dataType, {
         bigEndian: item.bigEndian,
       }).toHex(hexLength);
+
+      setBigInt(item.offset, item.dataType, 0x0n);
     }
 
     let checksum = 0x0;

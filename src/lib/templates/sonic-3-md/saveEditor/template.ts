@@ -80,8 +80,8 @@ const template: GameJson = {
               dataType: "uint16",
               bigEndian: true,
               control: {
-                offset: 0xb4,
-                length: 0x34,
+                offsetStart: 0xb4,
+                offsetEnd: 0xe6,
               },
             },
             {
@@ -196,8 +196,8 @@ const template: GameJson = {
               dataType: "uint16",
               bigEndian: true,
               control: {
-                offset: 0x140,
-                length: 0x54,
+                offsetStart: 0x140,
+                offsetEnd: 0x192,
               },
             },
             {
@@ -298,8 +298,8 @@ const template: GameJson = {
               dataType: "uint16",
               bigEndian: true,
               control: {
-                offset: 0x8,
-                length: 0x54,
+                offsetStart: 0x8,
+                offsetEnd: 0x5a,
               },
             },
             {

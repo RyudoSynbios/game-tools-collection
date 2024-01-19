@@ -100,16 +100,8 @@ export function dataViewToVmu(): ArrayBufferLike {
 export function generateVmuChecksum(item: ItemChecksum): number {
   let checksum = 0x0;
 
-  for (
-    let i = item.control.offset;
-    i < item.control.offset + item.control.length;
-    i += 0x1
-  ) {
+  for (let i = item.control.offsetStart; i < item.control.offsetEnd; i += 0x1) {
     let int = getInt(i, "uint8");
-
-    if (i === item.offset || i === item.offset + 1) {
-      int = 0x0;
-    }
 
     checksum ^= int << 8;
 

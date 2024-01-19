@@ -445,13 +445,11 @@ export function generateChecksum(item: ItemChecksum): number {
   }
 
   for (
-    let i = item.control.offset;
-    i < item.control.offset + item.control.length + (isOwlFile ? 0x2000 : 0x0);
+    let i = item.control.offsetStart;
+    i < item.control.offsetEnd + (isOwlFile ? 0x2000 : 0x0);
     i += 0x1
   ) {
-    if (i < item.offset || i >= item.offset + 0x2) {
-      checksum += getInt(i, "uint8");
-    }
+    checksum += getInt(i, "uint8");
   }
 
   return formatChecksum(checksum, item.dataType);

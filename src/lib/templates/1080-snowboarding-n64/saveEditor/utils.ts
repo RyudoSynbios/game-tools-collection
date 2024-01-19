@@ -40,7 +40,8 @@ export function overrideGetRegions(
   ) as ItemChecksum;
 
   itemChecksum.offset += shift;
-  itemChecksum.control.offset += shift;
+  itemChecksum.control.offsetStart += shift;
+  itemChecksum.control.offsetEnd += shift;
 
   const checksum = generateChecksum(itemChecksum, dataView);
 
@@ -211,8 +212,8 @@ export function generateChecksum(
     });
   } else {
     for (
-      let i = item.control.offset;
-      i < item.control.offset + item.control.length;
+      let i = item.control.offsetStart;
+      i < item.control.offsetEnd;
       i += 0x4
     ) {
       checksum += getInt(i, "uint32", {}, dataView);

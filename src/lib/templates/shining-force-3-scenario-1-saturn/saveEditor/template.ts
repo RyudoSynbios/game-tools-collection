@@ -46,8 +46,8 @@ const template: GameJson = {
           dataType: "uint16",
           bigEndian: true,
           control: {
-            offset: 0x26a,
-            length: 0x325e,
+            offsetStart: 0x26a,
+            offsetEnd: 0x34c8,
           },
         },
         {

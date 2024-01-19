@@ -148,8 +148,8 @@ export interface ItemChecksum {
   dataType: DataTypeInt;
   bigEndian?: boolean;
   control: {
-    offset: number;
-    length: number;
+    offsetStart: number;
+    offsetEnd: number;
   };
   overrideShift?: {
     parent: number;

@@ -22,8 +22,8 @@ const template: GameJson = {
           type: "checksum",
           dataType: "uint32",
           control: {
-            offset: 0x8,
-            length: 0x180,
+            offsetStart: 0x8,
+            offsetEnd: 0x188,
           },
         },
         {
@@ -33,8 +33,8 @@ const template: GameJson = {
           type: "checksum",
           dataType: "uint32",
           control: {
-            offset: 0x8,
-            length: 0x180,
+            offsetStart: 0x8,
+            offsetEnd: 0x188,
           },
         },
         {
@@ -44,8 +44,8 @@ const template: GameJson = {
           type: "checksum",
           dataType: "uint32",
           control: {
-            offset: 0x190,
-            length: 0x60,
+            offsetStart: 0x190,
+            offsetEnd: 0x1f0,
           },
         },
         {
@@ -55,8 +55,8 @@ const template: GameJson = {
           type: "checksum",
           dataType: "uint32",
           control: {
-            offset: 0x190,
-            length: 0x60,
+            offsetStart: 0x190,
+            offsetEnd: 0x1f0,
           },
         },
         {
@@ -66,8 +66,8 @@ const template: GameJson = {
           type: "checksum",
           dataType: "uint32",
           control: {
-            offset: 0x1f8,
-            length: 0x18,
+            offsetStart: 0x1f8,
+            offsetEnd: 0x210,
           },
         },
         {
@@ -77,8 +77,8 @@ const template: GameJson = {
           type: "checksum",
           dataType: "uint32",
           control: {
-            offset: 0x1f8,
-            length: 0x18,
+            offsetStart: 0x1f8,
+            offsetEnd: 0x210,
           },
         },
         {
@@ -88,8 +88,8 @@ const template: GameJson = {
           type: "checksum",
           dataType: "uint32",
           control: {
-            offset: 0x0,
-            length: 0x0,
+            offsetStart: 0x0,
+            offsetEnd: 0x0,
           },
         },
         {
@@ -99,8 +99,8 @@ const template: GameJson = {
           type: "checksum",
           dataType: "uint32",
           control: {
-            offset: 0x0,
-            length: 0x0,
+            offsetStart: 0x0,
+            offsetEnd: 0x0,
           },
         },
       ],

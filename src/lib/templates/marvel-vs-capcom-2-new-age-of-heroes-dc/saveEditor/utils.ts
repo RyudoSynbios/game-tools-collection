@@ -128,15 +128,9 @@ export function generateChecksum(item: ItemChecksum): number {
   let checksum1 = 0x0;
   let checksum2 = 0x0;
 
-  for (
-    let i = item.control.offset;
-    i < item.control.offset + item.control.length;
-    i += 0x2
-  ) {
-    if (i < item.offset || i > item.offset + 0x3) {
-      checksum1 += getInt(i, "uint16");
-      checksum2 += getInt(i, "uint8") + getInt(i + 0x1, "uint8");
-    }
+  for (let i = item.control.offsetStart; i < item.control.offsetEnd; i += 0x2) {
+    checksum1 += getInt(i, "uint16");
+    checksum2 += getInt(i, "uint8") + getInt(i + 0x1, "uint8");
   }
 
   checksum1 &= 0xffff;

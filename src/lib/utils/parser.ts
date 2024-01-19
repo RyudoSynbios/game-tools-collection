@@ -136,8 +136,10 @@ export function parseItem(
   if (newItem.type === "bitflags") {
     return parseBitflags(newItem, shifts);
   } else if (newItem.type === "checksum") {
-    if (newItem.control.offset !== undefined) {
-      newItem.control.offset = getShift(shifts) + newItem.control.offset;
+    if (newItem.control !== undefined) {
+      newItem.control.offsetStart =
+        getShift(shifts) + newItem.control.offsetStart;
+      newItem.control.offsetEnd = getShift(shifts) + newItem.control.offsetEnd;
     }
 
     checksums.push(newItem as ItemChecksum);
@@ -406,12 +408,12 @@ export function checkMissingFields(item: Item): void {
     errors.push("flags");
   }
 
-  if (item.type === "checksum" && item.control.offset === undefined) {
-    errors.push("control.offset");
+  if (item.type === "checksum" && item.control.offsetStart === undefined) {
+    errors.push("control.offsetStart");
   }
 
-  if (item.type === "checksum" && item.control.length === undefined) {
-    errors.push("control.length");
+  if (item.type === "checksum" && item.control.offsetEnd === undefined) {
+    errors.push("control.offsetEnd");
   }
 
   if (

@@ -21,8 +21,11 @@ export function overrideGetRegions(dataView: DataView): string[] {
       ($gameTemplate.items[0] as ItemContainer).items[0],
     ) as ItemChecksum;
 
-    itemChecksum.offset += 0x500 * i;
-    itemChecksum.control.offset += 0x500 * i;
+    const shift = 0x500 * i;
+
+    itemChecksum.offset += shift;
+    itemChecksum.control.offsetStart += shift;
+    itemChecksum.control.offsetEnd += shift;
 
     const checksum = generateChecksum(itemChecksum, dataView);
 
@@ -155,11 +158,7 @@ export function generateChecksum(
 ): number {
   let checksum = 0x5a5a;
 
-  for (
-    let i = item.control.offset;
-    i < item.control.offset + item.control.length;
-    i += 0x2
-  ) {
+  for (let i = item.control.offsetStart; i < item.control.offsetEnd; i += 0x2) {
     checksum -= getInt(i, "uint16", {}, dataView);
   }
 

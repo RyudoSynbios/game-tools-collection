@@ -84,11 +84,7 @@ export function afterSetInt(item: Item): void {
 export function generateChecksum(item: ItemChecksum): number {
   let checksum = 0x0;
 
-  for (
-    let i = item.control.offset;
-    i < item.control.offset + item.control.length;
-    i += 0x1
-  ) {
+  for (let i = item.control.offsetStart; i < item.control.offsetEnd; i += 0x1) {
     checksum += getInt(i, "uint8");
   }
 

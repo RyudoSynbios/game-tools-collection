@@ -32,7 +32,8 @@ export function overrideGetRegions(
   const itemChecksum = clone($gameTemplate.items[0]) as ItemChecksum;
 
   itemChecksum.offset += shift;
-  itemChecksum.control.offset += shift;
+  itemChecksum.control.offsetStart += shift;
+  itemChecksum.control.offsetEnd += shift;
 
   const checksum = generateChecksum(itemChecksum, dataView);
 
@@ -49,19 +50,13 @@ export function generateChecksum(
 ): number {
   let checksum = 0x0;
 
-  for (
-    let i = item.control.offset;
-    i < item.control.offset + item.control.length;
-    i += 0x4
-  ) {
-    if (i < item.offset) {
-      const multiplicator = i - item.control.offset + 0x4;
+  for (let i = item.control.offsetStart; i < item.control.offsetEnd; i += 0x4) {
+    const multiplicator = i - item.control.offsetStart + 0x4;
 
-      checksum += getInt(i, "uint8", {}, dataView) * multiplicator;
-      checksum += getInt(i + 0x1, "uint8", {}, dataView) * (multiplicator - 1);
-      checksum += getInt(i + 0x2, "uint8", {}, dataView) * (multiplicator - 2);
-      checksum += getInt(i + 0x3, "uint8", {}, dataView) * (multiplicator - 3);
-    }
+    checksum += getInt(i, "uint8", {}, dataView) * multiplicator;
+    checksum += getInt(i + 0x1, "uint8", {}, dataView) * (multiplicator - 1);
+    checksum += getInt(i + 0x2, "uint8", {}, dataView) * (multiplicator - 2);
+    checksum += getInt(i + 0x3, "uint8", {}, dataView) * (multiplicator - 3);
   }
 
   return formatChecksum(checksum, item.dataType);

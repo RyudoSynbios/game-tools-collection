@@ -55,17 +55,17 @@ const template: GameJson = {
           hidden: true,
           items: [...Array(0x12).keys()].map((index) => {
             let offset = index * 0x8 + 0x7;
-            let controlOffset = index * 0x8;
-            let length = 0x7;
+            let offsetStart = index * 0x8;
+            let length = 0x8;
 
             if (index === 2) {
               offset = 0x18;
-              controlOffset = 0x10;
-              length = 0x8;
+              offsetStart = 0x10;
+              length = 0x9;
             } else if (index === 3) {
               offset = 0x1f;
-              controlOffset = 0x19;
-              length = 0x6;
+              offsetStart = 0x19;
+              length = 0x7;
             }
 
             return {
@@ -74,8 +74,8 @@ const template: GameJson = {
               type: "checksum",
               dataType: "uint8",
               control: {
-                offset: controlOffset,
-                length,
+                offsetStart,
+                offsetEnd: offsetStart + length,
               },
             };
           }),
@@ -867,22 +867,52 @@ const template: GameJson = {
                           name: "Body Parts",
                           type: "bitflags",
                           flags: [
-                            { offset: 0x1d, bit: 0, label: "???", hidden: true },
+                            {
+                              offset: 0x1d,
+                              bit: 0,
+                              label: "???",
+                              hidden: true,
+                            },
                             { offset: 0x1d, bit: 1, label: "Knight Helmet" },
                             { offset: 0x1d, bit: 2, label: "Dragon Head" },
                             { offset: 0x1d, bit: 3, label: "Iron Googles" },
                             { offset: 0x1d, bit: 4, label: "Cat Hood" },
                             { offset: 0x1d, bit: 5, label: "Ponytails" },
                             { offset: 0x1d, bit: 6, label: "Sunglasses" },
-                            { offset: 0x1d, bit: 7, label: "???", hidden: true },
+                            {
+                              offset: 0x1d,
+                              bit: 7,
+                              label: "???",
+                              hidden: true,
+                            },
                             { offset: 0x93, bit: 0, label: "Chicken Head" },
                             { offset: 0x93, bit: 1, label: "Samourai Head" },
                             { offset: 0x93, bit: 2, label: "Clown Smile" },
                             { offset: 0x93, bit: 3, label: "Gold Visor" },
-                            { offset: 0x93, bit: 4, label: "???", hidden: true },
-                            { offset: 0x93, bit: 5, label: "???", hidden: true },
-                            { offset: 0x93, bit: 6, label: "???", hidden: true },
-                            { offset: 0x93, bit: 7, label: "???", hidden: true },
+                            {
+                              offset: 0x93,
+                              bit: 4,
+                              label: "???",
+                              hidden: true,
+                            },
+                            {
+                              offset: 0x93,
+                              bit: 5,
+                              label: "???",
+                              hidden: true,
+                            },
+                            {
+                              offset: 0x93,
+                              bit: 6,
+                              label: "???",
+                              hidden: true,
+                            },
+                            {
+                              offset: 0x93,
+                              bit: 7,
+                              label: "???",
+                              hidden: true,
+                            },
                           ],
                         },
                       ],
@@ -902,22 +932,52 @@ const template: GameJson = {
                           name: "Body Parts",
                           type: "bitflags",
                           flags: [
-                            { offset: 0x1e, bit: 0, label: "???", hidden: true },
+                            {
+                              offset: 0x1e,
+                              bit: 0,
+                              label: "???",
+                              hidden: true,
+                            },
                             { offset: 0x1e, bit: 1, label: "Knight Armor" },
                             { offset: 0x1e, bit: 2, label: "Dragon Mail" },
                             { offset: 0x1e, bit: 3, label: "Iron Armor" },
                             { offset: 0x1e, bit: 4, label: "Cat Suit" },
                             { offset: 0x1e, bit: 5, label: "Dress" },
                             { offset: 0x1e, bit: 6, label: "Duck Float" },
-                            { offset: 0x1e, bit: 7, label: "???", hidden: true },
+                            {
+                              offset: 0x1e,
+                              bit: 7,
+                              label: "???",
+                              hidden: true,
+                            },
                             { offset: 0x94, bit: 0, label: "Rocking Horse" },
                             { offset: 0x94, bit: 1, label: "Shogun Kimono" },
                             { offset: 0x94, bit: 2, label: "Karate Ware" },
                             { offset: 0x94, bit: 3, label: "Gold Armor" },
-                            { offset: 0x94, bit: 4, label: "???", hidden: true },
-                            { offset: 0x94, bit: 5, label: "???", hidden: true },
-                            { offset: 0x94, bit: 6, label: "???", hidden: true },
-                            { offset: 0x94, bit: 7, label: "???", hidden: true },
+                            {
+                              offset: 0x94,
+                              bit: 4,
+                              label: "???",
+                              hidden: true,
+                            },
+                            {
+                              offset: 0x94,
+                              bit: 5,
+                              label: "???",
+                              hidden: true,
+                            },
+                            {
+                              offset: 0x94,
+                              bit: 6,
+                              label: "???",
+                              hidden: true,
+                            },
+                            {
+                              offset: 0x94,
+                              bit: 7,
+                              label: "???",
+                              hidden: true,
+                            },
                           ],
                         },
                       ],
@@ -937,22 +997,52 @@ const template: GameJson = {
                           name: "Body Parts",
                           type: "bitflags",
                           flags: [
-                            { offset: 0x80, bit: 0, label: "???", hidden: true },
+                            {
+                              offset: 0x80,
+                              bit: 0,
+                              label: "???",
+                              hidden: true,
+                            },
                             { offset: 0x80, bit: 1, label: "Knight Sword" },
                             { offset: 0x80, bit: 2, label: "Dragon Gloves" },
                             { offset: 0x80, bit: 3, label: "Iron Knuckles" },
                             { offset: 0x80, bit: 4, label: "Cat Paws" },
                             { offset: 0x80, bit: 5, label: "Slash Claws" },
                             { offset: 0x80, bit: 6, label: "Drill Arms" },
-                            { offset: 0x80, bit: 7, label: "???", hidden: true },
+                            {
+                              offset: 0x80,
+                              bit: 7,
+                              label: "???",
+                              hidden: true,
+                            },
                             { offset: 0x95, bit: 0, label: "Chicken Wings" },
                             { offset: 0x95, bit: 1, label: "Fans" },
                             { offset: 0x95, bit: 2, label: "Boxing Gloves" },
                             { offset: 0x95, bit: 3, label: "Gold Gloves" },
-                            { offset: 0x95, bit: 4, label: "???", hidden: true },
-                            { offset: 0x95, bit: 5, label: "???", hidden: true },
-                            { offset: 0x95, bit: 6, label: "???", hidden: true },
-                            { offset: 0x95, bit: 7, label: "???", hidden: true },
+                            {
+                              offset: 0x95,
+                              bit: 4,
+                              label: "???",
+                              hidden: true,
+                            },
+                            {
+                              offset: 0x95,
+                              bit: 5,
+                              label: "???",
+                              hidden: true,
+                            },
+                            {
+                              offset: 0x95,
+                              bit: 6,
+                              label: "???",
+                              hidden: true,
+                            },
+                            {
+                              offset: 0x95,
+                              bit: 7,
+                              label: "???",
+                              hidden: true,
+                            },
                           ],
                         },
                       ],
@@ -972,22 +1062,52 @@ const template: GameJson = {
                           name: "Body Parts",
                           type: "bitflags",
                           flags: [
-                            { offset: 0x81, bit: 0, label: "???", hidden: true },
+                            {
+                              offset: 0x81,
+                              bit: 0,
+                              label: "???",
+                              hidden: true,
+                            },
                             { offset: 0x81, bit: 1, label: "Knight Shoes" },
                             { offset: 0x81, bit: 2, label: "Dragon Spikes" },
                             { offset: 0x81, bit: 3, label: "Iron Sneakers" },
                             { offset: 0x81, bit: 4, label: "Cat Paws" },
                             { offset: 0x81, bit: 5, label: "High Tops" },
                             { offset: 0x81, bit: 6, label: "Duck Feet" },
-                            { offset: 0x81, bit: 7, label: "???", hidden: true },
+                            {
+                              offset: 0x81,
+                              bit: 7,
+                              label: "???",
+                              hidden: true,
+                            },
                             { offset: 0x96, bit: 0, label: "Bubby Socks" },
                             { offset: 0x96, bit: 1, label: "High Heels" },
                             { offset: 0x96, bit: 2, label: "Clogs" },
                             { offset: 0x96, bit: 3, label: "Gold Boots" },
-                            { offset: 0x96, bit: 4, label: "???", hidden: true },
-                            { offset: 0x96, bit: 5, label: "???", hidden: true },
-                            { offset: 0x96, bit: 6, label: "???", hidden: true },
-                            { offset: 0x96, bit: 7, label: "???", hidden: true },
+                            {
+                              offset: 0x96,
+                              bit: 4,
+                              label: "???",
+                              hidden: true,
+                            },
+                            {
+                              offset: 0x96,
+                              bit: 5,
+                              label: "???",
+                              hidden: true,
+                            },
+                            {
+                              offset: 0x96,
+                              bit: 6,
+                              label: "???",
+                              hidden: true,
+                            },
+                            {
+                              offset: 0x96,
+                              bit: 7,
+                              label: "???",
+                              hidden: true,
+                            },
                           ],
                         },
                       ],

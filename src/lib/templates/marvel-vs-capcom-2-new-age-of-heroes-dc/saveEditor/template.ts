@@ -47,8 +47,8 @@ const template: GameJson = {
           type: "checksum",
           dataType: "uint32",
           control: {
-            offset: 0x280,
-            length: 0x728,
+            offsetStart: 0x280,
+            offsetEnd: 0x9a8,
           },
         },
         {
@@ -58,8 +58,8 @@ const template: GameJson = {
           type: "checksum",
           dataType: "uint16",
           control: {
-            offset: 0x0,
-            length: 0x9a8,
+            offsetStart: 0x0,
+            offsetEnd: 0x9a8,
           },
         },
       ],

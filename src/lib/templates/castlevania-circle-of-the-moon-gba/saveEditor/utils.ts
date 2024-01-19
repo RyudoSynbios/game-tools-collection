@@ -18,14 +18,8 @@ export function initHeaderShift(dataView: DataView): number {
 export function generateChecksum(item: ItemChecksum): number {
   let checksum = 0x0;
 
-  for (
-    let i = item.control.offset;
-    i < item.control.offset + item.control.length;
-    i += 0x1
-  ) {
-    if (i !== item.offset) {
-      checksum += getInt(i, "uint8");
-    }
+  for (let i = item.control.offsetStart; i < item.control.offsetEnd; i += 0x1) {
+    checksum += getInt(i, "uint8");
   }
 
   return formatChecksum(checksum, item.dataType);
