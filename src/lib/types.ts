@@ -155,6 +155,7 @@ export interface ItemChecksum {
     parent: number;
     shift: number;
   };
+  disabled?: boolean;
   hidden?: boolean;
 }
 

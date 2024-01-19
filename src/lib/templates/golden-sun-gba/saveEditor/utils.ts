@@ -74,21 +74,15 @@ export function overrideParseContainerItemsShifts(
   const $fileHeaderShift = get(fileHeaderShift);
 
   if (item.id === "slots") {
-    let invalidOffset = 0x0;
-
     for (let i = 0x0; i < item.length * 0x10; i += item.length) {
       const saveIndex = getInt($fileHeaderShift + i + 0x7, "uint8");
 
       if (saveIndex === index) {
         return [true, [...shifts, i]];
       }
-
-      if (saveIndex === 0x10 || saveIndex === 0xff) {
-        invalidOffset = i;
-      }
     }
 
-    return [true, [...shifts, invalidOffset]];
+    return [true, [-1]];
   }
 
   return [false, undefined];

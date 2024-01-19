@@ -38,6 +38,12 @@ export function updateChecksums(): void {
 
     let previousChecksum;
 
+    if (item.disabled) {
+      console.log(`${item.name} > Skipped`);
+
+      return;
+    }
+
     if (item.dataType !== "int64" && item.dataType !== "uint64") {
       previousChecksum = getInt(item.offset, item.dataType, {
         bigEndian: item.bigEndian,

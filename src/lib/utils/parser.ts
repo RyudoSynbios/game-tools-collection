@@ -91,11 +91,16 @@ function getOverridedShift(
   }, 0);
 }
 
+interface ParseItemOptions {
+  checksumsDisabled?: boolean;
+}
+
 export function parseItem(
   item: Item,
   shifts: number[],
   instanceId = "",
   instanceIndex = 0,
+  options: ParseItemOptions = {},
 ): Item {
   const $gameUtils = get(gameUtils) as any;
   const $isDebug = get(isDebug);
@@ -142,11 +147,15 @@ export function parseItem(
       newItem.control.offsetEnd = getShift(shifts) + newItem.control.offsetEnd;
     }
 
+    if (options.checksumsDisabled) {
+      newItem.disabled = true;
+    }
+
     checksums.push(newItem as ItemChecksum);
   } else if (newItem.type === "component") {
     return parseComponent(newItem, shifts, instanceId, instanceIndex);
   } else if (newItem.type === "container") {
-    return parseContainer(newItem, shifts, instanceId, instanceIndex);
+    return parseContainer(newItem, shifts, instanceId, instanceIndex, options);
   }
 
   if ((newItem as any).items) {
@@ -157,6 +166,7 @@ export function parseItem(
           shifts,
           instanceId,
           instanceIndex,
+          options,
         );
 
         results.push(parsedItem);
@@ -217,6 +227,7 @@ export function parseContainer(
   shifts: number[],
   instanceId: string,
   instanceIndex: number,
+  options: ParseItemOptions,
 ): any {
   const $gameUtils = get(gameUtils) as any;
 
@@ -260,6 +271,7 @@ export function parseContainer(
                 shifts,
                 instanceId,
                 instanceIndex,
+                options,
               );
 
               results.push(parsedItem);
@@ -285,9 +297,11 @@ export function parseContainer(
       instanceShifts = [...shifts, item.length * index];
     }
 
+    const disabled = getShift(instanceShifts) === -1;
+
     const parsedSubitem: any = {
       flex: item.flex,
-      disabled: getShift(instanceShifts) === -1,
+      disabled,
       items: item.items
         ? item.items.reduce((results: any, subitem: any) => {
             const parsedItem = parseItem(
@@ -295,6 +309,7 @@ export function parseContainer(
               instanceShifts,
               instanceId,
               index,
+              { checksumsDisabled: disabled },
             );
 
             results.push(parsedItem);
@@ -328,6 +343,7 @@ export function parseContainer(
                 instanceShifts,
                 instanceId,
                 instanceIndex,
+                options,
               ),
             );
 
@@ -363,6 +379,7 @@ export function parseContainer(
                 shifts,
                 instanceId,
                 instanceIndex,
+                options,
               );
 
               results.push(parsedItem);
