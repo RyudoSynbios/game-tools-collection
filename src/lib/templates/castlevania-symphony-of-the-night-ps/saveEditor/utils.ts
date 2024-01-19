@@ -55,12 +55,12 @@ export function overrideParseContainerItemsShifts(
   const $gameRegion = get(gameRegion);
   const $gameTemplate = get(gameTemplate);
 
-  const validator: number[] =
-    $gameTemplate.validator.regions[
-      getObjKey($gameTemplate.validator.regions, $gameRegion)
-    ][0];
-
   if (item.id === "slots") {
+    const validator: number[] =
+      $gameTemplate.validator.regions[
+        getObjKey($gameTemplate.validator.regions, $gameRegion)
+      ][0];
+
     if (isPsvHeader()) {
       if (index === 0) {
         return [false, undefined];
