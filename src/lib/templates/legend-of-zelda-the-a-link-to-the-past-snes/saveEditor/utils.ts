@@ -1,6 +1,6 @@
 import { get } from "svelte/store";
 
-import { gameRegion } from "$lib/stores";
+import { gameRegion, gameTemplate } from "$lib/stores";
 import { getInt, setInt, setString } from "$lib/utils/bytes";
 import { formatChecksum } from "$lib/utils/checksum";
 import { clone } from "$lib/utils/format";
@@ -13,12 +13,12 @@ import type {
   ItemString,
 } from "$lib/types";
 
-import template from "./template";
-
 export function overrideGetRegions(dataView: DataView): string[] {
+  const $gameTemplate = get(gameTemplate);
+
   for (let i = 0; i < 3; i += 1) {
     const itemChecksum = clone(
-      (template.items[0] as ItemContainer).items[0],
+      ($gameTemplate.items[0] as ItemContainer).items[0],
     ) as ItemChecksum;
 
     itemChecksum.offset += 0x500 * i;
@@ -74,6 +74,8 @@ export function overrideSetInt(item: Item, value: string): boolean {
 }
 
 export function afterSetInt(item: Item): void {
+  const $gameTemplate = get(gameTemplate);
+
   if ("id" in item && item.id === "health") {
     const itemInt = item as ItemInt;
 
@@ -99,7 +101,7 @@ export function afterSetInt(item: Item): void {
     const bombsMax = getInt(itemInt.offset + 0x2d, "uint8");
 
     const bombsMaxRef = parseInt(
-      template.resources!.bombsMax[bombsMax] as string,
+      $gameTemplate.resources!.bombsMax[bombsMax] as string,
     );
 
     bombs = Math.min(bombs, bombsMaxRef);
@@ -112,7 +114,7 @@ export function afterSetInt(item: Item): void {
     const bombsMax = getInt(itemInt.offset, "uint8");
 
     const bombsMaxRef = parseInt(
-      template.resources!.bombsMax[bombsMax] as string,
+      $gameTemplate.resources!.bombsMax[bombsMax] as string,
     );
 
     bombs = Math.min(bombs, bombsMaxRef);
@@ -125,7 +127,7 @@ export function afterSetInt(item: Item): void {
     const arrowsMax = getInt(itemInt.offset - 0x6, "uint8");
 
     const arrowsMaxRef = parseInt(
-      template.resources!.arrowsMax[arrowsMax] as string,
+      $gameTemplate.resources!.arrowsMax[arrowsMax] as string,
     );
 
     arrows = Math.min(arrows, arrowsMaxRef);
@@ -138,7 +140,7 @@ export function afterSetInt(item: Item): void {
     const arrowsMax = getInt(itemInt.offset, "uint8");
 
     const arrowsMaxRef = parseInt(
-      template.resources!.arrowsMax[arrowsMax] as string,
+      $gameTemplate.resources!.arrowsMax[arrowsMax] as string,
     );
 
     arrows = Math.min(arrows, arrowsMaxRef);

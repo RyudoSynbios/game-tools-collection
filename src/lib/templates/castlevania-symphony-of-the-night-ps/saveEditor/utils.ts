@@ -15,8 +15,6 @@ import { getObjKey } from "$lib/utils/format";
 
 import type { Item, ItemContainer, ItemInt, ItemString } from "$lib/types";
 
-import template from "./template";
-
 export function initHeaderShift(dataView: DataView): number {
   if (isDexDriveHeader(dataView)) {
     return getDexDriveHeaderShift();
@@ -180,6 +178,8 @@ export function overrideSetInt(item: Item, value: string): boolean {
 }
 
 export function afterSetInt(item: Item): void {
+  const $gameTemplate = get(gameTemplate);
+
   if ("id" in item && item.id === "filename") {
     const itemString = item as ItemString;
 
@@ -215,10 +215,13 @@ export function afterSetInt(item: Item): void {
 
     const value = getInt(itemInt.offset, "uint32");
 
-    const buttonName = template.resources!.buttons[value];
+    const buttonName = $gameTemplate.resources!.buttons[value];
 
-    const buttonMapped = Object.keys(template.resources!.buttonsMapped).find(
-      (key) => template.resources!.buttonsMapped[parseInt(key)] === buttonName,
+    const buttonMapped = Object.keys(
+      $gameTemplate.resources!.buttonsMapped,
+    ).find(
+      (key) =>
+        $gameTemplate.resources!.buttonsMapped[parseInt(key)] === buttonName,
     );
 
     let offset = itemInt.offset;

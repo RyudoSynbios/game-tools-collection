@@ -1,3 +1,6 @@
+import { get } from "svelte/store";
+
+import { gameTemplate } from "$lib/stores";
 import { getInt, getString, setInt, setString } from "$lib/utils/bytes";
 import { formatChecksum } from "$lib/utils/checksum";
 import {
@@ -16,8 +19,6 @@ import type {
   ItemString,
 } from "$lib/types";
 
-import template from "./template";
-
 export function initHeaderShift(dataView: DataView): number {
   if (isSrmFile(dataView)) {
     return getSrmHeaderShift("sra");
@@ -32,8 +33,10 @@ export function overrideGetRegions(
   dataView: DataView,
   shift: number,
 ): string[] {
+  const $gameTemplate = get(gameTemplate);
+
   const itemChecksum = clone(
-    (template.items[0] as ItemSection).items[6],
+    ($gameTemplate.items[0] as ItemSection).items[6],
   ) as ItemChecksum;
 
   itemChecksum.offset += shift;

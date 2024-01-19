@@ -1,7 +1,7 @@
 import Long from "long";
 import { get } from "svelte/store";
 
-import { fileHeaderShift } from "$lib/stores";
+import { fileHeaderShift, gameTemplate } from "$lib/stores";
 import { getBigInt, getInt, setInt } from "$lib/utils/bytes";
 import {
   getDexDriveHeaderShift,
@@ -19,8 +19,6 @@ import type {
   TimeUnit,
 } from "$lib/types";
 
-import template from "./template";
-
 export function initHeaderShift(dataView: DataView): number {
   if (isSrmFile(dataView)) {
     return getSrmHeaderShift("eep");
@@ -35,7 +33,9 @@ export function overrideGetRegions(
   dataView: DataView,
   shift: number,
 ): string[] {
-  const itemChecksum = clone(template.items[0] as ItemContainer)
+  const $gameTemplate = get(gameTemplate);
+
+  const itemChecksum = clone($gameTemplate.items[0] as ItemContainer)
     .items[0] as ItemChecksum;
 
   itemChecksum.offset += shift;

@@ -1,13 +1,11 @@
 import { get } from "svelte/store";
 
-import { dataView } from "$lib/stores";
+import { dataView, gameTemplate } from "$lib/stores";
 import { getInt, setInt } from "$lib/utils/bytes";
 import { formatChecksum } from "$lib/utils/checksum";
 import { clone } from "$lib/utils/format";
 
 import type { Item, ItemChecksum, ItemInt, ItemTab } from "$lib/types";
-
-import template from "./template";
 
 export function beforeInitDataView(dataView: DataView): DataView {
   const array = [];
@@ -31,6 +29,8 @@ export function overrideItem(
   item: Item & ItemTab,
   instanceIndex: number,
 ): Item | ItemTab {
+  const $gameTemplate = get(gameTemplate);
+
   if ("id" in item && item.id === "friendship") {
     const itemTab = item as ItemTab;
     const itemInt = itemTab.items[0] as ItemInt;
@@ -42,7 +42,7 @@ export function overrideItem(
 
     for (
       let i = 0;
-      i < Object.keys(template.resources!.characters).length - 1;
+      i < Object.keys($gameTemplate.resources!.characters).length - 1;
       i += 1
     ) {
       const characterIndexReached = i >= instanceIndex;
@@ -57,7 +57,7 @@ export function overrideItem(
         offset += characterIndex - 1;
       }
 
-      newItemInt.name = template.resources!.characters[
+      newItemInt.name = $gameTemplate.resources!.characters[
         characterIndex
       ] as string;
       newItemInt.offset = offset;
