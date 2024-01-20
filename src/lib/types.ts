@@ -52,6 +52,10 @@ export type ObjectKeyValue<T> = { key: string; value: T };
 
 export type Palette = number[][];
 
+export type RegionValidator = Validator | LogicalOperator<Validator>;
+
+export type Validator = { [key: number]: number[] };
+
 export type TimeUnit = "milliseconds" | "seconds" | "minutes" | "hours";
 
 export interface Manufacturer {
@@ -85,7 +89,7 @@ export interface Game {
 
 export interface GameJson {
   validator: {
-    regions: { [key: string]: { [key: number]: any } };
+    regions: { [key: string]: RegionValidator };
     text: string;
     error: string;
   };
@@ -175,7 +179,10 @@ export interface ItemContainer {
   instances: number;
   instanceType: "section" | "tabs";
   enumeration?: string;
-  disableSubinstanceIf?: ItemIntCondition | LogicalOperator[] | string;
+  disableSubinstanceIf?:
+    | ItemIntCondition
+    | LogicalOperator<ItemIntCondition>
+    | string;
   prependSubinstance?: ItemTab[];
   appendSubinstance?: ItemTab[];
   enumerationOrder?: number[];
@@ -264,7 +271,7 @@ export interface ItemTab {
   id?: string;
   name: string;
   flex?: boolean;
-  disableTabIf?: ItemIntCondition | LogicalOperator[] | string;
+  disableTabIf?: ItemIntCondition | LogicalOperator<ItemIntCondition> | string;
   items: Item[];
   disabled?: boolean;
   hidden?: boolean;
@@ -282,7 +289,7 @@ export interface ItemTabs {
   hidden?: boolean;
 }
 
-export interface LogicalOperator {
-  $and?: ItemIntCondition[] | LogicalOperator[];
-  $or?: ItemIntCondition[] | LogicalOperator[];
+export interface LogicalOperator<T> {
+  $and?: (LogicalOperator<T> | T)[];
+  $or?: (LogicalOperator<T> | T)[];
 }

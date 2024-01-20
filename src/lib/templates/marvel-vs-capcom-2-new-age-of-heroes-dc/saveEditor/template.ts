@@ -10,26 +10,22 @@ export const japanValidator = [
 const template: GameJson = {
   validator: {
     regions: {
-      europe_usa: [
-        {
-          $or: [
-            { 0x4: europeUsaValidator },
-            ...[...Array(100).keys()].map((index) => ({
-              [0x400 + index * 0x20 + 0x4]: europeUsaValidator,
-            })),
-          ],
-        },
-      ],
-      japan: [
-        {
-          $or: [
-            { 0x4: japanValidator },
-            ...[...Array(100).keys()].map((index) => ({
-              [0x400 + index * 0x20 + 0x4]: japanValidator,
-            })),
-          ],
-        },
-      ],
+      europe_usa: {
+        $or: [
+          { 0x4: europeUsaValidator },
+          ...[...Array(100).keys()].map((index) => ({
+            [0x400 + index * 0x20 + 0x4]: europeUsaValidator,
+          })),
+        ],
+      },
+      japan: {
+        $or: [
+          { 0x4: japanValidator },
+          ...[...Array(100).keys()].map((index) => ({
+            [0x400 + index * 0x20 + 0x4]: japanValidator,
+          })),
+        ],
+      },
     },
     text: "Drag 'n' drop here or click to add a save file.",
     error:

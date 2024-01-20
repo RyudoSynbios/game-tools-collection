@@ -3,66 +3,51 @@ import type { GameJson } from "$lib/types";
 const template: GameJson = {
   validator: {
     regions: {
-      europe: [
-        {
-          $or: [
-            {
-              $and: [
-                { 0x24: [0x44, 0x4c, 0x45, 0x5a] },
-                { 0x2a: [0x33, 0x41] },
-              ],
-            },
-            {
-              $and: [
-                { 0x4024: [0x44, 0x4c, 0x45, 0x5a] },
-                { 0x402a: [0x33, 0x41] },
-              ],
-            },
-          ],
-        },
-      ],
-      usa: [
-        {
-          $or: [
-            {
-              $and: [
-                { 0x24: [0x44, 0x4c, 0x45, 0x5a] },
-                { 0x2a: [0x33, 0x41] },
-              ],
-            },
-            {
-              $and: [
-                { 0x4024: [0x44, 0x4c, 0x45, 0x5a] },
-                { 0x402a: [0x33, 0x41] },
-              ],
-            },
-          ],
-        },
-      ],
-      japan: [
-        {
-          $or: [
-            {
-              $and: [
-                { 0x24: [0x44, 0x4c, 0x45, 0x5a] },
-                { 0x2a: [0x33, 0x41] },
-              ],
-            },
-            {
-              $and: [
-                { 0x4024: [0x44, 0x4c, 0x45, 0x5a] },
-                { 0x402a: [0x33, 0x41] },
-              ],
-            },
-            {
-              $and: [
-                { 0x8024: [0x44, 0x4c, 0x45, 0x5a] },
-                { 0x802a: [0x33, 0x41] },
-              ],
-            },
-          ],
-        },
-      ],
+      europe: {
+        $or: [
+          {
+            $and: [{ 0x24: [0x44, 0x4c, 0x45, 0x5a] }, { 0x2a: [0x33, 0x41] }],
+          },
+          {
+            $and: [
+              { 0x4024: [0x44, 0x4c, 0x45, 0x5a] },
+              { 0x402a: [0x33, 0x41] },
+            ],
+          },
+        ],
+      },
+      usa: {
+        $or: [
+          {
+            $and: [{ 0x24: [0x44, 0x4c, 0x45, 0x5a] }, { 0x2a: [0x33, 0x41] }],
+          },
+          {
+            $and: [
+              { 0x4024: [0x44, 0x4c, 0x45, 0x5a] },
+              { 0x402a: [0x33, 0x41] },
+            ],
+          },
+        ],
+      },
+      japan: {
+        $or: [
+          {
+            $and: [{ 0x24: [0x44, 0x4c, 0x45, 0x5a] }, { 0x2a: [0x33, 0x41] }],
+          },
+          {
+            $and: [
+              { 0x4024: [0x44, 0x4c, 0x45, 0x5a] },
+              { 0x402a: [0x33, 0x41] },
+            ],
+          },
+          {
+            $and: [
+              { 0x8024: [0x44, 0x4c, 0x45, 0x5a] },
+              { 0x802a: [0x33, 0x41] },
+            ],
+          },
+        ],
+      },
     },
     text: "Drag 'n' drop here or click to add a save file.",
     error: "Not a valid save file.",
@@ -75,24 +60,22 @@ const template: GameJson = {
       instanceType: "tabs",
       instances: 3,
       enumeration: "Slot %d",
-      disableSubinstanceIf: [
-        {
-          $or: [
-            {
-              offset: 0x24,
-              type: "variable",
-              dataType: "uint8",
-              value: 0x0,
-            },
-            {
-              offset: 0x24,
-              type: "variable",
-              dataType: "uint8",
-              value: 0xff,
-            },
-          ],
-        },
-      ],
+      disableSubinstanceIf: {
+        $or: [
+          {
+            offset: 0x24,
+            type: "variable",
+            dataType: "uint8",
+            value: 0x0,
+          },
+          {
+            offset: 0x24,
+            type: "variable",
+            dataType: "uint8",
+            value: 0xff,
+          },
+        ],
+      },
       // appendSubinstance: [
       //   {
       //     name: "Options",

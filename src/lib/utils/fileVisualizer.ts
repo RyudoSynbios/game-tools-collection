@@ -3,7 +3,17 @@ import { get } from "svelte/store";
 import { fileHeaderShift, gameJson } from "$lib/stores";
 import { dataTypeToLength } from "$lib/utils/bytes";
 
-import type { ContentType, DataType, Item, ItemInt } from "$lib/types";
+import type {
+  ContentType,
+  DataType,
+  Item,
+  ItemInt,
+  ItemIntCondition,
+  RegionValidator,
+  Validator,
+} from "$lib/types";
+
+import { getObjKey } from "./format";
 
 export interface HighlightedOffset {
   offset: number;
@@ -87,11 +97,14 @@ export function parseItem(
         "disableTabIf" in group &&
         group.disableTabIf &&
         typeof group.disableTabIf !== "string" &&
-        !Array.isArray(group.disableTabIf)
+        !("$and" in group.disableTabIf) &&
+        !("$or" in group.disableTabIf)
       ) {
         parseItem(highlightedOffsets, {
           ...(group.disableTabIf as ItemInt),
-          name: `disableTabIf value === ${group.disableTabIf.value.toHex(2)}`,
+          name: `disableTabIf value === ${(
+            group.disableTabIf as ItemIntCondition
+          ).value.toHex(2)}`,
         });
       }
 
@@ -105,7 +118,7 @@ export function parseItem(
 export function parseCondition(
   highlightedOffsets: HighlightedOffsets,
   key: string,
-  condition: { [key: number]: any },
+  condition: RegionValidator,
 ) {
   const $fileHeaderShift = get(fileHeaderShift);
 
@@ -116,7 +129,6 @@ export function parseCondition(
       } else {
         const offset = parseInt(Object.keys(item)[0]);
         const length = item[offset].length;
-
         for (let i = offset; i < offset + length; i += 1) {
           addItem(
             highlightedOffsets,
@@ -135,13 +147,11 @@ export function parseValidator(highlightedOffsets: HighlightedOffsets) {
   const $gameJson = get(gameJson);
 
   Object.entries($gameJson.validator.regions).forEach(([key, value]) => {
-    if (Array.isArray(value)) {
-      value.forEach((condition) =>
-        parseCondition(highlightedOffsets, key, condition),
-      );
+    if ("$and" in value || "$or" in value) {
+      parseCondition(highlightedOffsets, key, value);
     } else if (Object.keys(value).length > 0) {
       const offset = parseInt(Object.keys(value)[0]);
-      const length = value[offset].length;
+      const length = (value as Validator)[offset].length;
 
       for (let i = offset; i < offset + length; i += 1) {
         addItem(

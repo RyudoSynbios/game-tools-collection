@@ -13,7 +13,13 @@ import {
 } from "$lib/utils/common/playstation";
 import { getObjKey } from "$lib/utils/format";
 
-import type { Item, ItemContainer, ItemInt, ItemString } from "$lib/types";
+import type {
+  Item,
+  ItemContainer,
+  ItemInt,
+  ItemString,
+  Validator,
+} from "$lib/types";
 
 export function initHeaderShift(dataView: DataView): number {
   if (isDexDriveHeader(dataView)) {
@@ -56,10 +62,9 @@ export function overrideParseContainerItemsShifts(
   const $gameTemplate = get(gameTemplate);
 
   if (item.id === "slots") {
-    const validator: number[] =
-      $gameTemplate.validator.regions[
-        getObjKey($gameTemplate.validator.regions, $gameRegion)
-      ][0];
+    const region = $gameTemplate.validator.regions[
+      getObjKey($gameTemplate.validator.regions, $gameRegion)
+    ] as Validator;
 
     if (isPsvHeader()) {
       if (index === 0) {
@@ -74,7 +79,7 @@ export function overrideParseContainerItemsShifts(
     for (let i = 1; i < 16; i += 1) {
       const offset = $fileHeaderShift + i * 0x80;
 
-      const isValid = validator.every((hex, j) => {
+      const isValid = region[0].every((hex, j) => {
         if (getInt(offset + 0xa + j, "uint8") === hex) {
           return true;
         }

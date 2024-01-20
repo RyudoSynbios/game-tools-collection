@@ -4,30 +4,21 @@ import { gameTemplate } from "$lib/stores";
 import { getInt } from "$lib/utils/bytes";
 import { getObjKey } from "$lib/utils/format";
 
-export function checkConditions(conditions: any, callback: any): boolean {
-  if (!Array.isArray(conditions)) {
-    if (conditions.$and || conditions.$or) {
-      return checkConditions([conditions], (subCondition: any) => {
-        return callback(subCondition);
-      });
-    } else {
-      return callback(conditions);
-    }
-  } else if (conditions.length === 1) {
-    const condition = conditions[0];
-    const operand = getObjKey(condition, 0);
+import type { RegionValidator } from "$lib/types";
 
-    if (operand === "$and" || operand === "$or") {
-      if (operand === "$and") {
-        return condition.$and.every((array: any) => {
-          return checkConditions(array, callback);
-        });
-      } else if (operand === "$or") {
-        return condition.$or.some((array: any) => {
-          return checkConditions(array, callback);
-        });
-      }
+export function checkConditions(conditions: any, callback: any): boolean {
+  if (conditions.$and || conditions.$or) {
+    if (conditions.$and) {
+      return conditions.$and.every((array: any) => {
+        return checkConditions(array, callback);
+      });
+    } else if (conditions.$or) {
+      return conditions.$or.some((array: any) => {
+        return checkConditions(array, callback);
+      });
     }
+  } else {
+    return callback(conditions);
   }
 
   return false;
@@ -46,7 +37,7 @@ export function getRegionIndex(region: string): number {
 export function getRegions(
   dataView: DataView,
   shift = 0x0,
-  overridedRegions?: { [key: string]: { [key: number]: any } },
+  overridedRegions?: { [key: string]: RegionValidator },
 ): string[] {
   const $gameTemplate = get(gameTemplate);
 

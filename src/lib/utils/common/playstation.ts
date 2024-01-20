@@ -4,6 +4,8 @@ import { gameTemplate } from "$lib/stores";
 import { getInt } from "$lib/utils/bytes";
 import { getRegions } from "$lib/utils/validator";
 
+import type { RegionValidator } from "$lib/types";
+
 export function isMcr(dataView: DataView, shift = 0x0): boolean {
   if (
     dataView.byteLength >= 0x20000 &&
@@ -66,22 +68,17 @@ export function customGetRegions(dataView: DataView, shift: number): string[] {
   const overridedRegions = Object.entries(
     $gameTemplate.validator.regions,
   ).reduce(
-    (
-      regions: { [key: string]: { [key: number]: any } },
-      [region, condition],
-    ) => {
+    (regions: { [key: string]: RegionValidator }, [region, condition]) => {
       const validator = Object.values(condition)[0];
 
       if (isPsvHeader(dataView)) {
         regions[region] = { 0x64: validator };
       } else if (isMcr(dataView, shift)) {
-        regions[region] = [
-          {
-            $or: [...Array(15).keys()].map((index) => ({
-              [0x8a + index * 0x80]: validator,
-            })),
-          },
-        ];
+        regions[region] = {
+          $or: [...Array(15).keys()].map((index) => ({
+            [0x8a + index * 0x80]: validator,
+          })),
+        };
       }
       return regions;
     },

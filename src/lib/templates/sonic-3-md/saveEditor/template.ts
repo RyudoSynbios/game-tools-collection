@@ -3,11 +3,9 @@ import type { GameJson } from "$lib/types";
 const template: GameJson = {
   validator: {
     regions: {
-      europe_usa_japan: [
-        {
-          $or: [{ 0x58: [0x4c, 0x44] }, { 0xe4: [0x4c, 0x44] }],
-        },
-      ],
+      europe_usa_japan: {
+        $or: [{ 0x58: [0x4c, 0x44] }, { 0xe4: [0x4c, 0x44] }],
+      },
     },
     text: "Drag 'n' drop here or click to add a save file.",
     error: "Not a valid save file.",
@@ -18,60 +16,58 @@ const template: GameJson = {
       items: [
         {
           name: "Sonic 3",
-          disableTabIf: [
-            {
-              $and: [
-                {
-                  offset: 0xb4,
-                  type: "variable",
-                  dataType: "uint8",
-                  value: 0xff,
-                },
-                {
-                  offset: 0xbc,
-                  type: "variable",
-                  dataType: "uint8",
-                  value: 0xff,
-                },
-                {
-                  offset: 0xc4,
-                  type: "variable",
-                  dataType: "uint8",
-                  value: 0xff,
-                },
-                {
-                  offset: 0xcc,
-                  type: "variable",
-                  dataType: "uint8",
-                  value: 0xff,
-                },
-                {
-                  offset: 0xd4,
-                  type: "variable",
-                  dataType: "uint8",
-                  value: 0xff,
-                },
-                {
-                  offset: 0xdc,
-                  type: "variable",
-                  dataType: "uint8",
-                  value: 0xff,
-                },
-                {
-                  offset: 0xe4,
-                  type: "variable",
-                  dataType: "uint8",
-                  value: 0xff,
-                },
-                {
-                  offset: 0xe6,
-                  type: "variable",
-                  dataType: "uint8",
-                  value: 0xff,
-                },
-              ],
-            },
-          ],
+          disableTabIf: {
+            $and: [
+              {
+                offset: 0xb4,
+                type: "variable",
+                dataType: "uint8",
+                value: 0xff,
+              },
+              {
+                offset: 0xbc,
+                type: "variable",
+                dataType: "uint8",
+                value: 0xff,
+              },
+              {
+                offset: 0xc4,
+                type: "variable",
+                dataType: "uint8",
+                value: 0xff,
+              },
+              {
+                offset: 0xcc,
+                type: "variable",
+                dataType: "uint8",
+                value: 0xff,
+              },
+              {
+                offset: 0xd4,
+                type: "variable",
+                dataType: "uint8",
+                value: 0xff,
+              },
+              {
+                offset: 0xdc,
+                type: "variable",
+                dataType: "uint8",
+                value: 0xff,
+              },
+              {
+                offset: 0xe4,
+                type: "variable",
+                dataType: "uint8",
+                value: 0xff,
+              },
+              {
+                offset: 0xe6,
+                type: "variable",
+                dataType: "uint8",
+                value: 0xff,
+              },
+            ],
+          },
           items: [
             {
               name: "Checksum",
@@ -90,24 +86,22 @@ const template: GameJson = {
               instanceType: "tabs",
               instances: 6,
               enumeration: "Slot %d",
-              disableSubinstanceIf: [
-                {
-                  $or: [
-                    {
-                      offset: 0xb4,
-                      type: "variable",
-                      dataType: "uint8",
-                      value: 0x80,
-                    },
-                    {
-                      offset: 0xb4,
-                      type: "variable",
-                      dataType: "uint8",
-                      value: 0xff,
-                    },
-                  ],
-                },
-              ],
+              disableSubinstanceIf: {
+                $or: [
+                  {
+                    offset: 0xb4,
+                    type: "variable",
+                    dataType: "uint8",
+                    value: 0x80,
+                  },
+                  {
+                    offset: 0xb4,
+                    type: "variable",
+                    dataType: "uint8",
+                    value: 0xff,
+                  },
+                ],
+              },
               items: [
                 {
                   type: "section",
@@ -206,24 +200,22 @@ const template: GameJson = {
               instanceType: "tabs",
               instances: 8,
               enumeration: "Slot %d",
-              disableSubinstanceIf: [
-                {
-                  $or: [
-                    {
-                      offset: 0x140,
-                      type: "variable",
-                      dataType: "uint8",
-                      value: 0x80,
-                    },
-                    {
-                      offset: 0x148,
-                      type: "variable",
-                      dataType: "uint8",
-                      value: 0x0,
-                    },
-                  ],
-                },
-              ],
+              disableSubinstanceIf: {
+                $or: [
+                  {
+                    offset: 0x140,
+                    type: "variable",
+                    dataType: "uint8",
+                    value: 0x80,
+                  },
+                  {
+                    offset: 0x148,
+                    type: "variable",
+                    dataType: "uint8",
+                    value: 0x0,
+                  },
+                ],
+              },
               items: [
                 {
                   type: "section",

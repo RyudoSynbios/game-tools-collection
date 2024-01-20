@@ -13,7 +13,15 @@ import {
 } from "$lib/utils/common/dreamcast";
 import { getObjKey } from "$lib/utils/format";
 
-import type { Item, ItemChecksum, ItemInt, ItemSection } from "$lib/types";
+import type {
+  Item,
+  ItemChecksum,
+  ItemInt,
+  ItemSection,
+  LogicalOperator,
+  RegionValidator,
+  Validator,
+} from "$lib/types";
 
 export function beforeInitDataView(dataView: DataView): DataView {
   if (isDciFile(dataView)) {
@@ -32,9 +40,11 @@ export function initShifts(shifts: number[]): number[] {
     return [...shifts, 0x20];
   }
 
-  const region = Object.values($gameTemplate.validator.regions)[$gameRegion];
+  const region = Object.values($gameTemplate.validator.regions)[
+    $gameRegion
+  ] as LogicalOperator<Validator>;
 
-  const save = region[0].$or.find((condition: any) => {
+  const save = region.$or!.find((condition: any) => {
     const offset = parseInt(getObjKey(condition, 0));
     const array = condition[offset];
     const length = array.length;

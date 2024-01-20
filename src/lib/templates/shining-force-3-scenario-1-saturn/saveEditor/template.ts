@@ -20,24 +20,22 @@ const template: GameJson = {
       instanceType: "tabs",
       instances: 2,
       enumeration: "Slot %d",
-      disableSubinstanceIf: [
-        {
-          $or: [
-            {
-              offset: 0x80,
-              type: "variable",
-              dataType: "uint8",
-              value: 0x0,
-            },
-            {
-              offset: 0x84,
-              type: "variable",
-              dataType: "uint8",
-              value: 0x0,
-            },
-          ],
-        },
-      ],
+      disableSubinstanceIf: {
+        $or: [
+          {
+            offset: 0x80,
+            type: "variable",
+            dataType: "uint8",
+            value: 0x0,
+          },
+          {
+            offset: 0x84,
+            type: "variable",
+            dataType: "uint8",
+            value: 0x0,
+          },
+        ],
+      },
       items: [
         {
           name: "Checksum",

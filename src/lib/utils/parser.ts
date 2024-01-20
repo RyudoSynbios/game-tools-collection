@@ -24,6 +24,9 @@ import type {
   ItemChecksum,
   ItemComponent,
   ItemContainer,
+  ItemIntCondition,
+  LogicalOperator,
+  Validator,
 } from "$lib/types";
 
 let checksums: ItemChecksum[];
@@ -332,27 +335,28 @@ export function parseContainer(
 
       if (typeof item.disableSubinstanceIf === "string") {
         disableSubinstanceIf = item.disableSubinstanceIf;
-      } else if (Array.isArray(item.disableSubinstanceIf)) {
-        disableSubinstanceIf = item.disableSubinstanceIf.map((obj) => {
-          const operand = getObjKey(obj, 0);
+      } else if (
+        "$and" in item.disableSubinstanceIf ||
+        "$or" in item.disableSubinstanceIf
+      ) {
+        const operand = getObjKey(item.disableSubinstanceIf, 0) as
+          | "$and"
+          | "$or";
 
-          if (operand === "$and" || operand === "$or") {
-            const parsedItems = obj[operand]!.map((subitem) =>
-              parseItem(
-                subitem as Item,
-                instanceShifts,
-                instanceId,
-                instanceIndex,
-                options,
-              ),
-            );
+        const parsedItems = item.disableSubinstanceIf[operand]!.map((subitem) =>
+          parseItem(
+            subitem as Item,
+            instanceShifts,
+            instanceId,
+            instanceIndex,
+            options,
+          ),
+        );
 
-            return { [operand]: parsedItems };
-          }
-        });
+        disableSubinstanceIf = { [operand]: parsedItems };
       } else {
         disableSubinstanceIf = parseItem(
-          item.disableSubinstanceIf,
+          item.disableSubinstanceIf as ItemIntCondition,
           instanceShifts,
           instanceId,
           instanceIndex,
