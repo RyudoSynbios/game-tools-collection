@@ -19,7 +19,6 @@ import type {
   ItemInt,
   ItemSection,
   LogicalOperator,
-  RegionValidator,
   Validator,
 } from "$lib/types";
 

@@ -1,6 +1,6 @@
 import { getInt } from "$lib/utils/bytes";
 
-export function isDexDriveHeader(dataView: DataView) {
+export function isDexDriveHeader(dataView: DataView): boolean {
   const validator = [
     0x31, 0x32, 0x33, 0x2d, 0x34, 0x35, 0x36, 0x2d, 0x53, 0x54, 0x44,
   ];
@@ -16,7 +16,7 @@ export function getDexDriveHeaderShift(): number {
   return 0x1540;
 }
 
-export function isSrmFile(dataView: DataView) {
+export function isSrmFile(dataView: DataView): boolean {
   return dataView.byteLength === 0x48800;
 }
 
@@ -29,4 +29,17 @@ export function getSrmHeaderShift(format: "eep" | "fla" | "sra"): number {
     case "sra":
       return 0x20800;
   }
+}
+
+export function retrieveHeaderShift(
+  dataView: DataView,
+  format: "eep" | "fla" | "sra",
+): number {
+  if (isSrmFile(dataView)) {
+    return getSrmHeaderShift(format);
+  } else if (isDexDriveHeader(dataView)) {
+    return getDexDriveHeaderShift();
+  }
+
+  return 0x0;
 }

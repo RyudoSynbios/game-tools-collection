@@ -20,7 +20,7 @@ export function isMcr(dataView: DataView, shift = 0x0): boolean {
   return false;
 }
 
-export function isDexDriveHeader(dataView: DataView) {
+export function isDexDriveHeader(dataView: DataView): boolean {
   const validator = [
     0x31, 0x32, 0x33, 0x2d, 0x34, 0x35, 0x36, 0x2d, 0x53, 0x54, 0x44,
   ];
@@ -36,7 +36,7 @@ export function getDexDriveHeaderShift(): number {
   return 0xf40;
 }
 
-export function isPsvHeader(dataView?: DataView) {
+export function isPsvHeader(dataView?: DataView): boolean {
   const validator = [0x0, 0x56, 0x53, 0x50, 0x0];
 
   return validator.every((hex, index) => {
@@ -50,7 +50,7 @@ export function getPsvHeaderShift(): number {
   return 0x84;
 }
 
-export function isVmpHeader(dataView: DataView) {
+export function isVmpHeader(dataView: DataView): boolean {
   const validator = [0x0, 0x50, 0x4d, 0x56, 0x80];
 
   return validator.every((hex, index) => {
@@ -141,4 +141,14 @@ export function retrieveSlots(
   }
 
   return [true, [-1]];
+}
+
+export function retrieveHeaderShift(dataView: DataView): number {
+  if (isDexDriveHeader(dataView)) {
+    return getDexDriveHeaderShift();
+  } else if (isVmpHeader(dataView)) {
+    return getVmpHeaderShift();
+  }
+
+  return 0x0;
 }

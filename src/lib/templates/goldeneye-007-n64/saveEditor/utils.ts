@@ -3,12 +3,7 @@ import { get } from "svelte/store";
 
 import { fileHeaderShift, gameTemplate } from "$lib/stores";
 import { getBigInt, getInt, setInt } from "$lib/utils/bytes";
-import {
-  getDexDriveHeaderShift,
-  getSrmHeaderShift,
-  isDexDriveHeader,
-  isSrmFile,
-} from "$lib/utils/common/nintendo64";
+import { retrieveHeaderShift } from "$lib/utils/common/nintendo64";
 import { clone, makeOperations } from "$lib/utils/format";
 
 import type {
@@ -20,13 +15,7 @@ import type {
 } from "$lib/types";
 
 export function initHeaderShift(dataView: DataView): number {
-  if (isSrmFile(dataView)) {
-    return getSrmHeaderShift("eep");
-  } else if (isDexDriveHeader(dataView)) {
-    return getDexDriveHeaderShift();
-  }
-
-  return 0x0;
+  return retrieveHeaderShift(dataView, "eep");
 }
 
 export function overrideGetRegions(

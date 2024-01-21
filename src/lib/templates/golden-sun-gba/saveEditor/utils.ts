@@ -3,10 +3,7 @@ import { get } from "svelte/store";
 import { fileHeaderShift } from "$lib/stores";
 import { extractBit, getInt, setInt } from "$lib/utils/bytes";
 import { formatChecksum } from "$lib/utils/checksum";
-import {
-  getGameSharkHeaderShift,
-  isGameSharkHeader,
-} from "$lib/utils/common/gameBoyAdvance";
+import { retrieveHeaderShift } from "$lib/utils/common/gameBoyAdvance";
 import { getItem, getShift } from "$lib/utils/parser";
 
 import type {
@@ -20,11 +17,7 @@ import type {
 } from "$lib/types";
 
 export function initHeaderShift(dataView: DataView): number {
-  if (isGameSharkHeader(dataView)) {
-    return getGameSharkHeaderShift(dataView);
-  }
-
-  return 0x0;
+  return retrieveHeaderShift(dataView);
 }
 
 export function overrideShift(item: Item, shifts: number[]): number[] {

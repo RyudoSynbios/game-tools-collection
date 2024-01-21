@@ -1,17 +1,10 @@
 import { getInt, setInt } from "$lib/utils/bytes";
-import {
-  getGameSharkHeaderShift,
-  isGameSharkHeader,
-} from "$lib/utils/common/gameBoyAdvance";
+import { retrieveHeaderShift } from "$lib/utils/common/gameBoyAdvance";
 
 import type { Item, ItemInt } from "$lib/types";
 
 export function initHeaderShift(dataView: DataView): number {
-  if (isGameSharkHeader(dataView)) {
-    return getGameSharkHeaderShift(dataView);
-  }
-
-  return 0x0;
+  return retrieveHeaderShift(dataView);
 }
 
 export function afterSetInt(item: Item): void {

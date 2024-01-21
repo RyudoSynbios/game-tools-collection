@@ -1,22 +1,11 @@
 import { getInt, setInt } from "$lib/utils/bytes";
 import { formatChecksum } from "$lib/utils/checksum";
-import {
-  getDexDriveHeaderShift,
-  getSrmHeaderShift,
-  isDexDriveHeader,
-  isSrmFile,
-} from "$lib/utils/common/nintendo64";
+import { retrieveHeaderShift } from "$lib/utils/common/nintendo64";
 
 import type { Item, ItemChecksum, ItemInt } from "$lib/types";
 
 export function initHeaderShift(dataView: DataView): number {
-  if (isSrmFile(dataView)) {
-    return getSrmHeaderShift("eep");
-  } else if (isDexDriveHeader(dataView)) {
-    return getDexDriveHeaderShift();
-  }
-
-  return 0x0;
+  return retrieveHeaderShift(dataView, "eep");
 }
 
 export function overrideGetInt(

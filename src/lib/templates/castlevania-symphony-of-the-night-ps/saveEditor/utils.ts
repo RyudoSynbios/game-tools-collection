@@ -4,25 +4,16 @@ import { gameRegion, gameTemplate } from "$lib/stores";
 import { getInt, getString, setInt, setString } from "$lib/utils/bytes";
 import {
   customGetRegions,
-  getDexDriveHeaderShift,
   getPsvHeaderShift,
-  getVmpHeaderShift,
-  isDexDriveHeader,
   isPsvHeader,
-  isVmpHeader,
+  retrieveHeaderShift,
   retrieveSlots,
 } from "$lib/utils/common/playstation";
 
 import type { Item, ItemContainer, ItemInt, ItemString } from "$lib/types";
 
 export function initHeaderShift(dataView: DataView): number {
-  if (isDexDriveHeader(dataView)) {
-    return getDexDriveHeaderShift();
-  } else if (isVmpHeader(dataView)) {
-    return getVmpHeaderShift();
-  }
-
-  return 0x0;
+  return retrieveHeaderShift(dataView);
 }
 
 export function initShifts(shifts: number[]): number[] {

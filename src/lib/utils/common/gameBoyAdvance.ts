@@ -24,3 +24,11 @@ export function getGameSharkHeaderShift(dataView: DataView): number {
 
   return shift;
 }
+
+export function retrieveHeaderShift(dataView: DataView): number {
+  if (isGameSharkHeader(dataView)) {
+    return getGameSharkHeaderShift(dataView);
+  }
+
+  return 0x0;
+}
