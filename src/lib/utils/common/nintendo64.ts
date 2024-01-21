@@ -31,7 +31,7 @@ export function getSrmHeaderShift(format: "eep" | "fla" | "sra"): number {
   }
 }
 
-export function retrieveHeaderShift(
+export function getHeaderShift(
   dataView: DataView,
   format: "eep" | "fla" | "sra",
 ): number {

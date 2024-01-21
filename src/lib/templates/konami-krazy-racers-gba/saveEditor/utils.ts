@@ -1,11 +1,11 @@
 import { getInt } from "$lib/utils/bytes";
 import { formatChecksum } from "$lib/utils/checksum";
-import { retrieveHeaderShift } from "$lib/utils/common/gameBoyAdvance";
+import { getHeaderShift } from "$lib/utils/common/gameBoyAdvance";
 
 import type { ItemChecksum } from "$lib/types";
 
 export function initHeaderShift(dataView: DataView): number {
-  return retrieveHeaderShift(dataView);
+  return getHeaderShift(dataView);
 }
 
 export function generateChecksum(item: ItemChecksum): number {

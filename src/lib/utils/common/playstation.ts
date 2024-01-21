@@ -64,6 +64,16 @@ export function getVmpHeaderShift(): number {
   return 0x80;
 }
 
+export function getHeaderShift(dataView: DataView): number {
+  if (isDexDriveHeader(dataView)) {
+    return getDexDriveHeaderShift();
+  } else if (isVmpHeader(dataView)) {
+    return getVmpHeaderShift();
+  }
+
+  return 0x0;
+}
+
 export function customGetRegions(dataView: DataView, shift: number): string[] {
   const $gameTemplate = get(gameTemplate);
 
@@ -90,7 +100,7 @@ export function customGetRegions(dataView: DataView, shift: number): string[] {
   return getRegions(dataView, shift, overridedRegions);
 }
 
-export function retrieveSlots(
+export function getSlots(
   order: "correspondance" | "memory",
   shifts: number[],
   index: number,
@@ -141,14 +151,4 @@ export function retrieveSlots(
   }
 
   return [true, [-1]];
-}
-
-export function retrieveHeaderShift(dataView: DataView): number {
-  if (isDexDriveHeader(dataView)) {
-    return getDexDriveHeaderShift();
-  } else if (isVmpHeader(dataView)) {
-    return getVmpHeaderShift();
-  }
-
-  return 0x0;
 }

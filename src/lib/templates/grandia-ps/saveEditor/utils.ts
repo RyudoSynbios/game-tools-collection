@@ -4,16 +4,23 @@ import { gameJson, gameRegion } from "$lib/stores";
 import { getInt, setInt, setString } from "$lib/utils/bytes";
 import {
   customGetRegions,
+  getHeaderShift,
   getPsvHeaderShift,
+  getSlots,
   isPsvHeader,
-  retrieveHeaderShift,
-  retrieveSlots,
 } from "$lib/utils/common/playstation";
 
 import type { Bit, Item, ItemContainer, ItemInt, Validator } from "$lib/types";
 
 export function initHeaderShift(dataView: DataView): number {
-  return retrieveHeaderShift(dataView);
+  return getHeaderShift(dataView);
+}
+
+export function overrideGetRegions(
+  dataView: DataView,
+  shift: number,
+): string[] {
+  return customGetRegions(dataView, shift);
 }
 
 export function initShifts(shifts: number[]): number[] {
@@ -54,17 +61,10 @@ export function overrideParseContainerItemsShifts(
   index: number,
 ): [boolean, number[] | undefined] {
   if (item.id === "slots") {
-    return retrieveSlots("correspondance", shifts, index);
+    return getSlots("correspondance", shifts, index);
   }
 
   return [false, undefined];
-}
-
-export function overrideGetRegions(
-  dataView: DataView,
-  shift: number,
-): string[] {
-  return customGetRegions(dataView, shift);
 }
 
 export function overrideGetInt(item: Item): [boolean, boolean | undefined] {

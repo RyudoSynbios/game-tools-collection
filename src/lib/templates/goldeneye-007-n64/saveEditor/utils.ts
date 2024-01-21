@@ -3,7 +3,7 @@ import { get } from "svelte/store";
 
 import { fileHeaderShift, gameTemplate } from "$lib/stores";
 import { getBigInt, getInt, setInt } from "$lib/utils/bytes";
-import { retrieveHeaderShift } from "$lib/utils/common/nintendo64";
+import { getHeaderShift } from "$lib/utils/common/nintendo64";
 import { clone, makeOperations } from "$lib/utils/format";
 
 import type {
@@ -15,7 +15,7 @@ import type {
 } from "$lib/types";
 
 export function initHeaderShift(dataView: DataView): number {
-  return retrieveHeaderShift(dataView, "eep");
+  return getHeaderShift(dataView, "eep");
 }
 
 export function overrideGetRegions(

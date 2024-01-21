@@ -1,10 +1,10 @@
 import { getInt, setInt, setString } from "$lib/utils/bytes";
 import {
   customGetRegions,
+  getHeaderShift,
   getPsvHeaderShift,
+  getSlots,
   isPsvHeader,
-  retrieveHeaderShift,
-  retrieveSlots,
 } from "$lib/utils/common/playstation";
 import { getItem } from "$lib/utils/parser";
 
@@ -18,7 +18,14 @@ import type {
 } from "$lib/types";
 
 export function initHeaderShift(dataView: DataView): number {
-  return retrieveHeaderShift(dataView);
+  return getHeaderShift(dataView);
+}
+
+export function overrideGetRegions(
+  dataView: DataView,
+  shift: number,
+): string[] {
+  return customGetRegions(dataView, shift);
 }
 
 export function initShifts(shifts: number[]): number[] {
@@ -29,20 +36,13 @@ export function initShifts(shifts: number[]): number[] {
   return shifts;
 }
 
-export function overrideGetRegions(
-  dataView: DataView,
-  shift: number,
-): string[] {
-  return customGetRegions(dataView, shift);
-}
-
 export function overrideParseContainerItemsShifts(
   item: ItemContainer,
   shifts: number[],
   index: number,
 ): [boolean, number[] | undefined] {
   if (item.id === "slots") {
-    return retrieveSlots("memory", shifts, index);
+    return getSlots("memory", shifts, index);
   }
 
   return [false, undefined];

@@ -11,7 +11,7 @@ import {
   setString,
 } from "$lib/utils/bytes";
 import { formatChecksum } from "$lib/utils/checksum";
-import { retrieveHeaderShift } from "$lib/utils/common/nintendo64";
+import { getHeaderShift } from "$lib/utils/common/nintendo64";
 import { getShift } from "$lib/utils/parser";
 
 import type {
@@ -25,7 +25,7 @@ import type {
 } from "$lib/types";
 
 export function initHeaderShift(dataView: DataView): number {
-  return retrieveHeaderShift(dataView, "fla");
+  return getHeaderShift(dataView, "fla");
 }
 
 export function overrideItem(item: Item): Item | ItemTab {

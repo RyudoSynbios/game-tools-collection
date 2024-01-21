@@ -1,11 +1,11 @@
 import { getInt, setInt } from "$lib/utils/bytes";
 import { formatChecksum } from "$lib/utils/checksum";
-import { retrieveHeaderShift } from "$lib/utils/common/nintendo64";
+import { getHeaderShift } from "$lib/utils/common/nintendo64";
 
 import type { Item, ItemChecksum, ItemInt } from "$lib/types";
 
 export function initHeaderShift(dataView: DataView): number {
-  return retrieveHeaderShift(dataView, "eep");
+  return getHeaderShift(dataView, "eep");
 }
 
 export function overrideGetInt(

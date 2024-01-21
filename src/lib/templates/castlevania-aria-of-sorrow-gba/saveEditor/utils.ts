@@ -1,10 +1,10 @@
 import { getInt, setInt } from "$lib/utils/bytes";
-import { retrieveHeaderShift } from "$lib/utils/common/gameBoyAdvance";
+import { getHeaderShift } from "$lib/utils/common/gameBoyAdvance";
 
 import type { Item, ItemInt } from "$lib/types";
 
 export function initHeaderShift(dataView: DataView): number {
-  return retrieveHeaderShift(dataView);
+  return getHeaderShift(dataView);
 }
 
 export function afterSetInt(item: Item): void {

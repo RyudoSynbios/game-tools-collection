@@ -1,12 +1,12 @@
 import { getInt, setInt } from "$lib/utils/bytes";
 import { formatChecksum } from "$lib/utils/checksum";
-import { retrieveHeaderShift } from "$lib/utils/common/gameBoyAdvance";
+import { getHeaderShift } from "$lib/utils/common/gameBoyAdvance";
 import { getShift } from "$lib/utils/parser";
 
 import type { Item, ItemChecksum, ItemInt } from "$lib/types";
 
 export function initHeaderShift(dataView: DataView): number {
-  return retrieveHeaderShift(dataView);
+  return getHeaderShift(dataView);
 }
 
 export function initShifts(shifts: number[]): number[] {
