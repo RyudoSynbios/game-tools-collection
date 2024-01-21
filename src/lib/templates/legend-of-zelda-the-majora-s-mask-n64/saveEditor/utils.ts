@@ -25,7 +25,6 @@ import type {
   ItemChecksum,
   ItemContainer,
   ItemInt,
-  ItemSection,
   ItemString,
   ItemTab,
 } from "$lib/types";

@@ -1,6 +1,4 @@
-import { get } from "svelte/store";
-
-import { fileHeaderShift, gameRegion, gameTemplate } from "$lib/stores";
+import { gameRegion, gameTemplate } from "$lib/stores";
 import { getInt, setInt, setString } from "$lib/utils/bytes";
 import {
   customGetRegions,
@@ -12,7 +10,6 @@ import {
   isVmpHeader,
   retrieveSlots,
 } from "$lib/utils/common/playstation";
-import { getObjKey } from "$lib/utils/format";
 import { getItem } from "$lib/utils/parser";
 
 import type {
@@ -22,7 +19,6 @@ import type {
   ItemContainer,
   ItemInt,
   ItemString,
-  Validator,
 } from "$lib/types";
 
 export function initHeaderShift(dataView: DataView): number {

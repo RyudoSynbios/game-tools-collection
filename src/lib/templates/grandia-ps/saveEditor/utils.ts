@@ -1,11 +1,6 @@
 import { get } from "svelte/store";
 
-import {
-  fileHeaderShift,
-  gameJson,
-  gameRegion,
-  gameTemplate,
-} from "$lib/stores";
+import { gameJson, gameRegion } from "$lib/stores";
 import { getInt, setInt, setString } from "$lib/utils/bytes";
 import {
   customGetRegions,
@@ -17,7 +12,6 @@ import {
   isVmpHeader,
   retrieveSlots,
 } from "$lib/utils/common/playstation";
-import { getObjKey } from "$lib/utils/format";
 
 import type { Bit, Item, ItemContainer, ItemInt, Validator } from "$lib/types";
 
