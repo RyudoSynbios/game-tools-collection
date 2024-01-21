@@ -1,10 +1,12 @@
 import { get } from "svelte/store";
 
-import { gameTemplate } from "$lib/stores";
+import { fileHeaderShift, gameRegion, gameTemplate } from "$lib/stores";
 import { getInt } from "$lib/utils/bytes";
 import { getRegions } from "$lib/utils/validator";
 
-import type { RegionValidator } from "$lib/types";
+import type { RegionValidator, Validator } from "$lib/types";
+
+import { getObjKey } from "../format";
 
 export function isMcr(dataView: DataView, shift = 0x0): boolean {
   if (
@@ -86,4 +88,57 @@ export function customGetRegions(dataView: DataView, shift: number): string[] {
   );
 
   return getRegions(dataView, shift, overridedRegions);
+}
+
+export function retrieveSlots(
+  order: "correspondance" | "memory",
+  shifts: number[],
+  index: number,
+): [boolean, number[] | undefined] {
+  const $fileHeaderShift = get(fileHeaderShift);
+  const $gameRegion = get(gameRegion);
+  const $gameTemplate = get(gameTemplate);
+
+  const region = $gameTemplate.validator.regions[
+    getObjKey($gameTemplate.validator.regions, $gameRegion)
+  ] as Validator;
+
+  let validator = region[0];
+
+  if (order === "correspondance") {
+    validator = [...validator, 0x30, 0x30 + index];
+  }
+
+  if (isPsvHeader()) {
+    if (index === 0) {
+      return [false, undefined];
+    } else {
+      return [true, [-1]];
+    }
+  }
+
+  let validCount = 0;
+
+  for (let i = 1; i < 16; i += 1) {
+    const offset = $fileHeaderShift + i * 0x80;
+
+    const isValid = validator.every((hex, j) => {
+      if (getInt(offset + 0xa + j, "uint8") === hex) {
+        return true;
+      }
+    });
+
+    if (isValid && getInt(offset, "uint8") === 0x51) {
+      if (
+        order === "correspondance" ||
+        (order === "memory" && index === validCount)
+      ) {
+        return [true, [...shifts, i * 0x2000]];
+      }
+
+      validCount += 1;
+    }
+  }
+
+  return [true, [-1]];
 }

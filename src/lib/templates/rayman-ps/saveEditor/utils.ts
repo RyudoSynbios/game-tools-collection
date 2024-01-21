@@ -10,6 +10,7 @@ import {
   isDexDriveHeader,
   isPsvHeader,
   isVmpHeader,
+  retrieveSlots,
 } from "$lib/utils/common/playstation";
 import { getObjKey } from "$lib/utils/format";
 import { getItem } from "$lib/utils/parser";
@@ -54,44 +55,8 @@ export function overrideParseContainerItemsShifts(
   shifts: number[],
   index: number,
 ): [boolean, number[] | undefined] {
-  const $fileHeaderShift = get(fileHeaderShift);
-  const $gameRegion = get(gameRegion);
-  const $gameTemplate = get(gameTemplate);
-
   if (item.id === "slots") {
-    const region = $gameTemplate.validator.regions[
-      getObjKey($gameTemplate.validator.regions, $gameRegion)
-    ] as Validator;
-
-    if (isPsvHeader()) {
-      if (index === 0) {
-        return [false, undefined];
-      } else {
-        return [true, [-1]];
-      }
-    }
-
-    let validCount = 0;
-
-    for (let i = 1; i < 16; i += 1) {
-      const offset = $fileHeaderShift + i * 0x80;
-
-      const isValid = region[0].every((hex, j) => {
-        if (getInt(offset + 0xa + j, "uint8") === hex) {
-          return true;
-        }
-      });
-
-      if (isValid && getInt(offset, "uint8") === 0x51) {
-        if (index === validCount) {
-          return [true, [...shifts, i * 0x2000]];
-        }
-
-        validCount += 1;
-      }
-    }
-
-    return [true, [-1]];
+    return retrieveSlots("memory", shifts, index);
   }
 
   return [false, undefined];
