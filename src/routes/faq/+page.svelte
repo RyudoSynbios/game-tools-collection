@@ -38,11 +38,41 @@
       contact@game-tools-collection.com
     </a>.
   </p>
-  <h2>
-    - Can i edit PlayStation Classic save files (from PSP, PS Vita and
-    PlayStation 3)?
-  </h2>
-  <p>Yes.</p>
+  <h2>- What files are supported for Save Editors?</h2>
+  <ul>
+    <li>
+      <strong>Game Boy: </strong>.sav, .srm
+    </li>
+    <li>
+      <strong>Game Boy Color: </strong>.sav, .srm
+    </li>
+    <li>
+      <strong>Game Boy Advance: </strong>.sav, .srm, .sps (<i>GameShark</i>)
+    </li>
+    <li>
+      <strong>Super Nintendo: </strong>.sav, .srm
+    </li>
+    <li>
+      <strong>Nintendo 64: </strong>.eep, .fla, .sra, .srm, .n64 (<i>DexDrive</i
+      >)
+    </li>
+    <li>
+      <strong>Dreamcast: </strong>.bin (<i>VMU raw dump</i>), .cdi
+    </li>
+    <li>
+      <strong>Mega Drive: </strong>.sav, .srm
+    </li>
+    <li>
+      <strong>Sega Saturn: </strong>.bkr (<i>System saves</i>)
+    </li>
+    <li>
+      <strong>PlayStation: </strong>.mcr, .srm, .psv (<i>PlayStation 3</i>),
+      .vmp (<i>PlayStation Classic</i>), .gme (<i>DexDrive</i>)
+    </li>
+    <li>
+      <strong>PC-Engine CD: </strong>.sav, .srm
+    </li>
+  </ul>
 </div>
 
 <style lang="postcss">
@@ -63,6 +93,12 @@
 
     & p:last-of-type {
       @apply m-0;
+    }
+
+    & ul {
+      & li {
+        @apply mb-1 text-sm;
+      }
     }
   }
 </style>
