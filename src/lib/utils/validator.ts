@@ -48,6 +48,11 @@ export function getRegions(
       checkConditions(conditions, (condition: any) => {
         const offset = parseInt(getObjKey(condition, 0));
         const array = condition[offset];
+
+        if (!array) {
+          return false;
+        }
+
         const length = array.length;
 
         for (let i = offset; i < offset + length; i += 0x1) {
