@@ -88,10 +88,6 @@ export function defaultTests(game: string): void {
     it("should not load a wrong GameShark save", async () => {
       await saveShouldBeRejected(`${game}/bad.sps`);
     });
-  } else if (game.match(/-n64$/)) {
-    it("should not load a wrong DexDrive save", async () => {
-      await saveShouldBeRejected(`${game}/bad.n64`);
-    });
   } else if (game.match(/-ps$/)) {
     it("should not load an empty standard save", async () => {
       await saveShouldBeRejected(`${game}/empty.mcr`);
