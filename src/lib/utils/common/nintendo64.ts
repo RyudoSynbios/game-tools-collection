@@ -13,7 +13,7 @@ export function isDexDriveHeader(dataView: DataView): boolean {
 }
 
 export function getDexDriveHeaderShift(): number {
-  return 0x1540;
+  return 0x1340;
 }
 
 export function isSrmFile(dataView: DataView): boolean {
