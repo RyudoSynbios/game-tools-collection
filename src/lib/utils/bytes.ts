@@ -27,6 +27,46 @@ export function resetState(): void {
   isDirty.set(false);
 }
 
+export function byteswap(
+  dataViewTmp?: DataView,
+  start = 0x0,
+  end?: number,
+): DataView {
+  const $dataView =
+    dataViewTmp && dataViewTmp.byteLength > 0 ? dataViewTmp : get(dataView);
+
+  if (!end) {
+    end = $dataView.byteLength;
+  }
+
+  const array = [];
+
+  if (start > 0x0) {
+    for (let i = 0x0; i < start; i += 0x1) {
+      array.push(getInt(i, "uint8", {}, $dataView));
+    }
+  }
+
+  for (let i = start; i < end; i += 0x4) {
+    array.push(
+      getInt(i + 0x3, "uint8", {}, $dataView),
+      getInt(i + 0x2, "uint8", {}, $dataView),
+      getInt(i + 0x1, "uint8", {}, $dataView),
+      getInt(i, "uint8", {}, $dataView),
+    );
+  }
+
+  if (end < $dataView.byteLength) {
+    for (let i = end; i < $dataView.byteLength; i += 0x1) {
+      array.push(getInt(i, "uint8", {}, $dataView));
+    }
+  }
+
+  const uint8Array = new Uint8Array(array);
+
+  return new DataView(uint8Array.buffer);
+}
+
 export function dataTypeToLength(
   dataType: Exclude<DataType, "string">,
 ): number {
