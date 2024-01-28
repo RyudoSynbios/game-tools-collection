@@ -1,12 +1,10 @@
 import { extractBit, getInt, setInt } from "$lib/utils/bytes";
 import { formatChecksum } from "$lib/utils/checksum";
 
-import type { Item, ItemBitflag, ItemBitflags, ItemChecksum } from "$lib/types";
+import type { Item, ItemBitflag, ItemChecksum } from "$lib/types";
 
-export function afterSetInt(item: Item): void {
+export function afterSetInt(item: Item, flag: ItemBitflag): void {
   if ("id" in item && item.id?.match(/level-/)) {
-    const flag = (item as ItemBitflags).flags[0] as ItemBitflag;
-
     const split = item.id.split("-");
 
     let offsetIndex = parseInt(split[1]);

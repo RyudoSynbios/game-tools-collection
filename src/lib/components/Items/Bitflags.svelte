@@ -29,7 +29,7 @@
     }
 
     if (utilsExists("afterSetInt")) {
-      $gameUtils.afterSetInt(item);
+      $gameUtils.afterSetInt(item, flag);
     }
   }
 

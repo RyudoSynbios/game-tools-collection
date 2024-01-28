@@ -4,7 +4,7 @@ import { dataView } from "$lib/stores";
 import { getInt, setInt } from "$lib/utils/bytes";
 import { formatChecksum } from "$lib/utils/checksum";
 
-import type { Item, ItemBitflag, ItemBitflags, ItemChecksum } from "$lib/types";
+import type { Item, ItemBitflag, ItemChecksum } from "$lib/types";
 
 export function beforeInitDataView(dataView: DataView): DataView {
   const array = [];
@@ -20,10 +20,8 @@ export function beforeInitDataView(dataView: DataView): DataView {
   return new DataView(uint8Array.buffer);
 }
 
-export function afterSetInt(item: Item): void {
+export function afterSetInt(item: Item, flag: ItemBitflag): void {
   if ("id" in item && item.id === "chaosEmeralds") {
-    const flag = (item as ItemBitflags).flags[0] as ItemBitflag;
-
     const emeralds = getInt(flag.offset, "uint8").toBitCount();
 
     setInt(flag.offset - 0x1, "uint8", emeralds);

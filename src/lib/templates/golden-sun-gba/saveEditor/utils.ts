@@ -10,7 +10,6 @@ import type {
   Bit,
   Item,
   ItemBitflag,
-  ItemBitflags,
   ItemChecksum,
   ItemContainer,
   ItemInt,
@@ -161,7 +160,7 @@ export function overrideSetInt(item: Item, value: string): boolean {
   return false;
 }
 
-export function afterSetInt(item: Item): void {
+export function afterSetInt(item: Item, flag: ItemBitflag): void {
   if ("id" in item && item.id?.match(/playTime-/)) {
     const itemInt = item as ItemInt;
 
@@ -243,8 +242,6 @@ export function afterSetInt(item: Item): void {
       setInt(itemInt.offset - 0x61c, "uint8", int);
     }
   } else if ("id" in item && item.id?.match(/djinn-/)) {
-    const flag = (item as ItemBitflags).flags[0] as ItemBitflag;
-
     const split = item.id.split("-");
 
     const characterIndex = parseInt(split[1]);
@@ -269,8 +266,6 @@ export function afterSetInt(item: Item): void {
     setInt(offset - 0x5de, "uint8", Math.min(elements[2], 7));
     setInt(offset - 0x5dd, "uint8", Math.min(elements[3], 7));
   } else if ("id" in item && item.id?.match(/djinnSet-/)) {
-    const flag = (item as ItemBitflags).flags[0] as ItemBitflag;
-
     const split = item.id.split("-");
 
     const elementIndex = parseInt(split[1]);
