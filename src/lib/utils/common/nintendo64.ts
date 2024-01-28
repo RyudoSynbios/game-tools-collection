@@ -1,4 +1,31 @@
+import { get } from "svelte/store";
+
+import {
+  dataView,
+  fileHeaderShift,
+  gameRegion,
+  gameTemplate,
+} from "$lib/stores";
 import { getInt } from "$lib/utils/bytes";
+import { getObjKey } from "$lib/utils/format";
+import { getRegions } from "$lib/utils/validator";
+
+import type { RegionValidator, Validator } from "$lib/types";
+
+export function isMpk(dataView: DataView, shift = 0x0): boolean {
+  if (
+    isDexDriveHeader(dataView) ||
+    (dataView.byteLength >= 0x20000 &&
+      getInt(shift + 0x0, "uint8", {}, dataView) === 0x81 &&
+      getInt(shift + 0x1, "uint8", {}, dataView) === 0x01 &&
+      getInt(shift + 0x2, "uint8", {}, dataView) === 0x02 &&
+      getInt(shift + 0x3, "uint8", {}, dataView) === 0x03)
+  ) {
+    return true;
+  }
+
+  return false;
+}
 
 export function isDexDriveHeader(dataView: DataView): boolean {
   const validator = [
@@ -43,4 +70,62 @@ export function getHeaderShift(dataView: DataView, format: SaveFormat): number {
   }
 
   return 0x0;
+}
+
+export function getRegionsFromMpk(dataView: DataView, shift: number): string[] {
+  const $gameTemplate = get(gameTemplate);
+
+  let overridedRegions: { [key: string]: RegionValidator } | undefined;
+
+  if (!isDexDriveHeader(dataView)) {
+    overridedRegions = Object.entries($gameTemplate.validator.regions).reduce(
+      (regions: { [key: string]: RegionValidator }, [region, condition]) => {
+        const validator = Object.values(condition)[0];
+
+        regions[region] = {
+          $or: [...Array(16).keys()].map((index) => ({
+            [0x300 + index * 0x20]: validator,
+          })),
+        };
+
+        return regions;
+      },
+      {},
+    );
+  }
+
+  return getRegions(dataView, shift, overridedRegions);
+}
+
+export function getMpkNoteShift(shifts: number[]): number[] {
+  const $dataView = get(dataView);
+  const $fileHeaderShift = get(fileHeaderShift);
+  const $gameRegion = get(gameRegion);
+  const $gameTemplate = get(gameTemplate);
+
+  const region = $gameTemplate.validator.regions[
+    getObjKey($gameTemplate.validator.regions, $gameRegion)
+  ] as Validator;
+
+  let validator = region[0];
+
+  if (isDexDriveHeader($dataView)) {
+    return [...shifts, 0x200];
+  }
+
+  for (let i = 0; i < 15; i += 1) {
+    const offset = $fileHeaderShift + 0x300 + i * 0x20;
+
+    const isValid = validator.every((hex, j) => {
+      if (getInt(offset + j, "uint8") === hex) {
+        return true;
+      }
+    });
+
+    if (isValid) {
+      return [...shifts, getInt(offset + 0x7, "uint8") * 0x100];
+    }
+  }
+
+  return shifts;
 }
