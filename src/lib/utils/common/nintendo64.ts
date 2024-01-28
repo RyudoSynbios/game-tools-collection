@@ -20,22 +20,22 @@ export function isSrm(dataView: DataView): boolean {
   return dataView.byteLength === 0x48800;
 }
 
-export function getSrmHeaderShift(format: "eep" | "fla" | "sra"): number {
+type SaveFormat = "eep" | "fla" | "mpk" | "sra";
+
+export function getSrmHeaderShift(format: SaveFormat): number {
   switch (format) {
     case "eep":
       return 0x0;
-    case "fla":
-      return 0x28800;
+    case "mpk":
+      return 0x800;
     case "sra":
       return 0x20800;
+    case "fla":
+      return 0x28800;
   }
 }
 
-export function getHeaderShift(
-  dataView: DataView,
-  format: "eep" | "fla" | "sra",
-): number {
-  if (isSrmFile(dataView)) {
+export function getHeaderShift(dataView: DataView, format: SaveFormat): number {
   if (isSrm(dataView)) {
     return getSrmHeaderShift(format);
   } else if (isDexDriveHeader(dataView)) {
