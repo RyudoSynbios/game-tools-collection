@@ -16,7 +16,7 @@ export function getDexDriveHeaderShift(): number {
   return 0x1340;
 }
 
-export function isSrmFile(dataView: DataView): boolean {
+export function isSrm(dataView: DataView): boolean {
   return dataView.byteLength === 0x48800;
 }
 
@@ -36,6 +36,7 @@ export function getHeaderShift(
   format: "eep" | "fla" | "sra",
 ): number {
   if (isSrmFile(dataView)) {
+  if (isSrm(dataView)) {
     return getSrmHeaderShift(format);
   } else if (isDexDriveHeader(dataView)) {
     return getDexDriveHeaderShift();
