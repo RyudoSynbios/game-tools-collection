@@ -174,7 +174,7 @@ export function getBitflag(
 
 export function setBitflag(
   offset: number,
-  index: number,
+  bit: number,
   value: boolean,
   options: BitflagOptions = {},
 ): void {
@@ -182,7 +182,7 @@ export function setBitflag(
 
   const bitflag = getBitflag(offset, { reversed: options.reversed });
 
-  bitflag[index] = Boolean(value);
+  bitflag[bit] = Boolean(value);
 
   const falseString = options.reversed ? "1" : "0";
   const trueString = options.reversed ? "0" : "1";
