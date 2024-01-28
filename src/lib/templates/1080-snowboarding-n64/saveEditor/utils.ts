@@ -1,21 +1,19 @@
 import { get } from "svelte/store";
 
 import { gameTemplate } from "$lib/stores";
-import { getInt, getString, setInt, setString } from "$lib/utils/bytes";
+import { getInt, setInt } from "$lib/utils/bytes";
 import { formatChecksum } from "$lib/utils/checksum";
-import { getHeaderShift } from "$lib/utils/common/nintendo64";
+import { byteswapDataView, getHeaderShift } from "$lib/utils/common/nintendo64";
 import { clone } from "$lib/utils/format";
 
-import type {
-  Item,
-  ItemChecksum,
-  ItemInt,
-  ItemSection,
-  ItemString,
-} from "$lib/types";
+import type { Item, ItemChecksum, ItemInt, ItemSection } from "$lib/types";
 
 export function initHeaderShift(dataView: DataView): number {
   return getHeaderShift(dataView, "sra");
+}
+
+export function beforeInitDataView(dataView: DataView): DataView {
+  return byteswapDataView("sra", dataView);
 }
 
 export function overrideGetRegions(
@@ -34,7 +32,10 @@ export function overrideGetRegions(
 
   const checksum = generateChecksum(itemChecksum, dataView);
 
-  if (checksum === getInt(itemChecksum.offset, "uint32", {}, dataView)) {
+  if (
+    checksum ===
+    getInt(itemChecksum.offset, "uint32", { bigEndian: true }, dataView)
+  ) {
     return ["europe", "usa_japan"];
   }
 
@@ -56,24 +57,6 @@ export function overrideGetInt(
     const int = getInt(itemInt.offset, "uint8") & 0x7;
 
     return [true, int];
-  } else if ("id" in item && item.id === "rtName") {
-    const itemString = item as ItemString;
-
-    const name1 = getString(itemString.offset, 0x2, itemString.letterDataType, {
-      resource: itemString.resource,
-      bigEndian: itemString.bigEndian,
-    });
-
-    const name2 = getString(
-      itemString.offset + 0x7,
-      0x1,
-      itemString.letterDataType,
-      {
-        resource: itemString.resource,
-      },
-    );
-
-    return [true, name1 + name2];
   } else if ("id" in item && item.id === "soundType") {
     const itemInt = item as ItemInt;
 
@@ -109,35 +92,6 @@ export function overrideSetInt(item: Item, value: string): boolean {
     setInt(itemInt.offset, "uint8", int);
 
     return true;
-  } else if ("id" in item && item.id === "rtName") {
-    const itemString = item as ItemString;
-
-    value = value.padEnd(3, " ");
-
-    setString(
-      itemString.offset,
-      0x2,
-      itemString.letterDataType,
-      `${value[0]}${value[1]}`,
-      itemString.fallback,
-      {
-        resource: itemString.resource,
-        bigEndian: itemString.bigEndian,
-      },
-    );
-
-    setString(
-      itemString.offset + 0x7,
-      0x1,
-      itemString.letterDataType,
-      value[2],
-      itemString.fallback,
-      {
-        resource: itemString.resource,
-      },
-    );
-
-    return true;
   } else if ("id" in item && item.id === "soundType") {
     const itemInt = item as ItemInt;
 
@@ -169,10 +123,10 @@ export function afterSetInt(item: Item): void {
       itemInt.offset - (parseInt(item.id.replace("contest-", "")) - 1) * 4;
 
     for (let i = 0; i < 5; i += 1) {
-      int += getInt(offset + i * 0x4, "uint32");
+      int += getInt(offset + i * 0x4, "uint32", { bigEndian: true });
     }
 
-    setInt(offset + 0x14, "uint32", int);
+    setInt(offset + 0x14, "uint32", int, { bigEndian: true });
   }
 }
 
@@ -189,13 +143,13 @@ export function generateChecksum(
       checksum += getInt(
         item.offset + offset - (item.id === "checksum1-2" ? 0x4 : 0x0),
         "uint32",
-        {},
+        { bigEndian: true },
         dataView,
       );
       checksum += getInt(
         item.offset + offset + (item.id === "checksum1-1" ? 0x4 : 0x0),
         "uint32",
-        {},
+        { bigEndian: true },
         dataView,
       );
     });
@@ -205,7 +159,7 @@ export function generateChecksum(
       i < item.control.offsetEnd;
       i += 0x4
     ) {
-      checksum += getInt(i, "uint32", {}, dataView);
+      checksum += getInt(i, "uint32", { bigEndian: true }, dataView);
     }
   }
 
@@ -222,4 +176,8 @@ export function generateChecksum(
   }
 
   return formatChecksum(checksum, item.dataType);
+}
+
+export function beforeSaving(): ArrayBufferLike {
+  return byteswapDataView("sra").buffer;
 }

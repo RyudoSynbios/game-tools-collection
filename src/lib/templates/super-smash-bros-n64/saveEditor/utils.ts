@@ -3,13 +3,17 @@ import { get } from "svelte/store";
 import { gameTemplate } from "$lib/stores";
 import { getInt } from "$lib/utils/bytes";
 import { formatChecksum } from "$lib/utils/checksum";
-import { getHeaderShift } from "$lib/utils/common/nintendo64";
+import { byteswapDataView, getHeaderShift } from "$lib/utils/common/nintendo64";
 import { clone } from "$lib/utils/format";
 
 import type { ItemChecksum } from "$lib/types";
 
 export function initHeaderShift(dataView: DataView): number {
   return getHeaderShift(dataView, "sra");
+}
+
+export function beforeInitDataView(dataView: DataView): DataView {
+  return byteswapDataView("sra", dataView);
 }
 
 export function overrideGetRegions(
@@ -26,7 +30,10 @@ export function overrideGetRegions(
 
   const checksum = generateChecksum(itemChecksum, dataView);
 
-  if (checksum === getInt(itemChecksum.offset, "uint32", {}, dataView)) {
+  if (
+    checksum ===
+    getInt(itemChecksum.offset, "uint32", { bigEndian: true }, dataView)
+  ) {
     return ["europe", "usa", "japan", "australia"];
   }
 
@@ -42,11 +49,15 @@ export function generateChecksum(
   for (let i = item.control.offsetStart; i < item.control.offsetEnd; i += 0x4) {
     const multiplicator = i - item.control.offsetStart + 0x4;
 
-    checksum += getInt(i, "uint8", {}, dataView) * multiplicator;
-    checksum += getInt(i + 0x1, "uint8", {}, dataView) * (multiplicator - 1);
-    checksum += getInt(i + 0x2, "uint8", {}, dataView) * (multiplicator - 2);
-    checksum += getInt(i + 0x3, "uint8", {}, dataView) * (multiplicator - 3);
+    checksum += getInt(i + 0x3, "uint8", {}, dataView) * multiplicator;
+    checksum += getInt(i + 0x2, "uint8", {}, dataView) * (multiplicator - 1);
+    checksum += getInt(i + 0x1, "uint8", {}, dataView) * (multiplicator - 2);
+    checksum += getInt(i, "uint8", {}, dataView) * (multiplicator - 3);
   }
 
   return formatChecksum(checksum, item.dataType);
+}
+
+export function beforeSaving(): ArrayBufferLike {
+  return byteswapDataView("sra").buffer;
 }

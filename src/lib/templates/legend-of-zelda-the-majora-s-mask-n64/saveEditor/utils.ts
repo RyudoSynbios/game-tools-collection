@@ -11,7 +11,7 @@ import {
   setString,
 } from "$lib/utils/bytes";
 import { formatChecksum } from "$lib/utils/checksum";
-import { getHeaderShift } from "$lib/utils/common/nintendo64";
+import { byteswapDataView, getHeaderShift } from "$lib/utils/common/nintendo64";
 import { getShift } from "$lib/utils/parser";
 
 import type {
@@ -26,6 +26,10 @@ import type {
 
 export function initHeaderShift(dataView: DataView): number {
   return getHeaderShift(dataView, "fla");
+}
+
+export function beforeInitDataView(dataView: DataView): DataView {
+  return byteswapDataView("fla", dataView);
 }
 
 export function overrideItem(item: Item): Item | ItemTab {
@@ -92,7 +96,7 @@ export function overrideParseContainerItemsShifts(
       offset = 0x10000;
     }
 
-    const isValid = getInt(shift + offset + 0x24, "uint8") === 0x44;
+    const isValid = getInt(shift + offset + 0x24, "uint8") === 0x5a;
 
     if (isValid) {
       return [true, [...shifts, offset]];
@@ -111,26 +115,7 @@ export function overrideParseContainerItemsShifts(
 export function overrideGetInt(
   item: Item,
 ): [boolean, number | string | undefined] {
-  if ("id" in item && item.id === "filename") {
-    const itemString = item as ItemString;
-
-    const name1 = getString(itemString.offset, 0x4, itemString.letterDataType, {
-      resource: itemString.resource,
-      bigEndian: itemString.bigEndian,
-    });
-
-    const name2 = getString(
-      itemString.offset + 0x4,
-      0x4,
-      itemString.letterDataType,
-      {
-        resource: itemString.resource,
-        bigEndian: itemString.bigEndian,
-      },
-    );
-
-    return [true, name1 + name2];
-  } else if ("id" in item && item.id === "heartPieces") {
+  if ("id" in item && item.id === "heartPieces") {
     const itemInt = item as ItemInt;
 
     const value = getInt(itemInt.offset, "uint8");
@@ -195,10 +180,10 @@ export function overrideGetInt(
   } else if ("id" in item && item.id === "hideoutCode") {
     const itemString = item as ItemString;
 
-    let string = `${getInt(itemString.offset - 0x4, "uint8")}`;
+    let string = "";
 
-    for (let i = 0x3; i >= 0x0; i -= 0x1) {
-      string += `${getInt(itemString.offset + i, "uint8")}`;
+    for (let i = 0x0; i < itemString.length; i += 0x1) {
+      string += getInt(itemString.offset + i, "uint8");
     }
 
     return [true, string];
@@ -209,12 +194,9 @@ export function overrideGetInt(
 
     let string = "";
 
-    string += colors[getInt(itemString.offset + 0x2, "uint8")] || "";
-    string += colors[getInt(itemString.offset + 0x1, "uint8")] || "";
-    string += colors[getInt(itemString.offset, "uint8")] || "";
-    string += colors[getInt(itemString.offset + 0x7, "uint8")] || "";
-    string += colors[getInt(itemString.offset + 0x6, "uint8")] || "";
-    string += colors[getInt(itemString.offset + 0x5, "uint8")] || "";
+    for (let i = 0x0; i < itemString.length; i += 0x1) {
+      string += colors[getInt(itemString.offset + i, "uint8")];
+    }
 
     return [true, string];
   }
@@ -223,37 +205,7 @@ export function overrideGetInt(
 }
 
 export function overrideSetInt(item: Item, value: string): boolean {
-  if ("id" in item && item.id === "filename") {
-    const itemString = item as ItemString;
-
-    value = value.padEnd(8, " ");
-
-    setString(
-      itemString.offset,
-      0x4,
-      itemString.letterDataType,
-      `${value[0]}${value[1]}${value[2]}${value[3]}`,
-      itemString.fallback,
-      {
-        resource: itemString.resource,
-        bigEndian: itemString.bigEndian,
-      },
-    );
-
-    setString(
-      itemString.offset + 0x4,
-      0x4,
-      itemString.letterDataType,
-      `${value[4]}${value[5]}${value[6]}${value[7]}`,
-      itemString.fallback,
-      {
-        resource: itemString.resource,
-        bigEndian: itemString.bigEndian,
-      },
-    );
-
-    return true;
-  } else if ("id" in item && item.id === "heartPieces") {
+  if ("id" in item && item.id === "heartPieces") {
     const itemInt = item as ItemInt;
 
     const int = parseInt(value);
@@ -339,36 +291,38 @@ export function afterSetInt(item: Item): void {
   if ("id" in item && item.id === "health") {
     const itemInt = item as ItemInt;
 
-    let health = getInt(itemInt.offset, "uint16");
-    const healthMax = getInt(itemInt.offset + 0x2, "uint16");
+    let health = getInt(itemInt.offset, "uint16", { bigEndian: true });
+    const healthMax = getInt(itemInt.offset - 0x2, "uint16", {
+      bigEndian: true,
+    });
 
     health = Math.min(health, healthMax);
 
-    setInt(itemInt.offset, "uint16", health);
+    setInt(itemInt.offset, "uint16", health, { bigEndian: true });
   } else if ("id" in item && item.id === "healthMax") {
     const itemInt = item as ItemInt;
 
-    let health = getInt(itemInt.offset - 0x2, "uint16");
-    const healthMax = getInt(itemInt.offset, "uint16");
+    let health = getInt(itemInt.offset + 0x2, "uint16", { bigEndian: true });
+    const healthMax = getInt(itemInt.offset, "uint16", { bigEndian: true });
 
     health = Math.min(health, healthMax);
 
-    setInt(itemInt.offset - 0x2, "uint16", health);
+    setInt(itemInt.offset + 0x2, "uint16", health, { bigEndian: true });
 
     let int = 0;
 
-    const hasDoubleDefense = getBoolean(itemInt.offset + 0xb);
+    const hasDoubleDefense = getBoolean(itemInt.offset + 0xe);
 
     if (hasDoubleDefense) {
       int = healthMax / 16;
     }
 
-    setInt(itemInt.offset + 0x9a, "uint32", int);
+    setInt(itemInt.offset + 0x9f, "uint8", int);
   } else if ("id" in item && item.id === "magic") {
     const itemInt = item as ItemInt;
 
     let magic = getInt(itemInt.offset, "uint8");
-    const magicMax = getInt(itemInt.offset + 0x1, "uint8");
+    const magicMax = getInt(itemInt.offset - 0x1, "uint8");
 
     if (magicMax === 0x1) {
       magic = Math.min(48, magic);
@@ -384,20 +338,20 @@ export function afterSetInt(item: Item): void {
 
     const int = getInt(itemInt.offset, "uint8");
 
-    const magic = getInt(itemInt.offset - 0x1, "uint8");
+    const magic = getInt(itemInt.offset + 0x1, "uint8");
 
     if (int === 0x1) {
-      setBoolean(itemInt.offset + 0x7, false);
+      setBoolean(itemInt.offset + 0x9, false);
       setBoolean(itemInt.offset + 0x8, true);
-      setInt(itemInt.offset - 0x1, "uint8", Math.min(48, magic));
+      setInt(itemInt.offset + 0x1, "uint8", Math.min(48, magic));
     } else if (int === 0x2) {
-      setBoolean(itemInt.offset + 0x7, true);
+      setBoolean(itemInt.offset + 0x9, true);
       setBoolean(itemInt.offset + 0x8, true);
-      setInt(itemInt.offset - 0x1, "uint8", Math.min(96, magic));
+      setInt(itemInt.offset + 0x1, "uint8", Math.min(96, magic));
     } else {
-      setBoolean(itemInt.offset + 0x7, false);
+      setBoolean(itemInt.offset + 0x9, false);
       setBoolean(itemInt.offset + 0x8, false);
-      setInt(itemInt.offset - 0x1, "uint8", Math.min(0, magic));
+      setInt(itemInt.offset + 0x1, "uint8", Math.min(0, magic));
     }
   } else if ("id" in item && item.id === "doubleDefense") {
     const itemInt = item as ItemInt;
@@ -405,19 +359,21 @@ export function afterSetInt(item: Item): void {
     let int = 0;
 
     const hasDoubleDefense = getBoolean(itemInt.offset);
-    const healthMax = getInt(itemInt.offset - 0xb, "uint16");
+    const healthMax = getInt(itemInt.offset - 0xe, "uint16", {
+      bigEndian: true,
+    });
 
     if (hasDoubleDefense) {
       int = healthMax / 16;
     }
 
-    setInt(itemInt.offset + 0x8f, "uint32", int);
+    setInt(itemInt.offset + 0x91, "uint8", int);
   } else if ("id" in item && item.id === "day") {
     const itemInt = item as ItemInt;
 
-    const int = getInt(itemInt.offset, "uint32");
+    const int = getInt(itemInt.offset, "uint32", { bigEndian: true });
 
-    setInt(itemInt.offset + 0x4, "uint32", int);
+    setInt(itemInt.offset + 0x4, "uint32", int, { bigEndian: true });
   }
 }
 
@@ -429,7 +385,7 @@ export function generateChecksum(item: ItemChecksum): number {
   let isOwlFile = false;
 
   if ($gameRegion !== 2) {
-    isOwlFile = getBoolean(item.offset - 0xfe8);
+    isOwlFile = getBoolean(item.offset - 0xfe7);
   }
 
   for (
@@ -441,4 +397,8 @@ export function generateChecksum(item: ItemChecksum): number {
   }
 
   return formatChecksum(checksum, item.dataType);
+}
+
+export function beforeSaving(): ArrayBufferLike {
+  return byteswapDataView("fla").buffer;
 }

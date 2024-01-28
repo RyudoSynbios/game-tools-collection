@@ -6,7 +6,7 @@ import {
   gameRegion,
   gameTemplate,
 } from "$lib/stores";
-import { getInt } from "$lib/utils/bytes";
+import { byteswap, getInt } from "$lib/utils/bytes";
 import { getObjKey } from "$lib/utils/format";
 import { getRegions } from "$lib/utils/validator";
 
@@ -47,6 +47,14 @@ export function isSrm(dataView: DataView): boolean {
   return dataView.byteLength === 0x48800;
 }
 
+export function isSrmSra(dataView: DataView): boolean {
+  if (isSrm(dataView) && getInt(0xb00, "uint8", {}, dataView) === 0x0) {
+    return true;
+  }
+
+  return false;
+}
+
 type SaveFormat = "eep" | "fla" | "mpk" | "sra";
 
 export function getSrmHeaderShift(format: SaveFormat): number {
@@ -62,6 +70,19 @@ export function getSrmHeaderShift(format: SaveFormat): number {
   }
 }
 
+export function getSrmHeaderEnd(format: SaveFormat): number {
+  switch (format) {
+    case "eep":
+      return 0x800;
+    case "mpk":
+      return 0x20800;
+    case "sra":
+      return 0x28800;
+    case "fla":
+      return 0x48800;
+  }
+}
+
 export function getHeaderShift(dataView: DataView, format: SaveFormat): number {
   if (isSrm(dataView)) {
     return getSrmHeaderShift(format);
@@ -70,6 +91,30 @@ export function getHeaderShift(dataView: DataView, format: SaveFormat): number {
   }
 
   return 0x0;
+}
+
+export function byteswapDataView(
+  format: SaveFormat,
+  dataViewTmp?: DataView,
+): DataView {
+  const $dataView =
+    dataViewTmp && dataViewTmp.byteLength > 0 ? dataViewTmp : get(dataView);
+
+  if (format === "eep") {
+    return $dataView;
+  }
+
+  if (isSrm($dataView)) {
+    return byteswap(
+      $dataView,
+      getSrmHeaderShift(format),
+      getSrmHeaderEnd(format),
+    );
+  } else if (!isMpk($dataView)) {
+    return byteswap($dataView);
+  }
+
+  return $dataView;
 }
 
 export function getRegionsFromMpk(dataView: DataView, shift: number): string[] {

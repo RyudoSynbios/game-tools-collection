@@ -27,7 +27,7 @@ describe(game, () => {
     ["should load a filled standard save (USA)"       ,  "filled.mpk", ["r|usa",    't|["Slot 3","Options"]'         , "s|3$1", "c|a09897d7", "i|1", "s|2$2", "i|134", "w|135", "c|d0423ad4"]],
     ["should load a standard save (Europe)"           ,  "europe.mpk", [            't|["Slot 1","Options"]'         , "s|1$1", "c|94f4c941", "i|1", "s|2$2", "i|103", "w|104", "c|49a6d93e"]],
     ["should load a standard save (USA)"              ,     "usa.mpk", [            't|["Slot 3","Options"]'         , "s|3$1", "c|d5f430d2", "i|4", "s|2$2", "i|144", "w|145", "c|a52e9dd1"]],
-    ["should load a standard save (Japan)"            ,   "japan.sra", [            't|["Slot 1","Options"]'         , "s|1$1", "c|92e76c8b", "i|3", "s|2$2", "i|131", "w|132", "c|c4233235"]],
+    ["should load a standard save (Japan)"            ,   "japan.sra", [            't|["Slot 2","Options"]'         , "s|2$1", "c|92e76c8b", "i|3", "s|2$2", "i|131", "w|132", "c|c4233235"]],
     ["should load a SRM save (Europe)"                ,  "europe.srm", [            't|["Slot 2","Slot 3","Options"]', "s|3$1", "c|c335c510", "i|1", "s|2$2", "i|100", "w|101", "c|b3ef6813"]],
     ["should load a SRM save (USA)"                   ,     "usa.srm", [            't|["Slot 1","Options"]'         , "s|1$1", "c|28b374ff", "i|1", "s|2$2", "i|141", "w|142", "c|b9dc83fa"]],
     ["should load a SRM save (Japan)"                 ,   "japan.srm", [            't|["Slot 1","Slot 3","Options"]', "s|3$1", "c|ba0d154c", "i|6", "s|2$2", "i|432", "w|433", "c|cad7b84f"]],

@@ -3,7 +3,7 @@ import { get } from "svelte/store";
 
 import { fileHeaderShift, gameTemplate } from "$lib/stores";
 import { getBigInt, getInt, setInt } from "$lib/utils/bytes";
-import { getHeaderShift } from "$lib/utils/common/nintendo64";
+import { byteswapDataView, getHeaderShift } from "$lib/utils/common/nintendo64";
 import { clone, makeOperations } from "$lib/utils/format";
 
 import type {
@@ -16,6 +16,10 @@ import type {
 
 export function initHeaderShift(dataView: DataView): number {
   return getHeaderShift(dataView, "eep");
+}
+
+export function beforeInitDataView(dataView: DataView): DataView {
+  return byteswapDataView("eep", dataView);
 }
 
 export function overrideGetRegions(
@@ -261,4 +265,8 @@ export function generateChecksum(
   const low = checksum1.xor(checksum2).toString(16).padStart(8, "0").slice(-8);
 
   return BigInt(`0x${high + low}`);
+}
+
+export function beforeSaving(): ArrayBufferLike {
+  return byteswapDataView("eep").buffer;
 }

@@ -1,11 +1,15 @@
 import { getInt, setInt } from "$lib/utils/bytes";
 import { formatChecksum } from "$lib/utils/checksum";
-import { getHeaderShift } from "$lib/utils/common/nintendo64";
+import { byteswapDataView, getHeaderShift } from "$lib/utils/common/nintendo64";
 
 import type { Item, ItemChecksum, ItemInt } from "$lib/types";
 
 export function initHeaderShift(dataView: DataView): number {
   return getHeaderShift(dataView, "eep");
+}
+
+export function beforeInitDataView(dataView: DataView): DataView {
+  return byteswapDataView("eep", dataView);
 }
 
 export function overrideGetInt(
@@ -68,4 +72,8 @@ export function generateChecksum(item: ItemChecksum): number {
   }
 
   return formatChecksum(checksum, item.dataType);
+}
+
+export function beforeSaving(): ArrayBufferLike {
+  return byteswapDataView("eep").buffer;
 }

@@ -1,20 +1,16 @@
 import { get } from "svelte/store";
 
 import { dataView, gameRegion, gameTemplate } from "$lib/stores";
-import {
-  byteswap,
-  getInt,
-  setBitflag,
-  setBoolean,
-  setInt,
-} from "$lib/utils/bytes";
+import { getInt, setBitflag, setBoolean, setInt } from "$lib/utils/bytes";
 import { formatChecksum } from "$lib/utils/checksum";
 import {
+  byteswapDataView,
   getHeaderShift,
   getMpkNoteShift,
   getRegionsFromMpk,
   isMpk,
   isSrm,
+  isSrmSra,
 } from "$lib/utils/common/nintendo64";
 import { clone } from "$lib/utils/format";
 import { getItem, getShift } from "$lib/utils/parser";
@@ -29,14 +25,6 @@ import type {
   ItemTab,
 } from "$lib/types";
 
-function isSrmSra(dataView: DataView): boolean {
-  if (isSrm(dataView) && getInt(0xb00, "uint8", {}, dataView) === 0x0) {
-    return true;
-  }
-
-  return false;
-}
-
 export function initHeaderShift(dataView: DataView): number {
   const format = isSrmSra(dataView) ? "sra" : "mpk";
 
@@ -44,13 +32,7 @@ export function initHeaderShift(dataView: DataView): number {
 }
 
 export function beforeInitDataView(dataView: DataView): DataView {
-  if (isSrm(dataView)) {
-    return byteswap(dataView, 0x20800, 0x28800);
-  } else if (!isMpk(dataView)) {
-    return byteswap(dataView);
-  }
-
-  return dataView;
+  return byteswapDataView("sra", dataView);
 }
 
 export function overrideGetRegions(
@@ -89,10 +71,6 @@ export function initShifts(shifts: number[]): number[] {
 
   const shift = getShift(shifts);
 
-  if (!isSrm($dataView) && $gameRegion === 2) {
-    return [...shifts, 0x40];
-  }
-
   if (isMpk($dataView, shift)) {
     return getMpkNoteShift(shifts);
   }
@@ -100,45 +78,14 @@ export function initShifts(shifts: number[]): number[] {
   return shifts;
 }
 
-export function overrideItem(item: Item): Item {
-  const $dataView = get(dataView);
-  const $gameRegion = get(gameRegion);
-
-  if (
-    "id" in item &&
-    item.id === "options" &&
-    !isSrm($dataView) &&
-    $gameRegion === 2
-  ) {
-    if ("control" in item) {
-      const itemChecksum = item as ItemChecksum;
-
-      itemChecksum.offset -= 0x40;
-      itemChecksum.control.offsetStart -= 0x40;
-      itemChecksum.control.offsetEnd -= 0x40;
-
-      return itemChecksum;
-    } else {
-      const itemInt = item as ItemInt;
-
-      itemInt.offset -= 0x40;
-
-      return itemInt;
-    }
-  }
-
-  return item;
-}
-
 export function overrideParseContainerItemsShifts(
   item: ItemContainer,
   shifts: number[],
   index: number,
 ): [boolean, number[] | undefined] {
-  const $dataView = get(dataView);
   const $gameRegion = get(gameRegion);
 
-  if (item.id === "slots" && isSrm($dataView) && $gameRegion === 2) {
+  if (item.id === "slots" && $gameRegion === 2) {
     return [true, [...shifts, -0xf0, index * 0x130]];
   }
 
@@ -308,17 +255,5 @@ export function generateChecksum(
 }
 
 export function beforeSaving(): ArrayBufferLike {
-  const $dataView = get(dataView);
-
-  if (isSrm($dataView)) {
-    const dataViewByteswapped = byteswap($dataView, 0x20800, 0x28800);
-
-    return dataViewByteswapped.buffer;
-  } else if (!isMpk($dataView)) {
-    const dataViewByteswapped = byteswap();
-
-    return dataViewByteswapped.buffer;
-  }
-
-  return $dataView.buffer;
+  return byteswapDataView("sra").buffer;
 }
