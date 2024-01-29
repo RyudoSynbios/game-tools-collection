@@ -1,7 +1,7 @@
 import { get } from "svelte/store";
 
 import { dataView } from "$lib/stores";
-import { getInt } from "$lib/utils/bytes";
+import { byteswap, getInt } from "$lib/utils/bytes";
 
 import type { ItemChecksum } from "$lib/types";
 
@@ -15,6 +15,18 @@ export function isDciFile(
   }
 
   return false;
+}
+
+export function byteswapDataView(dataViewTmp?: DataView): DataView {
+  if (isDciFile(dataViewTmp)) {
+    return byteswap(dataViewTmp, 0x20);
+  }
+
+  if (dataViewTmp !== undefined) {
+    return vmuToDataView(dataViewTmp);
+  }
+
+  return dataViewToVmu();
 }
 
 export function dciToDataView(dataView: DataView): DataView {
@@ -81,7 +93,7 @@ export function vmuToDataView(dataView: DataView): DataView {
   return new DataView(uint8Array.buffer);
 }
 
-export function dataViewToVmu(): ArrayBufferLike {
+export function dataViewToVmu(): DataView {
   const $dataView = get(dataView);
 
   const array = [];
@@ -94,7 +106,7 @@ export function dataViewToVmu(): ArrayBufferLike {
 
   const uint8Array = new Uint8Array(array);
 
-  return uint8Array.buffer;
+  return new DataView(uint8Array.buffer);
 }
 
 export function generateVmuChecksum(item: ItemChecksum): number {

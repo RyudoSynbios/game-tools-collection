@@ -3,14 +3,8 @@ import { get } from "svelte/store";
 import { dataView, gameRegion, gameTemplate } from "$lib/stores";
 import { getInt, setInt } from "$lib/utils/bytes";
 import { formatChecksum } from "$lib/utils/checksum";
-import {
-  dataViewToDci,
-  dataViewToVmu,
-  dciToDataView,
-  generateVmuChecksum,
-  isDciFile,
-  vmuToDataView,
-} from "$lib/utils/common/dreamcast";
+import { generateVmuChecksum, isDciFile } from "$lib/utils/common/dreamcast";
+import { byteswapDataView } from "$lib/utils/common/dreamcast";
 import { getObjKey } from "$lib/utils/format";
 
 import type {
@@ -23,11 +17,7 @@ import type {
 } from "$lib/types";
 
 export function beforeInitDataView(dataView: DataView): DataView {
-  if (isDciFile(dataView)) {
-    return dciToDataView(dataView);
-  }
-
-  return vmuToDataView(dataView);
+  return byteswapDataView(dataView);
 }
 
 export function initShifts(shifts: number[]): number[] {
@@ -151,9 +141,5 @@ export function generateChecksum(item: ItemChecksum): number {
 }
 
 export function beforeSaving(): ArrayBufferLike {
-  if (isDciFile()) {
-    return dataViewToDci();
-  }
-
-  return dataViewToVmu();
+  return byteswapDataView().buffer;
 }
