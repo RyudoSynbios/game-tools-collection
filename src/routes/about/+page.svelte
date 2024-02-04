@@ -31,11 +31,6 @@
     Also, some editors can be not fully complete, so don't hesitate to come back
     from time to time to check the progress!
   </p>
-  <p>
-    At the moment the source code is private but i plan to make it open source,
-    allowing any developer wishing to participate to push their templates on the
-    Git repository.
-  </p>
 </div>
 
 <style lang="postcss">
