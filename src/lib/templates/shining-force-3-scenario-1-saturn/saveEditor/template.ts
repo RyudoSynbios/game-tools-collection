@@ -6,7 +6,7 @@ const template: GameJson = {
       europe_usa_japan: {
         0x84: [
           0x53, 0x46, 0x4f, 0x52, 0x43, 0x45, 0x33, 0x31, 0x5f, 0x30, 0x31,
-        ],
+        ], // "SFORCE31_01"
       },
     },
     text: "Drag 'n' drop here or click to add a save file.",
