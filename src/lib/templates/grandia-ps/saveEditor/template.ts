@@ -672,12 +672,11 @@ const template: GameJson = {
                           name: "Weapons",
                           items: [
                             {
-                              name: "Weapon 1",
                               type: "section",
                               flex: true,
                               items: [
                                 {
-                                  name: "Type",
+                                  name: "Type 1",
                                   offset: 0x384,
                                   type: "variable",
                                   dataType: "uint8",
@@ -701,12 +700,11 @@ const template: GameJson = {
                               ],
                             },
                             {
-                              name: "Weapon 2",
                               type: "section",
                               flex: true,
                               items: [
                                 {
-                                  name: "Type",
+                                  name: "Type 2",
                                   offset: 0x385,
                                   type: "variable",
                                   dataType: "uint8",
@@ -730,12 +728,11 @@ const template: GameJson = {
                               ],
                             },
                             {
-                              name: "Weapon 3",
                               type: "section",
                               flex: true,
                               items: [
                                 {
-                                  name: "Type",
+                                  name: "Type 3",
                                   offset: 0x386,
                                   type: "variable",
                                   dataType: "uint8",
@@ -759,12 +756,11 @@ const template: GameJson = {
                               ],
                             },
                             {
-                              name: "Weapon 4",
                               type: "section",
                               flex: true,
                               items: [
                                 {
-                                  name: "Type",
+                                  name: "Type 4",
                                   offset: 0x387,
                                   type: "variable",
                                   dataType: "uint8",

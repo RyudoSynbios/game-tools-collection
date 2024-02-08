@@ -447,12 +447,11 @@ const template: GameJson = {
                   type: "section",
                   items: [
                     {
-                      name: "Item 1",
                       type: "section",
                       flex: true,
                       items: [
                         {
-                          name: "Item",
+                          name: "Item 1",
                           offset: 0xc0,
                           type: "variable",
                           dataType: "uint8",
@@ -468,12 +467,11 @@ const template: GameJson = {
                       ],
                     },
                     {
-                      name: "Item 2",
                       type: "section",
                       flex: true,
                       items: [
                         {
-                          name: "Item",
+                          name: "Item 2",
                           offset: 0xc2,
                           type: "variable",
                           dataType: "uint8",
@@ -489,12 +487,11 @@ const template: GameJson = {
                       ],
                     },
                     {
-                      name: "Item 3",
                       type: "section",
                       flex: true,
                       items: [
                         {
-                          name: "Item",
+                          name: "Item 3",
                           offset: 0xc4,
                           type: "variable",
                           dataType: "uint8",
@@ -510,12 +507,11 @@ const template: GameJson = {
                       ],
                     },
                     {
-                      name: "Item 4",
                       type: "section",
                       flex: true,
                       items: [
                         {
-                          name: "Item",
+                          name: "Item 4",
                           offset: 0xc6,
                           type: "variable",
                           dataType: "uint8",
