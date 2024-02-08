@@ -51,6 +51,16 @@ const template: GameJson = {
                   flex: true,
                   items: [
                     {
+                      id: "mName-%index%",
+                      name: "Name",
+                      offset: 0x0,
+                      length: 0x12,
+                      type: "variable",
+                      dataType: "string",
+                      letterDataType: "uint8",
+                      disabled: true,
+                    },
+                    {
                       name: "HP",
                       offset: 0x2,
                       type: "variable",

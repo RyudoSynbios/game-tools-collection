@@ -3,11 +3,29 @@ import { get } from "svelte/store";
 import { gameJson, gameRegion } from "$lib/stores";
 import { getInt } from "$lib/utils/bytes";
 
+import type { Item, ItemString } from "$lib/types";
+
 import {
   pointerToItemTexts,
   pointerToMonsterTexts,
   pointerToTexts,
 } from "./template";
+
+export function overrideGetInt(
+  item: Item,
+): [boolean, number | string | undefined] {
+  if ("id" in item && item.id?.match(/mName-/)) {
+    const split = item.id.split("-");
+
+    const index = parseInt(split[1]);
+
+    const names = getMonsterNames();
+
+    return [true, names[index]];
+  }
+
+  return [false, undefined];
+}
 
 function getRegionArray<T>(array: T[]): T {
   const $gameRegion = get(gameRegion);
