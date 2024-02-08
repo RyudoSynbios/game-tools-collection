@@ -3,7 +3,6 @@ import { get } from "svelte/store";
 import {
   fileHeaderShift,
   gameJson,
-  gameRegion,
   gameTemplate,
   gameUtils,
   isDebug,
@@ -25,8 +24,6 @@ import type {
   ItemComponent,
   ItemContainer,
   ItemIntCondition,
-  LogicalOperator,
-  Validator,
 } from "$lib/types";
 
 let checksums: ItemChecksum[];
