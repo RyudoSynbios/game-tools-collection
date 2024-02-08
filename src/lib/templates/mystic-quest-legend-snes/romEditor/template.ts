@@ -492,13 +492,14 @@ const template: GameJson = {
           name: "Monster Groups",
           items: [
             {
+              id: "monsterGroups",
               pointer: pointerToMonsterGroups,
               pointerDataType: "uint16",
               length: 0x4,
               type: "container",
               instanceType: "tabs",
               instances: 234,
-              enumeration: "Group %d",
+              resource: "monsterGroupNames",
               vertical: true,
               items: [
                 {
@@ -509,13 +510,12 @@ const template: GameJson = {
                       type: "section",
                       items: [
                         {
-                          name: "Monster 1",
                           type: "section",
                           flex: true,
                           items: [
                             {
                               id: "mgMonster",
-                              name: "Monster",
+                              name: "Monster 1",
                               offset: 0x0,
                               type: "variable",
                               dataType: "uint8",
@@ -534,13 +534,12 @@ const template: GameJson = {
                           ],
                         },
                         {
-                          name: "Monster 2",
                           type: "section",
                           flex: true,
                           items: [
                             {
                               id: "mgMonster",
-                              name: "Monster",
+                              name: "Monster 2",
                               offset: 0x1,
                               type: "variable",
                               dataType: "uint8",
@@ -559,13 +558,12 @@ const template: GameJson = {
                           ],
                         },
                         {
-                          name: "Monster 3",
                           type: "section",
                           flex: true,
                           items: [
                             {
                               id: "mgMonster",
-                              name: "Monster",
+                              name: "Monster 3",
                               offset: 0x2,
                               type: "variable",
                               dataType: "uint8",
@@ -586,7 +584,6 @@ const template: GameJson = {
                       ],
                     },
                     {
-                      name: "&nbsp;",
                       type: "section",
                       items: [
                         {
@@ -1344,6 +1341,7 @@ const template: GameJson = {
     characterNames: "getCharacterNames()",
     locationNames: "getLocationNames()",
     monsterNames: "getMonsterNames()",
+    monsterGroupNames: "getMonsterGroupNames()",
     monsterGroupsSpecial: {
       0x0: "-",
       0x1: "Fly",

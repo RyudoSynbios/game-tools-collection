@@ -23,6 +23,7 @@ import {
   pointerToCharacterNames,
   pointerToChestSet,
   pointerToMapsPointers,
+  pointerToMonsterGroups,
   pointerToMonsterNames,
   pointerToMonsterSpriteSizes,
   pointerToMonsterTiles,
@@ -135,6 +136,8 @@ export function afterSetInt(item: Item): void {
     setInt(itemInt.offset, "uint8", stat);
   } else if ("id" in item && item.id === "mName") {
     updateResources("getMonsterNames");
+  } else if ("id" in item && item.id === "mgMonster") {
+    updateResources("getMonsterGroupNames");
   }
 }
 
@@ -225,6 +228,25 @@ export function getLocationNames(): { [value: number]: string } {
   });
 
   names[0xff] = "-";
+
+  return names;
+}
+
+export function getMonsterGroupNames(): { [value: number]: string } {
+  const monsterGroupsOffset = pointerToOffset(pointerToMonsterGroups);
+
+  const offset = pointerToOffset(pointerToMonsterNames);
+  const length = getRegionArray(monsterNamesLength);
+
+  const names: { [value: number]: string } = {};
+
+  [...Array(234).keys()].forEach((index) => {
+    names[index] = getText(
+      offset +
+        (getInt(monsterGroupsOffset + index * 0x4, "uint8") & 0x7f) * length,
+      length,
+    );
+  });
 
   return names;
 }
