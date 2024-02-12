@@ -33,6 +33,10 @@ declare global {
     toBitCount: () => number;
     toHex: (length?: number) => string;
   }
+
+  interface String {
+    reverse: () => string;
+  }
 }
 
 export {};

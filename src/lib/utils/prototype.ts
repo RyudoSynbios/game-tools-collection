@@ -136,3 +136,7 @@ Number.prototype.toHex = function (length = 0) {
 
   return hex;
 };
+
+String.prototype.reverse = function () {
+  return this.split("").reverse().join("");
+};

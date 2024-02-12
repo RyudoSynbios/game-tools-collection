@@ -539,7 +539,7 @@ export function getString(
   }
 
   if (options.bigEndian) {
-    string = string.split("").reverse().join("");
+    string = string.reverse();
   }
 
   return string;
@@ -558,7 +558,7 @@ export function setString(
   const increment = dataTypeToLength(letterDataType);
 
   if (options.bigEndian) {
-    value = value.split("").reverse().join("");
+    value = value.reverse();
   }
 
   for (let i = offset; i < offset + length; i += increment) {
