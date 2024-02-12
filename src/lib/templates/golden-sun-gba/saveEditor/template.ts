@@ -765,7 +765,7 @@ const template: GameJson = {
                           ],
                         },
                         {
-                          name: "Djinns",
+                          name: "Djinn",
                           items: [
                             {
                               name: "Equipped",
@@ -899,7 +899,7 @@ const template: GameJson = {
                               hidden: true,
                               items: [
                                 {
-                                  name: "# Djinns Earth (Save Preview)",
+                                  name: "# Djinn Earth (Save Preview)",
                                   offset: 0x28,
                                   type: "variable",
                                   dataType: "uint8",
@@ -910,7 +910,7 @@ const template: GameJson = {
                                   hidden: true,
                                 },
                                 {
-                                  name: "# Djinns Water (Save Preview)",
+                                  name: "# Djinn Water (Save Preview)",
                                   offset: 0x29,
                                   type: "variable",
                                   dataType: "uint8",
@@ -921,7 +921,7 @@ const template: GameJson = {
                                   hidden: true,
                                 },
                                 {
-                                  name: "# Djinns Fire (Save Preview)",
+                                  name: "# Djinn Fire (Save Preview)",
                                   offset: 0x2a,
                                   type: "variable",
                                   dataType: "uint8",
@@ -932,7 +932,7 @@ const template: GameJson = {
                                   hidden: true,
                                 },
                                 {
-                                  name: "# Djinns Wind (Save Preview)",
+                                  name: "# Djinn Wind (Save Preview)",
                                   offset: 0x2b,
                                   type: "variable",
                                   dataType: "uint8",
@@ -950,28 +950,28 @@ const template: GameJson = {
                               hidden: true,
                               items: [
                                 {
-                                  name: "# Djinns Earth Set",
+                                  name: "# Djinn Earth Set",
                                   offset: 0x62c,
                                   type: "variable",
                                   dataType: "uint8",
                                   hidden: true,
                                 },
                                 {
-                                  name: "# Djinns Water Set",
+                                  name: "# Djinn Water Set",
                                   offset: 0x62d,
                                   type: "variable",
                                   dataType: "uint8",
                                   hidden: true,
                                 },
                                 {
-                                  name: "# Djinns Fire Set",
+                                  name: "# Djinn Fire Set",
                                   offset: 0x62e,
                                   type: "variable",
                                   dataType: "uint8",
                                   hidden: true,
                                 },
                                 {
-                                  name: "# Djinns Wind Set",
+                                  name: "# Djinn Wind Set",
                                   offset: 0x62f,
                                   type: "variable",
                                   dataType: "uint8",
