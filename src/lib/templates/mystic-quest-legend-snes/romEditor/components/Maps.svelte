@@ -12,7 +12,9 @@
     flipTileData,
     getPalette24Bit,
   } from "$lib/utils/graphics";
-  import { getLocationNames, getMappedTiles, pointerToOffset } from "../utils";
+
+  import type { Bit, Palette } from "$lib/types";
+
   import {
     pointerToBackgroundsPointers,
     pointerToChestSet,
@@ -32,8 +34,7 @@
     pointerToVillagersTiles,
     tilesPositionement,
   } from "../template";
-
-  import type { Bit, Palette } from "$lib/types";
+  import { getMappedTiles, pointerToOffset } from "../utils";
 
   export let roomIndex: number;
 
@@ -138,8 +139,7 @@
 
     // Tiles Chunks
 
-    const tilemapCorrespondanceIndex =
-      getInt(mapSettingsOffset, "uint8") & 0xf;
+    const tilemapCorrespondanceIndex = getInt(mapSettingsOffset, "uint8") & 0xf;
 
     const tileIndexOffset =
       tilesChunkOffset + tilemapCorrespondanceIndex * 0x200;
@@ -166,8 +166,7 @@
 
         const tilemapChunkIndex = Math.floor((tileIndex >> 4) / 2);
         const tilePosition =
-          tileIndex &
-          (0xf + ((tileIndex >> 4) - tilemapChunkIndex * 2) * 0x10);
+          tileIndex & (0xf + ((tileIndex >> 4) - tilemapChunkIndex * 2) * 0x10);
 
         let paletteIndex = 0;
 

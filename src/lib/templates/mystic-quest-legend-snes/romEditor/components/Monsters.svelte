@@ -2,6 +2,9 @@
   import Tabs from "$lib/components/Items/Tabs.svelte";
   import { gameJson } from "$lib/stores";
   import { getRegionArray } from "$lib/utils/format";
+
+  import type { ItemTabs } from "$lib/types";
+
   import {
     monsterNamesLength,
     pointerToMonsterDrops,
@@ -11,8 +14,6 @@
     pointerToMonsterStats,
   } from "../template";
   import { pointerToOffset } from "../utils";
-
-  import type { ItemTabs } from "$lib/types";
 
   let monsterNames: string[];
 

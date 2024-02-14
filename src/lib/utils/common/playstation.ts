@@ -2,11 +2,10 @@ import { get } from "svelte/store";
 
 import { fileHeaderShift, gameRegion, gameTemplate } from "$lib/stores";
 import { getInt } from "$lib/utils/bytes";
+import { getObjKey } from "$lib/utils/format";
 import { getRegions } from "$lib/utils/validator";
 
 import type { RegionValidator, Validator } from "$lib/types";
-
-import { getObjKey } from "../format";
 
 export function isMcr(dataView: DataView, shift = 0x0): boolean {
   if (
