@@ -24,6 +24,7 @@ export class Canvas {
   private app: Application;
   private width: number;
   private height: number;
+  private scale: number;
   private animation: boolean;
   private layers: { [key: string]: Layer };
 
@@ -32,18 +33,21 @@ export class Canvas {
     options?: {
       width?: number;
       height?: number;
+      scale?: number;
       backgroundAlpha?: number;
       animation?: boolean;
     },
   ) {
     const width = options?.width || 0;
     const height = options?.height || 0;
+    const scale = options?.scale || 1;
     const backgroundAlpha = options?.backgroundAlpha || 0;
     const animation =
       options?.animation !== undefined ? options?.animation : true;
 
     this.width = width;
     this.height = height;
+    this.scale = scale;
     this.layers = {};
     this.animation = animation;
 
@@ -51,7 +55,7 @@ export class Canvas {
       width,
       height,
       backgroundAlpha,
-      resolution: 1,
+      resolution: scale,
     });
 
     this.app.ticker.add((delta) => {
