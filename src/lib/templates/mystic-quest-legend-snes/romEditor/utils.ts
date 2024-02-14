@@ -3,8 +3,9 @@ import { get } from "svelte/store";
 import { gameJson } from "$lib/stores";
 import { extractBit, getBitflag, getInt, setInt } from "$lib/utils/bytes";
 import type { Canvas } from "$lib/utils/canvas";
+import { getTileData } from "$lib/utils/common/superNintendo";
 import { getRegionArray } from "$lib/utils/format";
-import { applyPalette, flipTileData, getTileData } from "$lib/utils/graphics";
+import { applyPalette, flipTileData } from "$lib/utils/graphics";
 import { updateResources } from "$lib/utils/parser";
 
 import type { Item, ItemInt, Palette } from "$lib/types";

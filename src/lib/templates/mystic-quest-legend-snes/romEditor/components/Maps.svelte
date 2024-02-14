@@ -5,12 +5,12 @@
   import { isDebug } from "$lib/stores";
   import { extractBit, getInt } from "$lib/utils/bytes";
   import { Canvas, type Axis } from "$lib/utils/canvas";
+  import { getTileData } from "$lib/utils/common/superNintendo";
   import { capitalize, getRegionArray } from "$lib/utils/format";
   import {
     applyPalette,
     flipTileData,
     getPalette,
-    getTileData,
   } from "$lib/utils/graphics";
   import { getLocationNames, getMappedTiles, pointerToOffset } from "../utils";
   import {
