@@ -4,7 +4,8 @@
   import { dataView } from "$lib/stores";
   import { getInt } from "$lib/utils/bytes";
   import { Canvas } from "$lib/utils/canvas";
-  import { getPalette } from "$lib/utils/graphics";
+  import { getPalette24Bit } from "$lib/utils/graphics";
+
   import { monsterPalettesOffset, pointerToMonsterGraphics } from "../template";
   import {
     generateMonsterCanvas,
@@ -34,8 +35,9 @@
       "uint8",
     );
 
-    const palette = getPalette(
+    const palette = getPalette24Bit(
       monsterPalettesOffset + paletteIndex * 0x10,
+      0x8,
       true,
     );
 

@@ -2,25 +2,19 @@ import { getInt } from "$lib/utils/bytes";
 
 import type { Palette } from "$lib/types";
 
-export function getPalette(offset: number, transparent = false): Palette {
+export function getPalette24Bit(
+  offset: number,
+  length: number,
+  transparent = false,
+): Palette {
   const palette = [];
 
-  for (let i = 0; i < 8; i += 1) {
+  for (let i = 0; i < length; i += 1) {
     const hex = getInt(offset + i * 2, "uint16");
 
     let red = (hex & 31) << 3;
     let green = ((hex >> 5) & 31) << 3;
     let blue = ((hex >> 10) & 31) << 3;
-
-    red = red / 8;
-    green = green / 8;
-    blue = blue / 8;
-
-    const ratio = 255 / 31;
-
-    red = Math.floor(red * ratio);
-    green = Math.floor(green * ratio);
-    blue = Math.floor(blue * ratio);
 
     if (transparent && i === 0) {
       palette.push([]);

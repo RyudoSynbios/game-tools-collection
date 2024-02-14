@@ -10,7 +10,7 @@
   import {
     applyPalette,
     flipTileData,
-    getPalette,
+    getPalette24Bit,
   } from "$lib/utils/graphics";
   import { getLocationNames, getMappedTiles, pointerToOffset } from "../utils";
   import {
@@ -113,7 +113,9 @@
     const tilemapPalettes: Palette[] = [];
 
     for (let i = 0x0; i < 0x8; i += 0x1) {
-      tilemapPalettes.push(getPalette(tilemapPaletteOffset + i * 0x10, true));
+      tilemapPalettes.push(
+        getPalette24Bit(tilemapPaletteOffset + i * 0x10, 0x8, true),
+      );
     }
 
     // Tileset
@@ -392,8 +394,9 @@
       getInt(spriteSetIndexOffset + spriteSet * 2, "uint16");
 
     for (let i = 0x0; i < 0x6; i += 0x1) {
-      const palette = getPalette(
+      const palette = getPalette24Bit(
         spritesPalettesOffset + getInt(spriteSetOffset + i, "uint8") * 0x10,
+        0x8,
         true,
       );
 
@@ -696,7 +699,7 @@
                 getTileData(
                   movingSpritesOffset - 0x1690 + (i >> 1) * 0x150 + i * 0x18,
                 ),
-                getPalette(spritesPalettesOffset + 0xe0),
+                getPalette24Bit(spritesPalettesOffset + 0xe0, 0x8),
               );
 
               canvas.addTile(
