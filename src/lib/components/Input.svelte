@@ -70,7 +70,11 @@
   }
 </script>
 
-<div class="gtc-input" class:gtc-input-debug={debug}>
+<div
+  class="gtc-input"
+  class:gtc-input-debug={debug}
+  class:gtc-input-disabled={disabled}
+>
   {#if label}
     <p>{label}</p>
   {/if}
@@ -96,6 +100,17 @@
 
     &.gtc-input-debug {
       @apply text-orange-800 bg-orange-950;
+    }
+
+    &.gtc-input-disabled {
+      & input,
+      & span {
+        @apply bg-gray-100 bg-opacity-30;
+      }
+
+      span {
+        @apply text-primary-500;
+      }
     }
 
     & p {
