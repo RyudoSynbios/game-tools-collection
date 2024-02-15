@@ -14,7 +14,7 @@ Link to the website: [https://game-tools-collection.com](https://game-tools-coll
 | Castlevania: Symphony of the Night        | PS       | Save       | EUR / USA / JAP                         |
 | Donkey Kong Land                          | GB       | Save       | EUR / USA / JAP                         |
 | Game & Watch Gallery 3                    | GBC      | Save       | EUR / USA / JAP / AUS                   |
-| Golden Sun                                | GBA      | Save       | EUR / USA / JAP / FRA / GER / ITA / SPA |
+| Golden Sun                                | GBA      | Save / Rom | EUR / USA / JAP / FRA / GER / ITA / SPA |
 | GoldenEye 007                             | N64      | Save       | EUR / USA / JAP                         |
 | Grandia                                   | PS       | Save       | EUR / USA / JAP / FRA / GER             |
 | Konami Krazy Racers                       | GBA      | Save       | EUR / USA / JAP                         |
