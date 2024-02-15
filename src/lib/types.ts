@@ -226,6 +226,7 @@ export interface ItemInt {
     shift: number;
   };
   autocomplete?: boolean;
+  suffix?: string;
   disabled?: boolean;
   hidden?: boolean;
   test?: boolean;

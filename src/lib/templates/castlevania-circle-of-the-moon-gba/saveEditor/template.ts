@@ -130,6 +130,7 @@ const template: GameJson = {
                   type: "variable",
                   dataType: "uint16",
                   operations: [{ "/": 9.8 }, { round: 2 }],
+                  suffix: "%",
                   disabled: true,
                 },
               ],

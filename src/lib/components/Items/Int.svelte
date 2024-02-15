@@ -130,6 +130,7 @@
         step={item.step || 1}
         leadingZeros={item.leadingZeros}
         {value}
+        suffix={item.suffix}
         debug={item.hidden}
         disabled={item.disabled}
         test={item.test}

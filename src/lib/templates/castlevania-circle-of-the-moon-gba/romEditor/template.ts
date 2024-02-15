@@ -113,6 +113,7 @@ const template: GameJson = {
                       operations: [{ "/": 100 }],
                       max: 100,
                       step: 0.01,
+                      suffix: "%",
                     },
                     {
                       name: "Drop Item 2",
@@ -130,6 +131,7 @@ const template: GameJson = {
                       operations: [{ "/": 100 }],
                       max: 100,
                       step: 0.01,
+                      suffix: "%",
                     },
                   ],
                 },

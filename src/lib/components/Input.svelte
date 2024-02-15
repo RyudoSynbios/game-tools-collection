@@ -12,6 +12,7 @@
   export let step = 1;
   export let leadingZeros = 0;
   export let value: bigint | number | string;
+  export let suffix = "";
   export let debug = false;
   export let disabled = false;
   export let checksum: boolean | null = null;
@@ -74,24 +75,30 @@
   class="gtc-input"
   class:gtc-input-debug={debug}
   class:gtc-input-disabled={disabled}
+  class:gtc-input-suffix={suffix}
 >
   {#if label}
     <p>{label}</p>
   {/if}
-  <input
-    {type}
-    {value}
-    {min}
-    {max}
-    {maxlength}
-    {step}
-    {disabled}
-    data-checksum={checksum}
-    data-test={$isDebug && test ? true : null}
-    bind:this={inputEl}
-    on:change={onChange}
-    on:input={handleInput}
-  />
+  <div>
+    <input
+      {type}
+      {value}
+      {min}
+      {max}
+      {maxlength}
+      {step}
+      {disabled}
+      data-checksum={checksum}
+      data-test={$isDebug && test ? true : null}
+      bind:this={inputEl}
+      on:change={onChange}
+      on:input={handleInput}
+    />
+    {#if suffix}
+      <span>{suffix}</span>
+    {/if}
+  </div>
 </div>
 
 <style lang="postcss">
@@ -113,8 +120,20 @@
       }
     }
 
+    &.gtc-input-suffix input {
+      width: 160px;
+    }
+
     & p {
       @apply mb-2 text-sm font-bold;
+    }
+
+    & div {
+      @apply flex;
+
+      & span {
+        @apply pr-1.5 py-1.5 w-5 text-sm bg-white;
+      }
     }
   }
 </style>
