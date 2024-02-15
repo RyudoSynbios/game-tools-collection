@@ -442,7 +442,7 @@ export function generateBattleBackgroundCanvas(
 
           const tile = applyPalette(tileData, palette);
 
-          canvas.addTile("background", tile, 8, 8, x, y);
+          canvas.addGraphic("background", tile, 8, 8, x, y);
         }
       }
     }
@@ -474,7 +474,7 @@ export function generateMonsterCanvas(
         const tileData = getTileData(offsetPosition);
         const tile = applyPalette(tileData, palette);
 
-        canvas.addTile("background", tile, 8, 8, column * 8, row * 8);
+        canvas.addGraphic("background", tile, 8, 8, column * 8, row * 8);
 
         count += 1;
       }

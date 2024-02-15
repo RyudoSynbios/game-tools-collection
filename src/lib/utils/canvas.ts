@@ -1,10 +1,13 @@
 import { Application } from "@pixi/app";
 import { BaseTexture, BufferResource, Texture } from "@pixi/core";
+import { Container } from "@pixi/display";
+import "@pixi/events";
 import { Sprite } from "@pixi/sprite";
 import { TilingSprite } from "@pixi/sprite-tiling";
 
 export type Axis = "x" | "y";
-type LayerType = "image" | "sprite" | "tilingSprite";
+
+type LayerType = "image" | "sprites" | "tilingSprite";
 
 interface Animation {
   axis: Axis;
@@ -15,8 +18,8 @@ interface Layer {
   type: LayerType;
   width: number;
   height: number;
-  data: Uint8Array;
-  sprite: Sprite | TilingSprite;
+  datas: Uint8Array[];
+  container: Container;
   animation: Animation | null;
 }
 
@@ -55,14 +58,16 @@ export class Canvas {
       width,
       height,
       backgroundAlpha,
-      resolution: scale,
+      resolution: this.scale,
     });
 
     this.app.ticker.add((delta) => {
       if (this.animation) {
         Object.values(this.layers).forEach((layer) => {
           if (layer.type === "tilingSprite" && layer.animation) {
-            (layer.sprite as TilingSprite).tilePosition[layer.animation.axis] +=
+            const tilingSprite = layer.container.getChildAt(0) as TilingSprite;
+
+            tilingSprite.tilePosition[layer.animation.axis] +=
               layer.animation.speed * delta;
           }
         });
@@ -84,9 +89,8 @@ export class Canvas {
       hidden?: boolean;
     },
   ): void {
-    if (!["image", "sprite", "tilingSprite"].includes(type)) {
+    if (!["image", "sprites", "tilingSprite"].includes(type)) {
       console.warn(`The type '${type}' is not available`);
-
       return;
     }
 
@@ -95,40 +99,46 @@ export class Canvas {
     const animation = options?.animation || null;
     const hidden = options?.hidden || false;
 
+    const container = new Container();
+
+    container.visible = !hidden;
+
     if (type === "image") {
+      container.addChild(new Sprite());
+
       this.layers[key] = {
         type,
         width: this.width,
         height: this.height,
-        data: new Uint8Array(this.width * this.height * 4),
-        sprite: new Sprite(),
+        datas: [new Uint8Array(this.width * this.height * 4)],
+        container,
         animation,
       };
-    } else if (type === "sprite") {
+    } else if (type === "sprites") {
       this.layers[key] = {
         type,
         width,
         height,
-        data: new Uint8Array(width * height * 4),
-        sprite: new Sprite(),
+        datas: [],
+        container,
         animation,
       };
     } else if (type === "tilingSprite") {
+      container.addChild(
+        new TilingSprite(Texture.EMPTY, this.width, this.height),
+      );
+
       this.layers[key] = {
         type,
         width,
         height,
-        data: new Uint8Array(width * height * 4),
-        sprite: new TilingSprite(Texture.EMPTY, this.width, this.height),
+        datas: [new Uint8Array(width * height * 4)],
+        container,
         animation,
       };
     }
 
-    if (hidden) {
-      this.layers[key].sprite.visible = false;
-    }
-
-    this.app.stage.addChild(this.layers[key].sprite);
+    this.app.stage.addChild(container);
   }
 
   public enableAnimation(): void {
@@ -145,19 +155,19 @@ export class Canvas {
 
   public hideLayer(key: string): void {
     if (this.layers[key]) {
-      this.layers[key].sprite.visible = false;
+      this.layers[key].container.visible = false;
     }
   }
 
   public showLayer(key: string): void {
     if (this.layers[key]) {
-      this.layers[key].sprite.visible = true;
+      this.layers[key].container.visible = true;
     }
   }
 
   public getLayerVisibility(key: string): boolean {
     if (this.layers[key]) {
-      return this.layers[key].sprite.visible;
+      return this.layers[key].container.visible;
     }
 
     return false;
@@ -177,12 +187,12 @@ export class Canvas {
 
   public changeLayerOpacity(key: string, opacity: number) {
     if (this.layers[key]) {
-      this.layers[key].sprite.alpha = opacity;
+      this.layers[key].container.alpha = opacity;
     }
   }
 
-  // TODO: Handle cache (add optional id on addTitle)
-  public addTile(
+  // TODO: Handle cache (add optional id on addGraphic)
+  public addGraphic(
     layer: string,
     data: Uint8Array,
     width: number,
@@ -193,23 +203,38 @@ export class Canvas {
       flipHorizontal: false,
     },
   ): void {
+    const split = layer.split(".");
+
+    layer = split[0];
+
+    const spriteIndex = split[1] ? parseInt(split[1]) : 0;
+
     if (!this.layers[layer]) {
       console.error("This layer doesn't exists");
-
       return;
     }
 
     const lineSize = width * 4;
 
+    let graphicWidth = this.layers[layer].width;
+
+    if (this.layers[layer].type === "sprites") {
+      const sprite = this.layers[layer].container.getChildAt(spriteIndex) as
+        | Sprite
+        | TilingSprite;
+
+      graphicWidth = sprite.width;
+    }
+
     for (let line = 0; line < height; line += 1) {
       const start = line * lineSize;
       const end = (line + 1) * lineSize;
-      const offset =
-        x * 4 +
-        y * this.layers[layer].width * 4 +
-        line * this.layers[layer].width * 4;
+      const offset = x * 4 + y * graphicWidth * 4 + line * graphicWidth * 4;
 
-      if (offset + end - start <= this.layers[layer].data.length) {
+      if (
+        offset + end - start <=
+        this.layers[layer].datas[spriteIndex].length
+      ) {
         const slice = new Uint8Array(data.slice(start, end));
 
         for (let i = 0; i < width; i += 1) {
@@ -223,7 +248,7 @@ export class Canvas {
               subOffset = offset + lineSize - (i + 1) * 4;
             }
 
-            this.layers[layer].data.set(
+            this.layers[layer].datas[spriteIndex].set(
               slice.slice(subStart, subEnd),
               subOffset,
             );
@@ -233,23 +258,64 @@ export class Canvas {
     }
   }
 
+  public addSprite(
+    layer: string,
+    width: number,
+    height: number,
+    x: number,
+    y: number,
+    events?: { [key: string]: () => void },
+  ) {
+    if (!this.layers[layer]) {
+      console.error("This layer doesn't exists");
+      return;
+    }
+
+    if (this.layers[layer].type !== "sprites") {
+      console.error("This layer is not a sprites type");
+      return;
+    }
+
+    this.layers[layer].datas.push(new Uint8Array(width * height * 4));
+
+    const sprite = new Sprite();
+
+    sprite.width = width;
+    sprite.height = height;
+    sprite.position.x = x;
+    sprite.position.y = y;
+
+    if (events) {
+      Object.entries(events).forEach(([key, callback]) => {
+        sprite.cursor = "pointer";
+        sprite.eventMode = "static";
+        sprite.on(key, callback);
+      });
+    }
+
+    this.layers[layer].container.addChild(sprite);
+  }
+
   public reset() {
     Object.keys(this.layers).forEach((key) => {
       if (this.layers[key].type === "image") {
         this.layers[key].width = this.width;
         this.layers[key].height = this.height;
-        this.layers[key].data = new Uint8Array(this.width * this.height * 4);
-      } else if (this.layers[key].type === "sprite") {
-        this.layers[key].data = new Uint8Array(
-          this.layers[key].width * this.layers[key].height * 4,
-        );
+        this.layers[key].datas = [new Uint8Array(this.width * this.height * 4)];
+      } else if (this.layers[key].type === "sprites") {
+        this.layers[key].datas = [];
+        this.layers[key].container.children.forEach((child) => child.destroy());
       } else if (this.layers[key].type === "tilingSprite") {
-        this.layers[key].data = new Uint8Array(
-          this.layers[key].width * this.layers[key].height * 4,
-        );
+        this.layers[key].datas = [
+          new Uint8Array(this.layers[key].width * this.layers[key].height * 4),
+        ];
 
-        this.layers[key].sprite.width = this.width;
-        this.layers[key].sprite.height = this.height;
+        const tilingSprite = this.layers[key].container.getChildAt(
+          0,
+        ) as TilingSprite;
+
+        tilingSprite.width = this.width;
+        tilingSprite.height = this.height;
       }
     });
   }
@@ -267,22 +333,26 @@ export class Canvas {
 
   public render(): void {
     Object.keys(this.layers).forEach((key) => {
-      const baseTexture = new BaseTexture(
-        new BufferResource(this.layers[key].data, {
-          width: this.layers[key].width,
-          height: this.layers[key].height,
-        }),
-        { scaleMode: 0 },
-      );
+      this.layers[key].container.children.forEach((displayObject, index) => {
+        const sprite = displayObject as Sprite | TilingSprite;
 
-      const texture = Texture.from(baseTexture);
+        const baseTexture = new BaseTexture(
+          new BufferResource(this.layers[key].datas[index], {
+            width: this.layers[key].width || sprite.width,
+            height: this.layers[key].height || sprite.height,
+          }),
+          { scaleMode: 0 },
+        );
 
-      this.layers[key].sprite.texture = texture;
+        const texture = Texture.from(baseTexture);
+
+        sprite.texture = texture;
+      });
     });
   }
 
   public destroy(): void {
-    Object.values(this.layers).forEach((object) => object.sprite.destroy());
+    Object.values(this.layers).forEach((object) => object.container.destroy());
 
     this.layers = {};
 

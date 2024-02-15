@@ -559,7 +559,7 @@
     if (canvas.getLayerVisibility("background")) {
       if (backgroundChunkIndex < 0x80) {
         tilesChunks[backgroundChunkIndex].forEach((tile, index) => {
-          canvas.addTile(
+          canvas.addGraphic(
             "background",
             tile,
             8,
@@ -615,7 +615,7 @@
           const tilesChunkIndex = mappedTiles[row * columns + column] & 0x7f;
 
           tilesChunks[tilesChunkIndex].forEach((tile, index) => {
-            canvas.addTile(
+            canvas.addGraphic(
               "foreground",
               tile,
               8,
@@ -636,7 +636,7 @@
           const tilesChunkIndex = mappedTiles[row * columns + column] & 0x7f;
 
           if (canvas.getLayerVisibility("collisions")) {
-            canvas.addTile(
+            canvas.addGraphic(
               "collisions",
               tilesChunksCollisions[tilesChunkIndex],
               16,
@@ -683,7 +683,7 @@
                 spritesPalettes[paletteIndex],
               );
 
-              canvas.addTile(
+              canvas.addGraphic(
                 "sprites",
                 tile,
                 8,
@@ -701,7 +701,7 @@
                 getPalette24Bit(spritesPalettesOffset + 0xe0, 0x8),
               );
 
-              canvas.addTile(
+              canvas.addGraphic(
                 "sprites",
                 tile,
                 8,
@@ -736,7 +736,7 @@
               tileData[j + 3] = 0xff;
             }
 
-            canvasDebug.addTile(
+            canvasDebug.addGraphic(
               "debug",
               tileData,
               8,
@@ -754,7 +754,7 @@
 
         const tile = applyPalette(tileData, tilemapPalettes[0]);
 
-        canvasDebug.addTile("debug", tile, 8, 8, x, y);
+        canvasDebug.addGraphic("debug", tile, 8, 8, x, y);
       });
 
       tilesChunks.forEach((tilesChunk, index) => {
@@ -762,7 +762,7 @@
         const y = Math.floor(index / 0x10) * 2 * 8;
 
         tilesChunk.forEach((tile, tileIndex) => {
-          canvasDebug.addTile(
+          canvasDebug.addGraphic(
             "debug",
             tile,
             8,
@@ -773,7 +773,7 @@
         });
 
         if (canvas.getLayerVisibility("collisions")) {
-          canvasDebug.addTile(
+          canvasDebug.addGraphic(
             "debugCollisions",
             tilesChunksCollisions[index],
             16,
@@ -787,7 +787,7 @@
       spritesDatas.forEach((spriteDatas, index) => {
         const tile = applyPalette(spriteDatas, spritesPalettes[3]);
 
-        canvasDebug.addTile(
+        canvasDebug.addGraphic(
           "debug",
           tile,
           8,

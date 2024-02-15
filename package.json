@@ -12,10 +12,12 @@
     "tests": "jest --runInBand"
   },
   "dependencies": {
-    "@pixi/app": "^7.3.2",
-    "@pixi/core": "^7.3.2",
-    "@pixi/sprite": "^7.3.2",
-    "@pixi/sprite-tiling": "^7.3.2",
+    "@pixi/app": "^7.4.0",
+    "@pixi/core": "^7.4.0",
+    "@pixi/display": "^7.4.0",
+    "@pixi/events": "^7.4.0",
+    "@pixi/sprite": "^7.4.0",
+    "@pixi/sprite-tiling": "^7.4.0",
     "file-saver": "^2.0.5",
     "hex2dec": "^1.1.2",
     "long": "^5.2.3",
