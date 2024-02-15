@@ -120,7 +120,7 @@
 </script>
 
 {#if !item.hidden || $isDebug}
-  <div class="gtc-int" class:gtc-int-debug={item.hidden && $isDebug}>
+  <div class="gtc-int">
     {#if options.length === 0}
       <Input
         label={item.name}
@@ -130,6 +130,7 @@
         step={item.step || 1}
         leadingZeros={item.leadingZeros}
         {value}
+        debug={item.hidden}
         disabled={item.disabled}
         test={item.test}
         onChange={handleInputChange}
@@ -139,6 +140,7 @@
         label={item.name}
         {value}
         {options}
+        debug={item.hidden}
         disabled={item.disabled}
         test={item.test}
         onChange={handleInputChange}
@@ -148,6 +150,7 @@
         label={item.name}
         {value}
         {options}
+        debug={item.hidden}
         disabled={item.disabled}
         test={item.test}
         onChange={handleInputChange}
@@ -157,13 +160,4 @@
 {/if}
 
 <style lang="postcss">
-  .gtc-int {
-    &.gtc-int-debug {
-      & :global(.gtc-autocomplete),
-      & :global(.gtc-input),
-      & :global(.gtc-select) {
-        @apply text-orange-800 bg-orange-950;
-      }
-    }
-  }
 </style>

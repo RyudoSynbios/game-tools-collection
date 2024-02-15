@@ -11,7 +11,7 @@
   <div
     class="gtc-section"
     class:gtc-section-background={item.background}
-    class:gtc-section-debug={item.hidden && $isDebug}
+    class:gtc-section-debug={item.hidden}
     class:gtc-section-flex1={item.flex1}
     class:gtc-section-nomargin={item.noMargin}
   >

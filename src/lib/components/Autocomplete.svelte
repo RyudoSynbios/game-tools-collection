@@ -6,6 +6,7 @@
   export let label = "";
   export let value: bigint | number | string;
   export let options: { key: string; value: string }[];
+  export let debug = false;
   export let disabled = false;
   export let test = false;
   export let onChange: (event: Event) => void;
@@ -207,7 +208,11 @@
 
 <svelte:window on:keydown={handleKeyDown} on:click={handleDropdownClose} />
 
-<div class="gtc-autocomplete" bind:this={rootEl}>
+<div
+  class="gtc-autocomplete"
+  class:gtc-autocomplete-debug={debug}
+  bind:this={rootEl}
+>
   {#if label}
     <p>{label}</p>
   {/if}
@@ -252,6 +257,10 @@
 <style lang="postcss">
   .gtc-autocomplete {
     @apply relative mr-4 mb-4 p-2 w-fit bg-primary-700 rounded;
+
+    &.gtc-autocomplete-debug {
+      @apply text-orange-800 bg-orange-950;
+    }
 
     & p {
       @apply mb-2 text-sm font-bold;

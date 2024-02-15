@@ -53,7 +53,7 @@
 </script>
 
 {#if !item.hidden || $isDebug}
-  <div class="gtc-boolean" class:gtc-boolean-debug={item.hidden && $isDebug}>
+  <div class="gtc-boolean" class:gtc-boolean-debug={item.hidden}>
     <Checkbox
       label={item.name}
       {checked}

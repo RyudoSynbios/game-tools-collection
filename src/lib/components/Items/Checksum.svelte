@@ -33,6 +33,7 @@
     label={item.name}
     type="text"
     {value}
+    debug
     disabled
     checksum
     onChange={() => {}}
@@ -40,9 +41,4 @@
 </div>
 
 <style lang="postcss">
-  .gtc-checksum {
-    & :global(.gtc-input) {
-      @apply text-orange-800 bg-orange-950;
-    }
-  }
 </style>

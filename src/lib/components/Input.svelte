@@ -12,6 +12,7 @@
   export let step = 1;
   export let leadingZeros = 0;
   export let value: bigint | number | string;
+  export let debug = false;
   export let disabled = false;
   export let checksum: boolean | null = null;
   export let test = false;
@@ -69,7 +70,7 @@
   }
 </script>
 
-<div class="gtc-input">
+<div class="gtc-input" class:gtc-input-debug={debug}>
   {#if label}
     <p>{label}</p>
   {/if}
@@ -92,6 +93,10 @@
 <style lang="postcss">
   .gtc-input {
     @apply mr-4 mb-4 p-2 w-fit bg-primary-700 rounded;
+
+    &.gtc-input-debug {
+      @apply text-orange-800 bg-orange-950;
+    }
 
     & p {
       @apply mb-2 text-sm font-bold;

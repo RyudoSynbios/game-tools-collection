@@ -4,12 +4,13 @@
   export let label = "";
   export let value: bigint | number | string;
   export let options: { key: string; value: string }[];
+  export let debug = false;
   export let disabled = false;
   export let test = false;
   export let onChange: (event: Event) => void;
 </script>
 
-<div class="gtc-select">
+<div class="gtc-select" class:gtc-select-debug={debug}>
   {#if label}
     <p>{label}</p>
   {/if}
@@ -30,6 +31,10 @@
 <style lang="postcss">
   .gtc-select {
     @apply mr-4 mb-4 p-2 w-fit bg-primary-700 rounded;
+
+    &.gtc-select-debug {
+      @apply text-orange-800 bg-orange-950;
+    }
 
     & p {
       @apply mb-2 text-sm font-bold;

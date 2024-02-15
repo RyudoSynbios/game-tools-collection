@@ -58,12 +58,13 @@
 </script>
 
 {#if !item.hidden || $isDebug}
-  <div class="gtc-string" class:gtc-string-debug={item.hidden && $isDebug}>
+  <div class="gtc-string">
     <Input
       label={item.name}
       type="text"
       maxlength={item.length / dataTypeToLength(item.letterDataType)}
       {value}
+      debug={item.hidden}
       disabled={item.disabled}
       test={item.test}
       onChange={handleInputChange}
@@ -72,11 +73,4 @@
 {/if}
 
 <style lang="postcss">
-  .gtc-string {
-    &.gtc-string-debug {
-      & :global(.gtc-input) {
-        @apply text-orange-800 bg-orange-950;
-      }
-    }
-  }
 </style>

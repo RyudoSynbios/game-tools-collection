@@ -65,7 +65,7 @@
 {#if !item.hidden || $isDebug}
   <div
     class="gtc-bitflags"
-    class:gtc-bitflags-debug={item.hidden && $isDebug}
+    class:gtc-bitflags-debug={item.hidden}
     class:gtc-bitflags-nomargin={item.noMargin}
   >
     {#if item.name}
@@ -73,10 +73,7 @@
     {/if}
     {#each flags as flag}
       {#if !flag.hidden || $isDebug}
-        <div
-          class="gtc-bitflag"
-          class:gtc-bitflag-debug={flag.hidden && $isDebug}
-        >
+        <div class="gtc-bitflag" class:gtc-bitflag-debug={flag.hidden}>
           <Checkbox
             label={flag.label}
             checked={flag.checked}
