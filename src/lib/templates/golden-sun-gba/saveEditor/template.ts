@@ -631,15 +631,6 @@ const template: GameJson = {
                           name: "Elemental Affinities",
                           flex: true,
                           items: [
-                            // Max
-                            // Earth Power: 558 - 559
-                            // Earth Resistance: 55A - 55B
-                            // Fire Power: 55C - 55D
-                            // Fire Resistance: 55E - 55F
-                            // Wind Power: 560 - 561
-                            // Wind Resistance: 562 - 563
-                            // Water Power: 564 - 565
-                            // Water Resistance: 566 - 567
                             {
                               name: "Earth",
                               type: "section",
