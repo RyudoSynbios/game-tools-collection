@@ -92,9 +92,7 @@ export function overrideParseContainerItemsShifts(
   return [false, undefined];
 }
 
-export function overrideGetInt(
-  item: Item,
-): [boolean, number | string | undefined] {
+export function overrideGetInt(item: Item): [boolean, number | undefined] {
   if ("id" in item && item.id?.match(/entryPassCount-total-/)) {
     const itemInt = item as ItemInt;
 

@@ -81,9 +81,7 @@ export function overrideItem(item: Item): Item {
   return item;
 }
 
-export function overrideGetInt(
-  item: Item,
-): [boolean, number | string | undefined] {
+export function overrideGetInt(item: Item): [boolean, number | undefined] {
   if ("id" in item && item.id === "score") {
     const itemInt = item as ItemInt;
 

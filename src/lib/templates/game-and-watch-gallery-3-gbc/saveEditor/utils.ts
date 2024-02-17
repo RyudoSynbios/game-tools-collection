@@ -3,9 +3,7 @@ import { formatChecksum } from "$lib/utils/checksum";
 
 import type { Item, ItemChecksum, ItemInt } from "$lib/types";
 
-export function overrideGetInt(
-  item: Item,
-): [boolean, number | string | undefined] {
+export function overrideGetInt(item: Item): [boolean, number | undefined] {
   if ("id" in item && item.id?.match(/score-/)) {
     const itemInt = item as ItemInt;
 

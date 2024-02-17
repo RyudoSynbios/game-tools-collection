@@ -12,9 +12,7 @@ export function beforeInitDataView(dataView: DataView): DataView {
   return byteswapDataView("eep", dataView);
 }
 
-export function overrideGetInt(
-  item: Item,
-): [boolean, number | string | undefined] {
+export function overrideGetInt(item: Item): [boolean, number | undefined] {
   if ("id" in item && item.id?.match(/time-/)) {
     const itemInt = item as ItemInt;
 

@@ -42,9 +42,7 @@ export function overrideGetRegions(
   return [];
 }
 
-export function overrideGetInt(
-  item: Item,
-): [boolean, number | string | undefined] {
+export function overrideGetInt(item: Item): [boolean, number | undefined] {
   if ("id" in item && item.id === "board") {
     const itemInt = item as ItemInt;
 

@@ -11,9 +11,7 @@ import {
   pointerToTexts,
 } from "./template";
 
-export function overrideGetInt(
-  item: Item,
-): [boolean, number | string | undefined] {
+export function overrideGetInt(item: Item): [boolean, string | undefined] {
   if ("id" in item && item.id?.match(/mName-/)) {
     const split = item.id.split("-");
 

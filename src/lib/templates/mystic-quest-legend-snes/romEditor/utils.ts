@@ -55,9 +55,7 @@ export function getComponent(component: string): any {
   }
 }
 
-export function overrideGetInt(
-  item: Item,
-): [boolean, number | string | undefined] {
+export function overrideGetInt(item: Item): [boolean, number | undefined] {
   if ("id" in item && item.id === "mgBattleMusic") {
     const itemInt = item as ItemInt;
 
