@@ -43,6 +43,14 @@
     }
   },
   {
+    "id": "castlevania-harmony-of-dissonance-gba",
+    "name": "Castlevania: Harmony of Dissonance",
+    "consoleId": "game-boy-advance",
+    "saveEditor": {
+      "regions": ["🇪🇺", "🇺🇸", "🇯🇵"]
+    }
+  },
+  {
     "id": "castlevania-symphony-of-the-night-ps",
     "name": "Castlevania: Symphony of the Night",
     "consoleId": "playstation",
