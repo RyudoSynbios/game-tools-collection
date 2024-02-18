@@ -1,4 +1,4 @@
-import { getBitflag, getInt } from "$lib/utils/bytes";
+import { getBitflags, getInt } from "$lib/utils/bytes";
 import { formatChecksum } from "$lib/utils/checksum";
 
 import type { Item, ItemChecksum, ItemInt } from "$lib/types";
@@ -16,8 +16,8 @@ export function overrideGetInt(item: Item): [boolean, number | undefined] {
       offset < itemInt.offset + 0x5;
       offset += 0x1
     ) {
-      const richter = getBitflag(offset);
-      const maria = getBitflag(offset + 0x5);
+      const richter = getBitflags(offset);
+      const maria = getBitflags(offset + 0x5);
 
       for (let i = 0; i < 8; i += 1) {
         if (richter[i] || maria[i]) {

@@ -197,19 +197,29 @@ interface BitflagOptions {
   reversed?: boolean;
 }
 
-export function getBitflag(
+export function getBitflags(
   offset: number,
   options: BitflagOptions = {},
 ): boolean[] {
   const trueString = options.reversed ? "0" : "1";
 
-  const binary = (getInt(offset, "uint8") >>> 0)
+  const bitflags = (getInt(offset, "uint8") >>> 0)
     .toBinary()
     .split("")
     .map((bit) => bit === trueString)
     .reverse();
 
-  return binary;
+  return bitflags;
+}
+
+export function getBitflag(
+  offset: number,
+  flag: Bit,
+  options: BitflagOptions = {},
+): boolean {
+  const bitflags = getBitflags(offset, options);
+
+  return bitflags[flag];
 }
 
 export function setBitflag(
@@ -220,7 +230,7 @@ export function setBitflag(
 ): void {
   const $dataView = get(dataView);
 
-  const bitflag = getBitflag(offset, { reversed: options.reversed });
+  const bitflag = getBitflags(offset, { reversed: options.reversed });
 
   bitflag[bit] = Boolean(value);
 

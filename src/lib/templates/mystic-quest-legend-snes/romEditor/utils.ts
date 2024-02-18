@@ -1,7 +1,7 @@
 import { get } from "svelte/store";
 
 import { gameJson } from "$lib/stores";
-import { extractBit, getBitflag, getInt, setInt } from "$lib/utils/bytes";
+import { extractBit, getBitflags, getInt, setInt } from "$lib/utils/bytes";
 import type { Canvas } from "$lib/utils/canvas";
 import { getTileData } from "$lib/utils/common/superNintendo";
 import { getRegionArray } from "$lib/utils/format";
@@ -59,7 +59,7 @@ export function overrideGetInt(item: Item): [boolean, number | undefined] {
   if ("id" in item && item.id === "mgBattleMusic") {
     const itemInt = item as ItemInt;
 
-    const bitFlags = getBitflag(itemInt.offset);
+    const bitFlags = getBitflags(itemInt.offset);
 
     let int = 0;
 

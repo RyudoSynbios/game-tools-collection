@@ -49,9 +49,9 @@
         (flags: (ItemBitflag & { checked: boolean })[], flag) => {
           flags.push({
             ...flag,
-            checked: getBitflag(flag.offset, { reversed: item.reversed })[
-              flag.bit
-            ],
+            checked: getBitflag(flag.offset, flag.bit, {
+              reversed: item.reversed,
+            }),
           });
 
           return flags;
