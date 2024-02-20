@@ -128,9 +128,9 @@ const template: GameJson = {
                       offset: 0xb8,
                       type: "variable",
                       dataType: "uint8",
+                      operations: [{ "+": 1 }],
                       min: 1,
                       max: 7,
-                      operations: [{ "+": 1 }],
                     },
                     {
                       name: "Number of Chaos Emeralds",

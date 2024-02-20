@@ -511,9 +511,9 @@ const template: GameJson = {
               offset: 0x88,
               type: "variable",
               dataType: "uint8",
+              operations: [{ "+": 1 }],
               min: 1,
               max: 8,
-              operations: [{ "+": 1 }],
             },
             {
               name: "Time",
@@ -549,9 +549,9 @@ const template: GameJson = {
               offset: 0x95,
               type: "variable",
               dataType: "uint8",
+              operations: [{ "+": 1 }],
               min: 1,
               max: 4,
-              operations: [{ "+": 1 }],
             },
             {
               name: "Gauge",

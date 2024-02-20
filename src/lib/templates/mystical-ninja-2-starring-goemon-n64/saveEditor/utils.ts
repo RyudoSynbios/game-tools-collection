@@ -67,7 +67,6 @@ export function overrideGetRegions(
 
 export function initShifts(shifts: number[]): number[] {
   const $dataView = get(dataView);
-  const $gameRegion = get(gameRegion);
 
   const shift = getShift(shifts);
 

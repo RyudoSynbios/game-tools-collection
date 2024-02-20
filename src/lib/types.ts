@@ -186,9 +186,9 @@ export interface ItemContainer {
   prependSubinstance?: ItemTab[];
   appendSubinstance?: ItemTab[];
   enumerationOrder?: number[];
+  resource?: string;
   vertical?: boolean;
   flex?: boolean;
-  resource?: string;
   items: Item[];
   hidden?: boolean;
 }
@@ -216,10 +216,10 @@ export interface ItemInt {
   binaryCodedDecimal?: boolean;
   bit?: Bit;
   leadingZeros?: number;
+  operations?: IntOperation[];
   min?: number;
   max?: number;
   step?: number;
-  operations?: IntOperation[];
   resource?: string;
   overrideShift?: {
     parent: number;

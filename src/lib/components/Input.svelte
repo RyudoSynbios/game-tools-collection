@@ -21,7 +21,7 @@
 
   let inputEl: HTMLInputElement;
 
-  function handleInput(event: Event) {
+  function handleInput(event: Event): void {
     const target = event.target as HTMLInputElement;
     const numberType = step % 1 === 0 ? "int" : "float";
     const isDecimalPressed =

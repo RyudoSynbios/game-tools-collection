@@ -42,7 +42,7 @@ export function overrideItem(item: Item): Item {
 
   if (
     "id" in item &&
-    item.id === "playTime" &&
+    item.id === "time" &&
     ($gameRegion === 1 || $gameRegion === 2)
   ) {
     const itemInt = item as ItemInt;

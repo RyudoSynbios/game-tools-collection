@@ -17,9 +17,9 @@ export function isMpk(dataView: DataView, shift = 0x0): boolean {
     isDexDriveHeader(dataView) ||
     (dataView.byteLength >= 0x20000 &&
       getInt(shift + 0x0, "uint8", {}, dataView) === 0x81 &&
-      getInt(shift + 0x1, "uint8", {}, dataView) === 0x01 &&
-      getInt(shift + 0x2, "uint8", {}, dataView) === 0x02 &&
-      getInt(shift + 0x3, "uint8", {}, dataView) === 0x03)
+      getInt(shift + 0x1, "uint8", {}, dataView) === 0x1 &&
+      getInt(shift + 0x2, "uint8", {}, dataView) === 0x2 &&
+      getInt(shift + 0x3, "uint8", {}, dataView) === 0x3)
   ) {
     return true;
   }

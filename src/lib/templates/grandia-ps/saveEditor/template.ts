@@ -62,7 +62,7 @@ const template: GameJson = {
                       mode: "time",
                       items: [
                         {
-                          id: "playTime",
+                          id: "time",
                           offset: 0x110,
                           type: "variable",
                           dataType: "uint32",
@@ -73,7 +73,7 @@ const template: GameJson = {
                           max: 999,
                         },
                         {
-                          id: "playTime",
+                          id: "time",
                           offset: 0x110,
                           type: "variable",
                           dataType: "uint32",
@@ -86,7 +86,7 @@ const template: GameJson = {
                           test: true,
                         },
                         {
-                          id: "playTime",
+                          id: "time",
                           offset: 0x110,
                           type: "variable",
                           dataType: "uint32",

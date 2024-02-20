@@ -7,7 +7,7 @@ import { getRegions } from "$lib/utils/validator";
 
 import type { RegionValidator, Validator } from "$lib/types";
 
-export function isMcr(dataView: DataView, shift = 0x0): boolean {
+export function isMemoryCard(dataView: DataView, shift = 0x0): boolean {
   if (
     dataView.byteLength >= 0x20000 &&
     getInt(shift + 0x0, "uint8", {}, dataView) === 0x4d &&
@@ -84,13 +84,14 @@ export function customGetRegions(dataView: DataView, shift: number): string[] {
 
       if (isPsvHeader(dataView)) {
         regions[region] = { 0x64: validator };
-      } else if (isMcr(dataView, shift)) {
+      } else if (isMemoryCard(dataView, shift)) {
         regions[region] = {
           $or: [...Array(15).keys()].map((index) => ({
             [0x8a + index * 0x80]: validator,
           })),
         };
       }
+
       return regions;
     },
     {},
