@@ -89,6 +89,10 @@
       if (regions.length === 1) {
         initEditor(regions[0]);
       } else if (regions.length === 0) {
+        if (utilsExists("onInitFailed")) {
+          $gameUtils.onInitFailed();
+        }
+
         error = $gameTemplate.validator.error;
       }
 
