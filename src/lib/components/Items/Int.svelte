@@ -149,6 +149,7 @@
     {:else}
       <Select
         label={item.name}
+        type="number"
         {value}
         {options}
         debug={item.hidden}

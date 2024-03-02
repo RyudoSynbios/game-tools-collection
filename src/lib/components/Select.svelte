@@ -2,6 +2,7 @@
   import { isDebug } from "$lib/stores";
 
   export let label = "";
+  export let type: "number" | "string" = "string";
   export let value: bigint | number | string;
   export let options: { key: string; value: string }[];
   export let debug = false;
@@ -21,7 +22,7 @@
     on:change={onChange}
   >
     {#each options as option}
-      <option value={parseInt(option.key)}>
+      <option value={type === "number" ? parseInt(option.key) : option.key}>
         {option.value}
       </option>
     {/each}
