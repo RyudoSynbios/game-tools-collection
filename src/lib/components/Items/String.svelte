@@ -27,6 +27,7 @@
         item.fallback,
         {
           bigEndian: item.bigEndian,
+          letterBigEndian: item.letterBigEndian,
           resource: item.resource,
         },
       );
@@ -51,6 +52,7 @@
     if (!isOverrided) {
       value = getString(item.offset, item.length, item.letterDataType, {
         bigEndian: item.bigEndian,
+        letterBigEndian: item.letterBigEndian,
         resource: item.resource,
       });
     }

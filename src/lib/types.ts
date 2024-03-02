@@ -266,9 +266,10 @@ export interface ItemString {
   length: number;
   type: "variable";
   dataType: "string";
-  letterDataType: "uint8" | "uint16" | "uint24" | "uint32";
-  fallback?: number;
   bigEndian?: boolean;
+  letterDataType: "uint8" | "uint16" | "uint24" | "uint32";
+  letterBigEndian?: boolean;
+  fallback?: number;
   resource?: string;
   disabled?: boolean;
   hidden?: boolean;

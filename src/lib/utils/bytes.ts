@@ -541,6 +541,7 @@ export function setBigInt(
 
 interface StringOptions {
   bigEndian?: boolean;
+  letterBigEndian?: boolean;
   resource?: string;
 }
 
@@ -557,7 +558,9 @@ export function getString(
   let string = "";
 
   for (let i = offset; i < offset + length; i += increment) {
-    const int = getInt(i, letterDataType);
+    const int = getInt(i, letterDataType, {
+      bigEndian: options.letterBigEndian,
+    });
 
     let resource: any;
 
@@ -641,9 +644,11 @@ export function setString(
         int = parseInt(getObjKey(resource, index));
       }
 
-      setInt(i, letterDataType, int);
+      setInt(i, letterDataType, int, { bigEndian: options.letterBigEndian });
     } else {
-      setInt(i, letterDataType, (char || "").charCodeAt(0));
+      setInt(i, letterDataType, (char || "").charCodeAt(0), {
+        bigEndian: options.letterBigEndian,
+      });
     }
   }
 }
