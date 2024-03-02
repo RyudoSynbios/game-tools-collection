@@ -159,6 +159,29 @@ export function makeOperations(
   return value;
 }
 
+export function mergeUint8Arrays(uint8Arrays: Uint8Array[]): Uint8Array {
+  const length = uint8Arrays.reduce(
+    (length, uint8Array) => (length += uint8Array.byteLength),
+    0,
+  );
+
+  const uint8Array = new Uint8Array(length);
+
+  let offset = 0x0;
+
+  uint8Arrays.forEach((array) => {
+    uint8Array.set(array, offset);
+
+    offset += array.byteLength;
+  });
+
+  return uint8Array;
+}
+
+export function numberArrayToString(array: number[]): string {
+  return array.map((char) => String.fromCharCode(char)).join("");
+}
+
 export function getObjKey(obj: Object, index: number): string {
   const keys = Object.keys(obj);
 
