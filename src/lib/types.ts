@@ -58,6 +58,11 @@ export type Validator = { [key: number]: number[] };
 
 export type TimeUnit = "milliseconds" | "seconds" | "minutes" | "hours";
 
+export interface Binary {
+  bitStart: Bit;
+  bitLength: number;
+}
+
 export interface Manufacturer {
   id: string;
   name: string;
@@ -213,6 +218,7 @@ export interface ItemInt {
   type: "variable";
   dataType: Exclude<DataType, "boolean" | "string">;
   bigEndian?: boolean;
+  binary?: Binary;
   binaryCodedDecimal?: boolean;
   bit?: Bit;
   disableIfNegative?: boolean;

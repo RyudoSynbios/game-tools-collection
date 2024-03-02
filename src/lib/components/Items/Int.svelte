@@ -40,6 +40,7 @@
           {
             bigEndian: item.bigEndian,
             binaryCodedDecimal: item.binaryCodedDecimal,
+            binary: item.binary,
             bit: item.bit,
             operations: item.operations,
           },
@@ -87,6 +88,7 @@
         value = getInt(item.offset, item.dataType, {
           bigEndian: item.bigEndian,
           binaryCodedDecimal: item.binaryCodedDecimal,
+          binary: item.binary,
           bit: item.bit,
           operations: item.operations,
         });

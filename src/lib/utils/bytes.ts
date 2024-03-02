@@ -18,7 +18,14 @@ import {
   utilsExists,
 } from "$lib/utils/format";
 
-import type { Bit, DataType, GameJson, IntOperation } from "$lib/types";
+import type {
+  Binary,
+  Bit,
+  DataType,
+  DataTypeInt,
+  GameJson,
+  IntOperation,
+} from "$lib/types";
 
 export function resetState(): void {
   const $gameUtils = get(gameUtils) as any;
@@ -123,6 +130,8 @@ export function dataTypeToValue(
     case "int64":
     case "uint64":
       return 0xfffffffffffff;
+    default:
+      return 0x0;
   }
 }
 
@@ -260,6 +269,7 @@ export function setBitflag(
 
 interface IntOptions {
   bigEndian?: boolean;
+  binary?: Binary;
   binaryCodedDecimal?: boolean;
   bit?: Bit;
   operations?: IntOperation[];
@@ -324,6 +334,14 @@ export function getInt(
       break;
   }
 
+  if (options.binary && (dataType === "int8" || dataType === "uint8")) {
+    const { bitStart, bitLength } = options.binary;
+
+    const mask = 0xff >> (8 - (bitStart + bitLength));
+
+    int = (int & mask) >> bitStart;
+  }
+
   if (options.binaryCodedDecimal) {
     let hex = int.toHex(dataTypeToLength(dataType) * 2);
 
@@ -358,6 +376,18 @@ export function setInt(
 
   if (typeof value === "string") {
     value = parseFloat(value) || 0;
+  }
+
+  if (options.binary && (dataType === "int8" || dataType === "uint8")) {
+    const { bitStart, bitLength } = options.binary;
+
+    const mask = 0xff ^ ((0xff >> (8 - bitLength)) << bitStart);
+
+    const int = getInt(offset, dataType, {
+      bigEndian: options.bigEndian,
+    });
+
+    value = (value << bitStart) + (int & mask);
   }
 
   if (options.binaryCodedDecimal) {

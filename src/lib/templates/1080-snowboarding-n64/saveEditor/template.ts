@@ -288,20 +288,26 @@ const template: GameJson = {
                           flex: true,
                           items: [
                             {
-                              id: "rider",
                               name: "Rider",
                               offset: 0x8,
                               type: "variable",
                               dataType: "uint8",
+                              binary: {
+                                bitStart: 0,
+                                bitLength: 3,
+                              },
                               resource: "riders",
                               autocomplete: true,
                             },
                             {
-                              id: "board",
                               name: "Board",
                               offset: 0x8,
                               type: "variable",
                               dataType: "uint8",
+                              binary: {
+                                bitStart: 3,
+                                bitLength: 5,
+                              },
                               resource: "boards",
                               autocomplete: true,
                             },
@@ -359,20 +365,26 @@ const template: GameJson = {
                           flex: true,
                           items: [
                             {
-                              id: "rider",
                               name: "Rider",
                               offset: 0x10,
                               type: "variable",
                               dataType: "uint8",
+                              binary: {
+                                bitStart: 0,
+                                bitLength: 3,
+                              },
                               resource: "riders",
                               autocomplete: true,
                             },
                             {
-                              id: "board",
                               name: "Board",
                               offset: 0x10,
                               type: "variable",
                               dataType: "uint8",
+                              binary: {
+                                bitStart: 3,
+                                bitLength: 5,
+                              },
                               resource: "boards",
                               autocomplete: true,
                             },
@@ -428,20 +440,26 @@ const template: GameJson = {
                           flex: true,
                           items: [
                             {
-                              id: "rider",
                               name: "Rider",
                               offset: 0x18,
                               type: "variable",
                               dataType: "uint8",
+                              binary: {
+                                bitStart: 0,
+                                bitLength: 3,
+                              },
                               resource: "riders",
                               autocomplete: true,
                             },
                             {
-                              id: "board",
                               name: "Board",
                               offset: 0x18,
                               type: "variable",
                               dataType: "uint8",
+                              binary: {
+                                bitStart: 3,
+                                bitLength: 5,
+                              },
                               resource: "boards",
                               autocomplete: true,
                             },
@@ -512,20 +530,26 @@ const template: GameJson = {
                           flex: true,
                           items: [
                             {
-                              id: "rider",
                               name: "Rider",
                               offset: 0x20,
                               type: "variable",
                               dataType: "uint8",
+                              binary: {
+                                bitStart: 0,
+                                bitLength: 3,
+                              },
                               resource: "riders",
                               autocomplete: true,
                             },
                             {
-                              id: "board",
                               name: "Board",
                               offset: 0x20,
                               type: "variable",
                               dataType: "uint8",
+                              binary: {
+                                bitStart: 3,
+                                bitLength: 5,
+                              },
                               resource: "boards",
                               autocomplete: true,
                             },
@@ -557,20 +581,26 @@ const template: GameJson = {
                           flex: true,
                           items: [
                             {
-                              id: "rider",
                               name: "Rider",
                               offset: 0x28,
                               type: "variable",
                               dataType: "uint8",
+                              binary: {
+                                bitStart: 0,
+                                bitLength: 3,
+                              },
                               resource: "riders",
                               autocomplete: true,
                             },
                             {
-                              id: "board",
                               name: "Board",
                               offset: 0x28,
                               type: "variable",
                               dataType: "uint8",
+                              binary: {
+                                bitStart: 3,
+                                bitLength: 5,
+                              },
                               resource: "boards",
                               autocomplete: true,
                             },
@@ -602,20 +632,26 @@ const template: GameJson = {
                           flex: true,
                           items: [
                             {
-                              id: "rider",
                               name: "Rider",
                               offset: 0x30,
                               type: "variable",
                               dataType: "uint8",
+                              binary: {
+                                bitStart: 0,
+                                bitLength: 3,
+                              },
                               resource: "riders",
                               autocomplete: true,
                             },
                             {
-                              id: "board",
                               name: "Board",
                               offset: 0x30,
                               type: "variable",
                               dataType: "uint8",
+                              binary: {
+                                bitStart: 3,
+                                bitLength: 5,
+                              },
                               resource: "boards",
                               autocomplete: true,
                             },
@@ -659,20 +695,26 @@ const template: GameJson = {
                           flex: true,
                           items: [
                             {
-                              id: "rider",
                               name: "Rider",
                               offset: 0x193,
                               type: "variable",
                               dataType: "uint8",
+                              binary: {
+                                bitStart: 0,
+                                bitLength: 3,
+                              },
                               resource: "riders",
                               autocomplete: true,
                             },
                             {
-                              id: "board",
                               name: "Board",
                               offset: 0x193,
                               type: "variable",
                               dataType: "uint8",
+                              binary: {
+                                bitStart: 3,
+                                bitLength: 5,
+                              },
                               resource: "boards",
                               autocomplete: true,
                             },
@@ -791,11 +833,14 @@ const template: GameJson = {
                       max: 10,
                     },
                     {
-                      id: "soundType",
                       name: "Type",
                       offset: 0x1fd,
                       type: "variable",
                       dataType: "uint8",
+                      binary: {
+                        bitStart: 0,
+                        bitLength: 2,
+                      },
                       resource: "soundTypes",
                     },
                   ],
@@ -805,11 +850,14 @@ const template: GameJson = {
                   flex: true,
                   items: [
                     {
-                      id: "language",
                       name: "Language",
                       offset: 0x1fd,
                       type: "variable",
                       dataType: "uint8",
+                      binary: {
+                        bitStart: 2,
+                        bitLength: 6,
+                      },
                       resource: "languages",
                       test: true,
                     },
@@ -855,14 +903,14 @@ const template: GameJson = {
       // Europe
       {
         0x0: "English",
-        0x8: "Japanese",
-        0x10: "French",
-        0x18: "German",
+        0x2: "Japanese",
+        0x4: "French",
+        0x6: "German",
       },
       // USA / Japan
       {
         0x0: "English",
-        0x4: "Japanese",
+        0x1: "Japanese",
       },
     ],
     letters: {
