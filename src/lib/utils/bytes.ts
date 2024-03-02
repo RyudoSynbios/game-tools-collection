@@ -6,6 +6,7 @@ import {
   fileName,
   gameJson,
   gameRegion,
+  gameUtils,
   isDebug,
   isDirty,
 } from "$lib/stores";
@@ -14,11 +15,18 @@ import {
   getRegionArray,
   isPartial,
   makeOperations,
+  utilsExists,
 } from "$lib/utils/format";
 
 import type { Bit, DataType, GameJson, IntOperation } from "$lib/types";
 
 export function resetState(): void {
+  const $gameUtils = get(gameUtils) as any;
+
+  if (utilsExists("onReset")) {
+    $gameUtils.onReset();
+  }
+
   dataView.set(new DataView(new ArrayBuffer(0)));
   fileName.set("");
   fileHeaderShift.set(0x0);

@@ -140,6 +140,11 @@ export function afterSetInt(item: Item): void {
   }
 }
 
+export function onReset(): void {
+  textsCache = [];
+  treesCache = [];
+}
+
 export function getAbilityDescriptions(): { [value: number]: string } {
   const abilityDescriptionStartIndex = getRegionArray(
     abilityDescriptionsStartIndexes,
