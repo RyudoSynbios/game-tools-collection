@@ -18,7 +18,7 @@ import { getObjKey } from "./format";
 export interface HighlightedOffset {
   offset: number;
   text: string;
-  type: ContentType;
+  type: ContentType | "search";
   dataType?: DataType;
 }
 
@@ -140,28 +140,5 @@ export function parseCondition(
         }
       }
     });
-  });
-}
-
-export function parseValidator(highlightedOffsets: HighlightedOffsets) {
-  const $gameJson = get(gameJson);
-
-  Object.entries($gameJson.validator.regions).forEach(([key, value]) => {
-    if ("$and" in value || "$or" in value) {
-      parseCondition(highlightedOffsets, key, value);
-    } else if (Object.keys(value).length > 0) {
-      const offset = parseInt(Object.keys(value)[0]);
-      const length = (value as Validator)[offset].length;
-
-      for (let i = offset; i < offset + length; i += 1) {
-        addItem(
-          highlightedOffsets,
-          i,
-          `Validator (${key})`,
-          "variable",
-          "string",
-        );
-      }
-    }
   });
 }

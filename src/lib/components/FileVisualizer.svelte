@@ -1,11 +1,18 @@
 <script lang="ts">
   import { onDestroy, onMount } from "svelte";
 
+  import Input from "$lib/components/Input.svelte";
+  import Select from "$lib/components/Select.svelte";
   import { dataView, gameJson, isFileVisualizerOpen } from "$lib/stores";
-  import { getInt } from "$lib/utils/bytes";
-  import { parseItem, parseValidator } from "$lib/utils/fileVisualizer";
+  import { dataTypeToLength, getInt } from "$lib/utils/bytes";
+  import { parseItem } from "$lib/utils/fileVisualizer";
 
-  import type { HighlightedOffsets } from "$lib/utils/fileVisualizer";
+  import type {
+    HighlightedOffset,
+    HighlightedOffsets,
+  } from "$lib/utils/fileVisualizer";
+
+  import type { DataTypeInt } from "$lib/types";
 
   const bodyEl = document.querySelector("body") as HTMLBodyElement;
 
@@ -21,18 +28,97 @@
   let start = 0;
   let end = 0;
 
+  let search: {
+    text: string;
+    dataType: Exclude<DataTypeInt, "int64" | "uint64">;
+  } = {
+    text: "",
+    dataType: "uint8",
+  };
+
   let highlightedOffsets: HighlightedOffsets = {};
   let tooltip = "";
 
   const rows = [...Array(Math.floor($dataView.byteLength / 0x10)).keys()];
   const rowHeight = 24;
 
+  function getHighlightedOffset(
+    offset: number,
+    searchPrevious = false,
+  ): HighlightedOffset {
+    if (search.text) {
+      const int = parseInt(search.text);
+
+      const highlightedOffset = highlightedOffsets[offset];
+
+      if (!searchPrevious) {
+        const previousOffsets = [
+          ...Array(dataTypeToLength(search.dataType) - 1).keys(),
+        ].reduce((result: HighlightedOffset | undefined, index) => {
+          const previousOffset = offset - (index + 1);
+
+          const previousHighlightedOffset = getHighlightedOffset(
+            Math.max(0x0, previousOffset),
+            true,
+          );
+
+          if (
+            previousHighlightedOffset &&
+            previousHighlightedOffset.type === "search" &&
+            previousHighlightedOffset.dataType === search.dataType &&
+            previousHighlightedOffset.offset === previousOffset
+          ) {
+            result = {
+              offset: previousOffset,
+              text: `Search${
+                highlightedOffset ? `\n${highlightedOffset.text}` : ""
+              }`,
+              type: "search",
+              dataType: search.dataType,
+            };
+          }
+
+          return result;
+        }, undefined);
+
+        if (previousOffsets) {
+          return previousOffsets;
+        }
+      }
+
+      if (!isNaN(int) && getInt(offset, search.dataType) === int) {
+        return {
+          offset,
+          text: `Search${
+            highlightedOffset ? `\n${highlightedOffset.text}` : ""
+          }`,
+          type: "search",
+          dataType: search.dataType,
+        };
+      }
+    }
+
+    return highlightedOffsets[offset];
+  }
+
   function handleClose(): void {
     $isFileVisualizerOpen = false;
   }
 
+  function handleSearchTextChange(event: Event): void {
+    const target = event.target as HTMLInputElement;
+
+    search.text = target.value;
+  }
+
+  function handleSearchTypeChange(event: Event): void {
+    const target = event.target as HTMLInputElement;
+
+    search.dataType = target.value as Exclude<DataTypeInt, "int64" | "uint64">;
+  }
+
   function handleMouseMove(event: MouseEvent, offset: number): void {
-    const highlightedOffset = highlightedOffsets[offset];
+    const highlightedOffset = getHighlightedOffset(offset);
 
     if (highlightedOffset !== undefined) {
       tooltip = `[0x${highlightedOffset.offset.toHex(8)}] ${
@@ -87,8 +173,6 @@
   onMount(() => {
     bodyEl.style.overflow = "hidden";
 
-    parseValidator(highlightedOffsets);
-
     Object.values($gameJson.items).forEach((item) => {
       parseItem(highlightedOffsets, item);
     });
@@ -99,6 +183,9 @@
   });
 
   $: {
+    contentHeight;
+    search;
+
     if (contentEl) {
       handleScroll();
 
@@ -108,13 +195,30 @@
 </script>
 
 <div class="gtc-filevisualizer-backdrop" on:click={handleClose}>
-  <div class="gtc-filevisualizer">
+  <div class="gtc-filevisualizer" on:click|stopPropagation>
+    <div class="gtc-filevisualizer-toolbar">
+      <Input
+        type="text"
+        placeholder="Search..."
+        value={search.text}
+        onChange={handleSearchTextChange}
+      />
+      <Select
+        value={search.dataType}
+        options={[
+          { key: "uint8", value: "uint8" },
+          { key: "uint16", value: "uint16" },
+          { key: "uint24", value: "uint24" },
+          { key: "uint32", value: "uint32" },
+        ]}
+        onChange={handleSearchTypeChange}
+      />
+    </div>
     <div
       class="gtc-filevisualizer-content"
       bind:this={contentEl}
       bind:offsetHeight={contentHeight}
       on:blur={handleMouseOut}
-      on:click|stopPropagation
       on:mouseout={handleMouseOut}
       on:scroll={handleScroll}
     >
@@ -128,20 +232,37 @@
             </div>
             <div class="gtc-filevisualizer-bytes">
               {#each [...Array(0x10).keys()] as offset}
+                {@const highlightedOffset = getHighlightedOffset(row + offset)}
                 <div
-                  class="gtc-filevisualizer-hex{highlightedOffsets[
-                    row + offset
-                  ] !== undefined && highlightedOffsets[row + offset].dataType
-                    ? ` gtc-filevisualizer-hex-${
-                        highlightedOffsets[row + offset].dataType
-                      }`
+                  class="gtc-filevisualizer-hex{highlightedOffset !==
+                    undefined && highlightedOffset.dataType
+                    ? ` gtc-filevisualizer-hex-${highlightedOffset.dataType}`
                     : ''}"
-                  class:gtc-filevisualizer-hex-bitflags={highlightedOffsets[
-                    row + offset
-                  ]?.type === "bitflags"}
+                  class:gtc-filevisualizer-hex-bitflags={highlightedOffset?.type ===
+                    "bitflags"}
+                  class:gtc-filevisualizer-hex-search={highlightedOffset?.type ===
+                    "search"}
                   on:mousemove={(event) => handleMouseMove(event, row + offset)}
                 >
                   {getInt(row + offset, "uint8").toHex(2)}
+                </div>
+              {/each}
+            </div>
+            <div class="gtc-filevisualizer-ascii">
+              {#each [...Array(0x10).keys()] as offset}
+                {@const highlightedOffset = getHighlightedOffset(row + offset)}
+                <div
+                  class="gtc-filevisualizer-char{highlightedOffset !==
+                    undefined && highlightedOffset.dataType
+                    ? ` gtc-filevisualizer-hex-${highlightedOffset.dataType}`
+                    : ''}"
+                  class:gtc-filevisualizer-hex-bitflags={highlightedOffset?.type ===
+                    "bitflags"}
+                  class:gtc-filevisualizer-hex-search={highlightedOffset?.type ===
+                    "search"}
+                  on:mousemove={(event) => handleMouseMove(event, row + offset)}
+                >
+                  {String.fromCharCode(getInt(row + offset, "uint8"))}
                 </div>
               {/each}
             </div>
@@ -166,9 +287,13 @@
     z-index: 10000;
 
     & .gtc-filevisualizer {
-      @apply flex justify-center p-4 h-full bg-primary-900 rounded-xl;
+      @apply flex flex-col justify-center p-4 h-full bg-primary-900 rounded-xl;
 
-      width: 602px;
+      width: 790px;
+
+      & .gtc-filevisualizer-toolbar {
+        @apply flex;
+      }
 
       & .gtc-filevisualizer-content {
         @apply overflow-y-auto;
@@ -181,13 +306,29 @@
           }
 
           & .gtc-filevisualizer-bytes {
+            width: 464px;
+          }
+
+          & .gtc-filevisualizer-ascii {
+            width: 176px;
+          }
+
+          & .gtc-filevisualizer-ascii,
+          & .gtc-filevisualizer-bytes {
             @apply flex content-start flex-wrap px-2;
 
-            width: 452px;
-
             & .gtc-filevisualizer-hex {
-              @apply px-1 h-6;
+              @apply px-1 w-7 h-6 font-source text-center uppercase;
+            }
 
+            & .gtc-filevisualizer-char {
+              @apply h-6 font-source text-center;
+
+              width: 0.625rem;
+            }
+
+            & .gtc-filevisualizer-hex,
+            & .gtc-filevisualizer-char {
               &.gtc-filevisualizer-hex-bitflags {
                 @apply bg-green-700;
               }
@@ -230,11 +371,11 @@
               &.gtc-filevisualizer-hex-string {
                 @apply bg-indigo-700;
               }
-            }
-          }
 
-          & .gtc-filevisualizer-hex {
-            @apply font-source text-center uppercase;
+              &.gtc-filevisualizer-hex-search {
+                @apply bg-fuchsia-700;
+              }
+            }
           }
         }
       }
