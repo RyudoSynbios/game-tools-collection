@@ -72,12 +72,18 @@
 
     let isOverrided = false;
 
+    let int = 0;
+
     if (utilsExists("overrideGetInt")) {
       [isOverrided, value] = $gameUtils.overrideGetInt(item);
     }
 
     if (!isOverrided) {
       if (item.dataType !== "int64" && item.dataType !== "uint64") {
+        int = getInt(item.offset, item.dataType, {
+          bigEndian: item.bigEndian,
+        });
+
         value = getInt(item.offset, item.dataType, {
           bigEndian: item.bigEndian,
           binaryCodedDecimal: item.binaryCodedDecimal,
@@ -89,6 +95,13 @@
           bigEndian: item.bigEndian,
         });
       }
+    }
+
+    const isNegative = (int || value) === -1;
+
+    if (item.disableIfNegative && isNegative) {
+      item.disabled = true;
+      value = 0;
     }
 
     if (item.leadingZeros) {

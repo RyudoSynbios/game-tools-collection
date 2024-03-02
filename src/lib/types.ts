@@ -215,6 +215,7 @@ export interface ItemInt {
   bigEndian?: boolean;
   binaryCodedDecimal?: boolean;
   bit?: Bit;
+  disableIfNegative?: boolean;
   leadingZeros?: number;
   operations?: IntOperation[];
   min?: number;
