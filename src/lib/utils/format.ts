@@ -37,7 +37,7 @@ export function generateIdFromArray(array: any[], key: string) {
 }
 
 export function getIntMin(item: ItemInt): number {
-  if (item.min) {
+  if (item.min !== undefined) {
     return item.min;
   } else if (
     item.dataType === "int8" ||
@@ -53,7 +53,7 @@ export function getIntMin(item: ItemInt): number {
 }
 
 export function getIntMax(item: ItemInt): number {
-  if (item.max) {
+  if (item.max !== undefined) {
     return item.max;
   } else if (item.binaryCodedDecimal) {
     if (item.dataType === "uint8") {
