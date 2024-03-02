@@ -6,6 +6,7 @@
 
   export let label = "";
   export let type: HTMLInputTypeAttribute;
+  export let placeholder = "";
   export let min: number | undefined = undefined;
   export let max: number | undefined = undefined;
   export let maxlength: number | undefined = undefined;
@@ -83,6 +84,7 @@
   <div>
     <input
       {type}
+      {placeholder}
       {value}
       {min}
       {max}
