@@ -109,33 +109,32 @@ export function parseItem(
     checkMissingFields(item);
   }
 
-  let newItem = clone(item);
+  let newItem = clone(item) as any;
 
   if (utilsExists("overrideItem")) {
     newItem = $gameUtils.overrideItem(newItem, instanceIndex);
   }
 
-  if ((newItem as any).id !== undefined) {
-    (newItem as any).id = (newItem as any).id.replace("%index%", instanceIndex);
+  if (newItem.id !== undefined) {
+    newItem.id = newItem.id.replace("%index%", instanceIndex);
   }
 
   if (utilsExists("overrideShift")) {
     shifts = $gameUtils.overrideShift(item, shifts);
   }
 
-  if ((newItem as any).offset !== undefined) {
-    if ((newItem as any).overrideShift) {
-      const { parent, shift } = (newItem as any).overrideShift;
+  if (newItem.offset !== undefined) {
+    if (newItem.overrideShift) {
+      const { parent, shift } = newItem.overrideShift;
 
-      (newItem as any).offset += getOverridedShift(
-        shifts,
-        parent,
-        shift,
-        instanceIndex,
-      );
+      newItem.offset += getOverridedShift(shifts, parent, shift, instanceIndex);
     } else {
-      (newItem as any).offset += getShift(shifts);
+      newItem.offset += getShift(shifts);
     }
+  }
+
+  if (Array.isArray(newItem.hidden)) {
+    newItem.hidden = getRegionArray(newItem.hidden);
   }
 
   if (newItem.type === "bitflags") {
@@ -158,23 +157,20 @@ export function parseItem(
     return parseContainer(newItem, shifts, instanceId, instanceIndex, options);
   }
 
-  if ((newItem as any).items) {
-    (newItem as any).items = (newItem as any).items.reduce(
-      (results: Item[], subitem: Item) => {
-        const parsedItem = parseItem(
-          subitem,
-          shifts,
-          instanceId,
-          instanceIndex,
-          options,
-        );
+  if (newItem.items) {
+    newItem.items = newItem.items.reduce((results: Item[], subitem: Item) => {
+      const parsedItem = parseItem(
+        subitem,
+        shifts,
+        instanceId,
+        instanceIndex,
+        options,
+      );
 
-        results.push(parsedItem);
+      results.push(parsedItem);
 
-        return results;
-      },
-      [],
-    );
+      return results;
+    }, []);
   }
 
   return newItem;
@@ -183,6 +179,10 @@ export function parseItem(
 export function parseBitflags(item: ItemBitflags, shifts: number[]): any {
   const flags = item.flags.reduce((flags: ItemBitflag[], flag) => {
     flag.offset += getShift(shifts);
+
+    if (Array.isArray(flag.hidden)) {
+      flag.hidden = getRegionArray(flag.hidden);
+    }
 
     flags.push(flag);
 

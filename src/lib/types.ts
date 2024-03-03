@@ -117,7 +117,7 @@ export interface ItemBitflag {
   label: string;
   separator?: boolean;
   disabled?: boolean;
-  hidden?: boolean;
+  hidden?: boolean | boolean[];
 }
 
 export interface ItemBitflags {
@@ -128,7 +128,7 @@ export interface ItemBitflags {
   noMargin?: boolean;
   reversed?: boolean;
   disabled?: boolean;
-  hidden?: boolean;
+  hidden?: boolean | boolean[];
 }
 
 export interface ItemBoolean {
@@ -146,7 +146,7 @@ export interface ItemBoolean {
   };
   separator?: boolean;
   disabled?: boolean;
-  hidden?: boolean;
+  hidden?: boolean | boolean[];
 }
 
 export interface ItemChecksum {
@@ -164,8 +164,6 @@ export interface ItemChecksum {
     parent: number;
     shift: number;
   };
-  disabled?: boolean;
-  hidden?: boolean;
 }
 
 export interface ItemComponent {
@@ -195,12 +193,12 @@ export interface ItemContainer {
   vertical?: boolean;
   flex?: boolean;
   items: Item[];
-  hidden?: boolean;
+  hidden?: boolean | boolean[];
 }
 
 export interface ItemContent {
   items: Item[];
-  hidden?: boolean;
+  hidden?: boolean | boolean[];
 }
 
 export interface ItemGroup {
@@ -208,7 +206,7 @@ export interface ItemGroup {
   type: "group";
   mode?: "chrono" | "fraction" | "time";
   items: ItemInt[];
-  hidden?: boolean;
+  hidden?: boolean | boolean[];
 }
 
 export interface ItemInt {
@@ -235,7 +233,7 @@ export interface ItemInt {
   autocomplete?: boolean;
   suffix?: string;
   disabled?: boolean;
-  hidden?: boolean;
+  hidden?: boolean | boolean[];
   test?: boolean;
 }
 
@@ -256,7 +254,7 @@ export interface ItemSection {
   flex1?: boolean;
   noMargin?: true;
   items: Item[];
-  hidden?: boolean;
+  hidden?: boolean | boolean[];
 }
 
 export interface ItemString {
@@ -272,7 +270,7 @@ export interface ItemString {
   fallback?: number;
   resource?: string;
   disabled?: boolean;
-  hidden?: boolean;
+  hidden?: boolean | boolean[];
   test?: boolean;
 }
 
@@ -283,7 +281,7 @@ export interface ItemTab {
   disableTabIf?: ItemIntCondition | LogicalOperator<ItemIntCondition> | string;
   items: Item[];
   disabled?: boolean;
-  hidden?: boolean;
+  hidden?: boolean | boolean[];
   planned?: boolean;
 }
 
@@ -295,7 +293,7 @@ export interface ItemTabs {
   enumerationOrder?: number[];
   resource?: string;
   items: ItemTab[];
-  hidden?: boolean;
+  hidden?: boolean | boolean[];
 }
 
 export interface LogicalOperator<T> {

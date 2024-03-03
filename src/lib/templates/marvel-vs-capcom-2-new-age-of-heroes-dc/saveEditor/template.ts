@@ -113,22 +113,21 @@ const template: GameJson = {
                   ],
                 },
                 {
-                  id: "europeUsaOnly",
                   name: "Points",
                   offset: 0x28e,
                   type: "variable",
                   dataType: "uint16",
                   max: 9999,
+                  hidden: [false, true],
                   test: true,
                 },
               ],
             },
             {
-              id: "japanOnly",
               name: "Points",
               type: "section",
               flex: true,
-              hidden: true,
+              hidden: [true, false],
               items: [
                 {
                   name: "D-pts.",
@@ -154,11 +153,10 @@ const template: GameJson = {
               ],
             },
             {
-              id: "japanOnly",
               name: "Net Rank",
               type: "section",
               flex: true,
-              hidden: true,
+              hidden: [true, false],
               items: [
                 {
                   name: "Win",

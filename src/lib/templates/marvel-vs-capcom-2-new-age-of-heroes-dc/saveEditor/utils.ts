@@ -61,26 +61,6 @@ export function initShifts(shifts: number[]): number[] {
   return shifts;
 }
 
-export function overrideItem(item: Item): Item {
-  const $gameRegion = get(gameRegion);
-
-  if ("id" in item && item.id === "europeUsaOnly" && $gameRegion === 1) {
-    const itemInt = item as ItemInt;
-
-    itemInt.hidden = true;
-
-    return itemInt;
-  } else if ("id" in item && item.id === "japanOnly" && $gameRegion === 1) {
-    const itemSection = item as ItemSection;
-
-    itemSection.hidden = false;
-
-    return itemSection;
-  }
-
-  return item;
-}
-
 export function overrideGetInt(item: Item): [boolean, number | undefined] {
   if ("id" in item && item.id === "score") {
     const itemInt = item as ItemInt;
