@@ -102,6 +102,14 @@
     }
   },
   {
+    "id": "kingdom-hearts-ps2",
+    "name": "Kingdom Hearts",
+    "consoleId": "playstation-2",
+    "saveEditor": {
+      "regions": ["🇪🇺", "🇺🇸", "🇯🇵", "🇫🇷", "🇩🇪", "🇮🇹", "🇪🇸", "🇦🇺"]
+    }
+  },
+  {
     "id": "konami-krazy-racers-gba",
     "name": "Konami Krazy Racers",
     "consoleId": "game-boy-advance",
