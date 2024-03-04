@@ -69,7 +69,7 @@ export async function saveShouldBeRejected(saveFile: string) {
 
 export function defaultTests(game: string): void {
   it("should not load an empty file", async () => {
-    await saveShouldBeRejected("empty");
+    await saveShouldBeRejected("common/empty");
   });
 
   it("should not load a wrong save", async () => {
@@ -78,7 +78,7 @@ export function defaultTests(game: string): void {
 
   if (game.match(/-dc$/)) {
     it("should not load an empty standard save", async () => {
-      await saveShouldBeRejected(`${game}/empty.bin`);
+      await saveShouldBeRejected("common/dreamcast/empty.bin");
     });
 
     it("should not load a deleted standard save", async () => {
@@ -90,7 +90,7 @@ export function defaultTests(game: string): void {
     });
   } else if (game.match(/-ps$/)) {
     it("should not load an empty standard save", async () => {
-      await saveShouldBeRejected(`${game}/empty.mcr`);
+      await saveShouldBeRejected("common/playstation/empty.mcr");
     });
 
     it("should not load a wrong DexDrive save", async () => {
