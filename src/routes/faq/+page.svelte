@@ -70,6 +70,9 @@
       .vmp (<i>PlayStation Classic</i>), .gme (<i>DexDrive</i>)
     </li>
     <li>
+      <strong>PlayStation 2: </strong>.ps2
+    </li>
+    <li>
       <strong>PC-Engine CD: </strong>.sav, .srm
     </li>
   </ul>

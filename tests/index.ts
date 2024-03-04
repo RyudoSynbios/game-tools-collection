@@ -96,6 +96,14 @@ export function defaultTests(game: string): void {
     it("should not load a wrong DexDrive save", async () => {
       await saveShouldBeRejected(`${game}/bad.gme`);
     });
+  } else if (game.match(/-ps2$/)) {
+    it("should not load an empty standard save", async () => {
+      await saveShouldBeRejected("common/playstation2/empty.ps2");
+    });
+
+    it("should not load an unformatted standard save", async () => {
+      await saveShouldBeRejected("common/playstation2/unformated.ps2");
+    });
   }
 }
 

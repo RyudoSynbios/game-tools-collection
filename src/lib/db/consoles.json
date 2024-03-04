@@ -45,6 +45,11 @@
     "manufacturerId": "sony"
   },
   {
+    "id": "playstation-2",
+    "name": "PlayStation 2",
+    "manufacturerId": "sony"
+  },
+  {
     "id": "pc-engine-cd",
     "name": "PC-Engine CD",
     "manufacturerId": "nec"
