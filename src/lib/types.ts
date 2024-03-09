@@ -115,6 +115,7 @@ export interface ItemBitflag {
   offset: number;
   bit: Bit;
   label: string;
+  reversed?: boolean;
   separator?: boolean;
   disabled?: boolean;
   hidden?: boolean | boolean[];

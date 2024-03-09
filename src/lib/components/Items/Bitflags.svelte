@@ -24,7 +24,7 @@
         flag.offset,
         flag.bit,
         (event.target as HTMLInputElement).checked,
-        { reversed: item.reversed },
+        { reversed: item.reversed || flag.reversed },
       );
     }
 
@@ -50,7 +50,7 @@
           flags.push({
             ...flag,
             checked: getBitflag(flag.offset, flag.bit, {
-              reversed: item.reversed,
+              reversed: item.reversed || flag.reversed,
             }),
           });
 
