@@ -2269,7 +2269,7 @@ const template: GameJson = {
                               type: "section",
                               items: [
                                 {
-                                  name: "Accessory Slots",
+                                  name: "Slots",
                                   offset: 0x9c1c,
                                   type: "variable",
                                   dataType: "uint8",
@@ -2356,7 +2356,7 @@ const template: GameJson = {
                               type: "section",
                               items: [
                                 {
-                                  name: "Item Slots",
+                                  name: "Slots",
                                   offset: 0x9c25,
                                   type: "variable",
                                   dataType: "uint8",
