@@ -447,11 +447,15 @@ const template: GameJson = {
                   type: "section",
                   items: [
                     {
-                      type: "section",
+                      length: 0x2,
+                      type: "container",
+                      instanceType: "section",
+                      instances: 4,
                       flex: true,
+                      noMargin: true,
                       items: [
                         {
-                          name: "Item 1",
+                          name: "Item %d",
                           offset: 0xc0,
                           type: "variable",
                           dataType: "uint8",
@@ -460,66 +464,6 @@ const template: GameJson = {
                         {
                           name: "Quantity",
                           offset: 0xc1,
-                          type: "variable",
-                          dataType: "uint8",
-                          max: 99,
-                        },
-                      ],
-                    },
-                    {
-                      type: "section",
-                      flex: true,
-                      items: [
-                        {
-                          name: "Item 2",
-                          offset: 0xc2,
-                          type: "variable",
-                          dataType: "uint8",
-                          resource: "items",
-                        },
-                        {
-                          name: "Quantity",
-                          offset: 0xc3,
-                          type: "variable",
-                          dataType: "uint8",
-                          max: 99,
-                        },
-                      ],
-                    },
-                    {
-                      type: "section",
-                      flex: true,
-                      items: [
-                        {
-                          name: "Item 3",
-                          offset: 0xc4,
-                          type: "variable",
-                          dataType: "uint8",
-                          resource: "items",
-                        },
-                        {
-                          name: "Quantity",
-                          offset: 0xc5,
-                          type: "variable",
-                          dataType: "uint8",
-                          max: 99,
-                        },
-                      ],
-                    },
-                    {
-                      type: "section",
-                      flex: true,
-                      items: [
-                        {
-                          name: "Item 4",
-                          offset: 0xc6,
-                          type: "variable",
-                          dataType: "uint8",
-                          resource: "items",
-                        },
-                        {
-                          name: "Quantity",
-                          offset: 0xc7,
                           type: "variable",
                           dataType: "uint8",
                           max: 99,
