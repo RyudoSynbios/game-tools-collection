@@ -116,7 +116,7 @@ export function getSlots(
   let validator = region[0];
 
   if (order === "correspondance") {
-    validator = [...validator, 0x30, 0x30 + index];
+    validator = [...validator, 0x30 + index];
   }
 
   if (isPsvHeader()) {

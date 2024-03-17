@@ -10,7 +10,7 @@ import {
   isPsvHeader,
 } from "$lib/utils/common/playstation";
 
-import type { Bit, Item, ItemContainer, ItemInt, Validator } from "$lib/types";
+import type { Bit, Item, ItemContainer, ItemInt } from "$lib/types";
 
 export function initHeaderShift(dataView: DataView): number {
   return getHeaderShift(dataView);
