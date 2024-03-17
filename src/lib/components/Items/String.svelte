@@ -6,7 +6,7 @@
 
   import type { ItemString } from "$lib/types";
 
-  export let item: ItemString;
+  export let item: ItemString & { hidden?: boolean };
 
   function handleInputChange(event: Event): void {
     let isOverrided = false;

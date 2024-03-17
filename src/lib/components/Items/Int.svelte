@@ -19,7 +19,7 @@
 
   import type { ItemInt, ObjectKeyValue } from "$lib/types";
 
-  export let item: ItemInt;
+  export let item: ItemInt & { hidden?: boolean };
 
   function handleInputChange(event: Event): void {
     let isOverrided = false;
