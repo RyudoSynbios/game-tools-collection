@@ -122,6 +122,7 @@ const template: GameJson = {
                   type: "variable",
                   dataType: "uint8",
                   resource: "locations",
+                  size: "lg",
                   autocomplete: true,
                 },
                 {

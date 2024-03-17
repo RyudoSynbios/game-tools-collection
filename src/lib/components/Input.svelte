@@ -13,6 +13,7 @@
   export let step = 1;
   export let leadingZeros = 0;
   export let value: bigint | number | string;
+  export let size: "md" | "lg" = "md";
   export let suffix = "";
   export let debug = false;
   export let disabled = false;
@@ -76,6 +77,7 @@
   class="gtc-input"
   class:gtc-input-debug={debug}
   class:gtc-input-disabled={disabled}
+  class:gtc-input-lg={size === "lg"}
   class:gtc-input-suffix={suffix}
 >
   {#if label}
@@ -120,6 +122,10 @@
       span {
         @apply text-primary-500;
       }
+    }
+
+    &.gtc-input-lg input {
+      width: 260px;
     }
 
     &.gtc-input-suffix input {

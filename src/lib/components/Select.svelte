@@ -5,13 +5,18 @@
   export let type: "number" | "string" = "string";
   export let value: bigint | number | string;
   export let options: { key: string; value: string }[];
+  export let size: "md" | "lg" = "md";
   export let debug = false;
   export let disabled = false;
   export let test = false;
   export let onChange: (event: Event) => void;
 </script>
 
-<div class="gtc-select" class:gtc-select-debug={debug}>
+<div
+  class="gtc-select"
+  class:gtc-select-debug={debug}
+  class:gtc-select-lg={size === "lg"}
+>
   {#if label}
     <p>{label}</p>
   {/if}
@@ -35,6 +40,10 @@
 
     &.gtc-select-debug {
       @apply text-orange-800 bg-orange-950;
+    }
+
+    &.gtc-select-lg select {
+      width: 260px;
     }
 
     & p {

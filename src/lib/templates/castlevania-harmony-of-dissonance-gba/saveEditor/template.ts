@@ -1070,6 +1070,7 @@ const template: GameJson = {
                   type: "variable",
                   dataType: "uint16",
                   resource: "locations",
+                  size: "lg",
                   autocomplete: true,
                 },
                 {

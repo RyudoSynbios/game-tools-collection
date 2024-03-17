@@ -6,6 +6,7 @@
   export let label = "";
   export let value: bigint | number | string;
   export let options: { key: string; value: string }[];
+  export let size: "md" | "lg" = "md";
   export let debug = false;
   export let disabled = false;
   export let test = false;
@@ -216,7 +217,11 @@
   {#if label}
     <p>{label}</p>
   {/if}
-  <div class="gtc-autocomplete-input" on:click={handleDropdownOpen}>
+  <div
+    class="gtc-autocomplete-input"
+    class:gtc-autocomplete-input-lg={size === "lg"}
+    on:click={handleDropdownOpen}
+  >
     <input
       value={valueDisplayed}
       {disabled}
@@ -277,6 +282,10 @@
 
       & :global(svg) {
         @apply w-4;
+      }
+
+      &.gtc-autocomplete-input-lg input {
+        width: 244px;
       }
     }
 

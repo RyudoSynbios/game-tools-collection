@@ -66,6 +66,7 @@
       type="text"
       maxlength={item.length / dataTypeToLength(item.letterDataType)}
       {value}
+      size={item.size}
       debug={item.hidden}
       disabled={item.disabled}
       test={item.test}

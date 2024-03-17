@@ -122,6 +122,7 @@ const template: GameJson = {
                   dataType: "uint16",
                   bigEndian: true,
                   resource: "locations",
+                  size: "lg",
                   autocomplete: true,
                 },
                 {

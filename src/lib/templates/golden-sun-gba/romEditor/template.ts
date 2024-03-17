@@ -1117,6 +1117,7 @@ const template: GameJson = {
                       type: "variable",
                       dataType: "string",
                       letterDataType: "uint8",
+                      size: "lg",
                       disabled: true,
                     },
                     {
@@ -1251,6 +1252,7 @@ const template: GameJson = {
                               type: "variable",
                               dataType: "string",
                               letterDataType: "uint8",
+                              size: "lg",
                               disabled: true,
                             },
                             {
@@ -1495,6 +1497,7 @@ const template: GameJson = {
                       type: "variable",
                       dataType: "string",
                       letterDataType: "uint8",
+                      size: "lg",
                       disabled: true,
                     },
                     {
@@ -1595,6 +1598,7 @@ const template: GameJson = {
                       type: "variable",
                       dataType: "string",
                       letterDataType: "uint8",
+                      size: "lg",
                       disabled: true,
                     },
                     {

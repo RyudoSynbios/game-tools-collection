@@ -145,6 +145,7 @@
         step={item.step || 1}
         leadingZeros={item.leadingZeros}
         {value}
+        size={item.size}
         suffix={item.suffix}
         debug={item.hidden}
         disabled={item.disabled}
@@ -156,6 +157,7 @@
         label={item.name}
         {value}
         {options}
+        size={item.size}
         debug={item.hidden}
         disabled={item.disabled}
         test={item.test}
@@ -167,6 +169,7 @@
         type="number"
         {value}
         {options}
+        size={item.size}
         debug={item.hidden}
         disabled={item.disabled}
         test={item.test}

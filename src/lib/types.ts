@@ -231,6 +231,7 @@ export interface ItemInt {
     parent: number;
     shift: number;
   };
+  size?: "md" | "lg";
   autocomplete?: boolean;
   suffix?: string;
   disabled?: boolean;
@@ -270,6 +271,7 @@ export interface ItemString {
   letterBigEndian?: boolean;
   fallback?: number;
   resource?: string;
+  size?: "md" | "lg";
   disabled?: boolean;
   hidden?: boolean | boolean[];
   test?: boolean;
