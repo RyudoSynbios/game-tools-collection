@@ -480,7 +480,7 @@ const template: GameJson = {
                               flex: true,
                               items: [
                                 {
-                                  name: "Item 01",
+                                  name: "Item 1",
                                   offset: 0x368,
                                   type: "variable",
                                   dataType: "uint16",
@@ -488,7 +488,7 @@ const template: GameJson = {
                                   autocomplete: true,
                                 },
                                 {
-                                  name: "Item 02",
+                                  name: "Item 2",
                                   offset: 0x36a,
                                   type: "variable",
                                   dataType: "uint16",
@@ -496,7 +496,7 @@ const template: GameJson = {
                                   autocomplete: true,
                                 },
                                 {
-                                  name: "Item 03",
+                                  name: "Item 3",
                                   offset: 0x36c,
                                   type: "variable",
                                   dataType: "uint16",
@@ -504,7 +504,7 @@ const template: GameJson = {
                                   autocomplete: true,
                                 },
                                 {
-                                  name: "Item 04",
+                                  name: "Item 4",
                                   offset: 0x36e,
                                   type: "variable",
                                   dataType: "uint16",
@@ -512,7 +512,7 @@ const template: GameJson = {
                                   autocomplete: true,
                                 },
                                 {
-                                  name: "Item 05",
+                                  name: "Item 5",
                                   offset: 0x370,
                                   type: "variable",
                                   dataType: "uint16",
@@ -520,7 +520,7 @@ const template: GameJson = {
                                   autocomplete: true,
                                 },
                                 {
-                                  name: "Item 06",
+                                  name: "Item 6",
                                   offset: 0x372,
                                   type: "variable",
                                   dataType: "uint16",
@@ -528,7 +528,7 @@ const template: GameJson = {
                                   autocomplete: true,
                                 },
                                 {
-                                  name: "Item 07",
+                                  name: "Item 7",
                                   offset: 0x374,
                                   type: "variable",
                                   dataType: "uint16",
@@ -536,7 +536,7 @@ const template: GameJson = {
                                   autocomplete: true,
                                 },
                                 {
-                                  name: "Item 08",
+                                  name: "Item 8",
                                   offset: 0x376,
                                   type: "variable",
                                   dataType: "uint16",
@@ -544,7 +544,7 @@ const template: GameJson = {
                                   autocomplete: true,
                                 },
                                 {
-                                  name: "Item 09",
+                                  name: "Item 9",
                                   offset: 0x378,
                                   type: "variable",
                                   dataType: "uint16",
