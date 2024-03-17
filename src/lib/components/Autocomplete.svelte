@@ -225,7 +225,6 @@
     <input
       value={valueDisplayed}
       {disabled}
-      data-test={$isDebug && test ? true : null}
       bind:this={inputEl}
       on:input={handleFilter}
       on:focus={handleFocusOn}
@@ -235,6 +234,7 @@
   <input
     class="gtc-autocomplete-inputhidden"
     {value}
+    data-test={$isDebug && test ? true : null}
     bind:this={inputHiddenEl}
     on:change={onChange}
   />
