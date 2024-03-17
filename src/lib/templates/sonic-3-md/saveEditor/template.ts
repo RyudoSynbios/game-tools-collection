@@ -121,6 +121,7 @@ const template: GameJson = {
                       type: "variable",
                       dataType: "uint8",
                       resource: "sonic3Zones",
+                      autocomplete: true,
                       test: true,
                     },
                     {
@@ -235,6 +236,7 @@ const template: GameJson = {
                       type: "variable",
                       dataType: "uint8",
                       resource: "sonic3&KnucklesZones",
+                      autocomplete: true,
                       test: true,
                     },
                     {
