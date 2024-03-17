@@ -193,6 +193,7 @@ export interface ItemContainer {
   resource?: string;
   vertical?: boolean;
   flex?: boolean;
+  noMargin?: boolean;
   items: Item[];
   hidden?: boolean | boolean[];
 }

@@ -305,6 +305,7 @@ export function parseContainer(
 
     const parsedSubitem: any = {
       flex: item.flex,
+      noMargin: item.noMargin,
       disabled,
       items: item.items
         ? item.items.reduce((results: any, subitem: any) => {
