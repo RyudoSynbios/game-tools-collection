@@ -177,6 +177,14 @@
     }
   },
   {
+    "id": "resident-evil-ps",
+    "name": "Resident Evil",
+    "consoleId": "playstation",
+    "saveEditor": {
+      "regions": ["🇪🇺", "🇺🇸", "🇯🇵", "🇫🇷", "🇩🇪"]
+    }
+  },
+  {
     "id": "shining-force-3-scenario-1-saturn",
     "name": "Shining Force 3: Scenario 1",
     "consoleId": "saturn",

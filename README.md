@@ -27,6 +27,7 @@ Link to the website: [https://game-tools-collection.com](https://game-tools-coll
 | Mystic Quest Legend                       | SNES     | Save / Rom | EUR / USA / JAP / FRA / GER                   |
 | Mystical Ninja 2 Starring Goemon          | N64      | Save       | EUR / USA / JAP                               |
 | Rayman                                    | PS       | Save       | EUR / USA / JAP                               |
+| Resident Evil                             | PS       | Save       | EUR / USA / JAP / FRA / GER                   |
 | Shining Force 3: Scenario 1               | SATURN   | Save       | EUR / USA / JAP                               |
 | Sonic 3                                   | MD       | Save       | EUR / USA / JAP                               |
 | Super Smash Bros.                         | N64      | Save       | EUR / USA / JAP / AUS                         |
