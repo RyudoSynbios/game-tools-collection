@@ -119,6 +119,10 @@ export function parseItem(
     newItem.id = newItem.id.replace("%index%", instanceIndex);
   }
 
+  if (newItem.name !== undefined) {
+    newItem.name = newItem.name.replace("%d", instanceIndex + 1);
+  }
+
   if (utilsExists("overrideShift")) {
     shifts = $gameUtils.overrideShift(item, shifts);
   }
