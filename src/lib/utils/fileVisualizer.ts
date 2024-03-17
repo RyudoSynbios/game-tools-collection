@@ -1,6 +1,3 @@
-import { get } from "svelte/store";
-
-import { fileHeaderShift, gameJson } from "$lib/stores";
 import { dataTypeToLength } from "$lib/utils/bytes";
 
 import type {
@@ -9,11 +6,7 @@ import type {
   Item,
   ItemInt,
   ItemIntCondition,
-  RegionValidator,
-  Validator,
 } from "$lib/types";
-
-import { getObjKey } from "./format";
 
 export interface HighlightedOffset {
   offset: number;
@@ -108,37 +101,11 @@ export function parseItem(
         });
       }
 
-      group.items.forEach((subitem) => {
-        parseItem(highlightedOffsets, subitem);
-      });
-    });
-  }
-}
-
-export function parseCondition(
-  highlightedOffsets: HighlightedOffsets,
-  key: string,
-  condition: RegionValidator,
-) {
-  const $fileHeaderShift = get(fileHeaderShift);
-
-  Object.values(condition).forEach((value) => {
-    value.forEach((item: { [key: number | string]: any }) => {
-      if (item.$and || item.$or) {
-        parseCondition(highlightedOffsets, key, item);
-      } else {
-        const offset = parseInt(Object.keys(item)[0]);
-        const length = item[offset].length;
-        for (let i = offset; i < offset + length; i += 1) {
-          addItem(
-            highlightedOffsets,
-            i + $fileHeaderShift,
-            `Validator (${key})`,
-            "variable",
-            "string",
-          );
-        }
+      if (!group.disabled) {
+        group.items.forEach((subitem) => {
+          parseItem(highlightedOffsets, subitem);
+        });
       }
     });
-  });
+  }
 }
