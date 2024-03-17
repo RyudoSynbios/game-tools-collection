@@ -287,7 +287,7 @@
     z-index: 10000;
 
     & .gtc-filevisualizer {
-      @apply flex flex-col justify-center p-4 h-full bg-primary-900 rounded-xl;
+      @apply flex flex-col p-4 h-full bg-primary-900 rounded-xl;
 
       width: 790px;
 
