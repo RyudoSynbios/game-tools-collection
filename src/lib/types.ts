@@ -161,10 +161,12 @@ export interface ItemChecksum {
     offsetStart: number;
     offsetEnd: number;
   };
+  order?: number;
   overrideShift?: {
     parent: number;
     shift: number;
   };
+  disabled?: boolean;
 }
 
 export interface ItemComponent {

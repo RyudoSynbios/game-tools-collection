@@ -33,55 +33,57 @@ export function updateChecksums(): void {
   const $gameUtils = get(gameUtils) as any;
   const $isDebug = get(isDebug);
 
-  $gameJson.checksums?.forEach((item) => {
-    const hexLength = dataTypeToLength(item.dataType) * 2;
+  $gameJson.checksums
+    ?.sort((a, b) => (a.order || 9999) - (b.order || 9999))
+    .forEach((item) => {
+      const hexLength = dataTypeToLength(item.dataType) * 2;
 
-    let previousChecksum;
+      let previousChecksum;
 
-    if (item.disabled) {
-      console.log(`${item.name} > Skipped`);
+      if (item.disabled) {
+        console.log(`${item.name} > Skipped`);
 
-      return;
-    }
+        return;
+      }
 
-    if (item.dataType !== "int64" && item.dataType !== "uint64") {
-      previousChecksum = getInt(item.offset, item.dataType, {
-        bigEndian: item.bigEndian,
-      }).toHex(hexLength);
+      if (item.dataType !== "int64" && item.dataType !== "uint64") {
+        previousChecksum = getInt(item.offset, item.dataType, {
+          bigEndian: item.bigEndian,
+        }).toHex(hexLength);
 
-      setInt(item.offset, item.dataType, 0x0);
-    } else {
-      previousChecksum = getBigInt(item.offset, item.dataType, {
-        bigEndian: item.bigEndian,
-      }).toHex(hexLength);
+        setInt(item.offset, item.dataType, 0x0);
+      } else {
+        previousChecksum = getBigInt(item.offset, item.dataType, {
+          bigEndian: item.bigEndian,
+        }).toHex(hexLength);
 
-      setBigInt(item.offset, item.dataType, 0x0n);
-    }
+        setBigInt(item.offset, item.dataType, 0x0n);
+      }
 
-    let checksum = 0x0;
+      let checksum = 0x0;
 
-    if (utilsExists("generateChecksum")) {
-      checksum = $gameUtils.generateChecksum(item);
-    }
+      if (utilsExists("generateChecksum")) {
+        checksum = $gameUtils.generateChecksum(item);
+      }
 
-    if (item.dataType !== "int64" && item.dataType !== "uint64") {
-      setInt(item.offset, item.dataType, checksum, {
-        bigEndian: item.bigEndian,
-      });
-    } else {
-      setBigInt(item.offset, item.dataType, checksum, {
-        bigEndian: item.bigEndian,
-      });
-    }
+      if (item.dataType !== "int64" && item.dataType !== "uint64") {
+        setInt(item.offset, item.dataType, checksum, {
+          bigEndian: item.bigEndian,
+        });
+      } else {
+        setBigInt(item.offset, item.dataType, checksum, {
+          bigEndian: item.bigEndian,
+        });
+      }
 
-    if ($isDebug) {
-      const newChecksum = checksum.toHex(hexLength);
+      if ($isDebug) {
+        const newChecksum = checksum.toHex(hexLength);
 
-      console.log(
-        `${item.name}: ${previousChecksum} > ${newChecksum} > ${
-          previousChecksum === newChecksum ? "Same" : "Different"
-        }`,
-      );
-    }
-  });
+        console.log(
+          `${item.name}: ${previousChecksum} > ${newChecksum} > ${
+            previousChecksum === newChecksum ? "Same" : "Different"
+          }`,
+        );
+      }
+    });
 }
