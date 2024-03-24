@@ -88,6 +88,10 @@ export function defaultTests(game: string): void {
     it("should not load a wrong GameShark save", async () => {
       await saveShouldBeRejected(`${game}/bad.sps`);
     });
+  } else if (game.match(/-ds$/)) {
+    it("should not load a wrong Action Replay Max DS save", async () => {
+      await saveShouldBeRejected(`${game}/bad.duc`);
+    });
   } else if (game.match(/-ps$/)) {
     it("should not load an empty standard save", async () => {
       await saveShouldBeRejected("common/playstation/empty.mcr");
