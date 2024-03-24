@@ -82,7 +82,7 @@ const template: GameJson = {
                             { "/": 60 },
                             { convert: { from: "seconds", to: "hours" } },
                           ],
-                          max: 20243,
+                          max: 999,
                         },
                         {
                           offset: 0xb9,
