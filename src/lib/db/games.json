@@ -43,6 +43,14 @@
     }
   },
   {
+    "id": "castlevania-dawn-of-sorrow-ds",
+    "name": "Castlevania: Dawn of Sorrow",
+    "consoleId": "nintendo-ds",
+    "saveEditor": {
+      "regions": ["🇪🇺", "🇺🇸", "🇯🇵"]
+    }
+  },
+  {
     "id": "castlevania-harmony-of-dissonance-gba",
     "name": "Castlevania: Harmony of Dissonance",
     "consoleId": "game-boy-advance",

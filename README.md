@@ -11,6 +11,7 @@ Link to the website: [https://game-tools-collection.com](https://game-tools-coll
 | Bomberman 64                              | N64      | Save       | EUR / USA / JAP                               |
 | Castlevania: Aria of Sorrow               | GBA      | Save       | EUR / USA / JAP                               |
 | Castlevania: Circle of the Moon           | GBA      | Save / Rom | EUR / USA / JAP                               |
+| Castlevania: Dawn of Sorrow               | DS       | Save       | EUR / USA / JAP                               |
 | Castlevania: Harmony of Dissonance        | GBA      | Save       | EUR / USA / JAP                               |
 | Castlevania: Symphony of the Night        | PS       | Save       | EUR / USA / JAP                               |
 | Donkey Kong Land                          | GB       | Save       | EUR / USA / JAP                               |
