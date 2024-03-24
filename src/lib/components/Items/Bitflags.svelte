@@ -91,7 +91,7 @@
 
 <style lang="postcss">
   .gtc-bitflags {
-    @apply mr-4 mb-4 p-2 w-fit bg-primary-700 rounded;
+    @apply mr-4 mb-4 p-2 w-fit h-fit bg-primary-700 rounded;
 
     min-width: 196px;
 
