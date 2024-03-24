@@ -89,7 +89,7 @@ const template: GameJson = {
         },
         {
           id: "checksum1-1",
-          name: "Checksum General 1",
+          name: "Checksum Master 1",
           offset: 0x0,
           type: "checksum",
           dataType: "uint32",
@@ -101,7 +101,7 @@ const template: GameJson = {
         },
         {
           id: "checksum1-2",
-          name: "Checksum General 2",
+          name: "Checksum Master 2",
           offset: 0x4,
           type: "checksum",
           dataType: "uint32",
