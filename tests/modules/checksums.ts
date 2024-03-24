@@ -9,10 +9,7 @@ export async function expectChecksums(
   const inputsEl = await page.$$("input[data-checksum=true]");
   const inputEl = inputsEl[inputIndex];
 
-  const checksum = await page.evaluate(
-    (el) => el.value.replace(/ /g, ""),
-    inputEl,
-  );
+  const checksum = await page.evaluate((el) => el.value, inputEl);
 
   expect(checksum).toBe(expectedValue);
 }
