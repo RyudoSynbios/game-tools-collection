@@ -2232,6 +2232,7 @@ const template: GameJson = {
               flex: true,
               items: [
                 {
+                  id: "abilities",
                   name: "Abilities",
                   type: "bitflags",
                   flags: [

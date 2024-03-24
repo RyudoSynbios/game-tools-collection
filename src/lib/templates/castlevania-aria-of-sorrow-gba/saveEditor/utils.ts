@@ -1,18 +1,51 @@
 import { getInt, setInt } from "$lib/utils/bytes";
 import { getHeaderShift } from "$lib/utils/common/gameBoyAdvance";
 
-import type { Item, ItemInt } from "$lib/types";
+import type { Item, ItemBitflag, ItemBitflags, ItemInt } from "$lib/types";
 
 export function initHeaderShift(dataView: DataView): number {
   return getHeaderShift(dataView);
 }
 
-export function afterSetInt(item: Item): void {
+export function overrideGetInt(
+  item: Item,
+): [boolean, (ItemBitflag & { checked: boolean })[] | undefined] {
+  if ("id" in item && item.id === "abilities") {
+    const itemBitflags = item as ItemBitflags;
+
+    const flags = itemBitflags.flags.reduce(
+      (flags: (ItemBitflag & { checked: boolean })[], flag) => {
+        flags.push({
+          ...flag,
+          checked:
+            getInt(flag.offset, flag.bit === 0 ? "lower4" : "upper4") > 0,
+        });
+
+        return flags;
+      },
+      [],
+    );
+
+    return [true, flags];
+  }
+
+  return [false, undefined];
+}
+
+export function afterSetInt(item: Item, flag: ItemBitflag): void {
   if ("id" in item && item.id === "gold") {
     const itemInt = item as ItemInt;
 
     const value = getInt(itemInt.offset, "uint32");
 
     setInt(itemInt.offset + 0x170, "uint32", value);
+  } else if ("id" in item && item.id === "abilities") {
+    const isChecked = Boolean(getInt(flag.offset, "bit", { bit: flag.bit }));
+
+    setInt(
+      flag.offset,
+      flag.bit === 0 ? "lower4" : "upper4",
+      isChecked ? 1 : 0,
+    );
   }
 }
