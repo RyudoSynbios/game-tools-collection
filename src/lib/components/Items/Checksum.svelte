@@ -24,7 +24,7 @@
       }).toHex(hexLength);
     }
 
-    value = value.replace(/(.{2})/g, "$1 ");
+    value = `0x${value}`;
   }
 </script>
 
