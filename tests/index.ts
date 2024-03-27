@@ -1,6 +1,6 @@
 import fs from "fs";
 
-import { expectChecksums } from "./modules/checksums";
+import { expectChecksum } from "./modules/checksum";
 import { expectInput, writeInput } from "./modules/input";
 import { selectRegion } from "./modules/region";
 import { expectTabs, selectTab } from "./modules/tabs";
@@ -140,7 +140,7 @@ export async function snippet(
       }
 
       if (type === "c") {
-        await expectChecksums(value, elIndex);
+        await expectChecksum(value, elIndex);
       }
 
       if (type === "i") {

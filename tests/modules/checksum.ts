@@ -1,4 +1,4 @@
-export async function expectChecksums(
+export async function expectChecksum(
   expectedValue: string,
   inputIndex: number,
 ): Promise<void> {
