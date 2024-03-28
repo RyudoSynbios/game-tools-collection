@@ -30,8 +30,6 @@ export type DataTypeInt =
   | "uint32"
   | "uint64";
 
-export type EditorType = "saveEditor" | "romEditor" | "randomizer";
-
 export type IntOperation = { [operand: string]: number | IntOperationConvert };
 
 export type IntOperationConvert = { from: TimeUnit; to: TimeUnit };

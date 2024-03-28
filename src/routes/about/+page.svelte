@@ -28,7 +28,7 @@
     not be optimized and could change (interface, colors, etc.).
   </p>
   <p>
-    Also, some editors can be not fully complete, so don't hesitate to come back
+    Also, some tools can be not fully complete, so don't hesitate to come back
     from time to time to check the progress!
   </p>
 </div>

@@ -2,7 +2,7 @@ import consoleManufacturersDb from "$lib/db/consoleManufacturers.json";
 import consolesDb from "$lib/db/consoles.json";
 import gamesDb from "$lib/db/games.json";
 
-import type { Console, EditorType, Game, Manufacturer } from "$lib/types";
+import type { Console, Game, Manufacturer } from "$lib/types";
 
 export function getConsole(consoleId: string): Console | undefined {
   const consoles = getConsoles();
@@ -35,7 +35,7 @@ export function getGame(gameId: string): Game | undefined {
 interface GameOptions {
   title?: string;
   console?: string;
-  editorType?: EditorType;
+  tool?: string;
 }
 
 export function getGames(options: GameOptions = {}): Game[] {
@@ -44,7 +44,7 @@ export function getGames(options: GameOptions = {}): Game[] {
       (options.title &&
         !game.name.toLowerCase().match(options.title.toLowerCase())) ||
       (options.console && game.consoleId !== options.console) ||
-      (options.editorType && !game[options.editorType])
+      (options.tool && !game[options.tool])
     ) {
       return results;
     }

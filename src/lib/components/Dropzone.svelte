@@ -87,7 +87,7 @@
       }
 
       if (regions.length === 1) {
-        initEditor(regions[0]);
+        initTool(regions[0]);
       } else if (regions.length === 0) {
         if (utilsExists("onInitFailed")) {
           $gameUtils.onInitFailed();
@@ -102,7 +102,7 @@
     fileReader.readAsArrayBuffer(file);
   }
 
-  function initEditor(region: string): void {
+  function initTool(region: string): void {
     const regionIndex = getRegionIndex(region);
 
     if (regionIndex !== -1) {
@@ -147,7 +147,7 @@
     <input type="file" bind:this={inputEl} on:change={handleInputChange} />
   </div>
   {#if regions.length > 1}
-    <RegionModal {regions} onSubmit={(region) => initEditor(region)} />
+    <RegionModal {regions} onSubmit={(region) => initTool(region)} />
   {/if}
 </div>
 

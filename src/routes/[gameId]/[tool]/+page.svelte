@@ -28,17 +28,17 @@
 
   const game = getGame($page.params["gameId"]) as Game;
 
-  let editorType = $page.params["editorType"];
+  let tool = $page.params["tool"];
 
-  switch (editorType) {
+  switch (tool) {
     case "randomize":
-      editorType = "Randomizer";
+      tool = "Randomizer";
       break;
     case "rom-editor":
-      editorType = "Rom Editor";
+      tool = "Rom Editor";
       break;
     case "save-editor":
-      editorType = "Save Editor";
+      tool = "Save Editor";
       break;
   }
 
@@ -92,20 +92,20 @@
 
 <svelte:head>
   <title>
-    {game.name} - {game.console.name} - {editorType} | Game Tools Collection
+    {game.name} - {game.console.name} - {tool} | Game Tools Collection
   </title>
 </svelte:head>
 
-<div class="gtc-editor">
+<div class="gtc-tool">
   {#if $dataView.byteLength === 0}
-    <div class="gtc-editor-dropzone">
+    <div class="gtc-tool-dropzone">
       <Dropzone
         logo="/img/games/{game.id}/logo.png"
         name="{game.name} ({game.console.name})"
       />
     </div>
   {:else}
-    <div class="gtc-editor-banner">
+    <div class="gtc-tool-banner">
       <img
         src="/img/games/{game.id}/logo.png"
         alt="{game.name} ({game.console.name})"
@@ -114,7 +114,7 @@
         {#if $isDebug}
           <button
             type="button"
-            class="gtc-editor-filevisualizer"
+            class="gtc-tool-filevisualizer"
             on:click={handleFileVisualizer}
           >
             <ManageSearchIcon /> File Visualizer
@@ -122,21 +122,17 @@
           {#if $gameJson.checksums && $gameJson.checksums.length > 0}
             <button
               type="button"
-              class="gtc-editor-checksums"
+              class="gtc-tool-checksums"
               on:click={handleFileChecksum}
             >
               <ChecksumsIcon /> Checksums
             </button>
           {/if}
         {/if}
-        <button
-          type="button"
-          class="gtc-editor-eject"
-          on:click={handleFileEject}
-        >
+        <button type="button" class="gtc-tool-eject" on:click={handleFileEject}>
           <EjectIcon /> Eject
         </button>
-        <button type="button" class="gtc-editor-save" on:click={handleFileSave}>
+        <button type="button" class="gtc-tool-save" on:click={handleFileSave}>
           <SaveIcon /> Save
         </button>
       </div>
@@ -149,10 +145,10 @@
 </div>
 
 <style lang="postcss">
-  .gtc-editor {
+  .gtc-tool {
     @apply flex-1 flex flex-col;
 
-    .gtc-editor-banner {
+    .gtc-tool-banner {
       @apply flex items-center justify-between mb-4 h-10;
 
       & img {
@@ -165,7 +161,7 @@
         & button {
           @apply flex ml-2;
 
-          &.gtc-editor-checksums {
+          &.gtc-tool-checksums {
             @apply text-blue-100 bg-blue-900;
 
             &:hover {
@@ -173,7 +169,7 @@
             }
           }
 
-          &.gtc-editor-eject {
+          &.gtc-tool-eject {
             @apply text-red-100 bg-red-900;
 
             &:hover {
@@ -181,7 +177,7 @@
             }
           }
 
-          &.gtc-editor-filevisualizer {
+          &.gtc-tool-filevisualizer {
             @apply text-indigo-100 bg-indigo-900;
 
             &:hover {
@@ -189,7 +185,7 @@
             }
           }
 
-          &.gtc-editor-save {
+          &.gtc-tool-save {
             @apply text-green-100 bg-green-900;
 
             &:hover {
@@ -204,7 +200,7 @@
       }
     }
 
-    & .gtc-editor-dropzone {
+    & .gtc-tool-dropzone {
       @apply flex-1 flex items-center justify-center;
     }
   }

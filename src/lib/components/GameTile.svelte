@@ -19,9 +19,9 @@
   <div class="gtc-tile-content">
     <p>{game.name}</p>
     <p>{game.console.name}</p>
-    <div class="gtc-tile-editors">
+    <div class="gtc-tile-tools">
       {#if game.saveEditor}
-        <a href="/{game.id}/save-editor" class="gtc-tile-editorlink">
+        <a href="/{game.id}/save-editor" class="gtc-tile-toollink">
           Save Editor
           <div>
             {#each game.saveEditor.regions as region}
@@ -30,10 +30,10 @@
           </div>
         </a>
       {:else}
-        <span class="gtc-tile-editordisabled"> Save Editor</span>
+        <span class="gtc-tile-tooldisabled">Save Editor</span>
       {/if}
       {#if game.romEditor}
-        <a href="/{game.id}/rom-editor" class="gtc-tile-editorlink">
+        <a href="/{game.id}/rom-editor" class="gtc-tile-toollink">
           Rom Editor
           <div>
             {#each game.romEditor.regions as region}
@@ -42,10 +42,10 @@
           </div>
         </a>
       {:else}
-        <span class="gtc-tile-editordisabled"> Rom Editor</span>
+        <span class="gtc-tile-tooldisabled">Rom Editor</span>
       {/if}
       {#if game.randomizer}
-        <a href="/{game.id}/randomizer" class="gtc-tile-editorlink">
+        <a href="/{game.id}/randomizer" class="gtc-tile-toollink">
           Randomizer
           <div>
             {#each game.randomizer.regions as region}
@@ -54,7 +54,7 @@
           </div>
         </a>
       {:else}
-        <span class="gtc-tile-editordisabled"> Randomizer</span>
+        <span class="gtc-tile-tooldisabled">Randomizer</span>
       {/if}
     </div>
   </div>
@@ -118,15 +118,15 @@
         @apply text-sm;
       }
 
-      & .gtc-tile-editors {
+      & .gtc-tile-tools {
         @apply flex mt-2 border-t border-primary-600;
 
-        & .gtc-tile-editorlink,
-        & .gtc-tile-editordisabled {
+        & .gtc-tile-toollink,
+        & .gtc-tile-tooldisabled {
           @apply flex-1 px-2 py-1  text-xs text-center rounded;
         }
 
-        & .gtc-tile-editorlink {
+        & .gtc-tile-toollink {
           @apply text-white;
 
           & div {

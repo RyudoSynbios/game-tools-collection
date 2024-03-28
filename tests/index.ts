@@ -38,10 +38,10 @@ export async function initPage(url: string): Promise<void> {
 }
 
 export async function ejectFile(): Promise<void> {
-  const contentEl = await page.$(".gtc-editor > .gtc-content");
+  const contentEl = await page.$(".gtc-tool > .gtc-content");
 
   if (contentEl) {
-    await page.click(".gtc-editor-eject");
+    await page.click(".gtc-tool-eject");
   }
 }
 

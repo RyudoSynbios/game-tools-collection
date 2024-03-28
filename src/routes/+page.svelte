@@ -1,27 +1,26 @@
 <script lang="ts">
   import GameTile from "$lib/components/GameTile.svelte";
   import { getConsoles, getGames } from "$lib/utils/db";
-  import type { EditorType } from "$lib/types.js";
 
   let consoles = getConsoles();
   let games = getGames();
 
   let titleEl: HTMLInputElement;
   let consoleEl: HTMLSelectElement;
-  let editorTypeEl: HTMLSelectElement;
+  let toolEl: HTMLSelectElement;
 
   let searchConsole = "";
-  let searchEditorType = "";
+  let searchTool = "";
 
   function handleFilter(): void {
     games = getGames({
       title: titleEl.value,
       console: consoleEl.value,
-      editorType: editorTypeEl.value as EditorType,
+      tool: toolEl.value,
     });
 
     searchConsole = consoleEl.value;
-    searchEditorType = editorTypeEl.value;
+    searchTool = toolEl.value;
   }
 </script>
 
@@ -49,11 +48,11 @@
       {/each}
     </select>
     <select
-      class:gtc-home-select-filled={searchEditorType}
-      bind:this={editorTypeEl}
+      class:gtc-home-select-filled={searchTool}
+      bind:this={toolEl}
       on:change={handleFilter}
     >
-      <option value="">Editor Type</option>
+      <option value="">Tool</option>
       <option value="saveEditor">Save Editor</option>
       <option value="romEditor">Rom Editor</option>
       <option value="randomizer">Randomizer</option>
@@ -71,7 +70,7 @@
   <div class="gtc-home-description">
     <h1>Game Tools Collection</h1>
     <h2>Customize your games with a collection of tools!</h2>
-    <p>This website offers various editors for many games.</p>
+    <p>This website offers various tools for many games.</p>
     <p>
       <strong>Save Editors</strong> allow you to edit your save files to customize
       your adventure by changing various stats or to unlock certain items/modes.
