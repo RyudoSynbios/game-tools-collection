@@ -334,10 +334,19 @@ export function getInt(
       break;
   }
 
-  if (options.binary && (dataType === "int8" || dataType === "uint8")) {
+  if (
+    options.binary &&
+    (dataType === "int8" ||
+      dataType === "int16" ||
+      dataType === "uint8" ||
+      dataType === "uint16")
+  ) {
     const { bitStart, bitLength } = options.binary;
 
-    const mask = 0xff >> (8 - (bitStart + bitLength));
+    const dataTypeLength = dataTypeToLength(dataType);
+    const dataTypeValue = dataTypeToValue(dataType);
+
+    const mask = dataTypeValue >> (dataTypeLength * 8 - (bitStart + bitLength));
 
     int = (int & mask) >> bitStart;
   }
@@ -378,10 +387,21 @@ export function setInt(
     value = parseFloat(value) || 0;
   }
 
-  if (options.binary && (dataType === "int8" || dataType === "uint8")) {
+  if (
+    options.binary &&
+    (dataType === "int8" ||
+      dataType === "int16" ||
+      dataType === "uint8" ||
+      dataType === "uint16")
+  ) {
     const { bitStart, bitLength } = options.binary;
 
-    const mask = 0xff ^ ((0xff >> (8 - bitLength)) << bitStart);
+    const dataTypeLength = dataTypeToLength(dataType);
+    const dataTypeValue = dataTypeToValue(dataType);
+
+    const mask =
+      dataTypeValue ^
+      ((dataTypeValue >> (dataTypeLength * 8 - bitLength)) << bitStart);
 
     const int = getInt(offset, dataType, {
       bigEndian: options.bigEndian,
