@@ -55,11 +55,14 @@ export function overrideParseContainerItemsShifts(
   const $fileHeaderShift = get(fileHeaderShift);
 
   if (item.id === "slots") {
-    for (let i = 0x0; i < item.length * 0x10; i += item.length) {
-      const saveIndex = getInt($fileHeaderShift + i + 0x28, "uint8");
+    for (let i = 0; i < item.instances + 1; i += 1) {
+      const saveIndex = getInt(
+        $fileHeaderShift + i * item.length + 0x28,
+        "uint8",
+      );
 
       if ((saveIndex & 0x7) === index && !(saveIndex & 0x80)) {
-        return [true, [...shifts, i]];
+        return [true, [...shifts, i * item.length]];
       }
     }
   }
@@ -229,7 +232,7 @@ export function generateChecksum(
   item: ItemChecksum,
   dataView = new DataView(new ArrayBuffer(0)),
 ): bigint {
-  let checksum1 = long(0);
+  let checksum1 = long(0x0);
   let polynormal = long(0x13108b3c1);
   let shift = 0;
 
@@ -262,7 +265,7 @@ export function generateChecksum(
   const high = checksum1.toString(16).padStart(8, "0").slice(-8);
   const low = checksum1.xor(checksum2).toString(16).padStart(8, "0").slice(-8);
 
-  return BigInt(`0x${high + low}`);
+  return BigInt(`0x${high}${low}`);
 }
 
 export function beforeSaving(): ArrayBufferLike {
