@@ -65,6 +65,10 @@
         & :global(select) {
           width: initial;
         }
+
+        & :global(select) {
+          min-width: 58px;
+        }
       }
 
       & span {
