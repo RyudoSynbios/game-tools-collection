@@ -8,6 +8,7 @@ Link to the website: [https://game-tools-collection.com](https://game-tools-coll
 | ----------------------------------------- | -------- | ---------- | --------------------------------------------- |
 | 1080° Snowboarding                        | N64      | Save       | EUR / USA / JAP                               |
 | Akumajou Dracula X: Chi no Rondo          | PCECD    | Save       | JAP                                           |
+| Banjo-Kazooie                             | N64      | Save       | EUR / USA / JAP                               |
 | Bomberman 64                              | N64      | Save       | EUR / USA / JAP                               |
 | Castlevania: Aria of Sorrow               | GBA      | Save       | EUR / USA / JAP                               |
 | Castlevania: Circle of the Moon           | GBA      | Save / Rom | EUR / USA / JAP                               |

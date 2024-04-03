@@ -16,6 +16,14 @@
     }
   },
   {
+    "id": "banjo-kazooie-n64",
+    "name": "Banjo-Kazooie",
+    "consoleId": "nintendo-64",
+    "saveEditor": {
+      "regions": ["🇪🇺", "🇺🇸", "🇯🇵"]
+    }
+  },
+  {
     "id": "bomberman-64-n64",
     "name": "Bomberman 64",
     "consoleId": "nintendo-64",
