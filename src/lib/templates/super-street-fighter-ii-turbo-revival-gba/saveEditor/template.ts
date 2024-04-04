@@ -5,8 +5,8 @@ const template: GameJson = {
     regions: {
       europe_usa_japan: {
         $or: [
-          { 0x0: [0x35, 0x30, 0x56, 0x20, 0x58, 0x32, 0x50, 0x53] }, // "50V X2PS"
-          { 0x100: [0x35, 0x30, 0x56, 0x20, 0x58, 0x32, 0x50, 0x53] }, // "50V X2PS"
+          { 0x0: [0x53, 0x50, 0x32, 0x58, 0x20, 0x56, 0x30, 0x35] }, // "SP2X V05"
+          { 0x100: [0x53, 0x50, 0x32, 0x58, 0x20, 0x56, 0x30, 0x35] }, // "SP2X V05"
         ],
       },
     },
@@ -16,7 +16,7 @@ const template: GameJson = {
   items: [
     {
       name: "Checksum",
-      offset: 0xf1,
+      offset: 0xf6,
       type: "checksum",
       dataType: "uint8",
       control: {
@@ -33,19 +33,17 @@ const template: GameJson = {
           items: [
             {
               name: "Save Count",
-              offset: 0xc,
+              offset: 0x8,
               type: "variable",
               dataType: "uint32",
-              bigEndian: true,
               disabled: true,
               test: true,
             },
             {
               name: "VS Point",
-              offset: 0x92,
+              offset: 0x94,
               type: "variable",
               dataType: "uint16",
-              bigEndian: true,
               max: 9999,
               test: true,
             },
@@ -67,21 +65,21 @@ const template: GameJson = {
                       mode: "chrono",
                       items: [
                         {
-                          offset: 0xae,
+                          offset: 0xa9,
                           type: "variable",
                           dataType: "uint8",
                           max: 99,
                           leadingZeros: 1,
                         },
                         {
-                          offset: 0xad,
+                          offset: 0xaa,
                           type: "variable",
                           dataType: "uint8",
                           max: 99,
                           leadingZeros: 1,
                         },
                         {
-                          offset: 0xac,
+                          offset: 0xab,
                           type: "variable",
                           dataType: "uint8",
                           max: 99,
@@ -100,21 +98,21 @@ const template: GameJson = {
                       mode: "chrono",
                       items: [
                         {
-                          offset: 0xaa,
+                          offset: 0xad,
                           type: "variable",
                           dataType: "uint8",
                           max: 99,
                           leadingZeros: 1,
                         },
                         {
-                          offset: 0xa9,
+                          offset: 0xae,
                           type: "variable",
                           dataType: "uint8",
                           max: 99,
                           leadingZeros: 1,
                         },
                         {
-                          offset: 0xa8,
+                          offset: 0xaf,
                           type: "variable",
                           dataType: "uint8",
                           max: 99,
@@ -133,21 +131,21 @@ const template: GameJson = {
                       mode: "chrono",
                       items: [
                         {
-                          offset: 0xb6,
+                          offset: 0xb1,
                           type: "variable",
                           dataType: "uint8",
                           max: 99,
                           leadingZeros: 1,
                         },
                         {
-                          offset: 0xb5,
+                          offset: 0xb2,
                           type: "variable",
                           dataType: "uint8",
                           max: 99,
                           leadingZeros: 1,
                         },
                         {
-                          offset: 0xb4,
+                          offset: 0xb3,
                           type: "variable",
                           dataType: "uint8",
                           max: 99,
@@ -166,21 +164,21 @@ const template: GameJson = {
                       mode: "chrono",
                       items: [
                         {
-                          offset: 0xb2,
+                          offset: 0xb5,
                           type: "variable",
                           dataType: "uint8",
                           max: 99,
                           leadingZeros: 1,
                         },
                         {
-                          offset: 0xb1,
+                          offset: 0xb6,
                           type: "variable",
                           dataType: "uint8",
                           max: 99,
                           leadingZeros: 1,
                         },
                         {
-                          offset: 0xb0,
+                          offset: 0xb7,
                           type: "variable",
                           dataType: "uint8",
                           max: 99,
@@ -199,21 +197,21 @@ const template: GameJson = {
                       mode: "chrono",
                       items: [
                         {
-                          offset: 0xbe,
+                          offset: 0xb9,
                           type: "variable",
                           dataType: "uint8",
                           max: 99,
                           leadingZeros: 1,
                         },
                         {
-                          offset: 0xbd,
+                          offset: 0xba,
                           type: "variable",
                           dataType: "uint8",
                           max: 99,
                           leadingZeros: 1,
                         },
                         {
-                          offset: 0xbc,
+                          offset: 0xbb,
                           type: "variable",
                           dataType: "uint8",
                           max: 99,
@@ -232,21 +230,21 @@ const template: GameJson = {
                       mode: "chrono",
                       items: [
                         {
-                          offset: 0xba,
+                          offset: 0xbd,
                           type: "variable",
                           dataType: "uint8",
                           max: 99,
                           leadingZeros: 1,
                         },
                         {
-                          offset: 0xb9,
+                          offset: 0xbe,
                           type: "variable",
                           dataType: "uint8",
                           max: 99,
                           leadingZeros: 1,
                         },
                         {
-                          offset: 0xb8,
+                          offset: 0xbf,
                           type: "variable",
                           dataType: "uint8",
                           max: 99,
@@ -265,21 +263,21 @@ const template: GameJson = {
                       mode: "chrono",
                       items: [
                         {
-                          offset: 0xc6,
+                          offset: 0xc1,
                           type: "variable",
                           dataType: "uint8",
                           max: 99,
                           leadingZeros: 1,
                         },
                         {
-                          offset: 0xc5,
+                          offset: 0xc2,
                           type: "variable",
                           dataType: "uint8",
                           max: 99,
                           leadingZeros: 1,
                         },
                         {
-                          offset: 0xc4,
+                          offset: 0xc3,
                           type: "variable",
                           dataType: "uint8",
                           max: 99,
@@ -298,21 +296,21 @@ const template: GameJson = {
                       mode: "chrono",
                       items: [
                         {
-                          offset: 0xc2,
+                          offset: 0xc5,
                           type: "variable",
                           dataType: "uint8",
                           max: 99,
                           leadingZeros: 1,
                         },
                         {
-                          offset: 0xc1,
+                          offset: 0xc6,
                           type: "variable",
                           dataType: "uint8",
                           max: 99,
                           leadingZeros: 1,
                         },
                         {
-                          offset: 0xc0,
+                          offset: 0xc7,
                           type: "variable",
                           dataType: "uint8",
                           max: 99,
@@ -342,21 +340,21 @@ const template: GameJson = {
                       mode: "chrono",
                       items: [
                         {
-                          offset: 0xce,
+                          offset: 0xc9,
                           type: "variable",
                           dataType: "uint8",
                           max: 99,
                           leadingZeros: 1,
                         },
                         {
-                          offset: 0xcd,
+                          offset: 0xca,
                           type: "variable",
                           dataType: "uint8",
                           max: 99,
                           leadingZeros: 1,
                         },
                         {
-                          offset: 0xcc,
+                          offset: 0xcb,
                           type: "variable",
                           dataType: "uint8",
                           max: 99,
@@ -375,21 +373,21 @@ const template: GameJson = {
                       mode: "chrono",
                       items: [
                         {
-                          offset: 0xca,
+                          offset: 0xcd,
                           type: "variable",
                           dataType: "uint8",
                           max: 99,
                           leadingZeros: 1,
                         },
                         {
-                          offset: 0xc9,
+                          offset: 0xce,
                           type: "variable",
                           dataType: "uint8",
                           max: 99,
                           leadingZeros: 1,
                         },
                         {
-                          offset: 0xc8,
+                          offset: 0xcf,
                           type: "variable",
                           dataType: "uint8",
                           max: 99,
@@ -408,21 +406,21 @@ const template: GameJson = {
                       mode: "chrono",
                       items: [
                         {
-                          offset: 0xd6,
+                          offset: 0xd1,
                           type: "variable",
                           dataType: "uint8",
                           max: 99,
                           leadingZeros: 1,
                         },
                         {
-                          offset: 0xd5,
+                          offset: 0xd2,
                           type: "variable",
                           dataType: "uint8",
                           max: 99,
                           leadingZeros: 1,
                         },
                         {
-                          offset: 0xd4,
+                          offset: 0xd3,
                           type: "variable",
                           dataType: "uint8",
                           max: 99,
@@ -441,21 +439,21 @@ const template: GameJson = {
                       mode: "chrono",
                       items: [
                         {
-                          offset: 0xd2,
+                          offset: 0xd5,
                           type: "variable",
                           dataType: "uint8",
                           max: 99,
                           leadingZeros: 1,
                         },
                         {
-                          offset: 0xd1,
+                          offset: 0xd6,
                           type: "variable",
                           dataType: "uint8",
                           max: 99,
                           leadingZeros: 1,
                         },
                         {
-                          offset: 0xd0,
+                          offset: 0xd7,
                           type: "variable",
                           dataType: "uint8",
                           max: 99,
@@ -474,21 +472,21 @@ const template: GameJson = {
                       mode: "chrono",
                       items: [
                         {
-                          offset: 0xde,
+                          offset: 0xd9,
                           type: "variable",
                           dataType: "uint8",
                           max: 99,
                           leadingZeros: 1,
                         },
                         {
-                          offset: 0xdd,
+                          offset: 0xda,
                           type: "variable",
                           dataType: "uint8",
                           max: 99,
                           leadingZeros: 1,
                         },
                         {
-                          offset: 0xdc,
+                          offset: 0xdb,
                           type: "variable",
                           dataType: "uint8",
                           max: 99,
@@ -508,7 +506,7 @@ const template: GameJson = {
           items: [
             {
               name: "Level",
-              offset: 0x88,
+              offset: 0x8f,
               type: "variable",
               dataType: "uint8",
               operations: [{ "+": 1 }],
@@ -523,7 +521,7 @@ const template: GameJson = {
               items: [
                 {
                   name: "Enable Time",
-                  offset: 0x89,
+                  offset: 0x8e,
                   type: "variable",
                   dataType: "boolean",
                 },
@@ -532,21 +530,21 @@ const template: GameJson = {
             {
               id: "matchTime",
               name: "Time",
-              offset: 0x97,
+              offset: 0x90,
               type: "variable",
               dataType: "uint8",
               resource: "times",
             },
             {
               name: "Round",
-              offset: 0x96,
+              offset: 0x91,
               type: "variable",
               dataType: "uint8",
               resource: "rounds",
             },
             {
               name: "Damage",
-              offset: 0x95,
+              offset: 0x92,
               type: "variable",
               dataType: "uint8",
               operations: [{ "+": 1 }],
@@ -555,7 +553,7 @@ const template: GameJson = {
             },
             {
               name: "Gauge",
-              offset: 0x91,
+              offset: 0x96,
               type: "variable",
               dataType: "uint8",
               resource: "gauges",
