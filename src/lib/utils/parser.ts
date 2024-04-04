@@ -24,6 +24,7 @@ import type {
   ItemComponent,
   ItemContainer,
   ItemIntCondition,
+  LogicalOperator,
 } from "$lib/types";
 
 let checksums: ItemChecksum[];
@@ -159,6 +160,15 @@ export function parseItem(
     return parseComponent(newItem, shifts, instanceId, instanceIndex);
   } else if (newItem.type === "container") {
     return parseContainer(newItem, shifts, instanceId, instanceIndex, options);
+  }
+
+  if (newItem.disableTabIf) {
+    newItem.disableTabIf = parseTabConditions(
+      newItem.disableTabIf,
+      shifts,
+      instanceId,
+      instanceIndex,
+    );
   }
 
   if (newItem.items) {
@@ -332,41 +342,14 @@ export function parseContainer(
       parsedSubitem.type = "section";
     }
 
-    if (item.disableSubinstanceIf) {
-      let disableSubinstanceIf;
-
-      if (typeof item.disableSubinstanceIf === "string") {
-        disableSubinstanceIf = item.disableSubinstanceIf;
-      } else if (
-        "$and" in item.disableSubinstanceIf ||
-        "$or" in item.disableSubinstanceIf
-      ) {
-        const operand = getObjKey(item.disableSubinstanceIf, 0) as
-          | "$and"
-          | "$or";
-
-        const parsedItems = item.disableSubinstanceIf[operand]!.map((subitem) =>
-          parseItem(
-            subitem as Item,
-            instanceShifts,
-            instanceId,
-            instanceIndex,
-            options,
-          ),
-        );
-
-        disableSubinstanceIf = { [operand]: parsedItems };
-      } else {
-        disableSubinstanceIf = parseItem(
-          item.disableSubinstanceIf as ItemIntCondition,
+    if (item.instanceType === "tabs") {
+      if (item.disableSubinstanceIf) {
+        parsedSubitem.disableTabIf = parseTabConditions(
+          item.disableSubinstanceIf,
           instanceShifts,
           instanceId,
           instanceIndex,
         );
-      }
-
-      if (item.instanceType === "tabs") {
-        parsedSubitem.disableTabIf = disableSubinstanceIf;
       }
     }
 
@@ -398,6 +381,36 @@ export function parseContainer(
   }
 
   return parsedItem;
+}
+
+function parseTabConditions(
+  condition: ItemIntCondition | LogicalOperator<ItemIntCondition> | string,
+  shifts: number[],
+  instanceId: string,
+  instanceIndex: number,
+) {
+  let parsedCondition;
+
+  if (typeof condition === "string") {
+    parsedCondition = condition;
+  } else if ("$and" in condition || "$or" in condition) {
+    const operand = getObjKey(condition, 0) as "$and" | "$or";
+
+    const parsedItems = condition[operand]!.map((subitem) =>
+      parseItem(subitem as Item, shifts, instanceId, instanceIndex),
+    );
+
+    parsedCondition = { [operand]: parsedItems };
+  } else {
+    parsedCondition = parseItem(
+      condition as ItemIntCondition,
+      shifts,
+      instanceId,
+      instanceIndex,
+    );
+  }
+
+  return parsedCondition;
 }
 
 export function checkMissingFields(item: Item): void {
