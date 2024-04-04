@@ -16,6 +16,7 @@ Link to the website: [https://game-tools-collection.com](https://game-tools-coll
 | Castlevania: Harmony of Dissonance        | GBA      | Save       | EUR / USA / JAP                               |
 | Castlevania: Symphony of the Night        | PS       | Save       | EUR / USA / JAP                               |
 | Donkey Kong Land                          | GB       | Save       | EUR / USA / JAP                               |
+| Final Fight One                           | GBA      | Save       | EUR / USA / JAP                               |
 | Game & Watch Gallery 3                    | GBC      | Save       | EUR / USA / JAP / AUS                         |
 | Golden Sun                                | GBA      | Save / Rom | EUR / USA / JAP / FRA / GER / ITA / SPA       |
 | GoldenEye 007                             | N64      | Save       | EUR / USA / JAP                               |

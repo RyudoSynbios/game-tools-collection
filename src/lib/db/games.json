@@ -83,6 +83,14 @@
     }
   },
   {
+    "id": "final-fight-one-gba",
+    "name": "Final Fight One",
+    "consoleId": "game-boy-advance",
+    "saveEditor": {
+      "regions": ["🇪🇺", "🇺🇸", "🇯🇵"]
+    }
+  },
+  {
     "id": "game-and-watch-gallery-3-gbc",
     "name": "Game & Watch Gallery 3",
     "consoleId": "game-boy-color",
