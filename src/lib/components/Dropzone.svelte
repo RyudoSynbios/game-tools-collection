@@ -74,7 +74,10 @@
       }
 
       if (utilsExists("beforeInitDataView")) {
-        dataViewTmp = $gameUtils.beforeInitDataView(dataViewTmp);
+        dataViewTmp = $gameUtils.beforeInitDataView(
+          dataViewTmp,
+          fileHeaderShiftTmp,
+        );
       }
 
       if (utilsExists("overrideGetRegions")) {
