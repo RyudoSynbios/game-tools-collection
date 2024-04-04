@@ -18,14 +18,7 @@ import {
   utilsExists,
 } from "$lib/utils/format";
 
-import type {
-  Binary,
-  Bit,
-  DataType,
-  DataTypeInt,
-  GameJson,
-  IntOperation,
-} from "$lib/types";
+import type { Binary, Bit, DataType, GameJson, IntOperation } from "$lib/types";
 
 export function resetState(): void {
   const $gameUtils = get(gameUtils) as any;
@@ -46,6 +39,7 @@ export function byteswap(
   dataViewTmp?: DataView,
   start = 0x0,
   end?: number,
+  length = 0x4,
 ): DataView {
   const $dataView =
     dataViewTmp && dataViewTmp.byteLength > 0 ? dataViewTmp : get(dataView);
@@ -62,12 +56,11 @@ export function byteswap(
     }
   }
 
-  for (let i = start; i < end; i += 0x4) {
+  for (let i = start; i < end; i += length) {
     array.push(
-      getInt(i + 0x3, "uint8", {}, $dataView),
-      getInt(i + 0x2, "uint8", {}, $dataView),
-      getInt(i + 0x1, "uint8", {}, $dataView),
-      getInt(i, "uint8", {}, $dataView),
+      ...[...Array(length).keys()].map((index) =>
+        getInt(i + length - index - 1, "uint8", {}, $dataView),
+      ),
     );
   }
 
