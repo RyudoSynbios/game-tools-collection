@@ -39,7 +39,7 @@
   let highlightedOffsets: HighlightedOffsets = {};
   let tooltip = "";
 
-  const rows = [...Array(Math.floor($dataView.byteLength / 0x10)).keys()];
+  const rows = [...Array(Math.ceil($dataView.byteLength / 0x10)).keys()];
   const rowHeight = 24;
 
   function getHighlightedOffset(
@@ -244,7 +244,9 @@
                     "search"}
                   on:mousemove={(event) => handleMouseMove(event, row + offset)}
                 >
-                  {getInt(row + offset, "uint8").toHex(2)}
+                  {row + offset < $dataView.byteLength
+                    ? getInt(row + offset, "uint8").toHex(2)
+                    : ""}
                 </div>
               {/each}
             </div>
@@ -262,7 +264,9 @@
                     "search"}
                   on:mousemove={(event) => handleMouseMove(event, row + offset)}
                 >
-                  {String.fromCharCode(getInt(row + offset, "uint8"))}
+                  {row + offset < $dataView.byteLength
+                    ? String.fromCharCode(getInt(row + offset, "uint8"))
+                    : ""}
                 </div>
               {/each}
             </div>
