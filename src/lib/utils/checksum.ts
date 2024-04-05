@@ -19,11 +19,7 @@ export function formatChecksum(
 ): number {
   const mask = dataTypeToValue(dataType);
 
-  checksum &= mask;
-
-  if (checksum < 0) {
-    checksum += mask + 0x1;
-  }
+  checksum = (checksum & mask) >>> 0;
 
   return checksum;
 }
