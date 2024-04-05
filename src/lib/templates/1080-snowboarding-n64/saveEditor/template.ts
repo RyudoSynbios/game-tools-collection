@@ -16,11 +16,10 @@ const template: GameJson = {
       hidden: true,
       items: [
         {
-          id: "checksum2-1",
-          name: "Checksum Records 1",
+          name: "Checksum Records",
           offset: 0x188,
           type: "checksum",
-          dataType: "uint32",
+          dataType: "uint64",
           bigEndian: true,
           control: {
             offsetStart: 0x8,
@@ -28,23 +27,10 @@ const template: GameJson = {
           },
         },
         {
-          id: "checksum2-2",
-          name: "Checksum Records 2",
-          offset: 0x18c,
-          type: "checksum",
-          dataType: "uint32",
-          bigEndian: true,
-          control: {
-            offsetStart: 0x8,
-            offsetEnd: 0x188,
-          },
-        },
-        {
-          id: "checksum3-1",
-          name: "Checksum Contest 1",
+          name: "Checksum Contest",
           offset: 0x1f0,
           type: "checksum",
-          dataType: "uint32",
+          dataType: "uint64",
           bigEndian: true,
           control: {
             offsetStart: 0x190,
@@ -52,23 +38,10 @@ const template: GameJson = {
           },
         },
         {
-          id: "checksum3-2",
-          name: "Checksum Contest 2",
-          offset: 0x1f4,
-          type: "checksum",
-          dataType: "uint32",
-          bigEndian: true,
-          control: {
-            offsetStart: 0x190,
-            offsetEnd: 0x1f0,
-          },
-        },
-        {
-          id: "checksum4-1",
-          name: "Checksum Progression 1",
+          name: "Checksum Progression",
           offset: 0x210,
           type: "checksum",
-          dataType: "uint32",
+          dataType: "uint64",
           bigEndian: true,
           control: {
             offsetStart: 0x1f8,
@@ -76,35 +49,11 @@ const template: GameJson = {
           },
         },
         {
-          id: "checksum4-2",
-          name: "Checksum Progression 2",
-          offset: 0x214,
-          type: "checksum",
-          dataType: "uint32",
-          bigEndian: true,
-          control: {
-            offsetStart: 0x1f8,
-            offsetEnd: 0x210,
-          },
-        },
-        {
-          id: "checksum1-1",
-          name: "Checksum Master 1",
+          id: "checksum",
+          name: "Checksum Master",
           offset: 0x0,
           type: "checksum",
-          dataType: "uint32",
-          bigEndian: true,
-          control: {
-            offsetStart: 0x0,
-            offsetEnd: 0x0,
-          },
-        },
-        {
-          id: "checksum1-2",
-          name: "Checksum Master 2",
-          offset: 0x4,
-          type: "checksum",
-          dataType: "uint32",
+          dataType: "uint64",
           bigEndian: true,
           control: {
             offsetStart: 0x0,

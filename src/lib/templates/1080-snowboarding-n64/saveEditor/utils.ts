@@ -1,7 +1,7 @@
 import { get } from "svelte/store";
 
 import { gameTemplate } from "$lib/stores";
-import { getInt, setInt } from "$lib/utils/bytes";
+import { getBigInt, getInt, setInt } from "$lib/utils/bytes";
 import { formatChecksum } from "$lib/utils/checksum";
 import { byteswapDataView, getHeaderShift } from "$lib/utils/common/nintendo64";
 import { clone } from "$lib/utils/format";
@@ -23,7 +23,7 @@ export function overrideGetRegions(
   const $gameTemplate = get(gameTemplate);
 
   const itemChecksum = clone(
-    ($gameTemplate.items[0] as ItemSection).items[6],
+    ($gameTemplate.items[0] as ItemSection).items[3],
   ) as ItemChecksum;
 
   itemChecksum.offset += shift;
@@ -34,7 +34,7 @@ export function overrideGetRegions(
 
   if (
     checksum ===
-    getInt(itemChecksum.offset, "uint32", { bigEndian: true }, dataView)
+    getBigInt(itemChecksum.offset, "uint64", { bigEndian: true }, dataView)
   ) {
     return ["europe", "usa_japan"];
   }
@@ -62,21 +62,22 @@ export function afterSetInt(item: Item): void {
 export function generateChecksum(
   item: ItemChecksum,
   dataView = new DataView(new ArrayBuffer(0)),
-): number {
-  let checksum = 0x0;
+): bigint {
+  let checksum1 = 0x0;
+  let checksum2 = 0x0;
 
-  if (item.id?.match(/checksum1-/)) {
+  if (item.id === "checksum") {
     const offsets = [0x188, 0x1f0, 0x210, 0x228];
 
     offsets.forEach((offset) => {
-      checksum += getInt(
-        item.offset + offset - (item.id === "checksum1-2" ? 0x4 : 0x0),
+      checksum1 += getInt(
+        item.offset + offset,
         "uint32",
         { bigEndian: true },
         dataView,
       );
-      checksum += getInt(
-        item.offset + offset + (item.id === "checksum1-1" ? 0x4 : 0x0),
+      checksum1 += getInt(
+        item.offset + offset + 0x4,
         "uint32",
         { bigEndian: true },
         dataView,
@@ -88,23 +89,25 @@ export function generateChecksum(
       i < item.control.offsetEnd;
       i += 0x4
     ) {
-      checksum += getInt(i, "uint32", { bigEndian: true }, dataView);
+      checksum1 += getInt(i, "uint32", { bigEndian: true }, dataView);
     }
   }
 
-  if (item.id?.match(/-1/)) {
-    checksum = 0xf251f205 - checksum;
-  } else if (item.id?.match(/-2/)) {
-    let base = 0xec5bc9a8;
+  checksum2 = checksum1;
 
-    if (item.id === "checksum1-2") {
-      base -= 0xd8769a8;
-    }
+  let base = 0xec5bc9a8;
 
-    checksum = base + checksum * 2;
+  if (item.id === "checksum") {
+    base = 0xded46000;
   }
 
-  return formatChecksum(checksum, item.dataType);
+  checksum1 = 0xf251f205 - checksum1;
+  checksum2 = base + checksum2 * 2;
+
+  const high = ((checksum1 & 0xffffffff) >>> 0).toHex(8);
+  const low = ((checksum2 & 0xffffffff) >>> 0).toHex(8);
+
+  return BigInt(`0x${high}${low}`);
 }
 
 export function beforeSaving(): ArrayBufferLike {
