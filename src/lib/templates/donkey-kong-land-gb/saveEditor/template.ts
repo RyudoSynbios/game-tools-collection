@@ -44,6 +44,15 @@ const template: GameJson = {
                   flex: true,
                   items: [
                     {
+                      id: "completionRate",
+                      name: "Completion Rate",
+                      offset: 0xa1f,
+                      type: "variable",
+                      dataType: "uint8",
+                      suffix: "%",
+                      disabled: true,
+                    },
+                    {
                       name: "Progression Level",
                       offset: 0xa06,
                       type: "variable",
