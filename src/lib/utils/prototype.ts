@@ -98,7 +98,7 @@ DataView.prototype.setInt24 = function (
 };
 
 BigInt.prototype.toHex = function (length = 0) {
-  let hex = decToHex(this.toString()) as string;
+  let hex = decToHex(this.toString(), { prefix: false }) as string;
 
   if (length) {
     if (hex.length > length) {
