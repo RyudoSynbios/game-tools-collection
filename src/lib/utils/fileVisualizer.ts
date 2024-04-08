@@ -25,7 +25,7 @@ export function addItem(
   text: string,
   type: ContentType,
   dataType?: DataType,
-) {
+): void {
   if (!highlightedOffsets[offset]) {
     highlightedOffsets[offset] = {
       offset,

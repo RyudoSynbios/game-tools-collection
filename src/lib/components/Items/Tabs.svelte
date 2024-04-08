@@ -58,13 +58,13 @@
     }
   }
 
-  function handleFocusOff(event: Event) {
+  function handleFocusOff(event: Event): void {
     if (!ulEl.contains(event.target as Element)) {
       isFocused = false;
     }
   }
 
-  function handleFocusOn() {
+  function handleFocusOn(): void {
     isFocused = true;
   }
 

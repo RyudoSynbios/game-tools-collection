@@ -20,23 +20,23 @@
 
   let isDropdownOpen = false;
 
-  function handleDropdownClose() {
+  function handleDropdownClose(): void {
     isDropdownOpen = false;
   }
 
-  function handleDropdownToggle() {
+  function handleDropdownToggle(): void {
     if (spriteIndex !== undefined) {
       isDropdownOpen = !isDropdownOpen;
     }
   }
 
-  function handleSpriteChange(index: number) {
+  function handleSpriteChange(index: number): void {
     onSpriteChange(index);
 
     handleDropdownClose();
   }
 
-  function updateCanvas() {
+  function updateCanvas(): void {
     canvas.reset();
 
     if (spriteIndex === undefined || !sprites[spriteIndex]) {

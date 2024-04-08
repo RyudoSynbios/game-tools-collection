@@ -20,13 +20,33 @@
   let shiftPressed = false;
   let ctrlPressed = false;
 
-  function handlePaletteOffsetChange(event: Event) {
+  function handleKeyDown(event: any): void {
+    if (event.key === "Shift") {
+      shiftPressed = true;
+    }
+
+    if (event.key === "Meta") {
+      ctrlPressed = true;
+    }
+  }
+
+  function handleKeyUp(event: any): void {
+    if (event.key === "Shift") {
+      shiftPressed = false;
+    }
+
+    if (event.key === "Meta") {
+      ctrlPressed = false;
+    }
+  }
+
+  function handlePaletteOffsetChange(event: Event): void {
     paletteOffset = parseInt((event.target as HTMLInputElement).value);
 
     updateCanvas();
   }
 
-  function handleSpriteOffsetChange(event: Event) {
+  function handleSpriteOffsetChange(event: Event): void {
     let value = parseInt((event.target as HTMLInputElement).value);
 
     if (shiftPressed && ctrlPressed) {
@@ -42,7 +62,7 @@
     updateCanvas();
   }
 
-  function handleViewWidthChange(event: any) {
+  function handleViewWidthChange(event: any): void {
     viewWidth = parseInt((event.target as HTMLInputElement).value);
 
     canvas.resize(viewWidth, viewHeight);
@@ -50,7 +70,7 @@
     updateCanvas();
   }
 
-  function handleViewHeightChange(event: any) {
+  function handleViewHeightChange(event: any): void {
     viewHeight = parseInt((event.target as HTMLInputElement).value);
 
     canvas.resize(viewWidth, viewHeight);
@@ -58,7 +78,7 @@
     updateCanvas();
   }
 
-  function updateCanvas() {
+  function updateCanvas(): void {
     const palette = getPalette24Bit(paletteOffset, 0x8);
 
     generateMonsterCanvas(canvas, spriteOffset, palette, viewWidth, viewHeight);
@@ -75,26 +95,6 @@
   onDestroy(() => {
     canvas.destroy();
   });
-
-  function handleKeyDown(event: any) {
-    if (event.key === "Shift") {
-      shiftPressed = true;
-    }
-
-    if (event.key === "Meta") {
-      ctrlPressed = true;
-    }
-  }
-
-  function handleKeyUp(event: any) {
-    if (event.key === "Shift") {
-      shiftPressed = false;
-    }
-
-    if (event.key === "Meta") {
-      ctrlPressed = false;
-    }
-  }
 </script>
 
 <svelte:window on:keydown={handleKeyDown} on:keyup={handleKeyUp} />

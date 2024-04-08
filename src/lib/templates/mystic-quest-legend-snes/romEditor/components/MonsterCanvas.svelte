@@ -20,7 +20,7 @@
 
   let canvas: Canvas;
 
-  function updateCanvas() {
+  function updateCanvas(): void {
     const [width, height] = getMonsterSpriteSize(monsterIndex);
 
     const graphicsOffset = pointerToOffset(pointerToMonsterGraphics);

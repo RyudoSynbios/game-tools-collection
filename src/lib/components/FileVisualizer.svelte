@@ -138,7 +138,7 @@
     tooltip = "";
   }
 
-  function handleScroll() {
+  function handleScroll(): void {
     const { scrollTop } = contentEl;
 
     let i = 0;

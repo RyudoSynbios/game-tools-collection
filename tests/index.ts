@@ -45,7 +45,7 @@ export async function ejectFile(): Promise<void> {
   }
 }
 
-export async function saveShouldBeRejected(saveFile: string) {
+export async function saveShouldBeRejected(saveFile: string): Promise<void> {
   const isFileExists = fs.existsSync(`${path}/${saveFile}`);
 
   if (!isFileExists) {

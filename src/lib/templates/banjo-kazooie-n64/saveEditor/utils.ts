@@ -234,7 +234,7 @@ export function afterSetInt(item: Item): void {
   }
 }
 
-function getHash(int: number, polynormal: Long, shift: number) {
+function getHash(int: number, polynormal: Long, shift: number): Long {
   const hash1 = polynormal
     .add(long(int).shiftLeft(long(shift).and(long(0xf))))
     .and(long(0x1ffffffff));
@@ -248,7 +248,7 @@ function getHash(int: number, polynormal: Long, shift: number) {
   return hash2.shiftRightUnsigned(0x14).and(long(0xfff)).xor(hash2);
 }
 
-function long(value: number) {
+function long(value: number): Long {
   return Long.fromNumber(value);
 }
 

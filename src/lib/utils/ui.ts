@@ -2,7 +2,7 @@ export function scrollIntoViewIfNecessary(
   parentEl: HTMLElement,
   childEl: HTMLElement,
   bottomAlignement: "center" | "end" = "end",
-) {
+): void {
   if (parentEl && childEl) {
     const parentElBoundaries = parentEl.getBoundingClientRect();
 

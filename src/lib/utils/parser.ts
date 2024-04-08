@@ -67,7 +67,7 @@ export function enrichGameJson(): void {
   updateResources();
 }
 
-export function getShift(shifts: number[]) {
+export function getShift(shifts: number[]): number {
   return shifts.reduce((total, shift) => total + shift, 0);
 }
 
@@ -76,7 +76,7 @@ function getOverridedShift(
   parent: number,
   shift: number,
   shiftIndex: number,
-) {
+): number {
   const parentIndex = shifts.length - parent;
 
   return shifts.reduce((total, value, index) => {
@@ -388,7 +388,7 @@ function parseTabConditions(
   shifts: number[],
   instanceId: string,
   instanceIndex: number,
-) {
+): string | Item | { [x: string]: Item[] } {
   let parsedCondition;
 
   if (typeof condition === "string") {

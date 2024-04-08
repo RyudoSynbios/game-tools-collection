@@ -426,7 +426,7 @@ function readFile(
 }
 
 // Adapted from https://github.com/ps2dev/mymc/blob/db5d9e1c141cbbc4ba4e374f73a0518a8d75b7ef/ps2mc_ecc.py
-function generateEcc(table: Uint8Array) {
+function generateEcc(table: Uint8Array): number[] {
   let column_parity = 0x77;
   let line_parity_0 = 0x7f;
   let line_parity_1 = 0x7f;
@@ -520,7 +520,7 @@ export function isMemoryCard(dataView: DataView): boolean {
   return false;
 }
 
-export function isUnpackedMemoryCard() {
+export function isUnpackedMemoryCard(): boolean {
   return Boolean(memoryCard.superblock);
 }
 
@@ -590,7 +590,7 @@ export function unpackMemoryCard(dataView: DataView): DataView {
   return dataView;
 }
 
-function getFileSizeOnMemoryCard(size: number) {
+function getFileSizeOnMemoryCard(size: number): number {
   const pages = Math.ceil(size / memoryCard.superblock.pageLength);
 
   return pages * memoryCard.superblock.pageLength;

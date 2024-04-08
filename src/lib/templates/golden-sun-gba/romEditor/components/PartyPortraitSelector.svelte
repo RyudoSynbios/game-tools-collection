@@ -14,7 +14,7 @@
 
   let portraitIndex: number;
 
-  function handleSpriteChange(index: number) {
+  function handleSpriteChange(index: number): void {
     portraits[characterIndex].portrait = index;
 
     setInt(portraits[characterIndex].offset + 0x2, "uint16", index);

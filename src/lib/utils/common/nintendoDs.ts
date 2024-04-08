@@ -1,6 +1,6 @@
 import { getInt } from "$lib/utils/bytes";
 
-export function isActionReplayMaxDsHeader(dataView: DataView) {
+export function isActionReplayMaxDsHeader(dataView: DataView): boolean {
   const validator = [
     0x41, 0x52, 0x44, 0x53, 0x30, 0x30, 0x30, 0x30, 0x30, 0x30, 0x30, 0x30,
     0x30, 0x30, 0x30, 0x31,

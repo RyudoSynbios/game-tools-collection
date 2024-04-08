@@ -26,7 +26,11 @@ export function getPalette24Bit(
   return palette;
 }
 
-export function flipTileData(data: number[], size: number, axis: "x" | "y") {
+export function flipTileData(
+  data: number[],
+  size: number,
+  axis: "x" | "y",
+): number[] {
   const flippedData = [];
 
   if (axis === "x") {

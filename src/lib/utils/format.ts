@@ -24,7 +24,7 @@ export function clone<T>(obj: T): T {
   return JSON.parse(JSON.stringify(obj));
 }
 
-export function generateIdFromArray(array: any[], key: string) {
+export function generateIdFromArray(array: any[], key: string): string {
   let id = "";
 
   array.forEach((item) => {

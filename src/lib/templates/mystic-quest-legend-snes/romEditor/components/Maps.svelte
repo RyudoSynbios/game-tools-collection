@@ -41,8 +41,8 @@
   let canvasEl: HTMLDivElement;
   let canvasDebugEl: HTMLDivElement;
 
-  let canvasDebug: Canvas;
   let canvas: Canvas;
+  let canvasDebug: Canvas;
 
   const roomsTableOffset = pointerToOffset(pointerToRoomsTable);
   const roomsOffset = pointerToOffset(pointerToRooms);
@@ -93,7 +93,7 @@
     updateCanvas();
   }
 
-  function updateCanvas() {
+  function updateCanvas(): void {
     const roomOffset = getInt(roomsTableOffset + roomIndex * 2, "uint16");
 
     const mapIndex = getInt(roomsOffset + roomOffset + 0x1, "uint8");
@@ -722,7 +722,7 @@
     canvas.render();
 
     if ($isDebug) {
-      canvasDebug.resize(0x2d8, 0x80);
+      canvasDebug.resize(728, 128);
 
       [...tilemapPalettes, ...spritesPalettes].forEach(
         (palette, paletteIndex) => {

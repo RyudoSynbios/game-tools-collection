@@ -15,7 +15,7 @@
 
   let iconIndex: number;
 
-  function handleSpriteChange(index: number) {
+  function handleSpriteChange(index: number): void {
     iconIndex = index;
 
     setInt(offset + itemIndex * 0x2c + 0x6, "uint8", index);

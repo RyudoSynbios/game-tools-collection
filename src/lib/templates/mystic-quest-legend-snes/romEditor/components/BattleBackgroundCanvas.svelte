@@ -20,7 +20,7 @@
 
   let canvas: Canvas;
 
-  function updateCanvas() {
+  function updateCanvas(): void {
     const tilesetsOffset = pointerToOffset(pointerToBattleBackgroundSets);
     const chunksOffset = pointerToOffset(pointerToBattleBackgroundChunks);
 

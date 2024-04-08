@@ -87,17 +87,17 @@
     }
   }
 
-  function handleFocusOff(event?: Event) {
+  function handleFocusOff(event?: Event): void {
     if (!event || !rootEl.contains(event.target as Element)) {
       isFocused = false;
     }
   }
 
-  function handleFocusOn() {
+  function handleFocusOn(): void {
     isFocused = true;
   }
 
-  function handleHover(event: Event) {
+  function handleHover(event: Event): void {
     removeAllHover();
 
     (event.target as HTMLLIElement).classList.add("gtc-autocomplete-hover");
@@ -179,7 +179,7 @@
     }
   }
 
-  function removeAllHover() {
+  function removeAllHover(): void {
     dropdownEl
       ?.querySelectorAll(".gtc-autocomplete-hover")
       .forEach((el) => el.classList?.remove("gtc-autocomplete-hover"));
