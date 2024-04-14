@@ -32,6 +32,14 @@
     }
   },
   {
+    "id": "castle-of-illusion-md",
+    "name": "Castle of Illusion",
+    "consoleId": "mega-drive",
+    "romEditor": {
+      "regions": ["🇪🇺", "🇺🇸"]
+    }
+  },
+  {
     "id": "castlevania-aria-of-sorrow-gba",
     "name": "Castlevania: Aria of Sorrow",
     "consoleId": "game-boy-advance",

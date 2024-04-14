@@ -10,6 +10,7 @@ Link to the website: [https://game-tools-collection.com](https://game-tools-coll
 | Akumajou Dracula X: Chi no Rondo          | PCECD    | Save       | JAP                                           |
 | Banjo-Kazooie                             | N64      | Save       | EUR / USA / JAP                               |
 | Bomberman 64                              | N64      | Save       | EUR / USA / JAP                               |
+| Castle of Illusion                        | MD       | Rom        | EUR / USA                                     |
 | Castlevania: Aria of Sorrow               | GBA      | Save       | EUR / USA / JAP                               |
 | Castlevania: Circle of the Moon           | GBA      | Save / Rom | EUR / USA / JAP                               |
 | Castlevania: Dawn of Sorrow               | DS       | Save       | EUR / USA / JAP                               |
