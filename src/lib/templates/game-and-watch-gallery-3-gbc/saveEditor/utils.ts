@@ -4,7 +4,21 @@ import { formatChecksum } from "$lib/utils/checksum";
 import type { Item, ItemChecksum, ItemInt } from "$lib/types";
 
 export function overrideGetInt(item: Item): [boolean, number | undefined] {
-  if ("id" in item && item.id?.match(/score-/)) {
+  if ("id" in item && item.id === "mode") {
+    const itemInt = item as ItemInt;
+
+    const game = getInt(itemInt.offset - 0xc, "uint8");
+
+    let int = getInt(itemInt.offset + game, "uint8");
+
+    if (game === 0xa) {
+      int += 0x3;
+    } else if (game === 0xc) {
+      int += 0x5;
+    }
+
+    return [true, int];
+  } else if ("id" in item && item.id?.match(/score-/)) {
     const itemInt = item as ItemInt;
 
     const digit1 = getInt(itemInt.offset, "uint8");

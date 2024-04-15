@@ -34,7 +34,7 @@ const template: GameJson = {
                 { offset: 0x3d4, bit: 0, label: "Judge" },
                 { offset: 0x3d4, bit: 4, label: "Lion" },
                 { offset: 0x3d4, bit: 1, label: "Spitball Sparky" },
-                { offset: 0x3d4, bit: 3, label: "Donkey Kong 2" },
+                { offset: 0x3d4, bit: 3, label: "Donkey Kong II" },
               ],
             },
             {
@@ -47,6 +47,52 @@ const template: GameJson = {
                 { offset: 0x335, bit: 0, label: "Mario Bros." },
                 { offset: 0x331, bit: 0, label: "Donkey Kong Jr." },
               ],
+            },
+          ],
+        },
+        {
+          name: "Pending Game",
+          flex: true,
+
+          disableTabIf: {
+            offset: 0x310,
+            type: "variable",
+            dataType: "uint8",
+            value: 0x0,
+          },
+          items: [
+            {
+              name: "Game",
+              offset: 0x311,
+              type: "variable",
+              dataType: "uint8",
+              resource: "games",
+              disabled: true,
+            },
+            {
+              id: "mode",
+              name: "Mode",
+              offset: 0x31d,
+              type: "variable",
+              dataType: "uint8",
+              resource: "modes",
+              disabled: true,
+            },
+            {
+              id: "score-4",
+              name: "Score",
+              offset: 0x211,
+              type: "variable",
+              dataType: "uint32",
+              max: 9999,
+              leadingZeros: 3,
+            },
+            {
+              name: "Misses",
+              offset: 0x215,
+              type: "variable",
+              dataType: "uint8",
+              max: 2,
             },
           ],
         },
@@ -467,7 +513,7 @@ const template: GameJson = {
                   ],
                 },
                 {
-                  name: "Donkey Kong 2",
+                  name: "Donkey Kong II",
                   flex: true,
                   items: [
                     {
@@ -502,7 +548,34 @@ const template: GameJson = {
       ],
     },
   ],
-  resources: {},
+  resources: {
+    modes: {
+      0x0: "Easy",
+      0x1: "Hard",
+      0x2: "Very Hard",
+      0x3: "1P",
+      0x4: "2P",
+      0x5: "Game A",
+      0x6: "Game B",
+    },
+    games: {
+      0x0: "Classic Egg",
+      0x1: "Modern Egg",
+      0x2: "Classic Turtle Bridge",
+      0x3: "Modern Turtle Bridge",
+      0x4: "Classic Donkey Kong Jr.",
+      0x5: "Modern Donkey Kong Jr.",
+      0x6: "Classic Greenhouse",
+      0x7: "Modern Greenhouse",
+      0x8: "Classic Mario Bros.",
+      0x9: "Modern Mario Bros.",
+      0xa: "Judge",
+      0xb: "Spitball Sparky",
+      0xc: "Flagman",
+      0xd: "Donkey Kong II",
+      0xe: "Lion",
+    },
+  },
 };
 
 export default template;
