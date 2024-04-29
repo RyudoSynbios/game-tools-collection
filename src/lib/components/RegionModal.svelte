@@ -27,6 +27,7 @@
     "Spain",
     "Australia",
     "Canada",
+    "Korea",
   ];
 
   regionsFormatted.sort(
