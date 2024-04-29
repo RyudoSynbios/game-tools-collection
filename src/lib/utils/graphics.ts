@@ -37,6 +37,10 @@ export function flipTileData(
     for (let i = 0; i < data.length; i += size) {
       flippedData.push(...data.slice(i, i + size).reverse());
     }
+  } else if (axis === "y") {
+    for (let i = data.length; i > 0; i -= size) {
+      flippedData.push(...data.slice(i - size, i));
+    }
   }
 
   return flippedData;
