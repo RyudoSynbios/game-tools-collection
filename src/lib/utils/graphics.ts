@@ -26,6 +26,31 @@ export function getPalette24Bit(
   return palette;
 }
 
+export function convertPaletteMegaDrive(
+  rawPalette: number[],
+  transparent = false,
+): Palette {
+  const palette: number[][] = [];
+
+  rawPalette.forEach((color, index) => {
+    let red = color & 0xf;
+    let green = (color & 0xf0) >> 0x4;
+    let blue = (color & 0xf00) >> 0x8;
+
+    red = (red << 4) | red;
+    green = (green << 4) | green;
+    blue = (blue << 4) | blue;
+
+    if (transparent && index === 0) {
+      palette.push([]);
+    } else {
+      palette.push([red, green, blue]);
+    }
+  });
+
+  return palette;
+}
+
 export function flipTileData(
   data: number[],
   size: number,
