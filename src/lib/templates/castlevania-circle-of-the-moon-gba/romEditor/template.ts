@@ -141,13 +141,13 @@ const template: GameJson = {
         },
         {
           name: "Items",
-          items: [],
           planned: true,
+          items: [],
         },
         {
-          name: "Maps",
-          items: [],
+          name: "Map Viewer",
           planned: true,
+          items: [],
         },
       ],
     },

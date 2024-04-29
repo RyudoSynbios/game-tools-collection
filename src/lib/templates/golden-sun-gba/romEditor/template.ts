@@ -2496,7 +2496,7 @@ const template: GameJson = {
           ],
         },
         {
-          name: "Maps",
+          name: "Map Viewer",
           planned: true,
           items: [
             {

@@ -693,10 +693,10 @@ const template: GameJson = {
           ],
         },
         {
-          name: "Maps",
+          name: "Map Viewer",
           items: [
             {
-              instanceId: "maps",
+              instanceId: "mapViewer",
               length: 0x2,
               type: "container",
               instanceType: "tabs",
@@ -707,8 +707,8 @@ const template: GameJson = {
               items: [
                 {
                   type: "component",
-                  component: "Maps",
-                  props: { roomIndex: "maps" },
+                  component: "MapViewer",
+                  props: { roomIndex: "mapViewer" },
                 },
               ],
             },

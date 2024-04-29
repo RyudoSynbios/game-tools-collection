@@ -12,7 +12,7 @@ import type { Item, ItemInt, Palette } from "$lib/types";
 
 import BattleBackgroundCanvas from "./components/BattleBackgroundCanvas.svelte";
 import Debug from "./components/Debug.svelte";
-import Maps from "./components/Maps.svelte";
+import MapViewer from "./components/MapViewer.svelte";
 import MonsterCanvas from "./components/MonsterCanvas.svelte";
 import Monsters from "./components/Monsters.svelte";
 import {
@@ -46,8 +46,8 @@ export function getComponent(component: string): any {
     return BattleBackgroundCanvas;
   } else if (component === "Debug") {
     return Debug;
-  } else if (component === "Maps") {
-    return Maps;
+  } else if (component === "MapViewer") {
+    return MapViewer;
   } else if (component === "MonsterCanvas") {
     return MonsterCanvas;
   } else if (component === "Monsters") {

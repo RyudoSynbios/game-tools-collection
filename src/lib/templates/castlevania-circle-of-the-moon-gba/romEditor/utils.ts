@@ -3,7 +3,7 @@ import { get } from "svelte/store";
 import { gameJson, gameRegion } from "$lib/stores";
 import { getInt } from "$lib/utils/bytes";
 
-import type { Item, ItemString } from "$lib/types";
+import type { Item } from "$lib/types";
 
 import {
   pointerToItemTexts,
