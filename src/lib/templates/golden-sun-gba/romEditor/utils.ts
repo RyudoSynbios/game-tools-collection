@@ -545,15 +545,15 @@ const compressed16Scheme = [
   "1111111111", // End
 ];
 
-export function getCompressedData(offset: number): number[] {
-  const compressedData = [];
+export function getDecompressedData(offset: number): number[] {
+  const decompressedData = [];
 
   let buffer = "";
 
   while (true) {
     const bitstream = getInt(offset, "uint8").toBinary().reverse();
 
-    compressedData.push(getInt(offset, "uint8"));
+    decompressedData.push(getInt(offset, "uint8"));
 
     for (let i = 0; i < bitstream.length; i += 1) {
       buffer += bitstream[i];
@@ -562,7 +562,7 @@ export function getCompressedData(offset: number): number[] {
         const index = compressed16Scheme.findIndex((item) => item === buffer);
 
         if (index === 0x10) {
-          return compressedData;
+          return decompressedData;
         }
 
         buffer = "";
@@ -573,14 +573,14 @@ export function getCompressedData(offset: number): number[] {
   }
 }
 
-export function getSpriteData(compressedData: number[]): number[] {
+export function getSpriteData(decompressedData: number[]): number[] {
   const tileData = [];
 
-  if (compressedData.length > 0) {
+  if (decompressedData.length > 0) {
     let bitstream = "";
 
-    for (let i = 0x0; i < compressedData.length; i += 0x1) {
-      bitstream += compressedData[i].toBinary().reverse();
+    for (let i = 0x0; i < decompressedData.length; i += 0x1) {
+      bitstream += decompressedData[i].toBinary().reverse();
     }
 
     let reference = "0123456789ABCDEF";
@@ -613,8 +613,8 @@ export function getSpriteData(compressedData: number[]): number[] {
 }
 
 export function getSprite(offset: number, palette: Palette): Uint8Array {
-  const compressedData = getCompressedData(offset);
-  const spriteData = getSpriteData(compressedData);
+  const decompressedData = getDecompressedData(offset);
+  const spriteData = getSpriteData(decompressedData);
   const sprite = applyPalette(spriteData, palette);
 
   return sprite;

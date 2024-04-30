@@ -22,35 +22,35 @@ export function generateChecksum(item: ItemChecksum): number {
   return formatChecksum(checksum, item.dataType);
 }
 
-export function getCompressedData(
+export function getDecompressedData(
   offset: number,
   size: number,
-  callback?: (compressedData: number[], a5: number) => [number[], number],
+  callback?: (decompressedData: number[], a5: number) => [number[], number],
 ): number[] {
-  let compressedData: number[] = [...Array(0x10000).keys()].map(() => 0x0);
+  let decompressedData: number[] = [...Array(0x10000).keys()].map(() => 0x0);
 
   let baseOffset = 0xe800;
 
   for (let i = 0x0; i < 0x100; i += 0x1) {
     for (let j = 0x0; j < 0xd; j += 0x1) {
-      compressedData[baseOffset + i * 0xd + j] = i;
+      decompressedData[baseOffset + i * 0xd + j] = i;
     }
   }
 
   for (let i = 0x0; i < 0x100; i += 0x1) {
-    compressedData[baseOffset + 0xd00 + i] = i;
+    decompressedData[baseOffset + 0xd00 + i] = i;
   }
 
   for (let i = 0x0; i < 0x100; i += 0x1) {
-    compressedData[baseOffset + 0xe00 + i] = 0xff - i;
+    decompressedData[baseOffset + 0xe00 + i] = 0xff - i;
   }
 
   for (let i = 0x0; i < 0x80; i += 0x1) {
-    compressedData[baseOffset + 0xf00 + i] = 0x0;
+    decompressedData[baseOffset + 0xf00 + i] = 0x0;
   }
 
   for (let i = 0x0; i < 0x6e; i += 0x1) {
-    compressedData[baseOffset + 0xf80 + i] = 0x20;
+    decompressedData[baseOffset + 0xf80 + i] = 0x20;
   }
 
   let a5 = 0x0;
@@ -68,8 +68,8 @@ export function getCompressedData(
       if (extractBit(int, i as Bit)) {
         d0 = (d0 & 0xff00) | (getInt(offset, "uint8") & 0xff);
 
-        compressedData[a5 & 0xffff] = d0 & 0xff;
-        compressedData[baseOffset + d6] = d0 & 0xff;
+        decompressedData[a5 & 0xffff] = d0 & 0xff;
+        decompressedData[baseOffset + d6] = d0 & 0xff;
 
         d6 = (d6 + 0x1) & 0xfff;
         a5 += 0x1;
@@ -85,10 +85,10 @@ export function getCompressedData(
         d0 = (((d0 << 4) & 0xff00) | (getInt(offset, "uint8") & 0xff)) & 0xfff;
 
         for (let i = 0x0; i <= iterations; i += 0x1) {
-          const value = compressedData[baseOffset + d0];
+          const value = decompressedData[baseOffset + d0];
 
-          compressedData[a5 & 0xffff] = value;
-          compressedData[baseOffset + d6] = value;
+          decompressedData[a5 & 0xffff] = value;
+          decompressedData[baseOffset + d6] = value;
 
           d0 = (d0 + 0x1) & 0xfff;
           d6 = (d6 + 0x1) & 0xfff;
@@ -102,11 +102,11 @@ export function getCompressedData(
     }
 
     if (callback !== undefined) {
-      [compressedData, a5] = callback(compressedData, a5);
+      [decompressedData, a5] = callback(decompressedData, a5);
     }
   }
 
-  return compressedData;
+  return decompressedData;
 }
 
 export function getTiles(offset: number, size: number): Uint8Array {
@@ -115,7 +115,7 @@ export function getTiles(offset: number, size: number): Uint8Array {
   let vdpaCount = 0x0;
 
   const callback = (
-    compressedData: number[],
+    decompressedData: number[],
     a5: number,
   ): [number[], number] => {
     let d1 = a5;
@@ -128,7 +128,7 @@ export function getTiles(offset: number, size: number): Uint8Array {
 
     while (d1 >= 0x0) {
       for (let i = 0x0; i < 0x2; i += 0x1) {
-        vdp.set([compressedData[a6 + i]], vdpaCount);
+        vdp.set([decompressedData[a6 + i]], vdpaCount);
 
         vdpaCount += 0x1;
       }
@@ -146,16 +146,16 @@ export function getTiles(offset: number, size: number): Uint8Array {
     a5 = 0x0;
 
     if (!clearFlag) {
-      compressedData[a5] = compressedData[a6];
+      decompressedData[a5] = decompressedData[a6];
 
       a5 += 0x1;
       a6 += 0x1;
     }
 
-    return [compressedData, a5];
+    return [decompressedData, a5];
   };
 
-  getCompressedData(offset, size, callback);
+  getDecompressedData(offset, size, callback);
 
   return vdp;
 }

@@ -15,7 +15,7 @@
   import type { Palette } from "$lib/types";
 
   import { pointerToRoomsTable } from "../template";
-  import { getCompressedData, getTiles, pointerToOffset } from "../utils";
+  import { getDecompressedData, getTiles, pointerToOffset } from "../utils";
 
   export let roomIndex: number;
 
@@ -161,7 +161,7 @@
       "uint32",
     );
 
-    const map = getCompressedData(
+    const map = getDecompressedData(
       mapCompressedDatasOffset + 0x8,
       mapUncompressedSize,
     );
@@ -203,7 +203,7 @@
         "uint32",
       );
 
-      sprites = getCompressedData(
+      sprites = getDecompressedData(
         spriteOverrideCompressedDatasOffset + 0x8,
         spritesUncompressedSize,
       );
