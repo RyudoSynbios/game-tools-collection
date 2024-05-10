@@ -61,6 +61,8 @@ export class Canvas {
       resolution: this.scale,
     });
 
+    this.app.stage.sortableChildren = true;
+
     this.app.ticker.add((delta) => {
       if (this.animation) {
         Object.values(this.layers).forEach((layer) => {
@@ -87,6 +89,7 @@ export class Canvas {
       height?: number;
       animation?: Animation;
       hidden?: boolean;
+      order?: number;
     },
   ): void {
     if (!["image", "sprites", "tilingSprite"].includes(type)) {
@@ -98,10 +101,12 @@ export class Canvas {
     const height = options?.height || 0;
     const animation = options?.animation || null;
     const hidden = options?.hidden || false;
+    const order = options?.order || 0;
 
     const container = new Container();
 
     container.visible = !hidden;
+    container.zIndex = order;
 
     if (type === "image") {
       container.addChild(new Sprite());
@@ -189,6 +194,14 @@ export class Canvas {
     if (this.layers[key]) {
       this.layers[key].container.alpha = opacity;
     }
+  }
+
+  public changeLayerOrder(layers: string[]) {
+    layers.forEach((key, index) => {
+      if (this.layers[key]) {
+        this.layers[key].container.zIndex = index;
+      }
+    });
   }
 
   // TODO: Handle cache (add optional id on addGraphic)
