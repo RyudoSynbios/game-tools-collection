@@ -35,7 +35,7 @@ export class Canvas {
   private layers: { [key: string]: Layer };
 
   constructor(
-    canvasEl: any,
+    canvasEl: HTMLDivElement,
     options?: {
       width?: number;
       height?: number;
