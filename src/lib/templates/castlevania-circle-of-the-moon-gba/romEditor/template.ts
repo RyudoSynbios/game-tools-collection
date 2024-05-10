@@ -1,8 +1,29 @@
 import type { GameJson } from "$lib/types";
 
-export const pointerToItemTexts = [0x62468, 0x620ac];
-export const pointerToMonsterTexts = [0x62480, 0x620c4];
-export const pointerToTexts = [0x5ff14, 0x5fb34];
+export const pointerToTexts = [0x5ff14, 0x5ff14, 0x5fb34];
+export const pointerToItemTexts = [0x62468, 0x62468, 0x620ac];
+export const pointerToMonsterTexts = [0x62480, 0x62480, 0x620c4];
+export const pointerToMapTexts = [0x6270c, 0x6270c, 0x623ac];
+export const pointerToMapBlocks = [0x8b8f8, 0x8b8f8, 0x8b5c4];
+export const animatedTilesTable = [0x8bd64, 0x8bd64, 0x8ba2c];
+export const monstersGraphicsTable = [0xcdaa8, 0xcdaa8, 0xcd69c];
+export const pointerToMapSpritesTable = [0xd9a40, 0xd9a40, 0xd95c4];
+export const specialGraphicsTable = [0x100268, 0x100268, 0x101e6c];
+export const commonSpritesGraphics = [0x4548a4, 0x4548a4, 0x458868];
+export const spritesetPalette2 = [0x453ec0, 0x453ec0, 0x457e84];
+export const commonSpritesPalettes = [0x453f20, 0x453f20, 0x457ee4];
+export const spritesetPalette1 = [0x456464, 0x456464, 0x45a428];
+export const spritesetPalette3 = [0x49a624, 0x49a624, 0x49e5e8];
+export const spritesetPalette6 = [0x4a56bc, 0x4a56bc, 0x4a9680];
+export const spritesetPalette4 = [0x4eda40, 0x4eda40, 0x4f1a04];
+export const undergroundWaterwayPalette = [0x5d3cc4, 0x5d3cc4, 0x5d7c88];
+export const spritesetPalette5 = [0x62f64c, 0x62f64c, 0x6336ac];
+export const shinyArmorSpriteGraphics = [0x65e2a8, 0x65e2f4, 0x6639ec];
+export const eventsTable = [0x66c16c, 0x66c1b8, 0x6718b0];
+export const pointerToDssCardsGraphics = [0x66cfa0, 0x66cfec, 0x6726e0];
+export const pointerToMapsPointers = [0x66f7f4, 0x66f840, 0x674f30];
+export const pointerToMapCollisions = [0x66f830, 0x66f87c, 0x674f6c];
+export const animatedTilesDracula2 = [0x670710, 0x67075c, 0x675e4c];
 
 const template: GameJson = {
   validator: {
@@ -146,8 +167,35 @@ const template: GameJson = {
         },
         {
           name: "Map Viewer",
-          planned: true,
-          items: [],
+          items: [
+            {
+              instanceId: "mapViewer",
+              length: 0x2,
+              type: "container",
+              instanceType: "tabs",
+              instances: 258,
+              resource: "mapNames",
+              vertical: true,
+              flex: true,
+              items: [
+                {
+                  type: "component",
+                  component: "MapViewer",
+                  props: { roomIndex: "mapViewer" },
+                },
+              ],
+            },
+          ],
+        },
+        {
+          name: "Debug",
+          hidden: true,
+          items: [
+            {
+              type: "component",
+              component: "Debug",
+            },
+          ],
         },
       ],
     },
@@ -155,6 +203,7 @@ const template: GameJson = {
   resources: {
     itemNames: "getItemNames()",
     letters: [
+      // Europe
       {
         0x0: "{00}",
         0x6: "{06}",
@@ -241,6 +290,94 @@ const template: GameJson = {
         0x73: "&",
         0xc0: "{C0}",
       },
+      // USA
+      {
+        0x0: "{00}",
+        0x6: "{06}",
+        0x7: "{07}",
+        0x9: "{09}",
+        0x1e: "{1E}",
+        0x26: " ",
+        0x27: " ",
+        0x28: "e",
+        0x29: "a",
+        0x2a: "t",
+        0x2b: "o",
+        0x2c: "r",
+        0x2d: "i",
+        0x2e: "n",
+        0x2f: "s",
+        0x30: "l",
+        0x31: "h",
+        0x32: "d",
+        0x33: "c",
+        0x34: "u",
+        0x35: ".",
+        0x36: "m",
+        0x37: "w",
+        0x38: "p",
+        0x39: "g",
+        0x3a: "f",
+        0x3b: "y",
+        0x3c: "b",
+        0x3d: "k",
+        0x3e: "A",
+        0x3f: "v",
+        0x40: "H",
+        0x41: "S",
+        0x42: "M",
+        0x43: "I",
+        0x44: "C",
+        0x45: "D",
+        0x46: "R",
+        0x47: "T",
+        0x48: "?",
+        0x49: "W",
+        0x4a: "!",
+        0x4b: "P",
+        0x4c: ",",
+        0x4d: "B",
+        0x4e: "E",
+        0x4f: "G",
+        0x50: "+",
+        0x51: "'",
+        0x52: "N",
+        0x53: "Y",
+        0x54: "(",
+        0x55: ")",
+        0x56: "F",
+        0x57: "x",
+        0x58: "-",
+        0x59: "[",
+        0x5a: "]",
+        0x5b: ">",
+        0x5c: "<",
+        0x5d: "UP",
+        0x5e: "DW",
+        0x5f: "L",
+        0x60: "U",
+        0x61: "q",
+        0x62: "j",
+        0x63: "2",
+        0x64: "0",
+        0x65: "z",
+        0x66: "K",
+        0x67: "O",
+        0x68: "%",
+        0x69: "5",
+        0x6a: "1",
+        0x6b: "J",
+        0x6c: "3",
+        0x6d: "X",
+        0x6e: "V",
+        0x6f: "Z",
+        0x70: "/",
+        0x71: "4",
+        0x72: "8",
+        0x73: "&",
+        0xc0: "{C0}",
+      },
+      // Japan
       {
         0x0: "{00}",
         0x6: "{06}",
@@ -264,9 +401,13 @@ const template: GameJson = {
         0x34: "ラ",
         0x35: "ク",
         0x36: "プ",
+        0x37: "e",
+        0x38: "r",
         0x39: "デ",
         0x3a: "フ",
+        0x3b: "a",
         0x3c: "?",
+        0x3d: "o",
         0x3e: "ケ",
         0x3f: "ブ",
         0x40: "キ",
@@ -279,27 +420,36 @@ const template: GameJson = {
         0x47: "ュ",
         0x48: "タ",
         0x49: "モ",
+        0x4a: "n",
         0x4b: "の",
         0x4c: "ィ",
         0x4d: "シ",
         0x4e: "ム",
+        0x4f: "l",
         0x50: "ダ",
         0x51: "ポ",
         0x52: "ャ",
+        0x53: "d",
         0x54: "エ",
         0x55: "サ",
         0x56: "ズ",
         0x57: "ミ",
         0x58: "-",
+        0x59: "t",
+        0x5a: "i",
+        0x5b: "u",
         0x5c: "カ",
         0x5d: "ガ",
         0x5e: "ゴ",
         0x5f: "ネ",
         0x60: "ピ",
         0x61: "ボ",
+        0x62: "m",
+        0x63: "w",
         0x64: "オ",
         0x65: "チ",
         0x66: "メ",
+        0x67: "y",
         0x68: "ジ",
         0x69: "ナ",
         0x6a: "パ",
@@ -307,6 +457,10 @@ const template: GameJson = {
         0x6c: "ョ",
         0x6d: "服",
         0x6e: "輪",
+        0x6f: "C",
+        0x70: "T",
+        0x71: "h",
+        0x72: "s",
         0x73: "ォ",
         0x74: "ギ",
         0x75: "ソ",
@@ -316,6 +470,13 @@ const template: GameJson = {
         0x79: "ホ",
         0x7a: "腕",
         0x7b: "・",
+        0x7c: "A",
+        0x7d: "R",
+        0x7e: "U",
+        0x7f: "W",
+        0x80: "b",
+        0x81: "c",
+        0x82: "g",
         0x83: "ェ",
         0x84: "コ",
         0x85: "ゾ",
@@ -323,6 +484,9 @@ const template: GameJson = {
         0x87: "ノ",
         0x88: "ベ",
         0x89: "者",
+        0x8a: "O",
+        0x8b: "S",
+        0x8c: "p",
         0x8d: "く",
         0x8e: "に",
         0x8f: "ゲ",
@@ -333,6 +497,12 @@ const template: GameJson = {
         0x94: "手",
         0x95: "石",
         0x96: "装",
+        0x97: "B",
+        0x98: "E",
+        0x99: "G",
+        0x9a: "H",
+        0x9b: "M",
+        0x9c: "v",
         0x9d: "い",
         0x9e: "う",
         0x9f: "お",
@@ -376,6 +546,7 @@ const template: GameJson = {
         0xc7: "力",
       },
     ],
+    mapNames: "getMapNames()",
     monsterNames: "getMonsterNames()",
   },
 };
