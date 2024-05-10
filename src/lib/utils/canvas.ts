@@ -212,9 +212,6 @@ export class Canvas {
     height: number,
     x = 0,
     y = 0,
-    manipulations = {
-      flipHorizontal: false,
-    },
   ): void {
     const split = layer.split(".");
 
@@ -255,15 +252,9 @@ export class Canvas {
           const subEnd = (i + 1) * 4;
 
           if (slice[subStart + 0x3] > 0x0) {
-            let subOffset = offset + i * 4;
-
-            if (manipulations.flipHorizontal) {
-              subOffset = offset + lineSize - (i + 1) * 4;
-            }
-
             this.layers[layer].datas[spriteIndex].set(
               slice.slice(subStart, subEnd),
-              subOffset,
+              offset + i * 4,
             );
           }
         }
