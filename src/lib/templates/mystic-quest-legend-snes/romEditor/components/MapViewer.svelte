@@ -183,9 +183,11 @@
         }
 
         if (paletteIndex > 7) {
-          paletteIndex = 0;
+          if ($isDebug) {
+            console.warn(`Palette ${paletteIndex} is out of range`);
+          }
 
-          console.warn("Palette out of range");
+          paletteIndex = 0;
         }
 
         const palette = tilemapPalettes[paletteIndex];
@@ -446,7 +448,12 @@
           );
 
           if (0x48 + position + 0x8 > array.length) {
-            console.warn("Sprite offset out of range");
+            if ($isDebug) {
+              console.warn(
+                `Sprite offset ${0x48 + position + 0x8} is out of range`,
+              );
+            }
+
             position = 0;
           }
 
@@ -671,7 +678,10 @@
 
         // TODO:
         if (paletteIndex >= 6) {
-          console.warn("paletteIndex out of range");
+          if ($isDebug) {
+            console.warn(`paletteIndex ${paletteIndex} is out of range`);
+          }
+
           paletteIndex = 0;
         }
 
@@ -872,7 +882,7 @@
     }
 
     & .gtc-mapViewer-canvas {
-      @apply mr-4 mb-4 p-2 w-fit bg-primary-700 rounded;
+      @apply self-start mr-4 mb-4 p-2 w-fit bg-primary-700 rounded;
     }
   }
 </style>
