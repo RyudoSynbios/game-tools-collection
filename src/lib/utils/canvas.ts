@@ -4,6 +4,9 @@ import { Container } from "@pixi/display";
 import "@pixi/events";
 import { Sprite } from "@pixi/sprite";
 import { TilingSprite } from "@pixi/sprite-tiling";
+import { get } from "svelte/store";
+
+import { isDebug } from "$lib/stores";
 
 export type Axis = "x" | "y";
 
@@ -213,6 +216,8 @@ export class Canvas {
     x = 0,
     y = 0,
   ): void {
+    const $isDebug = get(isDebug);
+
     const split = layer.split(".");
 
     layer = split[0];
@@ -227,6 +232,38 @@ export class Canvas {
     const lineSize = width * 4;
 
     let graphicWidth = this.layers[layer].width;
+    let graphicHeight = this.layers[layer].height;
+
+    let truncateStartX = 0;
+    let truncateEndX = 0;
+    let truncateStartY = 0;
+    let truncateEndY = 0;
+
+    if (x < 0 || x + width > graphicWidth) {
+      if ($isDebug) {
+        console.warn(
+          `Try to draw outside of width bounds: ${
+            x < 0 ? x : x + width
+          }px > ${graphicWidth}px`,
+        );
+      }
+
+      truncateStartX = Math.abs(Math.min(x, 0));
+      truncateEndX = Math.abs(Math.min(graphicWidth - (x + width), 0));
+    }
+
+    if (y < 0 || y + height > graphicHeight) {
+      if ($isDebug) {
+        console.warn(
+          `Try to draw outside of height bounds: ${
+            y < 0 ? y : y + height
+          }px > ${graphicHeight}px`,
+        );
+      }
+
+      truncateStartY = Math.abs(Math.min(y, 0));
+      truncateEndY = Math.abs(Math.min(graphicHeight - (y + height), 0));
+    }
 
     if (this.layers[layer].type === "sprites") {
       const sprite = this.layers[layer].container.getChildAt(spriteIndex) as
@@ -236,7 +273,7 @@ export class Canvas {
       graphicWidth = sprite.width;
     }
 
-    for (let line = 0; line < height; line += 1) {
+    for (let line = truncateStartY; line < height - truncateEndY; line += 1) {
       const start = line * lineSize;
       const end = (line + 1) * lineSize;
       const offset = x * 4 + y * graphicWidth * 4 + line * graphicWidth * 4;
@@ -247,7 +284,7 @@ export class Canvas {
       ) {
         const slice = new Uint8Array(data.slice(start, end));
 
-        for (let i = 0; i < width; i += 1) {
+        for (let i = truncateStartX; i < width - truncateEndX; i += 1) {
           const subStart = i * 4;
           const subEnd = (i + 1) * 4;
 
