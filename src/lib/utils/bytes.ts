@@ -129,7 +129,21 @@ export function dataTypeToValue(
 }
 
 export function extractBit(number: number, bit: Bit): boolean {
-  return (number & (1 << bit)) !== 0;
+  return (number & (0x1 << bit)) !== 0x0;
+}
+
+export function extractBinary(
+  number: number,
+  bitStart: Bit,
+  bitLength: number,
+): number {
+  const dataLength = Math.ceil((bitStart + bitLength) / 0x8);
+
+  const mask =
+    (Math.pow(0x100, dataLength) - 0x1) >>
+    (dataLength * 0x8 - (bitStart + bitLength));
+
+  return (number & mask) >> bitStart;
 }
 
 interface BooleanOptions {
@@ -327,21 +341,8 @@ export function getInt(
       break;
   }
 
-  if (
-    options.binary &&
-    (dataType === "int8" ||
-      dataType === "int16" ||
-      dataType === "uint8" ||
-      dataType === "uint16")
-  ) {
-    const { bitStart, bitLength } = options.binary;
-
-    const dataTypeLength = dataTypeToLength(dataType);
-    const dataTypeValue = dataTypeToValue(dataType);
-
-    const mask = dataTypeValue >> (dataTypeLength * 8 - (bitStart + bitLength));
-
-    int = (int & mask) >> bitStart;
+  if (options.binary) {
+    int = extractBinary(int, options.binary.bitStart, options.binary.bitLength);
   }
 
   if (options.binaryCodedDecimal) {
