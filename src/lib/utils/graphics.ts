@@ -2,7 +2,7 @@ import { getInt } from "$lib/utils/bytes";
 
 import type { Palette } from "$lib/types";
 
-export function getPalette24Bit(
+export function getPalette15Bit(
   offset: number,
   length: number,
   transparent = false,

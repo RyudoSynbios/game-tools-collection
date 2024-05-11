@@ -10,7 +10,7 @@
   import {
     applyPalette,
     flipTileData,
-    getPalette24Bit,
+    getPalette15Bit,
   } from "$lib/utils/graphics";
 
   import type { Bit, Palette } from "$lib/types";
@@ -115,7 +115,7 @@
 
     for (let i = 0x0; i < 0x8; i += 0x1) {
       tilemapPalettes.push(
-        getPalette24Bit(tilemapPaletteOffset + i * 0x10, 0x8, true),
+        getPalette15Bit(tilemapPaletteOffset + i * 0x10, 0x8, true),
       );
     }
 
@@ -395,7 +395,7 @@
       getInt(spriteSetIndexOffset + spriteSet * 2, "uint16");
 
     for (let i = 0x0; i < 0x6; i += 0x1) {
-      const palette = getPalette24Bit(
+      const palette = getPalette15Bit(
         spritesPalettesOffset + getInt(spriteSetOffset + i, "uint8") * 0x10,
         0x8,
         true,
@@ -708,7 +708,7 @@
                 getTileData(
                   movingSpritesOffset - 0x1690 + (i >> 1) * 0x150 + i * 0x18,
                 ),
-                getPalette24Bit(spritesPalettesOffset + 0xe0, 0x8),
+                getPalette15Bit(spritesPalettesOffset + 0xe0, 0x8),
               );
 
               canvas.addGraphic(

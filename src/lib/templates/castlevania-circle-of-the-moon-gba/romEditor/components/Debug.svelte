@@ -4,7 +4,7 @@
   import { getInt } from "$lib/utils/bytes";
   import { Canvas } from "$lib/utils/canvas";
   import { getRegionArray } from "$lib/utils/format";
-  import { applyPalette, getPalette24Bit } from "$lib/utils/graphics";
+  import { applyPalette, getPalette15Bit } from "$lib/utils/graphics";
 
   import { getCompressedGraphic } from "../utils";
   import { pointerToDssCardsGraphics } from "../template";
@@ -28,7 +28,7 @@
       );
 
       const graphic = getCompressedGraphic(graphicOffset);
-      const palette = getPalette24Bit(paletteOffset, 0x10, true);
+      const palette = getPalette15Bit(paletteOffset, 0x10, true);
 
       graphic.forEach((tileData, index) => {
         const tile = applyPalette(tileData, palette);
