@@ -113,19 +113,27 @@
       if (newTab.name === undefined) {
         newTab.name = "";
 
-        if (item.enumeration) {
-          newTab.name = item.enumeration.replace(
-            "%d",
-            `${enumerationCount + 1}`,
-          );
-        } else if (
+        const enumeratedName =
+          item.enumeration?.replace("%d", `${enumerationCount + 1}`) || "";
+
+        if (
           item.resource &&
           $gameJson.resources &&
           $gameJson.resources[item.resource]
         ) {
-          newTab.name =
-            ($gameJson.resources[item.resource][enumerationCount] as string) ||
-            "???";
+          const name = $gameJson.resources[item.resource][
+            enumerationCount
+          ] as string;
+
+          if (name) {
+            newTab.name = name;
+          } else if (item.enumeration) {
+            newTab.name = enumeratedName;
+          } else {
+            newTab.name = "???";
+          }
+        } else if (item.enumeration) {
+          newTab.name = enumeratedName;
         }
 
         enumerationCount += 1;
