@@ -860,7 +860,7 @@ const template: GameJson = {
                           autocomplete: true,
                         },
                         {
-                          name: "Body Parts",
+                          name: "Head Parts",
                           type: "bitflags",
                           flags: [
                             { offset: 0x1d, bit: 0, label: "???", hidden: true },
@@ -930,7 +930,7 @@ const template: GameJson = {
                           autocomplete: true,
                         },
                         {
-                          name: "Body Parts",
+                          name: "Arms Parts",
                           type: "bitflags",
                           flags: [
                             { offset: 0x80, bit: 0, label: "???", hidden: true },
@@ -965,7 +965,7 @@ const template: GameJson = {
                           autocomplete: true,
                         },
                         {
-                          name: "Body Parts",
+                          name: "Legs Parts",
                           type: "bitflags",
                           flags: [
                             { offset: 0x81, bit: 0, label: "???", hidden: true },
