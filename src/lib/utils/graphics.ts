@@ -9,18 +9,15 @@ export function getPalette15Bit(
 ): Palette {
   const palette = [];
 
-  for (let i = 0; i < length; i += 1) {
-    const color = getInt(offset + i * 2, "uint16");
+  for (let i = 0x0; i < length; i += 0x1) {
+    const color = getInt(offset + i * 0x2, "uint16");
 
-    const red = (color & 31) << 3;
-    const green = ((color >> 5) & 31) << 3;
-    const blue = ((color >> 10) & 31) << 3;
+    const red = (color & 0x1f) << 0x3;
+    const green = ((color >> 0x5) & 0x1f) << 0x3;
+    const blue = ((color >> 0xa) & 0x1f) << 0x3;
+    const alpha = transparent && i === 0x0 ? 0 : 255;
 
-    if (transparent && i === 0) {
-      palette.push([]);
-    } else {
-      palette.push([red, green, blue]);
-    }
+    palette.push([red, green, blue, alpha]);
   }
 
   return palette;
@@ -37,15 +34,13 @@ export function convertPaletteMegaDrive(
     let green = (color & 0xf0) >> 0x4;
     let blue = (color & 0xf00) >> 0x8;
 
+    const alpha = transparent && index === 0x0 ? 0x0 : 0xff;
+
     red = (red << 4) | red;
     green = (green << 4) | green;
     blue = (blue << 4) | blue;
 
-    if (transparent && index === 0) {
-      palette.push([]);
-    } else {
-      palette.push([red, green, blue]);
-    }
+    palette.push([red, green, blue, alpha]);
   });
 
   return palette;
@@ -81,7 +76,7 @@ export function applyPalette(data: number[], palette: Palette): Uint8Array {
       tileData[index * 4 + 0] = color[0]; // Red
       tileData[index * 4 + 1] = color[1]; // Green
       tileData[index * 4 + 2] = color[2]; // Blue
-      tileData[index * 4 + 3] = 255; // Alpha
+      tileData[index * 4 + 3] = color[3]; // Alpha
     }
   });
 
