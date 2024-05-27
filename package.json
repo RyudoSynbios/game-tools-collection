@@ -16,6 +16,7 @@
     "@pixi/core": "^7.4.0",
     "@pixi/display": "^7.4.0",
     "@pixi/events": "^7.4.0",
+    "@pixi/extract": "^7.4.0",
     "@pixi/sprite": "^7.4.0",
     "@pixi/sprite-tiling": "^7.4.0",
     "file-saver": "^2.0.5",

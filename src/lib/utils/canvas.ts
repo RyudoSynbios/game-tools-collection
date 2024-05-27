@@ -1,7 +1,8 @@
 import { Application } from "@pixi/app";
-import { BaseTexture, BufferResource, Texture } from "@pixi/core";
+import { BaseTexture, BufferResource, Texture, extensions } from "@pixi/core";
 import { Container } from "@pixi/display";
 import "@pixi/events";
+import { Extract } from "@pixi/extract";
 import { Sprite } from "@pixi/sprite";
 import { TilingSprite } from "@pixi/sprite-tiling";
 import { get } from "svelte/store";
@@ -25,6 +26,8 @@ interface Layer {
   container: Container;
   animation: Animation | null;
 }
+
+extensions.add(Extract);
 
 export class Canvas {
   private app: Application;
@@ -387,6 +390,12 @@ export class Canvas {
         sprite.texture = texture;
       });
     });
+  }
+
+  public async export(): Promise<string> {
+    this.render();
+
+    return await this.app.renderer.extract.base64(this.app.stage);
   }
 
   public destroy(): void {
