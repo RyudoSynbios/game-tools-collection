@@ -602,8 +602,8 @@
   }
 </script>
 
-<div class="gtc-mapViewer">
-  <div class="gtc-mapViewer-inputs">
+<div class="gtc-mapviewer">
+  <div class="gtc-mapviewer-inputs">
     <Select
       label="Monster Set"
       type="number"
@@ -614,7 +614,7 @@
       ]}
       onChange={handleMonsterSetChange}
     />
-    <div class="gtc-mapViewer-layers">
+    <div class="gtc-mapviewer-layers">
       <p>Layers</p>
       <div>
         {#each ["background", "foreground", "collisions", "sprites", "monsters"] as layer}
@@ -629,26 +629,26 @@
   </div>
   <div>
     {#if $isDebug}
-      <div class="gtc-mapViewer-canvas">
+      <div class="gtc-mapviewer-canvasdebug">
         <div bind:this={canvasDebugEl} />
       </div>
     {/if}
-    <div class="gtc-mapViewer-canvas">
+    <div class="gtc-mapviewer-canvas">
       <div bind:this={canvasEl} />
     </div>
   </div>
 </div>
 
 <style lang="postcss">
-  .gtc-mapViewer {
+  .gtc-mapviewer {
     & > div {
       @apply flex;
     }
 
-    & .gtc-mapViewer-inputs {
+    & .gtc-mapviewer-inputs {
       @apply flex;
 
-      & .gtc-mapViewer-layers {
+      & .gtc-mapviewer-layers {
         @apply mr-4 mb-4 p-2 w-fit bg-primary-700 rounded;
 
         & p {
@@ -659,14 +659,19 @@
           @apply flex;
 
           & :global(label) {
-            @apply mr-2;
+            @apply mr-4;
           }
         }
       }
     }
 
-    & .gtc-mapViewer-canvas {
-      @apply self-start mr-4 mb-4 p-2 w-fit bg-primary-700 rounded;
+    & .gtc-mapviewer-canvasdebug,
+    & .gtc-mapviewer-canvas {
+      @apply self-start p-2 w-fit bg-primary-700 rounded;
+    }
+
+    & .gtc-mapviewer-canvasdebug {
+      @apply mr-4;
     }
   }
 </style>

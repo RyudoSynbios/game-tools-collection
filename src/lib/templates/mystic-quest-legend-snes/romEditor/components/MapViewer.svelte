@@ -851,8 +851,8 @@
   }
 </script>
 
-<div class="gtc-mapViewer">
-  <div class="gtc-mapViewer-inputs">
+<div class="gtc-mapviewer">
+  <div class="gtc-mapviewer-inputs">
     {#each ["background", "foreground", "collisions", "sprites"] as layer}
       <Checkbox
         label={capitalize(layer)}
@@ -867,27 +867,32 @@
     />
   </div>
   {#if $isDebug}
-    <div class="gtc-mapViewer-canvas">
+    <div class="gtc-mapviewer-canvasdebug">
       <div bind:this={canvasDebugEl} />
     </div>
   {/if}
-  <div class="gtc-mapViewer-canvas">
+  <div class="gtc-mapviewer-canvas">
     <div bind:this={canvasEl} />
   </div>
 </div>
 
 <style lang="postcss">
-  .gtc-mapViewer {
-    & .gtc-mapViewer-inputs {
+  .gtc-mapviewer {
+    & .gtc-mapviewer-inputs {
       @apply flex mb-2;
 
       & :global(label) {
-        @apply mr-2;
+        @apply mr-4;
       }
     }
 
-    & .gtc-mapViewer-canvas {
-      @apply self-start mr-4 mb-4 p-2 w-fit bg-primary-700 rounded;
+    & .gtc-mapviewer-canvasdebug,
+    & .gtc-mapviewer-canvas {
+      @apply self-start p-2 w-fit bg-primary-700 rounded;
+    }
+
+    & .gtc-mapviewer-canvasdebug {
+      @apply mb-4;
     }
   }
 </style>

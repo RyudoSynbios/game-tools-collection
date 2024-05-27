@@ -79,6 +79,6 @@
 
 <style lang="postcss">
   .gtc-monstercanvas {
-    @apply self-start mr-4 mb-4 p-2 w-fit bg-primary-700 rounded;
+    @apply self-start mr-4 p-2 w-fit bg-primary-700 rounded;
   }
 </style>
