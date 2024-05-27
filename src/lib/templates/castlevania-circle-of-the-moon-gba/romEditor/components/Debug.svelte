@@ -14,7 +14,11 @@
   let canvas: Canvas;
 
   onMount(() => {
-    canvas = new Canvas(canvasEl, { width: 640, height: 192 });
+    canvas = new Canvas({
+      canvasEl,
+      width: 640,
+      height: 192,
+    });
 
     canvas.addLayer("background", "image");
 

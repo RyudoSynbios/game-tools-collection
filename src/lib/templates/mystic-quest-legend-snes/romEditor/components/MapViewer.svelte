@@ -812,7 +812,10 @@
   }
 
   onMount(() => {
-    canvas = new Canvas(canvasEl, { backgroundAlpha: 1 });
+    canvas = new Canvas({
+      canvasEl,
+      backgroundAlpha: 1,
+    });
 
     canvas.addLayer("background", "tilingSprite", { width: 16, height: 16 });
     canvas.addLayer("foreground", "image");
@@ -820,7 +823,9 @@
     canvas.addLayer("sprites", "image");
 
     if ($isDebug) {
-      canvasDebug = new Canvas(canvasDebugEl);
+      canvasDebug = new Canvas({
+        canvasEl: canvasDebugEl,
+      });
 
       canvasDebug.addLayer("debug", "image");
       canvasDebug.addLayer("debugCollisions", "image");

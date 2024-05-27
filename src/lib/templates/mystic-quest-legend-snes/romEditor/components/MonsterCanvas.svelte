@@ -54,7 +54,7 @@
   }
 
   onMount(() => {
-    canvas = new Canvas(canvasEl);
+    canvas = new Canvas({ canvasEl });
 
     canvas.addLayer("background", "image");
   });

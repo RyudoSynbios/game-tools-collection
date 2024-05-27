@@ -55,7 +55,8 @@
   onMount(() => {
     // Main
 
-    canvas = new Canvas(canvasEl, {
+    canvas = new Canvas({
+      canvasEl,
       width: spriteWidth,
       height: spriteHeight,
       scale: mainScale,
@@ -65,7 +66,10 @@
 
     // Dropdown
 
-    canvasDropdown = new Canvas(canvasDropdownEl, { scale: dropdownScale });
+    canvasDropdown = new Canvas({
+      canvasEl: canvasDropdownEl,
+      scale: dropdownScale,
+    });
 
     canvasDropdown.addLayer("background", "sprites");
 

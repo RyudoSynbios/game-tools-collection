@@ -34,16 +34,15 @@ export class Canvas {
   private animation: boolean;
   private layers: { [key: string]: Layer };
 
-  constructor(
-    canvasEl: HTMLDivElement,
-    options?: {
-      width?: number;
-      height?: number;
-      scale?: number;
-      backgroundAlpha?: number;
-      animation?: boolean;
-    },
-  ) {
+  constructor(options?: {
+    canvasEl?: HTMLDivElement;
+    width?: number;
+    height?: number;
+    scale?: number;
+    backgroundAlpha?: number;
+    animation?: boolean;
+  }) {
+    const canvasEl = options?.canvasEl;
     const width = options?.width || 0;
     const height = options?.height || 0;
     const scale = options?.scale || 1;
@@ -81,7 +80,9 @@ export class Canvas {
 
     this.reset();
 
-    canvasEl.appendChild(this.app.view as any);
+    if (canvasEl) {
+      canvasEl.appendChild(this.app.view as any);
+    }
   }
 
   public addLayer(

@@ -85,7 +85,11 @@
   }
 
   onMount(() => {
-    canvas = new Canvas(canvasEl, { width: viewWidth, height: viewHeight });
+    canvas = new Canvas({
+      canvasEl,
+      width: viewWidth,
+      height: viewHeight,
+    });
 
     canvas.addLayer("background", "image");
 

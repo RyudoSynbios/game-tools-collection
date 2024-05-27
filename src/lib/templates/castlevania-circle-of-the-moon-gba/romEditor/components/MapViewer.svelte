@@ -565,7 +565,7 @@
   }
 
   onMount(() => {
-    canvas = new Canvas(canvasEl);
+    canvas = new Canvas({ canvasEl });
 
     canvas.addLayer("background", "image");
     canvas.addLayer("foreground", "image");
@@ -574,7 +574,9 @@
     canvas.addLayer("monsters", "image");
 
     if ($isDebug) {
-      canvasDebug = new Canvas(canvasDebugEl);
+      canvasDebug = new Canvas({
+        canvasEl: canvasDebugEl,
+      });
 
       canvasDebug.addLayer("debug", "image");
       canvasDebug.addLayer("debugCollisions", "image");
