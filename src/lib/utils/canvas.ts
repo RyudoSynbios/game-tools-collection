@@ -289,12 +289,10 @@ export class Canvas {
           const subStart = i * 4;
           const subEnd = (i + 1) * 4;
 
-          if (slice[subStart + 0x3] > 0x0) {
-            this.layers[layer].datas[spriteIndex].set(
-              slice.slice(subStart, subEnd),
-              offset + i * 4,
-            );
-          }
+          this.layers[layer].datas[spriteIndex].set(
+            slice.slice(subStart, subEnd),
+            offset + i * 4,
+          );
         }
       }
     }
