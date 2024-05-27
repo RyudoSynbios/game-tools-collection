@@ -27,6 +27,9 @@
     "id": "bomberman-64-n64",
     "name": "Bomberman 64",
     "consoleId": "nintendo-64",
+    "romEditor": {
+      "regions": ["🇪🇺", "🇺🇸", "🇯🇵"]
+    },
     "saveEditor": {
       "regions": ["🇪🇺", "🇺🇸", "🇯🇵"]
     }
