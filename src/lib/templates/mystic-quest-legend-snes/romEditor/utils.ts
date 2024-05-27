@@ -309,12 +309,12 @@ export function getMonsterSpritePattern(
       const baseOffset = getInt(monsterPatternSizesOffset + 0x4, "uint8");
       const multiplierOffset = getInt(monsterPatternSizesOffset + 0x5, "uint8");
       const byteLength = getInt(monsterPatternSizesOffset + 0x6, "uint8");
-      const numberOfFrames = getInt(monsterPatternSizesOffset + 0x8, "uint8");
+      const frameCount = getInt(monsterPatternSizesOffset + 0x8, "uint8");
 
       patternPosition =
         baseOffset +
         multiplierOffset * 0x100 +
-        monsterId * byteLength * numberOfFrames;
+        monsterId * byteLength * frameCount;
     }
 
     monsterPatternSizesOffset += 0xa;

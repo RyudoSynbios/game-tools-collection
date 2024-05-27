@@ -349,9 +349,9 @@ const template: GameJson = {
                     { offset: 0xf, bit: 4, label: "Anemone Beach Dungeon: Octopus defeated related", hidden: true },
                     { offset: 0x10, bit: 1, label: "Burn Daisy: Shuffler defeated" },
                     { offset: 0x11, bit: 5, label: "Iris Animal Village: Floor of squirrels' house fixed" },
-                    { offset: 0x16, bit: 1, label: "Worldmap: Path to Castle Freesia unlocked" },
+                    { offset: 0x16, bit: 1, label: "World Map: Path to Castle Freesia unlocked" },
                     { offset: 0x17, bit: 0, label: "Castle Freesia: Giant Plant Seed obtained" },
-                    { offset: 0x18, bit: 0, label: "Worldmap: Path to Root Temple unlocked" },
+                    { offset: 0x18, bit: 0, label: "World Map: Path to Root Temple unlocked" },
                     { offset: 0x1b, bit: 3, label: "Rafflesia School: Silver Medal obtained" },
                     { offset: 0x1b, bit: 4, label: "Rafflesia School: Gold Medal obtained" },
                     { offset: 0x1b, bit: 7, label: "Soleil Town Castle: Holy Sword obtained" },
@@ -362,12 +362,12 @@ const template: GameJson = {
                     { offset: 0x32, bit: 6, label: "Soleil Town: Lend 10 Malins to hero's mother" },
                     { offset: 0x33, bit: 4, label: "Soleil Town Castle: Charlie event related" },
                     { offset: 0x33, bit: 5, label: "Soleil Town Castle: Golden Apple appeared after Charlie event" },
-                    { offset: 0x42, bit: 2, label: "Worldmap: Path to Burn Daisy unlocked" },
-                    { offset: 0x42, bit: 3, label: "Worldmap: Path to Camelia Desert West unlocked" },
-                    { offset: 0x42, bit: 4, label: "Worldmap: Path to Tower of Babel unlocked" },
-                    { offset: 0x42, bit: 6, label: "Worldmap: Path to Iris unlocked" },
-                    { offset: 0x42, bit: 7, label: "Worldmap: Path to Camelia Desert unlocked" },
-                    { offset: 0x43, bit: 0, label: "Worldmap: Path to Anemone Beach and Hot Daisy unlocked" },
+                    { offset: 0x42, bit: 2, label: "World Map: Path to Burn Daisy unlocked" },
+                    { offset: 0x42, bit: 3, label: "World Map: Path to Camelia Desert West unlocked" },
+                    { offset: 0x42, bit: 4, label: "World Map: Path to Tower of Babel unlocked" },
+                    { offset: 0x42, bit: 6, label: "World Map: Path to Iris unlocked" },
+                    { offset: 0x42, bit: 7, label: "World Map: Path to Camelia Desert unlocked" },
+                    { offset: 0x43, bit: 0, label: "World Map: Path to Anemone Beach and Hot Daisy unlocked" },
                     { offset: 0x8a, bit: 1, label: "Anemone Beach Dungeon: Money Bag obtained" },
                     { offset: 0x8a, bit: 2, label: "Anemone Beach Dungeon: Money Bag obtained" },
                     { offset: 0x8a, bit: 3, label: "Hot Daisy: Money Bag obtained" },
@@ -757,7 +757,7 @@ const template: GameJson = {
       } as { [key: number]: string | number };
     }),
     locations: {
-      // 0x0: "Worldmap", // Unused
+      // 0x0: "World Map", // Unused
       0x1: "Soleil Town",
       // 0x2: "", // Unused
       // 0x3: "", // Unused

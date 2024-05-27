@@ -368,8 +368,6 @@ export class Canvas {
 
     this.reset();
 
-    // TODO: Take account of resolution
-
     this.app.renderer.resize(width, height);
   }
 

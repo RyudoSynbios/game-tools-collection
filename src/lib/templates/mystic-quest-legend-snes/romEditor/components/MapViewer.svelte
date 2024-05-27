@@ -228,7 +228,7 @@
 
       switch (tilesChunkCollision) {
         case 0x0: // Walkable
-        case 0xb: // Worldmap bridge
+        case 0xb: // World Map bridge
         case 0x800: // Stairs
         case 0x802: // Walkable
         case 0x803: // Walkable
