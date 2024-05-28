@@ -13,14 +13,14 @@ export function overrideGetInt(item: Item): [boolean, number | undefined] {
     let int = 0;
 
     if (item.id === "wc-red") {
-      int = ((int1 & 0x1f) >> 2) + ((int1 & 0x1f) === 0x1f ? 0x1 : 0x0);
+      int = ((int1 & 0x1f) >> 0x2) + ((int1 & 0x1f) === 0x1f ? 0x1 : 0x0);
     } else if (item.id === "wc-green") {
       int =
-        ((int2 & 0x3) << 1) +
-        ((int1 & 0xe0) >> 7) +
+        ((int2 & 0x3) << 0x1) +
+        ((int1 & 0xe0) >> 0x7) +
         ((int1 & 0xe0) === 0xe0 ? 0x1 : 0x0);
     } else if (item.id === "wc-blue") {
-      int = ((int2 & 0xfc) >> 4) + ((int2 & 0xfc) === 0x7c ? 0x1 : 0x0);
+      int = ((int2 & 0xfc) >> 0x4) + ((int2 & 0xfc) === 0x7c ? 0x1 : 0x0);
     }
 
     return [true, int];
@@ -39,12 +39,12 @@ export function overrideSetInt(item: Item, value: string): boolean {
     let value2 = getInt(itemInt.offset + 0x1, "uint8");
 
     if (item.id === "wc-red") {
-      value1 = (value1 & 0xe0) + (int << 2) - (int === 8 ? 0x1 : 0x0);
+      value1 = (value1 & 0xe0) + (int << 0x2) - (int === 8 ? 0x1 : 0x0);
     } else if (item.id === "wc-green") {
-      value1 = (value1 & 0x1f) + ((int & 0x1) << 7) + (int === 8 ? 0xe0 : 0x0);
-      value2 = (value2 & 0xfc) + (int >> 1) - (int === 8 ? 0x1 : 0x0);
+      value1 = (value1 & 0x1f) + ((int & 0x1) << 0x7) + (int === 8 ? 0xe0 : 0x0); // prettier-ignore
+      value2 = (value2 & 0xfc) + (int >> 0x1) - (int === 8 ? 0x1 : 0x0);
     } else if (item.id === "wc-blue") {
-      value2 = (value2 & 0x3) + (int << 4) - (int === 8 ? 0x4 : 0x0);
+      value2 = (value2 & 0x3) + (int << 0x4) - (int === 8 ? 0x4 : 0x0);
     }
 
     setInt(itemInt.offset, "uint8", value1);
@@ -78,7 +78,7 @@ export function generateChecksum(item: ItemChecksum): number {
   }
 
   while (checksum > 0x10000) {
-    checksum = (checksum & 0xffff) + (checksum >> 16);
+    checksum = (checksum & 0xffff) + (checksum >> 0x10);
   }
 
   return formatChecksum(checksum, item.dataType);

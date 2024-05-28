@@ -23,9 +23,9 @@ export function overrideGetInt(item: Item): [boolean, number | undefined] {
     });
 
     if (item.id === "time-1") {
-      int += (getInt(itemInt.offset + 0x6, "uint8") & 0x7) << 24;
+      int += (getInt(itemInt.offset + 0x6, "uint8") & 0x7) << 0x18;
     } else if (item.id === "time-2") {
-      int += (getInt(itemInt.offset + 0x3, "uint8") & 0x38) << 21;
+      int += (getInt(itemInt.offset + 0x3, "uint8") & 0x38) << 0x15;
     }
 
     return [true, int];
@@ -44,14 +44,14 @@ export function overrideSetInt(item: Item, value: string): boolean {
       bigEndian: itemInt.bigEndian,
     });
 
-    int >>= 24;
+    int >>= 0x18;
 
     if (item.id === "time-1") {
       int += getInt(itemInt.offset + 0x6, "uint8") & 0x38;
 
       setInt(itemInt.offset + 0x6, "uint8", int);
     } else if (item.id === "time-2") {
-      int = (int << 3) + (getInt(itemInt.offset + 0x3, "uint8") & 0x7);
+      int = (int << 0x3) | (getInt(itemInt.offset + 0x3, "uint8") & 0x7);
 
       setInt(itemInt.offset + 0x3, "uint8", int);
     }

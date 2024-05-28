@@ -77,16 +77,16 @@ function getTime(offset: number, mode: string, timeUnit: TimeUnit): number {
 
   switch (mode) {
     case "time-1":
-      int = ((byte1 << 8) + byte2) >> 6;
+      int = ((byte1 << 0x8) | byte2) >> 0x6;
       break;
     case "time-2":
-      int = ((byte1 & 0x3f) << 4) + (byte2 >> 4);
+      int = ((byte1 & 0x3f) << 0x4) | (byte2 >> 0x4);
       break;
     case "time-3":
-      int = ((byte1 & 0xf) << 6) + (byte2 >> 2);
+      int = ((byte1 & 0xf) << 0x6) | (byte2 >> 0x2);
       break;
     case "time-4":
-      int = ((byte1 & 0x3) << 8) + byte2;
+      int = ((byte1 & 0x3) << 0x8) | byte2;
       break;
   }
 
@@ -148,30 +148,30 @@ export function overrideSetInt(item: Item, value: string): boolean {
     let byte2 = getInt(itemInt.offset + 0x1, "uint8");
 
     if (item.id === "time-1") {
-      base <<= 6;
+      base <<= 0x6;
       byte2 &= 0x3f;
 
-      setInt(itemInt.offset, "uint16", base + byte2, { bigEndian: true });
+      setInt(itemInt.offset, "uint16", base | byte2, { bigEndian: true });
     } else if (item.id === "time-2") {
-      byte1 = (byte1 >> 6) << 14;
-      base <<= 4;
+      byte1 = (byte1 >> 0x6) << 0xe;
+      base <<= 0x4;
       byte2 &= 0xf;
 
-      setInt(itemInt.offset, "uint16", byte1 + base + byte2, {
+      setInt(itemInt.offset, "uint16", byte1 | base | byte2, {
         bigEndian: true,
       });
     } else if (item.id === "time-3") {
-      byte1 = (byte1 >> 4) << 12;
-      base <<= 2;
+      byte1 = (byte1 >> 0x4) << 0xc;
+      base <<= 0x2;
       byte2 &= 0x3;
 
-      setInt(itemInt.offset, "uint16", byte1 + base + byte2, {
+      setInt(itemInt.offset, "uint16", byte1 | base | byte2, {
         bigEndian: true,
       });
     } else if (item.id === "time-4") {
-      byte1 = (byte1 >> 2) << 10;
+      byte1 = (byte1 >> 0x2) << 0xa;
 
-      setInt(itemInt.offset, "uint16", byte1 + base, { bigEndian: true });
+      setInt(itemInt.offset, "uint16", byte1 | base, { bigEndian: true });
     }
 
     return true;

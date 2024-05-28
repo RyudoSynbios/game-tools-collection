@@ -121,7 +121,7 @@ export function overrideSetInt(item: Item, value: string): boolean {
     let int = 0x0;
 
     for (let i = 0x0; i < parseInt(value); i += 0x1) {
-      int = (int << 1) + 1;
+      int = (int << 0x1) + 1;
     }
 
     setInt(itemInt.offset, "uint8", int);

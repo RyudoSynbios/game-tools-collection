@@ -163,9 +163,9 @@
           tileData = flipTileData(tileData, 8, "x");
         }
 
-        const tilemapChunkIndex = Math.floor((tileIndex >> 4) / 2);
+        const tilemapChunkIndex = Math.floor((tileIndex >> 0x4) / 2);
         const tilePosition =
-          tileIndex & (0xf + ((tileIndex >> 4) - tilemapChunkIndex * 2) * 0x10);
+          tileIndex & (0xf + ((tileIndex >> 0x4) - tilemapChunkIndex * 2) * 0x10); // prettier-ignore
 
         let paletteIndex = 0;
 
@@ -504,10 +504,10 @@
     const backgroundIndex1 =
       getInt(roomsOffset + roomOffset + 0x5, "uint8") & 0xe0;
     const backgroundIndex2 =
-      (getInt(roomsOffset + roomOffset + 0x6, "uint8") & 0xe0) >> 3;
+      (getInt(roomsOffset + roomOffset + 0x6, "uint8") & 0xe0) >> 0x3;
 
     const backgroundIndex =
-      Math.max(0, ((backgroundIndex1 | backgroundIndex2) >> 2) - 1) * 4;
+      Math.max(0, ((backgroundIndex1 | backgroundIndex2) >> 0x2) - 1) * 4;
 
     const backgroundMode = getInt(backgroundsOffset + backgroundIndex, "uint8");
 
@@ -515,7 +515,7 @@
     const backgroundTmpUnknown1 = extractBit(backgroundMode, 1);
     const backgroundTmpAnimate = extractBit(backgroundMode, 2);
     const backgroundTmpUnknown2 = extractBit(backgroundMode, 3);
-    const backgroundTmpUnknown3 = extractBit(backgroundMode, 4); // << Use for water transparency if player is in
+    const backgroundTmpUnknown3 = extractBit(backgroundMode, 4); // << Used for water transparency if player is in
     const backgroundTmpAboveEverything = extractBit(backgroundMode, 5);
     const backgroundTmpAboveForeground = extractBit(backgroundMode, 6);
     const backgroundTmpUnknown4 = extractBit(backgroundMode, 7);
@@ -543,7 +543,7 @@
       "uint8",
     );
 
-    const sizeIndex = (getInt(mapSettingsOffset, "uint8") & 0xf0) >> 3;
+    const sizeIndex = (getInt(mapSettingsOffset, "uint8") & 0xf0) >> 0x3;
 
     const columns = getInt(mapSizeOffset + sizeIndex, "uint8");
     const rows = getInt(mapSizeOffset + sizeIndex + 0x1, "uint8");
@@ -567,7 +567,7 @@
             8,
             8,
             (index & 0x1) * 8,
-            (index >> 1) * 8,
+            (index >> 0x1) * 8,
           );
         });
       }
@@ -623,7 +623,7 @@
               8,
               8,
               column * 16 + (index & 0x1) * 8,
-              row * 16 + (index >> 1) * 8,
+              row * 16 + (index >> 0x1) * 8,
             );
           });
         }
@@ -659,8 +659,7 @@
         const positionX =
           getInt(roomsOffset + roomOffset + j + 0x2, "uint8") & 0x3f;
         let paletteIndex =
-          ((getInt(roomsOffset + roomOffset + j + 0x3, "uint8") & 0xe0) >> 4) /
-          2;
+          ((getInt(roomsOffset + roomOffset + j + 0x3, "uint8") & 0xe0) >> 0x4) / 2; // prettier-ignore
         const animationOffset =
           (getInt(roomsOffset + roomOffset + j + 0x3, "uint8") & 0x1f) * 2;
         const eventType = getInt(roomsOffset + roomOffset + j + 0x3, "uint16");
@@ -688,14 +687,14 @@
                 8,
                 8,
                 positionX * 16 + (tileIndex & 0x1) * 8,
-                positionY * 16 + (tileIndex >> 1) * 8,
+                positionY * 16 + (tileIndex >> 0x1) * 8,
               );
             });
           } else {
             for (let i = 0x0; i < 0x4; i += 0x1) {
               const tile = applyPalette(
                 getTileData(
-                  movingSpritesOffset - 0x1690 + (i >> 1) * 0x150 + i * 0x18,
+                  movingSpritesOffset - 0x1690 + (i >> 0x1) * 0x150 + i * 0x18,
                 ),
                 getPalette15Bit(spritesPalettesOffset + 0xe0, 0x8),
               );
@@ -706,7 +705,7 @@
                 8,
                 8,
                 positionX * 16 + (i & 0x1) * 8,
-                positionY * 16 + (i >> 1) * 8,
+                positionY * 16 + (i >> 0x1) * 8,
               );
             }
           }
@@ -767,7 +766,7 @@
             8,
             8,
             x + (tileIndex & 0x1) * 8,
-            y + (tileIndex >> 1) * 8,
+            y + (tileIndex >> 0x1) * 8,
           );
         });
 

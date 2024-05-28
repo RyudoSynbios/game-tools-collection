@@ -20,7 +20,7 @@ export function formatChecksum(
 ): number {
   const mask = dataTypeToValue(dataType);
 
-  checksum = (checksum & mask) >>> 0;
+  checksum = (checksum & mask) >>> 0x0;
 
   return checksum;
 }

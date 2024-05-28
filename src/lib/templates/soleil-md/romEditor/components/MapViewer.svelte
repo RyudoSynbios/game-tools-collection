@@ -55,9 +55,9 @@
         });
 
         const color =
-          (((rawColor & 0x3e) >> 3) << 9) |
-          ((rawColor >> 0xd) << 5) |
-          (((rawColor & 0x7c0) >> 8) << 1);
+          (((rawColor & 0x3e) >> 0x3) << 0x9) |
+          ((rawColor >> 0xd) << 0x5) |
+          (((rawColor & 0x7c0) >> 0x8) << 0x1);
 
         rawPalette.push(color);
       }
@@ -276,8 +276,8 @@
     // Generate tilesetDatas
 
     vdp.forEach((data, index) => {
-      const high = data >> 4;
-      const low = data - (high << 4);
+      const high = data >> 0x4;
+      const low = data - (high << 0x4);
 
       const tileIndex = Math.floor(index / 0x20);
 
@@ -289,7 +289,7 @@
     });
 
     function getMapValue(offset: number): number {
-      return (map[offset] << 8) | map[offset + 0x1];
+      return (map[offset] << 0x8) | map[offset + 0x1];
     }
 
     // Generate map

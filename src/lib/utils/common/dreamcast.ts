@@ -115,13 +115,13 @@ export function generateVmuChecksum(item: ItemChecksum): number {
   for (let i = item.control.offsetStart; i < item.control.offsetEnd; i += 0x1) {
     let int = getInt(i, "uint8");
 
-    checksum ^= int << 8;
+    checksum ^= int << 0x8;
 
     for (let j = 0; j < 8; j += 1) {
       if (checksum & 0x8000) {
-        checksum = (checksum << 1) ^ 0x1021;
+        checksum = (checksum << 0x1) ^ 0x1021;
       } else {
-        checksum = checksum << 1;
+        checksum = checksum << 0x1;
       }
     }
 

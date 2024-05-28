@@ -113,7 +113,7 @@ export function generateChecksum(item: ItemChecksum): number {
   checksum1 &= 0xffff;
   checksum2 &= 0xffff;
 
-  const checksum = checksum1 + (checksum2 << 16);
+  const checksum = checksum1 | (checksum2 << 0x10);
 
   return formatChecksum(checksum, item.dataType);
 }

@@ -228,7 +228,7 @@ export function getBitflags(
 ): boolean[] {
   const trueString = options.reversed ? "0" : "1";
 
-  const bitflags = (getInt(offset, "uint8") >>> 0)
+  const bitflags = (getInt(offset, "uint8") >>> 0x0)
     .toBinary()
     .split("")
     .map((bit) => bit === trueString)
@@ -402,7 +402,7 @@ export function setInt(
       bigEndian: options.bigEndian,
     });
 
-    value = (value << bitStart) + (int & mask);
+    value = (value << bitStart) | (int & mask);
   }
 
   if (options.binaryCodedDecimal) {

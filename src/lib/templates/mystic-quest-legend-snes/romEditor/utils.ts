@@ -424,7 +424,7 @@ export function generateBattleBackgroundCanvas(
           const spriteOffset = graphicsOffset + tileOffset * 0x18;
 
           const x = repeat * 64 + column * 16 + (i & 0x1) * 8;
-          const y = (position === "bottom" ? 64 : 0) + row * 16 + (i >> 1) * 8;
+          const y = (position === "bottom" ? 64 : 0) + row * 16 + (i >> 0x1) * 8; // prettier-ignore
 
           let palette = palettePrimary;
 

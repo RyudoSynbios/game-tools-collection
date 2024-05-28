@@ -239,9 +239,9 @@ export function generateChecksum(
 
     for (let j = 0; j < 8; j += 1) {
       if ((checksum & 0x80000000) === 0) {
-        checksum = checksum << 1;
+        checksum = checksum << 0x1;
       } else {
-        checksum = (checksum << 1) ^ bitMask;
+        checksum = (checksum << 0x1) ^ bitMask;
       }
     }
   }

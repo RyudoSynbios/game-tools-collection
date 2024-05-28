@@ -77,7 +77,7 @@ export function overrideGetInt(item: Item): [boolean, number | undefined] {
     const location2 = getInt(itemInt.offset + 0x4, "uint8");
     const location3 = getInt(itemInt.offset + 0x6, "uint8");
 
-    const int = (location1 << 16) + (location2 << 8) + location3;
+    const int = (location1 << 0x10) | (location2 << 0x8) | location3;
 
     return [true, int];
   } else if ("id" in item && item.id?.match(/ta-/)) {

@@ -65,7 +65,7 @@ export function getDecompressedData(offset: number): Uint8Array {
         bufferIndex = (bufferIndex + 1) & 0x3ff;
       } else {
         const special = getInt(offset, "uint16", { bigEndian: true });
-        const wordPosition = (special >> 0x8) | ((special & 0xc0) << 0x2);
+        const wordPosition = ((special & 0xc0) << 0x2) | (special >> 0x8);
         const count = 3 + (special & 0x3f);
 
         for (let j = 0; j < count; j += 1) {
@@ -134,7 +134,7 @@ export function setMesh(
   mesh.uvs = [];
   mesh.uvsTmp = [];
 
-  const verticesCount = data.getUint8(i + 0x2) >> 2;
+  const verticesCount = data.getUint8(i + 0x2) >> 0x2;
 
   const offset = data.getUint24(i + 0x5);
 

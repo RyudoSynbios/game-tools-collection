@@ -91,9 +91,9 @@ interface Save {
 // ECC constants (adapted from https://github.com/ps2dev/mymc/blob/db5d9e1c141cbbc4ba4e374f73a0518a8d75b7ef/ps2mc_ecc.py)
 
 const parityTable = [...Array(256).keys()].map((i) => {
-  i = i ^ (i >> 1);
-  i = i ^ (i >> 2);
-  i = i ^ (i >> 4);
+  i = i ^ (i >> 0x1);
+  i = i ^ (i >> 0x2);
+  i = i ^ (i >> 0x4);
 
   return i & 1;
 });

@@ -140,7 +140,7 @@ export function generateChecksum(item: ItemChecksum): number {
     for (let j = 0x0; j < 0x4; j += 0x1) {
       let value = values[checksum & 0xf];
 
-      checksum >>= 4;
+      checksum >>= 0x4;
 
       checksum ^= value;
 

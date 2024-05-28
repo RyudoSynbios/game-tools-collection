@@ -36,9 +36,9 @@ export function convertPaletteMegaDrive(
 
     const alpha = transparent && index === 0x0 ? 0x0 : 0xff;
 
-    red = (red << 4) | red;
-    green = (green << 4) | green;
-    blue = (blue << 4) | blue;
+    red = (red << 0x4) | red;
+    green = (green << 0x4) | green;
+    blue = (blue << 0x4) | blue;
 
     palette.push([red, green, blue, alpha]);
   });

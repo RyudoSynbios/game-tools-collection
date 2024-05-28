@@ -82,7 +82,7 @@ export function getDecompressedData(
 
         let iterations = (d0 & 0xf) + 0x2;
 
-        d0 = (((d0 << 4) & 0xff00) | (getInt(offset, "uint8") & 0xff)) & 0xfff;
+        d0 = (((d0 << 0x4) & 0xff00) | (getInt(offset, "uint8") & 0xff)) & 0xfff; // prettier-ignore
 
         for (let i = 0x0; i <= iterations; i += 0x1) {
           const value = decompressedData[baseOffset + d0];

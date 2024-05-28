@@ -104,8 +104,8 @@ export function generateChecksum(
   checksum1 = 0xf251f205 - checksum1;
   checksum2 = base + checksum2 * 2;
 
-  const high = ((checksum1 & 0xffffffff) >>> 0).toHex(8);
-  const low = ((checksum2 & 0xffffffff) >>> 0).toHex(8);
+  const high = ((checksum1 & 0xffffffff) >>> 0x0).toHex(8);
+  const low = ((checksum2 & 0xffffffff) >>> 0x0).toHex(8);
 
   return BigInt(`0x${high}${low}`);
 }

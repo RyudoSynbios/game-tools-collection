@@ -120,7 +120,7 @@ export function overrideSetInt(item: Item, value: string): boolean {
   } else if ("id" in item && item.id === "aType") {
     const itemInt = item as ItemInt;
 
-    const int = (getInt(itemInt.offset, "uint8") & 0xc0) + parseInt(value);
+    const int = (getInt(itemInt.offset, "uint8") & 0xc0) | parseInt(value);
 
     setInt(itemInt.offset, "uint8", int);
 
@@ -444,7 +444,7 @@ function decodeText(index: number): string {
   const pointer = getRegionArray(pointerToTexts);
 
   const pointerToStartTextBitstream =
-    getInt(pointer + 0x60, "uint24") + 0x8 * (index >> 8);
+    getInt(pointer + 0x60, "uint24") + 0x8 * (index >> 0x8);
 
   const textBlock = getInt(pointerToStartTextBitstream, "uint24");
   const textBlockLengths = getInt(pointerToStartTextBitstream + 0x4, "uint24");
@@ -502,7 +502,7 @@ function decodeText(index: number): string {
           } else {
             if ([0xde, 0xdf].includes(int)) {
               text = text.slice(0, -1);
-              text += decodeCamelotFont((treeIndex << 8) + int);
+              text += decodeCamelotFont((treeIndex << 0x8) + int);
             } else {
               text += decodeCamelotFont(int);
             }
