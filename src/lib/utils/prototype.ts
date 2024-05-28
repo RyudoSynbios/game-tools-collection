@@ -24,19 +24,19 @@ function boundsCheck(offset: number, size: number, max: number): boolean {
   return true;
 }
 
-DataView.prototype.getBit = function (offset, bit): number {
+DataView.prototype.getBit = function (offset, bit) {
   return extractBit(this.getUint8(offset), bit) ? 1 : 0;
 };
 
-DataView.prototype.getLower4 = function (offset): number {
+DataView.prototype.getLower4 = function (offset) {
   return this.getUint8(offset) & 0xf;
 };
 
-DataView.prototype.getUpper4 = function (offset): number {
+DataView.prototype.getUpper4 = function (offset) {
   return this.getUint8(offset) >> 4;
 };
 
-DataView.prototype.getUint24 = function (offset, littleEndian): number {
+DataView.prototype.getUint24 = function (offset, littleEndian) {
   const buffer = new Uint8Array(this.buffer);
   const order = littleEndian ? littleEndian24 : bigEndian24;
 
@@ -47,13 +47,13 @@ DataView.prototype.getUint24 = function (offset, littleEndian): number {
   return b0 | b1 | b2;
 };
 
-DataView.prototype.getInt24 = function (offset, littleEndian): number {
+DataView.prototype.getInt24 = function (offset, littleEndian) {
   const int = this.getUint24(offset, littleEndian);
 
   return int & 0x800000 ? int ^ -0x1000000 : int;
 };
 
-DataView.prototype.setBit = function (offset, bit, value): void {
+DataView.prototype.setBit = function (offset, bit, value) {
   let int = this.getUint8(offset);
 
   if (value) {
@@ -65,19 +65,19 @@ DataView.prototype.setBit = function (offset, bit, value): void {
   this.setInt8(offset, int);
 };
 
-DataView.prototype.setLower4 = function (offset, value): void {
+DataView.prototype.setLower4 = function (offset, value) {
   const upper4 = this.getUpper4(offset);
 
   this.setInt8(offset, (upper4 << 4) + value);
 };
 
-DataView.prototype.setUpper4 = function (offset, value): void {
+DataView.prototype.setUpper4 = function (offset, value) {
   const lower4 = this.getLower4(offset);
 
   this.setInt8(offset, lower4 + (value << 4));
 };
 
-DataView.prototype.setUint24 = function (offset, value, littleEndian): void {
+DataView.prototype.setUint24 = function (offset, value, littleEndian) {
   const buffer = new Uint8Array(this.buffer);
   const order = littleEndian ? littleEndian24 : bigEndian24;
 
@@ -90,11 +90,7 @@ DataView.prototype.setUint24 = function (offset, value, littleEndian): void {
   this.setInt8(offset + order[2], (value >>> 16) & 0xff);
 };
 
-DataView.prototype.setInt24 = function (
-  offset: number,
-  value: number,
-  littleEndian: boolean,
-): void {
+DataView.prototype.setInt24 = function (offset, value, littleEndian) {
   this.setUint24(offset, value < 0 ? value | 0x1000000 : value, littleEndian);
 };
 
@@ -112,11 +108,11 @@ BigInt.prototype.toHex = function (length = 0) {
   return hex;
 };
 
-Number.prototype.toBinary = function (): string {
+Number.prototype.toBinary = function () {
   return this.toString(2).padStart(8, "0");
 };
 
-Number.prototype.toBitCount = function (): number {
+Number.prototype.toBitCount = function () {
   if (this === 0) {
     return 0;
   }
@@ -124,7 +120,7 @@ Number.prototype.toBitCount = function (): number {
   return this.toBinary().match(/1/g)!.length;
 };
 
-Number.prototype.toHex = function (length = 0): string {
+Number.prototype.toHex = function (length = 0) {
   let hex = this.toString(16);
 
   if (length) {
@@ -138,6 +134,6 @@ Number.prototype.toHex = function (length = 0): string {
   return hex;
 };
 
-String.prototype.reverse = function (): string {
+String.prototype.reverse = function () {
   return this.split("").reverse().join("");
 };
