@@ -10,6 +10,7 @@ import {
   isDebug,
   isDirty,
 } from "$lib/stores";
+import debug from "$lib/utils/debug";
 import {
   getObjKey,
   getRegionArray,
@@ -296,7 +297,7 @@ export function getInt(
     offset < 0x0 ||
     offset + dataTypeToLength(dataType) - 1 > $dataView.byteLength - 1
   ) {
-    console.error(
+    debug.error(
       `Tried to read bytes past the end of a buffer at index ${offset} of ${$dataView.byteLength}`,
     );
 
@@ -370,7 +371,7 @@ export function setInt(
     offset < 0x0 ||
     offset + dataTypeToLength(dataType) - 1 > $dataView.byteLength - 1
   ) {
-    console.error(
+    debug.error(
       `Tried to write bytes past the end of a buffer at index ${offset} of ${$dataView.byteLength}`,
     );
 
@@ -491,8 +492,8 @@ export function getBigInt(
     offset < 0x0 ||
     offset + dataTypeToLength(dataType) - 1 > $dataView.byteLength - 1
   ) {
-    console.error(
-      `Tried to write bytes past the end of a buffer at index ${offset} of ${$dataView.byteLength}`,
+    debug.error(
+      `Tried to read bytes past the end of a buffer at index ${offset} of ${$dataView.byteLength}`,
     );
 
     return BigInt(0);
@@ -526,8 +527,8 @@ export function setBigInt(
     offset < 0x0 ||
     offset + dataTypeToLength(dataType) - 1 > $dataView.byteLength - 1
   ) {
-    console.error(
-      `Tried to read bytes past the end of a buffer at index ${offset} of ${$dataView.byteLength}`,
+    debug.error(
+      `Tried to write bytes past the end of a buffer at index ${offset} of ${$dataView.byteLength}`,
     );
 
     return;

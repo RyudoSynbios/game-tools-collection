@@ -1,6 +1,6 @@
 import { get } from "svelte/store";
 
-import { gameJson, gameUtils, isDebug } from "$lib/stores";
+import { gameJson, gameUtils } from "$lib/stores";
 import {
   dataTypeToLength,
   dataTypeToValue,
@@ -9,6 +9,7 @@ import {
   setBigInt,
   setInt,
 } from "$lib/utils/bytes";
+import debug from "$lib/utils/debug";
 import { utilsExists } from "$lib/utils/format";
 
 import type { DataType } from "$lib/types";
@@ -27,7 +28,6 @@ export function formatChecksum(
 export function updateChecksums(): void {
   const $gameJson = get(gameJson);
   const $gameUtils = get(gameUtils) as any;
-  const $isDebug = get(isDebug);
 
   $gameJson.checksums
     ?.sort((a, b) => (a.order || 9999) - (b.order || 9999))
@@ -37,7 +37,7 @@ export function updateChecksums(): void {
       let previousChecksum;
 
       if (item.disabled) {
-        console.log(`${item.name} > Skipped`);
+        debug.log(`${item.name} > Skipped`);
 
         return;
       }
@@ -72,14 +72,12 @@ export function updateChecksums(): void {
         });
       }
 
-      if ($isDebug) {
-        const newChecksum = checksum.toHex(hexLength);
+      const newChecksum = checksum.toHex(hexLength);
 
-        console.log(
-          `${item.name}: ${previousChecksum} > ${newChecksum} > ${
-            previousChecksum === newChecksum ? "Same" : "Different"
-          }`,
-        );
-      }
+      debug.log(
+        `${item.name}: ${previousChecksum} > ${newChecksum} > ${
+          previousChecksum === newChecksum ? "Same" : "Different"
+        }`,
+      );
     });
 }

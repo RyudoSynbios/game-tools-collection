@@ -5,9 +5,8 @@ import "@pixi/events";
 import { Extract } from "@pixi/extract";
 import { Sprite } from "@pixi/sprite";
 import { TilingSprite } from "@pixi/sprite-tiling";
-import { get } from "svelte/store";
 
-import { isDebug } from "$lib/stores";
+import debug from "$lib/utils/debug";
 
 export type Axis = "x" | "y";
 
@@ -100,7 +99,7 @@ export default class Canvas {
     },
   ): void {
     if (!["image", "sprites", "tilingSprite"].includes(type)) {
-      console.warn(`The type '${type}' is not available`);
+      debug.warn(`The type '${type}' is not available`);
       return;
     }
 
@@ -220,8 +219,6 @@ export default class Canvas {
     x = 0,
     y = 0,
   ): void {
-    const $isDebug = get(isDebug);
-
     const split = layer.split(".");
 
     layer = split[0];
@@ -229,7 +226,7 @@ export default class Canvas {
     const spriteIndex = split[1] ? parseInt(split[1]) : 0;
 
     if (!this.layers[layer]) {
-      console.error("This layer doesn't exists");
+      debug.error("This layer doesn't exists");
       return;
     }
 
@@ -244,26 +241,22 @@ export default class Canvas {
     let truncateEndY = 0;
 
     if (x < 0 || x + width > graphicWidth) {
-      if ($isDebug) {
-        console.warn(
-          `Try to draw outside of width bounds: ${
-            x < 0 ? x : x + width
-          }px > ${graphicWidth}px`,
-        );
-      }
+      debug.warn(
+        `Tried to draw outside of width bounds: ${
+          x < 0 ? x : x + width
+        }px > ${graphicWidth}px`,
+      );
 
       truncateStartX = Math.abs(Math.min(x, 0));
       truncateEndX = Math.abs(Math.min(graphicWidth - (x + width), 0));
     }
 
     if (y < 0 || y + height > graphicHeight) {
-      if ($isDebug) {
-        console.warn(
-          `Try to draw outside of height bounds: ${
-            y < 0 ? y : y + height
-          }px > ${graphicHeight}px`,
-        );
-      }
+      debug.warn(
+        `Tried to draw outside of height bounds: ${
+          y < 0 ? y : y + height
+        }px > ${graphicHeight}px`,
+      );
 
       truncateStartY = Math.abs(Math.min(y, 0));
       truncateEndY = Math.abs(Math.min(graphicHeight - (y + height), 0));
@@ -310,12 +303,12 @@ export default class Canvas {
     events?: { [key: string]: () => void },
   ) {
     if (!this.layers[layer]) {
-      console.error("This layer doesn't exists");
+      debug.error("This layer doesn't exists");
       return;
     }
 
     if (this.layers[layer].type !== "sprites") {
-      console.error("This layer is not a sprites type");
+      debug.error("This layer is not a sprites type");
       return;
     }
 

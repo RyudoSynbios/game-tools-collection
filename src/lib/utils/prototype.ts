@@ -1,6 +1,7 @@
 import { decToHex } from "hex2dec";
 
 import { extractBit } from "$lib/utils/bytes";
+import debug from "$lib/utils/debug";
 
 // DataView prototype adapted from https://gist.github.com/tjmehta/7e0f0d2aca966c71e70a453d0786f938
 
@@ -9,11 +10,11 @@ const bigEndian24 = [2, 1, 0];
 
 function boundsCheck(offset: number, size: number, max: number): boolean {
   if (offset < 0) {
-    console.error("Tried to write to a negative index");
+    debug.error("Tried to write to a negative index");
 
     return false;
   } else if (offset + size > max) {
-    console.error(
+    debug.error(
       `Tried to write ${size} bytes past the end of a buffer at index ${offset} of ${max}`,
     );
 

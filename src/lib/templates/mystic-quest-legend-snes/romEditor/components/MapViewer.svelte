@@ -5,6 +5,7 @@
   import { isDebug } from "$lib/stores";
   import { extractBit, getInt } from "$lib/utils/bytes";
   import Canvas, { type Axis } from "$lib/utils/canvas";
+  import debug from "$lib/utils/debug";
   import { getTileData } from "$lib/utils/common/superNintendo";
   import { capitalize, getRegionArray } from "$lib/utils/format";
   import {
@@ -183,9 +184,7 @@
         }
 
         if (paletteIndex > 7) {
-          if ($isDebug) {
-            console.warn(`Palette ${paletteIndex} is out of range`);
-          }
+          debug.warn(`Palette ${paletteIndex} is out of range`);
 
           paletteIndex = 0;
         }
@@ -448,11 +447,9 @@
           );
 
           if (0x48 + position + 0x8 > array.length) {
-            if ($isDebug) {
-              console.warn(
-                `Sprite offset ${0x48 + position + 0x8} is out of range`,
-              );
-            }
+            debug.warn(
+              `Sprite offset ${0x48 + position + 0x8} is out of range`,
+            );
 
             position = 0;
           }
@@ -678,9 +675,7 @@
 
         // TODO:
         if (paletteIndex >= 6) {
-          if ($isDebug) {
-            console.warn(`paletteIndex ${paletteIndex} is out of range`);
-          }
+          debug.warn(`paletteIndex ${paletteIndex} is out of range`);
 
           paletteIndex = 0;
         }

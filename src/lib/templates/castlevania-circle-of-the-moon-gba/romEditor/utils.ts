@@ -3,6 +3,7 @@ import { get } from "svelte/store";
 import { gameJson } from "$lib/stores";
 import { extractBinary, extractBit, getInt } from "$lib/utils/bytes";
 import type Canvas from "$lib/utils/canvas";
+import debug from "$lib/utils/debug";
 import { getRegionArray } from "$lib/utils/format";
 import { applyPalette, flipTileData } from "$lib/utils/graphics";
 
@@ -318,7 +319,7 @@ export function getBlock(
 
     if (effects) {
       if (paletteSet === 0) {
-        console.warn("Use paletteSet 0");
+        debug.warn("Use paletteSet 0");
       }
     }
 
@@ -348,7 +349,7 @@ export function getDecompressedData(offset: number): number[][] {
   let decompressedData: number[] = [];
 
   if (magic !== 0x10) {
-    console.warn(`Image in offet 0x${offset.toHex()} is not LZ77 compressed.`);
+    debug.warn(`Image in offet 0x${offset.toHex()} is not LZ77 compressed.`);
 
     return [];
   }

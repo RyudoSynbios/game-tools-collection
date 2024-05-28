@@ -1,8 +1,6 @@
-import { get } from "svelte/store";
-
-import { isDebug } from "$lib/stores";
 import { extractBit, getInt } from "$lib/utils/bytes";
 import type Canvas from "$lib/utils/canvas";
+import debug from "$lib/utils/debug";
 import { applyPalette } from "$lib/utils/graphics";
 import type Three from "$lib/utils/three";
 
@@ -36,8 +34,6 @@ export function getComponent(component: string): any {
 }
 
 export function getDecompressedData(offset: number): Uint8Array {
-  const $isDebug = get(isDebug);
-
   const decompressedData: number[] = [];
 
   const size = getInt(offset, "uint32", { bigEndian: true });
@@ -54,9 +50,7 @@ export function getDecompressedData(offset: number): Uint8Array {
     offset += 0x1;
 
     if (decompressedData.length === 0 && getInt(offset, "uint8") !== 0x36) {
-      if ($isDebug) {
-        console.warn("Not an asset file");
-      }
+      debug.warn("Not an asset file");
 
       return new Uint8Array();
     }
@@ -135,8 +129,6 @@ export function setMesh(
     uvsTmp: number[];
   },
 ): void {
-  const $isDebug = get(isDebug);
-
   mesh.vertices = [];
   mesh.indices = [];
   mesh.uvs = [];
@@ -147,11 +139,7 @@ export function setMesh(
   const offset = data.getUint24(i + 0x5);
 
   if (offset > decompressedData.length) {
-    if ($isDebug) {
-      console.warn(
-        `Offset 0x${offset.toHex()} is out of decompressedData length`,
-      );
-    }
+    debug.warn(`Offset 0x${offset.toHex()} is out of decompressedData length`);
 
     return;
   }
@@ -173,14 +161,12 @@ export function setMesh(
     mesh.uvsTmp.push(uvX, uvY);
   }
 
-  if ($isDebug) {
-    console.log(
-      `%cmesh (${verticesCount} vertices): 0x${offset.toHex()} (0x${data
-        .getUint32(i)
-        .toHex()})`,
-      "color: blue;",
-    );
-  }
+  debug.color(
+    `mesh (${verticesCount} vertices): 0x${offset.toHex()} (0x${data
+      .getUint32(i)
+      .toHex()})`,
+    "blue",
+  );
 }
 
 export function resetTexture(
@@ -189,8 +175,6 @@ export function resetTexture(
   texture: Texture,
   log = false,
 ): void {
-  const $isDebug = get(isDebug);
-
   texture.base64 = "";
   texture.pixelsOffset = 0x0;
   texture.paletteLength = 0x0;
@@ -200,12 +184,12 @@ export function resetTexture(
   texture.width = 8;
   texture.height = 8;
 
-  if ($isDebug && log) {
-    console.log(
-      `%ctexture reset: ${data.getUint24(offset + 0x1).toHex(6)} ${data
+  if (log) {
+    debug.color(
+      `texture reset: ${data.getUint24(offset + 0x1).toHex(6)} ${data
         .getUint32(offset + 0x4)
         .toHex(8)}`,
-      "color: gold;",
+      "gold",
     );
   }
 }
@@ -215,8 +199,6 @@ export function setColor(
   offset: number,
   texture: Texture,
 ): void {
-  const $isDebug = get(isDebug);
-
   const unknown = data.getUint24(offset + 0x1);
   const color = data.getUint24(offset + 0x4);
 
@@ -224,12 +206,10 @@ export function setColor(
     texture.color = color;
   }
 
-  if ($isDebug) {
-    console.log(
-      `%capply color (${unknown.toHex()}): 0x${color.toHex(6)}`,
-      "color: magenta;",
-    );
-  }
+  debug.color(
+    `apply color (${unknown.toHex()}): 0x${color.toHex(6)}`,
+    "magenta",
+  );
 }
 
 export function setTextureOffsets(
@@ -237,8 +217,6 @@ export function setTextureOffsets(
   offset: number,
   texture: Texture,
 ): void {
-  const $isDebug = get(isDebug);
-
   const type = data.getUint24(offset + 0x1);
   offset = data.getUint24(offset + 0x5);
 
@@ -247,29 +225,23 @@ export function setTextureOffsets(
 
     texture.paletteOffset = offset;
 
-    if ($isDebug) {
-      console.log(`%ctexture palette: 0x${offset.toHex()}`, "color: purple;");
-    }
+    debug.color(`texture palette: 0x${offset.toHex()}`, "purple");
   } else if (type === 0x180000) {
     // 32-bit texture loaded from next asset
 
-    if ($isDebug) {
-      // TODO
-      console.log(
-        "%ctexture loaded from next asset (not handled for the moment)",
-        "color: purple;",
-      );
-    }
+    // TODO
+    debug.color(
+      "texture loaded from next asset (not handled for the moment)",
+      "purple",
+    );
   } else if (type === 0x480003 || type === 0x48003f || type === 0x500000) {
     // Pixels
 
     texture.pixelsOffset = offset;
 
-    if ($isDebug) {
-      console.log(`%ctexture pixels: 0x${offset.toHex()}`, "color: purple;");
-    }
-  } else if ($isDebug) {
-    console.warn(`Unknown texture type ${type.toHex(6)}`);
+    debug.color(`texture pixels: 0x${offset.toHex()}`, "purple");
+  } else {
+    debug.warn(`Unknown texture type ${type.toHex(6)}`);
   }
 }
 
@@ -278,8 +250,6 @@ export function setTexturePaletteLength(
   offset: number,
   texture: Texture,
 ): void {
-  const $isDebug = get(isDebug);
-
   const unknown1 = data.getUint24(offset + 0x1);
   const unknown2 = data.getUint32(offset + 0x4);
 
@@ -291,14 +261,12 @@ export function setTexturePaletteLength(
     texture.paletteLength = 0x100;
   }
 
-  if ($isDebug) {
-    console.log(
-      `%ctexture palette length (0x${texture.paletteLength.toHex()}): ${unknown1.toHex(
-        6,
-      )} ${unknown2.toHex(8)}`,
-      "color: darkgreen;",
-    );
-  }
+  debug.color(
+    `texture palette length (0x${texture.paletteLength.toHex()}): ${unknown1.toHex(
+      6,
+    )} ${unknown2.toHex(8)}`,
+    "darkgreen",
+  );
 }
 
 export function setTextureManipulations(
@@ -306,8 +274,6 @@ export function setTextureManipulations(
   offset: number,
   texture: Texture,
 ): void {
-  const $isDebug = get(isDebug);
-
   const unknown = data.getUint24(offset + 0x1);
   const value = data.getUint32(offset + 0x4);
 
@@ -316,16 +282,12 @@ export function setTextureManipulations(
     (unknown & 0x400) === 0x0 &&
     (unknown & 0x800) === 0x0
   ) {
-    if ($isDebug) {
-      console.log(
-        `%cunknown texture manipulation ${data
-          .getUint8(offset)
-          .toHex(2)}: ${data.getUint24(offset + 0x1).toHex(6)} ${data
-          .getUint32(offset + 0x4)
-          .toHex(8)}`,
-        "color: red;",
-      );
-    }
+    debug.color(
+      `unknown texture manipulation ${data.getUint8(offset).toHex(2)}: ${data
+        .getUint24(offset + 0x1)
+        .toHex(6)} ${data.getUint32(offset + 0x4).toHex(8)}`,
+      "red",
+    );
 
     return;
   }
@@ -349,14 +311,12 @@ export function setTextureManipulations(
     }
   }
 
-  if ($isDebug) {
-    console.log(
-      `%ctexture manipulation repeat (${unknown.toHex(6)}): ${value.toHex(
-        8,
-      )} (repeatX: ${texture.repeatX}, repeatY: ${texture.repeatY})`,
-      `color: cyan;`,
-    );
-  }
+  debug.color(
+    `texture manipulation repeat (${unknown.toHex(6)}): ${value.toHex(
+      8,
+    )} (repeatX: ${texture.repeatX}, repeatY: ${texture.repeatY})`,
+    "cyan",
+  );
 }
 
 export async function applyTexture(
@@ -371,8 +331,6 @@ export async function applyTexture(
     texture: Uint8Array;
   }[],
 ): Promise<void> {
-  const $isDebug = get(isDebug);
-
   // TODO: Not mode but size to substract
   const mode = data.getUint8(offset + 0x1);
 
@@ -405,14 +363,12 @@ export async function applyTexture(
     texture: textureTmp,
   });
 
-  if ($isDebug) {
-    console.log(
-      `%capply texture (${texture.width}x${texture.height}) [${mode}]: ${data
-        .getUint24(offset + 0x1)
-        .toHex(6)} ${data.getUint32(offset + 0x4).toHex(8)}`,
-      "color: darkblue;",
-    );
-  }
+  debug.color(
+    `apply texture (${texture.width}x${texture.height}) [${mode}]: ${data
+      .getUint24(offset + 0x1)
+      .toHex(6)} ${data.getUint32(offset + 0x4).toHex(8)}`,
+    "darkblue",
+  );
 }
 
 export function addMesh(
@@ -423,8 +379,6 @@ export function addMesh(
   texture: Texture,
   isFace = false,
 ): void {
-  const $isDebug = get(isDebug);
-
   if (isFace) {
     for (let j = 0x0; j < 0x7; j += 0x1) {
       mesh.indices.push(data.getUint8(offset + 0x1 + j) / 0x2);
@@ -453,12 +407,7 @@ export function addMesh(
     textureRepeatY: texture.repeatY,
   });
 
-  if ($isDebug) {
-    console.log(
-      `%cadd mesh (${isFace ? "face" : "triangle"})`,
-      "color: green;",
-    );
-  }
+  debug.color(`add mesh (${isFace ? "face" : "triangle"})`, "green");
 
   mesh.indices = [];
 }

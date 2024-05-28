@@ -2,9 +2,9 @@
   import { onDestroy, onMount } from "svelte";
 
   import Checkbox from "$lib/components/Checkbox.svelte";
-  import { isDebug } from "$lib/stores";
   import { getInt } from "$lib/utils/bytes";
   import Canvas from "$lib/utils/canvas";
+  import debug from "$lib/utils/debug";
   import Three from "$lib/utils/three";
 
   import {
@@ -98,9 +98,7 @@
   }
 
   async function updateCanvas(): Promise<void> {
-    if ($isDebug) {
-      console.clear();
-    }
+    debug.clear();
 
     const decompressedData = getDecompressedData(assets[assetIndex]);
 
@@ -144,11 +142,9 @@
 
     const filteredHeadersOffsets = headersOffsets.filter((header) => {
       if (header.type === 0x4) {
-        if ($isDebug) {
-          console.warn(
-            `Header has an unknown type beahviour: ${JSON.stringify(header)}`,
-          );
-        }
+        debug.warn(
+          `Header has an unknown type beahviour: ${JSON.stringify(header)}`,
+        );
 
         return false;
       }
@@ -208,13 +204,11 @@
 
       const { data } = header;
 
-      if ($isDebug) {
-        console.log("header", index, {
-          type: header.type.toHex(),
-          value: header.value.toHex(),
-          offset: header.offset.toHex(),
-        });
-      }
+      debug.log("header", index, {
+        type: header.type.toHex(),
+        value: header.value.toHex(),
+        offset: header.offset.toHex(),
+      });
 
       if ([0x0, 0x5, 0x6, 0x8].includes(header.type)) {
         // 3D Object
@@ -240,14 +234,12 @@
           height: 8,
         };
 
-        if ($isDebug) {
-          console.log(
-            `%c[header ${index} [object] (0x${filteredHeadersOffsets[
-              index
-            ].offset.toHex()})]`,
-            "color: grey;",
-          );
-        }
+        debug.color(
+          `[header ${index} [object] (0x${filteredHeadersOffsets[
+            index
+          ].offset.toHex()})]`,
+          "grey",
+        );
 
         for (let i = 0x0; i < data.byteLength - 0x7; i += 0x8) {
           const key = data.getUint8(i);
@@ -264,9 +256,7 @@
               addMesh(three, data, i, mesh, texture, true);
               break;
             case 0xb8:
-              if ($isDebug) {
-                console.log(`%c[end of header ${index}]`, "color: grey;");
-              }
+              debug.color(`[end of header ${index}]`, "grey");
               return;
             case 0xbc:
               setColor(data, i, texture);
@@ -297,14 +287,12 @@
               setTextureOffsets(data, i, texture);
               break;
             default:
-              if ($isDebug) {
-                console.log(
-                  `%c${data.getUint8(i).toHex(2)}: ${data
-                    .getUint24(i + 0x1)
-                    .toHex(6)} ${data.getUint32(i + 0x4).toHex(8)}`,
-                  "color: red;",
-                );
-              }
+              debug.color(
+                `${data.getUint8(i).toHex(2)}: ${data
+                  .getUint24(i + 0x1)
+                  .toHex(6)} ${data.getUint32(i + 0x4).toHex(8)}`,
+                "red",
+              );
           }
         }
       } else if (header.type === 0x12 || header.type === 0x15) {
@@ -318,14 +306,12 @@
           texture.width -= 1;
         }
 
-        if ($isDebug) {
-          console.log(
-            `%c[header ${index} [ci pixels] (0x${filteredHeadersOffsets[
-              index
-            ].offset.toHex()})]`,
-            "color: grey;",
-          );
-        }
+        debug.color(
+          `[header ${index} [ci pixels] (0x${filteredHeadersOffsets[
+            index
+          ].offset.toHex()})]`,
+          "grey",
+        );
       } else if (header.type === 0x19) {
         // 32-bit Texture
 
@@ -345,19 +331,17 @@
           texture: sprite,
         });
 
-        if ($isDebug) {
-          console.log(
-            `%c[header ${index} [32-bit texture] (0x${filteredHeadersOffsets[
-              index
-            ].offset.toHex()})]`,
-            "color: grey;",
-          );
+        debug.color(
+          `[header ${index} [32-bit texture] (0x${filteredHeadersOffsets[
+            index
+          ].offset.toHex()})]`,
+          "grey",
+        );
 
-          console.log(
-            `%ctexture format (32-bit ${texture.width}x${texture.height} ${texture.paletteLength} colors)`,
-            `color: orange;`,
-          );
-        }
+        debug.color(
+          `texture format (32-bit ${texture.width}x${texture.height} ${texture.paletteLength} colors)`,
+          "orange",
+        );
       } else if (header.type === 0x1a) {
         // Colour Index Palette
 
@@ -390,23 +374,19 @@
           texture: textureTmp,
         });
 
-        if ($isDebug) {
-          console.log(
-            `%c[header ${index} [ci pixels] (0x${filteredHeadersOffsets[
-              index
-            ].offset.toHex()})]`,
-            "color: grey;",
-          );
+        debug.color(
+          `[header ${index} [ci pixels] (0x${filteredHeadersOffsets[
+            index
+          ].offset.toHex()})]`,
+          "grey",
+        );
 
-          console.log(
-            `%ctexture format (CI ${texture.width}x${texture.height} ${texture.paletteLength} colors)`,
-            `color: orange;`,
-          );
-        }
+        debug.color(
+          `texture format (CI ${texture.width}x${texture.height} ${texture.paletteLength} colors)`,
+          "orange",
+        );
       } else {
-        if ($isDebug) {
-          console.warn("Not a handled asset header");
-        }
+        debug.warn("Not a handled asset header");
       }
     }, Promise.resolve());
 
