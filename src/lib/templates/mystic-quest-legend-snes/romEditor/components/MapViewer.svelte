@@ -685,7 +685,7 @@
           paletteIndex = 0;
         }
 
-        if (spriteIndex <= 0x80) {
+        if (spriteIndex <= 0x80 && spritesChunksDatas[spriteIndex]) {
           if (spritesChunksDatas[spriteIndex][0].length > 0) {
             spritesChunksDatas[spriteIndex].forEach((tileData, tileIndex) => {
               const tile = applyPalette(
