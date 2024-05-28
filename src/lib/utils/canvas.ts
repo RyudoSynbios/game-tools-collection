@@ -235,6 +235,14 @@ export default class Canvas {
     let graphicWidth = this.layers[layer].width;
     let graphicHeight = this.layers[layer].height;
 
+    if (this.layers[layer].type === "sprites") {
+      const sprite = this.layers[layer].container.getChildAt(spriteIndex) as
+        | Sprite
+        | TilingSprite;
+
+      graphicWidth = sprite.width;
+    }
+
     let truncateStartX = 0;
     let truncateEndX = 0;
     let truncateStartY = 0;
@@ -260,14 +268,6 @@ export default class Canvas {
 
       truncateStartY = Math.abs(Math.min(y, 0));
       truncateEndY = Math.abs(Math.min(graphicHeight - (y + height), 0));
-    }
-
-    if (this.layers[layer].type === "sprites") {
-      const sprite = this.layers[layer].container.getChildAt(spriteIndex) as
-        | Sprite
-        | TilingSprite;
-
-      graphicWidth = sprite.width;
     }
 
     for (let line = truncateStartY; line < height - truncateEndY; line += 1) {
@@ -339,6 +339,8 @@ export default class Canvas {
         this.layers[key].height = this.height;
         this.layers[key].datas = [new Uint8Array(this.width * this.height * 4)];
       } else if (this.layers[key].type === "sprites") {
+        this.layers[key].width = this.width;
+        this.layers[key].height = this.height;
         this.layers[key].datas = [];
         this.layers[key].container.children.forEach((child) => child.destroy());
       } else if (this.layers[key].type === "tilingSprite") {
@@ -370,11 +372,18 @@ export default class Canvas {
       this.layers[key].container.children.forEach((displayObject, index) => {
         const sprite = displayObject as Sprite | TilingSprite;
 
+        const width =
+          this.layers[key].type === "sprites"
+            ? sprite.width
+            : this.layers[key].width;
+
+        const height =
+          this.layers[key].type === "sprites"
+            ? sprite.height
+            : this.layers[key].height;
+
         const baseTexture = new BaseTexture(
-          new BufferResource(this.layers[key].datas[index], {
-            width: this.layers[key].width || sprite.width,
-            height: this.layers[key].height || sprite.height,
-          }),
+          new BufferResource(this.layers[key].datas[index], { width, height }),
           { scaleMode: 0 },
         );
 
