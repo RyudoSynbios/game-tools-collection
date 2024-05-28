@@ -4,7 +4,7 @@
   import Checkbox from "$lib/components/Checkbox.svelte";
   import { isDebug } from "$lib/stores";
   import { getInt } from "$lib/utils/bytes";
-  import { Canvas } from "$lib/utils/canvas";
+  import Canvas from "$lib/utils/canvas";
   import { capitalize } from "$lib/utils/format";
   import {
     applyPalette,

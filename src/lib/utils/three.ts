@@ -21,7 +21,7 @@ import {
 } from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 
-export class Three {
+export default class Three {
   private scene: Scene;
   private renderer: WebGLRenderer;
   private camera: PerspectiveCamera;

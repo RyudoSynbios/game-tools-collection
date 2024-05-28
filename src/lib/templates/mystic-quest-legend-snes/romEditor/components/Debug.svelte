@@ -2,7 +2,7 @@
   import { onDestroy, onMount } from "svelte";
 
   import Input from "$lib/components/Input.svelte";
-  import { Canvas } from "$lib/utils/canvas";
+  import Canvas from "$lib/utils/canvas";
   import { getPalette15Bit } from "$lib/utils/graphics";
 
   import { generateMonsterCanvas } from "../utils";

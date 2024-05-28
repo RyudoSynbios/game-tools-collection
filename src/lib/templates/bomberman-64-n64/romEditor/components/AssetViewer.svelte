@@ -4,8 +4,8 @@
   import Checkbox from "$lib/components/Checkbox.svelte";
   import { isDebug } from "$lib/stores";
   import { getInt } from "$lib/utils/bytes";
-  import { Canvas } from "$lib/utils/canvas";
-  import { Three } from "$lib/utils/three";
+  import Canvas from "$lib/utils/canvas";
+  import Three from "$lib/utils/three";
 
   import {
     addMesh,

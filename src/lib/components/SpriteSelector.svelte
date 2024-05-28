@@ -1,7 +1,7 @@
 <script lang="ts">
   import { onDestroy, onMount } from "svelte";
 
-  import { Canvas } from "$lib/utils/canvas";
+  import Canvas from "$lib/utils/canvas";
 
   export let spriteIndex: number;
   export let spriteWidth: number;

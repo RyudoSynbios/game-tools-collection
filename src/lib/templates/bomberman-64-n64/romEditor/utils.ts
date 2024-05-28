@@ -2,9 +2,9 @@ import { get } from "svelte/store";
 
 import { isDebug } from "$lib/stores";
 import { extractBit, getInt } from "$lib/utils/bytes";
-import type { Canvas } from "$lib/utils/canvas";
+import type Canvas from "$lib/utils/canvas";
 import { applyPalette } from "$lib/utils/graphics";
-import type { Three } from "$lib/utils/three";
+import type Three from "$lib/utils/three";
 
 import type { Bit, Palette } from "$lib/types";
 

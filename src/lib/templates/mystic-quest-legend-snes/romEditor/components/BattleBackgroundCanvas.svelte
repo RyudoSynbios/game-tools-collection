@@ -3,7 +3,7 @@
 
   import { dataView } from "$lib/stores";
   import { getInt } from "$lib/utils/bytes";
-  import { Canvas } from "$lib/utils/canvas";
+  import Canvas from "$lib/utils/canvas";
   import { getPalette15Bit } from "$lib/utils/graphics";
 
   import {

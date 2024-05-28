@@ -4,7 +4,7 @@
   import Checkbox from "$lib/components/Checkbox.svelte";
   import { isDebug } from "$lib/stores";
   import { extractBit, getInt } from "$lib/utils/bytes";
-  import { Canvas, type Axis } from "$lib/utils/canvas";
+  import Canvas, { type Axis } from "$lib/utils/canvas";
   import { getTileData } from "$lib/utils/common/superNintendo";
   import { capitalize, getRegionArray } from "$lib/utils/format";
   import {

@@ -29,7 +29,7 @@ interface Layer {
 
 extensions.add(Extract);
 
-export class Canvas {
+export default class Canvas {
   private app: Application;
   private width: number;
   private height: number;

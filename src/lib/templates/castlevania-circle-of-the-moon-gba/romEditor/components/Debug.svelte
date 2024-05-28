@@ -2,7 +2,7 @@
   import { onDestroy, onMount } from "svelte";
 
   import { getInt } from "$lib/utils/bytes";
-  import { Canvas } from "$lib/utils/canvas";
+  import Canvas from "$lib/utils/canvas";
   import { getRegionArray } from "$lib/utils/format";
   import { applyPalette, getPalette15Bit } from "$lib/utils/graphics";
 
