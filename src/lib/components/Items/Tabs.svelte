@@ -52,6 +52,26 @@
     }
   }
 
+  function getNextEnabledTab(): number {
+    for (let i = selectedTab + 1; i < tabs.length; i += 1) {
+      if (!tabs[i].disabled) {
+        return i;
+      }
+    }
+
+    return selectedTab;
+  }
+
+  function getPreviousEnabledTab(): number {
+    for (let i = selectedTab - 1; i >= 0; i -= 1) {
+      if (!tabs[i].disabled) {
+        return i;
+      }
+    }
+
+    return selectedTab;
+  }
+
   function handleTabClick(index: number): void {
     if (tabs[index] && !tabs[index].disabled) {
       selectedTab = index;
@@ -82,9 +102,9 @@
       event.preventDefault();
 
       if (event.key === "ArrowUp" || event.key === "ArrowLeft") {
-        handleTabClick(selectedTab - 1);
+        handleTabClick(getPreviousEnabledTab());
       } else if (event.key === "ArrowRight" || event.key === "ArrowDown") {
-        handleTabClick(selectedTab + 1);
+        handleTabClick(getNextEnabledTab());
       }
 
       const selectedTabEl = ulEl?.children[selectedTab] as HTMLLIElement;
