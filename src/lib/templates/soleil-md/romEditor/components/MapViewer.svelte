@@ -33,8 +33,6 @@
     } else {
       canvas.hideLayer(layer);
     }
-
-    updateCanvas();
   }
 
   function updateCanvas(): void {

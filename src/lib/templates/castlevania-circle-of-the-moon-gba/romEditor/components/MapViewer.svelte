@@ -56,19 +56,9 @@
   function handleLayerVisibilityChange(event: Event, layer: string): void {
     if ((event.target as HTMLInputElement).checked) {
       canvas.showLayer(layer);
-
-      if ($isDebug && layer === "collisions") {
-        canvasDebug.showLayer("debugCollisions");
-      }
     } else {
       canvas.hideLayer(layer);
-
-      if ($isDebug && layer === "collisions") {
-        canvasDebug.hideLayer("debugCollisions");
-      }
     }
-
-    updateCanvas();
   }
 
   function handleMonsterSetChange(event: Event): void {

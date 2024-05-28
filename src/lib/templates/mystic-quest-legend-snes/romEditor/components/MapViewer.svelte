@@ -90,8 +90,6 @@
         canvasDebug.hideLayer("debugCollisions");
       }
     }
-
-    updateCanvas();
   }
 
   function updateCanvas(): void {
@@ -633,23 +631,19 @@
     }
 
     // Collisions
-    if (canvas.getLayerVisibility("collisions")) {
-      for (let row = 0x0; row < rows; row += 0x1) {
-        for (let column = 0x0; column < columns; column += 0x1) {
-          // The game add 0x80 to the tilesChunkIndex to mark it as hidden on the map
-          const tilesChunkIndex = mappedTiles[row * columns + column] & 0x7f;
+    for (let row = 0x0; row < rows; row += 0x1) {
+      for (let column = 0x0; column < columns; column += 0x1) {
+        // The game add 0x80 to the tilesChunkIndex to mark it as hidden on the map
+        const tilesChunkIndex = mappedTiles[row * columns + column] & 0x7f;
 
-          if (canvas.getLayerVisibility("collisions")) {
-            canvas.addGraphic(
-              "collisions",
-              tilesChunksCollisions[tilesChunkIndex],
-              16,
-              16,
-              column * 16,
-              row * 16,
-            );
-          }
-        }
+        canvas.addGraphic(
+          "collisions",
+          tilesChunksCollisions[tilesChunkIndex],
+          16,
+          16,
+          column * 16,
+          row * 16,
+        );
       }
     }
 
@@ -777,16 +771,14 @@
           );
         });
 
-        if (canvas.getLayerVisibility("collisions")) {
-          canvasDebug.addGraphic(
-            "debugCollisions",
-            tilesChunksCollisions[index],
-            16,
-            16,
-            x,
-            y,
-          );
-        }
+        canvasDebug.addGraphic(
+          "debugCollisions",
+          tilesChunksCollisions[index],
+          16,
+          16,
+          x,
+          y,
+        );
       });
 
       spritesDatas.forEach((spriteDatas, index) => {
