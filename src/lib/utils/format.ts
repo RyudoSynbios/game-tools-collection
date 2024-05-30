@@ -161,7 +161,25 @@ export function makeOperations(
   return value;
 }
 
-export function mergeUint8Arrays(uint8Arrays: Uint8Array[]): Uint8Array {
+export function getLocalStorage(key: string): string {
+  const isBrowser = typeof window !== "undefined";
+
+  if (isBrowser) {
+    return localStorage[key];
+  }
+
+  return "";
+}
+
+export function setLocalStorage(key: string, value: number | string): void {
+  const isBrowser = typeof window !== "undefined";
+
+  if (isBrowser) {
+    localStorage[key] = value;
+  }
+}
+
+export function mergeUint8Arrays(...uint8Arrays: Uint8Array[]): Uint8Array {
   const length = uint8Arrays.reduce(
     (length, uint8Array) => (length += uint8Array.byteLength),
     0,
@@ -279,16 +297,29 @@ export function unitValueToTimestamp(
   return value;
 }
 
-export function getUtils(value = "", params = {}): any {
+export function getUtils(value = "", ...params: any[]): any {
   const $gameUtils = get(gameUtils) as any;
 
   let method: string = value;
 
-  if (method && method.match(/\(\)$/)) {
-    method = method.replace(/\(\)$/, "");
+  const regex = /\((.*?)\)$/;
+
+  if (method && method.match(regex)) {
+    regex
+      .exec(method)![1]
+      .split(",")
+      .forEach((param) => {
+        if (!param.match(/'/)) {
+          params.push(parseInt(param));
+        } else {
+          params.push(param.replaceAll("'", ""));
+        }
+      });
+
+    method = method.replace(regex, "");
 
     if (utilsExists(method)) {
-      value = $gameUtils[method](params);
+      value = $gameUtils[method](...params);
     }
   }
 

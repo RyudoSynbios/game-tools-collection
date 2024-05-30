@@ -15,7 +15,7 @@
   } from "../template";
   import { pointerToOffset } from "../utils";
 
-  let monsterNames: string[];
+  let monsterNames: { [value: number]: string };
 
   const namesOffset = pointerToOffset(pointerToMonsterNames);
   const namesLength = getRegionArray(monsterNamesLength);
@@ -33,10 +33,11 @@
   $: {
     $gameJson;
 
-    monsterNames = $gameJson.resources?.monsterNames as string[];
+    monsterNames = $gameJson.resources?.monsterNames as {
+      [value: number]: string;
+    };
 
     item = {
-      id: "monsters",
       type: "tabs",
       vertical: true,
       items: [...Array(81).keys()].map((index) => ({

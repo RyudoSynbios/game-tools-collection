@@ -1,3 +1,5 @@
+import type { Group } from "three";
+
 import { extractBit, getInt } from "$lib/utils/bytes";
 import type Canvas from "$lib/utils/canvas";
 import debug from "$lib/utils/debug";
@@ -149,14 +151,14 @@ export function setMesh(
       decompressedData.slice(offset + i * 0x10, offset + (i + 1) * 0x10).buffer,
     );
 
-    const x = object.getInt16(0x0);
-    const y = object.getInt16(0x2);
-    const z = object.getInt16(0x4);
+    const x = getInt(0x0, "int16", { bigEndian: true }, object);
+    const y = getInt(0x2, "int16", { bigEndian: true }, object);
+    const z = getInt(0x4, "int16", { bigEndian: true }, object);
 
     mesh.vertices.push(x, y, z);
 
-    const uvX = object.getInt16(0x8);
-    const uvY = object.getInt16(0xa);
+    const uvX = getInt(0x8, "int16", { bigEndian: true }, object);
+    const uvY = getInt(0xa, "int16", { bigEndian: true }, object);
 
     mesh.uvsTmp.push(uvX, uvY);
   }
@@ -372,11 +374,12 @@ export async function applyTexture(
 }
 
 export function addMesh(
-  three: Three,
   data: DataView,
   offset: number,
   mesh: Mesh,
   texture: Texture,
+  three: Three,
+  instanceId: string,
   isFace = false,
 ): void {
   if (isFace) {
@@ -400,11 +403,16 @@ export function addMesh(
     mesh.uvs.push(uv / multiplicator);
   });
 
-  three.addMesh(mesh.vertices, mesh.indices, mesh.uvs, {
-    color: texture.color,
-    texture: texture.base64,
-    textureRepeatX: texture.repeatX,
-    textureRepeatY: texture.repeatY,
+  three.addMesh(mesh.vertices, mesh.indices, mesh.uvs, instanceId, {
+    material: {
+      color: texture.color,
+      texture: {
+        base64: texture.base64,
+        flipY: false,
+        repeatX: texture.repeatX,
+        repeatY: texture.repeatY,
+      },
+    },
   });
 
   debug.color(`add mesh (${isFace ? "face" : "triangle"})`, "green");

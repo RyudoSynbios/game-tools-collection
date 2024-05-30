@@ -1,10 +1,10 @@
 <script lang="ts">
   import { onDestroy, onMount } from "svelte";
 
-  import Checkbox from "$lib/components/Checkbox.svelte";
   import { getInt } from "$lib/utils/bytes";
   import Canvas from "$lib/utils/canvas";
   import debug from "$lib/utils/debug";
+  import { generateGraphicsSheet } from "$lib/utils/graphics";
   import Three from "$lib/utils/three";
 
   import {
@@ -69,14 +69,6 @@
     three.resetCamera();
   }
 
-  function handleGridHelperStatusChange(event: Event): void {
-    if ((event.target as HTMLInputElement).checked) {
-      three.showGridHelper();
-    } else {
-      three.hideGridHelper();
-    }
-  }
-
   function handleKeyDown(event: any): void {
     if (!event.ctrlKey && !event.metaKey && event.key === "f") {
       event.preventDefault();
@@ -89,16 +81,15 @@
     }
   }
 
-  function handleWireframeStatusChange(event: Event): void {
-    if ((event.target as HTMLInputElement).checked) {
-      three.showWireframe();
-    } else {
-      three.hideWireframe();
-    }
-  }
-
   async function updateCanvas(): Promise<void> {
     debug.clear();
+
+    canvas.reset();
+    three.reset();
+
+    const instanceId = three.getInstanceId();
+
+    three.setLoading(true);
 
     const decompressedData = getDecompressedData(assets[assetIndex]);
 
@@ -112,7 +103,6 @@
     let decompressedDataPosition = 0xc;
 
     let headersOffsets: {
-      asset: number;
       type: number;
       value: number;
       offset: number;
@@ -127,10 +117,9 @@
       );
 
       headersOffsets.push({
-        asset: assetIndex,
-        type: header.getInt32(0x0),
-        value: header.getInt32(0x4),
-        offset: header.getUint32(0x8),
+        type: getInt(0x0, "int32", { bigEndian: true }, header),
+        value: getInt(0x4, "int32", { bigEndian: true }, header),
+        offset: getInt(0x8, "int32", { bigEndian: true }, header),
       });
 
       decompressedDataPosition += 0xc;
@@ -153,7 +142,6 @@
     });
 
     let headers: {
-      asset: number;
       type: number;
       value: number;
       offset: number;
@@ -171,8 +159,6 @@
         data: new DataView(decompressedData.slice(offset, end).buffer),
       };
     });
-
-    three.reset();
 
     const textures: {
       width: number;
@@ -201,6 +187,10 @@
 
     await headers.reduce(async (previousHeader, header, index) => {
       await previousHeader;
+
+      if (instanceId !== three.getInstanceId()) {
+        return previousHeader;
+      }
 
       const { data } = header;
 
@@ -244,7 +234,7 @@
         for (let i = 0x0; i < data.byteLength - 0x7; i += 0x8) {
           const key = data.getUint8(i);
 
-          if (header.asset !== assetIndex) {
+          if (instanceId !== three.getInstanceId()) {
             return previousHeader;
           }
 
@@ -253,7 +243,7 @@
               setMesh(data, i, decompressedData, mesh);
               break;
             case 0xb1:
-              addMesh(three, data, i, mesh, texture, true);
+              addMesh(data, i, mesh, texture, three, instanceId, true);
               break;
             case 0xb8:
               debug.color(`[end of header ${index}]`, "grey");
@@ -262,7 +252,7 @@
               setColor(data, i, texture);
               break;
             case 0xbf:
-              addMesh(three, data, i, mesh, texture);
+              addMesh(data, i, mesh, texture, three, instanceId);
               break;
             case 0xf0:
               setTexturePaletteLength(data, i, texture);
@@ -390,44 +380,24 @@
       }
     }, Promise.resolve());
 
-    const coordinates: { x: number; y: number }[] = [];
+    if (instanceId !== three.getInstanceId()) {
+      return;
+    }
 
-    let width = hideTree ? 1 : 128;
-    let height = 1;
-    let previousY = 0;
+    three.setLoading(false);
+
+    const sheet = generateGraphicsSheet(hideTree ? 0 : 128, textures);
+
+    canvas.resize(sheet.width, sheet.height);
 
     textures.forEach((texture, index) => {
-      let x =
-        index > 0 ? coordinates[index - 1].x + textures[index - 1].width : 0;
-      let y = previousY;
-
-      if (x + texture.width > width) {
-        x = 0;
-        y = height;
-        previousY = height;
-      }
-
-      coordinates.push({ x, y });
-
-      if (hideTree && texture.width > width) {
-        width = texture.width;
-      }
-
-      if (y + texture.height > height) {
-        height = y + texture.height;
-      }
-    });
-
-    canvas.resize(width, height);
-
-    coordinates.forEach((coordinate, index) => {
       canvas.addGraphic(
         "textures",
-        textures[index].texture,
-        textures[index].width,
-        textures[index].height,
-        coordinate.x,
-        coordinate.y,
+        texture.texture,
+        texture.width,
+        texture.height,
+        sheet.coordinates[index].x,
+        sheet.coordinates[index].y,
       );
     });
 
@@ -439,9 +409,7 @@
 
     canvas.addLayer("textures", "image");
 
-    three = new Three(threeEl, {
-      gridHelper: true,
-    });
+    three = new Three(threeEl);
 
     canvasTexture = new Canvas({
       width: 32,
@@ -466,6 +434,7 @@
       updateCanvas();
     }
   }
+
   $: {
     innerWidth;
 
@@ -483,34 +452,6 @@
 <svelte:window bind:innerWidth on:keydown={handleKeyDown} />
 
 <div class="gtc-assetviewer">
-  <div class="gtc-assetviewer-inputs">
-    <div>
-      <p>Tools</p>
-      <div>
-        <Checkbox
-          label="Grid"
-          checked={three?.getGridHelperStatus()}
-          onChange={(event) => handleGridHelperStatusChange(event)}
-        />
-        <Checkbox
-          label="Wireframe"
-          checked={three?.getWireframeStatus()}
-          onChange={(event) => handleWireframeStatusChange(event)}
-        />
-      </div>
-    </div>
-    <div>
-      <p>Camera</p>
-      <div>
-        <button class="gtc-assetviewer-button" on:click={handleCameraFit}>
-          Fit
-        </button>
-        <button class="gtc-assetviewer-button" on:click={handleCameraReset}>
-          Reset
-        </button>
-      </div>
-    </div>
-  </div>
   <div class="gtc-assetviewer-content">
     <div
       class="gtc-assetviewer-canvas"
@@ -531,38 +472,6 @@
   .gtc-assetviewer {
     @apply flex-1;
 
-    & .gtc-assetviewer-inputs {
-      @apply flex;
-
-      & > div {
-        @apply mr-4 mb-4 p-2 w-fit bg-primary-700 rounded;
-
-        & p {
-          @apply mb-2 text-sm font-bold;
-        }
-
-        & div {
-          @apply flex;
-
-          & :global(label) {
-            @apply mr-4;
-          }
-
-          & .gtc-assetviewer-button {
-            @apply text-red-100 bg-primary-400;
-
-            &:first-of-type {
-              @apply mr-2;
-            }
-
-            &:hover {
-              @apply bg-primary-300;
-            }
-          }
-        }
-      }
-    }
-
     & .gtc-assetviewer-content {
       @apply flex;
 
@@ -580,7 +489,7 @@
       }
 
       & .gtc-assetviewer-three {
-        @apply w-full;
+        @apply relative w-full;
 
         &.gtc-assetviewer-three-hidden {
           @apply hidden;

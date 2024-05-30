@@ -2,7 +2,6 @@ import { get } from "svelte/store";
 
 import { gameTemplate } from "$lib/stores";
 import { getBigInt, getInt, setInt } from "$lib/utils/bytes";
-import { formatChecksum } from "$lib/utils/checksum";
 import { byteswapDataView, getHeaderShift } from "$lib/utils/common/nintendo64";
 import { clone } from "$lib/utils/format";
 

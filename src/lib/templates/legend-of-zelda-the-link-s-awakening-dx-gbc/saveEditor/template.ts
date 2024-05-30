@@ -707,7 +707,7 @@ const template: GameJson = {
                           length: 0x1,
                           type: "container",
                           instanceType: "tabs",
-                          instances: 0x10,
+                          instances: 16,
                           enumeration: "Column %d",
                           items: [],
                         },

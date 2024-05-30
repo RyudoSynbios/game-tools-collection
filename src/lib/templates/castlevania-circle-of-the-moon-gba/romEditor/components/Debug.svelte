@@ -6,7 +6,7 @@
   import { getRegionArray } from "$lib/utils/format";
   import { applyPalette, getPalette15Bit } from "$lib/utils/graphics";
 
-  import { getCompressedGraphic } from "../utils";
+  import { getDecompressedGraphic } from "../utils";
   import { pointerToDssCardsGraphics } from "../template";
 
   let canvasEl: HTMLDivElement;
@@ -31,7 +31,7 @@
         "uint24",
       );
 
-      const graphic = getCompressedGraphic(graphicOffset);
+      const graphic = getDecompressedGraphic(graphicOffset);
       const palette = getPalette15Bit(paletteOffset, 0x10, true);
 
       graphic.forEach((tileData, index) => {

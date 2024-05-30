@@ -33,7 +33,7 @@
   import {
     generateMap,
     generateSprites,
-    getCompressedGraphic,
+    getDecompressedGraphic,
     getMapsInfos,
     getSpriteData,
   } from "../utils";
@@ -110,7 +110,7 @@
 
     const vramTileset = new Uint8Array(0x10000);
 
-    getCompressedGraphic(tileset1Offset).forEach((tile, index) => {
+    getDecompressedGraphic(tileset1Offset).forEach((tile, index) => {
       vramTileset.set(
         tile,
         ((tileset1VramOffset - (roomIndex === 0x101 ? 0x4000 : 0x0)) / 0x20) *
@@ -120,7 +120,7 @@
     });
 
     if (tileset2Offset) {
-      getCompressedGraphic(tileset2Offset).forEach((tile, index) => {
+      getDecompressedGraphic(tileset2Offset).forEach((tile, index) => {
         vramTileset.set(
           tile,
           (tileset2VramOffset / 0x20) * 0x40 + index * 0x40,
@@ -129,7 +129,7 @@
     }
 
     if (tileset3Offset) {
-      getCompressedGraphic(tileset3Offset).forEach((tile, index) => {
+      getDecompressedGraphic(tileset3Offset).forEach((tile, index) => {
         vramTileset.set(
           tile,
           (tileset3VramOffset / 0x20) * 0x40 + index * 0x40,
@@ -243,7 +243,7 @@
       "uint24",
     );
 
-    const tilesColisions = getCompressedGraphic(mapCollisionsTilesOffset);
+    const tilesColisions = getDecompressedGraphic(mapCollisionsTilesOffset);
     const paletteColisions = getPalette15Bit(
       mapCollisionsPaletteOffset,
       0x10,
@@ -435,7 +435,7 @@
 
         monster.firstTile = (vramOffset - 0x8000) / 0x40;
 
-        getCompressedGraphic(spriteOffset).forEach((tile) => {
+        getDecompressedGraphic(spriteOffset).forEach((tile) => {
           vramSpriteset.set(tile, vramOffset);
 
           vramOffset += 0x40;
@@ -451,7 +451,7 @@
         "uint24",
       );
 
-      getCompressedGraphic(spriteOffset).forEach((tile, index) => {
+      getDecompressedGraphic(spriteOffset).forEach((tile, index) => {
         vramSpriteset.set(tile, 0x7000 + index * 0x40);
       });
     }

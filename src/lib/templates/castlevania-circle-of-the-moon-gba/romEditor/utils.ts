@@ -397,7 +397,7 @@ export function getDecompressedData(offset: number): number[][] {
   return blocks;
 }
 
-export function getCompressedGraphic(offset: number): number[][] {
+export function getDecompressedGraphic(offset: number): number[][] {
   const decompressedData = getDecompressedData(offset);
 
   let graphic: number[][] = [];

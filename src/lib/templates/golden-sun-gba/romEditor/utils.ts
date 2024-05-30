@@ -234,6 +234,8 @@ export function getEnemyGroupNames(): { [value: number]: string } {
     );
   });
 
+  names[0] = "-";
+
   return names;
 }
 
@@ -245,6 +247,8 @@ export function getEnemyNames(): { [value: number]: string } {
   [...Array(164).keys()].forEach((index) => {
     names[index] = getText(enemyNamesStartIndex + index);
   });
+
+  names[0] = "-";
 
   return names;
 }
@@ -271,6 +275,8 @@ export function getItemNames(): { [value: number]: string } {
   [...Array(269).keys()].forEach((index) => {
     names[index] = getText(itemNamesStartIndex + index);
   });
+
+  names[0] = "-";
 
   return names;
 }
@@ -439,7 +445,6 @@ function generateTrees(): void {
 
 function decodeText(index: number): string {
   const $gameRegion = get(gameRegion);
-  const $gameTemplate = get(gameTemplate);
 
   const pointer = getRegionArray(pointerToTexts);
 

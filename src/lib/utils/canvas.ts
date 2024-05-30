@@ -219,6 +219,11 @@ export default class Canvas {
     x = 0,
     y = 0,
   ): void {
+    if (!data || data.length === 0) {
+      debug.error("Data field is empty");
+      return;
+    }
+
     const split = layer.split(".");
 
     layer = split[0];
@@ -359,8 +364,8 @@ export default class Canvas {
   }
 
   public resize(width: number, height: number) {
-    this.width = width;
-    this.height = height;
+    this.width = width || 1;
+    this.height = height || 1;
 
     this.reset();
 

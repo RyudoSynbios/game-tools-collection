@@ -95,3 +95,15 @@ select {
     @apply bg-primary-400;
   }
 }
+
+.gtc-three-message {
+  @apply absolute top-1/2 left-1/2 text-xl font-bold -translate-x-1/2 -translate-y-1/2;
+}
+
+.lil-gui {
+  --width: 180px;
+}
+
+.lil-gui.root {
+  @apply absolute top-2 right-2;
+}
