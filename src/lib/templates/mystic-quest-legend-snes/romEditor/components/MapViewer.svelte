@@ -8,11 +8,7 @@
   import debug from "$lib/utils/debug";
   import { getTileData } from "$lib/utils/common/superNintendo";
   import { capitalize, getRegionArray } from "$lib/utils/format";
-  import {
-    applyPalette,
-    flipTileData,
-    getPalette15Bit,
-  } from "$lib/utils/graphics";
+  import { applyPalette, flipTileData, getPalette } from "$lib/utils/graphics";
 
   import type { Bit, Palette } from "$lib/types";
 
@@ -114,7 +110,9 @@
 
     for (let i = 0x0; i < 0x8; i += 0x1) {
       tilemapPalettes.push(
-        getPalette15Bit(tilemapPaletteOffset + i * 0x10, 0x8, true),
+        getPalette("BGR555", tilemapPaletteOffset + i * 0x10, 0x8, {
+          firstTransparent: true,
+        }),
       );
     }
 
@@ -392,10 +390,11 @@
       getInt(spriteSetIndexOffset + spriteSet * 2, "uint16");
 
     for (let i = 0x0; i < 0x6; i += 0x1) {
-      const palette = getPalette15Bit(
+      const palette = getPalette(
+        "BGR555",
         spritesPalettesOffset + getInt(spriteSetOffset + i, "uint8") * 0x10,
         0x8,
-        true,
+        { firstTransparent: true },
       );
 
       spritesPalettes.push(palette);
@@ -696,7 +695,7 @@
                 getTileData(
                   movingSpritesOffset - 0x1690 + (i >> 0x1) * 0x150 + i * 0x18,
                 ),
-                getPalette15Bit(spritesPalettesOffset + 0xe0, 0x8),
+                getPalette("BGR555", spritesPalettesOffset + 0xe0, 0x8),
               );
 
               canvas.addGraphic(

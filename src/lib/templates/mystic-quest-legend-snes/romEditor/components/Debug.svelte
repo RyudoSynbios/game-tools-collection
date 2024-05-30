@@ -3,7 +3,7 @@
 
   import Input from "$lib/components/Input.svelte";
   import Canvas from "$lib/utils/canvas";
-  import { getPalette15Bit } from "$lib/utils/graphics";
+  import { getPalette } from "$lib/utils/graphics";
 
   import { generateMonsterCanvas } from "../utils";
 
@@ -79,7 +79,7 @@
   }
 
   function updateCanvas(): void {
-    const palette = getPalette15Bit(paletteOffset, 0x8);
+    const palette = getPalette("BGR555", paletteOffset, 0x8);
 
     generateMonsterCanvas(canvas, spriteOffset, palette, viewWidth, viewHeight);
   }

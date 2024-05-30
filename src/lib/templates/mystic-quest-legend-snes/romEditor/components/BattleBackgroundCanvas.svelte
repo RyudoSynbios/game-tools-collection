@@ -4,7 +4,7 @@
   import { dataView } from "$lib/stores";
   import { getInt } from "$lib/utils/bytes";
   import Canvas from "$lib/utils/canvas";
-  import { getPalette15Bit } from "$lib/utils/graphics";
+  import { getPalette } from "$lib/utils/graphics";
 
   import {
     pointerToBattleBackgroundChunks,
@@ -38,11 +38,13 @@
 
     const palettesOffset = pointerToOffset(pointerToBattleBackgroundPalettes);
 
-    const palettePrimary = getPalette15Bit(
+    const palettePrimary = getPalette(
+      "BGR555",
       palettesOffset + palettePrimaryIndex * 0x10,
       0x8,
     );
-    const paletteSecondary = getPalette15Bit(
+    const paletteSecondary = getPalette(
+      "BGR555",
       palettesOffset + paletteSecondaryIndex * 0x10,
       0x8,
     );

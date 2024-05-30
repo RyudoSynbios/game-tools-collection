@@ -1,10 +1,10 @@
 import { extractBit, getInt } from "$lib/utils/bytes";
 import type Canvas from "$lib/utils/canvas";
 import debug from "$lib/utils/debug";
-import { applyPalette } from "$lib/utils/graphics";
+import { applyPalette, getPalette } from "$lib/utils/graphics";
 import type Three from "$lib/utils/three";
 
-import type { Bit, Palette } from "$lib/types";
+import type { Bit } from "$lib/types";
 
 import AssetViewer from "./components/AssetViewer.svelte";
 
@@ -92,18 +92,10 @@ export function getImage(
   paletteData: Uint8Array,
   colors: number,
 ): Uint8Array {
-  const palette: Palette = [];
-
-  for (let i = 0; i < colors; i += 1) {
-    const color = (paletteData[i * 2] << 0x8) | paletteData[i * 2 + 1];
-
-    const red = (color >> 0xb) << 0x3;
-    const green = ((color >> 0x6) & 0x1f) << 0x3;
-    const blue = ((color >> 0x1) & 0x1f) << 0x3;
-    const alpha = (color & 0x1) * 255;
-
-    palette.push([red, green, blue, alpha]);
-  }
+  const palette = getPalette("RGBA555", 0x0, colors, {
+    bigEndian: true,
+    array: paletteData,
+  });
 
   let tileData: number[] = [];
 

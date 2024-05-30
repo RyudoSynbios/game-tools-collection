@@ -6,11 +6,7 @@
   import { getInt } from "$lib/utils/bytes";
   import Canvas from "$lib/utils/canvas";
   import { capitalize } from "$lib/utils/format";
-  import {
-    applyPalette,
-    convertPaletteMegaDrive,
-    flipTileData,
-  } from "$lib/utils/graphics";
+  import { applyPalette, flipTileData, getColor } from "$lib/utils/graphics";
 
   import type { Palette } from "$lib/types";
 
@@ -45,24 +41,24 @@
     const palettesOffset = 0xff000;
 
     for (let i = 0x0; i < 0x4; i += 0x1) {
-      const rawPalette = [];
+      const palette: Palette = [];
 
       const offset = (getInt(roomOffset + 0xc + i, "uint8") - 0x1) * 0x20;
 
       for (let j = 0x0; j < 0x10; j += 0x1) {
-        const rawColor = getInt(palettesOffset + offset + j * 0x2, "uint16", {
+        const encoded = getInt(palettesOffset + offset + j * 0x2, "uint16", {
           bigEndian: true,
         });
 
-        const color =
-          (((rawColor & 0x3e) >> 0x3) << 0x9) |
-          ((rawColor >> 0xd) << 0x5) |
-          (((rawColor & 0x7c0) >> 0x8) << 0x1);
+        const rawColor =
+          (((encoded & 0x3e) >> 0x3) << 0x9) |
+          ((encoded >> 0xd) << 0x5) |
+          (((encoded & 0x7c0) >> 0x8) << 0x1);
 
-        rawPalette.push(color);
+        const color = getColor(rawColor, "BGR333");
+
+        palette.push(color);
       }
-
-      const palette = convertPaletteMegaDrive(rawPalette);
 
       palettes.push(palette);
     }

@@ -2,7 +2,7 @@
   import SpriteSelector from "$lib/components/SpriteSelector.svelte";
   import { getInt, setInt } from "$lib/utils/bytes";
   import { getRegionArray } from "$lib/utils/format";
-  import { getPalette15Bit } from "$lib/utils/graphics";
+  import { getPalette } from "$lib/utils/graphics";
 
   import {
     pointerToCharacterGraphics,
@@ -33,7 +33,7 @@
     const offset = getInt(graphicsOffset + i * 2, "uint16");
 
     if (offset !== 0x0) {
-      const palette = getPalette15Bit(graphicsOffset + offset, 0x10);
+      const palette = getPalette("BGR555", graphicsOffset + offset, 0x10);
       const compressedDataOffset = graphicsOffset + offset + 0x20;
 
       sprites.push(getSprite(compressedDataOffset, palette));

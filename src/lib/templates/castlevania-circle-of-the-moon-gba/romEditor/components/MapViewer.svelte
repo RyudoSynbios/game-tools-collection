@@ -7,7 +7,7 @@
   import { getInt } from "$lib/utils/bytes";
   import Canvas from "$lib/utils/canvas";
   import { capitalize, getRegionArray } from "$lib/utils/format";
-  import { applyPalette, getPalette15Bit } from "$lib/utils/graphics";
+  import { applyPalette, getPalette } from "$lib/utils/graphics";
 
   import type { Palette } from "$lib/types";
 
@@ -93,16 +93,19 @@
 
     for (let i = 0x0; i < 0x8; i += 0x1) {
       tilesetsPalettes.push(
-        getPalette15Bit(tilesetsPalettesPointer + i * 0x20, 0x10, true),
+        getPalette("BGR555", tilesetsPalettesPointer + i * 0x20, 0x10, {
+          firstTransparent: true,
+        }),
       );
     }
 
     // Use the cleansed palette for Underground Waterway
     if ([0xb7, 0xb9, 0xbb, 0xbc, 0xbf, 0xc0, 0xc1].includes(roomIndex)) {
-      tilesetsPalettes[7] = getPalette15Bit(
+      tilesetsPalettes[7] = getPalette(
+        "BGR555",
         getRegionArray(undergroundWaterwayPalette),
         0x10,
-        true,
+        { firstTransparent: true },
       );
     }
 
@@ -244,10 +247,11 @@
     );
 
     const tilesColisions = getCompressedGraphic(mapCollisionsTilesOffset);
-    const paletteColisions = getPalette15Bit(
+    const paletteColisions = getPalette(
+      "BGR555",
       mapCollisionsPaletteOffset,
       0x10,
-      true,
+      { firstTransparent: true },
     );
 
     canvas.resize(width, height);
@@ -358,26 +362,38 @@
     const spritesetPalette6Offset = getRegionArray(spritesetPalette6);
 
     spritesetPalettes.push(
-      getPalette15Bit(spritesetPalette1Offset, 0x10, true),
+      getPalette("BGR555", spritesetPalette1Offset, 0x10, {
+        firstTransparent: true,
+      }),
     );
 
     for (let i = 0x0; i < 0x3; i += 0x1) {
       spritesetPalettes.push(
-        getPalette15Bit(spritesetPalette2Offset + i * 0x20, 0x10, true),
+        getPalette("BGR555", spritesetPalette2Offset + i * 0x20, 0x10, {
+          firstTransparent: true,
+        }),
       );
     }
 
     spritesetPalettes.push(
-      getPalette15Bit(spritesetPalette3Offset, 0x10, true),
+      getPalette("BGR555", spritesetPalette3Offset, 0x10, {
+        firstTransparent: true,
+      }),
     );
     spritesetPalettes.push(
-      getPalette15Bit(spritesetPalette4Offset, 0x10, true),
+      getPalette("BGR555", spritesetPalette4Offset, 0x10, {
+        firstTransparent: true,
+      }),
     );
     spritesetPalettes.push(
-      getPalette15Bit(spritesetPalette5Offset, 0x10, true),
+      getPalette("BGR555", spritesetPalette5Offset, 0x10, {
+        firstTransparent: true,
+      }),
     );
     spritesetPalettes.push(
-      getPalette15Bit(spritesetPalette6Offset, 0x10, true),
+      getPalette("BGR555", spritesetPalette6Offset, 0x10, {
+        firstTransparent: true,
+      }),
     );
 
     // Monsters Palettes
@@ -392,7 +408,9 @@
 
       for (let i = 0x0; i < 0x4; i += 0x1) {
         spritesetPalettes.push(
-          getPalette15Bit(paletteOffset + i * 0x20, 0x10, true),
+          getPalette("BGR555", paletteOffset + i * 0x20, 0x10, {
+            firstTransparent: true,
+          }),
         );
       }
     } else {
@@ -403,19 +421,26 @@
             "uint24",
           );
 
-          spritesetPalettes.push(getPalette15Bit(paletteOffset, 0x10, true));
+          spritesetPalettes.push(
+            getPalette("BGR555", paletteOffset, 0x10, {
+              firstTransparent: true,
+            }),
+          );
         } else {
-          spritesetPalettes.push([...Array(0x10).keys()].map(() => [0, 0, 0]));
+          spritesetPalettes.push(
+            [...Array(0x10).keys()].map(() => [0, 0, 0, 0]),
+          );
         }
       });
     }
 
     for (let i = 0x0; i < 0x4; i += 0x1) {
       spritesetPalettes.push(
-        getPalette15Bit(
+        getPalette(
+          "BGR555",
           getRegionArray(commonSpritesPalettes) + i * 0x20,
           0x10,
-          true,
+          { firstTransparent: true },
         ),
       );
     }

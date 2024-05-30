@@ -1,5 +1,9 @@
 export type Bit = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7;
 
+export type Color = [number, number, number, number];
+
+export type ColorType = "ABGR555" | "BGR333" | "BGR555" | "RGBA555";
+
 export type ContentType =
   | "bitflags"
   | "checksum"
@@ -48,7 +52,7 @@ export type Item =
 
 export type ObjectKeyValue<T> = { key: string; value: T };
 
-export type Palette = number[][];
+export type Palette = Color[];
 
 export type RegionValidator = Validator | LogicalOperator<Validator>;
 

@@ -1,47 +1,78 @@
 import { getInt } from "$lib/utils/bytes";
 
-import type { Palette } from "$lib/types";
+import type { Color, ColorType, Palette } from "$lib/types";
 
-export function getPalette15Bit(
-  offset: number,
-  length: number,
-  transparent = false,
-): Palette {
-  const palette = [];
+export function getColor(raw: number, type: ColorType): Color {
+  let red = 0;
+  let green = 0;
+  let blue = 0;
+  let alpha = 0;
 
-  for (let i = 0x0; i < length; i += 0x1) {
-    const color = getInt(offset + i * 0x2, "uint16");
-
-    const red = (color & 0x1f) << 0x3;
-    const green = ((color >> 0x5) & 0x1f) << 0x3;
-    const blue = ((color >> 0xa) & 0x1f) << 0x3;
-    const alpha = transparent && i === 0x0 ? 0 : 255;
-
-    palette.push([red, green, blue, alpha]);
+  switch (type) {
+    case "BGR333": // ---- BBB- GGG- RRR-
+      blue = ((raw & 0xe00) >> 0x8) | ((raw & 0xe00) >> 0x4);
+      green = (raw & 0xe0) | ((raw & 0xe0) >> 0x4);
+      red = ((raw & 0xe) << 0x4) | (raw & 0xe);
+      alpha = 255;
+      break;
+    case "BGR555": // -BBB BBGG GGGR RRRR
+      blue = ((raw >> 0xa) & 0x1f) << 0x3;
+      green = ((raw >> 0x5) & 0x1f) << 0x3;
+      red = (raw & 0x1f) << 0x3;
+      alpha = 255;
+      break;
+    case "ABGR555": // ABBB BBGG GGGR RRRR
+      alpha = ((raw >> 0xf) & 0x1) * 255;
+      blue = ((raw >> 0xa) & 0x1f) << 0x3;
+      green = ((raw >> 0x5) & 0x1f) << 0x3;
+      red = (raw & 0x1f) << 0x3;
+      break;
+    case "RGBA555": // RRRR RGGG GGBB BBBA
+      red = ((raw >> 0xb) & 0x1f) << 0x3;
+      green = ((raw >> 0x6) & 0x1f) << 0x3;
+      blue = ((raw >> 0x1) & 0x1f) << 0x3;
+      alpha = (raw & 0x1) * 255;
+      break;
   }
 
-  return palette;
+  return [red, green, blue, alpha];
 }
 
-export function convertPaletteMegaDrive(
-  rawPalette: number[],
-  transparent = false,
+export function getPalette(
+  type: ColorType,
+  offset: number,
+  length: number,
+  options?: {
+    firstTransparent?: boolean;
+    bigEndian?: boolean;
+    array?: number[] | Uint8Array;
+    dataView?: DataView;
+  },
 ): Palette {
-  const palette: number[][] = [];
+  const firstTransparent = options?.firstTransparent || false;
+  const bigEndian = options?.bigEndian || false;
+  const array = options?.array;
+  const dataView = options?.dataView;
 
-  rawPalette.forEach((color, index) => {
-    let red = color & 0xf;
-    let green = (color & 0xf0) >> 0x4;
-    let blue = (color & 0xf00) >> 0x8;
+  const palette: Color[] = [];
 
-    const alpha = transparent && index === 0x0 ? 0x0 : 0xff;
+  for (let i = 0x0; i < length; i += 0x1) {
+    if (i === 0x0 && firstTransparent) {
+      palette.push([0, 0, 0, 0]);
+    } else {
+      let raw = 0x0;
 
-    red = (red << 0x4) | red;
-    green = (green << 0x4) | green;
-    blue = (blue << 0x4) | blue;
+      if (array) {
+        raw = getIntFromArray(array, offset + i * 0x2, "uint16", bigEndian);
+      } else {
+        raw = getInt(offset + i * 0x2, "uint16", { bigEndian }, dataView);
+      }
 
-    palette.push([red, green, blue, alpha]);
-  });
+      const color = getColor(raw, type);
+
+      palette.push(color);
+    }
+  }
 
   return palette;
 }
@@ -66,7 +97,10 @@ export function flipTileData(
   return flippedData;
 }
 
-export function applyPalette(data: number[], palette: Palette): Uint8Array {
+export function applyPalette(
+  data: number[] | Uint8Array,
+  palette: Palette,
+): Uint8Array {
   const tileData = new Uint8Array(data.length * 4);
 
   data.forEach((paletteIndex, index) => {
