@@ -2,6 +2,7 @@ import { error } from "@sveltejs/kit";
 
 import { gameTemplate, gameUtils } from "$lib/stores.js";
 import { getGame } from "$lib/utils/db.js";
+import debug from "$lib/utils/debug";
 
 import type { Game } from "$lib/types.js";
 
@@ -42,7 +43,11 @@ export async function load({ params }): Promise<void> {
     );
 
     gameUtils.set(utils);
-  } catch (err) {}
+  } catch (err) {
+    debug.error(
+      `Couldn't load utils "templates/${params.gameId}/${tool}/utils.ts"`,
+    );
+  }
 
   gameTemplate.set(template);
 }

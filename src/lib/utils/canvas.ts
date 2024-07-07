@@ -219,6 +219,11 @@ export default class Canvas {
     x = 0,
     y = 0,
   ): void {
+    if (!data || data.length === 0) {
+      debug.error("Data field is empty");
+      return;
+    }
+
     const split = layer.split(".");
 
     layer = split[0];
