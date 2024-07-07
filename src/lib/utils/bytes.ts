@@ -21,6 +21,12 @@ import {
 
 import type { Binary, Bit, DataType, GameJson, IntOperation } from "$lib/types";
 
+export function getDataView(dataViewTmp?: DataView): DataView {
+  return dataViewTmp && dataViewTmp.byteLength > 0
+    ? dataViewTmp
+    : get(dataView);
+}
+
 export function resetState(): void {
   const $gameUtils = get(gameUtils) as any;
 
@@ -37,13 +43,12 @@ export function resetState(): void {
 }
 
 export function byteswap(
-  dataViewTmp?: DataView,
+  dataView?: DataView,
   start = 0x0,
   end?: number,
   length = 0x4,
 ): DataView {
-  const $dataView =
-    dataViewTmp && dataViewTmp.byteLength > 0 ? dataViewTmp : get(dataView);
+  const $dataView = getDataView(dataView);
 
   if (!end) {
     end = $dataView.byteLength;
@@ -287,10 +292,9 @@ export function getInt(
   offset: number,
   dataType: Exclude<DataType, "boolean" | "int64" | "uint64" | "string">,
   options: IntOptions = {},
-  dataViewTmp?: DataView,
+  dataView?: DataView,
 ): number {
-  const $dataView =
-    dataViewTmp && dataViewTmp.byteLength > 0 ? dataViewTmp : get(dataView);
+  const $dataView = getDataView(dataView);
 
   if (
     $dataView.byteLength === 0x0 ||
@@ -482,10 +486,9 @@ export function getBigInt(
   offset: number,
   dataType: "int64" | "uint64",
   options: BigIntOptions = {},
-  dataViewTmp?: DataView,
+  dataView?: DataView,
 ): bigint {
-  const $dataView =
-    dataViewTmp && dataViewTmp.byteLength > 0 ? dataViewTmp : get(dataView);
+  const $dataView = getDataView(dataView);
 
   if (
     $dataView.byteLength === 0x0 ||
@@ -565,7 +568,9 @@ export function getString(
   length: number,
   letterDataType: "uint8" | "uint16" | "uint24" | "uint32",
   options: StringOptions = {},
+  dataView?: DataView,
 ): string {
+  const $dataView = getDataView(dataView);
   const $gameJson = get(gameJson);
 
   const increment = dataTypeToLength(letterDataType);
@@ -573,9 +578,12 @@ export function getString(
   let string = "";
 
   for (let i = offset; i < offset + length; i += increment) {
-    const int = getInt(i, letterDataType, {
-      bigEndian: options.letterBigEndian,
-    });
+    const int = getInt(
+      i,
+      letterDataType,
+      { bigEndian: options.letterBigEndian },
+      $dataView,
+    );
 
     let resource: any;
 

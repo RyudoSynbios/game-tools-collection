@@ -6,7 +6,7 @@ import {
   gameRegion,
   gameTemplate,
 } from "$lib/stores";
-import { byteswap, getInt } from "$lib/utils/bytes";
+import { byteswap, getDataView, getInt } from "$lib/utils/bytes";
 import { getObjKey } from "$lib/utils/format";
 import { checkValidator, getRegions } from "$lib/utils/validator";
 
@@ -90,10 +90,9 @@ export function getHeaderShift(dataView: DataView, format: SaveFormat): number {
 
 export function byteswapDataView(
   format: SaveFormat,
-  dataViewTmp?: DataView,
+  dataView?: DataView,
 ): DataView {
-  const $dataView =
-    dataViewTmp && dataViewTmp.byteLength > 0 ? dataViewTmp : get(dataView);
+  const $dataView = getDataView(dataView);
 
   if (format === "eep") {
     return $dataView;
