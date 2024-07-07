@@ -24,6 +24,18 @@ export function checkConditions(conditions: any, callback: any): boolean {
   return false;
 }
 
+export function checkValidator(
+  validator: number[],
+  offset: number,
+  dataView?: DataView,
+): boolean {
+  return validator.every((int, index) => {
+    if (getInt(offset + index, "uint8", {}, dataView) === int) {
+      return true;
+    }
+  });
+}
+
 export function getRegionIndex(region: string): number {
   const $gameTemplate = get(gameTemplate);
 

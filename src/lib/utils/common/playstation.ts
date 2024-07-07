@@ -3,15 +3,15 @@ import { get } from "svelte/store";
 import { fileHeaderShift, gameRegion, gameTemplate } from "$lib/stores";
 import { getInt } from "$lib/utils/bytes";
 import { getObjKey } from "$lib/utils/format";
-import { getRegions } from "$lib/utils/validator";
+import { checkValidator, getRegions } from "$lib/utils/validator";
 
 import type { RegionValidator, Validator } from "$lib/types";
 
 export function isMemoryCard(dataView: DataView, shift = 0x0): boolean {
+  const validator = [0x4d, 0x43]; // "MC"
   if (
     dataView.byteLength >= 0x20000 &&
-    getInt(shift + 0x0, "uint8", {}, dataView) === 0x4d &&
-    getInt(shift + 0x1, "uint8", {}, dataView) === 0x43
+    checkValidator(validator, shift, dataView)
   ) {
     return true;
   }
@@ -22,13 +22,9 @@ export function isMemoryCard(dataView: DataView, shift = 0x0): boolean {
 export function isDexDriveHeader(dataView: DataView): boolean {
   const validator = [
     0x31, 0x32, 0x33, 0x2d, 0x34, 0x35, 0x36, 0x2d, 0x53, 0x54, 0x44,
-  ];
+  ]; // "123-456-STD"
 
-  return validator.every((hex, index) => {
-    if (getInt(index, "uint8", {}, dataView) === hex) {
-      return true;
-    }
-  });
+  return checkValidator(validator, 0x0, dataView);
 }
 
 export function getDexDriveHeaderShift(): number {
@@ -36,13 +32,9 @@ export function getDexDriveHeaderShift(): number {
 }
 
 export function isPsvHeader(dataView?: DataView): boolean {
-  const validator = [0x0, 0x56, 0x53, 0x50, 0x0];
+  const validator = [0x0, 0x56, 0x53, 0x50, 0x0]; // " VSP "
 
-  return validator.every((hex, index) => {
-    if (getInt(index, "uint8", {}, dataView) === hex) {
-      return true;
-    }
-  });
+  return checkValidator(validator, 0x0, dataView);
 }
 
 export function getPsvHeaderShift(): number {
@@ -50,13 +42,9 @@ export function getPsvHeaderShift(): number {
 }
 
 export function isVmpHeader(dataView: DataView): boolean {
-  const validator = [0x0, 0x50, 0x4d, 0x56, 0x80];
+  const validator = [0x0, 0x50, 0x4d, 0x56, 0x80]; // " PMV."
 
-  return validator.every((hex, index) => {
-    if (getInt(index, "uint8", {}, dataView) === hex) {
-      return true;
-    }
-  });
+  return checkValidator(validator, 0x0, dataView);
 }
 
 export function getVmpHeaderShift(): number {

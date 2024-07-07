@@ -1,16 +1,14 @@
 import { getInt } from "$lib/utils/bytes";
 
+import { checkValidator } from "../validator";
+
 export function isGameSharkHeader(dataView: DataView): boolean {
   const validator = [
     0xd, 0x0, 0x0, 0x0, 0x53, 0x68, 0x61, 0x72, 0x6b, 0x50, 0x6f, 0x72, 0x74,
     0x53, 0x61, 0x76, 0x65,
-  ];
+  ]; // "SharkPortSave"
 
-  return validator.every((hex, index) => {
-    if (getInt(index, "uint8", {}, dataView) === hex) {
-      return true;
-    }
-  });
+  return checkValidator(validator, 0x0, dataView);
 }
 
 export function getGameSharkHeaderShift(dataView: DataView): number {

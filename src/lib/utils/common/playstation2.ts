@@ -10,6 +10,8 @@ import {
 
 import type { Validator } from "$lib/types";
 
+import { checkValidator } from "../validator";
+
 type Entry = Directory | File;
 
 interface Directory {
@@ -508,11 +510,7 @@ export function isMemoryCard(dataView: DataView): boolean {
 
   if (
     dataView.byteLength >= 0x840000 &&
-    validator.every((hex, index) => {
-      if (getInt(index, "uint8", {}, dataView) === hex) {
-        return true;
-      }
-    })
+    checkValidator(validator, 0x0, dataView)
   ) {
     return true;
   }

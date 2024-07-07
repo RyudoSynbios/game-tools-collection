@@ -1,16 +1,14 @@
 import { getInt } from "$lib/utils/bytes";
 
+import { checkValidator } from "../validator";
+
 export function isActionReplayMaxDsHeader(dataView: DataView): boolean {
   const validator = [
     0x41, 0x52, 0x44, 0x53, 0x30, 0x30, 0x30, 0x30, 0x30, 0x30, 0x30, 0x30,
     0x30, 0x30, 0x30, 0x31,
-  ];
+  ]; // "ARDS000000000001"
 
-  return validator.every((hex, index) => {
-    if (getInt(index, "uint8", {}, dataView) === hex) {
-      return true;
-    }
-  });
+  return checkValidator(validator, 0x0, dataView);
 }
 
 export function getActionReplayMaxDsHeaderShift(): number {

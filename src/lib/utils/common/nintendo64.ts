@@ -8,18 +8,17 @@ import {
 } from "$lib/stores";
 import { byteswap, getInt } from "$lib/utils/bytes";
 import { getObjKey } from "$lib/utils/format";
-import { getRegions } from "$lib/utils/validator";
+import { checkValidator, getRegions } from "$lib/utils/validator";
 
 import type { RegionValidator, Validator } from "$lib/types";
 
 export function isMpk(dataView: DataView, shift = 0x0): boolean {
+  const validator = [0x81, 0x1, 0x2, 0x3];
+
   if (
     isDexDriveHeader(dataView) ||
     (dataView.byteLength >= 0x20000 &&
-      getInt(shift + 0x0, "uint8", {}, dataView) === 0x81 &&
-      getInt(shift + 0x1, "uint8", {}, dataView) === 0x1 &&
-      getInt(shift + 0x2, "uint8", {}, dataView) === 0x2 &&
-      getInt(shift + 0x3, "uint8", {}, dataView) === 0x3)
+      checkValidator(validator, shift, dataView))
   ) {
     return true;
   }
@@ -30,13 +29,9 @@ export function isMpk(dataView: DataView, shift = 0x0): boolean {
 export function isDexDriveHeader(dataView: DataView): boolean {
   const validator = [
     0x31, 0x32, 0x33, 0x2d, 0x34, 0x35, 0x36, 0x2d, 0x53, 0x54, 0x44,
-  ];
+  ]; // "123-456-STD"
 
-  return validator.every((hex, index) => {
-    if (getInt(index, "uint8", {}, dataView) === hex) {
-      return true;
-    }
-  });
+  return checkValidator(validator, 0x0, dataView);
 }
 
 export function getDexDriveHeaderShift(): number {
