@@ -161,6 +161,24 @@ export function makeOperations(
   return value;
 }
 
+export function getLocalStorage(key: string): string {
+  const isBrowser = typeof window !== "undefined";
+
+  if (isBrowser) {
+    return localStorage[key];
+  }
+
+  return "";
+}
+
+export function setLocalStorage(key: string, value: number | string): void {
+  const isBrowser = typeof window !== "undefined";
+
+  if (isBrowser) {
+    localStorage[key] = value;
+  }
+}
+
 export function mergeUint8Arrays(...uint8Arrays: Uint8Array[]): Uint8Array {
   const length = uint8Arrays.reduce(
     (length, uint8Array) => (length += uint8Array.byteLength),
