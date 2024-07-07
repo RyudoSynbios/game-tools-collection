@@ -116,3 +116,52 @@ export function applyPalette(
 
   return tileData;
 }
+
+interface GraphicsSheet {
+  width: number;
+  height: number;
+  coordinates: Coordinates[];
+}
+
+interface Coordinates {
+  x: number;
+  y: number;
+}
+
+export function generateGraphicsSheet(
+  width: number,
+  images: { width: number; height: number }[],
+): GraphicsSheet {
+  const sheet: GraphicsSheet = {
+    width,
+    height: 1,
+    coordinates: [],
+  };
+
+  let previousY = 0;
+
+  images.forEach((image, index) => {
+    let x =
+      index > 0 ? sheet.coordinates[index - 1].x + images[index - 1].width : 0;
+    let y = previousY;
+
+    if (x + image.width > sheet.width) {
+      x = 0;
+      y = sheet.height;
+      previousY = sheet.height;
+    }
+
+    sheet.coordinates.push({ x, y });
+
+    if (!width && image.width > width) {
+      sheet.width = image.width;
+    }
+
+    if (y + image.height > sheet.height) {
+      sheet.height = y + image.height;
+    }
+  });
+
+  return sheet;
+}
+

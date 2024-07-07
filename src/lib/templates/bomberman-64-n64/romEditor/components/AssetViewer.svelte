@@ -5,6 +5,7 @@
   import { getInt } from "$lib/utils/bytes";
   import Canvas from "$lib/utils/canvas";
   import debug from "$lib/utils/debug";
+  import { generateGraphicsSheet } from "$lib/utils/graphics";
   import Three from "$lib/utils/three";
 
   import {
@@ -390,44 +391,20 @@
       }
     }, Promise.resolve());
 
-    const coordinates: { x: number; y: number }[] = [];
 
-    let width = hideTree ? 1 : 128;
-    let height = 1;
-    let previousY = 0;
+
+    const sheet = generateGraphicsSheet(hideTree ? 0 : 128, textures);
+
+    canvas.resize(sheet.width, sheet.height);
 
     textures.forEach((texture, index) => {
-      let x =
-        index > 0 ? coordinates[index - 1].x + textures[index - 1].width : 0;
-      let y = previousY;
-
-      if (x + texture.width > width) {
-        x = 0;
-        y = height;
-        previousY = height;
-      }
-
-      coordinates.push({ x, y });
-
-      if (hideTree && texture.width > width) {
-        width = texture.width;
-      }
-
-      if (y + texture.height > height) {
-        height = y + texture.height;
-      }
-    });
-
-    canvas.resize(width, height);
-
-    coordinates.forEach((coordinate, index) => {
       canvas.addGraphic(
         "textures",
-        textures[index].texture,
-        textures[index].width,
-        textures[index].height,
-        coordinate.x,
-        coordinate.y,
+        texture.texture,
+        texture.width,
+        texture.height,
+        sheet.coordinates[index].x,
+        sheet.coordinates[index].y,
       );
     });
 
