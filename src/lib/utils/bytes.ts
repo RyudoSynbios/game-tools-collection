@@ -19,7 +19,14 @@ import {
   utilsExists,
 } from "$lib/utils/format";
 
-import type { Binary, Bit, DataType, GameJson, IntOperation } from "$lib/types";
+import type {
+  Binary,
+  Bit,
+  DataType,
+  DataTypeInt,
+  GameJson,
+  IntOperation,
+} from "$lib/types";
 
 export function getDataView(dataViewTmp?: DataView): DataView {
   return dataViewTmp && dataViewTmp.byteLength > 0
@@ -738,3 +745,49 @@ export function getIntFromArray(
   return int;
 }
 
+export function intToArray(
+  int: number,
+  dataType: Exclude<DataTypeInt, "int8" | "uint8" | "int64" | "uint64">,
+  bigEndian = false,
+): number[] {
+  const littleEndian16 = [0x0, 0x8];
+  const bigEndian16 = [0x8, 0x0];
+
+  const littleEndian24 = [0x0, 0x8, 0x10];
+  const bigEndian24 = [0x10, 0x8, 0x0];
+
+  const littleEndian32 = [0x0, 0x8, 0x10, 0x18];
+  const bigEndian32 = [0x18, 0x10, 0x8, 0x0];
+
+  let order = [];
+
+  const array = [];
+
+  if (["int16", "uint16"].includes(dataType)) {
+    order = bigEndian ? bigEndian16 : littleEndian16;
+
+    const b0 = (int >> order[0]) & 0xff;
+    const b1 = (int >> order[1]) & 0xff;
+
+    array.push(b0, b1);
+  } else if (["int24", "uint24"].includes(dataType)) {
+    order = bigEndian ? bigEndian24 : littleEndian24;
+
+    const b0 = (int >> order[0]) & 0xff;
+    const b1 = (int >> order[1]) & 0xff;
+    const b2 = (int >> order[2]) & 0xff;
+
+    array.push(b0, b1, b2);
+  } else if (["int32", "uint32"].includes(dataType)) {
+    order = bigEndian ? bigEndian32 : littleEndian32;
+
+    const b0 = (int >> order[0]) & 0xff;
+    const b1 = (int >> order[1]) & 0xff;
+    const b2 = (int >> order[2]) & 0xff;
+    const b3 = (int >> order[3]) & 0xff;
+
+    array.push(b0, b1, b2, b3);
+  }
+
+  return array;
+}
