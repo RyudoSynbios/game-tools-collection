@@ -424,7 +424,7 @@ function readFile(
     nextClusterIndex &= 0x7fffffff;
   }
 
-  return mergeUint8Arrays(uint8Arrays);
+  return mergeUint8Arrays(...uint8Arrays);
 }
 
 // Adapted from https://github.com/ps2dev/mymc/blob/db5d9e1c141cbbc4ba4e374f73a0518a8d75b7ef/ps2mc_ecc.py
@@ -580,7 +580,7 @@ export function unpackMemoryCard(dataView: DataView): DataView {
       });
     });
 
-    const uint8Array = mergeUint8Arrays(uint8Arrays);
+    const uint8Array = mergeUint8Arrays(...uint8Arrays);
 
     return new DataView(uint8Array.buffer);
   }

@@ -161,7 +161,7 @@ export function makeOperations(
   return value;
 }
 
-export function mergeUint8Arrays(uint8Arrays: Uint8Array[]): Uint8Array {
+export function mergeUint8Arrays(...uint8Arrays: Uint8Array[]): Uint8Array {
   const length = uint8Arrays.reduce(
     (length, uint8Array) => (length += uint8Array.byteLength),
     0,
