@@ -5,10 +5,8 @@ import {
   extractBit,
   getBoolean,
   getInt,
-  getString,
   setBoolean,
   setInt,
-  setString,
 } from "$lib/utils/bytes";
 import { formatChecksum } from "$lib/utils/checksum";
 import { byteswapDataView, getHeaderShift } from "$lib/utils/common/nintendo64";

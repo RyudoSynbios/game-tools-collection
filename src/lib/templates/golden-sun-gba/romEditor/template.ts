@@ -150,7 +150,7 @@ const template: GameJson = {
                               disabled: true,
                             },
                             {
-                              name: "Start Level",
+                              name: "Level",
                               offset: 0x96,
                               type: "variable",
                               dataType: "uint8",
@@ -738,7 +738,7 @@ const template: GameJson = {
                               autocomplete: true,
                             },
                             {
-                              name: "Level",
+                              name: "Required Level",
                               offset: 0x11,
                               type: "variable",
                               dataType: "uint8",
@@ -759,7 +759,7 @@ const template: GameJson = {
                               autocomplete: true,
                             },
                             {
-                              name: "Level",
+                              name: "Required Level",
                               offset: 0x15,
                               type: "variable",
                               dataType: "uint8",
@@ -780,7 +780,7 @@ const template: GameJson = {
                               autocomplete: true,
                             },
                             {
-                              name: "Level",
+                              name: "Required Level",
                               offset: 0x19,
                               type: "variable",
                               dataType: "uint8",
@@ -801,7 +801,7 @@ const template: GameJson = {
                               autocomplete: true,
                             },
                             {
-                              name: "Level",
+                              name: "Required Level",
                               offset: 0x1d,
                               type: "variable",
                               dataType: "uint8",
@@ -822,7 +822,7 @@ const template: GameJson = {
                               autocomplete: true,
                             },
                             {
-                              name: "Level",
+                              name: "Required Level",
                               offset: 0x21,
                               type: "variable",
                               dataType: "uint8",
@@ -843,7 +843,7 @@ const template: GameJson = {
                               autocomplete: true,
                             },
                             {
-                              name: "Level",
+                              name: "Required Level",
                               offset: 0x25,
                               type: "variable",
                               dataType: "uint8",
@@ -864,7 +864,7 @@ const template: GameJson = {
                               autocomplete: true,
                             },
                             {
-                              name: "Level",
+                              name: "Required Level",
                               offset: 0x29,
                               type: "variable",
                               dataType: "uint8",
@@ -885,7 +885,7 @@ const template: GameJson = {
                               autocomplete: true,
                             },
                             {
-                              name: "Level",
+                              name: "Required Level",
                               offset: 0x2d,
                               type: "variable",
                               dataType: "uint8",
@@ -906,7 +906,7 @@ const template: GameJson = {
                               autocomplete: true,
                             },
                             {
-                              name: "Level",
+                              name: "Required Level",
                               offset: 0x31,
                               type: "variable",
                               dataType: "uint8",
@@ -927,7 +927,7 @@ const template: GameJson = {
                               autocomplete: true,
                             },
                             {
-                              name: "Level",
+                              name: "Required Level",
                               offset: 0x35,
                               type: "variable",
                               dataType: "uint8",
@@ -948,7 +948,7 @@ const template: GameJson = {
                               autocomplete: true,
                             },
                             {
-                              name: "Level",
+                              name: "Required Level",
                               offset: 0x39,
                               type: "variable",
                               dataType: "uint8",
@@ -969,7 +969,7 @@ const template: GameJson = {
                               autocomplete: true,
                             },
                             {
-                              name: "Level",
+                              name: "Required Level",
                               offset: 0x3d,
                               type: "variable",
                               dataType: "uint8",
@@ -990,7 +990,7 @@ const template: GameJson = {
                               autocomplete: true,
                             },
                             {
-                              name: "Level",
+                              name: "Required Level",
                               offset: 0x41,
                               type: "variable",
                               dataType: "uint8",
@@ -1011,7 +1011,7 @@ const template: GameJson = {
                               autocomplete: true,
                             },
                             {
-                              name: "Level",
+                              name: "Required Level",
                               offset: 0x45,
                               type: "variable",
                               dataType: "uint8",
@@ -1032,7 +1032,7 @@ const template: GameJson = {
                               autocomplete: true,
                             },
                             {
-                              name: "Level",
+                              name: "Required Level",
                               offset: 0x49,
                               type: "variable",
                               dataType: "uint8",
@@ -1053,7 +1053,7 @@ const template: GameJson = {
                               autocomplete: true,
                             },
                             {
-                              name: "Level",
+                              name: "Required Level",
                               offset: 0x4d,
                               type: "variable",
                               dataType: "uint8",

@@ -65,8 +65,7 @@
   });
 
   $: {
-    $dataView;
-    monsterIndex;
+    $dataView, monsterIndex;
 
     if (canvas) {
       updateCanvas();

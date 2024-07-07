@@ -2,7 +2,7 @@
   import { onDestroy, onMount } from "svelte";
 
   import Checkbox from "$lib/components/Checkbox.svelte";
-  import { getInt } from "$lib/utils/bytes";
+  import { getInt, getIntFromArray } from "$lib/utils/bytes";
   import Canvas from "$lib/utils/canvas";
   import debug from "$lib/utils/debug";
   import { generateGraphicsSheet } from "$lib/utils/graphics";
@@ -120,18 +120,16 @@
     }[] = [];
 
     for (let i = 0x0; i < headerCount; i += 0x1) {
-      const header = new DataView(
-        decompressedData.slice(
-          decompressedDataPosition,
-          decompressedDataPosition + 0xc,
-        ).buffer,
+      const header = decompressedData.slice(
+        decompressedDataPosition,
+        decompressedDataPosition + 0xc,
       );
 
       headersOffsets.push({
         asset: assetIndex,
-        type: header.getInt32(0x0),
-        value: header.getInt32(0x4),
-        offset: header.getUint32(0x8),
+        type: getIntFromArray(header, 0x0, "int32", true),
+        value: getIntFromArray(header, 0x4, "int32", true),
+        offset: getIntFromArray(header, 0x8, "uint32", true),
       });
 
       decompressedDataPosition += 0xc;
@@ -158,7 +156,7 @@
       type: number;
       value: number;
       offset: number;
-      data: DataView;
+      data: Uint8Array;
     }[] = [];
 
     filteredHeadersOffsets.forEach((header, index) => {
@@ -169,7 +167,7 @@
 
       headers[index] = {
         ...header,
-        data: new DataView(decompressedData.slice(offset, end).buffer),
+        data: decompressedData.slice(offset, end),
       };
     });
 
@@ -243,7 +241,9 @@
         );
 
         for (let i = 0x0; i < data.byteLength - 0x7; i += 0x8) {
-          const key = data.getUint8(i);
+          const key = data[i];
+          const unknown1 = getIntFromArray(data, i + 0x1, "uint24", true);
+          const unknown2 = getIntFromArray(data, i + 0x4, "uint32", true);
 
           if (header.asset !== assetIndex) {
             return previousHeader;
@@ -254,7 +254,7 @@
               setMesh(data, i, decompressedData, mesh);
               break;
             case 0xb1:
-              addMesh(three, data, i, mesh, texture, true);
+              addMesh(data, i, mesh, texture, three, instanceId, true);
               break;
             case 0xb8:
               debug.color(`[end of header ${index}]`, "grey");
@@ -263,7 +263,7 @@
               setColor(data, i, texture);
               break;
             case 0xbf:
-              addMesh(three, data, i, mesh, texture);
+              addMesh(data, i, mesh, texture, three, instanceId);
               break;
             case 0xf0:
               setTexturePaletteLength(data, i, texture);
@@ -289,9 +289,7 @@
               break;
             default:
               debug.color(
-                `${data.getUint8(i).toHex(2)}: ${data
-                  .getUint24(i + 0x1)
-                  .toHex(6)} ${data.getUint32(i + 0x4).toHex(8)}`,
+                `${key.toHex(2)}: ${unknown1.toHex(6)} ${unknown2.toHex(8)}`,
                 "red",
               );
           }
@@ -443,6 +441,7 @@
       updateCanvas();
     }
   }
+
   $: {
     innerWidth;
 

@@ -79,18 +79,18 @@ export function getPalette(
 
 export function flipTileData(
   data: number[],
-  size: number,
+  width: number,
   axis: "x" | "y",
 ): number[] {
   const flippedData = [];
 
   if (axis === "x") {
-    for (let i = 0; i < data.length; i += size) {
-      flippedData.push(...data.slice(i, i + size).reverse());
+    for (let i = 0; i < data.length; i += width) {
+      flippedData.push(...data.slice(i, i + width).reverse());
     }
   } else if (axis === "y") {
-    for (let i = data.length; i > 0; i -= size) {
-      flippedData.push(...data.slice(i - size, i));
+    for (let i = data.length; i > 0; i -= width) {
+      flippedData.push(...data.slice(i - width, i));
     }
   }
 

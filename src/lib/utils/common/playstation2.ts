@@ -120,7 +120,7 @@ let memoryCardRaw = new DataView(new ArrayBuffer(0));
 let saves: Save[] = [];
 let filteredSaves: Save[] = [];
 
-// Source from from http://www.csclub.uwaterloo.ca:11068/mymc/ps2mcfs.html
+// Source from http://www.csclub.uwaterloo.ca:11068/mymc/ps2mcfs.html
 export function generateMemoryCard(dataView: DataView): void {
   memoryCardRaw = dataView;
 
@@ -130,7 +130,7 @@ export function generateMemoryCard(dataView: DataView): void {
 
   memoryCard.superblock.magic = [...Array(0x28).keys()].reduce(
     (string, index) => {
-      const char = getInt(index, "uint8", undefined, dataView);
+      const char = getInt(index, "uint8", {}, dataView);
 
       if (char === 0x0) {
         return string;
@@ -141,19 +141,19 @@ export function generateMemoryCard(dataView: DataView): void {
     "",
   );
 
-  memoryCard.superblock.pageLength = getInt(0x28, "uint16", undefined, dataView); // prettier-ignore
-  memoryCard.superblock.pagesPerCluster = getInt(0x2a, "uint16", undefined, dataView); // prettier-ignore
-  memoryCard.superblock.pagesPerBlock = getInt(0x2c, "uint16", undefined, dataView); // prettier-ignore
-  memoryCard.superblock.clustersPerCard = getInt(0x30, "uint32", undefined, dataView); // prettier-ignore
-  memoryCard.superblock.allocOffset = getInt(0x34, "uint32", undefined, dataView); // prettier-ignore
-  memoryCard.superblock.allocEnd = getInt(0x38, "uint32", undefined, dataView); // prettier-ignore
-  memoryCard.superblock.rootdirCluster = getInt(0x3c, "uint32", undefined, dataView); // prettier-ignore
-  memoryCard.superblock.backupBlock1 = getInt(0x40, "uint32", undefined, dataView); // prettier-ignore
-  memoryCard.superblock.backupBlock2 = getInt(0x44, "uint32", undefined, dataView); // prettier-ignore
+  memoryCard.superblock.pageLength = getInt(0x28, "uint16", {}, dataView);
+  memoryCard.superblock.pagesPerCluster = getInt(0x2a, "uint16", {}, dataView);
+  memoryCard.superblock.pagesPerBlock = getInt(0x2c, "uint16", {}, dataView);
+  memoryCard.superblock.clustersPerCard = getInt(0x30, "uint32", {}, dataView);
+  memoryCard.superblock.allocOffset = getInt(0x34, "uint32", {}, dataView);
+  memoryCard.superblock.allocEnd = getInt(0x38, "uint32", {}, dataView);
+  memoryCard.superblock.rootdirCluster = getInt(0x3c, "uint32", {}, dataView);
+  memoryCard.superblock.backupBlock1 = getInt(0x40, "uint32", {}, dataView);
+  memoryCard.superblock.backupBlock2 = getInt(0x44, "uint32", {}, dataView);
 
   memoryCard.superblock.ifcList = [...Array(0x20).keys()].reduce(
     (ifc: number[], index) => {
-      ifc.push(getInt(0x50 + index * 4, "uint32", undefined, dataView));
+      ifc.push(getInt(0x50 + index * 4, "uint32", {}, dataView));
       return ifc;
     },
     [],
@@ -161,16 +161,14 @@ export function generateMemoryCard(dataView: DataView): void {
 
   memoryCard.superblock.badBlockList = [...Array(0x20).keys()].reduce(
     (badBlockList: number[], index) => {
-      badBlockList.push(
-        getInt(0xd0 + index * 4, "uint32", undefined, dataView),
-      );
+      badBlockList.push(getInt(0xd0 + index * 4, "uint32", {}, dataView));
       return badBlockList;
     },
     [],
   );
 
-  memoryCard.superblock.cardType = getInt(0x150, "uint8", undefined, dataView);
-  memoryCard.superblock.cardFlags = getInt(0x151, "uint8", undefined, dataView);
+  memoryCard.superblock.cardType = getInt(0x150, "uint8", {}, dataView);
+  memoryCard.superblock.cardFlags = getInt(0x151, "uint8", {}, dataView);
 
   // Extras
 
@@ -200,34 +198,34 @@ export function generateMemoryCard(dataView: DataView): void {
 
       const page = {} as Page;
 
-      page.entryMode = getInt(pageOffset, "uint16", undefined, dataView); // prettier-ignore
-      page.entryLength = getInt(pageOffset + 0x4, "uint32", undefined, dataView); // prettier-ignore
+      page.entryMode = getInt(pageOffset, "uint16", {}, dataView);
+      page.entryLength = getInt(pageOffset + 0x4, "uint32", {}, dataView);
 
       page.entryCreated = {
-        seconds: getInt(pageOffset + 0x8 + 0x1, "uint8", undefined, dataView),
-        minutes: getInt(pageOffset + 0x8 + 0x2, "uint8", undefined, dataView),
-        hours: getInt(pageOffset + 0x8 + 0x3, "uint8", undefined, dataView),
-        day: getInt(pageOffset + 0x8 + 0x4, "uint8", undefined, dataView),
-        month: getInt(pageOffset + 0x8 + 0x5, "uint8", undefined, dataView),
-        year: getInt(pageOffset + 0x8 + 0x6, "uint16", undefined, dataView),
+        seconds: getInt(pageOffset + 0x8 + 0x1, "uint8", {}, dataView),
+        minutes: getInt(pageOffset + 0x8 + 0x2, "uint8", {}, dataView),
+        hours: getInt(pageOffset + 0x8 + 0x3, "uint8", {}, dataView),
+        day: getInt(pageOffset + 0x8 + 0x4, "uint8", {}, dataView),
+        month: getInt(pageOffset + 0x8 + 0x5, "uint8", {}, dataView),
+        year: getInt(pageOffset + 0x8 + 0x6, "uint16", {}, dataView),
       };
 
-      page.entryCluster = getInt(pageOffset + 0x10, "uint32", undefined, dataView); // prettier-ignore
-      page.entryDirEntry = getInt(pageOffset + 0x14, "uint32", undefined, dataView); // prettier-ignore
+      page.entryCluster = getInt(pageOffset + 0x10, "uint32", {}, dataView);
+      page.entryDirEntry = getInt(pageOffset + 0x14, "uint32", {}, dataView);
 
       page.entryModified = {
-        seconds: getInt(pageOffset + 0x18 + 0x1, "uint8", undefined, dataView),
-        minutes: getInt(pageOffset + 0x18 + 0x2, "uint8", undefined, dataView),
-        hours: getInt(pageOffset + 0x18 + 0x3, "uint8", undefined, dataView),
-        day: getInt(pageOffset + 0x18 + 0x4, "uint8", undefined, dataView),
-        month: getInt(pageOffset + 0x18 + 0x5, "uint8", undefined, dataView),
-        year: getInt(pageOffset + 0x18 + 0x6, "uint16", undefined, dataView),
+        seconds: getInt(pageOffset + 0x18 + 0x1, "uint8", {}, dataView),
+        minutes: getInt(pageOffset + 0x18 + 0x2, "uint8", {}, dataView),
+        hours: getInt(pageOffset + 0x18 + 0x3, "uint8", {}, dataView),
+        day: getInt(pageOffset + 0x18 + 0x4, "uint8", {}, dataView),
+        month: getInt(pageOffset + 0x18 + 0x5, "uint8", {}, dataView),
+        year: getInt(pageOffset + 0x18 + 0x6, "uint16", {}, dataView),
       };
 
-      page.entryAttr = getInt(pageOffset + 0x20, "uint32", undefined, dataView); // prettier-ignore
+      page.entryAttr = getInt(pageOffset + 0x20, "uint32", {}, dataView);
 
       page.entryName = [...Array(0x20).keys()].reduce((string, index) => {
-        const char = getInt(pageOffset + 0x40 + index, "uint8", undefined, dataView); // prettier-ignore
+        const char = getInt(pageOffset + 0x40 + index, "uint8", {}, dataView);
 
         if (char === 0x0) {
           return string;
@@ -258,22 +256,20 @@ export function resetMemoryCard(): void {
   filteredSaves = [];
 }
 
-function getDirectories(fileName: string, isPartial = false): Directory[] {
+function getDirectories(name: string, isPartial = false): Directory[] {
   return memoryCard.root.filter(
     (directory) =>
-      directory.name === fileName ||
-      (isPartial && directory.name.includes(fileName)),
+      directory.name === name || (isPartial && directory.name.includes(name)),
   );
 }
 
 function getFile(
   directory: Directory,
-  fileName: string,
+  name: string,
   isPartial = false,
 ): File | undefined {
   return directory.content.find(
-    (file) =>
-      file.name === fileName || (isPartial && file.name.includes(fileName)),
+    (file) => file.name === name || (isPartial && file.name.includes(name)),
   ) as File;
 }
 
@@ -293,7 +289,7 @@ function getNextClusterIndex(dataView: DataView, clusterIndex: number): number {
   const clusterOffset =
     offset + clusterIndex * 0x4 + eccRowsCount * memoryCard.extras.eccLength;
 
-  return getInt(clusterOffset, "uint32", undefined, dataView);
+  return getInt(clusterOffset, "uint32", {}, dataView);
 }
 
 function readDirectory(
@@ -478,7 +474,7 @@ function writeFile(file: File, blob: ArrayBuffer): void {
         const eccOffset = pageOffset + memoryCard.superblock.pageLength;
 
         for (let j = 0x0; j < 0x4; j += 0x1) {
-          const table = part.slice(j * 0x80, (j + 1) * 0x80);
+          const table = part.slice(j * 0x80, (j + 0x1) * 0x80);
 
           const ecc = generateEcc(table);
 

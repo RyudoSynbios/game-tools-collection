@@ -92,8 +92,7 @@
   });
 
   $: {
-    $dataView;
-    backgroundIndex;
+    $dataView, backgroundIndex;
 
     if (canvas) {
       updateCanvas();

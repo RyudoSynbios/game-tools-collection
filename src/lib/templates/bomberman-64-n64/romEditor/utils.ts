@@ -1,4 +1,4 @@
-import { extractBit, getInt } from "$lib/utils/bytes";
+import { extractBit, getInt, getIntFromArray } from "$lib/utils/bytes";
 import type Canvas from "$lib/utils/canvas";
 import debug from "$lib/utils/debug";
 import { applyPalette, getPalette } from "$lib/utils/graphics";
@@ -62,7 +62,7 @@ export function getDecompressedData(offset: number): Uint8Array {
         buffer[bufferIndex] = value;
         decompressedData.push(value);
 
-        bufferIndex = (bufferIndex + 1) & 0x3ff;
+        bufferIndex = (bufferIndex + 0x1) & 0x3ff;
       } else {
         const special = getInt(offset, "uint16", { bigEndian: true });
         const wordPosition = ((special & 0xc0) << 0x2) | (special >> 0x8);
@@ -74,7 +74,7 @@ export function getDecompressedData(offset: number): Uint8Array {
           buffer[bufferIndex] = value;
           decompressedData.push(value);
 
-          bufferIndex = (bufferIndex + 1) & 0x3ff;
+          bufferIndex = (bufferIndex + 0x1) & 0x3ff;
         }
 
         offset += 0x1;
@@ -111,7 +111,7 @@ export function getImage(
 }
 
 export function setMesh(
-  data: DataView,
+  data: Uint8Array,
   i: number,
   decompressedData: Uint8Array,
   mesh: {
@@ -126,9 +126,11 @@ export function setMesh(
   mesh.uvs = [];
   mesh.uvsTmp = [];
 
-  const verticesCount = data.getUint8(i + 0x2) >> 0x2;
+  const unknown = getIntFromArray(data, i, "uint32", true);
 
-  const offset = data.getUint24(i + 0x5);
+  const verticesCount = data[i + 0x2] >> 0x2;
+
+  const offset = getIntFromArray(data, i + 0x5, "uint24", true);
 
   if (offset > decompressedData.length) {
     debug.warn(`Offset 0x${offset.toHex()} is out of decompressedData length`);
@@ -137,36 +139,38 @@ export function setMesh(
   }
 
   for (let i = 0x0; i < verticesCount; i += 0x1) {
-    const object = new DataView(
-      decompressedData.slice(offset + i * 0x10, offset + (i + 1) * 0x10).buffer,
+    const object = decompressedData.slice(
+      offset + i * 0x10,
+      offset + (i + 0x1) * 0x10,
     );
 
-    const x = object.getInt16(0x0);
-    const y = object.getInt16(0x2);
-    const z = object.getInt16(0x4);
+    const x = getIntFromArray(object, 0x0, "int16", true);
+    const y = getIntFromArray(object, 0x2, "int16", true);
+    const z = getIntFromArray(object, 0x4, "int16", true);
 
     mesh.vertices.push(x, y, z);
 
-    const uvX = object.getInt16(0x8);
-    const uvY = object.getInt16(0xa);
+    const uvX = getIntFromArray(object, 0x8, "int16", true);
+    const uvY = getIntFromArray(object, 0xa, "int16", true);
 
     mesh.uvsTmp.push(uvX, uvY);
   }
 
   debug.color(
-    `mesh (${verticesCount} vertices): 0x${offset.toHex()} (0x${data
-      .getUint32(i)
-      .toHex()})`,
+    `mesh (${verticesCount} vertices): 0x${offset.toHex()} (0x${unknown.toHex()})`,
     "blue",
   );
 }
 
 export function resetTexture(
-  data: DataView,
+  data: Uint8Array,
   offset: number,
   texture: Texture,
   log = false,
 ): void {
+  const unknown1 = getIntFromArray(data, offset + 0x1, "uint24", true);
+  const unknown2 = getIntFromArray(data, offset + 0x4, "uint32", true);
+
   texture.base64 = "";
   texture.pixelsOffset = 0x0;
   texture.paletteLength = 0x0;
@@ -178,21 +182,19 @@ export function resetTexture(
 
   if (log) {
     debug.color(
-      `texture reset: ${data.getUint24(offset + 0x1).toHex(6)} ${data
-        .getUint32(offset + 0x4)
-        .toHex(8)}`,
+      `texture reset: ${unknown1.toHex(6)} ${unknown2.toHex(8)}`,
       "gold",
     );
   }
 }
 
 export function setColor(
-  data: DataView,
+  data: Uint8Array,
   offset: number,
   texture: Texture,
 ): void {
-  const unknown = data.getUint24(offset + 0x1);
-  const color = data.getUint24(offset + 0x4);
+  const unknown = getIntFromArray(data, offset + 0x1, "uint24", true);
+  const color = getIntFromArray(data, offset + 0x4, "uint24", true);
 
   if (unknown === 0x200a) {
     texture.color = color;
@@ -205,12 +207,12 @@ export function setColor(
 }
 
 export function setTextureOffsets(
-  data: DataView,
+  data: Uint8Array,
   offset: number,
   texture: Texture,
 ): void {
-  const type = data.getUint24(offset + 0x1);
-  offset = data.getUint24(offset + 0x5);
+  const type = getIntFromArray(data, offset + 0x1, "uint24", true);
+  offset = getIntFromArray(data, offset + 0x5, "uint24", true);
 
   if (type === 0x100000) {
     // Palette
@@ -238,12 +240,12 @@ export function setTextureOffsets(
 }
 
 export function setTexturePaletteLength(
-  data: DataView,
+  data: Uint8Array,
   offset: number,
   texture: Texture,
 ): void {
-  const unknown1 = data.getUint24(offset + 0x1);
-  const unknown2 = data.getUint32(offset + 0x4);
+  const unknown1 = getIntFromArray(data, offset + 0x1, "uint24", true);
+  const unknown2 = getIntFromArray(data, offset + 0x4, "uint32", true);
 
   texture.paletteLength = 0x10;
 
@@ -262,22 +264,23 @@ export function setTexturePaletteLength(
 }
 
 export function setTextureManipulations(
-  data: DataView,
+  data: Uint8Array,
   offset: number,
   texture: Texture,
 ): void {
-  const unknown = data.getUint24(offset + 0x1);
-  const value = data.getUint32(offset + 0x4);
+  const unknown1 = data[offset];
+  const unknown2 = getIntFromArray(data, offset + 0x1, "uint24", true);
+  const value = getIntFromArray(data, offset + 0x4, "uint32", true);
 
   if (
-    (unknown & 0x200) === 0x0 &&
-    (unknown & 0x400) === 0x0 &&
-    (unknown & 0x800) === 0x0
+    (unknown2 & 0x200) === 0x0 &&
+    (unknown2 & 0x400) === 0x0 &&
+    (unknown2 & 0x800) === 0x0
   ) {
     debug.color(
-      `unknown texture manipulation ${data.getUint8(offset).toHex(2)}: ${data
-        .getUint24(offset + 0x1)
-        .toHex(6)} ${data.getUint32(offset + 0x4).toHex(8)}`,
+      `unknown texture manipulation ${unknown1.toHex(2)}: ${unknown2.toHex(
+        6,
+      )} ${value.toHex(8)}`,
       "red",
     );
 
@@ -304,7 +307,7 @@ export function setTextureManipulations(
   }
 
   debug.color(
-    `texture manipulation repeat (${unknown.toHex(6)}): ${value.toHex(
+    `texture manipulation repeat (${unknown2.toHex(6)}): ${value.toHex(
       8,
     )} (repeatX: ${texture.repeatX}, repeatY: ${texture.repeatY})`,
     "cyan",
@@ -313,7 +316,7 @@ export function setTextureManipulations(
 
 export async function applyTexture(
   canvas: Canvas,
-  data: DataView,
+  data: Uint8Array,
   offset: number,
   decompressedData: Uint8Array,
   texture: Texture,
@@ -323,11 +326,14 @@ export async function applyTexture(
     texture: Uint8Array;
   }[],
 ): Promise<void> {
-  // TODO: Not mode but size to substract
-  const mode = data.getUint8(offset + 0x1);
+  const unknown1 = getIntFromArray(data, offset + 0x1, "uint24", true);
 
-  texture.width = (data.getUint32(offset + 0x4) >> 0xe) + 1;
-  texture.height = ((data.getUint32(offset + 0x4) & 0xfff) >> 0x2) + 1;
+  // TODO: Not mode but size to substract
+  const mode = unknown1 & 0xff;
+  const size = getIntFromArray(data, offset + 0x4, "uint32", true);
+
+  texture.width = (size >> 0xe) + 1;
+  texture.height = ((size & 0xfff) >> 0x2) + 1;
 
   canvas.resize(texture.width, texture.height);
 
@@ -356,24 +362,24 @@ export async function applyTexture(
   });
 
   debug.color(
-    `apply texture (${texture.width}x${texture.height}) [${mode}]: ${data
-      .getUint24(offset + 0x1)
-      .toHex(6)} ${data.getUint32(offset + 0x4).toHex(8)}`,
+    `apply texture (${texture.width}x${
+      texture.height
+    }) [${mode}]: ${unknown1.toHex(6)} ${size.toHex(8)}`,
     "darkblue",
   );
 }
 
 export function addMesh(
-  three: Three,
-  data: DataView,
+  data: Uint8Array,
   offset: number,
   mesh: Mesh,
   texture: Texture,
+  three: Three,
   isFace = false,
 ): void {
   if (isFace) {
     for (let j = 0x0; j < 0x7; j += 0x1) {
-      mesh.indices.push(data.getUint8(offset + 0x1 + j) / 0x2);
+      mesh.indices.push(data[offset + 0x1 + j] / 0x2);
 
       if (j === 0x2) {
         j += 0x1;
@@ -381,7 +387,7 @@ export function addMesh(
     }
   } else {
     for (let j = 0x0; j < 0x3; j += 0x1) {
-      mesh.indices.push(data.getUint8(offset + 0x5 + j) / 0x2);
+      mesh.indices.push(data[offset + 0x5 + j] / 0x2);
     }
   }
 

@@ -234,6 +234,8 @@ export function getEnemyGroupNames(): { [value: number]: string } {
     );
   });
 
+  names[0] = "-";
+
   return names;
 }
 
@@ -245,6 +247,8 @@ export function getEnemyNames(): { [value: number]: string } {
   [...Array(164).keys()].forEach((index) => {
     names[index] = getText(enemyNamesStartIndex + index);
   });
+
+  names[0] = "-";
 
   return names;
 }
@@ -271,6 +275,8 @@ export function getItemNames(): { [value: number]: string } {
   [...Array(269).keys()].forEach((index) => {
     names[index] = getText(itemNamesStartIndex + index);
   });
+
+  names[0] = "-";
 
   return names;
 }
@@ -439,7 +445,6 @@ function generateTrees(): void {
 
 function decodeText(index: number): string {
   const $gameRegion = get(gameRegion);
-  const $gameTemplate = get(gameTemplate);
 
   const pointer = getRegionArray(pointerToTexts);
 
@@ -573,8 +578,10 @@ export function getDecompressedData(offset: number): number[] {
   }
 }
 
-export function getSpriteData(decompressedData: number[]): number[] {
-  const tileData = [];
+export function getDecompressedSpriteData(
+  decompressedData: number[],
+): number[] {
+  const spriteData = [];
 
   if (decompressedData.length > 0) {
     let bitstream = "";
@@ -594,10 +601,10 @@ export function getSpriteData(decompressedData: number[]): number[] {
         const index = compressed16Scheme.findIndex((item) => item === binary);
 
         if (index === 0x10) {
-          return tileData;
+          return spriteData;
         }
 
-        tileData.push(parseInt(reference[index], 16));
+        spriteData.push(parseInt(reference[index], 16));
 
         reference =
           reference[index] +
@@ -609,12 +616,12 @@ export function getSpriteData(decompressedData: number[]): number[] {
     }
   }
 
-  return tileData;
+  return spriteData;
 }
 
 export function getSprite(offset: number, palette: Palette): Uint8Array {
   const decompressedData = getDecompressedData(offset);
-  const spriteData = getSpriteData(decompressedData);
+  const spriteData = getDecompressedSpriteData(decompressedData);
   const sprite = applyPalette(spriteData, palette);
 
   return sprite;
