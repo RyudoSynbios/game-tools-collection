@@ -364,8 +364,8 @@ export default class Canvas {
   }
 
   public resize(width: number, height: number) {
-    this.width = width;
-    this.height = height;
+    this.width = width || 1;
+    this.height = height || 1;
 
     this.reset();
 
