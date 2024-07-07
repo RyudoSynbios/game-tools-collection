@@ -3,7 +3,7 @@
 
   import Checkbox from "$lib/components/Checkbox.svelte";
   import { isDebug } from "$lib/stores";
-  import { getInt } from "$lib/utils/bytes";
+  import { getInt, getIntFromArray } from "$lib/utils/bytes";
   import Canvas from "$lib/utils/canvas";
   import { capitalize } from "$lib/utils/format";
   import { applyPalette, flipTileData, getColor } from "$lib/utils/graphics";
@@ -205,14 +205,10 @@
     }
 
     while (true) {
-      const spriteType =
-        (sprites[baseRamTest + 0x0] << 0x8) | sprites[baseRamTest + 0x1];
-      const x =
-        (sprites[baseRamTest + 0x2] << 0x8) | sprites[baseRamTest + 0x3];
-      const y =
-        (sprites[baseRamTest + 0x4] << 0x8) | sprites[baseRamTest + 0x5];
-      const spriteId =
-        (sprites[baseRamTest + 0x6] << 0x8) | sprites[baseRamTest + 0x7];
+      const spriteType = getIntFromArray(sprites, baseRamTest, "uint16", true);
+      const x = getIntFromArray(sprites, baseRamTest + 0x2, "uint16", true);
+      const y = getIntFromArray(sprites, baseRamTest + 0x4, "uint16", true);
+      const spriteId = getIntFromArray(sprites, baseRamTest + 0x6, "uint16", true); // prettier-ignore
 
       if (x + y === 0x0) {
         break;
@@ -285,7 +281,7 @@
     });
 
     function getMapValue(offset: number): number {
-      return (map[offset] << 0x8) | map[offset + 0x1];
+      return getIntFromArray(map, offset, "uint16", true);
     }
 
     // Generate map

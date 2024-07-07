@@ -667,3 +667,66 @@ export function setString(
     }
   }
 }
+
+export function getIntFromArray(
+  array: number[] | Uint8Array,
+  offset: number,
+  dataType: Exclude<DataTypeInt, "int64" | "uint64">,
+  bigEndian = false,
+): number {
+  const littleEndian16 = [0, 1];
+  const bigEndian16 = [1, 0];
+
+  const littleEndian24 = [0, 1, 2];
+  const bigEndian24 = [2, 1, 0];
+
+  const littleEndian32 = [0, 1, 2, 3];
+  const bigEndian32 = [3, 2, 1, 0];
+
+  let order = [];
+
+  let int = array[offset];
+
+  if (dataType === "int8") {
+    int = int & 0x80 ? int ^ -0x100 : int;
+  } else if (["int16", "uint16"].includes(dataType)) {
+    order = bigEndian ? bigEndian16 : littleEndian16;
+
+    const b0 = array[offset + order[0]];
+    const b1 = array[offset + order[1]] << 0x8;
+
+    int = b0 | b1;
+
+    if (dataType === "int16") {
+      int = int & 0x8000 ? int ^ -0x10000 : int;
+    }
+  } else if (["int24", "uint24"].includes(dataType)) {
+    order = bigEndian ? bigEndian24 : littleEndian24;
+
+    const b0 = array[offset + order[0]];
+    const b1 = array[offset + order[1]] << 0x8;
+    const b2 = array[offset + order[2]] << 0x10;
+
+    int = b0 | b1 | b2;
+
+    if (dataType === "int24") {
+      int = int & 0x800000 ? int ^ -0x1000000 : int;
+    }
+  } else if (["int32", "uint32"].includes(dataType)) {
+    order = bigEndian ? bigEndian32 : littleEndian32;
+
+    const b0 = array[offset + order[0]];
+    const b1 = array[offset + order[1]] << 0x8;
+    const b2 = array[offset + order[2]] << 0x10;
+    const b3 = array[offset + order[3]] << 0x18;
+
+    int = b0 | b1 | b2 | b3;
+
+    if (dataType === "int32") {
+      int = int & 0x80000000 ? int ^ -0x100000000 : int;
+    }
+  }
+
+  return int;
+}
+

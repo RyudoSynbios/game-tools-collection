@@ -1,4 +1,4 @@
-import { getInt } from "$lib/utils/bytes";
+import { getInt, getIntFromArray } from "$lib/utils/bytes";
 
 import type { Color, ColorType, Palette } from "$lib/types";
 
