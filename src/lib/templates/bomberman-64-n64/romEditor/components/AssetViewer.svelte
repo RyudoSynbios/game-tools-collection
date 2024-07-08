@@ -1,7 +1,6 @@
 <script lang="ts">
   import { onDestroy, onMount } from "svelte";
 
-  import Checkbox from "$lib/components/Checkbox.svelte";
   import { getInt, getIntFromArray } from "$lib/utils/bytes";
   import Canvas from "$lib/utils/canvas";
   import debug from "$lib/utils/debug";
@@ -70,14 +69,6 @@
     three.resetCamera();
   }
 
-  function handleGridHelperStatusChange(event: Event): void {
-    if ((event.target as HTMLInputElement).checked) {
-      three.showGridHelper();
-    } else {
-      three.hideGridHelper();
-    }
-  }
-
   function handleKeyDown(event: any): void {
     if (!event.ctrlKey && !event.metaKey && event.key === "f") {
       event.preventDefault();
@@ -90,16 +81,15 @@
     }
   }
 
-  function handleWireframeStatusChange(event: Event): void {
-    if ((event.target as HTMLInputElement).checked) {
-      three.showWireframe();
-    } else {
-      three.hideWireframe();
-    }
-  }
-
   async function updateCanvas(): Promise<void> {
     debug.clear();
+
+    canvas.reset();
+    three.reset();
+
+    const instanceId = three.getInstanceId();
+
+    three.setLoading(true);
 
     const decompressedData = getDecompressedData(assets[assetIndex]);
 
@@ -113,7 +103,6 @@
     let decompressedDataPosition = 0xc;
 
     let headersOffsets: {
-      asset: number;
       type: number;
       value: number;
       offset: number;
@@ -126,7 +115,6 @@
       );
 
       headersOffsets.push({
-        asset: assetIndex,
         type: getIntFromArray(header, 0x0, "int32", true),
         value: getIntFromArray(header, 0x4, "int32", true),
         offset: getIntFromArray(header, 0x8, "uint32", true),
@@ -152,7 +140,6 @@
     });
 
     let headers: {
-      asset: number;
       type: number;
       value: number;
       offset: number;
@@ -170,8 +157,6 @@
         data: decompressedData.slice(offset, end),
       };
     });
-
-    three.reset();
 
     const textures: {
       width: number;
@@ -200,6 +185,10 @@
 
     await headers.reduce(async (previousHeader, header, index) => {
       await previousHeader;
+
+      if (instanceId !== three.getInstanceId()) {
+        return previousHeader;
+      }
 
       const { data } = header;
 
@@ -245,7 +234,7 @@
           const unknown1 = getIntFromArray(data, i + 0x1, "uint24", true);
           const unknown2 = getIntFromArray(data, i + 0x4, "uint32", true);
 
-          if (header.asset !== assetIndex) {
+          if (instanceId !== three.getInstanceId()) {
             return previousHeader;
           }
 
@@ -389,7 +378,11 @@
       }
     }, Promise.resolve());
 
+    if (instanceId !== three.getInstanceId()) {
+      return;
+    }
 
+    three.setLoading(false);
 
     const sheet = generateGraphicsSheet(hideTree ? 0 : 128, textures);
 
@@ -414,9 +407,7 @@
 
     canvas.addLayer("textures", "image");
 
-    three = new Three(threeEl, {
-      gridHelper: true,
-    });
+    three = new Three(threeEl);
 
     canvasTexture = new Canvas({
       width: 32,
@@ -459,34 +450,6 @@
 <svelte:window bind:innerWidth on:keydown={handleKeyDown} />
 
 <div class="gtc-assetviewer">
-  <div class="gtc-assetviewer-inputs">
-    <div>
-      <p>Tools</p>
-      <div>
-        <Checkbox
-          label="Grid"
-          checked={three?.getGridHelperStatus()}
-          onChange={(event) => handleGridHelperStatusChange(event)}
-        />
-        <Checkbox
-          label="Wireframe"
-          checked={three?.getWireframeStatus()}
-          onChange={(event) => handleWireframeStatusChange(event)}
-        />
-      </div>
-    </div>
-    <div>
-      <p>Camera</p>
-      <div>
-        <button class="gtc-assetviewer-button" on:click={handleCameraFit}>
-          Fit
-        </button>
-        <button class="gtc-assetviewer-button" on:click={handleCameraReset}>
-          Reset
-        </button>
-      </div>
-    </div>
-  </div>
   <div class="gtc-assetviewer-content">
     <div
       class="gtc-assetviewer-canvas"
@@ -507,38 +470,6 @@
   .gtc-assetviewer {
     @apply flex-1;
 
-    & .gtc-assetviewer-inputs {
-      @apply flex;
-
-      & > div {
-        @apply mr-4 mb-4 p-2 w-fit bg-primary-700 rounded;
-
-        & p {
-          @apply mb-2 text-sm font-bold;
-        }
-
-        & div {
-          @apply flex;
-
-          & :global(label) {
-            @apply mr-4;
-          }
-
-          & .gtc-assetviewer-button {
-            @apply text-red-100 bg-primary-400;
-
-            &:first-of-type {
-              @apply mr-2;
-            }
-
-            &:hover {
-              @apply bg-primary-300;
-            }
-          }
-        }
-      }
-    }
-
     & .gtc-assetviewer-content {
       @apply flex;
 
@@ -556,7 +487,7 @@
       }
 
       & .gtc-assetviewer-three {
-        @apply w-full;
+        @apply relative w-full;
 
         &.gtc-assetviewer-three-hidden {
           @apply hidden;

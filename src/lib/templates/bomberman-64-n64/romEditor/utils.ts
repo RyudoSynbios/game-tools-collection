@@ -375,6 +375,7 @@ export function addMesh(
   mesh: Mesh,
   texture: Texture,
   three: Three,
+  instanceId: string,
   isFace = false,
 ): void {
   if (isFace) {
@@ -398,11 +399,16 @@ export function addMesh(
     mesh.uvs.push(uv / multiplicator);
   });
 
-  three.addMesh(mesh.vertices, mesh.indices, mesh.uvs, {
-    color: texture.color,
-    texture: texture.base64,
-    textureRepeatX: texture.repeatX,
-    textureRepeatY: texture.repeatY,
+  three.addMesh(mesh.vertices, mesh.indices, mesh.uvs, instanceId, {
+    material: {
+      color: texture.color,
+      texture: {
+        base64: texture.base64,
+        flipY: false,
+        repeatX: texture.repeatX,
+        repeatY: texture.repeatY,
+      },
+    },
   });
 
   debug.color(`add mesh (${isFace ? "face" : "triangle"})`, "green");

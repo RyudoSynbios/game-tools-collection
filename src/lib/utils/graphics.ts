@@ -1,3 +1,5 @@
+import { BufferAttribute, type BufferGeometry, Vector3 } from "three";
+
 import { getInt, getIntFromArray } from "$lib/utils/bytes";
 
 import type { Color, ColorType, Palette } from "$lib/types";
@@ -97,6 +99,19 @@ export function flipTileData(
   return flippedData;
 }
 
+export function flipUvs(uvs: number[], axis: "x" | "y"): number[] {
+  return uvs.map((uv, index) => {
+    if (
+      (axis === "x" && index % 2 === 0) ||
+      (axis === "y" && index % 2 !== 0)
+    ) {
+      uv ^= 1;
+    }
+
+    return uv;
+  });
+}
+
 export function applyPalette(
   data: number[] | Uint8Array,
   palette: Palette,
@@ -164,4 +179,3 @@ export function generateGraphicsSheet(
 
   return sheet;
 }
-
