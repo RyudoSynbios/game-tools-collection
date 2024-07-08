@@ -59,21 +59,21 @@ export function getPalette(
   const palette: Color[] = [];
 
   for (let i = 0x0; i < length; i += 0x1) {
-    if (i === 0x0 && firstTransparent) {
-      palette.push([0, 0, 0, 0]);
+    let raw = 0x0;
+
+    if (array) {
+      raw = getIntFromArray(array, offset + i * 0x2, "uint16", bigEndian);
     } else {
-      let raw = 0x0;
-
-      if (array) {
-        raw = getIntFromArray(array, offset + i * 0x2, "uint16", bigEndian);
-      } else {
-        raw = getInt(offset + i * 0x2, "uint16", { bigEndian }, dataView);
-      }
-
-      const color = getColor(raw, type);
-
-      palette.push(color);
+      raw = getInt(offset + i * 0x2, "uint16", { bigEndian }, dataView);
     }
+
+    const color = getColor(raw, type);
+
+    palette.push(color);
+  }
+
+  if (palette.length > 0 && firstTransparent) {
+    palette[0][3] = 0x0;
   }
 
   return palette;
