@@ -90,7 +90,7 @@ interface Save {
   offset: number;
 }
 
-// ECC constants (adapted from https://github.com/ps2dev/mymc/blob/db5d9e1c141cbbc4ba4e374f73a0518a8d75b7ef/ps2mc_ecc.py)
+// ECC constants
 
 const parityTable = [...Array(256).keys()].map((i) => {
   i = i ^ (i >> 0x1);

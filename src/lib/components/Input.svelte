@@ -87,7 +87,6 @@
     <input
       {type}
       {placeholder}
-      {value}
       {min}
       {max}
       {maxlength}

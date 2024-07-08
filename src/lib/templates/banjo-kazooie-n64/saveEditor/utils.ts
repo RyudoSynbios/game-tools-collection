@@ -173,6 +173,7 @@ export function overrideSetInt(item: Item, value: string): boolean {
 
   return false;
 }
+
 export function afterSetInt(item: Item): void {
   if ("id" in item && item.id === "eggs") {
     const itemInt = item as ItemInt;

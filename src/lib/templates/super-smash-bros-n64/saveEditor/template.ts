@@ -260,7 +260,7 @@ const template: GameJson = {
               vertical: true,
               items: [
                 {
-                  name: "Number of Kos against",
+                  name: "Number of KOs against",
                   type: "section",
                   flex: true,
                   items: [

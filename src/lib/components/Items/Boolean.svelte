@@ -9,17 +9,16 @@
   export let item: ItemBoolean;
 
   function handleInputChange(event: Event): void {
+    const target = event.target as HTMLInputElement;
+
     let isOverrided = false;
 
     if (utilsExists("overrideSetInt")) {
-      isOverrided = $gameUtils.overrideSetInt(
-        item,
-        (event.target as HTMLInputElement).checked,
-      );
+      isOverrided = $gameUtils.overrideSetInt(item, target.checked);
     }
 
     if (!isOverrided) {
-      setBoolean(item.offset, (event.target as HTMLInputElement).checked, {
+      setBoolean(item.offset, target.checked, {
         on: item.on,
         off: item.off,
         resource: item.resource,

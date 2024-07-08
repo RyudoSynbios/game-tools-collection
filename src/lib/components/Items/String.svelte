@@ -9,13 +9,12 @@
   export let item: ItemString & { hidden?: boolean };
 
   function handleInputChange(event: Event): void {
+    const target = event.target as HTMLInputElement;
+
     let isOverrided = false;
 
     if (utilsExists("overrideSetInt")) {
-      isOverrided = $gameUtils.overrideSetInt(
-        item,
-        (event.target as HTMLInputElement).value,
-      );
+      isOverrided = $gameUtils.overrideSetInt(item, target.value);
     }
 
     if (!isOverrided) {
@@ -23,7 +22,7 @@
         item.offset,
         item.length,
         item.letterDataType,
-        (event.target as HTMLInputElement).value,
+        target.value,
         item.fallback,
         {
           bigEndian: item.bigEndian,
