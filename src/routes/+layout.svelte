@@ -36,6 +36,13 @@
     <div class="gtc-header-inner">
       <a href="/">Game Tools Collection</a>
       <div>
+        <a
+          href="https://github.com/RyudoSynbios/game-tools-collection"
+          target="_blank"
+        >
+          <img src="/img/github-mark-white.svg" alt="GitHub Logo" />
+          GitHub
+        </a>
         <a href="/faq">FAQ</a>
         <a href="/about">About</a>
       </div>
@@ -58,8 +65,20 @@
       & .gtc-header-inner {
         @apply relative mx-auto flex justify-between w-full max-w-7xl;
 
-        & div a:not(:last-child) {
-          @apply mr-4;
+        & div {
+          @apply flex;
+
+          & a {
+            @apply flex items-center;
+
+            &:not(:last-child) {
+              @apply mr-4;
+            }
+
+            & img {
+              @apply mr-2 h-4;
+            }
+          }
         }
       }
     }

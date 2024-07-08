@@ -61,6 +61,10 @@ h2 {
   @apply mb-4 font-bold;
 }
 
+img {
+  @apply inline-block;
+}
+
 input:not([type="checkbox"]),
 select {
   @apply h-8 text-primary-900;
