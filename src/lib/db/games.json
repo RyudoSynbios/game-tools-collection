@@ -78,6 +78,14 @@
     }
   },
   {
+    "id": "dead-or-alive-2-ps2",
+    "name": "Dead or Alive 2",
+    "consoleId": "playstation-2",
+    "saveEditor": {
+      "regions": ["🇪🇺"]
+    }
+  },
+  {
     "id": "donkey-kong-land-gb",
     "name": "Donkey Kong Land",
     "consoleId": "game-boy",

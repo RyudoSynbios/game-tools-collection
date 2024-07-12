@@ -15,6 +15,7 @@ Link to the website: [https://game-tools-collection.com](https://game-tools-coll
 | Castlevania: Dawn of Sorrow               | DS       | Save       | EUR / USA / JAP                               |
 | Castlevania: Harmony of Dissonance        | GBA      | Save       | EUR / USA / JAP                               |
 | Castlevania: Symphony of the Night        | PS       | Save       | EUR / USA / JAP                               |
+| Dead or Alive 2                           | PS2      | Save       | EUR                                           |
 | Donkey Kong Land                          | GB       | Save       | EUR / USA / JAP                               |
 | Final Fight One                           | GBA      | Save       | EUR / USA / JAP                               |
 | Game & Watch Gallery 3                    | GBC      | Save       | EUR / USA / JAP / AUS                         |
