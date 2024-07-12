@@ -243,6 +243,7 @@ export function parseContainer(
   instanceIndex: number,
   options: ParseItemOptions,
 ): any {
+  const $gameTemplate = get(gameTemplate);
   const $gameUtils = get(gameUtils) as any;
 
   if (!instanceId && item.instanceId) {
@@ -337,6 +338,12 @@ export function parseContainer(
     if (item.instanceType === "section") {
       if (item.enumeration) {
         parsedSubitem.name = item.enumeration.replace("%d", index + 1);
+      } else if (
+        item.resource &&
+        $gameTemplate.resources &&
+        $gameTemplate.resources[item.resource]
+      ) {
+        parsedSubitem.name = $gameTemplate.resources[item.resource][index];
       }
 
       parsedSubitem.type = "section";
