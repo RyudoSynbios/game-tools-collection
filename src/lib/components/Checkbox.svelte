@@ -1,12 +1,24 @@
 <script lang="ts">
+  import { dataView } from "$lib/stores";
+
   export let label = "";
   export let checked: boolean;
   export let disabled = false;
   export let onChange: (event: Event) => void;
+
+  let inputEl: HTMLInputElement;
+
+  $: {
+    $dataView;
+
+    if (inputEl) {
+      inputEl.checked = checked;
+    }
+  }
 </script>
 
 <label class="gtc-checkbox">
-  <input type="checkbox" {checked} {disabled} on:change={onChange} />
+  <input type="checkbox" {disabled} bind:this={inputEl} on:change={onChange} />
   {#if label}
     <span>{@html label}</span>
   {/if}
