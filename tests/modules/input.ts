@@ -3,6 +3,8 @@ export async function expectInput(
   inputIndex: number,
   shouldReturn = true,
 ): Promise<void> {
+  await page.waitForSelector(".gtc-content");
+
   const inputsEl = await page.$$("*[data-test=true]");
   const inputEl = inputsEl[inputIndex];
 

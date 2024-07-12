@@ -2,6 +2,8 @@ export async function expectChecksum(
   expectedValue: string,
   inputIndex: number,
 ): Promise<void> {
+  await page.waitForSelector(".gtc-tool-checksums");
+
   const checksumButtonEl = await page.$(".gtc-tool-checksums");
 
   await checksumButtonEl?.click();
