@@ -15,6 +15,7 @@
 <div
   class="gtc-select"
   class:gtc-select-debug={debug}
+  class:gtc-select-disabled={disabled}
   class:gtc-select-lg={size === "lg"}
 >
   {#if label}
@@ -40,6 +41,10 @@
 
     &.gtc-select-debug {
       @apply text-orange-800 bg-orange-950;
+    }
+
+    &.gtc-select-disabled select {
+      @apply bg-gray-100 bg-opacity-30;
     }
 
     &.gtc-select-lg select {

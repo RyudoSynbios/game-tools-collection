@@ -34,7 +34,7 @@
   }
 
   function handleDropdownOpen(): void {
-    if (!isDropdownOpen) {
+    if (!disabled && !isDropdownOpen) {
       filteredOptions = options;
       inputEl.select();
 
@@ -212,6 +212,7 @@
 <div
   class="gtc-autocomplete"
   class:gtc-autocomplete-debug={debug}
+  class:gtc-autocomplete-disabled={disabled}
   bind:this={rootEl}
 >
   {#if label}
@@ -271,8 +272,15 @@
       @apply mb-2 text-sm font-bold;
     }
 
+    &.gtc-autocomplete-disabled .gtc-autocomplete-input {
+      & input,
+      & :global(svg) {
+        @apply bg-gray-100 bg-opacity-30;
+      }
+    }
+
     & .gtc-autocomplete-input {
-      @apply flex items-center text-primary-900 bg-white;
+      @apply flex items-center text-primary-900;
 
       & input {
         @apply flex-1 pr-1;
@@ -281,7 +289,7 @@
       }
 
       & :global(svg) {
-        @apply w-4;
+        @apply w-4 h-8 bg-white;
       }
 
       &.gtc-autocomplete-input-lg input {
