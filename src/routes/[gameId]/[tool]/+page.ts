@@ -1,4 +1,4 @@
-import { error } from "@sveltejs/kit";
+import { error, redirect } from "@sveltejs/kit";
 
 import { gameTemplate, gameUtils } from "$lib/stores.js";
 import { getGame } from "$lib/utils/db.js";
@@ -12,6 +12,10 @@ export interface Data {
 
 export async function load({ params }): Promise<void> {
   let tool = "";
+
+  if (params.gameId === "shining-force-3-scenario-1-saturn") {
+    throw redirect(301, `/shining-force-3-saturn/${params.tool}`);
+  }
 
   if (params.tool === "randomizer") {
     tool = "randomizer";

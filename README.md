@@ -32,7 +32,7 @@ Link to the website: [https://game-tools-collection.com](https://game-tools-coll
 | Mystical Ninja 2 Starring Goemon          | N64      | Save       | EUR / USA / JAP                               |
 | Rayman                                    | PS       | Save       | EUR / USA / JAP                               |
 | Resident Evil                             | PS       | Save       | EUR / USA / JAP / FRA / GER                   |
-| Shining Force 3: Scenario 1               | SATURN   | Save / Rom | EUR / USA / JAP                               |
+| Shining Force 3                           | SATURN   | Save / Rom | EUR / USA / JAP                               |
 | Soleil                                    | MD       | Save / Rom | EUR / USA / JAP / FRA / GER / SPA / KOR       |
 | Sonic 3                                   | MD       | Save       | EUR / USA / JAP                               |
 | Super Smash Bros.                         | N64      | Save       | EUR / USA / JAP / AUS                         |

@@ -6,7 +6,7 @@ import {
   snippet,
 } from "../";
 
-const game = "shining-force-3-scenario-1-saturn";
+const game = "shining-force-3-saturn";
 
 beforeAll(async () => initPage(`${game}/save-editor`));
 

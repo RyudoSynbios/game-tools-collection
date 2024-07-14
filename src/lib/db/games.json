@@ -220,8 +220,8 @@
     }
   },
   {
-    "id": "shining-force-3-scenario-1-saturn",
-    "name": "Shining Force 3: Scenario 1",
+    "id": "shining-force-3-saturn",
+    "name": "Shining Force 3",
     "consoleId": "saturn",
     "saveEditor": {
       "regions": ["🇪🇺", "🇺🇸", "🇯🇵"]
