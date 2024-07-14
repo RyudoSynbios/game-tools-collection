@@ -311,6 +311,11 @@ export function getFilteredFiles(type: string): File[] {
     } else if (file.name.match(/.CHR$/)) {
       return type === "sprite";
     } else if (
+      file.name.match(/^FACE(.*?).DAT$/) ||
+      file.name.match(/^KAO(.*?).DAT$/)
+    ) {
+      return type === "face";
+    } else if (
       file.name === "LOGOBG.BIN" ||
       file.name === "LOGOBLK.BIN" ||
       file.name === "LOGONEW.BIN" ||
@@ -320,8 +325,6 @@ export function getFilteredFiles(type: string): File[] {
       file.name === "THREES.BIN" ||
       file.name.match(/.FNT$/) ||
       file.name.match(/.SPR$/) ||
-      file.name.match(/^FACE(.*?).DAT$/) ||
-      file.name.match(/^KAO(.*?).DAT$/) ||
       file.name.match(/^X4EN(.*?).BIN$/)
     ) {
       return type === "image";

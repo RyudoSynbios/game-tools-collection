@@ -20,8 +20,7 @@ const template: GameJson = {
       // },
     },
     text: "Drag 'n' drop here or click to add a rom file.",
-    error:
-      "Not a valid rom file.<br />Scenario 3 will be available very soon.",
+    error: "Not a valid rom file.<br />Scenario 3 will be available very soon.",
   },
   items: [
     {
@@ -2616,6 +2615,29 @@ const template: GameJson = {
                   ],
                 },
                 {
+                  name: "Faces",
+                  items: [
+                    {
+                      id: "assetViewer-face",
+                      instanceId: "faceViewer",
+                      length: 0x2,
+                      type: "container",
+                      instanceType: "tabs",
+                      instances: 0,
+                      resource: "assetFaceNames",
+                      vertical: true,
+                      flex: true,
+                      items: [
+                        {
+                          type: "component",
+                          component: "ImageViewer",
+                          props: { assetIndex: "faceViewer", type: "face" },
+                        },
+                      ],
+                    },
+                  ],
+                },
+                {
                   name: "Sprites",
                   items: [
                     {
@@ -2768,9 +2790,10 @@ const template: GameJson = {
   resources: {
     assetBattleCharacterNames: "getAssetNames('battleCharacter')",
     assetBattleStageNames: "getAssetNames('battleStage')",
-    assetNames: "getAssetNames('asset')",
+    assetFaceNames: "getAssetNames('face')",
     assetImageNames: "getAssetNames('image')",
     assetLocationNames: "getAssetNames('location')",
+    assetNames: "getAssetNames('asset')",
     assetSpriteNames: "getAssetNames('sprite')",
     assetTextNames: "getAssetNames('text')",
     assetVideoNames: "getAssetNames('video')",
