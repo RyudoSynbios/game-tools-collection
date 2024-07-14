@@ -45,12 +45,12 @@
   const assets: number[] = [];
 
   while (true) {
+    const offset =
+      baseOffset + getInt(tableOffset, "uint32", { bigEndian: true });
+
     const compressedSize = getInt(tableOffset + 0x4, "uint32", {
       bigEndian: true,
     });
-
-    const offset =
-      baseOffset + getInt(tableOffset, "uint32", { bigEndian: true });
 
     if (compressedSize === 0xffffffff) {
       break;

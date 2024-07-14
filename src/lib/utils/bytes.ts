@@ -303,13 +303,16 @@ export function getInt(
 ): number {
   const $dataView = getDataView(dataView);
 
-  if (
+  if (offset < 0x0) {
+    debug.error("Tried to read a negative offset");
+
+    return 0x0;
+  } else if (
     $dataView.byteLength === 0x0 ||
-    offset < 0x0 ||
     offset + dataTypeToLength(dataType) - 1 > $dataView.byteLength - 1
   ) {
     debug.error(
-      `Tried to read bytes past the end of a buffer at index ${offset} of ${$dataView.byteLength}`,
+      `Tried to read bytes past the end of a buffer at offset 0x${offset.toHex()} of 0x${$dataView.byteLength.toHex()}`,
     );
 
     return 0x0;
@@ -377,13 +380,16 @@ export function setInt(
   const $dataView = get(dataView);
   const $isDebug = get(isDebug);
 
-  if (
+  if (offset < 0x0) {
+    debug.error("Tried to write to a negative offset");
+
+    return;
+  } else if (
     $dataView.byteLength === 0x0 ||
-    offset < 0x0 ||
     offset + dataTypeToLength(dataType) - 1 > $dataView.byteLength - 1
   ) {
     debug.error(
-      `Tried to write bytes past the end of a buffer at index ${offset} of ${$dataView.byteLength}`,
+      `Tried to write bytes past the end of a buffer at offset 0x${offset.toHex()} of 0x${$dataView.byteLength.toHex()}`,
     );
 
     return;
@@ -497,13 +503,16 @@ export function getBigInt(
 ): bigint {
   const $dataView = getDataView(dataView);
 
-  if (
+  if (offset < 0x0) {
+    debug.error("Tried to read a negative offset");
+
+    return BigInt(0);
+  } else if (
     $dataView.byteLength === 0x0 ||
-    offset < 0x0 ||
     offset + dataTypeToLength(dataType) - 1 > $dataView.byteLength - 1
   ) {
     debug.error(
-      `Tried to read bytes past the end of a buffer at index ${offset} of ${$dataView.byteLength}`,
+      `Tried to read bytes past the end of a buffer at offset 0x${offset.toHex()} of 0x${$dataView.byteLength.toHex()}`,
     );
 
     return BigInt(0);
@@ -532,13 +541,16 @@ export function setBigInt(
   const $dataView = get(dataView);
   const $isDebug = get(isDebug);
 
-  if (
+  if (offset < 0x0) {
+    debug.error("Tried to write to a negative offset");
+
+    return;
+  } else if (
     $dataView.byteLength === 0x0 ||
-    offset < 0x0 ||
     offset + dataTypeToLength(dataType) - 1 > $dataView.byteLength - 1
   ) {
     debug.error(
-      `Tried to write bytes past the end of a buffer at index ${offset} of ${$dataView.byteLength}`,
+      `Tried to write bytes past the end of a buffer at offset 0x${offset.toHex()} of 0x${$dataView.byteLength.toHex()}`,
     );
 
     return;

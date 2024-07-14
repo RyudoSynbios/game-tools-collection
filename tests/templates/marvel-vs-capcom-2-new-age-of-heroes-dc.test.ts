@@ -1,10 +1,4 @@
-import {
-  defaultTests,
-  ejectFile,
-  initPage,
-  saveShouldBeRejected,
-  snippet,
-} from "../";
+import { defaultTests, ejectFile, initPage, snippet } from "../";
 
 const game = "marvel-vs-capcom-2-new-age-of-heroes-dc";
 
