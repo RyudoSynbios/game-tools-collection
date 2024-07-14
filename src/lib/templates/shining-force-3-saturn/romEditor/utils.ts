@@ -1,3 +1,6 @@
+import { get } from "svelte/store";
+
+import { gameRegion } from "$lib/stores";
 import { getInt } from "$lib/utils/bytes";
 import {
   type File,
@@ -342,6 +345,7 @@ export function getFileOffset(
   identifier: string,
   offset: number,
   dataView: DataView,
+  subOffset = 0x0,
 ): number {
   const absoluteOffset = getInt(
     offset,
@@ -357,12 +361,30 @@ export function getFileOffset(
   } else if (identifier === "x033") {
     return absoluteOffset - 0x6078000;
   } else if (identifier === "mpd" && absoluteOffset >= 0x60a0000) {
-    return absoluteOffset - 0x609df00;
+    return absoluteOffset - (0x60a0000 - subOffset);
   } else if (identifier === "mpd" && absoluteOffset >= 0x290000) {
     return absoluteOffset - 0x290000;
   }
 
   return absoluteOffset;
+}
+
+export function getScenario(): string {
+  const $gameRegion = get(gameRegion);
+
+  switch ($gameRegion) {
+    case 0:
+    case 1:
+      return "1";
+    case 2:
+      return "2";
+    case 3:
+      return "3";
+    case 4:
+      return "platinum";
+    default:
+      return "";
+  }
 }
 
 export function isDummy(dataView: DataView): boolean {

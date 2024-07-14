@@ -2,13 +2,12 @@
   import { onDestroy, onMount } from "svelte";
   import { Matrix4, Mesh } from "three";
 
-  import { isDebug } from "$lib/stores";
   import Canvas from "$lib/utils/canvas";
   import debug from "$lib/utils/debug";
   import { generateGraphicsSheet } from "$lib/utils/graphics";
   import Three from "$lib/utils/three";
 
-  import { getFileData, isDummy } from "../utils";
+  import { getFileData, getScenario, isDummy } from "../utils";
   import {
     addObject as addBattleCharacterObject,
     unpackBattleCharacter,
@@ -163,7 +162,9 @@
 
             const clone = three.clone(mesh);
 
-            clone.applyMatrix4(new Matrix4().makeScale(-1, 1, -1));
+            const scaleX = getScenario() === "1" ? -1 : 1;
+
+            clone.applyMatrix4(new Matrix4().makeScale(scaleX, 1, -1));
 
             clone.position.z -= 256;
           }
@@ -194,6 +195,7 @@
             mesh = three.cloneCachedMesh(meshId, instanceId);
           } else {
             mesh = addMpdObject(
+              mpd.objectsBaseOffset,
               offset,
               mpd.textures,
               three,
@@ -233,7 +235,7 @@
         addMpdFloor(
           mpd.floor.texture,
           mpd.floor.position,
-          mpd.isBattlefield,
+          mpd.floor.repeat,
           three,
           instanceId,
         );

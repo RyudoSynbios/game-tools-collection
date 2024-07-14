@@ -13,7 +13,7 @@ import type Three from "$lib/utils/three";
 
 import type { Palette } from "$lib/types";
 
-import { getDecompressedData, getFileOffset } from "../utils";
+import { getDecompressedData, getFileOffset, getScenario } from "../utils";
 import { type Texture, getIndices, getMaterials, getVertices } from "./model";
 
 export function addBattlefieldFloor(
@@ -74,60 +74,62 @@ export function addBattlefieldFloor(
           const flipY = (tile & 0x2000) !== 0x0;
           const useMapHeight = (tile & 0x8000) !== 0x0;
 
-          let heights = yVertices;
+          if (textureIndex !== 0xff) {
+            let heights = yVertices;
 
-          if (useMapHeight) {
-            heights = yHeightMap;
-          }
-
-          const base64 = textures[textureIndex]?.base64;
-
-          if (base64) {
-            let uvs = [0, 0, 1, 0, 1, 1, 1, 1, 0, 1, 0, 0];
-
-            if (flipX) {
-              uvs = flipUvs(uvs, "x");
+            if (useMapHeight) {
+              heights = yHeightMap;
             }
 
-            if (flipY) {
-              uvs = flipUvs(uvs, "y");
-            }
+            const base64 = textures[textureIndex]?.base64;
 
-            const mesh = three.addMesh(
-              [
-                0,
-                heights[row * 16 + column * 4 + 0],
-                0,
-                32,
-                heights[row * 16 + column * 4 + 1],
-                0,
-                32,
-                heights[row * 16 + column * 4 + 2],
-                -32,
-                0,
-                heights[row * 16 + column * 4 + 3],
-                -32,
-              ],
-              [0, 1, 2, 2, 3, 0],
-              uvs,
-              instanceId,
-              {
-                group,
-                geometry: {
-                  nonIndexed: true,
-                },
-                material: {
-                  color: 0x0,
-                  texture: {
-                    base64,
+            if (base64) {
+              let uvs = [0, 0, 1, 0, 1, 1, 1, 1, 0, 1, 0, 0];
+
+              if (flipX) {
+                uvs = flipUvs(uvs, "x");
+              }
+
+              if (flipY) {
+                uvs = flipUvs(uvs, "y");
+              }
+
+              const mesh = three.addMesh(
+                [
+                  0,
+                  heights[row * 16 + column * 4 + 0],
+                  0,
+                  32,
+                  heights[row * 16 + column * 4 + 1],
+                  0,
+                  32,
+                  heights[row * 16 + column * 4 + 2],
+                  -32,
+                  0,
+                  heights[row * 16 + column * 4 + 3],
+                  -32,
+                ],
+                [0, 1, 2, 2, 3, 0],
+                uvs,
+                instanceId,
+                {
+                  group,
+                  geometry: {
+                    nonIndexed: true,
+                  },
+                  material: {
+                    color: 0x0,
+                    texture: {
+                      base64,
+                    },
                   },
                 },
-              },
-            );
+              );
 
-            if (mesh) {
-              mesh.position.x = blockColumn * 128 + column * 32;
-              mesh.position.z = -(blockRow * 128 + row * 32);
+              if (mesh) {
+                mesh.position.x = blockColumn * 128 + column * 32;
+                mesh.position.z = -(blockRow * 128 + row * 32);
+              }
             }
           }
         }
@@ -189,21 +191,22 @@ export function addFloor(
 }
 
 export function addObject(
+  baseOffset: number,
   offset: number,
   textures: Texture[],
   three: Three,
   instanceId: string,
   dataView: DataView,
 ): Mesh | null {
-  const verticesOffset = getFileOffset("mpd", offset, dataView);
+  const verticesOffset = getFileOffset("mpd", offset, dataView, baseOffset);
   const verticesCount = getInt(offset + 0x4, "uint32", { bigEndian: true }, dataView); // prettier-ignore
   const vertices = getVertices(verticesOffset, verticesCount, dataView);
 
-  const indicesOffset = getFileOffset("mpd", offset + 0x8, dataView);
+  const indicesOffset = getFileOffset("mpd", offset + 0x8, dataView, baseOffset); // prettier-ignore
   const indicesCount = getInt(offset + 0xc, "uint32", { bigEndian: true }, dataView); // prettier-ignore
   const indices = getIndices(indicesOffset, indicesCount, dataView);
 
-  const texturesOffset = getFileOffset("mpd", offset + 0x10, dataView);
+  const texturesOffset = getFileOffset("mpd", offset + 0x10, dataView, baseOffset); // prettier-ignore
   const materials = getMaterials(
     texturesOffset,
     indicesCount,
@@ -337,11 +340,7 @@ async function getTextures(
   return textures;
 }
 
-function getTiles(
-  data: number[],
-  palette: Palette,
-  dataView: DataView,
-): Uint8Array[] {
+function getTiles(data: number[], palette: Palette): Uint8Array[] {
   const tiles: Uint8Array[] = [];
 
   let width = 8;
@@ -364,7 +363,14 @@ function getTiles(
 }
 
 interface Mpd {
-  isBattlefield: boolean;
+  pointerTable: {
+    objects: number;
+    battlefieldFloor: number;
+    heightMap: number;
+    textures: number;
+    tiledFloorTexture: number;
+    unknown: number;
+  };
   palette: Palette;
   floor: {
     position: {
@@ -377,7 +383,9 @@ interface Mpd {
       heightMap: number[];
     };
     texture: string;
+    repeat: boolean;
   };
+  objectsBaseOffset: number;
   objects: {
     offset: number;
     position: {
@@ -409,9 +417,6 @@ export async function unpackMpd(
 
   const settingsOffset = getFileOffset("mpd", entryOffset, dataView);
 
-  mpd.isBattlefield =
-    getInt(settingsOffset, "uint16", { bigEndian: true }, dataView) !== 0x1103;
-
   const paletteStartOffset = getFileOffset(
     "mpd",
     settingsOffset + 0x3c,
@@ -440,23 +445,40 @@ export async function unpackMpd(
       z: -getInt(settingsOffset + 0x48, "int16", { bigEndian: true }, dataView) % 2048,
     },
     texture: "",
+    repeat: false
   };
 
-  const pointerTableOffset = 0x2000;
+  const pointerTable = {
+    objects: 0x2008,
+    battlefieldFloor: 0x2010,
+    heightMap: 0x2028,
+    textures: 0x2030,
+    floorGraphics: 0x2070,
+    tiledFloorTexture: 0x2080,
+    unknown: 0x20a0,
+  };
 
   mpd.objects = [];
 
-  const objectsOffset = getFileOffset(
-    "mpd",
-    pointerTableOffset + 0x8,
-    dataView,
-  );
-  const objectSize = getInt(
-    pointerTableOffset + 0xc,
-    "uint32",
-    { bigEndian: true },
-    dataView,
-  );
+  let objectsOffset = 0x0;
+  let objectSize = 0;
+
+  const objectsOffsets = [pointerTable.objects];
+
+  if (getScenario() === "2") {
+    objectsOffsets.push(pointerTable.unknown);
+  }
+
+  objectsOffsets.some((offset) => {
+    objectsOffset = getFileOffset("mpd", offset, dataView);
+    objectSize = getInt(offset + 0x4, "uint32", { bigEndian: true }, dataView);
+
+    if (objectSize > 0) {
+      return true;
+    }
+  });
+
+  mpd.objectsBaseOffset = objectsOffset;
 
   if (objectSize > 0) {
     const objectCount = getInt(
@@ -471,6 +493,7 @@ export async function unpackMpd(
         "mpd",
         objectsOffset + i * 0x3c + 0xc,
         dataView,
+        mpd.objectsBaseOffset,
       );
 
       const positionX = -getInt(objectsOffset + i * 0x3c + 0x2c, "int16", { bigEndian: true }, dataView); // prettier-ignore
@@ -510,27 +533,51 @@ export async function unpackMpd(
     }
   }
 
-  const battlefieldFloorOffset = getFileOffset(
-    "mpd",
-    pointerTableOffset + 0x10,
-    dataView,
-  );
-  const battlefieldFloorSize = getFileOffset(
-    "mpd",
-    pointerTableOffset + 0x14,
-    dataView,
-  );
+  let battlefieldFloorOffset = 0x0;
+  let battlefieldFloorSize = 0;
+
+  const battlefieldFloorOffsets = [pointerTable.battlefieldFloor];
+
+  if (getScenario() === "2") {
+    battlefieldFloorOffsets.push(pointerTable.unknown);
+  }
+
+  battlefieldFloorOffsets.some((offset) => {
+    battlefieldFloorOffset = getFileOffset(
+      "mpd",
+      offset,
+      dataView,
+      mpd.objectsBaseOffset,
+    );
+    battlefieldFloorSize = getInt(
+      offset + 0x4,
+      "uint32",
+      { bigEndian: true },
+      dataView,
+    );
+
+    if (battlefieldFloorSize > 0) {
+      return true;
+    }
+  });
 
   if (battlefieldFloorSize > 0) {
     mpd.floor.battlefield = {
       offset: battlefieldFloorOffset,
       heightMap: [
         ...getDecompressedData(
-          getFileOffset("mpd", pointerTableOffset + 0x28, dataView),
+          getFileOffset(
+            "mpd",
+            pointerTable.heightMap,
+            dataView,
+            mpd.objectsBaseOffset,
+          ),
           dataView,
         ),
       ],
     };
+
+    mpd.floor.repeat = true;
   }
 
   mpd.textures = [];
@@ -538,12 +585,14 @@ export async function unpackMpd(
   for (let i = 0x0; i < 0x8; i += 0x1) {
     const texturesOffset = getFileOffset(
       "mpd",
-      pointerTableOffset + 0x30 + i * 0x8,
+      pointerTable.textures + i * 0x8,
       dataView,
+      mpd.objectsBaseOffset,
     );
-    const texturesSize = getFileOffset(
-      "mpd",
-      pointerTableOffset + 0x34 + i * 0x8,
+    const texturesSize = getInt(
+      pointerTable.textures + i * 0x8 + 0x4,
+      "uint32",
+      { bigEndian: true },
       dataView,
     );
 
@@ -561,12 +610,14 @@ export async function unpackMpd(
   for (let i = 0x0; i < 0x2; i += 0x1) {
     const tilesOffset = getFileOffset(
       "mpd",
-      pointerTableOffset + 0x70 + i * 0x8,
+      pointerTable.floorGraphics + i * 0x8,
       dataView,
+      mpd.objectsBaseOffset,
     );
-    const tilesSize = getFileOffset(
-      "mpd",
-      pointerTableOffset + 0x74 + i * 0x8,
+    const tilesSize = getInt(
+      pointerTable.floorGraphics + i * 0x8 + 0x4,
+      "uint32",
+      { bigEndian: true },
       dataView,
     );
 
@@ -578,29 +629,34 @@ export async function unpackMpd(
   }
 
   if (tilesData.length > 0) {
-    if (mpd.isBattlefield) {
+    const tiledFloorTextureSize = getInt(
+      pointerTable.tiledFloorTexture + 0x4,
+      "uint32",
+      { bigEndian: true },
+      dataView,
+    );
+
+    if (tiledFloorTextureSize === 0) {
       generateFloorTexture(tilesData, mpd.palette, canvas);
     } else {
-      const tiles = getTiles(tilesData, mpd.palette, dataView);
+      const tiles = getTiles(tilesData, mpd.palette);
 
-      let iteration = 0;
-
-      for (let i = 0x0; i < 0x4; i += 0x1) {
-        const tilemapOffset = getFileOffset(
+      for (let i = 0x0; i < 0x2; i += 0x1) {
+        const tiledFloorTextureOffset = getFileOffset(
           "mpd",
-          pointerTableOffset + 0x80 + i * 0x8,
+          pointerTable.tiledFloorTexture + i * 0x18,
+          dataView,
+          mpd.objectsBaseOffset,
+        );
+        const tiledFloorTextureSize = getInt(
+          pointerTable.tiledFloorTexture + i * 0x18 + 0x4,
+          "uint32",
+          { bigEndian: true },
           dataView,
         );
-        const tilemapSize = getFileOffset(
-          "mpd",
-          pointerTableOffset + 0x84 + i * 0x8,
-          dataView,
-        );
 
-        if (tilemapSize > 0) {
-          generateTilemap(tilemapOffset, iteration, tiles, canvas, dataView);
-
-          iteration += 1;
+        if (tiledFloorTextureSize > 0) {
+          generateTilemap(tiledFloorTextureOffset, i, tiles, canvas, dataView);
         }
       }
     }

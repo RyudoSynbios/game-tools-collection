@@ -9,9 +9,9 @@ const template: GameJson = {
       scenario1japan: {
         0x20: [0x47, 0x53, 0x2d, 0x39, 0x31, 0x37, 0x35], // "GS-9175"
       },
-      // scenario2: {
-      //   0x20: [0x47, 0x53, 0x2d, 0x39, 0x31, 0x38, 0x38], // "GS-9188"
-      // },
+      scenario2: {
+        0x20: [0x47, 0x53, 0x2d, 0x39, 0x31, 0x38, 0x38], // "GS-9188"
+      },
       // scenario3: {
       //   0x20: [0x47, 0x53, 0x2d, 0x39, 0x32, 0x30, 0x33], // "GS-9203"
       // },
@@ -21,7 +21,7 @@ const template: GameJson = {
     },
     text: "Drag 'n' drop here or click to add a rom file.",
     error:
-      "Not a valid rom file.<br />Scenarios 2 and 3 will be available very soon.",
+      "Not a valid rom file.<br />Scenario 3 will be available very soon.",
   },
   items: [
     {

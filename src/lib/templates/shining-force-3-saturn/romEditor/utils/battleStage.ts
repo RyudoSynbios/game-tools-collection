@@ -12,7 +12,7 @@ import type Three from "$lib/utils/three";
 
 import type { Palette } from "$lib/types";
 
-import { getDecompressedData } from "../utils";
+import { getDecompressedData, getScenario } from "../utils";
 import { type Texture, getIndices, getMaterials, getVertices } from "./model";
 
 export function addObject(
@@ -82,18 +82,19 @@ export function addFloor(texture: string, three: Three, instanceId: string) {
 
 export function generateFloorTexture(
   data: number[],
+  width: number,
   palette: Palette,
   canvas: Canvas,
 ): void {
   const textureData = applyPalette(data, palette);
 
   const flippedTextureData = applyPalette(
-    flipTileData(data, 512, "y"),
+    flipTileData(data, width, "y"),
     palette,
   );
 
-  canvas.addGraphic("texture", textureData, 512, 128, 0, 0);
-  canvas.addGraphic("texture", flippedTextureData, 512, 128, 0, 128);
+  canvas.addGraphic("texture", textureData, width, 128, 0, 0);
+  canvas.addGraphic("texture", flippedTextureData, width, 128, 0, 128);
 }
 
 async function getTextures(
@@ -211,7 +212,15 @@ export async function unpackBattleStage(
 
   const floorOffset = getInt(0x0, "uint32", { bigEndian: true }, dataView);
 
-  battleStage.palette = getPalette("BGR555", floorOffset + 0x4, 0x200, {
+  let paletteOffset = floorOffset;
+
+  const scenario = getScenario();
+
+  if (scenario === "1") {
+    paletteOffset += 0x4;
+  }
+
+  battleStage.palette = getPalette("BGR555", paletteOffset, 0x200, {
     bigEndian: true,
     dataView,
   });
@@ -309,15 +318,24 @@ export async function unpackBattleStage(
 
   battleStage.textures.push(...textures);
 
-  canvas.resize(512, 256);
+  const textureWidth = scenario === "1" ? 512 : 256;
+
+  canvas.resize(textureWidth, 256);
 
   const textureData = [];
 
-  for (let i = 0x0; i < 0x10000; i += 0x1) {
-    textureData.push(getInt(floorOffset + 0x204 + i, "uint8", {}, dataView));
+  const paletteLength = paletteOffset - 0x600;
+
+  const textureDataLength =
+    getInt(0x4, "uint32", { bigEndian: true }, dataView) - paletteLength;
+
+  for (let i = 0x0; i < textureDataLength; i += 0x1) {
+    textureData.push(
+      getInt(floorOffset + paletteLength + i, "uint8", {}, dataView),
+    );
   }
 
-  generateFloorTexture(textureData, battleStage.palette, canvas);
+  generateFloorTexture(textureData, textureWidth, battleStage.palette, canvas);
 
   battleStage.floor.texture = await canvas.export();
 
