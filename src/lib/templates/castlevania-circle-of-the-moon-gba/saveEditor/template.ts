@@ -442,6 +442,7 @@ const template: GameJson = {
                     },
                     {
                       name: "DSS Combinations",
+                      flex: true,
                       items: [
                         {
                           type: "section",
@@ -507,6 +508,12 @@ const template: GameJson = {
                               type: "variable",
                               dataType: "boolean",
                             },
+                          ],
+                        },
+                        {
+                          type: "section",
+                          background: true,
+                          items: [
                             {
                               name: "Venus / Salamander",
                               offset: 0x33a,
@@ -567,6 +574,12 @@ const template: GameJson = {
                               type: "variable",
                               dataType: "boolean",
                             },
+                          ],
+                        },
+                        {
+                          type: "section",
+                          background: true,
+                          items: [
                             {
                               name: "Jupiter / Salamander",
                               offset: 0x344,
@@ -627,6 +640,12 @@ const template: GameJson = {
                               type: "variable",
                               dataType: "boolean",
                             },
+                          ],
+                        },
+                        {
+                          type: "section",
+                          background: true,
+                          items: [
                             {
                               name: "Mars / Salamander",
                               offset: 0x34e,
@@ -687,6 +706,12 @@ const template: GameJson = {
                               type: "variable",
                               dataType: "boolean",
                             },
+                          ],
+                        },
+                        {
+                          type: "section",
+                          background: true,
+                          items: [
                             {
                               name: "Diana / Salamander",
                               offset: 0x358,
@@ -747,6 +772,12 @@ const template: GameJson = {
                               type: "variable",
                               dataType: "boolean",
                             },
+                          ],
+                        },
+                        {
+                          type: "section",
+                          background: true,
+                          items: [
                             {
                               name: "Apollo / Salamander",
                               offset: 0x362,
@@ -807,6 +838,12 @@ const template: GameJson = {
                               type: "variable",
                               dataType: "boolean",
                             },
+                          ],
+                        },
+                        {
+                          type: "section",
+                          background: true,
+                          items: [
                             {
                               name: "Neptune / Salamander",
                               offset: 0x36c,
@@ -867,6 +904,12 @@ const template: GameJson = {
                               type: "variable",
                               dataType: "boolean",
                             },
+                          ],
+                        },
+                        {
+                          type: "section",
+                          background: true,
+                          items: [
                             {
                               name: "Saturne / Salamander",
                               offset: 0x376,
@@ -927,6 +970,12 @@ const template: GameJson = {
                               type: "variable",
                               dataType: "boolean",
                             },
+                          ],
+                        },
+                        {
+                          type: "section",
+                          background: true,
+                          items: [
                             {
                               name: "Uranus / Salamander",
                               offset: 0x380,
@@ -987,6 +1036,12 @@ const template: GameJson = {
                               type: "variable",
                               dataType: "boolean",
                             },
+                          ],
+                        },
+                        {
+                          type: "section",
+                          background: true,
+                          items: [
                             {
                               name: "Pluto / Salamander",
                               offset: 0x38a,
