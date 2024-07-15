@@ -437,15 +437,19 @@ export async function unpackMpd(
     });
   }
 
+  const scenario = getScenario();
+
+  const shift = scenario === "3" ? 0x8 : 0x0;
+
   // prettier-ignore
   mpd.floor = {
     position: {
-      x: getInt(settingsOffset + 0x44, "int16", { bigEndian: true }, dataView) % 2048,
-      y: -getInt(settingsOffset + 0x46, "int16", { bigEndian: true }, dataView) % 2048,
-      z: -getInt(settingsOffset + 0x48, "int16", { bigEndian: true }, dataView) % 2048,
+      x: getInt(settingsOffset + 0x44 + shift, "int16", { bigEndian: true }, dataView) % 2048,
+      y: -getInt(settingsOffset + 0x46 + shift, "int16", { bigEndian: true }, dataView) % 2048,
+      z: -getInt(settingsOffset + 0x48 + shift, "int16", { bigEndian: true }, dataView) % 2048,
     },
     texture: "",
-    repeat: false
+    repeat: false,
   };
 
   const pointerTable = {
@@ -465,7 +469,7 @@ export async function unpackMpd(
 
   const objectsOffsets = [pointerTable.objects];
 
-  if (getScenario() === "2") {
+  if (scenario !== "1") {
     objectsOffsets.push(pointerTable.unknown);
   }
 
@@ -538,7 +542,7 @@ export async function unpackMpd(
 
   const battlefieldFloorOffsets = [pointerTable.battlefieldFloor];
 
-  if (getScenario() === "2") {
+  if (scenario !== "1") {
     battlefieldFloorOffsets.push(pointerTable.unknown);
   }
 

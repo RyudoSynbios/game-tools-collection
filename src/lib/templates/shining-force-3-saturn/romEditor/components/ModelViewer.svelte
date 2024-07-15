@@ -72,7 +72,7 @@
 
     const dataView = getFileData(type, assetIndex);
 
-    if (isDummy(dataView)) {
+    if (isDummy(0x0, dataView)) {
       three.setLoading(false);
 
       canvas.resize(1, 1);

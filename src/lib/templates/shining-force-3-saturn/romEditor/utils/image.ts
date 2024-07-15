@@ -3,7 +3,7 @@ import { getFile } from "$lib/utils/common/iso9660";
 import { applyPalette, getColor, getPalette } from "$lib/utils/graphics";
 import { checkValidator } from "$lib/utils/validator";
 
-import type { Palette } from "$lib/types";
+import type { ColorType, Palette } from "$lib/types";
 
 import { getDecompressedData, getFilteredFiles, isDummy } from "../utils";
 
@@ -18,6 +18,7 @@ function getImage(
   height: number,
   dataView: DataView,
   offset = 0x0,
+  colorType: ColorType = "BGR555",
 ): Image {
   const length = width * height * 2;
 
@@ -26,7 +27,7 @@ function getImage(
   for (let i = offset; i < offset + length; i += 0x2) {
     const rawColor = getInt(i, "uint16", { bigEndian: true }, dataView);
 
-    const color = getColor(rawColor, "BGR555");
+    const color = getColor(rawColor, colorType);
 
     imageData.push(...color);
   }
@@ -268,7 +269,15 @@ export function getImagesCanvas(
     } else if (file.name === "LOGOBG.BIN") {
       imagesCanvas.width = 320;
       imagesCanvas.images.push(getImage(320, 240, file.dataView));
-    } else if (file.name.match(/^X4EN(.*?).BIN$/) && !isDummy(file.dataView)) {
+    } else if (file.name === "ENDING.SPR") {
+      imagesCanvas.width = 320;
+      imagesCanvas.images.push(
+        getImage(320, 448, file.dataView, 0x0, "ABGR555"),
+      );
+    } else if (
+      file.name.match(/^X4EN(.*?).BIN$/) &&
+      !isDummy(0x0, file.dataView)
+    ) {
       imagesCanvas.width = 512;
       imagesCanvas.images.push({
         width: 512,

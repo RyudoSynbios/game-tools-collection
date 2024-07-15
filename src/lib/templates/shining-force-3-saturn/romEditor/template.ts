@@ -12,15 +12,15 @@ const template: GameJson = {
       scenario2: {
         0x20: [0x47, 0x53, 0x2d, 0x39, 0x31, 0x38, 0x38], // "GS-9188"
       },
-      // scenario3: {
-      //   0x20: [0x47, 0x53, 0x2d, 0x39, 0x32, 0x30, 0x33], // "GS-9203"
-      // },
+      scenario3: {
+        0x20: [0x47, 0x53, 0x2d, 0x39, 0x32, 0x30, 0x33], // "GS-9203"
+      },
       // premiumdisc: {
       //   0x20: [0x36, 0x31, 0x30, 0x36, 0x39, 0x37, 0x39], // "6106979"
       // },
     },
     text: "Drag 'n' drop here or click to add a rom file.",
-    error: "Not a valid rom file.<br />Scenario 3 will be available very soon.",
+    error: "Not a valid rom file.",
   },
   items: [
     {

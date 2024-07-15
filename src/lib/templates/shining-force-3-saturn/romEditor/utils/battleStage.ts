@@ -12,7 +12,7 @@ import type Three from "$lib/utils/three";
 
 import type { Palette } from "$lib/types";
 
-import { getDecompressedData, getScenario } from "../utils";
+import { getDecompressedData, getScenario, isDummy } from "../utils";
 import { type Texture, getIndices, getMaterials, getVertices } from "./model";
 
 export function addObject(
@@ -105,18 +105,32 @@ async function getTextures(
 
   let offset = getInt(0x20, "uint32", { bigEndian: true }, dataView);
 
+  const unknown1 = getInt(offset, "uint32", { bigEndian: true }, dataView);
+  const unknown2 = getInt(
+    offset + 0x4,
+    "uint32",
+    { bigEndian: true },
+    dataView,
+  );
+
+  const shift = unknown1 === 0x14 && unknown2 !== 0x14 ? 0x0 : 0x4;
+
+  if (isDummy(offset + 0x1e, dataView)) {
+    return textures;
+  }
+
   const textureCount = getInt(
-    offset + 0xa,
-    "uint16",
+    offset + 0x4 + shift,
+    "uint32",
     { bigEndian: true },
     dataView,
   );
 
   if (textureCount) {
-    offset += 0x18;
+    offset += 0x14 + shift;
 
     const decompressedData = getDecompressedData(
-      offset + textureCount * 0x8 + 0x4,
+      offset + textureCount * 0x8 + shift,
       dataView,
     );
 

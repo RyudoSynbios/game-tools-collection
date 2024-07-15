@@ -390,14 +390,14 @@ export function getScenario(): string {
   }
 }
 
-export function isDummy(dataView: DataView): boolean {
+export function isDummy(offset: number, dataView: DataView): boolean {
   if (dataView.byteLength === 2) {
     return true;
   }
 
   const validator = [0x64, 0x75, 0x6d, 0x6d, 0x79, 0xa]; // "dummy"
 
-  return checkValidator(validator, 0x0, dataView);
+  return checkValidator(validator, offset, dataView);
 }
 
 export function readText(dataView: DataView): string {
