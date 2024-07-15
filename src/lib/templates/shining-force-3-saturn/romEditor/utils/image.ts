@@ -5,7 +5,12 @@ import { checkValidator } from "$lib/utils/validator";
 
 import type { ColorType, Palette } from "$lib/types";
 
-import { getDecompressedData, getFilteredFiles, isDummy } from "../utils";
+import {
+  getDecompressedData,
+  getFilteredFiles,
+  getScenario,
+  isDummy,
+} from "../utils";
 
 interface Image {
   width: number;
@@ -107,13 +112,24 @@ export function getImagesCanvas(
 
       for (let i = 0x0; i < spritesOffsets.length; i += 0x1) {
         if (spritesOffsets[i] !== -1) {
+          let spriteData = new Uint8Array();
+
+          if (
+            getScenario() === "premium" &&
+            ["FACE32D.DAT", "FACE32P.DAT"].includes(file.name)
+          ) {
+            spriteData = new Uint8Array(file.dataView.buffer).slice(
+              spritesOffsets[i],
+              spritesOffsets[i] + 0x1000,
+            );
+          } else {
+            spriteData = getDecompressedData(spritesOffsets[i], file.dataView);
+          }
+
           imagesCanvas.images.push({
             width: 32,
             height: 32,
-            data: applyPalette(
-              getDecompressedData(spritesOffsets[i], file.dataView),
-              palette,
-            ),
+            data: applyPalette(spriteData, palette),
           });
         } else {
           imagesCanvas.images.push({
