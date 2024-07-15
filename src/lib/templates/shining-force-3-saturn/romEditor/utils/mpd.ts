@@ -152,8 +152,8 @@ export function addFloor(
   let max = 2048;
 
   if (repeat) {
-    max = 32768;
-    uvs = uvs.map((uv) => uv * 16);
+    max *= 3;
+    uvs = uvs.map((uv) => uv * 3);
   }
 
   const mesh = three.addMesh(
@@ -184,8 +184,8 @@ export function addFloor(
     mesh.position.z = position.z;
 
     if (repeat) {
-      mesh.position.x -= 16384;
-      mesh.position.z += 16384;
+      mesh.position.x -= 2048;
+      mesh.position.z += 2048;
     }
   }
 }
@@ -580,8 +580,6 @@ export async function unpackMpd(
         ),
       ],
     };
-
-    mpd.floor.repeat = true;
   }
 
   mpd.textures = [];
@@ -642,6 +640,8 @@ export async function unpackMpd(
 
     if (tiledFloorTextureSize === 0) {
       generateFloorTexture(tilesData, mpd.palette, canvas);
+
+      mpd.floor.repeat = true;
     } else {
       const tiles = getTiles(tilesData, mpd.palette);
 
