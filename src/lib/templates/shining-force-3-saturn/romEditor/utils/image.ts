@@ -242,7 +242,16 @@ export function getImagesCanvas(
           }
         }
       });
-    } else if (["LOGO.SPR", "ENDLOGO.SPR"].includes(file.name)) {
+    } else if (
+      [
+        "LOGO.SPR",
+        "ENDLOGO.SPR",
+        "HAJUNOMA.SPR",
+        "MOVIESEL.SPR",
+        "MODESEL.SPR",
+        "MOVSEL2.SPR",
+      ].includes(file.name)
+    ) {
       imagesCanvas.width = 320;
       imagesCanvas.images.push(getImage(320, 224, file.dataView));
     } else if (file.name === "STTL1.SPR") {

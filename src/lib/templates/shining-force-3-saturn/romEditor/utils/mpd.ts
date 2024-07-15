@@ -439,7 +439,7 @@ export async function unpackMpd(
 
   const scenario = getScenario();
 
-  const shift = scenario === "3" ? 0x8 : 0x0;
+  const shift = scenario === "3" || scenario === "premium" ? 0x8 : 0x0;
 
   // prettier-ignore
   mpd.floor = {

@@ -384,7 +384,7 @@ export function getScenario(): string {
     case 3:
       return "3";
     case 4:
-      return "platinum";
+      return "premium";
     default:
       return "";
   }
