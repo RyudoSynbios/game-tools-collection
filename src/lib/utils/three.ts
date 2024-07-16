@@ -18,6 +18,7 @@ import {
   PerspectiveCamera,
   Raycaster,
   RepeatWrapping,
+  SRGBColorSpace,
   Scene,
   TextureLoader,
   Vector2,
@@ -150,10 +151,10 @@ export default class Three {
 
     // Lights
 
-    const ambientLight = new AmbientLight(0x7c7c7c, 3.0);
+    const ambientLight = new AmbientLight(0x7c7c7c, 8.0);
     this.scene.add(ambientLight);
 
-    const light = new DirectionalLight(0xffffff, 3.0);
+    const light = new DirectionalLight(0xffffff, 8.0);
     light.position.set(0, 1, 0);
     this.scene.add(light);
 
@@ -556,6 +557,7 @@ export default class Three {
 
     if (texture.base64) {
       const map = new TextureLoader().load(texture.base64);
+      map.colorSpace = SRGBColorSpace;
       map.flipY = texture.flipY;
       map.minFilter = NearestFilter;
       map.magFilter = NearestFilter;
