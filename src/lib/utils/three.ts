@@ -208,7 +208,7 @@ export default class Three {
       });
 
     const cameraFolder = this.gui.addFolder("Camera");
-    cameraFolder.add(this.guiController, "cameraFit").name("Fit");
+    cameraFolder.add(this.guiController, "cameraFit").name("Fit to scene");
     cameraFolder.add(this.guiController, "cameraReset").name("Reset");
 
     // Dummies
@@ -358,6 +358,11 @@ export default class Three {
   }
 
   private onMouseUp(event: MouseEvent): void {
+    const target = event.target as HTMLElement;
+    if (target.tagName !== "CANVAS") {
+      return;
+    }
+
     const delta = 6;
 
     const diffX = Math.abs(event.pageX - this.mousemove.startX);
@@ -403,6 +408,8 @@ export default class Three {
         this.selectedObject.reference = null;
       }
     }
+
+    this.updateFitControllerName();
   }
 
   public getInstanceId(): string {
@@ -718,6 +725,12 @@ export default class Three {
     }
   }
 
+  private updateFitControllerName(): void {
+    this.gui.folders[0].controllers[0].name(
+      this.selectedObject.reference ? "Fit to object" : "Fit to scene",
+    );
+  }
+
   private setWireframe(object: Object3D, wireframe: boolean): void {
     if ("isMesh" in object) {
       const mesh = object as Mesh;
@@ -750,6 +763,8 @@ export default class Three {
 
     this.groupLocked.traverse((object) => this.dispose(object));
     this.groupLocked.remove(...this.groupLocked.children);
+
+    this.updateFitControllerName();
   }
 
   public destroy(): void {
