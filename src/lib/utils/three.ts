@@ -3,6 +3,7 @@ import {
   Box3,
   BufferAttribute,
   BufferGeometry,
+  CanvasTexture,
   Color,
   DirectionalLight,
   DoubleSide,
@@ -20,7 +21,6 @@ import {
   RepeatWrapping,
   SRGBColorSpace,
   Scene,
-  TextureLoader,
   Vector2,
   Vector3,
   WebGLRenderer,
@@ -46,7 +46,7 @@ export interface MaterialOptions {
   doubleSide?: boolean;
   model?: "basic" | "lambert";
   texture?: {
-    base64?: string;
+    canvas?: HTMLCanvasElement;
     flipY?: boolean;
     repeatX?: boolean | "mirrored";
     repeatY?: boolean | "mirrored";
@@ -297,6 +297,7 @@ export default class Three {
       this.controls.enabled = false;
       this.gui.hide();
       this.group.visible = false;
+      this.groupLocked.visible = false;
       this.gridHelper.visible = false;
 
       this.setMessage("Loading...");
@@ -309,6 +310,7 @@ export default class Three {
       this.controls.enabled = true;
       this.gui.show();
       this.group.visible = true;
+      this.groupLocked.visible = true;
       this.gridHelper.visible = this.guiController.grid;
       this.setMessage("");
     }
@@ -535,7 +537,7 @@ export default class Three {
     const doubleSide = options?.doubleSide || false;
     const model = options?.model || "basic";
     const texture = {
-      base64: options?.texture?.base64 || "",
+      canvas: options?.texture?.canvas,
       flipY:
         options?.texture?.flipY !== undefined ? options?.texture?.flipY : true,
       repeatX: options?.texture?.repeatX || false,
@@ -555,8 +557,8 @@ export default class Three {
       materialParams.side = DoubleSide;
     }
 
-    if (texture.base64) {
-      const map = new TextureLoader().load(texture.base64);
+    if (texture.canvas) {
+      const map = new CanvasTexture(texture.canvas);
       map.colorSpace = SRGBColorSpace;
       map.flipY = texture.flipY;
       map.minFilter = NearestFilter;

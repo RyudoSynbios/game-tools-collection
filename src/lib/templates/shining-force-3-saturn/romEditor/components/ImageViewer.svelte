@@ -13,7 +13,7 @@
 
   let canvas: Canvas;
 
-  async function updateCanvas(): Promise<void> {
+  function updateCanvas(): void {
     const imagesCanvas = getImagesCanvas(assetIndex, type);
 
     const sheet = generateGraphicsSheet(
@@ -37,7 +37,7 @@
     canvas.render();
   }
 
-  onMount(async () => {
+  onMount(() => {
     canvas = new Canvas({ canvasEl });
 
     canvas.addLayer("sprite", "image");

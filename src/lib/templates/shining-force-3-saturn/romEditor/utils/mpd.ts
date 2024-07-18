@@ -81,9 +81,9 @@ export function addBattlefieldFloor(
               heights = yHeightMap;
             }
 
-            const base64 = textures[textureIndex]?.base64;
+            const canvas = textures[textureIndex]?.canvas;
 
-            if (base64) {
+            if (canvas) {
               let uvs = [0, 0, 1, 0, 1, 1, 1, 1, 0, 1, 0, 0];
 
               if (flipX) {
@@ -120,7 +120,7 @@ export function addBattlefieldFloor(
                   material: {
                     color: 0x0,
                     texture: {
-                      base64,
+                      canvas,
                     },
                   },
                 },
@@ -141,7 +141,7 @@ export function addBattlefieldFloor(
 }
 
 export function addFloor(
-  texture: string,
+  texture: HTMLCanvasElement,
   position: { x: number; y: number; z: number },
   repeat: boolean,
   three: Three,
@@ -170,7 +170,7 @@ export function addFloor(
       material: {
         color: 0x0,
         texture: {
-          base64: texture,
+          canvas: texture,
           repeatX: true,
           repeatY: true,
         },
@@ -283,11 +283,11 @@ export function generateTilemap(
   }
 }
 
-async function getTextures(
+function getTextures(
   offset: number,
   canvas: Canvas,
   dataView: DataView,
-): Promise<Texture[]> {
+): Texture[] {
   const textures: Texture[] = [];
 
   const decompressedData = getDecompressedData(offset, dataView);
@@ -326,13 +326,11 @@ async function getTextures(
 
       canvas.addGraphic("texture", data, width, height);
 
-      const base64 = await canvas.export();
-
       textures.push({
         width: width,
         height: height,
         data,
-        base64,
+        canvas: canvas.extract(),
       });
     }
   }
@@ -382,7 +380,7 @@ interface Mpd {
       offset: number;
       heightMap: number[];
     };
-    texture: string;
+    texture?: HTMLCanvasElement;
     repeat: boolean;
   };
   objectsBaseOffset: number;
@@ -407,10 +405,7 @@ interface Mpd {
   textures: Texture[];
 }
 
-export async function unpackMpd(
-  canvas: Canvas,
-  dataView: DataView,
-): Promise<Mpd> {
+export function unpackMpd(canvas: Canvas, dataView: DataView): Mpd {
   const mpd = {} as Mpd;
 
   const entryOffset = getFileOffset("mpd", 0x0, dataView);
@@ -448,7 +443,7 @@ export async function unpackMpd(
       y: -getInt(settingsOffset + 0x46 + shift, "int16", { bigEndian: true }, dataView) % 2048,
       z: -getInt(settingsOffset + 0x48 + shift, "int16", { bigEndian: true }, dataView) % 2048,
     },
-    texture: "",
+    texture: undefined,
     repeat: false,
   };
 
@@ -599,7 +594,7 @@ export async function unpackMpd(
     );
 
     if (texturesSize > 0) {
-      const textures = await getTextures(texturesOffset, canvas, dataView);
+      const textures = getTextures(texturesOffset, canvas, dataView);
 
       mpd.textures.push(...textures);
     }
@@ -665,7 +660,7 @@ export async function unpackMpd(
       }
     }
 
-    mpd.floor.texture = await canvas.export();
+    mpd.floor.texture = canvas.extract();
   }
 
   return mpd;

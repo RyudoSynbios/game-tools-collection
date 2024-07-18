@@ -16,7 +16,7 @@ export interface Mesh {
 }
 
 export interface Texture {
-  base64: string;
+  canvas?: HTMLCanvasElement;
   color: number;
   pixelsOffset: number;
   paletteLength: number;
@@ -171,7 +171,7 @@ export function resetTexture(
   const unknown1 = getIntFromArray(data, offset + 0x1, "uint24", true);
   const unknown2 = getIntFromArray(data, offset + 0x4, "uint32", true);
 
-  texture.base64 = "";
+  texture.canvas = undefined;
   texture.pixelsOffset = 0x0;
   texture.paletteLength = 0x0;
   texture.paletteOffset = 0x0;
@@ -314,7 +314,7 @@ export function setTextureManipulations(
   );
 }
 
-export async function applyTexture(
+export function applyTexture(
   canvas: Canvas,
   data: Uint8Array,
   offset: number,
@@ -325,7 +325,7 @@ export async function applyTexture(
     height: number;
     texture: Uint8Array;
   }[],
-): Promise<void> {
+): void {
   const unknown1 = getIntFromArray(data, offset + 0x1, "uint24", true);
 
   // TODO: Not mode but size to substract
@@ -353,7 +353,7 @@ export async function applyTexture(
 
   canvas.addGraphic("texture", textureTmp, texture.width, texture.height);
 
-  texture.base64 = await canvas.export();
+  texture.canvas = canvas.extract();
 
   textures.push({
     width: texture.width,
@@ -403,7 +403,7 @@ export function addMesh(
     material: {
       color: texture.color,
       texture: {
-        base64: texture.base64,
+        canvas: texture.canvas,
         flipY: false,
         repeatX: texture.repeatX,
         repeatY: texture.repeatY,

@@ -58,7 +58,7 @@ export interface Texture {
   width: number;
   height: number;
   data: Uint8Array;
-  base64?: string;
+  canvas?: HTMLCanvasElement;
 }
 
 export interface Materials {
@@ -103,17 +103,17 @@ export function getMaterials(
 
     uvs.push(...uv);
 
-    let base64 = undefined;
+    let canvas = undefined;
 
     if (extractBit(textureType, 2)) {
-      base64 = textures[textureIndex]?.base64;
+      canvas = textures[textureIndex]?.canvas;
     }
 
     options.push({
       color: meshColor,
       doubleSide: (textureType & 0x100) !== 0x0,
       texture: {
-        base64,
+        canvas,
       },
     });
   }

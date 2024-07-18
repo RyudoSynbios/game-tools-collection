@@ -11,7 +11,7 @@
 
   let canvas: Canvas;
 
-  async function updateCanvas(): Promise<void> {
+  function updateCanvas(): void {
     const dataView = getFileData("video", assetIndex);
 
     if (isCpk(dataView)) {
@@ -23,7 +23,7 @@
     canvas.render();
   }
 
-  onMount(async () => {
+  onMount(() => {
     canvas = new Canvas({ canvasEl });
 
     canvas.addLayer("sprite", "image");

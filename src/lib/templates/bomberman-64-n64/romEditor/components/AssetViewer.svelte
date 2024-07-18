@@ -81,7 +81,7 @@
     }
   }
 
-  async function updateCanvas(): Promise<void> {
+  function updateCanvas(): void {
     debug.clear();
 
     canvas.reset();
@@ -172,7 +172,7 @@
     };
 
     let texture: Texture = {
-      base64: "",
+      canvas: undefined,
       color: 0xffffff,
       pixelsOffset: 0x0,
       paletteLength: 0x10,
@@ -183,11 +183,9 @@
       height: 8,
     };
 
-    await headers.reduce(async (previousHeader, header, index) => {
-      await previousHeader;
-
+    headers.forEach((header, index) => {
       if (instanceId !== three.getInstanceId()) {
-        return previousHeader;
+        return;
       }
 
       const { data } = header;
@@ -211,7 +209,7 @@
         };
 
         texture = {
-          base64: "",
+          canvas: undefined,
           color: 0xffffff,
           pixelsOffset: 0x0,
           paletteLength: 0x0,
@@ -235,7 +233,7 @@
           const unknown2 = getIntFromArray(data, i + 0x4, "uint32", true);
 
           if (instanceId !== three.getInstanceId()) {
-            return previousHeader;
+            return;
           }
 
           switch (key) {
@@ -258,7 +256,7 @@
               setTexturePaletteLength(data, i, texture);
               break;
             case 0xf2:
-              await applyTexture(
+              applyTexture(
                 canvasTexture,
                 data,
                 i,
@@ -376,7 +374,7 @@
       } else {
         debug.warn("Not a handled asset header");
       }
-    }, Promise.resolve());
+    });
 
     if (instanceId !== three.getInstanceId()) {
       return;
@@ -402,7 +400,7 @@
     canvas.render();
   }
 
-  onMount(async () => {
+  onMount(() => {
     canvas = new Canvas({ canvasEl });
 
     canvas.addLayer("textures", "image");

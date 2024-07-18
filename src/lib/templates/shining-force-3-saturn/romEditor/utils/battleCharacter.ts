@@ -47,10 +47,7 @@ export function addObject(
   return mesh;
 }
 
-async function getTextures(
-  canvas: Canvas,
-  dataView: DataView,
-): Promise<Texture[]> {
+function getTextures(canvas: Canvas, dataView: DataView): Texture[] {
   const textures: Texture[] = [];
 
   let offset = getInt(0x0, "uint32", { bigEndian: true }, dataView);
@@ -117,13 +114,11 @@ async function getTextures(
 
       canvas.addGraphic("texture", data, width, height);
 
-      const base64 = await canvas.export();
-
       textures.push({
         width: width,
         height: height,
         data,
-        base64,
+        canvas: canvas.extract(),
       });
     }
   }
@@ -137,10 +132,10 @@ interface BattleCharacter {
   textures: Texture[];
 }
 
-export async function unpackBattleCharacter(
+export function unpackBattleCharacter(
   canvas: Canvas,
   dataView: DataView,
-): Promise<BattleCharacter> {
+): BattleCharacter {
   const battleCharacter = {} as BattleCharacter;
 
   battleCharacter.objectsBaseOffset = getInt(
@@ -191,7 +186,7 @@ export async function unpackBattleCharacter(
 
   battleCharacter.textures = [];
 
-  const textures = await getTextures(canvas, dataView);
+  const textures = getTextures(canvas, dataView);
 
   battleCharacter.textures.push(...textures);
 

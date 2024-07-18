@@ -60,7 +60,7 @@
     }
   }
 
-  async function updateCanvas(): Promise<void> {
+  function updateCanvas(): void {
     debug.clear();
 
     canvas.reset();
@@ -84,10 +84,7 @@
     let textures: Texture[] = [];
 
     if (type === "battleCharacter") {
-      const battleCharacter = await unpackBattleCharacter(
-        canvasTexture,
-        dataView,
-      );
+      const battleCharacter = unpackBattleCharacter(canvasTexture, dataView);
 
       if (instanceId !== three.getInstanceId()) {
         return;
@@ -116,7 +113,7 @@
         textures = battleCharacter.textures;
       }
     } else if (type === "battleStage") {
-      const battleStage = await unpackBattleStage(canvasTexture, dataView);
+      const battleStage = unpackBattleStage(canvasTexture, dataView);
 
       if (instanceId !== three.getInstanceId()) {
         return;
@@ -170,12 +167,14 @@
           }
         });
 
-        addBattleStageFloor(battleStage.floor.texture, three, instanceId);
+        if (battleStage.floor.texture) {
+          addBattleStageFloor(battleStage.floor.texture, three, instanceId);
+        }
 
         textures = battleStage.textures;
       }
     } else if (type === "location") {
-      const mpd = await unpackMpd(canvasTexture, dataView);
+      const mpd = unpackMpd(canvasTexture, dataView);
 
       if (instanceId !== three.getInstanceId()) {
         return;
@@ -232,13 +231,15 @@
           );
         }
 
-        addMpdFloor(
-          mpd.floor.texture,
-          mpd.floor.position,
-          mpd.floor.repeat,
-          three,
-          instanceId,
-        );
+        if (mpd.floor.texture) {
+          addMpdFloor(
+            mpd.floor.texture,
+            mpd.floor.position,
+            mpd.floor.repeat,
+            three,
+            instanceId,
+          );
+        }
 
         textures = mpd.textures;
       }
@@ -264,7 +265,7 @@
     canvas.render();
   }
 
-  onMount(async () => {
+  onMount(() => {
     canvas = new Canvas({ canvasEl });
 
     canvas.addLayer("sprite", "image");

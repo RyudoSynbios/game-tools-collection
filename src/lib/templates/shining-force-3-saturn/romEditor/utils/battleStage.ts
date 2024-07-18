@@ -50,7 +50,11 @@ export function addObject(
   return mesh;
 }
 
-export function addFloor(texture: string, three: Three, instanceId: string) {
+export function addFloor(
+  texture: HTMLCanvasElement,
+  three: Three,
+  instanceId: string,
+) {
   let uvs = [0, 0, 1, 0, 1, 1, 1, 1, 0, 1, 0, 0];
 
   const mesh = three.addMesh(
@@ -66,7 +70,7 @@ export function addFloor(texture: string, three: Three, instanceId: string) {
       material: {
         color: 0x0,
         texture: {
-          base64: texture,
+          canvas: texture,
           repeatX: true,
           repeatY: true,
         },
@@ -97,10 +101,7 @@ export function generateFloorTexture(
   canvas.addGraphic("texture", flippedTextureData, width, 128, 0, 128);
 }
 
-async function getTextures(
-  canvas: Canvas,
-  dataView: DataView,
-): Promise<Texture[]> {
+function getTextures(canvas: Canvas, dataView: DataView): Texture[] {
   const textures: Texture[] = [];
 
   let offset = getInt(0x20, "uint32", { bigEndian: true }, dataView);
@@ -177,13 +178,11 @@ async function getTextures(
 
       canvas.addGraphic("texture", data, width, height);
 
-      const base64 = await canvas.export();
-
       textures.push({
         width: width,
         height: height,
         data,
-        base64,
+        canvas: canvas.extract(),
       });
     }
   }
@@ -194,7 +193,7 @@ async function getTextures(
 interface BattleStage {
   palette: Palette;
   floor: {
-    texture: string;
+    texture?: HTMLCanvasElement;
   };
   objectsBaseOffset: number;
   objects: {
@@ -218,10 +217,10 @@ interface BattleStage {
   textures: Texture[];
 }
 
-export async function unpackBattleStage(
+export function unpackBattleStage(
   canvas: Canvas,
   dataView: DataView,
-): Promise<BattleStage> {
+): BattleStage {
   const battleStage = {} as BattleStage;
 
   const floorOffset = getInt(0x0, "uint32", { bigEndian: true }, dataView);
@@ -240,7 +239,7 @@ export async function unpackBattleStage(
   });
 
   battleStage.floor = {
-    texture: "",
+    texture: undefined,
   };
 
   battleStage.objectsBaseOffset = getInt(
@@ -328,7 +327,7 @@ export async function unpackBattleStage(
 
   battleStage.textures = [];
 
-  const textures = await getTextures(canvas, dataView);
+  const textures = getTextures(canvas, dataView);
 
   battleStage.textures.push(...textures);
 
@@ -351,7 +350,7 @@ export async function unpackBattleStage(
 
   generateFloorTexture(textureData, textureWidth, battleStage.palette, canvas);
 
-  battleStage.floor.texture = await canvas.export();
+  battleStage.floor.texture = canvas.extract();
 
   return battleStage;
 }

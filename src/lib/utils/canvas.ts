@@ -399,10 +399,14 @@ export default class Canvas {
     });
   }
 
-  public async export(): Promise<string> {
+  public extract(): HTMLCanvasElement {
     this.render();
 
-    return await this.app.renderer.extract.base64(this.app.stage);
+    const canvas = this.app.renderer.extract.canvas(
+      this.app.stage,
+    ) as HTMLCanvasElement;
+
+    return canvas;
   }
 
   public destroy(): void {
