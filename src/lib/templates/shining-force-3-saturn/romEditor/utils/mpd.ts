@@ -265,9 +265,12 @@ export function generateTilemap(
             row * 0x80 +
             column * 0x2;
 
-          const tileIndex =
-            (decompressedData[tileOffset] << 0x8) |
-            decompressedData[tileOffset + 1];
+          const tileIndex = getIntFromArray(
+            decompressedData,
+            tileOffset,
+            "uint16",
+            true,
+          );
 
           canvas.addGraphic(
             "texture",
@@ -297,13 +300,16 @@ async function getTextures(
   if (textureCount > 200) {
     debug.warn("Texture count", offset.toHex(), textureCount);
   } else {
-    for (let j = 0x0; j < textureCount; j += 0x1) {
-      const width = decompressedData[0x4 + j * 0x4];
-      const height = decompressedData[0x5 + j * 0x4];
+    for (let i = 0x0; i < textureCount; i += 0x1) {
+      const width = decompressedData[0x4 + i * 0x4];
+      const height = decompressedData[0x5 + i * 0x4];
 
-      const textureOffset =
-        (decompressedData[0x6 + j * 0x4] << 0x8) |
-        decompressedData[0x7 + j * 0x4];
+      const textureOffset = getIntFromArray(
+        decompressedData,
+        0x6 + i * 0x4,
+        "uint16",
+        true,
+      );
 
       const texture = decompressedData.slice(
         textureOffset,
@@ -350,9 +356,9 @@ function getTiles(data: number[], palette: Palette): Uint8Array[] {
 
   let tileCount = (data.length / length) * 2;
 
-  for (let j = 0; j < tileCount; j += 1) {
+  for (let i = 0; i < tileCount; i += 1) {
     const spriteData = applyPalette(
-      data.slice((j * length) / 2, (j * length) / 2 + length),
+      data.slice((i * length) / 2, (i * length) / 2 + length),
       palette,
     );
 
