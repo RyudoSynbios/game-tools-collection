@@ -297,6 +297,7 @@ export default class Three {
       this.controls.enabled = false;
       this.gui.hide();
       this.group.visible = false;
+      this.groupLocked.visible = false;
       this.gridHelper.visible = false;
 
       this.setMessage("Loading...");
@@ -309,6 +310,7 @@ export default class Three {
       this.controls.enabled = true;
       this.gui.show();
       this.group.visible = true;
+      this.groupLocked.visible = true;
       this.gridHelper.visible = this.guiController.grid;
       this.setMessage("");
     }
