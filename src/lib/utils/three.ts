@@ -45,12 +45,12 @@ export interface MaterialOptions {
   depthTest?: boolean;
   doubleSide?: boolean;
   model?: "basic" | "lambert";
+  opacity?: number;
   texture?: {
     base64?: string;
     flipY?: boolean;
     repeatX?: boolean | "mirrored";
     repeatY?: boolean | "mirrored";
-    opacity?: number;
   };
 }
 
@@ -543,19 +543,19 @@ export default class Three {
       options?.depthTest !== undefined ? options?.depthTest : true;
     const doubleSide = options?.doubleSide || false;
     const model = options?.model || "basic";
+    const opacity = options?.opacity !== undefined ? options?.opacity : 1;
     const texture = {
       base64: options?.texture?.base64 || "",
       flipY:
         options?.texture?.flipY !== undefined ? options?.texture?.flipY : true,
       repeatX: options?.texture?.repeatX || false,
       repeatY: options?.texture?.repeatY || false,
-      opacity: options?.texture?.opacity || 1,
     };
 
     let materialParams: MeshBasicMaterialParameters = {
       alphaTest: 0.1,
       depthTest,
-      opacity: texture.opacity,
+      opacity,
       transparent: true,
       wireframe: this.wireframe,
     };
