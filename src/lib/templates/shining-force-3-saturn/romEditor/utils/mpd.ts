@@ -458,6 +458,10 @@ export async function unpackMpd(
     repeat: false,
   };
 
+  if (mpd.floor.position.z < -1024) {
+    mpd.floor.position.z += 2048;
+  }
+
   const pointerTable = {
     objects: 0x2008,
     battlefieldFloor: 0x2010,
