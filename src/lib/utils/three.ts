@@ -208,8 +208,8 @@ export default class Three {
       });
 
     const cameraFolder = this.gui.addFolder("Camera");
-    cameraFolder.add(this.guiController, "cameraFit").name("Fit to scene");
-    cameraFolder.add(this.guiController, "cameraReset").name("Reset");
+    cameraFolder.add(this.guiController, "cameraFit").name("Fit to scene (F)");
+    cameraFolder.add(this.guiController, "cameraReset").name("Reset (R)");
 
     // Dummies
 
@@ -727,7 +727,7 @@ export default class Three {
 
   private updateFitControllerName(): void {
     this.gui.folders[0].controllers[0].name(
-      this.selectedObject.reference ? "Fit to object" : "Fit to scene",
+      `Fit to ${this.selectedObject.reference ? "object" : "scene"} (F)`,
     );
   }
 
