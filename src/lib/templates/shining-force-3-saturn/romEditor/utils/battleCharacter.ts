@@ -1,21 +1,21 @@
 import type { Mesh } from "three";
 
-import { getInt, getIntFromArray } from "$lib/utils/bytes";
-import type Canvas from "$lib/utils/canvas";
-import { getColor } from "$lib/utils/graphics";
+import { getInt } from "$lib/utils/bytes";
+import Canvas from "$lib/utils/canvas";
 import type Three from "$lib/utils/three";
 
 import { getDecompressedData } from "../utils";
 import { type Texture, getIndices, getMaterials, getVertices } from "./model";
 
-export function addObject(
+export async function addObject(
   baseOffset: number,
   offset: number,
   textures: Texture[],
   three: Three,
   instanceId: string,
+  canvas: Canvas,
   dataView: DataView,
-): Mesh | null {
+): Promise<Mesh | null> {
   const verticesOffset = baseOffset + getInt(offset, "uint32", { bigEndian: true }, dataView); // prettier-ignore
   const verticesCount = getInt(offset + 0x4, "uint32", { bigEndian: true }, dataView) * 2; // prettier-ignore
   const vertices = getVertices(verticesOffset, verticesCount, dataView);
@@ -24,11 +24,12 @@ export function addObject(
   const indicesCount = getInt(offset + 0xc, "uint32", { bigEndian: true }, dataView); // prettier-ignore
   const indices = getIndices(indicesOffset, indicesCount, dataView);
 
-  const texturesOffset = baseOffset + getInt(offset + 0x10, "uint32", { bigEndian: true }, dataView); // prettier-ignore
-  const materials = getMaterials(
-    texturesOffset,
+  const materialsOffset = baseOffset + getInt(offset + 0x10, "uint32", { bigEndian: true }, dataView); // prettier-ignore
+  const materials = await getMaterials(
+    materialsOffset,
     indicesCount,
     textures,
+    canvas,
     dataView,
   );
 
@@ -47,10 +48,7 @@ export function addObject(
   return mesh;
 }
 
-async function getTextures(
-  canvas: Canvas,
-  dataView: DataView,
-): Promise<Texture[]> {
+function getTextures(dataView: DataView): Texture[] {
   const textures: Texture[] = [];
 
   let offset = getInt(0x0, "uint32", { bigEndian: true }, dataView);
@@ -96,34 +94,17 @@ async function getTextures(
           dataView,
         ) * 0x8;
 
-      const texture = decompressedData.slice(
+      const rawData = decompressedData.slice(
         textureOffset,
         textureOffset + width * height * 0x2,
       );
 
-      const textureData = [];
-
-      for (let i = 0x0; i < texture.length; i += 0x1) {
-        const rawColor = getIntFromArray(texture, i * 0x2, "uint16", true);
-
-        const color = getColor(rawColor, "ABGR555");
-
-        textureData.push(...color);
-      }
-
-      const data = new Uint8Array(textureData);
-
-      canvas.resize(width, height);
-
-      canvas.addGraphic("texture", data, width, height);
-
-      const base64 = await canvas.export();
-
       textures.push({
         width: width,
         height: height,
-        data,
-        base64,
+        rawData,
+        data: new Uint8Array(),
+        base64: "",
       });
     }
   }
@@ -137,10 +118,7 @@ interface BattleCharacter {
   textures: Texture[];
 }
 
-export async function unpackBattleCharacter(
-  canvas: Canvas,
-  dataView: DataView,
-): Promise<BattleCharacter> {
+export function unpackBattleCharacter(dataView: DataView): BattleCharacter {
   const battleCharacter = {} as BattleCharacter;
 
   battleCharacter.objectsBaseOffset = getInt(
@@ -191,7 +169,7 @@ export async function unpackBattleCharacter(
 
   battleCharacter.textures = [];
 
-  const textures = await getTextures(canvas, dataView);
+  const textures = getTextures(dataView);
 
   battleCharacter.textures.push(...textures);
 

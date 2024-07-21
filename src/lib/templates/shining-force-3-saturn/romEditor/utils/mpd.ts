@@ -6,25 +6,35 @@ import debug from "$lib/utils/debug";
 import {
   applyPalette,
   flipUvs,
-  getColor,
   getPalette,
+  rotateUvs,
 } from "$lib/utils/graphics";
 import type Three from "$lib/utils/three";
+import type { MaterialOptions } from "$lib/utils/three";
 
 import type { Palette } from "$lib/types";
 
 import { getDecompressedData, getFileOffset, getScenario } from "../utils";
-import { type Texture, getIndices, getMaterials, getVertices } from "./model";
+import {
+  type Texture,
+  generateTexture,
+  getIndices,
+  getMaterials,
+  getVertices,
+} from "./model";
 
-export function addBattlefieldFloor(
+export async function addBattlefieldFloor(
   offset: number,
   heightMap: number[],
   textures: Texture[],
   three: Three,
   instanceId: string,
+  canvas: Canvas,
   dataView: DataView,
-): Group {
+): Promise<Group> {
   const group = three.addGroup(true);
+
+  const scenario = getScenario();
 
   for (let blockRow = 0; blockRow < 16; blockRow += 1) {
     for (let blockColumn = 0; blockColumn < 16; blockColumn += 1) {
@@ -70,8 +80,10 @@ export function addBattlefieldFloor(
           );
 
           const textureIndex = tile & 0xff;
-          const flipX = (tile & 0x1000) !== 0x0;
-          const flipY = (tile & 0x2000) !== 0x0;
+          const rotate90 = (tile & 0x100) !== 0x0;
+          const rotate180 = (tile & 0x200) !== 0x0;
+          let flipX = (tile & 0x1000) !== 0x0;
+          let flipY = (tile & 0x2000) !== 0x0;
           const useMapHeight = (tile & 0x8000) !== 0x0;
 
           if (textureIndex !== 0xff) {
@@ -81,10 +93,33 @@ export function addBattlefieldFloor(
               heights = yHeightMap;
             }
 
-            const base64 = textures[textureIndex]?.base64;
+            let base64 = "";
 
-            if (base64) {
+            const texture = textures[textureIndex];
+
+            if (texture) {
+              if (texture.base64) {
+                base64 = texture.base64;
+              } else {
+                base64 = await generateTexture(texture, canvas);
+              }
+
               let uvs = [0, 0, 1, 0, 1, 1, 1, 1, 0, 1, 0, 0];
+
+              if (scenario === "3" || scenario === "premium") {
+                if (rotate90) {
+                  uvs = rotateUvs(uvs, 90);
+
+                  // We shouldn't have to do this, issue linked to uvs manipulation instead of texture manipulation
+                  const tmp = flipX;
+                  flipX = flipY;
+                  flipY = tmp;
+                }
+
+                if (rotate180) {
+                  uvs = rotateUvs(uvs, 180);
+                }
+              }
 
               if (flipX) {
                 uvs = flipUvs(uvs, "x");
@@ -190,14 +225,23 @@ export function addFloor(
   }
 }
 
-export function addObject(
+interface OverrideOptions {
+  palette?: Palette;
+  renderLast?: boolean;
+  renderOrder?: number;
+  materials?: MaterialOptions;
+}
+
+export async function addObject(
   baseOffset: number,
   offset: number,
   textures: Texture[],
+  overrideOptions: OverrideOptions,
   three: Three,
   instanceId: string,
+  canvas: Canvas,
   dataView: DataView,
-): Mesh | null {
+): Promise<Mesh | null> {
   const verticesOffset = getFileOffset("mpd", offset, dataView, baseOffset);
   const verticesCount = getInt(offset + 0x4, "uint32", { bigEndian: true }, dataView); // prettier-ignore
   const vertices = getVertices(verticesOffset, verticesCount, dataView);
@@ -206,16 +250,21 @@ export function addObject(
   const indicesCount = getInt(offset + 0xc, "uint32", { bigEndian: true }, dataView); // prettier-ignore
   const indices = getIndices(indicesOffset, indicesCount, dataView);
 
-  const texturesOffset = getFileOffset("mpd", offset + 0x10, dataView, baseOffset); // prettier-ignore
-  const materials = getMaterials(
-    texturesOffset,
+  const materialsOffset = getFileOffset("mpd", offset + 0x10, dataView, baseOffset); // prettier-ignore
+  const materials = await getMaterials(
+    materialsOffset,
     indicesCount,
     textures,
+    canvas,
     dataView,
+    overrideOptions.materials,
+    overrideOptions.palette,
   );
 
   const mesh = three.addMesh(vertices, indices, materials.uvs, instanceId, {
     id: offset.toHex(),
+    renderLast: overrideOptions?.renderLast,
+    renderOrder: overrideOptions?.renderOrder,
     geometry: {
       nonIndexed: true,
     },
@@ -286,11 +335,7 @@ export function generateTilemap(
   }
 }
 
-async function getTextures(
-  offset: number,
-  canvas: Canvas,
-  dataView: DataView,
-): Promise<Texture[]> {
+function getTextures(offset: number, dataView: DataView): Texture[] {
   const textures: Texture[] = [];
 
   const decompressedData = getDecompressedData(offset, dataView);
@@ -311,34 +356,17 @@ async function getTextures(
         true,
       );
 
-      const texture = decompressedData.slice(
+      const rawData = decompressedData.slice(
         textureOffset,
         textureOffset + width * height * 0x2,
       );
 
-      const textureData = [];
-
-      for (let j = 0x0; j < texture.length; j += 0x1) {
-        const rawColor = getIntFromArray(texture, j * 0x2, "uint16", true);
-
-        const color = getColor(rawColor, "ABGR555");
-
-        textureData.push(...color);
-      }
-
-      const data = new Uint8Array(textureData);
-
-      canvas.resize(width, height);
-
-      canvas.addGraphic("texture", data, width, height);
-
-      const base64 = await canvas.export();
-
       textures.push({
         width: width,
         height: height,
-        data,
-        base64,
+        rawData,
+        data: new Uint8Array(),
+        base64: "",
       });
     }
   }
@@ -377,7 +405,8 @@ interface Mpd {
     tiledFloorTexture: number;
     unknown: number;
   };
-  palette: Palette;
+  palette1: Palette;
+  palette2: Palette;
   floor: {
     position: {
       x: number;
@@ -394,6 +423,7 @@ interface Mpd {
   objectsBaseOffset: number;
   objects: {
     offset: number;
+    overrideOptions: OverrideOptions;
     position: {
       x: number;
       y: number;
@@ -437,7 +467,7 @@ export async function unpackMpd(
   const length = paletteEndOffset - paletteStartOffset;
 
   if (length > 0) {
-    mpd.palette = getPalette("BGR555", paletteStartOffset, length, {
+    mpd.palette1 = getPalette("BGR555", paletteStartOffset, length, {
       bigEndian: true,
       dataView,
     });
@@ -445,7 +475,30 @@ export async function unpackMpd(
 
   const scenario = getScenario();
 
-  const shift = scenario === "3" || scenario === "premium" ? 0x8 : 0x0;
+  let shift = 0x0;
+
+  if (scenario === "3" || scenario === "premium") {
+    const paletteStartOffset = getFileOffset(
+      "mpd",
+      settingsOffset + 0x44,
+      dataView,
+    );
+    const paletteEndOffset = getFileOffset(
+      "mpd",
+      settingsOffset + 0x48,
+      dataView,
+    );
+
+    const length = paletteEndOffset - paletteStartOffset;
+
+    mpd.palette2 = getPalette("BGR555", paletteStartOffset, length, {
+      firstTransparent: true,
+      bigEndian: true,
+      dataView,
+    });
+
+    shift = 0x8;
+  }
 
   // prettier-ignore
   mpd.floor = {
@@ -502,6 +555,10 @@ export async function unpackMpd(
       dataView,
     );
 
+    const overrideOptionsCache: {
+      [offset: number]: OverrideOptions;
+    } = {};
+
     for (let i = 0x0; i < objectCount; i += 0x1) {
       const objectOffset = getFileOffset(
         "mpd",
@@ -526,8 +583,39 @@ export async function unpackMpd(
       scaleY += getInt(objectsOffset + i * 0x3c + 0x3e, "uint16", { bigEndian: true }, dataView) / 0x10000; // prettier-ignore
       scaleZ += getInt(objectsOffset + i * 0x3c + 0x42, "uint16", { bigEndian: true }, dataView) / 0x10000; // prettier-ignore
 
+      const unknown = getInt(objectsOffset + i * 0x3c + 0x44, "uint16", { bigEndian: true }, dataView) // prettier-ignore
+
+      if ([0x7d0, 0x7e0, 0x7f0, 0x800].includes(unknown & 0xff0)) {
+        overrideOptionsCache[objectOffset] = {
+          palette:
+            scenario === "3" || scenario === "premium"
+              ? mpd.palette2
+              : undefined,
+          materials: {
+            color: 0x0,
+            opacity: 0.5,
+            texture: {
+              base64: scenario === "1" || scenario === "2" ? "" : undefined,
+            },
+          },
+        };
+      } else if ([0x830, 0x840].includes(unknown & 0xff0)) {
+        overrideOptionsCache[objectOffset] = {
+          palette:
+            scenario === "3" || scenario === "premium"
+              ? mpd.palette2
+              : undefined,
+        };
+      } else if (unknown === 0xbb8) {
+        overrideOptionsCache[objectOffset] = {
+          renderLast: true,
+          renderOrder: -2,
+        };
+      }
+
       mpd.objects.push({
         offset: objectOffset,
+        overrideOptions: {},
         position: {
           x: positionX,
           y: positionY,
@@ -545,6 +633,16 @@ export async function unpackMpd(
         },
       });
     }
+
+    Object.entries(overrideOptionsCache).forEach(
+      ([offset, overrideOptions]) => {
+        mpd.objects.map((object) => {
+          if (object.offset === parseInt(offset)) {
+            object.overrideOptions = overrideOptions;
+          }
+        });
+      },
+    );
   }
 
   let battlefieldFloorOffset = 0x0;
@@ -609,7 +707,7 @@ export async function unpackMpd(
     );
 
     if (texturesSize > 0) {
-      const textures = await getTextures(texturesOffset, canvas, dataView);
+      const textures = getTextures(texturesOffset, dataView);
 
       mpd.textures.push(...textures);
     }
@@ -649,11 +747,11 @@ export async function unpackMpd(
     );
 
     if (tiledFloorTextureSize === 0) {
-      generateFloorTexture(tilesData, mpd.palette, canvas);
+      generateFloorTexture(tilesData, mpd.palette1, canvas);
 
       mpd.floor.repeat = true;
     } else {
-      const tiles = getTiles(tilesData, mpd.palette);
+      const tiles = getTiles(tilesData, mpd.palette1);
 
       for (let i = 0x0; i < 0x2; i += 0x1) {
         const tiledFloorTextureOffset = getFileOffset(

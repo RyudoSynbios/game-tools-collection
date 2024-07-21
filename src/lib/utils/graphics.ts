@@ -112,6 +112,24 @@ export function flipUvs(uvs: number[], axis: "x" | "y"): number[] {
   });
 }
 
+export function rotateUvs(uvs: number[], angle: 90 | 180): number[] {
+  if (angle === 90) {
+    const ref90 = [4, 0, 1, 1, 2, 4];
+
+    const rotatedUvs: number[] = [];
+
+    ref90.forEach((ref) => {
+      rotatedUvs.push(uvs[ref * 2], uvs[ref * 2 + 1]);
+    });
+
+    return rotatedUvs;
+  } else if (angle === 180) {
+    return uvs.map((uv) => (uv ^= 1));
+  }
+
+  return uvs;
+}
+
 export function applyPalette(
   data: number[] | Uint8Array,
   palette: Palette,

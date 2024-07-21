@@ -17,7 +17,7 @@
     addObject as addBattleStageObject,
     unpackBattleStage,
   } from "../utils/battleStage";
-  import type { Texture } from "../utils/model";
+  import { getTextureData, type Texture } from "../utils/model";
   import {
     addBattlefieldFloor,
     addFloor as addMpdFloor,
@@ -81,28 +81,30 @@
       return;
     }
 
+    const scenario = getScenario();
+
     let textures: Texture[] = [];
 
     if (type === "battleCharacter") {
-      const battleCharacter = await unpackBattleCharacter(
-        canvasTexture,
-        dataView,
-      );
-
-      if (instanceId !== three.getInstanceId()) {
-        return;
-      }
+      const battleCharacter = unpackBattleCharacter(dataView);
 
       debug.log(battleCharacter);
 
       if (battleCharacter) {
-        battleCharacter.objects.forEach((offset) => {
-          const mesh = addBattleCharacterObject(
+        await battleCharacter.objects.reduce(async (previousObject, offset) => {
+          await previousObject;
+
+          if (instanceId !== three.getInstanceId()) {
+            return;
+          }
+
+          const mesh = await addBattleCharacterObject(
             battleCharacter.objectsBaseOffset,
             offset,
             battleCharacter.textures,
             three,
             instanceId,
+            canvasTexture,
             dataView,
           );
 
@@ -111,21 +113,23 @@
             mesh.scale.y = 10;
             mesh.scale.z = 10;
           }
-        });
+        }, Promise.resolve());
 
         textures = battleCharacter.textures;
       }
     } else if (type === "battleStage") {
       const battleStage = await unpackBattleStage(canvasTexture, dataView);
 
-      if (instanceId !== three.getInstanceId()) {
-        return;
-      }
-
       debug.log(battleStage);
 
       if (battleStage) {
-        battleStage.objects.forEach((object) => {
+        await battleStage.objects.reduce(async (previousObject, object) => {
+          await previousObject;
+
+          if (instanceId !== three.getInstanceId()) {
+            return;
+          }
+
           const { offset, position, rotation, scale } = object;
 
           const meshId = offset.toHex();
@@ -135,12 +139,13 @@
           if (three.isMeshCached(meshId)) {
             mesh = three.cloneCachedMesh(meshId, instanceId);
           } else {
-            mesh = addBattleStageObject(
+            mesh = await addBattleStageObject(
               battleStage.objectsBaseOffset,
               offset,
               battleStage.textures,
               three,
               instanceId,
+              canvasTexture,
               dataView,
             );
           }
@@ -162,13 +167,13 @@
 
             const clone = three.clone(mesh);
 
-            const scaleX = getScenario() === "1" ? -1 : 1;
+            const scaleX = scenario === "1" ? -1 : 1;
 
             clone.applyMatrix4(new Matrix4().makeScale(scaleX, 1, -1));
 
             clone.position.z -= 256;
           }
-        });
+        }, Promise.resolve());
 
         addBattleStageFloor(battleStage.floor.texture, three, instanceId);
 
@@ -177,14 +182,16 @@
     } else if (type === "location") {
       const mpd = await unpackMpd(canvasTexture, dataView);
 
-      if (instanceId !== three.getInstanceId()) {
-        return;
-      }
-
       debug.log(mpd);
 
       if (mpd) {
-        mpd.objects.forEach((object) => {
+        await mpd.objects.reduce(async (previousObject, object) => {
+          await previousObject;
+
+          if (instanceId !== three.getInstanceId()) {
+            return;
+          }
+
           const { offset, position, rotation, scale } = object;
 
           const meshId = offset.toHex();
@@ -194,12 +201,14 @@
           if (three.isMeshCached(meshId)) {
             mesh = three.cloneCachedMesh(meshId, instanceId);
           } else {
-            mesh = addMpdObject(
+            mesh = await addMpdObject(
               mpd.objectsBaseOffset,
               offset,
               mpd.textures,
+              object.overrideOptions,
               three,
               instanceId,
+              canvasTexture,
               dataView,
             );
           }
@@ -219,15 +228,16 @@
             mesh.scale.y = scale.y;
             mesh.scale.z = scale.z;
           }
-        });
+        }, Promise.resolve());
 
         if (mpd.floor.battlefield) {
-          addBattlefieldFloor(
+          await addBattlefieldFloor(
             mpd.floor.battlefield.offset,
             mpd.floor.battlefield.heightMap,
             mpd.textures,
             three,
             instanceId,
+            canvasTexture,
             dataView,
           );
         }
@@ -244,6 +254,10 @@
       }
     }
 
+    if (instanceId !== three.getInstanceId()) {
+      return;
+    }
+
     three.setLoading(false);
 
     const sheet = generateGraphicsSheet(128, textures);
@@ -251,6 +265,10 @@
     canvas.resize(sheet.width, sheet.height);
 
     textures.forEach((texture, index) => {
+      if (texture.data.length === 0) {
+        texture.data = getTextureData(texture);
+      }
+
       canvas.addGraphic(
         "sprite",
         texture.data,
