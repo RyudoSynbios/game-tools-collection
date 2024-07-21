@@ -309,7 +309,7 @@ function readDirectory(
       pageIndex * memoryCard.superblock.pageLength +
       pageIndex * memoryCard.extras.eccLength;
 
-    if (length === 0x0) {
+    if (length === 0) {
       length = page.entryLength;
     }
 

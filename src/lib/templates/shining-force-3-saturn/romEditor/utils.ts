@@ -65,8 +65,6 @@ let cache: {
   enemies: new DataView(new ArrayBuffer(0)),
 };
 
-// TODO: X023.BIN > Shops
-
 export function overrideGetInt(
   item: Item,
 ): [boolean, number | string | undefined] {
@@ -86,7 +84,7 @@ export function overrideGetInt(
     const index = parseInt(split[1]);
     const type = split[2];
 
-    if (cache.characters.byteLength === 0x0) {
+    if (cache.characters.byteLength === 0) {
       const file = getFile("X033.BIN");
 
       if (file) {
@@ -123,7 +121,7 @@ export function overrideGetInt(
   } else if ("id" in item && item.id === "item") {
     const itemInt = item as ItemInt;
 
-    if (cache.items.byteLength === 0x0) {
+    if (cache.items.byteLength === 0) {
       const file = getFile("X002.BIN");
 
       if (file) {
@@ -153,7 +151,7 @@ export function overrideGetInt(
   } else if ("id" in item && item.id === "enemy") {
     const itemInt = item as ItemInt;
 
-    if (cache.enemies.byteLength === 0x0) {
+    if (cache.enemies.byteLength === 0) {
       const file = getFile("X019.BIN");
 
       if (file) {

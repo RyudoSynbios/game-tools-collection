@@ -308,7 +308,7 @@ export function getInt(
 
     return 0x0;
   } else if (
-    $dataView.byteLength === 0x0 ||
+    $dataView.byteLength === 0 ||
     offset + dataTypeToLength(dataType) - 1 > $dataView.byteLength - 1
   ) {
     debug.error(
@@ -385,7 +385,7 @@ export function setInt(
 
     return;
   } else if (
-    $dataView.byteLength === 0x0 ||
+    $dataView.byteLength === 0 ||
     offset + dataTypeToLength(dataType) - 1 > $dataView.byteLength - 1
   ) {
     debug.error(
@@ -508,7 +508,7 @@ export function getBigInt(
 
     return BigInt(0);
   } else if (
-    $dataView.byteLength === 0x0 ||
+    $dataView.byteLength === 0 ||
     offset + dataTypeToLength(dataType) - 1 > $dataView.byteLength - 1
   ) {
     debug.error(
@@ -546,7 +546,7 @@ export function setBigInt(
 
     return;
   } else if (
-    $dataView.byteLength === 0x0 ||
+    $dataView.byteLength === 0 ||
     offset + dataTypeToLength(dataType) - 1 > $dataView.byteLength - 1
   ) {
     debug.error(
