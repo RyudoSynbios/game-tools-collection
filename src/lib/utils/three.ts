@@ -438,6 +438,7 @@ export default class Three {
       group?: Group;
       locked?: boolean;
       renderLast?: boolean;
+      renderOrder?: number;
       geometry?: GeometryOptions;
       material?: MaterialOptions | MaterialOptions[];
     },
@@ -450,6 +451,7 @@ export default class Three {
     const group = options?.group;
     const locked = options?.locked || false;
     const renderLast = options?.renderLast || false;
+    const renderOrder = options?.renderOrder || 0;
 
     const geometry = this.generateGeometry(
       vertices,
@@ -485,6 +487,10 @@ export default class Three {
 
     if (renderLast) {
       mesh.renderOrder = -1;
+    }
+
+    if (renderOrder) {
+      mesh.renderOrder = renderOrder;
     }
 
     if (group) {
