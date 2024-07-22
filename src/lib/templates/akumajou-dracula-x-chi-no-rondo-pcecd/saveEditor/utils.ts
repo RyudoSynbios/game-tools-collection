@@ -7,9 +7,7 @@ export function overrideGetInt(item: Item): [boolean, number | undefined] {
   if ("id" in item && item.id === "completionRate") {
     const itemInt = item as ItemInt;
 
-    let int = 0;
-
-    int += getInt(itemInt.offset - 0xb, "uint8").toBitCount() * 2;
+    let int = getInt(itemInt.offset - 0xb, "uint8").toBitCount() * 2;
 
     for (
       let offset = itemInt.offset;

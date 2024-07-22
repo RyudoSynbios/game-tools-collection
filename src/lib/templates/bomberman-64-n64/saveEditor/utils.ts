@@ -16,9 +16,7 @@ export function overrideGetInt(item: Item): [boolean, number | undefined] {
   if ("id" in item && item.id?.match(/time-/)) {
     const itemInt = item as ItemInt;
 
-    let int = 0;
-
-    int = getInt(itemInt.offset, "uint24", {
+    let int = getInt(itemInt.offset, "uint24", {
       bigEndian: itemInt.bigEndian,
     });
 

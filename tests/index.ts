@@ -150,6 +150,7 @@ export async function snippet(
       if (type === "n") {
         await expectInput(value, elIndex, false);
       }
+
       if (type === "r") {
         await selectRegion(value);
       }

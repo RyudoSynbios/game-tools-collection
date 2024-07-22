@@ -306,7 +306,7 @@ const template: GameJson = {
                       ],
                     },
                     {
-                      name: "Position",
+                      name: "Location",
                       flex: true,
                       items: [
                         {
