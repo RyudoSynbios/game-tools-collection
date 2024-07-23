@@ -204,6 +204,14 @@
     }
   },
   {
+    "id": "pokemon-trading-card-game-gbc",
+    "name": "Pokémon Trading Card Game",
+    "consoleId": "game-boy-color",
+    "saveEditor": {
+      "regions": ["🇪🇺", "🇺🇸", "🇯🇵", "🇦🇺"]
+    }
+  },
+  {
     "id": "rayman-ps",
     "name": "Rayman",
     "consoleId": "playstation",
