@@ -579,6 +579,7 @@ export function setBigInt(
 interface StringOptions {
   bigEndian?: boolean;
   letterBigEndian?: boolean;
+  isZeroTerminated?: boolean;
   resource?: string;
 }
 
@@ -603,6 +604,10 @@ export function getString(
       { bigEndian: options.letterBigEndian },
       $dataView,
     );
+
+    if (int === 0x0 && options.isZeroTerminated) {
+      break;
+    }
 
     let resource: any;
 
@@ -656,6 +661,12 @@ export function setString(
 
   for (let i = offset; i < offset + length; i += increment) {
     const char = value[(i - offset) / increment];
+
+    if (char === undefined && options.isZeroTerminated) {
+      setInt(i, letterDataType, 0x0, { bigEndian: options.letterBigEndian });
+
+      break;
+    }
 
     let resource;
 
