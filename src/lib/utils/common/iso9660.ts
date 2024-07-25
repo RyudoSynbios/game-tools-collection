@@ -4,13 +4,14 @@ import { dataView, gameTemplate } from "$lib/stores";
 
 import type { RegionValidator } from "$lib/types";
 
-import { extractBit, getInt, getString } from "../bytes";
+import { extractBit, getInt, getString, setInt } from "../bytes";
 import { checkValidator, getRegions } from "../validator";
 
 interface Iso {
   hasSectors: boolean;
-  sectorShift: number;
+  sectorHeaderSize: number;
   blockSize: number;
+  eccSize: number;
   volume: Volume;
 }
 
@@ -61,6 +62,31 @@ export interface File {
   size: number;
 }
 
+// ECC constant
+
+const edcPoly = 0xd8018001;
+
+const eccFLut = new Uint8Array(0x100);
+const eccBLut = new Uint8Array(0x100);
+const edcLut = new Uint32Array(0x100);
+
+for (let i = 0x0; i < 0x100; i += 0x1) {
+  let j = (i << 0x1) ^ (i & 0x80 ? 0x11d : 0x0);
+
+  eccFLut[i] = j;
+  eccBLut[i ^ j] = i;
+
+  let edc = i;
+
+  for (let j = 0x0; j < 0x8; j += 0x1) {
+    edc = (edc >>> 0x1) ^ (edc & 0x1 ? edcPoly : 0x0);
+  }
+
+  edcLut[i] = edc;
+}
+
+// Global object
+
 let iso = {} as Iso;
 
 export function customGetRegions(dataView: DataView, shift: number): string[] {
@@ -100,7 +126,7 @@ export function hasSectors(dataView: DataView): boolean {
 export function getAbsoluteOffset(offset: number): number {
   if (iso.hasSectors) {
     offset =
-      iso.sectorShift +
+      iso.sectorHeaderSize +
       Math.floor(offset / (iso.volume.logicalBlockSizeLE || 0x800)) *
         (iso.blockSize || 0x930);
   }
@@ -111,10 +137,11 @@ export function getAbsoluteOffset(offset: number): number {
 export function getRelativeOffset(offset: number): number {
   if (
     iso.hasSectors &&
-    offset % iso.blockSize >= iso.sectorShift + iso.volume.logicalBlockSizeLE
+    offset % iso.blockSize >=
+      iso.sectorHeaderSize + iso.volume.logicalBlockSizeLE
   ) {
     offset =
-      iso.sectorShift +
+      iso.sectorHeaderSize +
       (Math.floor(offset / iso.blockSize) + 0x1) * iso.blockSize;
   }
 
@@ -126,7 +153,8 @@ export function readIso9660(): void {
   const $dataView = get(dataView);
 
   iso.hasSectors = hasSectors($dataView);
-  iso.sectorShift = iso.hasSectors ? 0x10 : 0x0;
+  iso.sectorHeaderSize = iso.hasSectors ? 0x10 : 0x0;
+  iso.eccSize = iso.hasSectors ? 0x120 : 0x0;
 
   iso.volume = {} as Volume;
 
@@ -176,7 +204,8 @@ export function readIso9660(): void {
   iso.blockSize = iso.volume.logicalBlockSizeLE;
 
   if (iso.hasSectors) {
-    iso.blockSize = iso.volume.logicalBlockSizeLE + 0x130;
+    iso.blockSize =
+      iso.sectorHeaderSize + iso.volume.logicalBlockSizeLE + iso.eccSize;
   }
 
   iso.volume.rootDirectory.files = [];
@@ -190,7 +219,7 @@ export function readIso9660(): void {
 
   if (iso.hasSectors) {
     offset = getAbsoluteOffset(offset);
-    offsetEnd -= 0x130;
+    offsetEnd -= iso.sectorHeaderSize - iso.eccSize;
   }
 
   while (true) {
@@ -297,4 +326,153 @@ export function getFile(
 
 export function getFiles(): File[] {
   return iso.volume.rootDirectory.files;
+}
+
+function edcComputeBlock(sectorData: Uint8Array): number[] {
+  let crc = 0x0;
+
+  sectorData.forEach((int) => {
+    crc = edcLut[(crc ^ int) & 0xff] ^ (crc >>> 0x8);
+  });
+
+  const edc = [
+    crc & 0xff,
+    (crc >> 0x8) & 0xff,
+    (crc >> 0x10) & 0xff,
+    (crc >> 0x18) & 0xff,
+  ];
+
+  return edc;
+}
+
+function eccComputeBlock(
+  src: Uint8Array,
+  majorCount: number,
+  minorCount: number,
+  majorMult: number,
+  minorInc: number,
+): Uint8Array {
+  const buffer = new Uint8Array(majorCount * 0x2);
+
+  const size = majorCount * minorCount;
+
+  for (let major = 0x0; major < majorCount; major += 0x1) {
+    let index = (major >>> 0x1) * majorMult + (major & 0x1);
+
+    let eccA = 0x0;
+    let eccB = 0x0;
+
+    for (let minor = 0x0; minor < minorCount; minor += 0x1) {
+      const temp = src[index];
+
+      index += minorInc;
+
+      if (index >= size) {
+        index -= size;
+      }
+
+      eccA ^= temp;
+      eccB ^= temp;
+      eccA = eccFLut[eccA];
+    }
+
+    eccA = eccBLut[eccFLut[eccA] ^ eccB];
+
+    buffer[major] = eccA;
+    buffer[major + majorCount] = eccA ^ eccB;
+  }
+
+  return buffer;
+}
+
+// Adapted from https://github.com/chungy/cmdpack/blob/master/cdpatch.c (originally by Neill Corlett)
+function generateEcc(sector: number): Uint8Array {
+  const $dataView = get(dataView);
+
+  const buffer = new Uint8Array(0x120);
+
+  const offset = sector * iso.blockSize;
+
+  const sectorMode = getInt(offset + 0xf, "uint8");
+
+  if (sectorMode === 0x1) {
+    // Compute EDC
+
+    let sectorData = new Uint8Array(
+      $dataView.buffer.slice(
+        offset,
+        offset + iso.volume.logicalBlockSizeLE + iso.sectorHeaderSize,
+      ),
+    );
+
+    const edc = edcComputeBlock(sectorData);
+
+    buffer.set(edc);
+
+    // Compute ECC P code
+
+    sectorData = new Uint8Array(0x8bc);
+
+    sectorData.set(
+      new Uint8Array($dataView.buffer.slice(offset + 0xc, offset + 0x8bc)),
+    );
+
+    const eccPCode = eccComputeBlock(sectorData, 0x56, 0x18, 0x2, 0x56);
+
+    buffer.set(eccPCode, 0xc);
+
+    // Compute ECC Q code
+
+    sectorData.set(eccPCode, 0x810);
+
+    const eccQCode = eccComputeBlock(sectorData, 0x34, 0x2b, 0x56, 0x58);
+
+    buffer.set(eccQCode, 0xb8);
+  }
+
+  return buffer;
+}
+
+export function writeFile(name: string, dataView: DataView): void {
+  const file = getFile(name);
+
+  if (file) {
+    let baseOffset = file.offset;
+
+    if (iso.hasSectors) {
+      baseOffset =
+        baseOffset -
+        Math.floor(baseOffset / iso.blockSize) *
+          (iso.sectorHeaderSize + iso.eccSize) -
+        iso.sectorHeaderSize;
+    }
+
+    let offset = file.offset;
+
+    for (let i = 0x0; i < file.size; i += 0x1) {
+      const int = getInt(i, "uint8", {}, dataView);
+
+      setInt(offset, "uint8", int);
+
+      offset += 0x1;
+
+      if (
+        iso.hasSectors &&
+        i % iso.volume.logicalBlockSizeLE ===
+          iso.volume.logicalBlockSizeLE - 0x1
+      ) {
+        const sector = Math.floor(offset / iso.blockSize);
+
+        const ecc = generateEcc(sector);
+
+        ecc.forEach((int) => {
+          setInt(offset, "uint8", int);
+
+          offset += 0x1;
+        });
+
+        offset += iso.sectorHeaderSize;
+      }
+    }
+  }
 }
