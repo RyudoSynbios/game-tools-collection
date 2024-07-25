@@ -2,6 +2,7 @@ import { get } from "svelte/store";
 
 import {
   dataView,
+  dataViewAlt,
   fileHeaderShift,
   fileName,
   gameJson,
@@ -34,6 +35,12 @@ export function getDataView(dataViewTmp?: DataView): DataView {
     : get(dataView);
 }
 
+export function isDataViewAltExists(key: string): boolean {
+  const $dataViewAlt = get(dataViewAlt);
+
+  return Boolean(key && $dataViewAlt[key]);
+}
+
 export function resetState(): void {
   const $gameUtils = get(gameUtils) as any;
 
@@ -42,6 +49,7 @@ export function resetState(): void {
   }
 
   dataView.set(new DataView(new ArrayBuffer(0)));
+  dataViewAlt.set({});
   fileName.set("");
   fileHeaderShift.set(0x0);
   gameJson.set({} as GameJson);
@@ -376,9 +384,15 @@ export function setInt(
   dataType: Exclude<DataType, "boolean" | "int64" | "uint64" | "string">,
   value: number | string,
   options: IntOptions = {},
+  dataViewAltKey = "",
 ): void {
-  const $dataView = get(dataView);
+  let $dataView = get(dataView);
+  const $dataViewAlt = get(dataViewAlt);
   const $isDebug = get(isDebug);
+
+  if (isDataViewAltExists(dataViewAltKey)) {
+    $dataView = $dataViewAlt[dataViewAltKey];
+  }
 
   if (offset < 0x0) {
     debug.error("Tried to write to a negative offset");
@@ -415,9 +429,10 @@ export function setInt(
       dataTypeValue ^
       ((dataTypeValue >> (dataTypeLength * 8 - bitLength)) << bitStart);
 
+    // prettier-ignore
     const int = getInt(offset, dataType, {
       bigEndian: options.bigEndian,
-    });
+    }, $dataView);
 
     value = (value << bitStart) | (int & mask);
   }
@@ -430,18 +445,19 @@ export function setInt(
 
   value = makeOperations(value, options.operations, true);
 
+  // prettier-ignore
   if (isPartial(options.operations)) {
     const oldInt = getInt(offset, dataType, {
       bigEndian: options.bigEndian,
       binaryCodedDecimal: options.binaryCodedDecimal,
-    });
+    }, $dataView);
 
     let oldValue = getInt(offset, dataType, {
       bigEndian: options.bigEndian,
       binaryCodedDecimal: options.binaryCodedDecimal,
       bit: options.bit,
       operations: options.operations,
-    });
+    }, $dataView);
 
     oldValue = makeOperations(oldValue, options.operations, true);
 
@@ -484,7 +500,14 @@ export function setInt(
       break;
   }
 
-  dataView.set($dataView);
+  if (isDataViewAltExists(dataViewAltKey)) {
+    dataViewAlt.set({
+      ...$dataViewAlt,
+      [dataViewAltKey]: $dataView,
+    });
+  } else {
+    dataView.set($dataView);
+  }
 
   if (!$isDebug) {
     isDirty.set(true);
@@ -537,9 +560,15 @@ export function setBigInt(
   dataType: "int64" | "uint64",
   value: bigint | string,
   options: BigIntOptions = {},
+  dataViewAltKey = "",
 ): void {
-  const $dataView = get(dataView);
+  let $dataView = get(dataView);
+  const $dataViewAlt = get(dataViewAlt);
   const $isDebug = get(isDebug);
+
+  if (isDataViewAltExists(dataViewAltKey)) {
+    $dataView = $dataViewAlt[dataViewAltKey];
+  }
 
   if (offset < 0x0) {
     debug.error("Tried to write to a negative offset");
@@ -569,7 +598,14 @@ export function setBigInt(
       break;
   }
 
-  dataView.set($dataView);
+  if (isDataViewAltExists(dataViewAltKey)) {
+    dataViewAlt.set({
+      ...$dataViewAlt,
+      [dataViewAltKey]: $dataView,
+    });
+  } else {
+    dataView.set($dataView);
+  }
 
   if (!$isDebug) {
     isDirty.set(true);

@@ -5,6 +5,7 @@ import type { GameJson } from "$lib/types";
 import { getLocalStorage } from "./utils/format";
 
 export const dataView = writable(new DataView(new ArrayBuffer(0)));
+export const dataViewAlt = writable<{ [key: string]: DataView }>({});
 export const fileIsLoading = writable(false);
 export const fileHeaderShift = writable(0x0);
 export const fileName = writable("");

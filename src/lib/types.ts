@@ -218,6 +218,7 @@ export interface ItemGroup {
 export interface ItemInt {
   id?: string;
   name?: string;
+  dataViewAltKey?: string;
   offset: number;
   type: "variable";
   dataType: Exclude<DataType, "boolean" | "string">;

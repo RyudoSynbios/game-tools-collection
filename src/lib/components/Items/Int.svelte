@@ -4,6 +4,7 @@
   import Select from "$lib/components/Select.svelte";
   import {
     dataView,
+    dataViewAlt,
     gameJson,
     gameRegion,
     gameUtils,
@@ -44,6 +45,7 @@
             bit: item.bit,
             operations: item.operations,
           },
+          item.dataViewAltKey,
         );
       } else {
         setBigInt(
@@ -51,6 +53,7 @@
           item.dataType,
           (event.target as HTMLInputElement).value,
           { bigEndian: item.bigEndian },
+          item.dataViewAltKey,
         );
       }
     }
@@ -79,11 +82,16 @@
       [isOverrided, value] = $gameUtils.overrideGetInt(item);
     }
 
+    const dataViewAlt = item.dataViewAltKey
+      ? $dataViewAlt[item.dataViewAltKey]
+      : undefined;
+
+    // prettier-ignore
     if (!isOverrided) {
       if (item.dataType !== "int64" && item.dataType !== "uint64") {
         int = getInt(item.offset, item.dataType, {
           bigEndian: item.bigEndian,
-        });
+        }, dataViewAlt);
 
         value = getInt(item.offset, item.dataType, {
           bigEndian: item.bigEndian,
@@ -91,11 +99,11 @@
           binary: item.binary,
           bit: item.bit,
           operations: item.operations,
-        });
+        }, dataViewAlt);
       } else {
         value = getBigInt(item.offset, item.dataType, {
           bigEndian: item.bigEndian,
-        });
+        }, dataViewAlt);
       }
     }
 
