@@ -292,7 +292,7 @@ export interface ItemTab {
   items: Item[];
   disabled?: boolean;
   hidden?: boolean | boolean[];
-  planned?: boolean;
+  planned?: boolean | boolean[];
 }
 
 export interface ItemTabs {

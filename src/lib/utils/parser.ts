@@ -138,6 +138,10 @@ export function parseItem(
     }
   }
 
+  if (Array.isArray(newItem.planned)) {
+    newItem.planned = getRegionArray(newItem.planned);
+  }
+
   if (Array.isArray(newItem.hidden)) {
     newItem.hidden = getRegionArray(newItem.hidden);
   }
