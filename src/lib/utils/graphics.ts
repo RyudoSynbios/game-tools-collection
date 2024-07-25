@@ -1,5 +1,3 @@
-import { BufferAttribute, type BufferGeometry, Vector3 } from "three";
-
 import { getInt, getIntFromArray } from "$lib/utils/bytes";
 
 import type { Color, ColorType, Palette } from "$lib/types";
