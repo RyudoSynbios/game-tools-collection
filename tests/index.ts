@@ -31,10 +31,8 @@ export async function initPage(url: string): Promise<void> {
   });
 
   await page.goto(`${URL}/${url}`, {
-    waitUntil: "domcontentloaded",
+    waitUntil: "networkidle0",
   });
-
-  await page.waitForTimeout(500);
 }
 
 export async function ejectFile(): Promise<void> {

@@ -1,5 +1,5 @@
 export async function selectRegion(region: string): Promise<void> {
-  await page.waitForSelector(".gtc-regionmodal");
+  await page.waitForSelector(".gtc-regionmodal > ul");
 
   const regionsEl = await page.$$eval(".gtc-regionmodal ul li", (els) =>
     els.map((el) => el.textContent?.trim()),
