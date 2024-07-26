@@ -14,7 +14,7 @@ export async function load({ params }): Promise<void> {
   let tool = "";
 
   if (params.gameId === "shining-force-3-scenario-1-saturn") {
-    throw redirect(301, `/shining-force-3-saturn/${params.tool}`);
+    redirect(301, `/shining-force-3-saturn/${params.tool}`);
   }
 
   if (params.tool === "randomizer") {
@@ -24,7 +24,7 @@ export async function load({ params }): Promise<void> {
   } else if (params.tool === "save-editor") {
     tool = "saveEditor";
   } else {
-    throw error(404, {
+    error(404, {
       message: "Not found",
     });
   }
@@ -32,7 +32,7 @@ export async function load({ params }): Promise<void> {
   const game = getGame(params.gameId);
 
   if (!game || !game[tool]) {
-    throw error(404, {
+    error(404, {
       message: "Not found",
     });
   }
