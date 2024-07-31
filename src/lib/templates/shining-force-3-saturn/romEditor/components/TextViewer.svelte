@@ -1,14 +1,14 @@
 <script lang="ts">
-  import { getFileData, readText } from "../utils";
+  import { getFileData, readTxt } from "../utils";
 
   export let assetIndex: number;
 
   let text = "";
 
   $: {
-    const dataView = getFileData("text", assetIndex);
+    const dataView = getFileData("txt", assetIndex);
 
-    text = readText(dataView);
+    text = readTxt(dataView);
   }
 </script>
 

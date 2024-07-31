@@ -1,5 +1,12 @@
 import type { GameJson } from "$lib/types";
 
+export const characterNamesStartIndexes = [0x137, 0x137];
+export const classNamesStartIndexes = [0x19c, 0x19a];
+export const enemyNamesStartIndexes = [0x44a, 0x448];
+export const itemNamesStartIndexes = [0x34a, 0x348];
+export const spellNamesStartIndexes = [0x316, 0x314];
+export const weaponSpecialNamesStartIndexes = [0x4d7, 0x4d5];
+
 const template: GameJson = {
   validator: {
     regions: {
@@ -2563,6 +2570,17 @@ const template: GameJson = {
           ],
         },
         {
+          name: "Shops",
+          planned: [false, false, true, true, true],
+          hidden: [false, false, false, false, true],
+          items: [
+            {
+              type: "component",
+              component: "Shops",
+            },
+          ],
+        },
+        {
           name: "Asset Viewer",
           items: [
             {
@@ -2572,13 +2590,13 @@ const template: GameJson = {
                   name: "Text Files",
                   items: [
                     {
-                      id: "assetViewer-text",
+                      id: "assetViewer-txt",
                       instanceId: "textViewer",
                       length: 0x2,
                       type: "container",
                       instanceType: "tabs",
                       instances: 0,
-                      resource: "assetTextNames",
+                      resource: "assetTxtNames",
                       vertical: true,
                       flex: true,
                       items: [
@@ -2795,7 +2813,7 @@ const template: GameJson = {
     assetLocationNames: "getAssetNames('location')",
     assetNames: "getAssetNames('asset')",
     assetSpriteNames: "getAssetNames('sprite')",
-    assetTextNames: "getAssetNames('text')",
+    assetTxtNames: "getAssetNames('txt')",
     assetVideoNames: "getAssetNames('video')",
     characterNames: "getCharacterNames()",
     classNames: "getClassesNames()",

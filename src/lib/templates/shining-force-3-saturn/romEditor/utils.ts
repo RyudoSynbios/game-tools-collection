@@ -1,6 +1,6 @@
 import { get } from "svelte/store";
 
-import { gameRegion } from "$lib/stores";
+import { dataView, dataViewAlt, gameRegion } from "$lib/stores";
 import { getInt } from "$lib/utils/bytes";
 import {
   type File,
@@ -9,24 +9,28 @@ import {
   getFiles,
   readIso9660,
   resetIso9660,
+  writeFile,
 } from "$lib/utils/common/iso9660";
-import { decodeWindows31J } from "$lib/utils/decode";
+import { decodeCamelotFont, decodeWindows31J } from "$lib/utils/decode";
+import { getRegionArray } from "$lib/utils/format";
 import { checkValidator } from "$lib/utils/validator";
 
 import type { Item, ItemContainer, ItemInt } from "$lib/types";
 
 import ImageViewer from "./components/ImageViewer.svelte";
 import ModelViewer from "./components/ModelViewer.svelte";
+import Shops from "./components/Shops.svelte";
 import TextViewer from "./components/TextViewer.svelte";
 import VideoViewer from "./components/VideoViewer.svelte";
 import {
-  characterNames,
-  classNames,
-  enemyNames,
-  itemNames,
-  spellNames,
-  weaponSpecialNames,
-} from "./utils/temporary";
+  characterNamesStartIndexes,
+  classNamesStartIndexes,
+  enemyNamesStartIndexes,
+  itemNamesStartIndexes,
+  spellNamesStartIndexes,
+  weaponSpecialNamesStartIndexes,
+} from "./template";
+import { decodeKanji } from "./utils/decode";
 
 export function overrideGetRegions(
   dataView: DataView,
@@ -59,10 +63,14 @@ let cache: {
   characters: DataView;
   items: DataView;
   enemies: DataView;
+  dummyTextFile: DataView;
+  texts: string[];
 } = {
   characters: new DataView(new ArrayBuffer(0)),
   items: new DataView(new ArrayBuffer(0)),
   enemies: new DataView(new ArrayBuffer(0)),
+  dummyTextFile: new DataView(new ArrayBuffer(0)),
+  texts: [],
 };
 
 export function overrideGetInt(
@@ -179,6 +187,8 @@ export function getComponent(component: string): any {
     return ImageViewer;
   } else if (component === "ModelViewer") {
     return ModelViewer;
+  } else if (component === "Shops") {
+    return Shops;
   } else if (component === "TextViewer") {
     return TextViewer;
   } else if (component === "VideoViewer") {
@@ -186,11 +196,24 @@ export function getComponent(component: string): any {
   }
 }
 
+export function beforeSaving(): ArrayBufferLike {
+  const $dataView = get(dataView);
+  const $dataViewAlt = get(dataViewAlt);
+
+  if ($dataViewAlt.x023) {
+    writeFile("X023.BIN", $dataViewAlt.x023);
+  }
+
+  return $dataView.buffer;
+}
+
 export function onReset(): void {
   cache = {
     characters: new DataView(new ArrayBuffer(0)),
     items: new DataView(new ArrayBuffer(0)),
     enemies: new DataView(new ArrayBuffer(0)),
+    dummyTextFile: new DataView(new ArrayBuffer(0)),
+    texts: [],
   };
 
   resetIso9660();
@@ -209,27 +232,91 @@ export function getAssetNames(type: string): { [value: number]: string } {
 }
 
 export function getCharacterNames(): { [value: number]: string } {
-  return characterNames;
+  const characterNamesStartIndex = getRegionArray(characterNamesStartIndexes);
+
+  const names: { [value: number]: string } = {};
+
+  for (let i = 0x0; i < 0x14; i += 0x1) {
+    names[i] = getText(characterNamesStartIndex + i);
+  }
+
+  for (let i = 0x0; i < 0xb; i += 0x1) {
+    names[0x14 + i] = `${getText(characterNamesStartIndex + i)} (Promoted)`;
+  }
+
+  names[0x1f] = `${getText(characterNamesStartIndex + 0xe)} (Promoted)`;
+
+  return names;
 }
 
 export function getClassesNames(): { [value: number]: string } {
-  return classNames;
+  const classNamesStartIndex = getRegionArray(classNamesStartIndexes);
+
+  const names: { [value: number]: string } = {};
+
+  for (let i = 0x0; i < 0x46; i += 0x1) {
+    names[i] = getText(classNamesStartIndex + i);
+  }
+
+  return names;
 }
 
 export function getEnemyNames(): { [value: number]: string } {
-  return enemyNames;
+  const enemyNamesStartIndex = getRegionArray(enemyNamesStartIndexes);
+
+  const names: { [value: number]: string } = {};
+
+  for (let i = 0x0; i < 0x8d; i += 0x1) {
+    names[i] = getText(enemyNamesStartIndex + i);
+  }
+
+  names[0x0] = "-";
+
+  return names;
 }
 
 export function getItemNames(): { [value: number]: string } {
-  return itemNames;
+  const itemNamesStartIndex = getRegionArray(itemNamesStartIndexes);
+
+  const names: { [value: number]: string } = {};
+
+  for (let i = 0x0; i < 0x100; i += 0x1) {
+    names[i] = getText(itemNamesStartIndex + i);
+  }
+
+  names[0x0] = "-";
+
+  return names;
 }
 
 export function getSpellNames(): { [value: number]: string } {
-  return spellNames;
+  const spellNamesStartIndex = getRegionArray(spellNamesStartIndexes);
+
+  const names: { [value: number]: string } = {};
+
+  for (let i = 0x0; i < 0x33; i += 0x1) {
+    names[i] = getText(spellNamesStartIndex + i);
+  }
+
+  names[0x0] = "-";
+
+  return names;
 }
 
 export function getWeaponSpecialNames(): { [value: number]: string } {
-  return weaponSpecialNames;
+  const weaponSpecialNamesStartIndex = getRegionArray(
+    weaponSpecialNamesStartIndexes,
+  );
+
+  const names: { [value: number]: string } = {};
+
+  for (let i = 0x0; i < 0xbc; i += 0x1) {
+    names[i] = getText(weaponSpecialNamesStartIndex + i);
+  }
+
+  names[0x0] = "-";
+
+  return names;
 }
 
 export function getDecompressedData(
@@ -329,9 +416,11 @@ export function getFilteredFiles(type: string): File[] {
     } else if (file.name.match(/.MPD$/) && file.name !== "SHIP2.MPD") {
       return type === "location";
     } else if (file.name.match(/.TXT$/)) {
-      return type === "text";
+      return type === "txt";
     } else if (file.name.match(/^X2ST(.*?).BIN$/)) {
       return type === "battleStage";
+    } else if (file.name.match(/^X5(.*?).BIN$/)) {
+      return type === "text";
     } else if (file.name.match(/^X8PC(.*?).BIN$/)) {
       return type === "battleCharacter";
     } else {
@@ -359,8 +448,12 @@ export function getFileOffset(
     return absoluteOffset - 0x6028800;
   } else if (identifier === "x019") {
     return absoluteOffset - 0x60a0000;
+  } else if (identifier === "x023") {
+    return absoluteOffset - 0x6078000;
   } else if (identifier === "x033") {
     return absoluteOffset - 0x6078000;
+  } else if (identifier === "x5") {
+    return absoluteOffset - 0x200000;
   } else if (identifier === "mpd" && absoluteOffset >= 0x60a0000) {
     return absoluteOffset - (0x60a0000 - subOffset);
   } else if (identifier === "mpd" && absoluteOffset >= 0x290000) {
@@ -398,7 +491,7 @@ export function isDummy(offset: number, dataView: DataView): boolean {
   return checkValidator(validator, offset, dataView);
 }
 
-export function readText(dataView: DataView): string {
+export function readTxt(dataView: DataView): string {
   let text = "";
 
   for (let i = 0x0; i < dataView.byteLength - 1; i += 0x1) {
@@ -415,4 +508,155 @@ export function readText(dataView: DataView): string {
   }
 
   return text;
+}
+
+export function getText(index: number): string {
+  if (cache.dummyTextFile.byteLength === 0) {
+    const files = getFilteredFiles("text");
+
+    if (files.length > 0) {
+      const file = getFile(files[0].name);
+
+      if (file) {
+        cache.dummyTextFile = file.dataView;
+      }
+    }
+  }
+
+  if (!cache.texts[index]) {
+    cache.texts[index] = decodeText(index);
+  }
+
+  return cache.texts[index].replace(/\{.*?\}/g, "");
+}
+
+function decodeText(index: number): string {
+  const $gameRegion = get(gameRegion);
+
+  const dataView = cache.dummyTextFile;
+
+  const scenario = getScenario();
+
+  if (dataView.byteLength > 0) {
+    const treesPointerOffset = scenario === "1" ? 0xc : 0x18;
+    const treesOffset = getFileOffset("x5", treesPointerOffset, dataView);
+
+    const pagesPointerOffset = scenario === "1" ? 0x18 : 0x24;
+
+    let page = Math.floor(index / 0x100);
+
+    index -= page * 0x100;
+
+    const pagesOffset = getFileOffset("x5", pagesPointerOffset, dataView);
+
+    let wordOffset = getFileOffset("x5", pagesOffset + page * 0x4, dataView);
+
+    for (let i = 0x0; i < index; i += 0x1) {
+      const size = getInt(wordOffset, "uint8", {}, dataView);
+
+      wordOffset += size + 0x1;
+
+      if (getInt(wordOffset, "uint8", {}, dataView) === 0x0) {
+        if ((i & 0xff) === 0xff) {
+          i -= 0x1;
+        } else {
+          return "DECODE ERROR!";
+        }
+      }
+    }
+
+    wordOffset += 0x1;
+
+    let text = "";
+
+    let letter = 0xffff;
+    let lastLetter = 0x0;
+
+    let treeIndex = 0x0;
+    let local10 = 0x80;
+
+    while (letter !== 0x0) {
+      letter = 0x0;
+
+      for (let i = 0x0; i < 0x2; i += 0x1) {
+        let mask = 0x80;
+
+        const treeOffset = treesOffset + (treeIndex << 0x2) * 0x2;
+        const lettersOffset = getFileOffset("x5", treeOffset, dataView);
+
+        let local1c = getFileOffset("x5", treeOffset + 0x4, dataView);
+        let leaf = 0x0;
+
+        while (true) {
+          let bVar1 = getInt(local1c, "uint8", {}, dataView) & mask;
+
+          mask >>= 0x1;
+
+          if (mask === 0x0) {
+            local1c += 0x1;
+            mask = 0x80;
+          }
+
+          if (bVar1 !== 0x0) {
+            break;
+          }
+
+          bVar1 = getInt(wordOffset, "uint8", {}, dataView) & local10;
+
+          local10 >>= 0x1;
+
+          if (local10 === 0x0) {
+            wordOffset += 0x1;
+            local10 = 0x80;
+          }
+
+          if (bVar1 !== 0x0) {
+            let iVar3 = 0x0;
+
+            while (iVar3 >= 0x0) {
+              if ((getInt(local1c, "uint8", {}, dataView) & mask) === 0x0) {
+                iVar3 += 0x1;
+              } else {
+                leaf += 0x1;
+                iVar3 -= 0x1;
+              }
+
+              mask >>= 0x1;
+
+              if (mask === 0x0) {
+                local1c += 0x1;
+                mask = 0x80;
+              }
+            }
+          }
+        }
+
+        const leafValue = getInt(lettersOffset + leaf, "uint8", {}, dataView);
+
+        letter = (letter << 0x8) | leafValue;
+        treeIndex = leafValue;
+      }
+
+      if (letter < 0x20) {
+        text += `{${letter.toHex(2)}}`;
+      } else if ($gameRegion === 0 || letter < 0x80) {
+        text += String.fromCharCode(letter);
+      } else {
+        if (letter >= 0x100) {
+          text += decodeKanji(letter);
+        } else if ([0xde, 0xdf].includes(letter)) {
+          text = text.slice(0, -1);
+          text += decodeCamelotFont((lastLetter << 0x8) | letter);
+        } else {
+          text += decodeCamelotFont(letter);
+        }
+      }
+
+      lastLetter = letter;
+    }
+
+    return text;
+  }
+
+  return "???";
 }
