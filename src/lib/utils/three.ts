@@ -25,10 +25,10 @@ import {
   Vector3,
   WebGLRenderer,
 } from "three";
-import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
-import { GUI } from "three/examples/jsm/libs/lil-gui.module.min";
-import { toCreasedNormals } from "three/examples/jsm/utils/BufferGeometryUtils";
-import { generateUUID } from "three/src/math/MathUtils";
+import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
+import { GUI } from "three/examples/jsm/libs/lil-gui.module.min.js";
+import { toCreasedNormals } from "three/examples/jsm/utils/BufferGeometryUtils.js";
+import { generateUUID } from "three/src/math/MathUtils.js";
 
 import { isDebug } from "$lib/stores";
 

@@ -144,7 +144,7 @@
   }
 </script>
 
-<div><Tabs {item} /></div>
+<Tabs {item} />
 
 <style lang="postcss">
 </style>
