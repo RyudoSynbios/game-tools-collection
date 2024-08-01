@@ -10,6 +10,7 @@
   import { getFileData, getScenario, isDummy } from "../utils";
   import {
     addObject as addBattleCharacterObject,
+    getModels,
     unpackBattleCharacter,
   } from "../utils/battleCharacter";
   import {
@@ -28,6 +29,10 @@
   export let assetIndex: number;
   export let type: string;
 
+  let previousAssetId = "";
+
+  let modelIndex = 0;
+
   let canvasEl: HTMLDivElement;
   let threeEl: HTMLDivElement;
 
@@ -39,6 +44,10 @@
 
   let hideCanvas = false;
   let hideTree = false;
+
+  function getAssetId() {
+    return `${type}_${assetIndex}`;
+  }
 
   function handleCameraFit(): void {
     three.fitCameraToScene();
@@ -66,11 +75,15 @@
     canvas.reset();
     three.reset();
 
+    if (getAssetId() !== previousAssetId) {
+      modelIndex = 0;
+    }
+
     const instanceId = three.getInstanceId();
 
     three.setLoading(true);
 
-    const dataView = getFileData(type, assetIndex);
+    let dataView = getFileData(type, assetIndex);
 
     if (isDummy(0x0, dataView)) {
       three.setLoading(false);
@@ -86,6 +99,30 @@
     let textures: Texture[] = [];
 
     if (type === "battleCharacter") {
+      const models = getModels(assetIndex);
+
+      if (models.length > 1) {
+        const list: { [key: string]: number } = {};
+
+        for (let i = 0; i < models.length; i += 1) {
+          list[`Model ${i + 1}`] = i;
+        }
+
+        three.addGuiElement(
+          "modelIndex",
+          "Model",
+          modelIndex,
+          (value) => {
+            modelIndex = value;
+          },
+          list,
+        );
+      }
+
+      if (modelIndex > 0) {
+        dataView = new DataView(dataView.buffer.slice(models[modelIndex]));
+      }
+
       const battleCharacter = unpackBattleCharacter(dataView);
 
       debug.log(battleCharacter);
@@ -306,11 +343,13 @@
   });
 
   $: {
-    assetIndex, type;
+    assetIndex, modelIndex, type;
 
     if (canvas) {
       updateCanvas();
     }
+
+    previousAssetId = getAssetId();
   }
 
   $: {
