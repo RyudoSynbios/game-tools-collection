@@ -77,7 +77,9 @@ export default class Three {
     wireframe: boolean;
     cameraFit: () => void;
     cameraReset: () => void;
+    custom: { [key: string]: number };
   };
+  private guiCustomFolder: GUI;
   private hoveredObject: {
     dummy: Mesh;
     reference: Mesh | null;
@@ -179,6 +181,7 @@ export default class Three {
       wireframe: this.wireframe,
       cameraFit: this.fitCameraToScene.bind(this),
       cameraReset: this.resetCamera.bind(this),
+      custom: {},
     };
 
     this.gui = new GUI({
@@ -206,6 +209,9 @@ export default class Three {
         this.wireframe = this.guiController.wireframe;
         setLocalStorage("threeWireframe", `${this.guiController.wireframe}`);
       });
+
+    this.guiCustomFolder = this.gui.addFolder("Custom");
+    this.guiCustomFolder.show(false);
 
     const cameraFolder = this.gui.addFolder("Camera");
     cameraFolder.add(this.guiController, "cameraFit").name("Fit to scene (F)");
@@ -731,8 +737,31 @@ export default class Three {
     }
   }
 
+  public resetGui(): void {
+    this.guiController.custom = {};
+    this.guiCustomFolder.children.forEach((children) => children.destroy());
+    this.guiCustomFolder.show(false);
+  }
+
+  public addGuiElement(
+    name: string,
+    label: string,
+    value: number,
+    callback: (value: number) => void,
+    options: {},
+  ): void {
+    this.guiCustomFolder.show(true);
+
+    this.guiController.custom[name] = value;
+
+    this.guiCustomFolder
+      .add(this.guiController.custom, name, options)
+      .name(label)
+      .onChange(callback);
+  }
+
   private updateFitControllerName(): void {
-    this.gui.folders[0].controllers[0].name(
+    this.gui.folders[1].controllers[0].name(
       `Fit to ${this.selectedObject.reference ? "object" : "scene"} (F)`,
     );
   }
@@ -771,6 +800,8 @@ export default class Three {
     this.groupLocked.remove(...this.groupLocked.children);
 
     this.updateFitControllerName();
+
+    this.resetGui();
   }
 
   public destroy(): void {
