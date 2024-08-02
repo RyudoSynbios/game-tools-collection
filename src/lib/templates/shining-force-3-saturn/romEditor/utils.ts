@@ -21,6 +21,7 @@ import ImageViewer from "./components/ImageViewer.svelte";
 import ModelViewer from "./components/ModelViewer.svelte";
 import Shops from "./components/Shops.svelte";
 import TextViewer from "./components/TextViewer.svelte";
+import TxtViewer from "./components/TxtViewer.svelte";
 import VideoViewer from "./components/VideoViewer.svelte";
 import {
   characterNamesStartIndexes,
@@ -191,6 +192,8 @@ export function getComponent(component: string): any {
     return Shops;
   } else if (component === "TextViewer") {
     return TextViewer;
+  } else if (component === "TxtViewer") {
+    return TxtViewer;
   } else if (component === "VideoViewer") {
     return VideoViewer;
   }
@@ -510,7 +513,13 @@ export function readTxt(dataView: DataView): string {
   return text;
 }
 
-export function getText(index: number): string {
+export function getText(
+  index: number,
+  format = true,
+  dataView?: DataView,
+): string {
+  let text = "";
+
   if (cache.dummyTextFile.byteLength === 0) {
     const files = getFilteredFiles("text");
 
@@ -523,17 +532,27 @@ export function getText(index: number): string {
     }
   }
 
-  if (!cache.texts[index]) {
-    cache.texts[index] = decodeText(index);
+  if (dataView) {
+    text = decodeText(index, dataView);
+  } else {
+    if (!cache.texts[index]) {
+      cache.texts[index] = decodeText(index, cache.dummyTextFile);
+    }
+
+    text = cache.texts[index];
   }
 
-  return cache.texts[index].replace(/\{.*?\}/g, "");
+  if (format) {
+    return text.replace(/\{.*?\}/g, "");
+  }
+
+  return text;
 }
 
-function decodeText(index: number): string {
-  const $gameRegion = get(gameRegion);
+export const decodeTextError = "DECODE ERROR!";
 
-  const dataView = cache.dummyTextFile;
+function decodeText(index: number, dataView: DataView): string {
+  const $gameRegion = get(gameRegion);
 
   const scenario = getScenario();
 
@@ -549,18 +568,22 @@ function decodeText(index: number): string {
 
     const pagesOffset = getFileOffset("x5", pagesPointerOffset, dataView);
 
+    if (pagesOffset + page * 0x4 >= dataView.byteLength) {
+      return decodeTextError;
+    }
+
     let wordOffset = getFileOffset("x5", pagesOffset + page * 0x4, dataView);
 
     for (let i = 0x0; i < index; i += 0x1) {
+      wordOffset += getInt(wordOffset, "uint8", {}, dataView) + 0x1;
+
       const size = getInt(wordOffset, "uint8", {}, dataView);
 
-      wordOffset += size + 0x1;
-
-      if (getInt(wordOffset, "uint8", {}, dataView) === 0x0) {
+      if (size === 0x0) {
         if ((i & 0xff) === 0xff) {
           i -= 0x1;
         } else {
-          return "DECODE ERROR!";
+          return decodeTextError;
         }
       }
     }
@@ -658,5 +681,5 @@ function decodeText(index: number): string {
     return text;
   }
 
-  return "???";
+  return decodeTextError;
 }

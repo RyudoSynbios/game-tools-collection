@@ -6,6 +6,7 @@ export const enemyNamesStartIndexes = [0x44a, 0x448];
 export const itemNamesStartIndexes = [0x34a, 0x348];
 export const spellNamesStartIndexes = [0x316, 0x314];
 export const weaponSpecialNamesStartIndexes = [0x4d7, 0x4d5];
+export const commonTextsStartIndexes = [0x830, 0x82d];
 
 const template: GameJson = {
   validator: {
@@ -2591,7 +2592,7 @@ const template: GameJson = {
                   items: [
                     {
                       id: "assetViewer-txt",
-                      instanceId: "textViewer",
+                      instanceId: "txtViewer",
                       length: 0x2,
                       type: "container",
                       instanceType: "tabs",
@@ -2602,8 +2603,8 @@ const template: GameJson = {
                       items: [
                         {
                           type: "component",
-                          component: "TextViewer",
-                          props: { assetIndex: "textViewer" },
+                          component: "TxtViewer",
+                          props: { assetIndex: "txtViewer" },
                         },
                       ],
                     },
@@ -2780,6 +2781,30 @@ const template: GameJson = {
                     },
                   ],
                 },
+                {
+                  name: "Texts",
+                  planned: [false, false, true, true, true],
+                  items: [
+                    {
+                      id: "assetViewer-text",
+                      instanceId: "textViewer",
+                      length: 0x2,
+                      type: "container",
+                      instanceType: "tabs",
+                      instances: 0,
+                      resource: "assetTextNames",
+                      vertical: true,
+                      flex: true,
+                      items: [
+                        {
+                          type: "component",
+                          component: "TextViewer",
+                          props: { assetIndex: "textViewer" },
+                        },
+                      ],
+                    },
+                  ],
+                },
               ],
             },
           ],
@@ -2813,6 +2838,7 @@ const template: GameJson = {
     assetLocationNames: "getAssetNames('location')",
     assetNames: "getAssetNames('asset')",
     assetSpriteNames: "getAssetNames('sprite')",
+    assetTextNames: "getAssetNames('text')",
     assetTxtNames: "getAssetNames('txt')",
     assetVideoNames: "getAssetNames('video')",
     characterNames: "getCharacterNames()",
