@@ -209,6 +209,7 @@
           { key: "uint16", value: "uint16" },
           { key: "uint24", value: "uint24" },
           { key: "uint32", value: "uint32" },
+          { key: "float32", value: "float32" },
         ]}
         onChange={handleSearchTypeChange}
       />
@@ -369,6 +370,10 @@
               &.gtc-filevisualizer-hex-int64,
               &.gtc-filevisualizer-hex-uint64 {
                 @apply bg-amber-700;
+              }
+
+              &.gtc-filevisualizer-hex-float32 {
+                @apply bg-slate-700;
               }
 
               &.gtc-filevisualizer-hex-string {

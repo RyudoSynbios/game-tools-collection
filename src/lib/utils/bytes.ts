@@ -115,6 +115,7 @@ export function dataTypeToLength(
       return 3;
     case "int32":
     case "uint32":
+    case "float32":
       return 4;
     case "int64":
     case "uint64":
@@ -140,6 +141,7 @@ export function dataTypeToValue(
       return 0xffffff;
     case "int32":
     case "uint32":
+    case "float32":
       return 0xffffffff;
     case "int64":
     case "uint64":
@@ -362,6 +364,9 @@ export function getInt(
     case "uint32":
       int = $dataView.getUint32(offset, !options.bigEndian);
       break;
+    case "float32":
+      int = $dataView.getFloat32(offset, !options.bigEndian);
+      break;
   }
 
   if (options.binary) {
@@ -497,6 +502,9 @@ export function setInt(
       break;
     case "uint32":
       $dataView.setUint32(offset, value, !options.bigEndian);
+      break;
+    case "float32":
+      $dataView.setFloat32(offset, value, !options.bigEndian);
       break;
   }
 
@@ -745,7 +753,7 @@ export function setString(
 export function getIntFromArray(
   array: number[] | Uint8Array,
   offset: number,
-  dataType: Exclude<DataTypeInt, "int64" | "uint64">,
+  dataType: Exclude<DataTypeInt, "int64" | "uint64" | "float32">,
   bigEndian = false,
 ): number {
   const littleEndian16 = [0, 1];
@@ -806,7 +814,10 @@ export function getIntFromArray(
 
 export function intToArray(
   int: number,
-  dataType: Exclude<DataTypeInt, "int8" | "uint8" | "int64" | "uint64">,
+  dataType: Exclude<
+    DataTypeInt,
+    "int8" | "uint8" | "int64" | "uint64" | "float32"
+  >,
   bigEndian = false,
 ): number[] {
   const littleEndian16 = [0x0, 0x8];

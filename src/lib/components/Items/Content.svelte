@@ -33,7 +33,7 @@
     {:else if item.type === "variable"}
       {#if item.dataType === "boolean"}
         <Boolean {item} />
-      {:else if ["bit", "lower4", "upper4", "int8", "int16", "int24", "int32", "int64", "uint8", "uint16", "uint24", "uint32", "uint64"].includes(item.dataType) && item.dataType !== "string"}
+      {:else if ["bit", "lower4", "upper4", "int8", "int16", "int24", "int32", "int64", "uint8", "uint16", "uint24", "uint32", "uint64", "float32"].includes(item.dataType) && item.dataType !== "string"}
         <Int {item} />
       {:else if item.dataType === "string"}
         <String {item} />

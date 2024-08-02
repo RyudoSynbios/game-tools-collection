@@ -15,6 +15,7 @@
     getIntMax,
     getIntMin,
     objToArrayKeyValue,
+    round,
     utilsExists,
   } from "$lib/utils/format";
 
@@ -112,6 +113,10 @@
     if (item.disableIfNegative && isNegative) {
       item.disabled = true;
       value = 0;
+    }
+
+    if (item.dataType === "float32") {
+      value = round(value as number, 3);
     }
 
     if (item.leadingZeros) {

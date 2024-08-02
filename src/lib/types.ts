@@ -32,7 +32,8 @@ export type DataTypeInt =
   | "uint16"
   | "uint24"
   | "uint32"
-  | "uint64";
+  | "uint64"
+  | "float32";
 
 export type IntOperation = { [operand: string]: number | IntOperationConvert };
 
