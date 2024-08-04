@@ -137,6 +137,14 @@
     }
   },
   {
+    "id": "grandia-ii-ps2",
+    "name": "Grandia II",
+    "consoleId": "playstation-2",
+    "saveEditor": {
+      "regions": ["🇪🇺", "🇺🇸", "🇯🇵"]
+    }
+  },
+  {
     "id": "kingdom-hearts-ps2",
     "name": "Kingdom Hearts",
     "consoleId": "playstation-2",
