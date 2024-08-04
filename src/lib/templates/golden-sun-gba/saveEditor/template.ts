@@ -381,7 +381,7 @@ const template: GameJson = {
                           items: [
                             {
                               id: "formation-1",
-                              name: "Position 1",
+                              name: "Character 1",
                               offset: 0x448,
                               type: "variable",
                               dataType: "uint8",
@@ -390,7 +390,7 @@ const template: GameJson = {
                             },
                             {
                               id: "formation-2",
-                              name: "Position 2",
+                              name: "Character 2",
                               offset: 0x449,
                               type: "variable",
                               dataType: "uint8",
@@ -399,7 +399,7 @@ const template: GameJson = {
                             },
                             {
                               id: "formation-3",
-                              name: "Position 3",
+                              name: "Character 3",
                               offset: 0x44a,
                               type: "variable",
                               dataType: "uint8",
@@ -408,7 +408,7 @@ const template: GameJson = {
                             },
                             {
                               id: "formation-4",
-                              name: "Position 4",
+                              name: "Character 4",
                               offset: 0x44b,
                               type: "variable",
                               dataType: "uint8",
@@ -416,7 +416,7 @@ const template: GameJson = {
                               autocomplete: true,
                             },
                             {
-                              name: "Position 1 (Save Preview)",
+                              name: "Character 1 (Save Preview)",
                               offset: 0x2c,
                               type: "variable",
                               dataType: "uint8",
@@ -425,7 +425,7 @@ const template: GameJson = {
                               hidden: true,
                             },
                             {
-                              name: "Position 2 (Save Preview)",
+                              name: "Character 2 (Save Preview)",
                               offset: 0x2d,
                               type: "variable",
                               dataType: "uint8",
@@ -434,7 +434,7 @@ const template: GameJson = {
                               hidden: true,
                             },
                             {
-                              name: "Position 3 (Save Preview)",
+                              name: "Character 3 (Save Preview)",
                               offset: 0x2e,
                               type: "variable",
                               dataType: "uint8",
@@ -443,7 +443,7 @@ const template: GameJson = {
                               hidden: true,
                             },
                             {
-                              name: "Position 4 (Save Preview)",
+                              name: "Character 4 (Save Preview)",
                               offset: 0x2f,
                               type: "variable",
                               dataType: "uint8",

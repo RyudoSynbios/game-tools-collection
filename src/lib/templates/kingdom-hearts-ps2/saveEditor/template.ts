@@ -55,7 +55,7 @@ const template: GameJson = {
       length: 0x20e00,
       type: "container",
       instanceType: "tabs",
-      instances: 1,
+      instances: 0,
       resource: "slots",
       items: [
         {
@@ -180,7 +180,7 @@ const template: GameJson = {
                       flex: true,
                       items: [
                         {
-                          name: "Formation 1",
+                          name: "Character 1",
                           offset: 0xa08e,
                           type: "variable",
                           dataType: "uint8",
@@ -188,7 +188,7 @@ const template: GameJson = {
                           autocomplete: true,
                         },
                         {
-                          name: "Formation 2",
+                          name: "Character 2",
                           offset: 0xa08f,
                           type: "variable",
                           dataType: "uint8",
@@ -196,7 +196,7 @@ const template: GameJson = {
                           autocomplete: true,
                         },
                         {
-                          name: "Formation 3",
+                          name: "Character 3",
                           offset: 0xa090,
                           type: "variable",
                           dataType: "uint8",
@@ -204,7 +204,7 @@ const template: GameJson = {
                           autocomplete: true,
                         },
                         {
-                          name: "Formation 4",
+                          name: "Character 4",
                           offset: 0xa091,
                           type: "variable",
                           dataType: "uint8",
@@ -1586,7 +1586,6 @@ const template: GameJson = {
                                       offset: 0x9c05,
                                       type: "variable",
                                       dataType: "uint8",
-                                      min: 1,
                                     },
                                     {
                                       offset: 0x9c06,

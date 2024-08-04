@@ -135,7 +135,7 @@ const template: GameJson = {
                       autocomplete: true,
                     },
                     {
-                      name: "Location",
+                      name: "Location (Save Preview)",
                       offset: 0x154,
                       length: 0x1e,
                       type: "variable",
@@ -165,7 +165,7 @@ const template: GameJson = {
                       hidden: true,
                     },
                     {
-                      name: "Formation 1 (Display)",
+                      name: "Character 1 (Save Preview)",
                       offset: 0x1ac,
                       type: "variable",
                       dataType: "uint8",
@@ -174,7 +174,7 @@ const template: GameJson = {
                       hidden: true,
                     },
                     {
-                      name: "Formation 2 (Display)",
+                      name: "Character 2 (Save Preview)",
                       offset: 0x1ad,
                       type: "variable",
                       dataType: "uint8",
@@ -183,7 +183,7 @@ const template: GameJson = {
                       hidden: true,
                     },
                     {
-                      name: "Formation 3 (Display)",
+                      name: "Character 3 (Save Preview)",
                       offset: 0x1ae,
                       type: "variable",
                       dataType: "uint8",
@@ -192,7 +192,7 @@ const template: GameJson = {
                       hidden: true,
                     },
                     {
-                      name: "Formation 4 (Display)",
+                      name: "Character 4 (Save Preview)",
                       offset: 0x1af,
                       type: "variable",
                       dataType: "uint8",
@@ -269,7 +269,6 @@ const template: GameJson = {
                                       offset: 0x31c,
                                       type: "variable",
                                       dataType: "uint16",
-                                      min: 1,
                                       max: 999,
                                     },
                                     {
@@ -1911,7 +1910,7 @@ const template: GameJson = {
               flex: true,
               items: Object.entries(items).map(([offset, name]) => ({
                 name,
-                offset: 0xad0 + parseInt(offset, 10) - 0x1,
+                offset: 0xad0 + parseInt(offset) - 0x1,
                 type: "variable",
                 dataType: "uint8",
                 max: 99,
