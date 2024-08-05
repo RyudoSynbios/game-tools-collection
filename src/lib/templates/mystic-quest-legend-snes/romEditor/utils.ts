@@ -392,24 +392,24 @@ export function generateBattleBackgroundCanvas(
 
         for (let i = 0; i < 4; i += 1) {
           let alternativePalette = false;
-          let flipHorizontal = false;
+          let flipX = false;
 
           switch (i) {
             case 0:
               alternativePalette = extractBit(tileManipulation, 6);
-              flipHorizontal = extractBit(tileManipulation, 7);
+              flipX = extractBit(tileManipulation, 7);
               break;
             case 1:
               alternativePalette = extractBit(tileManipulation, 4);
-              flipHorizontal = extractBit(tileManipulation, 5);
+              flipX = extractBit(tileManipulation, 5);
               break;
             case 2:
               alternativePalette = extractBit(tileManipulation, 2);
-              flipHorizontal = extractBit(tileManipulation, 3);
+              flipX = extractBit(tileManipulation, 3);
               break;
             case 3:
               alternativePalette = extractBit(tileManipulation, 0);
-              flipHorizontal = extractBit(tileManipulation, 1);
+              flipX = extractBit(tileManipulation, 1);
               break;
           }
 
@@ -434,7 +434,7 @@ export function generateBattleBackgroundCanvas(
 
           let tileData = getTileData(spriteOffset);
 
-          if (flipHorizontal) {
+          if (flipX) {
             tileData = flipTileData(tileData, 8, "x");
           }
 

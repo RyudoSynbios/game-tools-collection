@@ -153,11 +153,11 @@
         const tileIndex = getInt(tileIndexOffset + i * 0x4 + j, "uint8");
         const tileFlip = getInt(tileFlipIndexOffset + i, "uint8");
 
-        const flipHorizontal = extractBit(tileFlip, j as Bit);
+        const flipX = extractBit(tileFlip, j as Bit);
 
         let tileData = tilemapDatas[tileIndex];
 
-        if (flipHorizontal) {
+        if (flipX) {
           tileData = flipTileData(tileData, 8, "x");
         }
 

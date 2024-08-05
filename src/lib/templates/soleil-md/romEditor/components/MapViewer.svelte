@@ -299,8 +299,8 @@
           [0x0, 0x2, 0x80, 0x82].forEach((offset, index) => {
             const rawTile = getMapValue(mapOffset + index * 2);
 
-            const flipHorizontal = (rawTile & 0x800) >> 0xb;
-            const flipVertical = (rawTile & 0x1000) >> 0xc;
+            const flipX = (rawTile & 0x800) >> 0xb;
+            const flipY = (rawTile & 0x1000) >> 0xc;
             const paletteIndex = (rawTile & 0x6000) >> 0xd;
             const tileIndex = rawTile & 0x7ff;
 
@@ -308,11 +308,11 @@
 
             let tileData = tilesetDatas[tileIndex];
 
-            if (flipHorizontal) {
+            if (flipX) {
               tileData = flipTileData(tileData, 8, "x");
             }
 
-            if (flipVertical) {
+            if (flipY) {
               tileData = flipTileData(tileData, 8, "y");
             }
 

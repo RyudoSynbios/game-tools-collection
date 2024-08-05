@@ -157,8 +157,8 @@ export function generateSprites(
         const effects2 = getInt(offset + 0x7, "uint8");
 
         let stop = extractBit(effects1, 0);
-        const flipHorizontal = extractBit(effects1, 4);
-        const flipVertical = extractBit(effects1, 5);
+        const flipX = extractBit(effects1, 4);
+        const flipY = extractBit(effects1, 5);
         const size1 = extractBit(effects1, 6);
         const size2 = extractBit(effects1, 7);
 
@@ -229,7 +229,7 @@ export function generateSprites(
 
               let tileData = spriteset[tileIndex + h * width + w];
 
-              if (flipHorizontal) {
+              if (flipX) {
                 tileData = flipTileData(tileData, 8, "x");
 
                 if (width === 2) {
@@ -251,7 +251,7 @@ export function generateSprites(
                 }
               }
 
-              if (flipVertical) {
+              if (flipY) {
                 tileData = flipTileData(tileData, 8, "y");
 
                 if (height === 2) {
@@ -311,8 +311,8 @@ export function getBlock(
 
     const effects = rawTile >> 0x8;
 
-    const flipHorizontal = extractBit(effects, 2);
-    const flipVertical = extractBit(effects, 3);
+    const flipX = extractBit(effects, 2);
+    const flipY = extractBit(effects, 3);
 
     let paletteIndex = extractBinary(effects, 4, 3);
     let paletteSet = effects >> 0x7;
@@ -325,11 +325,11 @@ export function getBlock(
 
     let tileData = tileset[tileIndex];
 
-    if (flipHorizontal) {
+    if (flipX) {
       tileData = flipTileData(tileData, 8, "x");
     }
 
-    if (flipVertical) {
+    if (flipY) {
       tileData = flipTileData(tileData, 8, "y");
     }
 
