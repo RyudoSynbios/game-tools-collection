@@ -4,25 +4,25 @@ import { gameTemplate, gameUtils } from "$lib/stores.js";
 import { getGame } from "$lib/utils/db.js";
 import debug from "$lib/utils/debug";
 
-import type { Game } from "$lib/types.js";
+import type { Game, Tool } from "$lib/types.js";
 
 export interface Data {
   game: Game;
 }
 
 export async function load({ params }): Promise<void> {
-  let tool = "";
+  let tool: Tool;
 
   if (params.gameId === "shining-force-3-scenario-1-saturn") {
     redirect(301, `/shining-force-3-saturn/${params.tool}`);
   }
 
-  if (params.tool === "randomizer") {
-    tool = "randomizer";
+  if (params.tool === "save-editor") {
+    tool = "saveEditor";
   } else if (params.tool === "rom-editor") {
     tool = "romEditor";
-  } else if (params.tool === "save-editor") {
-    tool = "saveEditor";
+  } else if (params.tool === "randomizer") {
+    tool = "randomizer";
   } else {
     error(404, {
       message: "Not found",
@@ -31,7 +31,7 @@ export async function load({ params }): Promise<void> {
 
   const game = getGame(params.gameId);
 
-  if (!game || !game[tool]) {
+  if (!game || !game.tools[tool]) {
     error(404, {
       message: "Not found",
     });

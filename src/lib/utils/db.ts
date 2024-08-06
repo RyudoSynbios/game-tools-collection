@@ -2,7 +2,7 @@ import consoleManufacturersDb from "$lib/db/consoleManufacturers.json";
 import consolesDb from "$lib/db/consoles.json";
 import gamesDb from "$lib/db/games.json";
 
-import type { Console, Game, Manufacturer } from "$lib/types";
+import type { Console, Game, Manufacturer, Tool } from "$lib/types";
 
 export function getConsole(consoleId: string): Console | undefined {
   const consoles = getConsoles();
@@ -35,7 +35,7 @@ export function getGame(gameId: string): Game | undefined {
 interface GameOptions {
   title?: string;
   console?: string;
-  tool?: string;
+  tool?: Tool;
 }
 
 export function getGames(options: GameOptions = {}): Game[] {
@@ -44,20 +44,22 @@ export function getGames(options: GameOptions = {}): Game[] {
       (options.title &&
         !game.name.toLowerCase().match(options.title.toLowerCase())) ||
       (options.console && game.consoleId !== options.console) ||
-      (options.tool && !game[options.tool])
+      (options.tool && !game.tools[options.tool])
     ) {
       return results;
     }
 
-    if (game.romEditor || game.saveEditor) {
+    if (game.tools.saveEditor || game.tools.romEditor) {
       const console = getConsole(game.consoleId) as Console;
 
       results.push({
         id: game.id,
         name: game.name,
         console,
-        romEditor: game.romEditor,
-        saveEditor: game.saveEditor,
+        tools: {
+          saveEditor: game.tools.saveEditor,
+          romEditor: game.tools.romEditor,
+        },
       });
     }
 

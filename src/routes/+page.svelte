@@ -2,6 +2,8 @@
   import GameTile from "$lib/components/GameTile.svelte";
   import { getConsoles, getGames } from "$lib/utils/db";
 
+  import type { Tool } from "$lib/types";
+
   let consoles = getConsoles();
   let games = getGames();
 
@@ -16,7 +18,7 @@
     games = getGames({
       title: titleEl.value,
       console: consoleEl.value,
-      tool: toolEl.value,
+      tool: toolEl.value as Tool,
     });
 
     searchConsole = consoleEl.value;

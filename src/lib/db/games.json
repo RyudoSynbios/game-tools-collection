@@ -3,290 +3,358 @@
     "id": "1080-snowboarding-n64",
     "name": "1080° Snowboarding",
     "consoleId": "nintendo-64",
-    "saveEditor": {
-      "regions": ["🇪🇺", "🇺🇸", "🇯🇵"]
+    "tools": {
+      "saveEditor": {
+        "regions": ["🇪🇺", "🇺🇸", "🇯🇵"]
+      }
     }
   },
   {
     "id": "akumajou-dracula-x-chi-no-rondo-pcecd",
     "name": "Akumajou Dracula X: Chi no Rondo",
     "consoleId": "pc-engine-cd",
-    "saveEditor": {
-      "regions": ["🇯🇵"]
+    "tools": {
+      "saveEditor": {
+        "regions": ["🇯🇵"]
+      }
     }
   },
   {
     "id": "banjo-kazooie-n64",
     "name": "Banjo-Kazooie",
     "consoleId": "nintendo-64",
-    "saveEditor": {
-      "regions": ["🇪🇺", "🇺🇸", "🇯🇵"]
+    "tools": {
+      "saveEditor": {
+        "regions": ["🇪🇺", "🇺🇸", "🇯🇵"]
+      }
     }
   },
   {
     "id": "bomberman-64-n64",
     "name": "Bomberman 64",
     "consoleId": "nintendo-64",
-    "romEditor": {
-      "regions": ["🇪🇺", "🇺🇸", "🇯🇵"]
-    },
-    "saveEditor": {
-      "regions": ["🇪🇺", "🇺🇸", "🇯🇵"]
+    "tools": {
+      "saveEditor": {
+        "regions": ["🇪🇺", "🇺🇸", "🇯🇵"]
+      },
+      "romEditor": {
+        "regions": ["🇪🇺", "🇺🇸", "🇯🇵"]
+      }
     }
   },
   {
     "id": "castlevania-aria-of-sorrow-gba",
     "name": "Castlevania: Aria of Sorrow",
     "consoleId": "game-boy-advance",
-    "saveEditor": {
-      "regions": ["🇪🇺", "🇺🇸", "🇯🇵"]
+    "tools": {
+      "saveEditor": {
+        "regions": ["🇪🇺", "🇺🇸", "🇯🇵"]
+      }
     }
   },
   {
     "id": "castlevania-circle-of-the-moon-gba",
     "name": "Castlevania: Circle of the Moon",
     "consoleId": "game-boy-advance",
-    "romEditor": {
-      "regions": ["🇪🇺", "🇺🇸", "🇯🇵"]
-    },
-    "saveEditor": {
-      "regions": ["🇪🇺", "🇺🇸", "🇯🇵"]
+    "tools": {
+      "saveEditor": {
+        "regions": ["🇪🇺", "🇺🇸", "🇯🇵"]
+      },
+      "romEditor": {
+        "regions": ["🇪🇺", "🇺🇸", "🇯🇵"]
+      }
     }
   },
   {
     "id": "castlevania-dawn-of-sorrow-ds",
     "name": "Castlevania: Dawn of Sorrow",
     "consoleId": "nintendo-ds",
-    "saveEditor": {
-      "regions": ["🇪🇺", "🇺🇸", "🇯🇵"]
+    "tools": {
+      "saveEditor": {
+        "regions": ["🇪🇺", "🇺🇸", "🇯🇵"]
+      }
     }
   },
   {
     "id": "castlevania-harmony-of-dissonance-gba",
     "name": "Castlevania: Harmony of Dissonance",
     "consoleId": "game-boy-advance",
-    "saveEditor": {
-      "regions": ["🇪🇺", "🇺🇸", "🇯🇵"]
+    "tools": {
+      "saveEditor": {
+        "regions": ["🇪🇺", "🇺🇸", "🇯🇵"]
+      }
     }
   },
   {
     "id": "castlevania-symphony-of-the-night-ps",
     "name": "Castlevania: Symphony of the Night",
     "consoleId": "playstation",
-    "saveEditor": {
-      "regions": ["🇪🇺", "🇺🇸", "🇯🇵"]
+    "tools": {
+      "saveEditor": {
+        "regions": ["🇪🇺", "🇺🇸", "🇯🇵"]
+      }
     }
   },
   {
     "id": "dead-or-alive-2-ps2",
     "name": "Dead or Alive 2",
     "consoleId": "playstation-2",
-    "saveEditor": {
-      "regions": ["🇪🇺"]
+    "tools": {
+      "saveEditor": {
+        "regions": ["🇪🇺"]
+      }
     }
   },
   {
     "id": "donkey-kong-land-gb",
     "name": "Donkey Kong Land",
     "consoleId": "game-boy",
-    "saveEditor": {
-      "regions": ["🇪🇺", "🇺🇸", "🇯🇵"]
+    "tools": {
+      "saveEditor": {
+        "regions": ["🇪🇺", "🇺🇸", "🇯🇵"]
+      }
     }
   },
   {
     "id": "final-fight-one-gba",
     "name": "Final Fight One",
     "consoleId": "game-boy-advance",
-    "saveEditor": {
-      "regions": ["🇪🇺", "🇺🇸", "🇯🇵"]
+    "tools": {
+      "saveEditor": {
+        "regions": ["🇪🇺", "🇺🇸", "🇯🇵"]
+      }
     }
   },
   {
     "id": "game-and-watch-gallery-3-gbc",
     "name": "Game & Watch Gallery 3",
     "consoleId": "game-boy-color",
-    "saveEditor": {
-      "regions": ["🇪🇺", "🇺🇸", "🇯🇵", "🇦🇺"]
+    "tools": {
+      "saveEditor": {
+        "regions": ["🇪🇺", "🇺🇸", "🇯🇵", "🇦🇺"]
+      }
     }
   },
   {
     "id": "golden-sun-gba",
     "name": "Golden Sun",
     "consoleId": "game-boy-advance",
-    "romEditor": {
-      "regions": ["🇪🇺", "🇺🇸", "🇯🇵", "🇫🇷", "🇩🇪", "🇮🇹", "🇪🇸"]
-    },
-    "saveEditor": {
-      "regions": ["🇪🇺", "🇺🇸", "🇯🇵", "🇫🇷", "🇩🇪", "🇮🇹", "🇪🇸"]
+    "tools": {
+      "saveEditor": {
+        "regions": ["🇪🇺", "🇺🇸", "🇯🇵", "🇫🇷", "🇩🇪", "🇮🇹", "🇪🇸"]
+      },
+      "romEditor": {
+        "regions": ["🇪🇺", "🇺🇸", "🇯🇵", "🇫🇷", "🇩🇪", "🇮🇹", "🇪🇸"]
+      }
     }
   },
   {
     "id": "goldeneye-007-n64",
     "name": "GoldenEye 007",
     "consoleId": "nintendo-64",
-    "saveEditor": {
-      "regions": ["🇪🇺", "🇺🇸", "🇯🇵"]
+    "tools": {
+      "saveEditor": {
+        "regions": ["🇪🇺", "🇺🇸", "🇯🇵"]
+      }
     }
   },
   {
     "id": "grandia-ps",
     "name": "Grandia",
     "consoleId": "playstation",
-    "saveEditor": {
-      "regions": ["🇪🇺", "🇺🇸", "🇯🇵", "🇫🇷", "🇩🇪"]
+    "tools": {
+      "saveEditor": {
+        "regions": ["🇪🇺", "🇺🇸", "🇯🇵", "🇫🇷", "🇩🇪"]
+      }
     }
   },
   {
     "id": "grandia-ii-ps2",
     "name": "Grandia II",
     "consoleId": "playstation-2",
-    "saveEditor": {
-      "regions": ["🇪🇺", "🇺🇸", "🇯🇵"]
+    "tools": {
+      "saveEditor": {
+        "regions": ["🇪🇺", "🇺🇸", "🇯🇵"]
+      }
     }
   },
   {
     "id": "kingdom-hearts-ps2",
     "name": "Kingdom Hearts",
     "consoleId": "playstation-2",
-    "saveEditor": {
-      "regions": ["🇪🇺", "🇺🇸", "🇯🇵", "🇫🇷", "🇩🇪", "🇮🇹", "🇪🇸", "🇦🇺"]
+    "tools": {
+      "saveEditor": {
+        "regions": ["🇪🇺", "🇺🇸", "🇯🇵", "🇫🇷", "🇩🇪", "🇮🇹", "🇪🇸", "🇦🇺"]
+      }
     }
   },
   {
     "id": "konami-krazy-racers-gba",
     "name": "Konami Krazy Racers",
     "consoleId": "game-boy-advance",
-    "saveEditor": {
-      "regions": ["🇪🇺", "🇺🇸", "🇯🇵"]
+    "tools": {
+      "saveEditor": {
+        "regions": ["🇪🇺", "🇺🇸", "🇯🇵"]
+      }
     }
   },
   {
     "id": "legend-of-zelda-the-a-link-to-the-past-snes",
     "name": "Legend of Zelda, The: A Link to the Past",
     "consoleId": "super-nintendo",
-    "saveEditor": {
-      "regions": ["🇪🇺", "🇺🇸", "🇯🇵", "🇫🇷", "🇩🇪", "🇨🇦"]
+    "tools": {
+      "saveEditor": {
+        "regions": ["🇪🇺", "🇺🇸", "🇯🇵", "🇫🇷", "🇩🇪", "🇨🇦"]
+      }
     }
   },
   {
     "id": "legend-of-zelda-the-link-s-awakening-dx-gbc",
     "name": "Legend of Zelda, The: Link's Awakening DX",
     "consoleId": "game-boy-color",
-    "saveEditor": {
-      "regions": ["🇪🇺", "🇺🇸", "🇯🇵", "🇫🇷", "🇩🇪"]
+    "tools": {
+      "saveEditor": {
+        "regions": ["🇪🇺", "🇺🇸", "🇯🇵", "🇫🇷", "🇩🇪"]
+      }
     }
   },
   {
     "id": "legend-of-zelda-the-majora-s-mask-n64",
     "name": "Legend of Zelda, The: Majora's Mask",
     "consoleId": "nintendo-64",
-    "saveEditor": {
-      "regions": ["🇪🇺", "🇺🇸", "🇯🇵"]
+    "tools": {
+      "saveEditor": {
+        "regions": ["🇪🇺", "🇺🇸", "🇯🇵"]
+      }
     }
   },
   {
     "id": "marvel-vs-capcom-2-new-age-of-heroes-dc",
     "name": "Marvel vs. Capcom 2: New Age of Heroes",
     "consoleId": "dreamcast",
-    "saveEditor": {
-      "regions": ["🇪🇺", "🇺🇸", "🇯🇵"]
+    "tools": {
+      "saveEditor": {
+        "regions": ["🇪🇺", "🇺🇸", "🇯🇵"]
+      }
     }
   },
   {
     "id": "mystic-quest-legend-snes",
     "name": "Mystic Quest Legend",
     "consoleId": "super-nintendo",
-    "romEditor": {
-      "regions": ["🇪🇺", "🇺🇸", "🇯🇵", "🇫🇷", "🇩🇪"]
-    },
-    "saveEditor": {
-      "regions": ["🇪🇺", "🇺🇸", "🇯🇵", "🇫🇷", "🇩🇪"]
+    "tools": {
+      "saveEditor": {
+        "regions": ["🇪🇺", "🇺🇸", "🇯🇵", "🇫🇷", "🇩🇪"]
+      },
+      "romEditor": {
+        "regions": ["🇪🇺", "🇺🇸", "🇯🇵", "🇫🇷", "🇩🇪"]
+      }
     }
   },
   {
     "id": "mystical-ninja-2-starring-goemon-n64",
     "name": "Mystical Ninja 2 Starring Goemon",
     "consoleId": "nintendo-64",
-    "saveEditor": {
-      "regions": ["🇪🇺", "🇺🇸", "🇯🇵"]
+    "tools": {
+      "saveEditor": {
+        "regions": ["🇪🇺", "🇺🇸", "🇯🇵"]
+      }
     }
   },
   {
     "id": "pokemon-trading-card-game-gbc",
     "name": "Pokémon Trading Card Game",
     "consoleId": "game-boy-color",
-    "saveEditor": {
-      "regions": ["🇪🇺", "🇺🇸", "🇯🇵", "🇦🇺"]
+    "tools": {
+      "saveEditor": {
+        "regions": ["🇪🇺", "🇺🇸", "🇯🇵", "🇦🇺"]
+      }
     }
   },
   {
     "id": "rayman-ps",
     "name": "Rayman",
     "consoleId": "playstation",
-    "saveEditor": {
-      "regions": ["🇪🇺", "🇺🇸", "🇯🇵"]
+    "tools": {
+      "saveEditor": {
+        "regions": ["🇪🇺", "🇺🇸", "🇯🇵"]
+      }
     }
   },
   {
     "id": "resident-evil-ps",
     "name": "Resident Evil",
     "consoleId": "playstation",
-    "saveEditor": {
-      "regions": ["🇪🇺", "🇺🇸", "🇯🇵", "🇫🇷", "🇩🇪"]
+    "tools": {
+      "saveEditor": {
+        "regions": ["🇪🇺", "🇺🇸", "🇯🇵", "🇫🇷", "🇩🇪"]
+      }
     }
   },
   {
     "id": "shining-force-3-saturn",
     "name": "Shining Force 3",
     "consoleId": "saturn",
-    "saveEditor": {
-      "regions": ["🇪🇺", "🇺🇸", "🇯🇵"]
-    },
-    "romEditor": {
-      "regions": ["🇪🇺", "🇺🇸", "🇯🇵"]
+    "tools": {
+      "saveEditor": {
+        "regions": ["🇪🇺", "🇺🇸", "🇯🇵"]
+      },
+      "romEditor": {
+        "regions": ["🇪🇺", "🇺🇸", "🇯🇵"]
+      }
     }
   },
   {
     "id": "soleil-md",
     "name": "Soleil",
     "consoleId": "mega-drive",
-    "saveEditor": {
-      "regions": ["🇪🇺", "🇺🇸", "🇯🇵", "🇫🇷", "🇩🇪", "🇪🇸", "🇰🇷"]
-    },
-    "romEditor": {
-      "regions": ["🇪🇺", "🇺🇸", "🇯🇵", "🇫🇷", "🇩🇪", "🇪🇸", "🇰🇷"]
+    "tools": {
+      "saveEditor": {
+        "regions": ["🇪🇺", "🇺🇸", "🇯🇵", "🇫🇷", "🇩🇪", "🇪🇸", "🇰🇷"]
+      },
+      "romEditor": {
+        "regions": ["🇪🇺", "🇺🇸", "🇯🇵", "🇫🇷", "🇩🇪", "🇪🇸", "🇰🇷"]
+      }
     }
   },
   {
     "id": "sonic-3-md",
     "name": "Sonic 3",
     "consoleId": "mega-drive",
-    "saveEditor": {
-      "regions": ["🇪🇺", "🇺🇸", "🇯🇵"]
+    "tools": {
+      "saveEditor": {
+        "regions": ["🇪🇺", "🇺🇸", "🇯🇵"]
+      }
     }
   },
   {
     "id": "super-smash-bros-n64",
     "name": "Super Smash Bros.",
     "consoleId": "nintendo-64",
-    "saveEditor": {
-      "regions": ["🇪🇺", "🇺🇸", "🇯🇵", "🇦🇺"]
+    "tools": {
+      "saveEditor": {
+        "regions": ["🇪🇺", "🇺🇸", "🇯🇵", "🇦🇺"]
+      }
     }
   },
   {
     "id": "super-street-fighter-ii-turbo-revival-gba",
     "name": "Super Street Fighter II Turbo Revival",
     "consoleId": "game-boy-advance",
-    "saveEditor": {
-      "regions": ["🇪🇺", "🇺🇸", "🇯🇵"]
+    "tools": {
+      "saveEditor": {
+        "regions": ["🇪🇺", "🇺🇸", "🇯🇵"]
+      }
     }
   },
   {
     "id": "wario-land-super-mario-land-3-gb",
     "name": "Wario Land: Super Mario Land 3",
     "consoleId": "game-boy",
-    "saveEditor": {
-      "regions": ["🏳️"]
+    "tools": {
+      "saveEditor": {
+        "regions": ["🏳️"]
+      }
     }
   }
 ]

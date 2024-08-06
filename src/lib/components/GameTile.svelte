@@ -20,11 +20,11 @@
     <p>{game.name}</p>
     <p>{game.console.name}</p>
     <div class="gtc-tile-tools">
-      {#if game.saveEditor}
+      {#if game.tools.saveEditor}
         <a href="/{game.id}/save-editor" class="gtc-tile-toollink">
           Save Editor
           <div>
-            {#each game.saveEditor.regions as region}
+            {#each game.tools.saveEditor.regions as region}
               <span>{region}</span>
             {/each}
           </div>
@@ -32,11 +32,11 @@
       {:else}
         <span class="gtc-tile-tooldisabled">Save Editor</span>
       {/if}
-      {#if game.romEditor}
+      {#if game.tools.romEditor}
         <a href="/{game.id}/rom-editor" class="gtc-tile-toollink">
           Rom Editor
           <div>
-            {#each game.romEditor.regions as region}
+            {#each game.tools.romEditor.regions as region}
               <span>{region}</span>
             {/each}
           </div>
@@ -44,11 +44,11 @@
       {:else}
         <span class="gtc-tile-tooldisabled">Rom Editor</span>
       {/if}
-      {#if game.randomizer}
+      {#if game.tools.randomizer}
         <a href="/{game.id}/randomizer" class="gtc-tile-toollink">
           Randomizer
           <div>
-            {#each game.randomizer.regions as region}
+            {#each game.tools.randomizer.regions as region}
               <span>{region}</span>
             {/each}
           </div>

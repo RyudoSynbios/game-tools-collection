@@ -57,9 +57,11 @@ export type Palette = Color[];
 
 export type RegionValidator = Validator | LogicalOperator<Validator>;
 
-export type Validator = { [key: number]: number[] };
-
 export type TimeUnit = "milliseconds" | "seconds" | "minutes" | "hours";
+
+export type Tool = "saveEditor" | "romEditor" | "randomizer";
+
+export type Validator = { [key: number]: number[] };
 
 export interface Binary {
   bitStart: Bit;
@@ -84,14 +86,16 @@ export interface Game {
     id: string;
     name: string;
   };
-  randomizer?: {
-    regions: string[];
-  };
-  romEditor?: {
-    regions: string[];
-  };
-  saveEditor?: {
-    regions: string[];
+  tools: {
+    saveEditor?: {
+      regions: string[];
+    };
+    romEditor?: {
+      regions: string[];
+    };
+    randomizer?: {
+      regions: string[];
+    };
   };
 }
 
