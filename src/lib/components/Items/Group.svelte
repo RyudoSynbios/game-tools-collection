@@ -18,7 +18,7 @@
     >
       {#each item.items as subitem, index}
         {#if ["bit", "lower4", "upper4", "int8", "int16", "int24", "int32", "int64", "uint8", "uint16", "uint24", "uint32", "uint64", "float32"].includes(subitem.dataType)}
-          <Int item={{ ...subitem, hidden: item.hidden }} />
+          <Int item={{ ...subitem, hidden: Boolean(item.hidden) }} />
           {#if item.mode === "chrono" && index === 0}
             <span>'</span>
           {:else if item.mode === "chrono" && index === 1}

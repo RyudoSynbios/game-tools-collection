@@ -67,7 +67,7 @@ export function updateChecksums(): void {
           bigEndian: item.bigEndian,
         });
       } else {
-        setBigInt(item.offset, item.dataType, checksum, {
+        setBigInt(item.offset, item.dataType, BigInt(checksum), {
           bigEndian: item.bigEndian,
         });
       }
