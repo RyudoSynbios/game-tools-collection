@@ -56,18 +56,18 @@ export function parseItem(
     });
   } else if (item.type === "checksum" || item.type === "variable") {
     if (item.offset !== undefined) {
-      let length = 1;
+      let dataTypeLength = 1;
 
       if (
         item.type === "checksum" ||
         (item.type === "variable" && item.dataType !== "string")
       ) {
-        length = dataTypeToLength(item.dataType);
+        dataTypeLength = dataTypeToLength(item.dataType);
       } else if (item.type === "variable" && item.dataType === "string") {
-        length = item.length;
+        dataTypeLength = item.length;
       }
 
-      for (let i = 0; i < length; i += 1) {
+      for (let i = 0; i < dataTypeLength; i += 1) {
         const isPartial =
           item.dataType === "lower4" || item.dataType === "upper4";
 

@@ -12,16 +12,16 @@
   $: {
     $dataView;
 
-    const hexLength = dataTypeToLength(item.dataType) * 2;
+    const dataTypeLength = dataTypeToLength(item.dataType) * 2;
 
     if (item.dataType !== "int64" && item.dataType !== "uint64") {
       value = getInt(item.offset, item.dataType, {
         bigEndian: item.bigEndian,
-      }).toHex(hexLength);
+      }).toHex(dataTypeLength);
     } else {
       value = getBigInt(item.offset, item.dataType, {
         bigEndian: item.bigEndian,
-      }).toHex(hexLength);
+      }).toHex(dataTypeLength);
     }
 
     value = `0x${value}`;

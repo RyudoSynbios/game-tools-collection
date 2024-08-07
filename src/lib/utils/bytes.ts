@@ -374,7 +374,7 @@ export function getInt(
   }
 
   if (options.binaryCodedDecimal) {
-    let hex = int.toHex(dataTypeToLength(dataType) * 2);
+    const hex = int.toHex(dataTypeToLength(dataType) * 2);
 
     int = parseInt(hex);
   }
@@ -443,7 +443,7 @@ export function setInt(
   }
 
   if (options.binaryCodedDecimal) {
-    let hex = value.toString().padStart(dataTypeToLength(dataType) * 2, "0");
+    const hex = value.toString().padStart(dataTypeToLength(dataType) * 2, "0");
 
     value = parseInt(hex, 16);
   }

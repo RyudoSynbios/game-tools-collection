@@ -32,7 +32,7 @@ export function updateChecksums(): void {
   $gameJson.checksums
     ?.sort((a, b) => (a.order || 9999) - (b.order || 9999))
     .forEach((item) => {
-      const hexLength = dataTypeToLength(item.dataType) * 2;
+      const dataTypeLength = dataTypeToLength(item.dataType) * 2;
 
       let previousChecksum;
 
@@ -45,13 +45,13 @@ export function updateChecksums(): void {
       if (item.dataType !== "int64" && item.dataType !== "uint64") {
         previousChecksum = getInt(item.offset, item.dataType, {
           bigEndian: item.bigEndian,
-        }).toHex(hexLength);
+        }).toHex(dataTypeLength);
 
         setInt(item.offset, item.dataType, 0x0);
       } else {
         previousChecksum = getBigInt(item.offset, item.dataType, {
           bigEndian: item.bigEndian,
-        }).toHex(hexLength);
+        }).toHex(dataTypeLength);
 
         setBigInt(item.offset, item.dataType, 0x0n);
       }
@@ -72,7 +72,7 @@ export function updateChecksums(): void {
         });
       }
 
-      const newChecksum = checksum.toHex(hexLength);
+      const newChecksum = checksum.toHex(dataTypeLength);
 
       debug.log(
         `${item.name}: ${previousChecksum} > ${newChecksum} > ${
