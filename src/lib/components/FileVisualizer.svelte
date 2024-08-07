@@ -1,6 +1,7 @@
 <script lang="ts">
   import { onDestroy, onMount } from "svelte";
 
+  import Checkbox from "$lib/components/Checkbox.svelte";
   import Input from "$lib/components/Input.svelte";
   import Select from "$lib/components/Select.svelte";
   import { dataView, gameJson, isFileVisualizerOpen } from "$lib/stores";
@@ -18,6 +19,10 @@
 
   let contentEl: HTMLDivElement;
   let tooltipEl: HTMLDivElement;
+  let gotoEl: HTMLInputElement;
+  let searchTextEl: HTMLInputElement;
+  let searchTypeEl: HTMLSelectElement;
+  let searchBigEndianEl: HTMLInputElement;
 
   let contentHeight = 0;
   let visibleRows: number[] = [];
@@ -28,12 +33,15 @@
   let start = 0;
   let end = 0;
 
+  let address = 0x0;
   let search: {
     text: string;
     dataType: Exclude<DataTypeInt, "int64" | "uint64">;
+    bigEndian: boolean;
   } = {
     text: "",
     dataType: "uint8",
+    bigEndian: false,
   };
 
   let highlightedOffsets: HighlightedOffsets = {};
@@ -86,7 +94,10 @@
         }
       }
 
-      if (!isNaN(int) && getInt(offset, search.dataType) === int) {
+      if (
+        !isNaN(int) &&
+        getInt(offset, search.dataType, { bigEndian: search.bigEndian }) === int
+      ) {
         return {
           offset,
           text: `Search${
@@ -105,6 +116,50 @@
     $isFileVisualizerOpen = false;
   }
 
+  function handleGoto(value: number | undefined = undefined): void {
+    if (value === undefined) {
+      value = parseInt(gotoEl.value);
+    }
+
+    if (gotoEl.value.match(/^\+|-/)) {
+      address += value;
+    } else {
+      address = value;
+    }
+
+    const top = Math.floor(address / 0x10) * 24;
+
+    contentEl.scrollTo({ top });
+  }
+
+  function handleSearch(direction: "previous" | "next"): void {
+    const search = parseInt(searchTextEl.value);
+    const type = searchTypeEl.value as Exclude<DataTypeInt, "int64" | "uint64">;
+    const bigEndian = searchBigEndianEl.checked;
+
+    const dataTypeLength = dataTypeToLength(type);
+
+    if (direction === "previous") {
+      for (let i = address - dataTypeLength; i > 0x0; i -= dataTypeLength) {
+        if (getInt(i, type, { bigEndian }) === search) {
+          handleGoto(i);
+          break;
+        }
+      }
+    } else if (direction === "next") {
+      for (
+        let i = address + 0x10;
+        i < $dataView.byteLength;
+        i += dataTypeLength
+      ) {
+        if (getInt(i, type, { bigEndian }) === search) {
+          handleGoto(i);
+          break;
+        }
+      }
+    }
+  }
+
   function handleSearchTextChange(event: Event): void {
     const target = event.target as HTMLInputElement;
 
@@ -115,6 +170,12 @@
     const target = event.target as HTMLInputElement;
 
     search.dataType = target.value as Exclude<DataTypeInt, "int64" | "uint64">;
+  }
+
+  function handleSearchBigEndianChange(event: Event): void {
+    const target = event.target as HTMLInputElement;
+
+    search.bigEndian = target.checked;
   }
 
   function handleMouseMove(event: MouseEvent, offset: number): void {
@@ -168,6 +229,8 @@
     end = i;
 
     paddingBottom = (rows.length - end) * rowHeight;
+
+    address = Math.floor(paddingTop / 24) * 0x10;
   }
 
   onMount(() => {
@@ -196,23 +259,55 @@
 <div class="gtc-filevisualizer-backdrop" on:click={handleClose}>
   <div class="gtc-filevisualizer" on:click|stopPropagation>
     <div class="gtc-filevisualizer-toolbar">
-      <Input
-        type="text"
-        placeholder="Search..."
-        value={search.text}
-        onChange={handleSearchTextChange}
-      />
-      <Select
-        value={search.dataType}
-        options={[
-          { key: "uint8", value: "uint8" },
-          { key: "uint16", value: "uint16" },
-          { key: "uint24", value: "uint24" },
-          { key: "uint32", value: "uint32" },
-          { key: "float32", value: "float32" },
-        ]}
-        onChange={handleSearchTypeChange}
-      />
+      <div>
+        <div class="gtc-filevisualizer-goto">
+          <Input
+            label="Go To"
+            type="text"
+            placeholder="0x0"
+            value=""
+            onEnter={handleGoto}
+            bind:inputEl={gotoEl}
+          />
+          <button type="button" on:click={() => handleGoto()}>Go</button>
+        </div>
+        <div class="gtc-filevisualizer-search">
+          <Input
+            label="Search"
+            type="text"
+            placeholder="0x0"
+            value={search.text}
+            onChange={handleSearchTextChange}
+            onEnter={() => handleSearch("next")}
+            bind:inputEl={searchTextEl}
+          />
+          <Select
+            label="&nbsp;"
+            value={search.dataType}
+            options={[
+              { key: "uint8", value: "uint8" },
+              { key: "uint16", value: "uint16" },
+              { key: "uint24", value: "uint24" },
+              { key: "uint32", value: "uint32" },
+              { key: "float32", value: "float32" },
+            ]}
+            onChange={handleSearchTypeChange}
+            bind:selectEl={searchTypeEl}
+          />
+          <button type="button" on:click={() => handleSearch("previous")}>
+            &lt;
+          </button>
+          <button type="button" on:click={() => handleSearch("next")}>
+            &gt;
+          </button>
+          <Checkbox
+            label="Big Endian"
+            checked={search.bigEndian}
+            onChange={handleSearchBigEndianChange}
+            bind:inputEl={searchBigEndianEl}
+          />
+        </div>
+      </div>
     </div>
     <div
       class="gtc-filevisualizer-content"
@@ -286,21 +381,65 @@
 
 <style lang="postcss">
   .gtc-filevisualizer-backdrop {
-    @apply fixed inset-0 flex items-center justify-center py-8 text-white bg-black/50;
+    @apply fixed inset-0 flex items-center justify-center py-8 bg-black/50;
 
     z-index: 10000;
 
     & .gtc-filevisualizer {
-      @apply flex flex-col p-4 h-full bg-primary-900 rounded-xl;
-
-      width: 790px;
+      @apply flex p-4 h-full bg-primary-900 rounded-xl;
 
       & .gtc-filevisualizer-toolbar {
-        @apply flex;
+        @apply flex pr-4;
+
+        & .gtc-filevisualizer-goto,
+        & .gtc-filevisualizer-search {
+          @apply flex justify-between items-end mb-4 p-2 bg-primary-700 rounded;
+
+          & :global(.gtc-input),
+          & :global(.gtc-select) {
+            @apply m-0 p-0;
+          }
+
+          & button {
+            @apply text-red-100 leading-4 bg-primary-400;
+
+            &:hover {
+              @apply bg-primary-300;
+            }
+          }
+        }
+
+        & .gtc-filevisualizer-goto {
+          & :global(.gtc-input) {
+            @apply flex-1;
+
+            & :global(input) {
+              @apply w-full;
+            }
+          }
+        }
+
+        & .gtc-filevisualizer-search {
+          @apply relative;
+
+          & :global(.gtc-input input) {
+            @apply w-28;
+          }
+
+          & :global(.gtc-select select) {
+            @apply w-20 border-l;
+          }
+
+          & :global(.gtc-checkbox) {
+            @apply absolute top-2 right-2;
+          }
+        }
       }
 
       & .gtc-filevisualizer-content {
-        @apply overflow-y-auto;
+        @apply text-white overflow-y-auto;
+
+        width: 758px;
 
         & .gtc-filevisualizer-row {
           @apply flex;
@@ -389,7 +528,7 @@
       }
 
       & .gtc-filevisualizer-tooltip {
-        @apply fixed top-0 right-0 hidden px-4 py-2 text-sm bg-primary-900 opacity-90 rounded whitespace-pre-wrap;
+        @apply fixed top-0 right-0 hidden px-4 py-2 text-sm text-white bg-primary-900 opacity-90 rounded whitespace-pre-wrap;
 
         width: fit-content;
 
