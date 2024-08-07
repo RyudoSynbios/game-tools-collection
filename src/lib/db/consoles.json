@@ -58,5 +58,10 @@
     "id": "pc-engine-cd",
     "name": "PC-Engine CD",
     "manufacturerId": "nec"
+  },
+  {
+    "id": "windows",
+    "name": "Windows",
+    "manufacturerId": "microsoft"
   }
 ]
