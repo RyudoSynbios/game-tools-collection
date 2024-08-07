@@ -19,9 +19,11 @@
   export let disabled = false;
   export let checksum: boolean | null = null;
   export let test = false;
-  export let onChange: (event: Event) => void;
+  export let onChange: ((event: Event) => void) | undefined = undefined;
+  export let onEnter: (() => void) | undefined = undefined;
 
-  let inputEl: HTMLInputElement;
+  // We export input element to allow prop binding
+  export let inputEl: HTMLInputElement | undefined = undefined;
 
   function handleInput(event: Event): void {
     const target = event.target as HTMLInputElement;
@@ -64,6 +66,12 @@
     }
   }
 
+  function handleKeyUp(event: any): void {
+    if (event.key === "Enter" && typeof onEnter === "function") {
+      onEnter();
+    }
+  }
+
   $: {
     $dataView;
 
@@ -97,6 +105,7 @@
       bind:this={inputEl}
       on:change={onChange}
       on:input={handleInput}
+      on:keypress={handleKeyUp}
     />
     {#if suffix}
       <span>{suffix}</span>

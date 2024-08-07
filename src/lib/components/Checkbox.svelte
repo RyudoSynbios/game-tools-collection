@@ -6,7 +6,8 @@
   export let disabled = false;
   export let onChange: (event: Event) => void;
 
-  let inputEl: HTMLInputElement;
+  // We export input element to allow prop binding
+  export let inputEl: HTMLInputElement | undefined = undefined;
 
   $: {
     $dataView;

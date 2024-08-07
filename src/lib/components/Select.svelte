@@ -10,6 +10,9 @@
   export let disabled = false;
   export let test = false;
   export let onChange: (event: Event) => void;
+
+  // We export select element to allow prop binding
+  export let selectEl: HTMLSelectElement | undefined = undefined;
 </script>
 
 <div
@@ -25,6 +28,7 @@
     {value}
     {disabled}
     data-test={$isDebug && test ? true : null}
+    bind:this={selectEl}
     on:change={onChange}
   >
     {#each options as option}
