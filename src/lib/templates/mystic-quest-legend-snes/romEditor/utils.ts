@@ -122,7 +122,7 @@ export function overrideSetInt(item: Item, value: string): boolean {
 
 export function afterSetInt(item: Item): void {
   if ("id" in item && item.id === "pName") {
-    updateResources("getCharacterNames");
+    updateResources("characterNames");
   } else if ("id" in item && item.id === "pStats") {
     const itemInt = item as ItemInt;
 
@@ -134,9 +134,9 @@ export function afterSetInt(item: Item): void {
     setInt(itemInt.offset - 0x26, "uint8", stat);
     setInt(itemInt.offset, "uint8", stat);
   } else if ("id" in item && item.id === "mName") {
-    updateResources("getMonsterNames");
+    updateResources("monsterNames");
   } else if ("id" in item && item.id === "mgMonster") {
-    updateResources("getMonsterGroupNames");
+    updateResources("monsterGroupNames");
   }
 }
 

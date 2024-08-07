@@ -132,11 +132,11 @@ export function overrideSetInt(item: Item, value: string): boolean {
 
 export function afterSetInt(item: Item): void {
   if ("id" in item && item.id === "sAbility") {
-    updateResources("getSummonNames");
+    updateResources("summonNames");
   } else if ("id" in item && item.id === "egEnemy") {
-    updateResources("getEnemyGroupNames");
+    updateResources("enemyGroupNames");
   } else if ("id" in item && item.id === "shType") {
-    updateResources("getShopNames");
+    updateResources("shopNames");
   }
 }
 
