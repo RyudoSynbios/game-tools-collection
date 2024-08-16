@@ -38,7 +38,13 @@ export function getDataView(dataViewTmp?: DataView): DataView {
 export function isDataViewAltExists(key: string): boolean {
   const $dataViewAlt = get(dataViewAlt);
 
-  return Boolean(key && $dataViewAlt[key]);
+  const exists = Boolean(key && $dataViewAlt[key]);
+
+  if (key && !exists) {
+    debug.error(`dataViewAlt ${key} is not initialized`);
+  }
+
+  return exists;
 }
 
 export function resetState(): void {
