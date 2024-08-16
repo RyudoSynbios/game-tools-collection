@@ -142,6 +142,7 @@ export interface ItemBitflags {
 export interface ItemBoolean {
   id?: string;
   name?: string;
+  dataViewAltKey?: string;
   offset: number;
   type: "variable";
   dataType: "boolean";

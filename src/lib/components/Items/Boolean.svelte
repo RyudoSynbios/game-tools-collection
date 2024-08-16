@@ -1,7 +1,11 @@
 <script lang="ts">
   import Checkbox from "$lib/components/Checkbox.svelte";
-  import { dataView, gameUtils, isDebug } from "$lib/stores";
-  import { getBoolean, setBoolean } from "$lib/utils/bytes";
+  import { dataView, dataViewAlt, gameUtils, isDebug } from "$lib/stores";
+  import {
+    getBoolean,
+    isDataViewAltExists,
+    setBoolean,
+  } from "$lib/utils/bytes";
   import { utilsExists } from "$lib/utils/format";
 
   import type { ItemBoolean } from "$lib/types";
@@ -17,12 +21,13 @@
       isOverrided = $gameUtils.overrideSetInt(item, target.checked);
     }
 
+    // prettier-ignore
     if (!isOverrided) {
       setBoolean(item.offset, target.checked, {
         on: item.on,
         off: item.off,
         resource: item.resource,
-      });
+      }, item.dataViewAltKey);
     }
 
     if (utilsExists("afterSetInt")) {
@@ -41,12 +46,19 @@
       [isOverrided, checked] = $gameUtils.overrideGetInt(item);
     }
 
+    let dataViewAlt;
+
+    if (isDataViewAltExists(item.dataViewAltKey || "")) {
+      dataViewAlt = $dataViewAlt[item.dataViewAltKey as string];
+    }
+
+    // prettier-ignore
     if (!isOverrided) {
       checked = getBoolean(item.offset, {
         on: item.on,
         off: item.off,
         resource: item.resource,
-      });
+      }, dataViewAlt);
     }
   }
 </script>

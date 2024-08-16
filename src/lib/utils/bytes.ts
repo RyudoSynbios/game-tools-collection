@@ -184,8 +184,12 @@ interface BooleanOptions {
 export function getBoolean(
   offset: number,
   options: BooleanOptions = {},
+  dataView?: DataView,
 ): boolean {
+  const $dataView = getDataView(dataView);
   const $gameJson = get(gameJson);
+
+  const int = getInt(offset, "uint8", {}, $dataView);
 
   if (
     options.resource &&
@@ -194,33 +198,28 @@ export function getBoolean(
     $gameJson.resources[options.resource][0] !== undefined &&
     $gameJson.resources[options.resource][1] !== undefined
   ) {
-    if ($gameJson.resources[options.resource][0] === getInt(offset, "uint8")) {
+    if ($gameJson.resources[options.resource][0] === int) {
       return false;
-    } else if (
-      $gameJson.resources[options.resource][1] === getInt(offset, "uint8")
-    ) {
+    } else if ($gameJson.resources[options.resource][1] === int) {
       return true;
     }
   }
 
-  if (options.on !== undefined && options.on === getInt(offset, "uint8")) {
+  if (options.on !== undefined && options.on === int) {
     return true;
-  } else if (
-    options.off !== undefined &&
-    options.off === getInt(offset, "uint8")
-  ) {
+  } else if (options.off !== undefined && options.off === int) {
     return false;
   }
 
-  return Boolean(getInt(offset, "uint8"));
+  return Boolean(int);
 }
 
 export function setBoolean(
   offset: number,
   value: boolean,
   options: BooleanOptions = {},
+  dataViewAltKey = "",
 ): void {
-  const $dataView = get(dataView);
   const $gameJson = get(gameJson);
 
   if (
@@ -234,16 +233,16 @@ export function setBoolean(
       offset,
       "uint8",
       $gameJson.resources[options.resource][value === true ? 1 : 0] as number,
+      {},
+      dataViewAltKey,
     );
   } else if (options.on !== undefined && value) {
-    setInt(offset, "uint8", options.on);
+    setInt(offset, "uint8", options.on, {}, dataViewAltKey);
   } else if (options.off !== undefined && !value) {
-    setInt(offset, "uint8", options.off);
+    setInt(offset, "uint8", options.off, {}, dataViewAltKey);
   } else {
-    setInt(offset, "uint8", value === false ? 0 : 1);
+    setInt(offset, "uint8", value === false ? 0 : 1, {}, dataViewAltKey);
   }
-
-  dataView.set($dataView);
 }
 
 interface BitflagOptions {
