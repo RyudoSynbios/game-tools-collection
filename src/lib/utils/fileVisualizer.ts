@@ -55,6 +55,10 @@ export function parseItem(
       }
     });
   } else if (item.type === "checksum" || item.type === "variable") {
+    if ("dataViewAltKey" in item) {
+      return;
+    }
+
     if (item.offset !== undefined) {
       let dataTypeLength = 1;
 
