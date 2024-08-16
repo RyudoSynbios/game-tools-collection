@@ -69,6 +69,10 @@ export function enrichGameJson(): void {
   // TODO: Find a way to not dissociate in 2 gameJson.set (useful for utils that required $gameJson)
 
   updateResources();
+
+  if (utilsExists("onReady")) {
+    $gameUtils.onReady();
+  }
 }
 
 export function getShift(shifts: number[]): number {
