@@ -26,8 +26,6 @@ export function onInitFailed(): void {
 }
 
 export function overrideItem(item: Item): Item {
-  const $gameRegion = get(gameRegion);
-
   if ("id" in item && item.id === "slots") {
     const itemContainer = item as ItemContainer;
 

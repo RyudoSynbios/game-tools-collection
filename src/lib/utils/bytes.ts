@@ -280,8 +280,6 @@ export function setBitflag(
   value: boolean,
   options: BitflagOptions = {},
 ): void {
-  const $dataView = get(dataView);
-
   const bitflag = getBitflags(offset, { reversed: options.reversed });
 
   bitflag[bit] = Boolean(value);
@@ -298,8 +296,6 @@ export function setBitflag(
   );
 
   setInt(offset, "uint8", binary);
-
-  dataView.set($dataView);
 }
 
 interface IntOptions {
