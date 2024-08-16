@@ -526,6 +526,7 @@ export function getItem(
   items: Item[] | undefined = undefined,
 ): Item | undefined {
   const $gameJson = get(gameJson);
+  const $gameTemplate = get(gameTemplate);
 
   if (items) {
     return items.reduce((result: Item | undefined, item: Item) => {
@@ -542,7 +543,7 @@ export function getItem(
       return result;
     }, undefined);
   } else {
-    return getItem(id, $gameJson.items);
+    return getItem(id, $gameJson.items || $gameTemplate.items);
   }
 }
 
