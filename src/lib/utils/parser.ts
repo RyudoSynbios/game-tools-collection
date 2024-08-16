@@ -560,7 +560,10 @@ export function updateResources(resource = ""): void {
     if (typeof resources[resource] === "string") {
       const value = getUtils(resources[resource] as string);
 
-      resources[resource] = value;
+      resources = {
+        ...$gameJson.resources,
+        [resource]: value,
+      };
     }
   } else {
     resources = Object.entries(resources).reduce(
