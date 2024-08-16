@@ -106,6 +106,16 @@
     }
   },
   {
+    "id": "diablo-ii-lord-of-destruction-windows",
+    "name": "Diablo II: Lord of Destruction",
+    "consoleId": "windows",
+    "tools": {
+      "saveEditor": {
+        "regions": ["🏳️"]
+      }
+    }
+  },
+  {
     "id": "donkey-kong-land-gb",
     "name": "Donkey Kong Land",
     "consoleId": "game-boy",
