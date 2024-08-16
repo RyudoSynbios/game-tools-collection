@@ -108,8 +108,8 @@ BigInt.prototype.toHex = function (length = 0) {
   return hex;
 };
 
-Number.prototype.toBinary = function () {
-  return this.toString(2).padStart(8, "0");
+Number.prototype.toBinary = function (length = 8) {
+  return this.toString(2).padStart(length, "0");
 };
 
 Number.prototype.toBitCount = function () {

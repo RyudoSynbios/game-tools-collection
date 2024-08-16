@@ -29,7 +29,7 @@ declare global {
   }
 
   interface Number {
-    toBinary: () => string;
+    toBinary: (length?: number) => string;
     toBitCount: () => number;
     toHex: (length?: number) => string;
   }
