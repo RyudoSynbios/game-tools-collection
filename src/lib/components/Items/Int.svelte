@@ -10,7 +10,13 @@
     gameUtils,
     isDebug,
   } from "$lib/stores";
-  import { getBigInt, getInt, setBigInt, setInt } from "$lib/utils/bytes";
+  import {
+    getBigInt,
+    getInt,
+    isDataViewAltExists,
+    setBigInt,
+    setInt,
+  } from "$lib/utils/bytes";
   import {
     getIntMax,
     getIntMin,
@@ -83,9 +89,11 @@
       [isOverrided, value] = $gameUtils.overrideGetInt(item);
     }
 
-    const dataViewAlt = item.dataViewAltKey
-      ? $dataViewAlt[item.dataViewAltKey]
-      : undefined;
+    let dataViewAlt;
+
+    if (isDataViewAltExists(item.dataViewAltKey || "")) {
+      dataViewAlt = $dataViewAlt[item.dataViewAltKey as string];
+    }
 
     // prettier-ignore
     if (!isOverrided) {
