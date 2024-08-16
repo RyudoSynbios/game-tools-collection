@@ -40,10 +40,8 @@ export function overrideGetRegions(
   return customGetRegions(dataView, shift);
 }
 
-export function initShifts(shifts: number[]): number[] {
+export function beforeItemsParsing(): void {
   readIso9660();
-
-  return shifts;
 }
 
 export function overrideItem(item: Item): Item {

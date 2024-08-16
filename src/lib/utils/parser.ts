@@ -46,6 +46,10 @@ export function enrichGameJson(): void {
     shifts = $gameUtils.initShifts(shifts);
   }
 
+  if (utilsExists("beforeItemsParsing")) {
+    $gameUtils.beforeItemsParsing();
+  }
+
   const items = $gameTemplate.items.reduce((items: Item[], item) => {
     items.push(parseItem(item, shifts));
 
