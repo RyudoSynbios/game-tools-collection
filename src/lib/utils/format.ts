@@ -62,6 +62,8 @@ export function getIntMax(item: ItemInt): number {
       return 9999;
     } else if (item.dataType === "uint24") {
       return 999999;
+    } else if (item.dataType === "uint32") {
+      return 99999999;
     }
   } else if (item.binary) {
     return 0xff >> (8 - item.binary.bitLength);
