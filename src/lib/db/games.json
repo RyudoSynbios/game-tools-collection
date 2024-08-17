@@ -146,6 +146,16 @@
     }
   },
   {
+    "id": "game-boy-camera-gb",
+    "name": "Game Boy Camera",
+    "consoleId": "game-boy",
+    "tools": {
+      "saveEditor": {
+        "regions": ["🇪🇺", "🇺🇸", "🇯🇵"]
+      }
+    }
+  },
+  {
     "id": "golden-sun-gba",
     "name": "Golden Sun",
     "consoleId": "game-boy-advance",
