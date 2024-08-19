@@ -260,10 +260,10 @@ export function readIso9660(): void {
     for (let i = 0x0; i < nameLength; i += 0x1) {
       const charCode = getInt(offset + 0x21 + i, "uint8");
 
-      if (charCode === 0x3b) {
-        i = nameLength;
-      } else {
+      if (charCode !== 0x3b) {
         name += String.fromCharCode(charCode);
+      } else {
+        break;
       }
     }
 

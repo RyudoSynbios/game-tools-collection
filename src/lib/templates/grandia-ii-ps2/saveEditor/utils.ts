@@ -1,6 +1,3 @@
-import { get } from "svelte/store";
-
-import { gameRegion } from "$lib/stores";
 import { getInt, setInt } from "$lib/utils/bytes";
 import {
   customGetRegions,
@@ -60,7 +57,7 @@ function getFormation(offset: number, index: number): number {
     if (binary[i] === "1") {
       if (current === index) {
         int = 0x1 << (7 - i);
-        i = 7;
+        break;
       } else {
         current += 1;
       }
