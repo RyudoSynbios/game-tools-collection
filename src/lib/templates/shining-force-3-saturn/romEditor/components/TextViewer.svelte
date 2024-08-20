@@ -2,7 +2,7 @@
   import Select from "$lib/components/Select.svelte";
   import { getRegionArray } from "$lib/utils/format";
 
-  import { commonTextsStartIndexes } from "../template";
+  import { dialogsStartIndexes } from "../template";
   import {
     decodeTextError,
     getFileData,
@@ -28,13 +28,15 @@
     const file = files[assetIndex];
     const dataView = getFileData("text", assetIndex);
 
-    let commonTextsStartIndex = getRegionArray(commonTextsStartIndexes);
+    let dialogsStartIndex = getRegionArray(dialogsStartIndexes);
 
-    if (
-      (scenario === "1" && file.name === "X5BTL99.BIN") ||
-      file.name.match(/X5BTL1(.*?).BIN$/)
+    if (scenario === "2" && file.name.match(/X5BTL(.*?).BIN$/)) {
+      dialogsStartIndex += 0x25;
+    } else if (
+      file.name.match(/X5BTL(.*?).BIN$/) &&
+      !["X5BTL02.BIN", "X5BTL24.BIN"].includes(file.name)
     ) {
-      commonTextsStartIndex += 0x1f;
+      dialogsStartIndex += 0x1f;
     }
 
     commonTexts = [];
@@ -51,10 +53,10 @@
 
       text = `<b>${index.toHex(3)}</b>: ${text}`;
 
-      if (index <= commonTextsStartIndex) {
-        commonTexts.push(text);
-      } else {
+      if (index >= dialogsStartIndex) {
         dialogsTexts.push(text);
+      } else {
+        commonTexts.push(text);
       }
 
       index += 1;

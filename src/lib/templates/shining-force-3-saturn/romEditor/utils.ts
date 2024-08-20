@@ -1,6 +1,6 @@
 import { get } from "svelte/store";
 
-import { dataView, dataViewAlt, gameRegion } from "$lib/stores";
+import { dataView, dataViewAlt, gameJson, gameRegion } from "$lib/stores";
 import { getInt } from "$lib/utils/bytes";
 import {
   type File,
@@ -13,6 +13,7 @@ import {
 } from "$lib/utils/common/iso9660";
 import { decodeCamelotFont, decodeWindows31J } from "$lib/utils/decode";
 import { getRegionArray } from "$lib/utils/format";
+import { updateResources } from "$lib/utils/parser";
 import { checkValidator } from "$lib/utils/validator";
 
 import type { Item, ItemContainer, ItemInt } from "$lib/types";
@@ -24,10 +25,13 @@ import TextViewer from "./components/TextViewer.svelte";
 import TxtViewer from "./components/TxtViewer.svelte";
 import VideoViewer from "./components/VideoViewer.svelte";
 import {
+  characterCount,
   characterNamesStartIndexes,
   classNamesStartIndexes,
+  enemyCount,
   enemyNamesStartIndexes,
   itemNamesStartIndexes,
+  itemOffsetShift,
   spellNamesStartIndexes,
   weaponSpecialNamesStartIndexes,
 } from "./template";
@@ -45,7 +49,15 @@ export function beforeItemsParsing(): void {
 }
 
 export function overrideItem(item: Item): Item {
-  if ("id" in item && item.id?.match(/assetViewer-/)) {
+  if ("id" in item && item.id === "characters") {
+    const itemContainer = item as ItemContainer;
+
+    itemContainer.instances = getRegionArray(characterCount);
+  } else if ("id" in item && item.id === "enemies") {
+    const itemContainer = item as ItemContainer;
+
+    itemContainer.instances = getRegionArray(enemyCount);
+  } else if ("id" in item && item.id?.match(/assetViewer-/)) {
     const [_, type] = item.id.split("-");
 
     const files = getFilteredFiles(type);
@@ -75,6 +87,8 @@ let cache: {
 export function overrideGetInt(
   item: Item,
 ): [boolean, number | string | undefined] {
+  const $gameJson = get(gameJson);
+
   if ("id" in item && item.id?.match(/cName-/)) {
     const split = item.id.split("-");
 
@@ -96,17 +110,23 @@ export function overrideGetInt(
 
       if (file) {
         cache.characters = file.dataView;
+
+        if (!$gameJson.resources!.characters) {
+          updateResources("characterNames");
+        }
       }
     }
 
     let offset = 0x0;
     let length = 0x0;
 
+    const shifts = getCharacterShifts();
+
     if (type === "miscellaneous") {
-      offset = getFileOffset("x033", 0x2e4, cache.characters);
+      offset = getFileOffset("x033", shifts.misc, cache.characters);
       length = index * 0x20;
     } else if (type === "stats") {
-      offset = getFileOffset("x033", 0x34c, cache.characters);
+      offset = getFileOffset("x033", shifts.stats, cache.characters);
     }
 
     const int = getInt(
@@ -136,8 +156,10 @@ export function overrideGetInt(
       }
     }
 
+    const shift = getRegionArray(itemOffsetShift);
+
     const baseOffset = getFileOffset("x002", 0x80, cache.items);
-    const offset = getFileOffset("x002", baseOffset + 0xb0, cache.items);
+    const offset = getFileOffset("x002", baseOffset + shift, cache.items);
 
     const int = getInt(
       offset + itemInt.offset,
@@ -234,18 +256,32 @@ export function getAssetNames(type: string): { [value: number]: string } {
 
 export function getCharacterNames(): { [value: number]: string } {
   const characterNamesStartIndex = getRegionArray(characterNamesStartIndexes);
+  const count = getRegionArray(characterCount);
 
   const names: { [value: number]: string } = {};
 
-  for (let i = 0x0; i < 0x14; i += 0x1) {
-    names[i] = getText(characterNamesStartIndex + i);
-  }
+  if (cache.characters.byteLength > 0) {
+    const shifts = getCharacterShifts();
 
-  for (let i = 0x0; i < 0xb; i += 0x1) {
-    names[0x14 + i] = `${getText(characterNamesStartIndex + i)} (Promoted)`;
-  }
+    const offset = getFileOffset("x033", shifts.stats, cache.characters);
 
-  names[0x1f] = `${getText(characterNamesStartIndex + 0xe)} (Promoted)`;
+    const indexes = [];
+
+    for (let i = 0x0; i < count; i += 0x1) {
+      const characterIndex = getInt(offset + i * 0x7b, "uint8", {}, cache.characters); // prettier-ignore
+
+      let promoted = "";
+
+      if (indexes[characterIndex]) {
+        promoted = "(Promoted)";
+      }
+
+      indexes[characterIndex] = true;
+
+      names[i] =
+        `${getText(characterNamesStartIndex + characterIndex)} ${promoted}`;
+    }
+  }
 
   return names;
 }
@@ -264,10 +300,11 @@ export function getClassesNames(): { [value: number]: string } {
 
 export function getEnemyNames(): { [value: number]: string } {
   const enemyNamesStartIndex = getRegionArray(enemyNamesStartIndexes);
+  const count = getRegionArray(enemyCount);
 
   const names: { [value: number]: string } = {};
 
-  for (let i = 0x0; i < 0x8d; i += 0x1) {
+  for (let i = 0x0; i < count; i += 0x1) {
     names[i] = getText(enemyNamesStartIndex + i);
   }
 
@@ -318,6 +355,29 @@ export function getWeaponSpecialNames(): { [value: number]: string } {
   names[0x0] = "-";
 
   return names;
+}
+
+export function getCharacterShifts(): { misc: number; stats: number } {
+  let misc = 0x0;
+  let stats = 0x0;
+
+  for (let i = 0x0; i < cache.characters.byteLength; i += 0x4) {
+    const value = getInt(i, "uint32", { bigEndian: true }, cache.characters);
+
+    if (value === 0xfd00f4) {
+      misc = i + 0x4;
+    } else if (value === 0xf40000) {
+      misc = i + 0x4;
+    } else if (value === 0xb6073) {
+      stats = i + 0x4;
+    }
+
+    if (misc && stats) {
+      break;
+    }
+  }
+
+  return { misc, stats };
 }
 
 export function getDecompressedData(
@@ -438,6 +498,8 @@ export function getFileOffset(
   dataView: DataView,
   subOffset = 0x0,
 ): number {
+  const scenario = getScenario();
+
   const absoluteOffset = getInt(
     offset,
     "uint32",
@@ -446,7 +508,11 @@ export function getFileOffset(
   );
 
   if (identifier === "x002") {
-    return absoluteOffset - 0x6028800;
+    if (scenario === "1") {
+      return absoluteOffset - 0x6028800;
+    }
+
+    return absoluteOffset - 0x602a000;
   } else if (identifier === "x019") {
     return absoluteOffset - 0x60a0000;
   } else if (identifier === "x023") {
@@ -522,7 +588,7 @@ export function getText(
     const files = getFilteredFiles("text");
 
     if (files.length > 0) {
-      const file = getFile(files[0].name);
+      const file = getFile("X5SHOP_T.BIN");
 
       if (file) {
         cache.dummyTextFile = file.dataView;
@@ -664,7 +730,7 @@ function decodeText(index: number, dataView: DataView): string {
         text += String.fromCharCode(letter);
       } else {
         if (letter >= 0x100) {
-          text += decodeKanji(letter);
+          text += decodeKanji(scenario, letter);
         } else if ([0xde, 0xdf].includes(letter)) {
           text = text.slice(0, -1);
           text += decodeCamelotFont((lastLetter << 0x8) | letter);

@@ -1,12 +1,17 @@
 import type { GameJson } from "$lib/types";
 
-export const characterNamesStartIndexes = [0x137, 0x137];
-export const classNamesStartIndexes = [0x19c, 0x19a];
-export const enemyNamesStartIndexes = [0x44a, 0x448];
-export const itemNamesStartIndexes = [0x34a, 0x348];
-export const spellNamesStartIndexes = [0x316, 0x314];
-export const weaponSpecialNamesStartIndexes = [0x4d7, 0x4d5];
-export const commonTextsStartIndexes = [0x830, 0x82d];
+export const characterNamesStartIndexes = [0x137, 0x137, 0x13a, 0x13a, 0x13a];
+export const characterCount = [0x20, 0x20, 0x41, 0x8e];
+export const classNamesStartIndexes = [0x19c, 0x19a, 0x19f, 0x19f, 0x19f];
+export const enemyNamesStartIndexes = [0x44a, 0x448, 0x5fb, 0x648, 0x539];
+export const enemyCount = [0x8d, 0x8d, 0xbe, 0xd3];
+export const itemNamesStartIndexes = [0x34a, 0x348, 0x4fb, 0x51c, 0x40d];
+export const itemOffsetShift = [0xb0, 0xb0, 0x9c, 0xa8];
+export const spellNamesStartIndexes = [0x316, 0x314, 0x4be, 0x4d2, 0x3c0];
+export const weaponSpecialNamesStartIndexes = [
+  0x4d7, 0x4d5, 0x6b9, 0x71b, 0x60c,
+];
+export const dialogsStartIndexes = [0x831, 0x82e, 0x8cc, 0x966, 0x857];
 
 const template: GameJson = {
   validator: {
@@ -39,10 +44,11 @@ const template: GameJson = {
           planned: true,
           items: [
             {
+              id: "characters",
               length: 0x7b,
               type: "container",
               instanceType: "tabs",
-              instances: 32,
+              instances: 0,
               resource: "characterNames",
               vertical: true,
               items: [
@@ -1858,10 +1864,11 @@ const template: GameJson = {
           planned: true,
           items: [
             {
+              id: "enemies",
               length: 0x4c,
               type: "container",
               instanceType: "tabs",
-              instances: 141,
+              instances: 0,
               resource: "enemyNames",
               vertical: true,
               items: [
@@ -2572,7 +2579,6 @@ const template: GameJson = {
         },
         {
           name: "Shops",
-          planned: [false, false, true, true, true],
           hidden: [false, false, false, false, true],
           items: [
             {
@@ -2783,7 +2789,6 @@ const template: GameJson = {
                 },
                 {
                   name: "Texts",
-                  planned: [false, false, true, true, true],
                   items: [
                     {
                       id: "assetViewer-text",
