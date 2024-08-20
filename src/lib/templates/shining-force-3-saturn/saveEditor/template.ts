@@ -473,8 +473,8 @@ const template: GameJson = {
                                   dataType: "int8",
                                 },
                                 {
-                                  name: "Wind",
-                                  offset: 0x26e9,
+                                  name: "Lightning",
+                                  offset: 0x26e8,
                                   type: "variable",
                                   dataType: "int8",
                                 },
@@ -497,8 +497,8 @@ const template: GameJson = {
                                   dataType: "int8",
                                 },
                                 {
-                                  name: "Lightning",
-                                  offset: 0x26e8,
+                                  name: "Wind",
+                                  offset: 0x26e9,
                                   type: "variable",
                                   dataType: "int8",
                                 },

@@ -173,8 +173,8 @@ const template: GameJson = {
                                 },
                                 {
                                   id: "character-%index%-stats",
-                                  name: "Wind",
-                                  offset: 0x63,
+                                  name: "Lightning",
+                                  offset: 0x62,
                                   type: "variable",
                                   dataType: "int8",
                                 },
@@ -200,8 +200,8 @@ const template: GameJson = {
                                 },
                                 {
                                   id: "character-%index%-stats",
-                                  name: "Lightning",
-                                  offset: 0x62,
+                                  name: "Wind",
+                                  offset: 0x63,
                                   type: "variable",
                                   dataType: "int8",
                                 },
@@ -2070,8 +2070,8 @@ const template: GameJson = {
                             },
                             {
                               id: "enemy",
-                              name: "Wind",
-                              offset: 0x10,
+                              name: "Lightning",
+                              offset: 0xf,
                               type: "variable",
                               dataType: "int8",
                             },
@@ -2097,8 +2097,8 @@ const template: GameJson = {
                             },
                             {
                               id: "enemy",
-                              name: "Lightning",
-                              offset: 0xf,
+                              name: "Wind",
+                              offset: 0x10,
                               type: "variable",
                               dataType: "int8",
                             },
