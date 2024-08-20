@@ -219,7 +219,7 @@ export function readIso9660(): void {
 
   if (iso.hasSectors) {
     offset = getAbsoluteOffset(offset);
-    offsetEnd -= iso.sectorHeaderSize - iso.eccSize;
+    offsetEnd -= iso.sectorHeaderSize + iso.eccSize;
   }
 
   while (true) {
