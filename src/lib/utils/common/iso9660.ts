@@ -5,7 +5,8 @@ import { dataView, gameTemplate } from "$lib/stores";
 import type { RegionValidator } from "$lib/types";
 
 import { extractBit, getInt, getString, setInt } from "../bytes";
-import { checkValidator, getRegions } from "../validator";
+import { getObjKey } from "../format";
+import { checkValidator, getRegions, reduceConditions } from "../validator";
 
 interface Iso {
   hasSectors: boolean;
@@ -95,16 +96,23 @@ export function customGetRegions(dataView: DataView, shift: number): string[] {
   const overridedRegions = Object.entries(
     $gameTemplate.validator.regions,
   ).reduce(
-    (regions: { [key: string]: RegionValidator }, [region, condition]) => {
-      const validator = Object.values(condition)[0];
+    (regions: { [key: string]: RegionValidator }, [region, conditions]) => {
+      const shiftedConditions = reduceConditions(
+        conditions,
+        (condition: any) => {
+          const validator = Object.values(condition)[0];
 
-      let offset = parseInt(Object.keys(condition)[0]);
+          let offset = parseInt(getObjKey(condition, 0));
 
-      if (hasSectors(dataView)) {
-        offset += 0x10;
-      }
+          if (hasSectors(dataView)) {
+            offset += 0x10;
+          }
 
-      regions[region] = { [offset]: validator };
+          return { [offset]: validator };
+        },
+      );
+
+      regions[region] = shiftedConditions;
 
       return regions;
     },
