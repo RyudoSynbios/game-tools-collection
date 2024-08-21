@@ -61,7 +61,7 @@ export function getRegions(
         const offset = parseInt(getObjKey(condition, 0));
         const array = condition[offset];
 
-        if (!array) {
+        if (isNaN(offset) || !array) {
           return false;
         }
 
