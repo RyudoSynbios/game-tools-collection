@@ -22,6 +22,22 @@ export function checkConditions(conditions: any, callback: any): boolean {
   return callback(conditions);
 }
 
+export function reduceConditions(conditions: any, callback: any): any {
+  if (conditions.$and || conditions.$or) {
+    const key = getObjKey(conditions, 0) as "$and" | "$or";
+
+    const test = conditions[key]!.reduce((results: any, condition: any) => {
+      results.push(reduceConditions(condition, callback));
+
+      return results;
+    }, []);
+
+    return { [key]: test };
+  }
+
+  return callback(conditions);
+}
+
 export function checkValidator(
   validator: number[],
   offset: number,
