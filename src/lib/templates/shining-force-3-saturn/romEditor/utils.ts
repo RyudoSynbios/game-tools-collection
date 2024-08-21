@@ -7,6 +7,7 @@ import {
   customGetRegions,
   getFile,
   getFiles,
+  hasSectors,
   readIso9660,
   resetIso9660,
   writeFile,
@@ -558,6 +559,16 @@ export function isDummy(offset: number, dataView: DataView): boolean {
   return checkValidator(validator, offset, dataView);
 }
 
+function isPatched(): boolean {
+  const $dataView = get(dataView);
+
+  const validator = [0x53, 0x46, 0x33, 0x54, 0x52, 0x41, 0x4e, 0x53]; // "SF3TRANS"
+
+  const offset = hasSectors($dataView) ? 0x30 : 0x20;
+
+  return checkValidator(validator, offset);
+}
+
 export function readTxt(dataView: DataView): string {
   let text = "";
 
@@ -619,12 +630,13 @@ function decodeText(index: number, dataView: DataView): string {
   const $gameRegion = get(gameRegion);
 
   const scenario = getScenario();
+  const patched = isPatched();
 
   if (dataView.byteLength > 0) {
-    const treesPointerOffset = scenario === "1" ? 0xc : 0x18;
+    const treesPointerOffset = scenario === "1" && !patched ? 0xc : 0x18;
     const treesOffset = getFileOffset("x5", treesPointerOffset, dataView);
 
-    const pagesPointerOffset = scenario === "1" ? 0x18 : 0x24;
+    const pagesPointerOffset = scenario === "1" && !patched ? 0x18 : 0x24;
 
     let page = Math.floor(index / 0x100);
 
