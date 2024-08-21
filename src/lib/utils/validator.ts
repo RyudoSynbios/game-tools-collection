@@ -9,19 +9,17 @@ import type { RegionValidator } from "$lib/types";
 export function checkConditions(conditions: any, callback: any): boolean {
   if (conditions.$and || conditions.$or) {
     if (conditions.$and) {
-      return conditions.$and.every((array: any) => {
-        return checkConditions(array, callback);
-      });
+      return conditions.$and.every((array: any) =>
+        checkConditions(array, callback),
+      );
     } else if (conditions.$or) {
-      return conditions.$or.some((array: any) => {
-        return checkConditions(array, callback);
-      });
+      return conditions.$or.some((array: any) =>
+        checkConditions(array, callback),
+      );
     }
-  } else {
-    return callback(conditions);
   }
 
-  return false;
+  return callback(conditions);
 }
 
 export function checkValidator(
