@@ -3,7 +3,7 @@ import { getFile } from "$lib/utils/common/iso9660";
 import { applyPalette, getColor, getPalette } from "$lib/utils/graphics";
 import { checkValidator } from "$lib/utils/validator";
 
-import type { ColorType, Palette } from "$lib/types";
+import type { ColorType } from "$lib/types";
 
 import {
   getDecompressedData,
@@ -139,55 +139,104 @@ export function getImagesCanvas(
           });
         }
       }
-    } else if (file.name.match(/.CHR$/)) {
-      let basePointer = 0x0;
+    } else if (file.name.match(/.CHP$/) || file.name.match(/.CHR$/)) {
+      const offsets = [];
 
-      while (true) {
-        const unknown = getInt(basePointer, "int16", { bigEndian: true }, file.dataView); // prettier-ignore
+      if (file.name.match(/.CHP$/)) {
+        let spriteId = -1;
 
-        if (unknown === -1) {
-          break;
+        let offset = 0x0;
+
+        while (spriteId === -1) {
+          spriteId = getInt(offset, "int16", { bigEndian: true }, file.dataView); // prettier-ignore
+
+          if (spriteId === -1) {
+            offset += 0x800;
+          }
         }
 
-        const width = getInt(basePointer + 0x2, "uint16", { bigEndian: true }, file.dataView); // prettier-ignore
-        const height = getInt(basePointer + 0x4, "uint16", { bigEndian: true }, file.dataView); // prettier-ignore
+        if (spriteId < 0xc9) {
+          const validator = [];
 
-        let pointer = getInt(basePointer + 0x10, "uint32", { bigEndian: true }, file.dataView); // prettier-ignore
+          for (let i = offset; i < offset + 0x6; i += 0x1) {
+            const int = getInt(i, "uint8", {}, file.dataView);
+
+            validator.push(int);
+          }
+
+          for (let i = offset; i < file.dataView.byteLength; i += 0x100) {
+            if (checkValidator(validator, i, file.dataView)) {
+              offsets.push(i);
+            }
+          }
+        } else {
+          for (let i = offset; i < file.dataView.byteLength; i += 0x100) {
+            const validator1 = [spriteId >> 0x8, spriteId & 0xff, 0x0];
+            const validator2 = [0xff, 0xff, 0x0, 0x0];
+
+            if (checkValidator(validator1, i, file.dataView)) {
+              offsets.push(i);
+
+              spriteId += 0x1;
+            } else if (checkValidator(validator2, i, file.dataView)) {
+              spriteId += 0x1;
+            }
+          }
+        }
+      } else {
+        offsets.push(0x0);
+      }
+
+      offsets.forEach((baseOffset) => {
+        let basePointer = baseOffset;
 
         while (true) {
-          const offset = getInt(pointer , "uint32", { bigEndian: true }, file.dataView); // prettier-ignore
+          const spriteId = getInt(basePointer, "int16", { bigEndian: true }, file.dataView); // prettier-ignore
 
-          if (offset === 0x0) {
+          if (spriteId === -1) {
             break;
           }
 
-          const decompressedData = getDecompressedSpriteData(
-            offset,
-            file.dataView,
-          );
+          const width = getInt(basePointer + 0x2, "uint16", { bigEndian: true }, file.dataView); // prettier-ignore
+          const height = getInt(basePointer + 0x4, "uint16", { bigEndian: true }, file.dataView); // prettier-ignore
 
-          const spriteData = [];
+          let pointer = getInt(basePointer + 0x10, "uint32", { bigEndian: true }, file.dataView); // prettier-ignore
 
-          for (let j = 0x0; j < decompressedData.length; j += 0x2) {
-            const rawColor = getIntFromArray(decompressedData, j, "uint16", true); // prettier-ignore
+          while (true) {
+            const offset = getInt(baseOffset + pointer , "uint32", { bigEndian: true }, file.dataView); // prettier-ignore
 
-            const color = getColor(rawColor, "ABGR555");
+            if (offset === 0x0) {
+              break;
+            }
 
-            spriteData.push(...color);
+            const decompressedData = getDecompressedSpriteData(
+              baseOffset + offset,
+              file.dataView,
+            );
+
+            const spriteData = [];
+
+            for (let j = 0x0; j < decompressedData.length; j += 0x2) {
+              const rawColor = getIntFromArray(decompressedData, j, "uint16", true); // prettier-ignore
+
+              const color = getColor(rawColor, "ABGR555");
+
+              spriteData.push(...color);
+            }
+
+            imagesCanvas.width = 800;
+            imagesCanvas.images.push({
+              width,
+              height,
+              data: new Uint8Array(spriteData),
+            });
+
+            pointer += 0x4;
           }
 
-          imagesCanvas.width = 800;
-          imagesCanvas.images.push({
-            width,
-            height,
-            data: new Uint8Array(spriteData),
-          });
-
-          pointer += 0x4;
+          basePointer += 0x18;
         }
-
-        basePointer += 0x18;
-      }
+      });
     } else if (file.name.match(/^KAO(.*?).DAT$/)) {
       imagesCanvas.width = 192;
 

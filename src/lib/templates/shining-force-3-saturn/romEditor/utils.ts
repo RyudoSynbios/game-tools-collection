@@ -455,7 +455,7 @@ export function getFilteredFiles(type: string): File[] {
   const files = getFiles().filter((file) => {
     if (file.name.match(/.CPK$/)) {
       return type === "video";
-    } else if (file.name.match(/.CHR$/)) {
+    } else if (file.name.match(/.CHP$/) || file.name.match(/.CHR$/)) {
       return type === "sprite";
     } else if (
       file.name.match(/^FACE(.*?).DAT$/) ||
