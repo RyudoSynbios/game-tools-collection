@@ -7,6 +7,7 @@ export const enemyNamesStartIndexes = [0x44a, 0x448, 0x5fb, 0x648, 0x539];
 export const enemyCount = [0x8d, 0x8d, 0xbe, 0xd3];
 export const itemNamesStartIndexes = [0x34a, 0x348, 0x4fb, 0x51c, 0x40d];
 export const itemOffsetShift = [0xb0, 0xb0, 0x9c, 0xa8];
+export const itemCount = [0x100, 0x100, 0x100, 0x12b, 0x12c];
 export const spellNamesStartIndexes = [0x316, 0x314, 0x4be, 0x4d2, 0x3c0];
 export const weaponSpecialNamesStartIndexes = [
   0x4d7, 0x4d5, 0x6b9, 0x71b, 0x60c,
@@ -1724,10 +1725,11 @@ const template: GameJson = {
           planned: true,
           items: [
             {
+              id: "items",
               length: 0x18,
               type: "container",
               instanceType: "tabs",
-              instances: 256,
+              instances: 0,
               resource: "itemNames",
               vertical: true,
               flex: true,
@@ -2648,7 +2650,6 @@ const template: GameJson = {
         },
         {
           name: "Shops",
-          hidden: [false, false, false, false, true],
           items: [
             {
               type: "component",

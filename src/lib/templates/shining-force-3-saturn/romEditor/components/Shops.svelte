@@ -10,6 +10,21 @@
 
   let item: ItemTabs;
 
+  function getItemShift(shopIndex: number): number {
+    const scenario = getScenario();
+
+    let shift = 0x4;
+
+    if (
+      (scenario !== "3" && scenario !== "premium" && shopIndex === 2) ||
+      shopIndex === 3
+    ) {
+      shift = 0x8;
+    }
+
+    return shift;
+  }
+
   $: {
     $gameJson;
 
@@ -36,7 +51,10 @@
 
           if ((scenario === "1" || scenario === "2") && pointers.length === 0) {
             shift = 0xc;
-          } else if (scenario === "3" && pointers.length !== 1) {
+          } else if (
+            (scenario === "3" || scenario === "premium") &&
+            pointers.length !== 1
+          ) {
             shift = 0x10;
           }
 
@@ -60,7 +78,7 @@
 
       [shopsOffset, dealsOffset, hagglesOffset].forEach((offset, index) => {
         while (true) {
-          const shopOffset = getFileOffset("x023", offset, dataView);
+          let shopOffset = getFileOffset("x023", offset, dataView);
 
           if (shopOffset < 0x0) {
             break;
@@ -72,10 +90,21 @@
 
           let count = 0;
 
-          while (true) {
-            const itemOffset = shopOffset + 0x3 + count * 0x4;
+          if ((scenario === "3" || scenario === "premium") && index === 1) {
+            shopOffset += 0x4;
+          }
 
-            const itemIndex = getInt(itemOffset, "uint8", {}, dataView);
+          const shift = getItemShift(index + 0x1);
+
+          while (true) {
+            const itemOffset = shopOffset + count * shift;
+
+            const itemIndex = getInt(
+              itemOffset,
+              "uint32",
+              { bigEndian: true },
+              dataView,
+            );
 
             if (itemIndex === 0x0) {
               break;
@@ -128,9 +157,12 @@
                   (index) => ({
                     name: `Item ${index + 1}`,
                     dataViewAltKey: "x023",
-                    offset: tab.array[shopIndex].offset + 0x3 + index * 0x4,
+                    offset:
+                      tab.array[shopIndex].offset +
+                      index * getItemShift(tabIndex),
                     type: "variable",
-                    dataType: "uint8",
+                    dataType: "uint32",
+                    bigEndian: true,
                     resource: "itemNames",
                     autocomplete: true,
                   }),

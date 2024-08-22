@@ -31,6 +31,7 @@ import {
   classNamesStartIndexes,
   enemyCount,
   enemyNamesStartIndexes,
+  itemCount,
   itemNamesStartIndexes,
   itemOffsetShift,
   spellNamesStartIndexes,
@@ -58,6 +59,10 @@ export function overrideItem(item: Item): Item {
     const itemContainer = item as ItemContainer;
 
     itemContainer.instances = getRegionArray(enemyCount);
+  } else if ("id" in item && item.id === "items") {
+    const itemContainer = item as ItemContainer;
+
+    itemContainer.instances = getRegionArray(itemCount);
   } else if ("id" in item && item.id?.match(/assetViewer-/)) {
     const [_, type] = item.id.split("-");
 
@@ -316,10 +321,11 @@ export function getEnemyNames(): { [value: number]: string } {
 
 export function getItemNames(): { [value: number]: string } {
   const itemNamesStartIndex = getRegionArray(itemNamesStartIndexes);
+  const count = getRegionArray(itemCount);
 
   const names: { [value: number]: string } = {};
 
-  for (let i = 0x0; i < 0x100; i += 0x1) {
+  for (let i = 0x0; i < count; i += 0x1) {
     names[i] = getText(itemNamesStartIndex + i);
   }
 
