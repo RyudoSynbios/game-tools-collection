@@ -25,8 +25,8 @@ const template: GameJson = {
               {
                 0x20: [
                   0x53, 0x46, 0x33, 0x54, 0x52, 0x41, 0x4e, 0x53, 0x20, 0x20,
-                  0x56, 0x32, 0x34,
-                ], // "SF3TRANS  V24"
+                  0x56, 0x32,
+                ], // "SF3TRANS  V2"
               },
               {
                 0x70: [
@@ -48,8 +48,8 @@ const template: GameJson = {
               {
                 0x20: [
                   0x53, 0x46, 0x33, 0x54, 0x52, 0x41, 0x4e, 0x53, 0x20, 0x20,
-                  0x56, 0x32, 0x34,
-                ], // "SF3TRANS  V24"
+                  0x56, 0x32,
+                ], // "SF3TRANS  V2"
               },
               {
                 0x70: [
@@ -68,8 +68,8 @@ const template: GameJson = {
               {
                 0x20: [
                   0x53, 0x46, 0x33, 0x54, 0x52, 0x41, 0x4e, 0x53, 0x20, 0x20,
-                  0x56, 0x32, 0x34,
-                ], // "SF3TRANS  V24"
+                  0x56, 0x32,
+                ], // "SF3TRANS  V2"
               },
               {
                 0x70: [
@@ -88,8 +88,8 @@ const template: GameJson = {
               {
                 0x20: [
                   0x53, 0x46, 0x33, 0x54, 0x52, 0x41, 0x4e, 0x53, 0x20, 0x20,
-                  0x56, 0x32, 0x34,
-                ], // "SF3TRANS  V24"
+                  0x56, 0x32,
+                ], // "SF3TRANS  V2"
               },
               {
                 0x70: [
