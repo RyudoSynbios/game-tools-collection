@@ -28,151 +28,141 @@
   $: {
     $gameJson;
 
-    if (!$dataViewAlt.x023) {
-      const file = getFile("X023.BIN");
+    const scenario = getScenario();
 
-      if (file) {
-        $dataViewAlt.x023 = file.dataView;
+    const dataView = $dataViewAlt.x023;
+
+    let pointers = [];
+
+    for (let i = 0x0; i < dataView.byteLength; i += 0x4) {
+      const value = getInt(i, "uint32", { bigEndian: true }, dataView);
+
+      if (value === 0x51eb851f) {
+        let shift = 0x4;
+
+        if ((scenario === "1" || scenario === "2") && pointers.length === 0) {
+          shift = 0xc;
+        } else if (
+          (scenario === "3" || scenario === "premium") &&
+          pointers.length !== 1
+        ) {
+          shift = 0x10;
+        }
+
+        pointers.push(i + shift);
       }
     }
 
-    const scenario = getScenario();
+    let shopsOffset = getFileOffset("x023", pointers[2], dataView);
+    let dealsOffset = getFileOffset("x023", pointers[0], dataView);
+    let hagglesOffset = getFileOffset("x023", pointers[1], dataView);
 
-    if ($dataViewAlt.x023) {
-      const dataView = $dataViewAlt.x023;
+    const initialShopOffset = getFileOffset("x023", shopsOffset, dataView);
 
-      let pointers = [];
+    const debug: { offset: number; count: number }[] = [];
+    const weaponShops: { offset: number; count: number }[] = [];
+    const itemShops: { offset: number; count: number }[] = [];
+    const deals: { offset: number; count: number }[] = [];
+    const haggles: { offset: number; count: number }[] = [];
 
-      for (let i = 0x0; i < dataView.byteLength; i += 0x4) {
-        const value = getInt(i, "uint32", { bigEndian: true }, dataView);
+    let isWeaponShops = true;
 
-        if (value === 0x51eb851f) {
-          let shift = 0x4;
+    [shopsOffset, dealsOffset, hagglesOffset].forEach((offset, index) => {
+      while (true) {
+        let shopOffset = getFileOffset("x023", offset, dataView);
 
-          if ((scenario === "1" || scenario === "2") && pointers.length === 0) {
-            shift = 0xc;
-          } else if (
-            (scenario === "3" || scenario === "premium") &&
-            pointers.length !== 1
-          ) {
-            shift = 0x10;
-          }
-
-          pointers.push(i + shift);
+        if (shopOffset < 0x0) {
+          break;
         }
-      }
 
-      let shopsOffset = getFileOffset("x023", pointers[2], dataView);
-      let dealsOffset = getFileOffset("x023", pointers[0], dataView);
-      let hagglesOffset = getFileOffset("x023", pointers[1], dataView);
+        if (weaponShops.length > 1 && shopOffset === initialShopOffset) {
+          isWeaponShops = false;
+        }
 
-      const initialShopOffset = getFileOffset("x023", shopsOffset, dataView);
+        let count = 0;
 
-      const debug: { offset: number; count: number }[] = [];
-      const weaponShops: { offset: number; count: number }[] = [];
-      const itemShops: { offset: number; count: number }[] = [];
-      const deals: { offset: number; count: number }[] = [];
-      const haggles: { offset: number; count: number }[] = [];
+        if ((scenario === "3" || scenario === "premium") && index === 1) {
+          shopOffset += 0x4;
+        }
 
-      let isWeaponShops = true;
+        const shift = getItemShift(index + 0x1);
 
-      [shopsOffset, dealsOffset, hagglesOffset].forEach((offset, index) => {
         while (true) {
-          let shopOffset = getFileOffset("x023", offset, dataView);
+          const itemOffset = shopOffset + count * shift;
 
-          if (shopOffset < 0x0) {
+          const itemIndex = getInt(
+            itemOffset,
+            "uint32",
+            { bigEndian: true },
+            dataView,
+          );
+
+          if (itemIndex === 0x0) {
             break;
           }
 
-          if (weaponShops.length > 1 && shopOffset === initialShopOffset) {
-            isWeaponShops = false;
-          }
-
-          let count = 0;
-
-          if ((scenario === "3" || scenario === "premium") && index === 1) {
-            shopOffset += 0x4;
-          }
-
-          const shift = getItemShift(index + 0x1);
-
-          while (true) {
-            const itemOffset = shopOffset + count * shift;
-
-            const itemIndex = getInt(
-              itemOffset,
-              "uint32",
-              { bigEndian: true },
-              dataView,
-            );
-
-            if (itemIndex === 0x0) {
-              break;
-            }
-
-            count += 1;
-          }
-
-          if (shopOffset === initialShopOffset && debug.length === 0) {
-            debug.push({ offset: shopOffset, count });
-          } else if (shopOffset !== initialShopOffset) {
-            if (index === 0 && isWeaponShops) {
-              weaponShops.push({ offset: shopOffset, count });
-            } else if (index === 0) {
-              itemShops.push({ offset: shopOffset, count });
-            } else if (index === 1) {
-              deals.push({ offset: shopOffset, count });
-            } else if (index === 2) {
-              haggles.push({ offset: shopOffset, count });
-            }
-          }
-
-          offset += 0x4;
+          count += 1;
         }
-      });
 
-      const tabs = [
-        { name: "Weapons", array: weaponShops },
-        { name: "Items", array: itemShops },
-        { name: "Deals", array: deals },
-        { name: "Haggles", array: haggles },
-        { name: "Debug", array: debug },
-      ];
+        if (shopOffset === initialShopOffset && debug.length === 0) {
+          debug.push({ offset: shopOffset, count });
+        } else if (shopOffset !== initialShopOffset) {
+          if (index === 0 && isWeaponShops) {
+            weaponShops.push({ offset: shopOffset, count });
+          } else if (index === 0) {
+            itemShops.push({ offset: shopOffset, count });
+          } else if (index === 1) {
+            deals.push({ offset: shopOffset, count });
+          } else if (index === 2) {
+            haggles.push({ offset: shopOffset, count });
+          }
+        }
 
-      item = {
-        type: "tabs",
-        items: tabs.map((tab, tabIndex) => ({
-          name: tab.name,
-          hidden: tabIndex === 4,
-          items: [
-            {
-              type: "tabs",
-              vertical: true,
-              items: [...Array(tab.array.length).keys()].map((shopIndex) => ({
-                name: `${tab.name} ${tabIndex < 2 ? "Shop" : ""} ${
-                  shopIndex + 0x1
-                }`,
-                flex: true,
-                items: [...Array(tab.array[shopIndex].count).keys()].map(
-                  (index) => ({
-                    name: `Item ${index + 1}`,
-                    dataViewAltKey: "x023",
-                    offset:
-                      tab.array[shopIndex].offset +
-                      index * getItemShift(tabIndex),
-                    type: "variable",
-                    dataType: "uint32",
-                    bigEndian: true,
-                    resource: "itemNames",
-                    autocomplete: true,
-                  }),
-                ),
-              })),
-            },
-          ],
-        })),
-      };
-    }
+        offset += 0x4;
+      }
+    });
+
+    const tabs = [
+      { name: "Weapons", array: weaponShops },
+      { name: "Items", array: itemShops },
+      { name: "Deals", array: deals },
+      { name: "Haggles", array: haggles },
+      { name: "Debug", array: debug },
+    ];
+
+    item = {
+      type: "tabs",
+      items: tabs.map((tab, tabIndex) => ({
+        name: tab.name,
+        hidden: tabIndex === 4,
+        items: [
+          {
+            type: "tabs",
+            vertical: true,
+            items: [...Array(tab.array.length).keys()].map((shopIndex) => ({
+              name: `${tab.name} ${tabIndex < 2 ? "Shop" : ""} ${
+                shopIndex + 0x1
+              }`,
+              flex: true,
+              items: [...Array(tab.array[shopIndex].count).keys()].map(
+                (index) => ({
+                  name: `Item ${index + 1}`,
+                  dataViewAltKey: "x023",
+                  offset:
+                    tab.array[shopIndex].offset +
+                    index * getItemShift(tabIndex),
+                  type: "variable",
+                  dataType: "uint32",
+                  bigEndian: true,
+                  resource: "itemNames",
+                  autocomplete: true,
+                }),
+              ),
+            })),
+          },
+        ],
+      })),
+    };
   }
 </script>
 

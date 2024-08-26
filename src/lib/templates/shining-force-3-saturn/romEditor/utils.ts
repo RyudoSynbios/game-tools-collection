@@ -1,7 +1,7 @@
 import { get } from "svelte/store";
 
-import { dataView, dataViewAlt, gameJson, gameRegion } from "$lib/stores";
-import { getInt } from "$lib/utils/bytes";
+import { dataView, dataViewAlt, gameRegion } from "$lib/stores";
+import { getInt, setInt } from "$lib/utils/bytes";
 import {
   type File,
   customGetRegions,
@@ -14,7 +14,7 @@ import {
 } from "$lib/utils/common/iso9660";
 import { decodeCamelotFont, decodeWindows31J } from "$lib/utils/decode";
 import { getRegionArray } from "$lib/utils/format";
-import { updateResources } from "$lib/utils/parser";
+import { getItem, updateResources } from "$lib/utils/parser";
 import { checkValidator } from "$lib/utils/validator";
 
 import type { Item, ItemContainer, ItemInt } from "$lib/types";
@@ -46,23 +46,79 @@ export function overrideGetRegions(
   return customGetRegions(dataView, shift);
 }
 
+const dataViews = [
+  { name: "x002", fileName: "X002.BIN" }, // Items
+  { name: "x019", fileName: "X019.BIN" }, // Enemies
+  { name: "x023", fileName: "X023.BIN" }, // Shops
+  { name: "x033", fileName: "X033.BIN" }, // Party
+];
+
 export function beforeItemsParsing(): void {
+  const $dataViewAlt = get(dataViewAlt);
+
   readIso9660();
+
+  dataViews.forEach((dataView) => {
+    const file = getFile(dataView.fileName);
+
+    if (file) {
+      $dataViewAlt[dataView.name] = file.dataView;
+    }
+  });
 }
 
 export function overrideItem(item: Item): Item {
-  if ("id" in item && item.id === "characters") {
+  const $dataViewAlt = get(dataViewAlt);
+
+  if ("id" in item && item.id === "party") {
     const itemContainer = item as ItemContainer;
 
     itemContainer.instances = getRegionArray(characterCount);
-  } else if ("id" in item && item.id === "enemies") {
-    const itemContainer = item as ItemContainer;
+  } else if ("dataViewAltKey" in item && item.dataViewAltKey === "x033") {
+    if (!cache.partyStatsBaseOffset) {
+      const shifts = getCharacterShifts();
 
-    itemContainer.instances = getRegionArray(enemyCount);
+      cache.partyStatsBaseOffset = getFileOffset(
+        "x033",
+        shifts.stats,
+        $dataViewAlt.x033,
+      );
+      cache.partyMiscBaseOffset = getFileOffset(
+        "x033",
+        shifts.misc,
+        $dataViewAlt.x033,
+      );
+    }
+
+    item.offset += cache.partyStatsBaseOffset;
   } else if ("id" in item && item.id === "items") {
     const itemContainer = item as ItemContainer;
 
     itemContainer.instances = getRegionArray(itemCount);
+  } else if ("dataViewAltKey" in item && item.dataViewAltKey === "x002") {
+    if (!cache.itemsBaseOffset) {
+      const shift = getRegionArray(itemOffsetShift);
+
+      const baseOffset = getFileOffset("x002", 0x80, $dataViewAlt.x002);
+
+      cache.itemsBaseOffset = getFileOffset(
+        "x002",
+        baseOffset + shift,
+        $dataViewAlt.x002,
+      );
+    }
+
+    item.offset += cache.itemsBaseOffset;
+  } else if ("id" in item && item.id === "enemies") {
+    const itemContainer = item as ItemContainer;
+
+    itemContainer.instances = getRegionArray(enemyCount);
+  } else if ("dataViewAltKey" in item && item.dataViewAltKey === "x019") {
+    if (!cache.enemiesBaseOffset) {
+      cache.enemiesBaseOffset = getFileOffset("x019", 0x0, $dataViewAlt.x019);
+    }
+
+    item.offset += cache.enemiesBaseOffset;
   } else if ("id" in item && item.id?.match(/assetViewer-/)) {
     const [_, type] = item.id.split("-");
 
@@ -76,16 +132,22 @@ export function overrideItem(item: Item): Item {
   return item;
 }
 
+export function onReady() {
+  updateResources("characterNames");
+}
+
 let cache: {
-  characters: DataView;
-  items: DataView;
-  enemies: DataView;
+  partyStatsBaseOffset: number;
+  partyMiscBaseOffset: number;
+  itemsBaseOffset: number;
+  enemiesBaseOffset: number;
   dummyTextFile: DataView;
   texts: string[];
 } = {
-  characters: new DataView(new ArrayBuffer(0)),
-  items: new DataView(new ArrayBuffer(0)),
-  enemies: new DataView(new ArrayBuffer(0)),
+  partyStatsBaseOffset: 0x0,
+  partyMiscBaseOffset: 0x0,
+  itemsBaseOffset: 0x0,
+  enemiesBaseOffset: 0x0,
   dummyTextFile: new DataView(new ArrayBuffer(0)),
   texts: [],
 };
@@ -93,7 +155,7 @@ let cache: {
 export function overrideGetInt(
   item: Item,
 ): [boolean, number | string | undefined] {
-  const $gameJson = get(gameJson);
+  const $dataViewAlt = get(dataViewAlt);
 
   if ("id" in item && item.id?.match(/cName-/)) {
     const split = item.id.split("-");
@@ -103,43 +165,18 @@ export function overrideGetInt(
     const names = getCharacterNames();
 
     return [true, names[index] || "???"];
-  } else if ("id" in item && item.id?.match(/character-/)) {
+  } else if ("id" in item && item.id?.match(/cMisc-/)) {
     const itemInt = item as ItemInt;
 
-    const split = item.id.split("-");
+    const cStatsItem = getItem(item.id.replace("cMisc", "cIndex")) as ItemInt;
 
-    const index = parseInt(split[1]);
-    const type = split[2];
-
-    if (cache.characters.byteLength === 0) {
-      const file = getFile("X033.BIN");
-
-      if (file) {
-        cache.characters = file.dataView;
-
-        if (!$gameJson.resources!.characters) {
-          updateResources("characterNames");
-        }
-      }
-    }
-
-    let offset = 0x0;
-    let length = 0x0;
-
-    const shifts = getCharacterShifts();
-
-    if (type === "miscellaneous") {
-      offset = getFileOffset("x033", shifts.misc, cache.characters);
-      length = index * 0x20;
-    } else if (type === "stats") {
-      offset = getFileOffset("x033", shifts.stats, cache.characters);
-    }
+    const index = getInt(cStatsItem.offset, "uint8", {}, $dataViewAlt.x033);
 
     const int = getInt(
-      offset + itemInt.offset + length,
+      cache.partyMiscBaseOffset + itemInt.offset + index * 0x20,
       itemInt.dataType as "int8" | "uint8" | "int16" | "uint16",
       { bigEndian: itemInt.bigEndian },
-      cache.characters,
+      $dataViewAlt.x033,
     );
 
     return [true, int];
@@ -151,30 +188,6 @@ export function overrideGetInt(
     const names = getItemNames();
 
     return [true, names[index] || "???"];
-  } else if ("id" in item && item.id === "item") {
-    const itemInt = item as ItemInt;
-
-    if (cache.items.byteLength === 0) {
-      const file = getFile("X002.BIN");
-
-      if (file) {
-        cache.items = file.dataView;
-      }
-    }
-
-    const shift = getRegionArray(itemOffsetShift);
-
-    const baseOffset = getFileOffset("x002", 0x80, cache.items);
-    const offset = getFileOffset("x002", baseOffset + shift, cache.items);
-
-    const int = getInt(
-      offset + itemInt.offset,
-      itemInt.dataType as "int8" | "uint8" | "int16" | "uint16",
-      { bigEndian: itemInt.bigEndian },
-      cache.items,
-    );
-
-    return [true, int];
   } else if ("id" in item && item.id?.match(/eName-/)) {
     const split = item.id.split("-");
 
@@ -183,30 +196,33 @@ export function overrideGetInt(
     const names = getEnemyNames();
 
     return [true, names[index] || "???"];
-  } else if ("id" in item && item.id === "enemy") {
-    const itemInt = item as ItemInt;
-
-    if (cache.enemies.byteLength === 0) {
-      const file = getFile("X019.BIN");
-
-      if (file) {
-        cache.enemies = file.dataView;
-      }
-    }
-
-    const offset = getFileOffset("x019", 0x0, cache.enemies);
-
-    const int = getInt(
-      offset + itemInt.offset,
-      itemInt.dataType as "int8" | "uint8" | "int16" | "uint16",
-      { bigEndian: itemInt.bigEndian },
-      cache.enemies,
-    );
-
-    return [true, int];
   }
 
   return [false, undefined];
+}
+
+export function overrideSetInt(item: Item, value: string): boolean {
+  const $dataViewAlt = get(dataViewAlt);
+
+  if ("id" in item && item.id?.match(/cMisc-/)) {
+    const itemInt = item as ItemInt;
+
+    const cStatsItem = getItem(item.id.replace("cMisc", "cIndex")) as ItemInt;
+
+    const index = getInt(cStatsItem.offset, "uint8", {}, $dataViewAlt.x033);
+
+    setInt(
+      cache.partyMiscBaseOffset + itemInt.offset + index * 0x20,
+      itemInt.dataType as "int8" | "uint8" | "int16" | "uint16",
+      value,
+      { bigEndian: itemInt.bigEndian },
+      "x033",
+    );
+
+    return true;
+  }
+
+  return false;
 }
 
 export function getComponent(component: string): any {
@@ -229,18 +245,19 @@ export function beforeSaving(): ArrayBufferLike {
   const $dataView = get(dataView);
   const $dataViewAlt = get(dataViewAlt);
 
-  if ($dataViewAlt.x023) {
-    writeFile("X023.BIN", $dataViewAlt.x023);
-  }
+  dataViews.forEach((dataView) => {
+    writeFile(dataView.fileName, $dataViewAlt[dataView.name]);
+  });
 
   return $dataView.buffer;
 }
 
 export function onReset(): void {
   cache = {
-    characters: new DataView(new ArrayBuffer(0)),
-    items: new DataView(new ArrayBuffer(0)),
-    enemies: new DataView(new ArrayBuffer(0)),
+    partyStatsBaseOffset: 0x0,
+    partyMiscBaseOffset: 0x0,
+    itemsBaseOffset: 0x0,
+    enemiesBaseOffset: 0x0,
     dummyTextFile: new DataView(new ArrayBuffer(0)),
     texts: [],
   };
@@ -261,32 +278,32 @@ export function getAssetNames(type: string): { [value: number]: string } {
 }
 
 export function getCharacterNames(): { [value: number]: string } {
+  const $dataViewAlt = get(dataViewAlt);
+
   const characterNamesStartIndex = getRegionArray(characterNamesStartIndexes);
   const count = getRegionArray(characterCount);
 
   const names: { [value: number]: string } = {};
 
-  if (cache.characters.byteLength > 0) {
-    const shifts = getCharacterShifts();
+  const shifts = getCharacterShifts();
 
-    const offset = getFileOffset("x033", shifts.stats, cache.characters);
+  const offset = getFileOffset("x033", shifts.stats, $dataViewAlt.x033);
 
-    const indexes = [];
+  const indexes = [];
 
-    for (let i = 0x0; i < count; i += 0x1) {
-      const characterIndex = getInt(offset + i * 0x7b, "uint8", {}, cache.characters); // prettier-ignore
+  for (let i = 0x0; i < count; i += 0x1) {
+    const characterIndex = getInt(offset + i * 0x7b, "uint8", {}, $dataViewAlt.x033); // prettier-ignore
 
-      let promoted = "";
+    let promoted = "";
 
-      if (indexes[characterIndex]) {
-        promoted = "(Promoted)";
-      }
-
-      indexes[characterIndex] = true;
-
-      names[i] =
-        `${getText(characterNamesStartIndex + characterIndex)} ${promoted}`;
+    if (indexes[characterIndex]) {
+      promoted = "(Promoted)";
     }
+
+    indexes[characterIndex] = true;
+
+    names[i] =
+      `${getText(characterNamesStartIndex + characterIndex)} ${promoted}`;
   }
 
   return names;
@@ -365,11 +382,13 @@ export function getWeaponSpecialNames(): { [value: number]: string } {
 }
 
 export function getCharacterShifts(): { misc: number; stats: number } {
+  const $dataViewAlt = get(dataViewAlt);
+
   let misc = 0x0;
   let stats = 0x0;
 
-  for (let i = 0x0; i < cache.characters.byteLength; i += 0x4) {
-    const value = getInt(i, "uint32", { bigEndian: true }, cache.characters);
+  for (let i = 0x0; i < $dataViewAlt.x033.byteLength; i += 0x4) {
+    const value = getInt(i, "uint32", { bigEndian: true }, $dataViewAlt.x033);
 
     if (value === 0xfd00f4) {
       misc = i + 0x4;
