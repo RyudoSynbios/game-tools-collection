@@ -4,7 +4,12 @@
   import Checkbox from "$lib/components/Checkbox.svelte";
   import Input from "$lib/components/Input.svelte";
   import Select from "$lib/components/Select.svelte";
-  import { dataView, gameJson, isFileVisualizerOpen } from "$lib/stores";
+  import {
+    dataView,
+    dataViewAlt,
+    gameJson,
+    isFileVisualizerOpen,
+  } from "$lib/stores";
   import { dataTypeToLength, getInt } from "$lib/utils/bytes";
   import { parseItem } from "$lib/utils/fileVisualizer";
 
@@ -25,6 +30,7 @@
   let searchBigEndianEl: HTMLInputElement;
 
   let contentHeight = 0;
+  let rows: number[] = [];
   let visibleRows: number[] = [];
 
   let paddingTop = 0;
@@ -33,6 +39,8 @@
   let start = 0;
   let end = 0;
 
+  let selectedDataView = $dataView;
+  let selectedDataViewKey = "main";
   let address = 0x0;
   let search: {
     text: string;
@@ -47,17 +55,18 @@
   let highlightedOffsets: HighlightedOffsets = {};
   let tooltip = "";
 
-  const rows = [...Array(Math.ceil($dataView.byteLength / 0x10)).keys()];
   const rowHeight = 24;
 
   function getHighlightedOffset(
     offset: number,
     searchPrevious = false,
   ): HighlightedOffset {
+    const highlightedOffset =
+      highlightedOffsets[selectedDataViewKey] &&
+      highlightedOffsets[selectedDataViewKey][offset];
+
     if (search.text) {
       const int = parseInt(search.text);
-
-      const highlightedOffset = highlightedOffsets[offset];
 
       if (!searchPrevious) {
         const previousOffsets = [
@@ -96,7 +105,7 @@
 
       if (
         !isNaN(int) &&
-        getInt(offset, search.dataType, { bigEndian: search.bigEndian }) === int
+        getInt(offset, search.dataType, { bigEndian: search.bigEndian }, selectedDataView) === int // prettier-ignore
       ) {
         return {
           offset,
@@ -109,11 +118,24 @@
       }
     }
 
-    return highlightedOffsets[offset];
+    return highlightedOffset;
   }
 
   function handleClose(): void {
     $isFileVisualizerOpen = false;
+  }
+
+  function handleDataViewChange(event: Event): void {
+    const target = event.target as HTMLInputElement;
+    const value = target.value;
+
+    if (value === "main") {
+      selectedDataView = $dataView;
+    } else {
+      selectedDataView = $dataViewAlt[value];
+    }
+
+    selectedDataViewKey = value;
   }
 
   function handleGoto(value: number | undefined = undefined): void {
@@ -139,9 +161,13 @@
 
     const dataTypeLength = dataTypeToLength(type);
 
+    if (isNaN(search)) {
+      return;
+    }
+
     if (direction === "previous") {
       for (let i = address - dataTypeLength; i > 0x0; i -= dataTypeLength) {
-        if (getInt(i, type, { bigEndian }) === search) {
+        if (getInt(i, type, { bigEndian }, selectedDataView) === search) {
           handleGoto(i);
           break;
         }
@@ -149,10 +175,10 @@
     } else if (direction === "next") {
       for (
         let i = address + 0x10;
-        i < $dataView.byteLength;
+        i < selectedDataView.byteLength;
         i += dataTypeLength
       ) {
-        if (getInt(i, type, { bigEndian }) === search) {
+        if (getInt(i, type, { bigEndian }, selectedDataView) === search) {
           handleGoto(i);
           break;
         }
@@ -246,7 +272,13 @@
   });
 
   $: {
-    contentHeight, search;
+    contentHeight, search, selectedDataViewKey;
+
+    rows = [...Array(Math.ceil(selectedDataView.byteLength / 0x10)).keys()];
+
+    if (address > selectedDataView.byteLength - 1) {
+      handleGoto(selectedDataView.byteLength - 1);
+    }
 
     if (contentEl) {
       handleScroll();
@@ -259,54 +291,66 @@
 <div class="gtc-filevisualizer-backdrop" on:click={handleClose}>
   <div class="gtc-filevisualizer" on:click|stopPropagation>
     <div class="gtc-filevisualizer-toolbar">
-      <div>
-        <div class="gtc-filevisualizer-goto">
-          <Input
-            label="Go To"
-            type="text"
-            placeholder="0x0"
-            value=""
-            onEnter={handleGoto}
-            bind:inputEl={gotoEl}
-          />
-          <button type="button" on:click={() => handleGoto()}>Go</button>
-        </div>
-        <div class="gtc-filevisualizer-search">
-          <Input
-            label="Search"
-            type="text"
-            placeholder="0x0"
-            value={search.text}
-            onChange={handleSearchTextChange}
-            onEnter={() => handleSearch("next")}
-            bind:inputEl={searchTextEl}
-          />
-          <Select
-            label="&nbsp;"
-            value={search.dataType}
-            options={[
-              { key: "uint8", value: "uint8" },
-              { key: "uint16", value: "uint16" },
-              { key: "uint24", value: "uint24" },
-              { key: "uint32", value: "uint32" },
-              { key: "float32", value: "float32" },
-            ]}
-            onChange={handleSearchTypeChange}
-            bind:selectEl={searchTypeEl}
-          />
-          <button type="button" on:click={() => handleSearch("previous")}>
-            &lt;
-          </button>
-          <button type="button" on:click={() => handleSearch("next")}>
-            &gt;
-          </button>
-          <Checkbox
-            label="Big Endian"
-            checked={search.bigEndian}
-            onChange={handleSearchBigEndianChange}
-            bind:inputEl={searchBigEndianEl}
-          />
-        </div>
+      <div class="gtc-filevisualizer-dataview">
+        <Select
+          label="DataView"
+          value={selectedDataViewKey}
+          options={[
+            { key: "main", value: "main" },
+            ...Object.keys($dataViewAlt).map((key) => ({
+              key,
+              value: key,
+            })),
+          ]}
+          onChange={handleDataViewChange}
+        />
+      </div>
+      <div class="gtc-filevisualizer-goto">
+        <Input
+          label="Go To"
+          type="text"
+          placeholder="0x0"
+          value=""
+          onEnter={handleGoto}
+          bind:inputEl={gotoEl}
+        />
+        <button type="button" on:click={() => handleGoto()}>Go</button>
+      </div>
+      <div class="gtc-filevisualizer-search">
+        <Input
+          label="Search"
+          type="text"
+          placeholder="0x0"
+          value={search.text}
+          onChange={handleSearchTextChange}
+          onEnter={() => handleSearch("next")}
+          bind:inputEl={searchTextEl}
+        />
+        <Select
+          label="&nbsp;"
+          value={search.dataType}
+          options={[
+            { key: "uint8", value: "uint8" },
+            { key: "uint16", value: "uint16" },
+            { key: "uint24", value: "uint24" },
+            { key: "uint32", value: "uint32" },
+            { key: "float32", value: "float32" },
+          ]}
+          onChange={handleSearchTypeChange}
+          bind:selectEl={searchTypeEl}
+        />
+        <button type="button" on:click={() => handleSearch("previous")}>
+          &lt;
+        </button>
+        <button type="button" on:click={() => handleSearch("next")}>
+          &gt;
+        </button>
+        <Checkbox
+          label="Big Endian"
+          checked={search.bigEndian}
+          onChange={handleSearchBigEndianChange}
+          bind:inputEl={searchBigEndianEl}
+        />
       </div>
     </div>
     <div
@@ -339,8 +383,10 @@
                     "search"}
                   on:mousemove={(event) => handleMouseMove(event, row + offset)}
                 >
-                  {row + offset < $dataView.byteLength
-                    ? getInt(row + offset, "uint8").toHex(2)
+                  {row + offset < selectedDataView.byteLength
+                    ? getInt(row + offset, "uint8", {}, selectedDataView).toHex(
+                        2,
+                      )
                     : ""}
                 </div>
               {/each}
@@ -359,8 +405,10 @@
                     "search"}
                   on:mousemove={(event) => handleMouseMove(event, row + offset)}
                 >
-                  {row + offset < $dataView.byteLength
-                    ? String.fromCharCode(getInt(row + offset, "uint8"))
+                  {row + offset < selectedDataView.byteLength
+                    ? String.fromCharCode(
+                        getInt(row + offset, "uint8", {}, selectedDataView),
+                      )
                     : ""}
                 </div>
               {/each}
@@ -389,8 +437,9 @@
       @apply flex p-4 h-full bg-primary-900 rounded-xl;
 
       & .gtc-filevisualizer-toolbar {
-        @apply flex pr-4;
+        @apply pr-4;
 
+        & .gtc-filevisualizer-dataview,
         & .gtc-filevisualizer-goto,
         & .gtc-filevisualizer-search {
           @apply flex justify-between items-end mb-4 p-2 bg-primary-700 rounded;
@@ -405,6 +454,16 @@
 
             &:hover {
               @apply bg-primary-300;
+            }
+          }
+        }
+
+        & .gtc-filevisualizer-dataview {
+          & :global(.gtc-select) {
+            @apply flex-1;
+
+            & :global(select) {
+              @apply w-full;
             }
           }
         }
