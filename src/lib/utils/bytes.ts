@@ -5,6 +5,8 @@ import {
   dataViewAlt,
   fileHeaderShift,
   fileName,
+  fileVisualizerAddress,
+  fileVisualizerDataViewKey,
   gameJson,
   gameRegion,
   gameUtils,
@@ -56,8 +58,10 @@ export function resetState(): void {
 
   dataView.set(new DataView(new ArrayBuffer(0)));
   dataViewAlt.set({});
-  fileName.set("");
   fileHeaderShift.set(0x0);
+  fileName.set("");
+  fileVisualizerAddress.set(0x0);
+  fileVisualizerDataViewKey.set("main");
   gameJson.set({} as GameJson);
   gameRegion.set(-1);
   isDirty.set(false);

@@ -7,6 +7,8 @@
   import {
     dataView,
     dataViewAlt,
+    fileVisualizerAddress,
+    fileVisualizerDataViewKey,
     gameJson,
     isFileVisualizerOpen,
   } from "$lib/stores";
@@ -40,8 +42,11 @@
   let end = 0;
 
   let selectedDataView = $dataView;
-  let selectedDataViewKey = "main";
-  let address = 0x0;
+
+  if ($fileVisualizerDataViewKey !== "main") {
+    selectedDataView = $dataViewAlt[$fileVisualizerDataViewKey];
+  }
+
   let search: {
     text: string;
     dataType: Exclude<DataTypeInt, "int64" | "uint64">;
@@ -62,8 +67,8 @@
     searchPrevious = false,
   ): HighlightedOffset {
     const highlightedOffset =
-      highlightedOffsets[selectedDataViewKey] &&
-      highlightedOffsets[selectedDataViewKey][offset];
+      highlightedOffsets[$fileVisualizerDataViewKey] &&
+      highlightedOffsets[$fileVisualizerDataViewKey][offset];
 
     if (search.text) {
       const int = parseInt(search.text);
@@ -135,7 +140,9 @@
       selectedDataView = $dataViewAlt[value];
     }
 
-    selectedDataViewKey = value;
+    $fileVisualizerDataViewKey = value;
+
+    handleGoto(0x0);
   }
 
   function handleGoto(value: number | undefined = undefined): void {
@@ -144,12 +151,12 @@
     }
 
     if (gotoEl.value.match(/^\+|-/)) {
-      address += value;
+      $fileVisualizerAddress += value;
     } else {
-      address = value;
+      $fileVisualizerAddress = value;
     }
 
-    const top = Math.floor(address / 0x10) * 24;
+    const top = Math.floor($fileVisualizerAddress / 0x10) * 24;
 
     contentEl.scrollTo({ top });
   }
@@ -166,7 +173,11 @@
     }
 
     if (direction === "previous") {
-      for (let i = address - dataTypeLength; i > 0x0; i -= dataTypeLength) {
+      for (
+        let i = $fileVisualizerAddress - dataTypeLength;
+        i > 0x0;
+        i -= dataTypeLength
+      ) {
         if (getInt(i, type, { bigEndian }, selectedDataView) === search) {
           handleGoto(i);
           break;
@@ -174,7 +185,7 @@
       }
     } else if (direction === "next") {
       for (
-        let i = address + 0x10;
+        let i = $fileVisualizerAddress + 0x10;
         i < selectedDataView.byteLength;
         i += dataTypeLength
       ) {
@@ -225,7 +236,7 @@
     tooltip = "";
   }
 
-  function handleScroll(): void {
+  function handleScroll(event?: Event): void {
     const { scrollTop } = contentEl;
 
     let i = 0;
@@ -256,11 +267,19 @@
 
     paddingBottom = (rows.length - end) * rowHeight;
 
-    address = Math.floor(paddingTop / 24) * 0x10;
+    if (event) {
+      $fileVisualizerAddress = Math.floor(paddingTop / 24) * 0x10;
+    }
   }
 
   onMount(() => {
     bodyEl.style.overflow = "hidden";
+
+    if ($fileVisualizerAddress) {
+      setTimeout(() => {
+        handleGoto($fileVisualizerAddress);
+      }, 1);
+    }
 
     Object.values($gameJson.items).forEach((item) => {
       parseItem(highlightedOffsets, item);
@@ -272,13 +291,9 @@
   });
 
   $: {
-    contentHeight, search, selectedDataViewKey;
+    contentHeight, search;
 
     rows = [...Array(Math.ceil(selectedDataView.byteLength / 0x10)).keys()];
-
-    if (address > selectedDataView.byteLength - 1) {
-      handleGoto(selectedDataView.byteLength - 1);
-    }
 
     if (contentEl) {
       handleScroll();
@@ -294,7 +309,7 @@
       <div class="gtc-filevisualizer-dataview">
         <Select
           label="DataView"
-          value={selectedDataViewKey}
+          value={$fileVisualizerDataViewKey}
           options={[
             { key: "main", value: "main" },
             ...Object.keys($dataViewAlt).map((key) => ({
@@ -459,6 +474,8 @@
         }
 
         & .gtc-filevisualizer-dataview {
+          @apply mb-8;
+
           & :global(.gtc-select) {
             @apply flex-1;
 
