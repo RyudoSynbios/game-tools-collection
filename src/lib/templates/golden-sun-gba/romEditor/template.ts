@@ -2697,7 +2697,6 @@ const template: GameJson = {
     characterNames: "getCharacterNames()",
     classNames: "getClassNames()",
     djinniNames: "getDjinniNames()",
-    enemyNames: "getEnemyNames()",
     enemyDropRates: {
       0x0: "Never",
       0x1: "100.00%",
@@ -2711,6 +2710,7 @@ const template: GameJson = {
       0x9: "0.39%",
     },
     enemyGroupNames: "getEnemyGroupNames()",
+    enemyNames: "getEnemyNames()",
     itemEffects: {
       0x0: "-",
       0x1: "+ Max HP",
