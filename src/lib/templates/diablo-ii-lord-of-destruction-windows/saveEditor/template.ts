@@ -14,8 +14,8 @@ const template: GameJson = {
       },
     },
     text: "Drag 'n' drop here or click to add a save file.",
-    error:
-      "Not a valid save file.<br />Save must be from Diablo II: Lord of Destruction v1.10 or above.",
+    hint: "Only works with Diablo II: Lord of Destruction v1.10 or above (.d2s files).",
+    error: "Not a valid save file.",
   },
   items: [
     {

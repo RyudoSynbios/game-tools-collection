@@ -103,6 +103,7 @@ export interface GameJson {
   validator: {
     regions: { [key: string]: RegionValidator };
     text: string;
+    hint?: string;
     error: string;
   };
   checksums?: ItemChecksum[];

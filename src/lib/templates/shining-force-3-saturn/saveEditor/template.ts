@@ -12,8 +12,8 @@ const template: GameJson = {
       },
     },
     text: "Drag 'n' drop here or click to add a save file.",
-    error:
-      "Not a valid save file.<br />Currently this save editor only works with System saves (.bkr files).<br />Scenarios 2 and 3 will be available later.",
+    hint: "Currently only works with System saves (.bkr files).<br />Scenarios 2 and 3 will be available later.",
+    error: "Not a valid save file.",
   },
   items: [
     {

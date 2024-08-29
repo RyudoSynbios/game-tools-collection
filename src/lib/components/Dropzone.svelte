@@ -144,6 +144,9 @@
     {:else}
       <p>Loading...</p>
     {/if}
+    {#if $gameTemplate.validator.hint}
+      <p class="gtc-dropzone-hint">{@html $gameTemplate.validator.hint}</p>
+    {/if}
     {#if error}
       <p class="gtc-dropzone-error">{@html $gameTemplate.validator.error}</p>
     {/if}
@@ -165,6 +168,10 @@
       @apply flex flex-col items-center justify-center p-4 w-full h-full text-white border-2 border-dashed cursor-pointer border-primary-500;
 
       &.gtc-dropzone-dragging {
+      }
+
+      & .gtc-dropzone-hint {
+        @apply text-primary-400 text-center;
       }
 
       & .gtc-dropzone-error {
