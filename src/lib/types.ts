@@ -101,7 +101,8 @@ export interface Game {
 
 export interface GameJson {
   validator: {
-    regions: { [key: string]: RegionValidator };
+    fileNames?: string[];
+    regions: { [key: string]: RegionValidator | boolean };
     text: string;
     hint?: string;
     error: string;

@@ -72,6 +72,10 @@ export function getRegions(
   ).reduce((regions: string[], [region, conditions]) => {
     if (
       checkConditions(conditions, (condition: any) => {
+        if (condition === true) {
+          return true;
+        }
+
         const offset = parseInt(getObjKey(condition, 0));
         const array = condition[offset];
 

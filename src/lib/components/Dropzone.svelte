@@ -89,6 +89,13 @@
         regions = getRegions(dataViewTmp as DataView, fileHeaderShiftTmp);
       }
 
+      if (
+        $gameTemplate.validator.fileNames &&
+        !$gameTemplate.validator.fileNames.includes(file.name)
+      ) {
+        regions = [];
+      }
+
       if (regions.length === 1) {
         initTool(regions[0]);
       } else if (regions.length === 0) {
