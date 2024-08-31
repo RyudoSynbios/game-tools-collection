@@ -597,6 +597,7 @@ interface StringOptions {
   bigEndian?: boolean;
   letterBigEndian?: boolean;
   isZeroTerminated?: boolean;
+  regex?: string;
   resource?: string;
 }
 
@@ -721,8 +722,11 @@ export function setString(
       if (index !== -1) {
         int = parseInt(getObjKey(resource, index));
       }
-    } else {
-      int = (char || "").charCodeAt(0);
+    } else if (
+      char !== undefined &&
+      (!options.regex || char.match(new RegExp(options.regex)))
+    ) {
+      int = char.charCodeAt(0);
     }
 
     if (options.isZeroTerminated && int === 0x0) {

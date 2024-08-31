@@ -33,6 +33,7 @@
           bigEndian: item.bigEndian,
           letterBigEndian: item.letterBigEndian,
           isZeroTerminated: item.isZeroTerminated,
+          regex: item.regex,
           resource: item.resource,
         },
         item.dataViewAltKey,

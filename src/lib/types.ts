@@ -286,6 +286,7 @@ export interface ItemString {
   letterBigEndian?: boolean;
   fallback?: number;
   isZeroTerminated?: boolean;
+  regex?: string;
   resource?: string;
   size?: "md" | "lg";
   disabled?: boolean;
