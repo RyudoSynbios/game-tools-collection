@@ -3,7 +3,11 @@ import { get } from "svelte/store";
 
 import { fileHeaderShift, gameTemplate } from "$lib/stores";
 import { getInt, setInt } from "$lib/utils/bytes";
-import { byteswapDataView, getHeaderShift } from "$lib/utils/common/nintendo64";
+import {
+  byteswapDataView,
+  generateRareChecksum,
+  getHeaderShift,
+} from "$lib/utils/common/nintendo64";
 import { clone, makeOperations } from "$lib/utils/format";
 
 import type {
@@ -235,58 +239,11 @@ export function afterSetInt(item: Item): void {
   }
 }
 
-function getHash(int: number, polynormal: Long, shift: number): Long {
-  const hash1 = polynormal
-    .add(long(int).shiftLeft(long(shift).and(long(0xf))))
-    .and(long(0x1ffffffff));
-
-  const hash2 = hash1
-    .shiftLeft(0x3f)
-    .shiftRightUnsigned(0x1f)
-    .or(hash1.shiftRightUnsigned(1))
-    .xor(hash1.shiftLeft(0x2c).shiftRightUnsigned(0x20));
-
-  return hash2.shiftRightUnsigned(0x14).and(long(0xfff)).xor(hash2);
-}
-
-function long(value: number): Long {
-  return Long.fromNumber(value);
-}
-
-// Adapted from https://github.com/bryc/rare-n64-chksm
 export function generateChecksum(
   item: ItemChecksum,
   dataView = new DataView(new ArrayBuffer(0)),
 ): number {
-  let checksum1 = long(0x0);
-  let polynormal = long(0x13108b3c1);
-  let shift = 0;
-
-  for (
-    let i = item.control.offsetStart;
-    i < item.control.offsetEnd;
-    i += 0x1, shift += 7
-  ) {
-    const int = getInt(i, "uint8", {}, dataView);
-
-    polynormal = getHash(int, polynormal, shift);
-
-    checksum1 = checksum1.xor(polynormal);
-  }
-
-  let checksum2 = checksum1;
-
-  for (
-    let i = item.control.offsetEnd - 1;
-    i >= item.control.offsetStart;
-    i -= 0x1, shift += 3
-  ) {
-    const int = getInt(i, "uint8", {}, dataView);
-
-    polynormal = getHash(int, polynormal, shift);
-
-    checksum2 = checksum2.xor(polynormal);
-  }
+  const [_, checksum2] = generateRareChecksum(item, dataView);
 
   const checksum = checksum2.toString(16).padStart(8, "0").slice(-8);
 
