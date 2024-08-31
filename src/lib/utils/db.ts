@@ -2,7 +2,7 @@ import consoleManufacturersDb from "$lib/db/consoleManufacturers.json";
 import consolesDb from "$lib/db/consoles.json";
 import gamesDb from "$lib/db/games.json";
 
-import type { Console, Game, Manufacturer, Tool } from "$lib/types";
+import type { Console, Game, Manufacturer } from "$lib/types";
 
 export function getConsole(consoleId: string): Console | undefined {
   const consoles = getConsoles();
@@ -31,6 +31,8 @@ export function getGame(gameId: string): Game | undefined {
 
   return games.find((game) => game.id === gameId);
 }
+
+export type Tool = "saveEditor" | "romEditor" | "randomizer";
 
 interface GameOptions {
   title?: string;

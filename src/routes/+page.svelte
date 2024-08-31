@@ -1,8 +1,6 @@
 <script lang="ts">
   import GameTile from "$lib/components/GameTile.svelte";
-  import { getConsoles, getGames } from "$lib/utils/db";
-
-  import type { Tool } from "$lib/types";
+  import { type Tool, getConsoles, getGames } from "$lib/utils/db";
 
   let consoles = getConsoles();
   let games = getGames();

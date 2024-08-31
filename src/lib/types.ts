@@ -59,8 +59,6 @@ export type RegionValidator = Validator | LogicalOperator<Validator>;
 
 export type TimeUnit = "milliseconds" | "seconds" | "minutes" | "hours";
 
-export type Tool = "saveEditor" | "romEditor" | "randomizer";
-
 export type Validator = { [key: number]: number[] };
 
 export interface Binary {

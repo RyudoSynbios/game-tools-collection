@@ -1,10 +1,10 @@
 import { error, redirect } from "@sveltejs/kit";
 
 import { gameTemplate, gameUtils } from "$lib/stores.js";
-import { getGame } from "$lib/utils/db.js";
+import { type Tool, getGame } from "$lib/utils/db.js";
 import debug from "$lib/utils/debug";
 
-import type { Game, Tool } from "$lib/types.js";
+import type { Game } from "$lib/types.js";
 
 export interface Data {
   game: Game;
