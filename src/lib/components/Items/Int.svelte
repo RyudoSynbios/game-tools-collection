@@ -32,36 +32,26 @@
   function handleInputChange(event: Event): void {
     let isOverrided = false;
 
+    const value = (event.target as HTMLInputElement).value;
+
     if (utilsExists("overrideSetInt")) {
-      isOverrided = $gameUtils.overrideSetInt(
-        item,
-        (event.target as HTMLInputElement).value,
-      );
+      isOverrided = $gameUtils.overrideSetInt(item, value);
     }
 
+    // prettier-ignore
     if (!isOverrided) {
       if (item.dataType !== "int64" && item.dataType !== "uint64") {
-        setInt(
-          item.offset,
-          item.dataType,
-          (event.target as HTMLInputElement).value,
-          {
-            bigEndian: item.bigEndian,
-            binaryCodedDecimal: item.binaryCodedDecimal,
-            binary: item.binary,
-            bit: item.bit,
-            operations: item.operations,
-          },
-          item.dataViewAltKey,
-        );
+        setInt(item.offset, item.dataType, value, {
+          bigEndian: item.bigEndian,
+          binaryCodedDecimal: item.binaryCodedDecimal,
+          binary: item.binary,
+          bit: item.bit,
+          operations: item.operations,
+        }, item.dataViewAltKey);
       } else {
-        setBigInt(
-          item.offset,
-          item.dataType,
-          (event.target as HTMLInputElement).value,
-          { bigEndian: item.bigEndian },
-          item.dataViewAltKey,
-        );
+        setBigInt(item.offset, item.dataType, value, {
+          bigEndian: item.bigEndian
+        }, item.dataViewAltKey);
       }
     }
 
