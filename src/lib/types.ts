@@ -84,6 +84,7 @@ export interface Game {
     id: string;
     name: string;
   };
+  createdAt: string;
   tools: {
     saveEditor?: {
       regions: string[];

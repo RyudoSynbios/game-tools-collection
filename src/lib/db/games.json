@@ -5,6 +5,7 @@
     "consoleId": "nintendo-64",
     "tools": {
       "saveEditor": {
+        "createdAt": "2023-12-16",
         "regions": ["🇪🇺", "🇺🇸", "🇯🇵"]
       }
     }
@@ -15,6 +16,7 @@
     "consoleId": "pc-engine-cd",
     "tools": {
       "saveEditor": {
+        "createdAt": "2023-12-16",
         "regions": ["🇯🇵"]
       }
     }
@@ -25,6 +27,7 @@
     "consoleId": "nintendo-64",
     "tools": {
       "saveEditor": {
+        "createdAt": "2024-04-04",
         "regions": ["🇪🇺", "🇺🇸", "🇯🇵"]
       }
     }
@@ -35,9 +38,11 @@
     "consoleId": "nintendo-64",
     "tools": {
       "saveEditor": {
+        "createdAt": "2023-12-20",
         "regions": ["🇪🇺", "🇺🇸", "🇯🇵"]
       },
       "romEditor": {
+        "createdAt": "2024-05-27",
         "regions": ["🇪🇺", "🇺🇸", "🇯🇵"]
       }
     }
@@ -48,6 +53,7 @@
     "consoleId": "game-boy-advance",
     "tools": {
       "saveEditor": {
+        "createdAt": "2023-12-16",
         "regions": ["🇪🇺", "🇺🇸", "🇯🇵"]
       }
     }
@@ -58,9 +64,11 @@
     "consoleId": "game-boy-advance",
     "tools": {
       "saveEditor": {
+        "createdAt": "2023-12-16",
         "regions": ["🇪🇺", "🇺🇸", "🇯🇵"]
       },
       "romEditor": {
+        "createdAt": "2023-12-16",
         "regions": ["🇪🇺", "🇺🇸", "🇯🇵"]
       }
     }
@@ -71,6 +79,7 @@
     "consoleId": "nintendo-ds",
     "tools": {
       "saveEditor": {
+        "createdAt": "2024-03-24",
         "regions": ["🇪🇺", "🇺🇸", "🇯🇵"]
       }
     }
@@ -81,6 +90,7 @@
     "consoleId": "game-boy-advance",
     "tools": {
       "saveEditor": {
+        "createdAt": "2024-02-19",
         "regions": ["🇪🇺", "🇺🇸", "🇯🇵"]
       }
     }
@@ -91,6 +101,7 @@
     "consoleId": "playstation",
     "tools": {
       "saveEditor": {
+        "createdAt": "2023-12-16",
         "regions": ["🇪🇺", "🇺🇸", "🇯🇵"]
       }
     }
@@ -101,6 +112,7 @@
     "consoleId": "playstation-2",
     "tools": {
       "saveEditor": {
+        "createdAt": "2024-07-12",
         "regions": ["🇪🇺"]
       }
     }
@@ -111,6 +123,7 @@
     "consoleId": "windows",
     "tools": {
       "saveEditor": {
+        "createdAt": "2024-08-16",
         "regions": ["🏳️"]
       }
     }
@@ -121,6 +134,7 @@
     "consoleId": "game-boy",
     "tools": {
       "saveEditor": {
+        "createdAt": "2023-12-16",
         "regions": ["🇪🇺", "🇺🇸", "🇯🇵"]
       }
     }
@@ -131,6 +145,7 @@
     "consoleId": "game-boy-advance",
     "tools": {
       "saveEditor": {
+        "createdAt": "2024-04-04",
         "regions": ["🇪🇺", "🇺🇸", "🇯🇵"]
       }
     }
@@ -141,6 +156,7 @@
     "consoleId": "game-boy-color",
     "tools": {
       "saveEditor": {
+        "createdAt": "2023-12-16",
         "regions": ["🇪🇺", "🇺🇸", "🇯🇵", "🇦🇺"]
       }
     }
@@ -151,6 +167,7 @@
     "consoleId": "game-boy",
     "tools": {
       "saveEditor": {
+        "createdAt": "2024-08-17",
         "regions": ["🇪🇺", "🇺🇸", "🇯🇵"]
       }
     }
@@ -161,9 +178,11 @@
     "consoleId": "game-boy-advance",
     "tools": {
       "saveEditor": {
+        "createdAt": "2023-12-19",
         "regions": ["🇪🇺", "🇺🇸", "🇯🇵", "🇫🇷", "🇩🇪", "🇮🇹", "🇪🇸"]
       },
       "romEditor": {
+        "createdAt": "2024-02-17",
         "regions": ["🇪🇺", "🇺🇸", "🇯🇵", "🇫🇷", "🇩🇪", "🇮🇹", "🇪🇸"]
       }
     }
@@ -174,6 +193,7 @@
     "consoleId": "nintendo-64",
     "tools": {
       "saveEditor": {
+        "createdAt": "2023-12-16",
         "regions": ["🇪🇺", "🇺🇸", "🇯🇵"]
       }
     }
@@ -184,6 +204,7 @@
     "consoleId": "playstation",
     "tools": {
       "saveEditor": {
+        "createdAt": "2023-12-16",
         "regions": ["🇪🇺", "🇺🇸", "🇯🇵", "🇫🇷", "🇩🇪"]
       }
     }
@@ -194,6 +215,7 @@
     "consoleId": "playstation-2",
     "tools": {
       "saveEditor": {
+        "createdAt": "2024-08-04",
         "regions": ["🇪🇺", "🇺🇸", "🇯🇵"]
       }
     }
@@ -204,6 +226,7 @@
     "consoleId": "playstation-2",
     "tools": {
       "saveEditor": {
+        "createdAt": "2024-03-04",
         "regions": ["🇪🇺", "🇺🇸", "🇯🇵", "🇫🇷", "🇩🇪", "🇮🇹", "🇪🇸", "🇦🇺"]
       }
     }
@@ -214,6 +237,7 @@
     "consoleId": "game-boy-advance",
     "tools": {
       "saveEditor": {
+        "createdAt": "2023-12-16",
         "regions": ["🇪🇺", "🇺🇸", "🇯🇵"]
       }
     }
@@ -224,6 +248,7 @@
     "consoleId": "super-nintendo",
     "tools": {
       "saveEditor": {
+        "createdAt": "2024-01-06",
         "regions": ["🇪🇺", "🇺🇸", "🇯🇵", "🇫🇷", "🇩🇪", "🇨🇦"]
       }
     }
@@ -234,6 +259,7 @@
     "consoleId": "game-boy-color",
     "tools": {
       "saveEditor": {
+        "createdAt": "2023-12-16",
         "regions": ["🇪🇺", "🇺🇸", "🇯🇵", "🇫🇷", "🇩🇪"]
       }
     }
@@ -244,6 +270,7 @@
     "consoleId": "nintendo-64",
     "tools": {
       "saveEditor": {
+        "createdAt": "2023-12-29",
         "regions": ["🇪🇺", "🇺🇸", "🇯🇵"]
       }
     }
@@ -254,6 +281,7 @@
     "consoleId": "dreamcast",
     "tools": {
       "saveEditor": {
+        "createdAt": "2024-01-10",
         "regions": ["🇪🇺", "🇺🇸", "🇯🇵"]
       }
     }
@@ -264,9 +292,11 @@
     "consoleId": "super-nintendo",
     "tools": {
       "saveEditor": {
+        "createdAt": "2023-12-16",
         "regions": ["🇪🇺", "🇺🇸", "🇯🇵", "🇫🇷", "🇩🇪"]
       },
       "romEditor": {
+        "createdAt": "2023-12-16",
         "regions": ["🇪🇺", "🇺🇸", "🇯🇵", "🇫🇷", "🇩🇪"]
       }
     }
@@ -277,6 +307,7 @@
     "consoleId": "nintendo-64",
     "tools": {
       "saveEditor": {
+        "createdAt": "2024-01-28",
         "regions": ["🇪🇺", "🇺🇸", "🇯🇵"]
       }
     }
@@ -287,6 +318,7 @@
     "consoleId": "game-boy-color",
     "tools": {
       "saveEditor": {
+        "createdAt": "2024-07-25",
         "regions": ["🇪🇺", "🇺🇸", "🇯🇵", "🇦🇺"]
       }
     }
@@ -297,6 +329,7 @@
     "consoleId": "playstation",
     "tools": {
       "saveEditor": {
+        "createdAt": "2023-12-23",
         "regions": ["🇪🇺", "🇺🇸", "🇯🇵"]
       }
     }
@@ -307,6 +340,7 @@
     "consoleId": "playstation",
     "tools": {
       "saveEditor": {
+        "createdAt": "2024-03-17",
         "regions": ["🇪🇺", "🇺🇸", "🇯🇵", "🇫🇷", "🇩🇪"]
       }
     }
@@ -317,6 +351,7 @@
     "consoleId": "windows",
     "tools": {
       "saveEditor": {
+        "createdAt": "2024-08-31",
         "regions": ["🏳️"]
       }
     }
@@ -327,9 +362,11 @@
     "consoleId": "saturn",
     "tools": {
       "saveEditor": {
+        "createdAt": "2023-12-16",
         "regions": ["🇪🇺", "🇺🇸", "🇯🇵"]
       },
       "romEditor": {
+        "createdAt": "2024-07-08",
         "regions": ["🇪🇺", "🇺🇸", "🇯🇵"]
       }
     }
@@ -340,9 +377,11 @@
     "consoleId": "mega-drive",
     "tools": {
       "saveEditor": {
+        "createdAt": "2024-04-29",
         "regions": ["🇪🇺", "🇺🇸", "🇯🇵", "🇫🇷", "🇩🇪", "🇪🇸", "🇰🇷"]
       },
       "romEditor": {
+        "createdAt": "2024-04-29",
         "regions": ["🇪🇺", "🇺🇸", "🇯🇵", "🇫🇷", "🇩🇪", "🇪🇸", "🇰🇷"]
       }
     }
@@ -353,6 +392,7 @@
     "consoleId": "mega-drive",
     "tools": {
       "saveEditor": {
+        "createdAt": "2023-12-16",
         "regions": ["🇪🇺", "🇺🇸", "🇯🇵"]
       }
     }
@@ -363,6 +403,7 @@
     "consoleId": "nintendo-64",
     "tools": {
       "saveEditor": {
+        "createdAt": "2023-12-16",
         "regions": ["🇪🇺", "🇺🇸", "🇯🇵", "🇦🇺"]
       }
     }
@@ -373,6 +414,7 @@
     "consoleId": "game-boy-advance",
     "tools": {
       "saveEditor": {
+        "createdAt": "2023-12-16",
         "regions": ["🇪🇺", "🇺🇸", "🇯🇵"]
       }
     }
@@ -383,6 +425,7 @@
     "consoleId": "game-boy",
     "tools": {
       "saveEditor": {
+        "createdAt": "2023-12-16",
         "regions": ["🏳️"]
       }
     }

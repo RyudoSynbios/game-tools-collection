@@ -1,3 +1,5 @@
+import moment from "moment";
+
 import consoleManufacturersDb from "$lib/db/consoleManufacturers.json";
 import consolesDb from "$lib/db/consoles.json";
 import gamesDb from "$lib/db/games.json";
@@ -34,10 +36,13 @@ export function getGame(gameId: string): Game | undefined {
 
 export type Tool = "saveEditor" | "romEditor" | "randomizer";
 
+export type Order = "createdAt";
+
 interface GameOptions {
   title?: string;
   console?: string;
   tool?: Tool;
+  order?: Order;
 }
 
 export function getGames(options: GameOptions = {}): Game[] {
@@ -54,10 +59,23 @@ export function getGames(options: GameOptions = {}): Game[] {
     if (game.tools.saveEditor || game.tools.romEditor) {
       const console = getConsole(game.consoleId) as Console;
 
+      let createdAt = "";
+
+      if (options.tool) {
+        createdAt = game.tools[options.tool].createdAt;
+      } else {
+        Object.values(game.tools).forEach((tool) => {
+          if (!createdAt || moment(tool.createdAt) > moment(createdAt)) {
+            createdAt = tool.createdAt;
+          }
+        });
+      }
+
       results.push({
         id: game.id,
         name: game.name,
         console,
+        createdAt,
         tools: {
           saveEditor: game.tools.saveEditor,
           romEditor: game.tools.romEditor,
@@ -67,6 +85,14 @@ export function getGames(options: GameOptions = {}): Game[] {
 
     return results;
   }, []);
+
+  games.sort((a, b) => {
+    if (options.order && options.order === "createdAt") {
+      return moment(b.createdAt).unix() - moment(a.createdAt).unix();
+    }
+
+    return a.name.localeCompare(b.name);
+  });
 
   return games;
 }

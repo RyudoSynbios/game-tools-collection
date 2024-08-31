@@ -1,6 +1,6 @@
 <script lang="ts">
   import GameTile from "$lib/components/GameTile.svelte";
-  import { type Tool, getConsoles, getGames } from "$lib/utils/db";
+  import { type Order, type Tool, getConsoles, getGames } from "$lib/utils/db";
 
   let consoles = getConsoles();
   let games = getGames();
@@ -8,19 +8,23 @@
   let titleEl: HTMLInputElement;
   let consoleEl: HTMLSelectElement;
   let toolEl: HTMLSelectElement;
+  let orderEl: HTMLSelectElement;
 
   let searchConsole = "";
   let searchTool = "";
+  let order = "";
 
   function handleFilter(): void {
     games = getGames({
       title: titleEl.value,
       console: consoleEl.value,
       tool: toolEl.value as Tool,
+      order: orderEl.value as Order,
     });
 
     searchConsole = consoleEl.value;
     searchTool = toolEl.value;
+    order = orderEl.value;
   }
 </script>
 
@@ -56,6 +60,14 @@
       <option value="saveEditor">Save Editor</option>
       <option value="romEditor">Rom Editor</option>
       <option value="randomizer">Randomizer</option>
+    </select>
+    <select
+      class:gtc-home-select-filled={order}
+      bind:this={orderEl}
+      on:change={handleFilter}
+    >
+      <option value="">Order</option>
+      <option value="createdAt">New</option>
     </select>
   </div>
   <div class="gtc-home-games">
