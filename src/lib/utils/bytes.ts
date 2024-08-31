@@ -1,25 +1,12 @@
 import { get } from "svelte/store";
 
-import {
-  dataView,
-  dataViewAlt,
-  fileHeaderShift,
-  fileName,
-  fileVisualizerAddress,
-  fileVisualizerDataViewKey,
-  gameJson,
-  gameRegion,
-  gameUtils,
-  isDebug,
-  isDirty,
-} from "$lib/stores";
+import { dataView, dataViewAlt, gameJson, isDebug, isDirty } from "$lib/stores";
 import debug from "$lib/utils/debug";
 import {
   getObjKey,
   getRegionArray,
   isPartial,
   makeOperations,
-  utilsExists,
 } from "$lib/utils/format";
 
 import type {
@@ -27,7 +14,6 @@ import type {
   Bit,
   DataType,
   DataTypeInt,
-  GameJson,
   IntOperation,
 } from "$lib/types";
 
@@ -47,24 +33,6 @@ export function isDataViewAltExists(key: string): boolean {
   }
 
   return exists;
-}
-
-export function resetState(): void {
-  const $gameUtils = get(gameUtils) as any;
-
-  if (utilsExists("onReset")) {
-    $gameUtils.onReset();
-  }
-
-  dataView.set(new DataView(new ArrayBuffer(0)));
-  dataViewAlt.set({});
-  fileHeaderShift.set(0x0);
-  fileName.set("");
-  fileVisualizerAddress.set(0x0);
-  fileVisualizerDataViewKey.set("main");
-  gameJson.set({} as GameJson);
-  gameRegion.set(-1);
-  isDirty.set(false);
 }
 
 export function byteswap(

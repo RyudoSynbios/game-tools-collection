@@ -20,10 +20,10 @@
     isDirty,
     isFileVisualizerOpen,
   } from "$lib/stores";
-  import { resetState } from "$lib/utils/bytes";
   import { updateChecksums } from "$lib/utils/checksum";
   import { getGame } from "$lib/utils/db.js";
   import { utilsExists } from "$lib/utils/format";
+  import { reset } from "$lib/utils/state";
   import type { Game, GameJson } from "$lib/types";
 
   const game = getGame($page.params["gameId"]) as Game;
@@ -57,7 +57,7 @@
       }
     }
 
-    resetState();
+    reset();
   }
 
   function handleFileSave(): void {
@@ -83,7 +83,7 @@
   }
 
   onDestroy(() => {
-    resetState();
+    reset();
 
     $gameTemplate = {} as GameJson;
     $gameUtils = {};
