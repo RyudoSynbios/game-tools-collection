@@ -170,6 +170,7 @@ const template: GameJson = {
                         {
                           type: "section",
                           flex: true,
+                          noMargin: true,
                           items: [
                             {
                               name: "HP",
@@ -200,6 +201,39 @@ const template: GameJson = {
                           flex: true,
                           items: [
                             {
+                              name: "HP Bonus",
+                              offset: 0x3d5,
+                              type: "variable",
+                              dataType: "uint8",
+                              operations: [{ "*": 10 }],
+                              max: 2550,
+                              step: 10,
+                            },
+                            {
+                              name: "MP Bonus",
+                              offset: 0x3d6,
+                              type: "variable",
+                              dataType: "uint8",
+                              operations: [{ "*": 10 }],
+                              max: 2550,
+                              step: 10,
+                            },
+                            {
+                              name: "Hearts Bonus",
+                              offset: 0x3d4,
+                              type: "variable",
+                              dataType: "uint8",
+                              operations: [{ "*": 6 }],
+                              max: 1530,
+                              step: 6,
+                            },
+                          ],
+                        },
+                        {
+                          type: "section",
+                          flex: true,
+                          items: [
+                            {
                               name: "Subweapon",
                               offset: 0x2e8,
                               type: "variable",
@@ -208,30 +242,6 @@ const template: GameJson = {
                               autocomplete: true,
                             },
                           ],
-                        },
-                      ],
-                    },
-                    {
-                      name: "Stats Bonus",
-                      flex: true,
-                      items: [
-                        {
-                          name: "HP +10",
-                          offset: 0x3d5,
-                          type: "variable",
-                          dataType: "uint8",
-                        },
-                        {
-                          name: "MP +10",
-                          offset: 0x3d6,
-                          type: "variable",
-                          dataType: "uint8",
-                        },
-                        {
-                          name: "Hearts +6",
-                          offset: 0x3d4,
-                          type: "variable",
-                          dataType: "uint8",
                         },
                       ],
                     },

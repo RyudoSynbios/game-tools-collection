@@ -132,7 +132,7 @@ export function overrideItem(item: Item): Item {
   return item;
 }
 
-export function onReady() {
+export function onReady(): void {
   updateResources("characterNames");
 }
 

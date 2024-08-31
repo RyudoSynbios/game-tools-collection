@@ -4005,6 +4005,7 @@ const template: GameJson = {
       0x77: "w",
       0x78: "x",
       0x79: "y",
+      0x7a: "z",
     },
     progressions: {
       0x0: "-",

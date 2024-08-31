@@ -59,7 +59,7 @@ const template: GameJson = {
                       test: true,
                     },
                     {
-                      name: "Death Counts",
+                      name: "Death Count",
                       offset: 0x3d,
                       type: "variable",
                       dataType: "uint16",
