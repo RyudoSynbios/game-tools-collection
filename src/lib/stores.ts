@@ -15,6 +15,6 @@ export const gameJson = writable({} as GameJson);
 export const gameRegion = writable(-1);
 export const gameTemplate = writable({} as GameJson);
 export const gameUtils = writable({}) as any;
-export const isDebug = writable(getLocalStorage("debug"));
+export const isDebug = writable(getLocalStorage("debug") === "true");
 export const isDirty = writable(false);
 export const isFileVisualizerOpen = writable(false);
