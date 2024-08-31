@@ -648,6 +648,8 @@ export function getString(
       const char = resource[int];
 
       string += char !== undefined ? char : " ";
+    } else if (int === 0x0) {
+      string += " ";
     } else {
       string += String.fromCharCode(int);
     }
@@ -677,12 +679,14 @@ export function setString(
     value = value.reverse();
   }
 
+  let skip = 0x0;
+
   for (let i = offset; i < offset + length; i += increment) {
     const char = value[(i - offset) / increment];
 
     if (char === undefined && options.isZeroTerminated) {
       // prettier-ignore
-      setInt(i, letterDataType, 0x0, {
+      setInt(i - skip, letterDataType, 0x0, {
         bigEndian: options.letterBigEndian,
       }, dataViewAltKey);
 
@@ -707,24 +711,25 @@ export function setString(
       }
     }
 
+    let int = fallback;
+
     if (resource) {
-      let index = Object.values(resource).findIndex(
+      const index = Object.values(resource).findIndex(
         (letter) => letter === char,
       );
-
-      let int = fallback;
 
       if (index !== -1) {
         int = parseInt(getObjKey(resource, index));
       }
+    } else {
+      int = (char || "").charCodeAt(0);
+    }
 
-      // prettier-ignore
-      setInt(i, letterDataType, int, {
-        bigEndian: options.letterBigEndian,
-      }, dataViewAltKey);
+    if (options.isZeroTerminated && int === 0x0) {
+      skip += 0x1;
     } else {
       // prettier-ignore
-      setInt(i, letterDataType, (char || "").charCodeAt(0), {
+      setInt(i - skip, letterDataType, int, {
         bigEndian: options.letterBigEndian,
       }, dataViewAltKey);
     }
