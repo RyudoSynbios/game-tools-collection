@@ -312,6 +312,16 @@
     }
   },
   {
+    "id": "rogue-legacy-windows",
+    "name": "Rogue Legacy",
+    "consoleId": "windows",
+    "tools": {
+      "saveEditor": {
+        "regions": ["🏳️"]
+      }
+    }
+  },
+  {
     "id": "shining-force-3-saturn",
     "name": "Shining Force 3",
     "consoleId": "saturn",
