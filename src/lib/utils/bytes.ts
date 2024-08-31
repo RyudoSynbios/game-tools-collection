@@ -699,6 +699,7 @@ export function setString(
   value: string,
   fallback = 0x0,
   options: StringOptions = {},
+  dataViewAltKey = "",
 ): void {
   const $gameJson = get(gameJson);
 
@@ -712,7 +713,10 @@ export function setString(
     const char = value[(i - offset) / increment];
 
     if (char === undefined && options.isZeroTerminated) {
-      setInt(i, letterDataType, 0x0, { bigEndian: options.letterBigEndian });
+      // prettier-ignore
+      setInt(i, letterDataType, 0x0, {
+        bigEndian: options.letterBigEndian,
+      }, dataViewAltKey);
 
       break;
     }
@@ -746,11 +750,15 @@ export function setString(
         int = parseInt(getObjKey(resource, index));
       }
 
-      setInt(i, letterDataType, int, { bigEndian: options.letterBigEndian });
+      // prettier-ignore
+      setInt(i, letterDataType, int, {
+        bigEndian: options.letterBigEndian,
+      }, dataViewAltKey);
     } else {
+      // prettier-ignore
       setInt(i, letterDataType, (char || "").charCodeAt(0), {
         bigEndian: options.letterBigEndian,
-      });
+      }, dataViewAltKey);
     }
   }
 }

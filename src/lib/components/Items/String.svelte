@@ -1,7 +1,12 @@
 <script lang="ts">
   import Input from "$lib/components/Input.svelte";
-  import { dataView, gameUtils, isDebug } from "$lib/stores";
-  import { dataTypeToLength, getString, setString } from "$lib/utils/bytes";
+  import { dataView, dataViewAlt, gameUtils, isDebug } from "$lib/stores";
+  import {
+    dataTypeToLength,
+    getString,
+    isDataViewAltExists,
+    setString,
+  } from "$lib/utils/bytes";
   import { utilsExists } from "$lib/utils/format";
 
   import type { ItemString } from "$lib/types";
@@ -30,6 +35,7 @@
           isZeroTerminated: item.isZeroTerminated,
           resource: item.resource,
         },
+        item.dataViewAltKey,
       );
     }
 
@@ -49,13 +55,20 @@
       [isOverrided, value] = $gameUtils.overrideGetInt(item);
     }
 
+    let dataViewAlt;
+
+    if (isDataViewAltExists(item.dataViewAltKey || "")) {
+      dataViewAlt = $dataViewAlt[item.dataViewAltKey as string];
+    }
+
+    // prettier-ignore
     if (!isOverrided) {
       value = getString(item.offset, item.length, item.letterDataType, {
         bigEndian: item.bigEndian,
         letterBigEndian: item.letterBigEndian,
         isZeroTerminated: item.isZeroTerminated,
         resource: item.resource,
-      });
+      }, dataViewAlt);
     }
   }
 </script>

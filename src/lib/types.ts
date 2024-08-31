@@ -276,6 +276,7 @@ export interface ItemSection {
 export interface ItemString {
   id?: string;
   name?: string;
+  dataViewAltKey?: string;
   offset: number;
   length: number;
   type: "variable";
