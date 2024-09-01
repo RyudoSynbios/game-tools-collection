@@ -150,7 +150,7 @@ export function overrideSetInt(item: Item, value: string): boolean {
     for (let i = 0x0; i < itemString.length * 2; i += 0x1, count += 0x1) {
       const offset = itemString.offset + i;
 
-      let index = Object.values(resource).findIndex(
+      const index = Object.values(resource).findIndex(
         (letter) => letter === value[count],
       );
 

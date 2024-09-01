@@ -2,7 +2,6 @@
   import Tabs from "$lib/components/Items/Tabs.svelte";
   import { dataViewAlt, gameJson } from "$lib/stores";
   import { getInt } from "$lib/utils/bytes";
-  import { getFile } from "$lib/utils/common/iso9660";
 
   import type { ItemTabs } from "$lib/types";
 

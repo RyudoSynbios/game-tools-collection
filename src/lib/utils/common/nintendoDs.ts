@@ -1,5 +1,3 @@
-import { getInt } from "$lib/utils/bytes";
-
 import { checkValidator } from "../validator";
 
 export function isActionReplayMaxDsHeader(dataView: DataView): boolean {

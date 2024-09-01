@@ -48,7 +48,7 @@ export async function addObject(
 }
 
 export function addFloor(texture: string, three: Three, instanceId: string) {
-  let uvs = [0, 0, 1, 0, 1, 1, 1, 1, 0, 1, 0, 0];
+  const uvs = [0, 0, 1, 0, 1, 1, 1, 1, 0, 1, 0, 0];
 
   const mesh = three.addMesh(
     [0, 0, 0, 512, 0, 0, 512, 0, -512, 0, 0, -512],

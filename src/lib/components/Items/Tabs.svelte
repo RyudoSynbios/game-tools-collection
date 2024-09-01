@@ -89,7 +89,7 @@
     isFocused = true;
   }
 
-  function handleKeyDown(event: any): void {
+  function handleKeyDown(event: KeyboardEvent): void {
     if (!isFocused) {
       return;
     }

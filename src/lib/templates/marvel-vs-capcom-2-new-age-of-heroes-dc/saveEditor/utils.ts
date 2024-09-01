@@ -11,7 +11,6 @@ import type {
   Item,
   ItemChecksum,
   ItemInt,
-  ItemSection,
   LogicalOperator,
   Validator,
 } from "$lib/types";

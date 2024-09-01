@@ -334,7 +334,7 @@ export default class Three {
   private onMouseMove(event: MouseEvent): void {
     const bounding = this.threeEl.getBoundingClientRect();
 
-    let pointer = new Vector2();
+    const pointer = new Vector2();
 
     pointer.x = ((event.clientX - bounding.left) / this.width) * 2 - 1;
     pointer.y = (-(event.clientY - bounding.top) / this.height) * 2 + 1;
@@ -564,7 +564,7 @@ export default class Three {
       repeatY: options?.texture?.repeatY || false,
     };
 
-    let materialParams: MeshBasicMaterialParameters = {
+    const materialParams: MeshBasicMaterialParameters = {
       alphaTest: 0.1,
       depthTest,
       opacity,
@@ -748,7 +748,7 @@ export default class Three {
     label: string,
     value: number,
     callback: (value: number) => void,
-    options: {},
+    options = {},
   ): void {
     this.guiCustomFolder.show(true);
 

@@ -8,7 +8,9 @@ import { Item, ItemChecksum, ItemInt, ItemString } from "$lib/types";
 
 import PhotoCanvas from "./components/PhotoCanvas.svelte";
 
-export function getComponent(component: string): any {
+export function getComponent(
+  component: string,
+): typeof PhotoCanvas | undefined {
   if (component === "PhotoCanvas") {
     return PhotoCanvas;
   }

@@ -147,7 +147,7 @@ export function getMpkNoteShift(shifts: number[]): number[] {
     getObjKey($gameTemplate.validator.regions, $gameRegion)
   ] as Validator;
 
-  let validator = region[0];
+  const validator = region[0];
 
   if (isDexDriveHeader($dataView)) {
     return [...shifts, 0x200];

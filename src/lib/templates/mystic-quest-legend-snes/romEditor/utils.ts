@@ -41,7 +41,15 @@ import {
   pointerToVillagersTiles,
 } from "./template";
 
-export function getComponent(component: string): any {
+export function getComponent(
+  component: string,
+):
+  | typeof BattleBackgroundCanvas
+  | typeof Debug
+  | typeof MapViewer
+  | typeof MonsterCanvas
+  | typeof Monsters
+  | undefined {
   if (component === "BattleBackgroundCanvas") {
     return BattleBackgroundCanvas;
   } else if (component === "Debug") {

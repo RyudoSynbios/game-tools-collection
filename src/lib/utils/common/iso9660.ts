@@ -72,7 +72,7 @@ const eccBLut = new Uint8Array(0x100);
 const edcLut = new Uint32Array(0x100);
 
 for (let i = 0x0; i < 0x100; i += 0x1) {
-  let j = (i << 0x1) ^ (i & 0x80 ? 0x11d : 0x0);
+  const j = (i << 0x1) ^ (i & 0x80 ? 0x11d : 0x0);
 
   eccFLut[i] = j;
   eccBLut[i ^ j] = i;
@@ -242,25 +242,25 @@ export function readIso9660(): void {
     offset = getRelativeOffset(offset);
 
     const headerSize = getInt(offset, "uint8");
-    const extendedAttributeHeaderSize = getInt(offset + 0x1, "uint8");
+    // const extendedAttributeHeaderSize = getInt(offset + 0x1, "uint8");
     const sectorLE = getInt(offset + 0x2, "uint32");
-    const sectorBE = getInt(offset + 0x6, "uint32", { bigEndian: true });
+    // const sectorBE = getInt(offset + 0x6, "uint32", { bigEndian: true });
     const fileSizeLE = getInt(offset + 0xa, "uint32");
-    const fileSizeBE = getInt(offset + 0xe, "uint32", { bigEndian: true });
-    const dateYear = getInt(offset + 0x12, "uint8");
-    const dateMonth = getInt(offset + 0x13, "uint8");
-    const dateDay = getInt(offset + 0x14, "uint8");
-    const dateHour = getInt(offset + 0x15, "uint8");
-    const dateMinutes = getInt(offset + 0x16, "uint8");
-    const dateSeconds = getInt(offset + 0x17, "uint8");
-    const dateGreenwichOffset = getInt(offset + 0x18, "uint8");
+    // const fileSizeBE = getInt(offset + 0xe, "uint32", { bigEndian: true });
+    // const dateYear = getInt(offset + 0x12, "uint8");
+    // const dateMonth = getInt(offset + 0x13, "uint8");
+    // const dateDay = getInt(offset + 0x14, "uint8");
+    // const dateHour = getInt(offset + 0x15, "uint8");
+    // const dateMinutes = getInt(offset + 0x16, "uint8");
+    // const dateSeconds = getInt(offset + 0x17, "uint8");
+    // const dateGreenwichOffset = getInt(offset + 0x18, "uint8");
     const flags = getInt(offset + 0x19, "uint8");
-    const unitSize = getInt(offset + 0x1a, "uint8");
-    const intervalGapSize = getInt(offset + 0x1b, "uint8");
-    const volumeSequenceNumberLE = getInt(offset + 0x1c, "uint16");
-    const volumeSequenceNumberBE = getInt(offset + 0x1e, "uint16", {
-      bigEndian: true,
-    });
+    // const unitSize = getInt(offset + 0x1a, "uint8");
+    // const intervalGapSize = getInt(offset + 0x1b, "uint8");
+    // const volumeSequenceNumberLE = getInt(offset + 0x1c, "uint16");
+    // const volumeSequenceNumberBE = getInt(offset + 0x1e, "uint16", {
+    //   bigEndian: true,
+    // });
     const nameLength = getInt(offset + 0x20, "uint8");
 
     let name = "";
@@ -313,7 +313,7 @@ export function getFile(
   );
 
   if (file) {
-    let data = [];
+    const data = [];
 
     let offset = file.offset;
 
@@ -445,16 +445,6 @@ export function writeFile(name: string, dataView: DataView): void {
   const file = getFile(name);
 
   if (file) {
-    let baseOffset = file.offset;
-
-    if (iso.hasSectors) {
-      baseOffset =
-        baseOffset -
-        Math.floor(baseOffset / iso.blockSize) *
-          (iso.sectorHeaderSize + iso.eccSize) -
-        iso.sectorHeaderSize;
-    }
-
     let offset = file.offset;
 
     for (let i = 0x0; i < file.size; i += 0x1) {

@@ -221,14 +221,14 @@ export function unpackBattleCharacter(dataView: DataView): BattleCharacter {
     dataView,
   );
 
-  let characterOffset = getInt(
+  const characterOffset = getInt(
     battleCharacter.objectsBaseOffset + 0x8,
     "int32",
     { bigEndian: true },
     dataView,
   );
 
-  let weaponOffset = getInt(
+  const weaponOffset = getInt(
     battleCharacter.objectsBaseOffset + 0xc,
     "int32",
     { bigEndian: true },

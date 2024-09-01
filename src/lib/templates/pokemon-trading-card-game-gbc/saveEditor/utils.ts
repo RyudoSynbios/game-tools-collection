@@ -47,7 +47,7 @@ export function overrideSetInt(item: Item, value: string): boolean {
   if ("id" in item && item.id === "duelAnimation") {
     const itemInt = item as ItemInt;
 
-    let int = parseInt(value);
+    const int = parseInt(value);
 
     setInt(itemInt.offset, "uint8", int >> 0x1);
     setInt(itemInt.offset + 0x2, "uint8", int & 0x1);

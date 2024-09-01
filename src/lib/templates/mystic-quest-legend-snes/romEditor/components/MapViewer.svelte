@@ -93,9 +93,9 @@
 
     const mapIndex = getInt(roomsOffset + roomOffset + 0x1, "uint8");
     const spriteSet = getInt(roomsOffset + roomOffset + 0x2, "uint8");
-    const bgm = getInt(roomsOffset + roomOffset + 0x6, "uint8");
-    const name = getInt(roomsOffset + roomOffset + 0x7, "uint8");
-    const unknown = getInt(roomsOffset + roomOffset + 0x8, "uint8");
+    // const bgm = getInt(roomsOffset + roomOffset + 0x6, "uint8");
+    // const name = getInt(roomsOffset + roomOffset + 0x7, "uint8");
+    // const unknown = getInt(roomsOffset + roomOffset + 0x8, "uint8");
 
     const mapSettingsOffset = pointerToOffset(mapsPointers) + mapIndex * 0xa;
 
@@ -213,7 +213,7 @@
       const green = [0, 255, 0];
       const blue = [0, 0, 255];
       const darkblue = [0, 0, 80];
-      const lightblue = [0, 80, 80];
+      // const lightblue = [0, 80, 80];
       const yellow = [255, 255, 0];
       const orange = [127, 127, 0];
       const purple = [255, 0, 255];
@@ -511,13 +511,13 @@
     const backgroundMode = getInt(backgroundsOffset + backgroundIndex, "uint8");
 
     const backgroundTmpDuplicate = extractBit(backgroundMode, 0);
-    const backgroundTmpUnknown1 = extractBit(backgroundMode, 1);
+    // const backgroundTmpUnknown1 = extractBit(backgroundMode, 1);
     const backgroundTmpAnimate = extractBit(backgroundMode, 2);
-    const backgroundTmpUnknown2 = extractBit(backgroundMode, 3);
+    // const backgroundTmpUnknown2 = extractBit(backgroundMode, 3);
     const backgroundTmpUnknown3 = extractBit(backgroundMode, 4); // << Used for water transparency if player is in
     const backgroundTmpAboveEverything = extractBit(backgroundMode, 5);
-    const backgroundTmpAboveForeground = extractBit(backgroundMode, 6);
-    const backgroundTmpUnknown4 = extractBit(backgroundMode, 7);
+    // const backgroundTmpAboveForeground = extractBit(backgroundMode, 6);
+    // const backgroundTmpUnknown4 = extractBit(backgroundMode, 7);
     const backgroundAlpha =
       backgroundTmpUnknown3 && backgroundTmpAboveEverything;
     const backgroundAnimate = !backgroundTmpDuplicate && backgroundTmpAnimate;
@@ -527,10 +527,10 @@
       "uint8",
     );
 
-    const backgroundSpeedShiftLeft = getInt(
-      backgroundsOffset + backgroundIndex + 0x2,
-      "uint8",
-    );
+    // const backgroundSpeedShiftLeft = getInt(
+    //   backgroundsOffset + backgroundIndex + 0x2,
+    //   "uint8",
+    // );
 
     const backgroundSpeed = getInt(
       backgroundsOffset + backgroundIndex + 0x2,
@@ -652,16 +652,16 @@
       let end = false;
 
       while (!end) {
-        const eventId = getInt(roomsOffset + roomOffset + j, "uint8");
+        // const eventId = getInt(roomsOffset + roomOffset + j, "uint8");
         const positionY =
           getInt(roomsOffset + roomOffset + j + 0x1, "uint8") & 0x3f;
         const positionX =
           getInt(roomsOffset + roomOffset + j + 0x2, "uint8") & 0x3f;
         let paletteIndex =
           ((getInt(roomsOffset + roomOffset + j + 0x3, "uint8") & 0xe0) >> 0x4) / 2; // prettier-ignore
-        const animationOffset =
-          (getInt(roomsOffset + roomOffset + j + 0x3, "uint8") & 0x1f) * 2;
-        const eventType = getInt(roomsOffset + roomOffset + j + 0x3, "uint16");
+        // const animationOffset =
+        //   (getInt(roomsOffset + roomOffset + j + 0x3, "uint8") & 0x1f) * 2;
+        // const eventType = getInt(roomsOffset + roomOffset + j + 0x3, "uint16");
         const spriteIndex = getInt(roomsOffset + roomOffset + j + 0x5, "uint8");
         const unknown = getInt(roomsOffset + roomOffset + j + 0x6, "uint8");
 

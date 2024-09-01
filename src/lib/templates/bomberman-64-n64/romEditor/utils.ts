@@ -27,7 +27,9 @@ export interface Texture {
   height: number;
 }
 
-export function getComponent(component: string): any {
+export function getComponent(
+  component: string,
+): typeof AssetViewer | undefined {
   if (component === "AssetViewer") {
     return AssetViewer;
   }
@@ -97,7 +99,7 @@ export function getImage(
     array: paletteData,
   });
 
-  let tileData: number[] = [];
+  const tileData: number[] = [];
 
   imageData.forEach((value) => {
     if (colors === 0x10) {

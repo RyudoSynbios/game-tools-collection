@@ -66,7 +66,7 @@
     }
   }
 
-  function handleKeyUp(event: any): void {
+  function handleKeyUp(event: KeyboardEvent): void {
     if (event.key === "Enter" && typeof onEnter === "function") {
       onEnter();
     }

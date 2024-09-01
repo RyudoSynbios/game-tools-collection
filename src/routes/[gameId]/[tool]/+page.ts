@@ -47,7 +47,7 @@ export async function load({ params }): Promise<void> {
     );
 
     gameUtils.set(utils);
-  } catch (err) {
+  } catch {
     debug.error(
       `Couldn't load utils "templates/${params.gameId}/${tool}/utils.ts"`,
     );

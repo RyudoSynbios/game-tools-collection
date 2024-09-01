@@ -467,7 +467,7 @@ function getDecompressedSpriteData(
                     if (byte1 !== unknown) {
                       byte1 -= 0x1;
 
-                      let count = (byte1 >> 2) * 2;
+                      const count = (byte1 >> 2) * 2;
 
                       byte2 = (byte2 << 0x10) | byte2;
 

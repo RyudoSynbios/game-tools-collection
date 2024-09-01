@@ -24,11 +24,14 @@
   let regions: string[] = [];
   let error = "";
 
-  function handleDrop(event: any): void {
-    const files = event.dataTransfer.files;
-    const file = files[0];
+  function handleDrop(event: DragEvent): void {
+    const files = event.dataTransfer?.files;
 
-    handleUploadedFile(file);
+    if (files) {
+      const file = files[0];
+
+      handleUploadedFile(file);
+    }
   }
 
   function handleDragLeave(): void {

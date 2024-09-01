@@ -322,10 +322,10 @@
     const spriteMonsterB2 = getInt(mapSpritesTableOffset + 0xe, "int16");
     const spriteMonsterB3 = getInt(mapSpritesTableOffset + 0x10, "int16");
     const spriteMonsterB4 = getInt(mapSpritesTableOffset + 0x12, "int16");
-    const unknown1 = getInt(mapSpritesTableOffset + 0x14, "int16");
+    // const unknown1 = getInt(mapSpritesTableOffset + 0x14, "int16");
     const spriteSpecial = getInt(mapSpritesTableOffset + 0x16, "int16");
-    const unknown3 = getInt(mapSpritesTableOffset + 0x18, "int16");
-    const unknown4 = getInt(mapSpritesTableOffset + 0x1a, "int16");
+    // const unknown3 = getInt(mapSpritesTableOffset + 0x18, "int16");
+    // const unknown4 = getInt(mapSpritesTableOffset + 0x1a, "int16");
 
     const isMonsterSetB =
       spriteMonsterB1 + spriteMonsterB2 + spriteMonsterB3 + spriteMonsterB4 !==

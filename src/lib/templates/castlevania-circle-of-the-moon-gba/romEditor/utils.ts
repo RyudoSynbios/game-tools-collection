@@ -22,7 +22,9 @@ import {
 } from "./template";
 import { getMonsterSpriteInfos, getSpriteFrameOffset } from "./utils/sprite";
 
-export function getComponent(component: string): any {
+export function getComponent(
+  component: string,
+): typeof Debug | typeof MapViewer | undefined {
   if (component === "Debug") {
     return Debug;
   } else if (component === "MapViewer") {
@@ -130,8 +132,8 @@ export function generateSprites(
     const blockY = getInt(offset + 0x2, "uint16");
     const type = getInt(offset + 0x4, "uint16");
     const spriteId = getInt(offset + 0x6, "uint16");
-    const unknown = getInt(offset + 0x8, "uint16");
-    const event = getInt(offset + 0xb, "uint8");
+    // const unknown = getInt(offset + 0x8, "uint16");
+    // const event = getInt(offset + 0xb, "uint8");
 
     const handledSprites = [
       0x1de, 0x1df, 0x1e4, 0x1e6, 0x1e7, 0x1e8, 0x1ea, 0x1eb, 0x1ec, 0x1ed,
@@ -308,15 +310,15 @@ export function getBlock(
   const block: Uint8Array[] = [];
 
   tiles.forEach((rawTile: number) => {
-    let tileIndex = rawTile & 0x3ff;
+    const tileIndex = rawTile & 0x3ff;
 
     const effects = rawTile >> 0x8;
 
     const flipX = extractBit(effects, 2);
     const flipY = extractBit(effects, 3);
 
-    let paletteIndex = extractBinary(effects, 4, 3);
-    let paletteSet = effects >> 0x7;
+    const paletteIndex = extractBinary(effects, 4, 3);
+    const paletteSet = effects >> 0x7;
 
     if (effects) {
       if (paletteSet === 0) {
@@ -347,7 +349,7 @@ export function getDecompressedData(offset: number): number[][] {
   const magic = header & 0xff;
   const decompressedLength = header >> 0x8;
 
-  let decompressedData: number[] = [];
+  const decompressedData: number[] = [];
 
   if (magic !== 0x10) {
     debug.warn(`Image in offet 0x${offset.toHex()} is not LZ77 compressed.`);
@@ -389,7 +391,7 @@ export function getDecompressedData(offset: number): number[][] {
     }
   }
 
-  let blocks: number[][] = [];
+  const blocks: number[][] = [];
 
   for (let i = 0x0; i < decompressedData.length / 0x20; i += 0x1) {
     blocks.push(decompressedData.slice(i * 0x20, (i + 0x1) * 0x20));
@@ -401,7 +403,7 @@ export function getDecompressedData(offset: number): number[][] {
 export function getDecompressedGraphic(offset: number): number[][] {
   const decompressedData = getDecompressedData(offset);
 
-  let graphic: number[][] = [];
+  const graphic: number[][] = [];
 
   decompressedData.forEach((block, index) => {
     graphic[index] = [];

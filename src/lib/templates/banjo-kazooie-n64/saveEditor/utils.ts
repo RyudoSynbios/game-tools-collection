@@ -1,4 +1,3 @@
-import Long from "long";
 import { get } from "svelte/store";
 
 import { fileHeaderShift, gameTemplate } from "$lib/stores";
@@ -243,7 +242,7 @@ export function generateChecksum(
   item: ItemChecksum,
   dataView = new DataView(new ArrayBuffer(0)),
 ): number {
-  const [_, checksum2] = generateRareChecksum(item, dataView);
+  const [, checksum2] = generateRareChecksum(item, dataView);
 
   const checksum = checksum2.toString(16).padStart(8, "0").slice(-8);
 

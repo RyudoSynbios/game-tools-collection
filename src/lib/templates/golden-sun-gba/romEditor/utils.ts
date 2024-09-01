@@ -1,6 +1,6 @@
 import { get } from "svelte/store";
 
-import { gameJson, gameRegion, gameTemplate } from "$lib/stores";
+import { gameJson, gameRegion } from "$lib/stores";
 import { getInt, setInt } from "$lib/utils/bytes";
 import { decodeCamelotFont } from "$lib/utils/decode";
 import { getRegionArray } from "$lib/utils/format";
@@ -30,7 +30,13 @@ import {
   pointerToTexts,
 } from "./template";
 
-export function getComponent(component: string): any {
+export function getComponent(
+  component: string,
+):
+  | typeof AbilityIconSelector
+  | typeof ItemIconSelector
+  | typeof PartyPortraitSelector
+  | undefined {
   if (component === "AbilityIconSelector") {
     return AbilityIconSelector;
   } else if (component === "ItemIconSelector") {
@@ -380,7 +386,7 @@ function generateTrees(): void {
 
     const offset = getInt(startOffsetsTable + i * 0x2, "uint16");
 
-    let indexLimit = Math.round(
+    const indexLimit = Math.round(
       ((lastOffsetAddress === 0x0
         ? offset
         : startCharTrees + offset - lastOffsetAddress) *
@@ -395,8 +401,9 @@ function generateTrees(): void {
         bitstream += getInt(startCharTrees + offset - j, "uint8").toBinary();
       }
 
+      const chars = [];
+
       let char = "";
-      let chars = [];
 
       for (let j = 0; j < bitstream.length; j += 0x1) {
         if (j >= 12 * chars.length + 0x4) {
@@ -416,7 +423,7 @@ function generateTrees(): void {
       let index = 0x0;
 
       for (let j = 0x0; index < indexLimit; j += 0x1) {
-        let bitstream = getInt(startCharTrees + offset + j, "uint8")
+        const bitstream = getInt(startCharTrees + offset + j, "uint8")
           .toBinary()
           .reverse();
 
@@ -498,7 +505,7 @@ function decodeText(index: number): string {
         }
 
         if (j === 0 || (j === 1 && tree.length === 1)) {
-          let { int } = tree[j === 0 ? charIndex : 0];
+          const { int } = tree[j === 0 ? charIndex : 0];
 
           if (int < 0x20) {
             text += `{${int.toHex(2)}}`;

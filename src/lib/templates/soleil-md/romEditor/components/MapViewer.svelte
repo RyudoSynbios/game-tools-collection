@@ -257,7 +257,7 @@
         }
       }
 
-      const tileData = [...Array(0x40).keys()].map((_) => 0x0);
+      const tileData = [...Array(0x40).keys()].map(() => 0x0);
       const tile = applyPalette(tileData, palettes[0]);
 
       canvas.addGraphic("sprites", tile, 8, 8, x, y);

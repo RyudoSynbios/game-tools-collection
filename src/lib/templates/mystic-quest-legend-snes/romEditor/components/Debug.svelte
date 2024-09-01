@@ -20,7 +20,7 @@
   let shiftPressed = false;
   let ctrlPressed = false;
 
-  function handleKeyDown(event: any): void {
+  function handleKeyDown(event: KeyboardEvent): void {
     if (event.key === "Shift") {
       shiftPressed = true;
     }
@@ -30,7 +30,7 @@
     }
   }
 
-  function handleKeyUp(event: any): void {
+  function handleKeyUp(event: KeyboardEvent): void {
     if (event.key === "Shift") {
       shiftPressed = false;
     }
@@ -62,7 +62,7 @@
     updateCanvas();
   }
 
-  function handleViewWidthChange(event: any): void {
+  function handleViewWidthChange(event: Event): void {
     viewWidth = parseInt((event.target as HTMLInputElement).value);
 
     canvas.resize(viewWidth, viewHeight);
@@ -70,7 +70,7 @@
     updateCanvas();
   }
 
-  function handleViewHeightChange(event: any): void {
+  function handleViewHeightChange(event: Event): void {
     viewHeight = parseInt((event.target as HTMLInputElement).value);
 
     canvas.resize(viewWidth, viewHeight);

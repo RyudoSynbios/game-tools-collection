@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { SvelteComponent } from "svelte";
+
   import { gameUtils } from "$lib/stores";
   import { utilsExists } from "$lib/utils/format";
 
@@ -7,7 +9,7 @@
 
   export let item: ItemComponent;
 
-  let component: any;
+  let component: SvelteComponent;
 
   $: {
     if (utilsExists("getComponent")) {

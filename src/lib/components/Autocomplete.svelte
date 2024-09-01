@@ -103,7 +103,7 @@
     (event.target as HTMLLIElement).classList.add("gtc-autocomplete-hover");
   }
 
-  function handleKeyDown(event: any): void {
+  function handleKeyDown(event: KeyboardEvent): void {
     if (!isFocused) {
       return;
     }

@@ -69,7 +69,7 @@
     three.resetCamera();
   }
 
-  function handleKeyDown(event: any): void {
+  function handleKeyDown(event: KeyboardEvent): void {
     if (!event.ctrlKey && !event.metaKey && event.key === "f") {
       event.preventDefault();
 

@@ -1,6 +1,6 @@
 import { get } from "svelte/store";
 
-import { dataView, dataViewAlt, gameJson, isDebug, isDirty } from "$lib/stores";
+import { dataView, dataViewAlt, isDebug, isDirty } from "$lib/stores";
 import debug from "$lib/utils/debug";
 import { getObjKey, isPartial, makeOperations } from "$lib/utils/format";
 
@@ -616,7 +616,7 @@ export function getString(
       break;
     }
 
-    let resource = getResource(options.resource, true);
+    const resource = getResource(options.resource, true);
 
     if (resource) {
       const char = resource[int];
@@ -665,7 +665,7 @@ export function setString(
       break;
     }
 
-    let resource = getResource(options.resource, true);
+    const resource = getResource(options.resource, true);
 
     let int = fallback;
 

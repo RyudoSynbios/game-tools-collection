@@ -54,7 +54,7 @@ export function isCpk(dataView: DataView): boolean {
   return checkValidator(validator, 0x0, dataView);
 }
 
-export function unpackCpk(dataView: DataView): any {
+export function unpackCpk(dataView: DataView): Cpk {
   const cpk = {} as Cpk;
 
   // Film

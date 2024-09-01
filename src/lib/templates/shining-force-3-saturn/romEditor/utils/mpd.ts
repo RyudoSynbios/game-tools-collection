@@ -377,12 +377,9 @@ function getTextures(offset: number, dataView: DataView): Texture[] {
 function getTiles(data: number[], palette: Palette): Uint8Array[] {
   const tiles: Uint8Array[] = [];
 
-  let width = 8;
-  let height = 8;
+  const length = 64;
 
-  const length = width * height;
-
-  let tileCount = (data.length / length) * 2;
+  const tileCount = (data.length / length) * 2;
 
   for (let i = 0; i < tileCount; i += 1) {
     const spriteData = applyPalette(

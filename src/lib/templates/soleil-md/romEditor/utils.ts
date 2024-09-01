@@ -6,7 +6,7 @@ import type { Bit, ItemChecksum } from "$lib/types";
 
 import MapViewer from "./components/MapViewer.svelte";
 
-export function getComponent(component: string): any {
+export function getComponent(component: string): typeof MapViewer | undefined {
   if (component === "MapViewer") {
     return MapViewer;
   }
@@ -29,7 +29,7 @@ export function getDecompressedData(
 ): number[] {
   let decompressedData: number[] = [...Array(0x10000).keys()].map(() => 0x0);
 
-  let baseOffset = 0xe800;
+  const baseOffset = 0xe800;
 
   for (let i = 0x0; i < 0x100; i += 0x1) {
     for (let j = 0x0; j < 0xd; j += 0x1) {
@@ -60,7 +60,7 @@ export function getDecompressedData(
   let count = 0x0;
 
   while (count < size) {
-    let int = getInt(offset, "uint8");
+    const int = getInt(offset, "uint8");
 
     offset += 0x1;
 
@@ -80,7 +80,7 @@ export function getDecompressedData(
       } else {
         d0 = (d0 & 0xff00) | (getInt(offset + 0x1, "uint8") & 0xff);
 
-        let iterations = (d0 & 0xf) + 0x2;
+        const iterations = (d0 & 0xf) + 0x2;
 
         d0 = (((d0 << 0x4) & 0xff00) | (getInt(offset, "uint8") & 0xff)) & 0xfff; // prettier-ignore
 

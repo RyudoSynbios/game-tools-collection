@@ -135,7 +135,7 @@ export function generateChecksum(item: ItemChecksum): number {
   let checksum = getInt(offset, "uint16");
 
   for (let i = item.control.offsetStart; i < item.control.offsetEnd; i += 0x2) {
-    let int = getInt(i, "uint16");
+    const int = getInt(i, "uint16");
 
     for (let j = 0x0; j < 0x4; j += 0x1) {
       let value = values[checksum & 0xf];

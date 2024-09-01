@@ -250,7 +250,7 @@ export function afterSetInt(item: Item, flag: ItemBitflag): void {
     const offset =
       flag.offset - characterIndex * 0x14c - (elementIndex - 1) * 0x4;
 
-    let elements = [0, 0, 0, 0];
+    const elements = [0, 0, 0, 0];
 
     for (let i = 0x0; i < 0x8; i += 0x1) {
       for (let j = 0x0; j < 0x4; j += 0x1) {

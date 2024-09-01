@@ -357,7 +357,8 @@ function updateHeroStats(): void {
 
   const encoded = [];
 
-  let binaries = [];
+  const binaries = [];
+
   let binary = "";
 
   for (let i = 0x0; i < $dataViewAlt.heroStats.byteLength; i += 0x4) {
@@ -387,8 +388,6 @@ function updateHeroStats(): void {
 
   binaries.push(heroStatusEnd.toBinary());
 
-  let offset = 0x2ff;
-
   // Encode
   binaries.forEach((value) => {
     while (value.length > 0) {
@@ -399,8 +398,6 @@ function updateHeroStats(): void {
         value = value.substring(0, start);
 
         encoded.push(parseInt(binary, 2));
-
-        offset += 0x1;
 
         binary = "";
       } else {

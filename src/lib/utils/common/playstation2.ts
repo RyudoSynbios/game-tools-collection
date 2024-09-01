@@ -102,7 +102,7 @@ const parityTable = [...Array(256).keys()].map((i) => {
 
 const cpMasks = [0x55, 0x33, 0x0f, 0x00, 0xaa, 0xcc, 0xf0];
 
-let columnParityMasks = [...Array(256).keys()];
+const columnParityMasks = [...Array(256).keys()];
 
 [...Array(256).keys()].map((i) => {
   let mask = 0x0;
@@ -381,7 +381,7 @@ function readFile(
   let nextClusterIndex = file.startCluster;
 
   while (true) {
-    let clusterIndex = nextClusterIndex;
+    const clusterIndex = nextClusterIndex;
 
     const clusterOffset =
       (memoryCard.superblock.allocOffset + clusterIndex) *
@@ -449,7 +449,7 @@ function writeFile(file: File, blob: ArrayBuffer): void {
   let nextClusterIndex = file.startCluster;
 
   while (true) {
-    let clusterIndex = nextClusterIndex;
+    const clusterIndex = nextClusterIndex;
 
     const clusterOffset =
       (memoryCard.superblock.allocOffset + clusterIndex) *
@@ -655,7 +655,7 @@ export function generateFilteredSaves(): void {
     getObjKey($gameTemplate.validator.regions, $gameRegion)
   ] as Validator;
 
-  let validator = region[0];
+  const validator = region[0];
 
   const validatorStringified = numberArrayToString(validator);
 

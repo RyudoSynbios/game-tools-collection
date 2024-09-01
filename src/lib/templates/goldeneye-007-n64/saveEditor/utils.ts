@@ -1,4 +1,3 @@
-import Long from "long";
 import { get } from "svelte/store";
 
 import { fileHeaderShift, gameTemplate } from "$lib/stores";
@@ -75,9 +74,10 @@ export function overrideParseContainerItemsShifts(
 }
 
 function getTime(offset: number, mode: string, timeUnit: TimeUnit): number {
+  const byte1 = getInt(offset, "uint8");
+  const byte2 = getInt(offset + 0x1, "uint8");
+
   let int = 0;
-  let byte1 = getInt(offset, "uint8");
-  let byte2 = getInt(offset + 0x1, "uint8");
 
   switch (mode) {
     case "time-1":

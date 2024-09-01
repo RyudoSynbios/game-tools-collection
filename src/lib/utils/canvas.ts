@@ -238,7 +238,7 @@ export default class Canvas {
     const lineSize = width * 4;
 
     let graphicWidth = this.layers[layer].width;
-    let graphicHeight = this.layers[layer].height;
+    const graphicHeight = this.layers[layer].height;
 
     if (this.layers[layer].type === "sprites") {
       const sprite = this.layers[layer].container.getChildAt(spriteIndex) as

@@ -87,7 +87,7 @@ export function afterSetInt(item: Item): void {
 
         if (total) {
           itemBitflags.flags.forEach((flag, index) => {
-            let itemBitflag = flag as ItemBitflag;
+            const itemBitflag = flag as ItemBitflag;
 
             if (index === 0) {
               totalCount += getInt(itemBitflag.offset, "bit", {

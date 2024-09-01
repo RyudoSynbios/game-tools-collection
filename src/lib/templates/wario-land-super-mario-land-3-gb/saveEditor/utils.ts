@@ -7,7 +7,7 @@ export function afterSetInt(item: Item, flag: ItemBitflag): void {
   if ("id" in item && item.id?.match(/level-/)) {
     const split = item.id.split("-");
 
-    let offsetIndex = parseInt(split[1]);
+    const offsetIndex = parseInt(split[1]);
 
     const offset = flag.offset - offsetIndex + 1;
 

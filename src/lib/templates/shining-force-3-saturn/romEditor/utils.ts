@@ -120,7 +120,7 @@ export function overrideItem(item: Item): Item {
 
     item.offset += cache.enemiesBaseOffset;
   } else if ("id" in item && item.id?.match(/assetViewer-/)) {
-    const [_, type] = item.id.split("-");
+    const [, type] = item.id.split("-");
 
     const files = getFilteredFiles(type);
 
@@ -225,7 +225,16 @@ export function overrideSetInt(item: Item, value: string): boolean {
   return false;
 }
 
-export function getComponent(component: string): any {
+export function getComponent(
+  component: string,
+):
+  | typeof ImageViewer
+  | typeof ModelViewer
+  | typeof Shops
+  | typeof TextViewer
+  | typeof TxtViewer
+  | typeof VideoViewer
+  | undefined {
   if (component === "ImageViewer") {
     return ImageViewer;
   } else if (component === "ModelViewer") {
@@ -663,7 +672,7 @@ function decodeText(index: number, dataView: DataView): string {
 
     const pagesPointerOffset = scenario === "1" && !patched ? 0x18 : 0x24;
 
-    let page = Math.floor(index / 0x100);
+    const page = Math.floor(index / 0x100);
 
     index -= page * 0x100;
 
