@@ -6,7 +6,6 @@
     dataView,
     dataViewAlt,
     gameJson,
-    gameRegion,
     gameUtils,
     isDebug,
   } from "$lib/stores";
@@ -24,6 +23,7 @@
     round,
     utilsExists,
   } from "$lib/utils/format";
+  import { getResource } from "$lib/utils/parser";
 
   import type { ItemInt, ObjectKeyValue } from "$lib/types";
 
@@ -123,19 +123,9 @@
 
     options = [];
 
-    if (
-      item.resource &&
-      $gameJson.resources &&
-      $gameJson.resources[item.resource]
-    ) {
-      let resource;
+    let resource = getResource(item.resource, true);
 
-      if (Array.isArray($gameJson.resources[item.resource])) {
-        resource = $gameJson.resources[item.resource][$gameRegion];
-      } else {
-        resource = $gameJson.resources[item.resource];
-      }
-
+    if (item.resource && resource) {
       const order =
         ($gameJson.resourcesOrder && $gameJson.resourcesOrder[item.resource]) ||
         [];

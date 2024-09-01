@@ -6,6 +6,7 @@ import type Canvas from "$lib/utils/canvas";
 import debug from "$lib/utils/debug";
 import { getRegionArray } from "$lib/utils/format";
 import { applyPalette, flipTileData } from "$lib/utils/graphics";
+import { getResource } from "$lib/utils/parser";
 
 import type { Item, Palette, Resource } from "$lib/types";
 
@@ -546,7 +547,7 @@ export function getText(index: number): string {
 
   let offset = getInt(offsetTexts + (index - 0x8001) * 0x4, "uint24");
 
-  const letters = getRegionArray($gameJson.resources.letters as Resource[]);
+  const letters = getResource("letters", true) as Resource;
 
   let text = "";
 

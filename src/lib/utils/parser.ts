@@ -3,6 +3,7 @@ import { get } from "svelte/store";
 import {
   fileHeaderShift,
   gameJson,
+  gameRegion,
   gameTemplate,
   gameUtils,
   isDebug,
@@ -25,6 +26,7 @@ import type {
   ItemContainer,
   ItemIntCondition,
   LogicalOperator,
+  Resource,
 } from "$lib/types";
 
 let checksums: ItemChecksum[];
@@ -547,17 +549,31 @@ export function getItem(
   }
 }
 
+export function getResource(
+  key = "",
+  filterRegion = false,
+): Resource | undefined {
+  const $gameJson = get(gameJson);
+  const $gameRegion = get(gameRegion);
+
+  let resource = key ? $gameJson.resources?.[key] : undefined;
+
+  if (resource) {
+    if (filterRegion && Array.isArray(resource)) {
+      resource = resource[$gameRegion];
+    }
+
+    return resource as Resource;
+  }
+}
+
 export function updateResources(resource = ""): void {
   const $gameJson = get(gameJson);
   const $gameTemplate = get(gameTemplate);
 
   let resources = { ...$gameTemplate.resources };
 
-  if (
-    resource &&
-    $gameTemplate.resources &&
-    $gameTemplate.resources[resource]
-  ) {
+  if (resource && $gameTemplate.resources?.[resource]) {
     if (typeof resources[resource] === "string") {
       const value = getUtils(resources[resource] as string);
 

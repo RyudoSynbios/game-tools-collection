@@ -6,7 +6,7 @@ import type Canvas from "$lib/utils/canvas";
 import { getTileData } from "$lib/utils/common/superNintendo";
 import { getRegionArray } from "$lib/utils/format";
 import { applyPalette, flipTileData } from "$lib/utils/graphics";
-import { updateResources } from "$lib/utils/parser";
+import { getResource, updateResources } from "$lib/utils/parser";
 
 import type { Item, ItemInt, Palette, Resource } from "$lib/types";
 
@@ -272,7 +272,7 @@ export function getText(offset: number, length: number): string {
     return "???";
   }
 
-  const letters = getRegionArray($gameJson.resources.letters as Resource[]);
+  const letters = getResource("letters", true) as Resource;
 
   let text = "";
 

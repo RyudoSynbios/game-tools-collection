@@ -3,9 +3,10 @@
 
   import AccessTimeIcon from "$lib/assets/AccessTime.svelte";
   import Content from "$lib/components/Items/Content.svelte";
-  import { gameJson, isDebug } from "$lib/stores";
+  import { isDebug } from "$lib/stores";
   import { getBigInt, getInt } from "$lib/utils/bytes";
   import { generateIdFromArray, getUtils } from "$lib/utils/format";
+  import { getResource } from "$lib/utils/parser";
   import { scrollIntoViewIfNecessary } from "$lib/utils/ui";
   import { checkConditions } from "$lib/utils/validator";
 
@@ -136,14 +137,10 @@
         const enumeratedName =
           item.enumeration?.replace("%d", `${enumerationCount + 1}`) || "";
 
-        if (
-          item.resource &&
-          $gameJson.resources &&
-          $gameJson.resources[item.resource]
-        ) {
-          const name = $gameJson.resources[item.resource][
-            enumerationCount
-          ] as string;
+        let resource = getResource(item.resource, false);
+
+        if (resource) {
+          const name = resource[enumerationCount] as string;
 
           if (name) {
             newTab.name = name;

@@ -2,12 +2,7 @@ import { get } from "svelte/store";
 
 import { dataView, dataViewAlt, gameJson, isDebug, isDirty } from "$lib/stores";
 import debug from "$lib/utils/debug";
-import {
-  getObjKey,
-  getRegionArray,
-  isPartial,
-  makeOperations,
-} from "$lib/utils/format";
+import { getObjKey, isPartial, makeOperations } from "$lib/utils/format";
 
 import type {
   Binary,
@@ -15,8 +10,9 @@ import type {
   DataType,
   DataTypeInt,
   IntOperation,
-  Resource,
 } from "$lib/types";
+
+import { getResource } from "./parser";
 
 export function getDataView(dataViewTmp?: DataView): DataView {
   return dataViewTmp && dataViewTmp.byteLength > 0
@@ -160,20 +156,17 @@ export function getBoolean(
   dataView?: DataView,
 ): boolean {
   const $dataView = getDataView(dataView);
-  const $gameJson = get(gameJson);
 
   const int = getInt(offset, "uint8", {}, $dataView);
 
-  if (
-    options.resource &&
-    $gameJson.resources &&
-    $gameJson.resources[options.resource] &&
-    $gameJson.resources[options.resource][0] !== undefined &&
-    $gameJson.resources[options.resource][1] !== undefined
-  ) {
-    if ($gameJson.resources[options.resource][0] === int) {
+  const resource = getResource(options.resource);
+  const resource0 = resource?.[0] as number | undefined;
+  const resource1 = resource?.[1] as number | undefined;
+
+  if (options.resource && resource0 !== undefined && resource1 !== undefined) {
+    if (resource0 === int) {
       return false;
-    } else if ($gameJson.resources[options.resource][1] === int) {
+    } else if (resource1 === int) {
       return true;
     }
   }
@@ -193,19 +186,15 @@ export function setBoolean(
   options: BooleanOptions = {},
   dataViewAltKey = "",
 ): void {
-  const $gameJson = get(gameJson);
+  const resource = getResource(options.resource);
+  const resource0 = resource?.[0] as number | undefined;
+  const resource1 = resource?.[1] as number | undefined;
 
-  if (
-    options.resource &&
-    $gameJson.resources &&
-    $gameJson.resources[options.resource] &&
-    $gameJson.resources[options.resource][0] !== undefined &&
-    $gameJson.resources[options.resource][1] !== undefined
-  ) {
+  if (options.resource && resource0 !== undefined && resource1 !== undefined) {
     setInt(
       offset,
       "uint8",
-      $gameJson.resources[options.resource][value === true ? 1 : 0] as number,
+      value === true ? resource1 : resource0,
       {},
       dataViewAltKey,
     );
@@ -610,7 +599,6 @@ export function getString(
   dataView?: DataView,
 ): string {
   const $dataView = getDataView(dataView);
-  const $gameJson = get(gameJson);
 
   const increment = dataTypeToLength(letterDataType);
 
@@ -628,21 +616,7 @@ export function getString(
       break;
     }
 
-    let resource: any;
-
-    if (
-      options.resource &&
-      $gameJson.resources &&
-      $gameJson.resources[options.resource]
-    ) {
-      if (Array.isArray($gameJson.resources[options.resource])) {
-        resource = getRegionArray(
-          $gameJson.resources[options.resource] as Resource[],
-        );
-      } else {
-        resource = $gameJson.resources[options.resource];
-      }
-    }
+    let resource = getResource(options.resource, true);
 
     if (resource) {
       const char = resource[int];
@@ -671,8 +645,6 @@ export function setString(
   options: StringOptions = {},
   dataViewAltKey = "",
 ): void {
-  const $gameJson = get(gameJson);
-
   const increment = dataTypeToLength(letterDataType);
 
   if (options.bigEndian) {
@@ -693,13 +665,7 @@ export function setString(
       break;
     }
 
-    let resource = options.resource
-      ? $gameJson.resources?.[options.resource]
-      : undefined;
-
-    if (Array.isArray(resource)) {
-      resource = getRegionArray(resource);
-    }
+    let resource = getResource(options.resource, true);
 
     let int = fallback;
 
