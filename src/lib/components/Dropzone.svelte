@@ -151,7 +151,7 @@
     {:else}
       <p>Loading...</p>
     {/if}
-    {#if $gameTemplate.validator.hint}
+    {#if $gameTemplate?.validator?.hint}
       <p class="gtc-dropzone-hint">{@html $gameTemplate.validator.hint}</p>
     {/if}
     {#if error}
