@@ -693,37 +693,40 @@ export function setString(
       break;
     }
 
-    let resource;
+    let resource = options.resource
+      ? $gameJson.resources?.[options.resource]
+      : undefined;
 
-    if (
-      options.resource &&
-      $gameJson.resources &&
-      $gameJson.resources[options.resource]
-    ) {
-      if (Array.isArray($gameJson.resources[options.resource])) {
-        resource = getRegionArray(
-          $gameJson.resources[options.resource] as Resource[],
-        );
-      } else {
-        resource = $gameJson.resources[options.resource];
-      }
+    if (Array.isArray(resource)) {
+      resource = getRegionArray(resource);
     }
 
     let int = fallback;
 
-    if (resource) {
-      const index = Object.values(resource).findIndex(
-        (letter) => letter === char,
-      );
+    if (char !== undefined) {
+      const charCase = char === char.toLowerCase() ? "lower" : "upper";
+      const charAltCase =
+        charCase === "lower" ? char.toUpperCase() : char.toLowerCase();
 
-      if (index !== -1) {
-        int = parseInt(getObjKey(resource, index));
-      }
-    } else if (
-      char !== undefined &&
-      (!options.regex || char.match(new RegExp(options.regex)))
-    ) {
-      int = char.charCodeAt(0);
+      const chars = [char, charAltCase];
+
+      chars.some((char) => {
+        if (resource) {
+          const characters = Object.values(resource);
+
+          const index = characters.findIndex((character) => character === char);
+
+          if (index !== -1) {
+            int = parseInt(getObjKey(resource, index));
+          }
+        } else if (!options.regex || char.match(new RegExp(options.regex))) {
+          int = char.charCodeAt(0);
+        }
+
+        if (int !== fallback) {
+          return true;
+        }
+      });
     }
 
     if (options.isZeroTerminated && int === 0x0) {
