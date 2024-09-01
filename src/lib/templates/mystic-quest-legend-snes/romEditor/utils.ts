@@ -8,7 +8,7 @@ import { getRegionArray } from "$lib/utils/format";
 import { applyPalette, flipTileData } from "$lib/utils/graphics";
 import { updateResources } from "$lib/utils/parser";
 
-import type { Item, ItemInt, Palette } from "$lib/types";
+import type { Item, ItemInt, Palette, Resource } from "$lib/types";
 
 import BattleBackgroundCanvas from "./components/BattleBackgroundCanvas.svelte";
 import Debug from "./components/Debug.svelte";
@@ -272,9 +272,7 @@ export function getText(offset: number, length: number): string {
     return "???";
   }
 
-  const letters = getRegionArray(
-    $gameJson.resources.letters as { [key: number]: string }[],
-  );
+  const letters = getRegionArray($gameJson.resources.letters as Resource[]);
 
   let text = "";
 

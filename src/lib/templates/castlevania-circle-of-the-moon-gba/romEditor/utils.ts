@@ -7,7 +7,7 @@ import debug from "$lib/utils/debug";
 import { getRegionArray } from "$lib/utils/format";
 import { applyPalette, flipTileData } from "$lib/utils/graphics";
 
-import type { Item, Palette } from "$lib/types";
+import type { Item, Palette, Resource } from "$lib/types";
 
 import Debug from "./components/Debug.svelte";
 import MapViewer from "./components/MapViewer.svelte";
@@ -546,9 +546,7 @@ export function getText(index: number): string {
 
   let offset = getInt(offsetTexts + (index - 0x8001) * 0x4, "uint24");
 
-  const letters = getRegionArray(
-    $gameJson.resources.letters as { [key: number]: string }[],
-  );
+  const letters = getRegionArray($gameJson.resources.letters as Resource[]);
 
   let text = "";
 

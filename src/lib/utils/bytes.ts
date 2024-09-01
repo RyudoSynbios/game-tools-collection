@@ -15,6 +15,7 @@ import type {
   DataType,
   DataTypeInt,
   IntOperation,
+  Resource,
 } from "$lib/types";
 
 export function getDataView(dataViewTmp?: DataView): DataView {
@@ -636,9 +637,7 @@ export function getString(
     ) {
       if (Array.isArray($gameJson.resources[options.resource])) {
         resource = getRegionArray(
-          $gameJson.resources[options.resource] as {
-            [key: number]: number | string;
-          }[],
+          $gameJson.resources[options.resource] as Resource[],
         );
       } else {
         resource = $gameJson.resources[options.resource];
@@ -703,9 +702,7 @@ export function setString(
     ) {
       if (Array.isArray($gameJson.resources[options.resource])) {
         resource = getRegionArray(
-          $gameJson.resources[options.resource] as {
-            [key: number]: number | string;
-          }[],
+          $gameJson.resources[options.resource] as Resource[],
         );
       } else {
         resource = $gameJson.resources[options.resource];

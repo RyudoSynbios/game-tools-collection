@@ -57,6 +57,13 @@ export type Palette = Color[];
 
 export type RegionValidator = Validator | LogicalOperator<Validator>;
 
+export type Resource = {
+  [key: string]:
+    | { [key: number]: number | string }
+    | { [key: number]: number | string }[]
+    | string;
+};
+
 export type TimeUnit = "milliseconds" | "seconds" | "minutes" | "hours";
 
 export type Validator = { [key: number]: number[] };
@@ -108,12 +115,7 @@ export interface GameJson {
   };
   checksums?: ItemChecksum[];
   items: Item[];
-  resources?: {
-    [key: string]:
-      | { [key: number]: number | string }
-      | { [key: number]: number | string }[]
-      | string;
-  };
+  resources?: Resource;
   resourcesOrder?: {
     [key: string]: number[];
   };

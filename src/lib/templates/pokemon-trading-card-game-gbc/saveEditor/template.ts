@@ -3294,14 +3294,14 @@ const template: GameJson = {
           0x388: "Ù",
           0x389: "Ú",
           0x38a: "Ü",
-        } as { [key: number]: string | number };
+        };
       } else if (index === 1) {
         // USA / Australia
         return {
           ...common,
           0x511: "Lv",
           0x513: "No",
-        } as { [key: number]: string | number };
+        };
       } else if (index === 2) {
         // Japan
         return {
@@ -3471,7 +3471,7 @@ const template: GameJson = {
           0xf5f: "ッ",
           0xf70: " ",
           0xf78: "ー",
-        } as { [key: number]: string | number };
+        };
       }
 
       return common;
@@ -3568,7 +3568,7 @@ const template: GameJson = {
           0xd9: "Ù",
           0xda: "Ú",
           0xdc: "Ü",
-        } as { [key: number]: string | number };
+        };
       }
 
       return common;
