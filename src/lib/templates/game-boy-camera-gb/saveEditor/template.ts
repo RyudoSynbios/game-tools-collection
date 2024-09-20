@@ -428,7 +428,7 @@ const template: GameJson = {
         0xb3: "ü",
         0xb4: "ñ",
         0xb5: "ç",
-        0xb6: "β",
+        0xb6: "ẞ",
         0xb7: "☺",
         0xb8: "☹",
         0xb9: "☻",

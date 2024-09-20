@@ -1455,7 +1455,7 @@ const template: GameJson = {
         0x82: ",",
         0xaa: "ö",
         0xaf: "ü",
-        0xc0: "β",
+        0xc0: "ß",
         0xc6: "è",
         0xc7: "é",
         0xc8: "ê",

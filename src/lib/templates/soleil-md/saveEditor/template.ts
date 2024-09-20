@@ -739,7 +739,7 @@ const template: GameJson = {
           0x51: "ä",
           0x52: "ö",
           0x53: "ü",
-          0x54: "β",
+          0x54: "ẞ",
         }),
         // Spain
         ...(index === 4 && {
