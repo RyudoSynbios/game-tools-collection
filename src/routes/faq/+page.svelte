@@ -34,7 +34,11 @@
   </p>
   <p>
     If you are in possession of a save file that is not recognized by the tools,
-    you can contact me at <a href="mailto:contact@game-tools-collection.com">
+    you can contact me on <a href="https://discordapp.com/users/433693716587216896">
+      Discord
+    </a>
+    or at
+    <a href="mailto:contact@game-tools-collection.com">
       contact@game-tools-collection.com
     </a>.
   </p>
