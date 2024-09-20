@@ -56,7 +56,7 @@ export function overrideItem(item: Item): Item | ItemTab {
   if ("id" in item && item.id === "general") {
     const itemTab = item as ItemTab;
 
-    if ($fileName === "RogueLegacyBP.rcdat") {
+    if ($fileName !== "RogueLegacyPlayer.rcdat") {
       itemTab.hidden = true;
     }
 
@@ -64,7 +64,7 @@ export function overrideItem(item: Item): Item | ItemTab {
   } else if ("id" in item && item.id === "manor") {
     const itemTab = item as ItemTab;
 
-    if ($fileName === "RogueLegacyPlayer.rcdat") {
+    if ($fileName !== "RogueLegacyBP.rcdat") {
       itemTab.hidden = true;
     }
 
