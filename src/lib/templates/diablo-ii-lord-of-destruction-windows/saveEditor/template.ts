@@ -110,7 +110,7 @@ const template: GameJson = {
                           type: "variable",
                           dataType: "string",
                           letterDataType: "uint8",
-                          isZeroTerminated: true,
+                          zeroTerminated: true,
                           regex: "[A-Za-z]",
                           test: true,
                         },

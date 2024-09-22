@@ -586,7 +586,7 @@ export function setBigInt(
 interface StringOptions {
   bigEndian?: boolean;
   letterBigEndian?: boolean;
-  isZeroTerminated?: boolean;
+  zeroTerminated?: boolean;
   regex?: string;
   resource?: string;
 }
@@ -612,7 +612,7 @@ export function getString(
       $dataView,
     );
 
-    if (int === 0x0 && options.isZeroTerminated) {
+    if (int === 0x0 && options.zeroTerminated) {
       break;
     }
 
@@ -656,7 +656,7 @@ export function setString(
   for (let i = offset; i < offset + length; i += increment) {
     const char = value[(i - offset) / increment];
 
-    if (char === undefined && options.isZeroTerminated) {
+    if (char === undefined && options.zeroTerminated) {
       // prettier-ignore
       setInt(i - skip, letterDataType, 0x0, {
         bigEndian: options.letterBigEndian,
@@ -695,7 +695,7 @@ export function setString(
       });
     }
 
-    if (options.isZeroTerminated && int === 0x0) {
+    if (options.zeroTerminated && int === 0x0) {
       skip += 0x1;
     } else {
       // prettier-ignore
