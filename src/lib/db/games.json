@@ -398,6 +398,17 @@
     }
   },
   {
+    "id": "sonic-adventure-2-battle-gc",
+    "name": "Sonic Adventure 2: Battle",
+    "consoleId": "gamecube",
+    "tools": {
+      "saveEditor": {
+        "createdAt": "2024-09-27",
+        "regions": ["🇪🇺", "🇺🇸", "🇯🇵"]
+      }
+    }
+  },
+  {
     "id": "super-smash-bros-n64",
     "name": "Super Smash Bros.",
     "consoleId": "nintendo-64",

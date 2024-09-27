@@ -54,6 +54,9 @@
       <strong>Game Boy Advance: </strong>.sav, .srm, .sps (<i>GameShark</i>)
     </li>
     <li>
+      <strong>GameCube: </strong>.gci
+    </li>
+    <li>
       <strong>Nintendo DS: </strong>.dsv, .sav, .dss, .dst, .duc (<i
         >Action Replay Max DS</i
       >)

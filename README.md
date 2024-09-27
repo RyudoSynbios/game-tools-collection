@@ -40,6 +40,7 @@ Link to the website: [https://game-tools-collection.com](https://game-tools-coll
 | Shining Force 3                           | SATURN   | Save / Rom | EUR / USA / JAP                               |
 | Soleil                                    | MD       | Save / Rom | EUR / USA / JAP / FRA / GER / SPA / KOR       |
 | Sonic 3                                   | MD       | Save       | EUR / USA / JAP                               |
+| Sonic Adventure 2: Battle                 | GC       | Save       | EUR / USA / JAP                               |
 | Super Smash Bros.                         | N64      | Save       | EUR / USA / JAP / AUS                         |
 | Super Street Fighter II Turbo Revival     | GBA      | Save       | EUR / USA / JAP                               |
 | Wario Land: Super Mario Land 3            | GB       | Save       | WORLD                                         |

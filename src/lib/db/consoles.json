@@ -15,6 +15,11 @@
     "manufacturerId": "nintendo"
   },
   {
+    "id": "gamecube",
+    "name": "GameCube",
+    "manufacturerId": "nintendo"
+  },
+  {
     "id": "nintendo-ds",
     "name": "Nintendo DS",
     "manufacturerId": "nintendo"
