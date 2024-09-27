@@ -156,6 +156,12 @@ export function makeOperations(
         case "round":
           value = round(value, operation.round as number);
           break;
+        case "roundCeil":
+          value = Math.ceil(value);
+          break;
+        case "roundFloor":
+          value = Math.floor(value);
+          break;
       }
     });
   }
