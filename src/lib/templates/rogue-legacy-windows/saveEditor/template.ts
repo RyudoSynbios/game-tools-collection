@@ -9,7 +9,7 @@ const template: GameJson = {
       world: true,
     },
     text: "Drag 'n' drop here or click to add a save file.",
-    hint: 'Only works with v1.4.0 or above.<br />General: "RogueLegacyPlayer.rcdat"<br />Manor: "RogueLegacyBP.rcdat"',
+    hint: 'Only works with v1.4.0 or above.<br />Main: "RogueLegacyPlayer.rcdat"<br />Manor: "RogueLegacyBP.rcdat"',
     error: "Not a valid save file.",
   },
   items: [
@@ -17,7 +17,7 @@ const template: GameJson = {
       type: "tabs",
       items: [
         {
-          id: "general",
+          id: "main",
           name: "General",
           items: [
             {
@@ -208,7 +208,7 @@ const template: GameJson = {
           ],
         },
         {
-          id: "general",
+          id: "main",
           name: "Current Game",
           flex: true,
           items: [
@@ -370,7 +370,7 @@ const template: GameJson = {
           ],
         },
         {
-          id: "general",
+          id: "main",
           name: "Current Run",
           items: [
             {
@@ -618,7 +618,7 @@ const template: GameJson = {
           ],
         },
         {
-          id: "general",
+          id: "main",
           name: "Bestiary",
           items: [
             {

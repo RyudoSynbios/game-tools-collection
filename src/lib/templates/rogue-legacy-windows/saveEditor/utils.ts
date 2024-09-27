@@ -53,7 +53,7 @@ export function onReady(): void {
 export function overrideItem(item: Item): Item | ItemTab {
   const $fileName = get(fileName);
 
-  if ("id" in item && item.id === "general") {
+  if ("id" in item && item.id === "main") {
     const itemTab = item as ItemTab;
 
     if ($fileName !== "RogueLegacyPlayer.rcdat") {
