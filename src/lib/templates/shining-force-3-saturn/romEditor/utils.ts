@@ -312,7 +312,7 @@ export function getCharacterNames(): { [value: number]: string } {
     indexes[characterIndex] = true;
 
     names[i] =
-      `${getText(characterNamesStartIndex + characterIndex)} ${promoted}`;
+      `${getText(characterNamesStartIndex + characterIndex)}${promoted ? ` ${promoted}` : ""}`;
   }
 
   return names;
