@@ -1,7 +1,5 @@
 # Game Tools Collection
 
----
-
 Link to the website: [https://game-tools-collection.com](https://game-tools-collection.com)
 
 | Games                                     | Consoles | Tools      | Regions                                       |
@@ -44,3 +42,18 @@ Link to the website: [https://game-tools-collection.com](https://game-tools-coll
 | Super Smash Bros.                         | N64      | Save       | EUR / USA / JAP / AUS                         |
 | Super Street Fighter II Turbo Revival     | GBA      | Save       | EUR / USA / JAP                               |
 | Wario Land: Super Mario Land 3            | GB       | Save       | WORLD                                         |
+
+---
+
+## How can i run this project?
+
+You first need [node v18.20.4 (LTS)](https://nodejs.org/en/download/prebuilt-installer/current).
+
+Once installed clone this project, run a terminal, `cd` to the root of the project and do:
+
+```
+npm install
+npm run dev
+```
+
+You should see a `Local` url, open it on your browser.
