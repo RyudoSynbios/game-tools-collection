@@ -1737,6 +1737,20 @@ const template: GameJson = {
                                   type: "variable",
                                   dataType: "uint8",
                                 },
+                              ],
+                            },
+                            {
+                              type: "section",
+                              flex: true,
+                              items: [
+                                {
+                                  name: "Turns",
+                                  offset: 0x1b,
+                                  type: "variable",
+                                  dataType: "uint8",
+                                  min: 1,
+                                  max: 2,
+                                },
                                 {
                                   name: "HP Regen",
                                   offset: 0x1c,
@@ -1748,14 +1762,6 @@ const template: GameJson = {
                                   offset: 0x1d,
                                   type: "variable",
                                   dataType: "uint8",
-                                },
-                                {
-                                  name: "Turns",
-                                  offset: 0x1b,
-                                  type: "variable",
-                                  dataType: "uint8",
-                                  min: 1,
-                                  max: 2,
                                 },
                               ],
                             },
