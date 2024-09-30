@@ -1,12 +1,12 @@
 import type { GameJson } from "$lib/types";
 
 export const characterNamesStartIndexes = [0x137, 0x137, 0x13a, 0x13a, 0x13a];
-export const characterCount = [0x20, 0x20, 0x41, 0x8e];
+export const characterCount = [0x20, 0x20, 0x41, 0x8e, 0x8f];
 export const classNamesStartIndexes = [0x19c, 0x19a, 0x19f, 0x19f, 0x19f];
 export const enemyNamesStartIndexes = [0x44a, 0x448, 0x5fb, 0x648, 0x539];
-export const enemyCount = [0x8d, 0x8d, 0xbe, 0xd3];
+export const enemyCount = [0x8d, 0x8d, 0xbe, 0xd3, 0xd3];
 export const itemNamesStartIndexes = [0x34a, 0x348, 0x4fb, 0x51c, 0x40d];
-export const itemOffsetShift = [0xb0, 0xb0, 0x9c, 0xa8];
+export const itemOffsetShift = [0xb0, 0xb0, 0x9c, 0xa8, 0xa8];
 export const itemCount = [0x100, 0x100, 0x100, 0x12b, 0x12c];
 export const spellNamesStartIndexes = [0x316, 0x314, 0x4be, 0x4d2, 0x3c0];
 export const weaponSpecialNamesStartIndexes = [
@@ -1933,7 +1933,6 @@ const template: GameJson = {
         },
         {
           name: "Enemies",
-          planned: true,
           items: [
             {
               id: "enemies",
@@ -2027,6 +2026,34 @@ const template: GameJson = {
                               name: "Luck",
                               dataViewAltKey: "x019",
                               offset: 0x8,
+                              type: "variable",
+                              dataType: "uint8",
+                            },
+                          ],
+                        },
+                        {
+                          type: "section",
+                          flex: true,
+                          items: [
+                            {
+                              name: "Turns",
+                              dataViewAltKey: "x019",
+                              offset: 0x9,
+                              type: "variable",
+                              dataType: "uint8",
+                              max: 3,
+                            },
+                            {
+                              name: "HP Regen",
+                              dataViewAltKey: "x019",
+                              offset: 0xa,
+                              type: "variable",
+                              dataType: "uint8",
+                            },
+                            {
+                              name: "MP Regen",
+                              dataViewAltKey: "x019",
+                              offset: 0xc,
                               type: "variable",
                               dataType: "uint8",
                             },
@@ -2268,33 +2295,9 @@ const template: GameJson = {
                       hidden: true,
                       items: [
                         {
-                          name: "Unknown 3",
-                          dataViewAltKey: "x019",
-                          offset: 0x9,
-                          type: "variable",
-                          dataType: "uint8",
-                          hidden: true,
-                        },
-                        {
-                          name: "Unknown 4",
-                          dataViewAltKey: "x019",
-                          offset: 0xa,
-                          type: "variable",
-                          dataType: "uint8",
-                          hidden: true,
-                        },
-                        {
                           name: "Unknown 5",
                           dataViewAltKey: "x019",
                           offset: 0xb,
-                          type: "variable",
-                          dataType: "uint8",
-                          hidden: true,
-                        },
-                        {
-                          name: "Unknown 6",
-                          dataViewAltKey: "x019",
-                          offset: 0xc,
                           type: "variable",
                           dataType: "uint8",
                           hidden: true,
