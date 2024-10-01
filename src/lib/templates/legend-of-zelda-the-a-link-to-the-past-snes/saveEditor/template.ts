@@ -96,9 +96,9 @@ const template: GameJson = {
                           type: "variable",
                           dataType: "uint8",
                           operations: [{ "/": 8 }],
-                          step: 0.25,
                           min: 0.25,
                           max: 20,
+                          step: 0.25,
                         },
                         {
                           id: "healthMax",

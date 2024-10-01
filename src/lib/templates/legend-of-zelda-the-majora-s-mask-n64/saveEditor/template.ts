@@ -150,9 +150,9 @@ const template: GameJson = {
                                   dataType: "uint16",
                                   bigEndian: true,
                                   operations: [{ "/": 16 }],
-                                  step: 0.25,
                                   min: 0.25,
                                   max: 20,
+                                  step: 0.25,
                                 },
                                 {
                                   id: "healthMax",
