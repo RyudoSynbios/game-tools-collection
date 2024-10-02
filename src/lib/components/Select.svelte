@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { isDebug } from "$lib/stores";
+  import { dataView, isDebug } from "$lib/stores";
 
   export let label = "";
   export let type: "number" | "string" = "string";
@@ -13,6 +13,14 @@
 
   // We export select element to allow prop binding
   export let selectEl: HTMLSelectElement | undefined = undefined;
+
+  $: {
+    $dataView;
+
+    if (selectEl) {
+      selectEl.value = value.toString();
+    }
+  }
 </script>
 
 <div
