@@ -240,7 +240,7 @@
     {#if !tabs[selectedTab].disabled}
       <Content items={tabs[selectedTab].items} flex={tabs[selectedTab].flex} />
     {:else}
-      <p>This save slot is not active</p>
+      <p>Content is disabled</p>
     {/if}
   </div>
 </div>
@@ -269,7 +269,7 @@
           @apply cursor-not-allowed bg-primary-400;
         }
 
-        &.gtc-tab-highlight {
+        &.gtc-tab-highlight:not(.gtc-tab-disabled) {
           @apply text-white bg-primary-300 rounded;
 
           &.gtc-tab-debug {
