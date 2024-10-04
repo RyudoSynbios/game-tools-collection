@@ -994,9 +994,7 @@ const template: GameJson = {
               instanceType: "tabs",
               instances: 16,
               resource: "courses",
-              enumerationOrder: [
-                1, 2, 13, 5, 8, 0, 9, 6, 11, 4, 10, 14, 3, 15, 12, 7,
-              ],
+              resourceOrder: true,
               vertical: true,
               items: [
                 {
@@ -1588,6 +1586,9 @@ const template: GameJson = {
       0x30: "Secret Master",
       0x31: "Ninja Fan",
     },
+  },
+  resourcesOrder: {
+    courses: [1, 2, 13, 5, 8, 0, 9, 6, 11, 4, 10, 14, 3, 15, 12, 7],
   },
 };
 

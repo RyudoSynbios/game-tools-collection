@@ -3,7 +3,7 @@
 
   import AccessTimeIcon from "$lib/assets/AccessTime.svelte";
   import Content from "$lib/components/Items/Content.svelte";
-  import { isDebug } from "$lib/stores";
+  import { gameJson, isDebug } from "$lib/stores";
   import { getBigInt, getInt } from "$lib/utils/bytes";
   import { generateIdFromArray, getUtils } from "$lib/utils/format";
   import { getResource } from "$lib/utils/parser";
@@ -193,10 +193,16 @@
       return tabs;
     }, []);
 
-    if (item.enumerationOrder) {
+    if (
+      item.resource &&
+      item.resourceOrder &&
+      $gameJson.resourcesOrder?.[item.resource]
+    ) {
+      const resourceOrder = $gameJson.resourcesOrder?.[item.resource];
+
       tabs.sort((a, b) => {
-        const indexA = item.enumerationOrder?.indexOf(a.index) || -2;
-        const indexB = item.enumerationOrder?.indexOf(b.index) || -2;
+        const indexA = resourceOrder.indexOf(a.index) || -2;
+        const indexB = resourceOrder.indexOf(b.index) || -2;
 
         return indexA - indexB;
       });

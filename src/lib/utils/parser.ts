@@ -268,8 +268,8 @@ export function parseContainer(
     id: item.id,
     type: item.instanceType,
     enumeration: item.enumeration,
-    enumerationOrder: item.enumerationOrder,
     resource: item.resource,
+    resourceOrder: item.resourceOrder,
     vertical: item.vertical,
     items: [],
   };

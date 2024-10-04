@@ -202,8 +202,8 @@ export interface ItemContainer {
     | string;
   prependSubinstance?: ItemTab[];
   appendSubinstance?: ItemTab[];
-  enumerationOrder?: number[];
   resource?: string;
+  resourceOrder?: boolean;
   vertical?: boolean;
   flex?: boolean;
   noMargin?: boolean;
@@ -311,8 +311,8 @@ export interface ItemTabs {
   type: "tabs";
   vertical?: boolean;
   enumeration?: string;
-  enumerationOrder?: number[];
   resource?: string;
+  resourceOrder?: boolean;
   items: ItemTab[];
   hidden?: boolean | boolean[];
 }
