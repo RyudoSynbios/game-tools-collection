@@ -23,6 +23,7 @@ Link to the website: [https://game-tools-collection.com](https://game-tools-coll
 | GoldenEye 007                             | N64      | Save       | EUR / USA / JAP                               |
 | Grandia                                   | PS       | Save       | EUR / USA / JAP / FRA / GER                   |
 | Grandia II                                | PS2      | Save       | EUR / USA / JAP                               |
+| Half-Minute Hero                          | PSP      | Save       | EUR / USA / JAP                               |
 | Kingdom Hearts                            | PS2      | Save       | EUR / USA / JAP / FRA / GER / ITA / SPA / AUS |
 | Konami Krazy Racers                       | GBA      | Save       | EUR / USA / JAP                               |
 | Legend of Zelda, The: A Link to the Past  | SNES     | Save       | EUR / USA / JAP / FRA / GER / CAN             |

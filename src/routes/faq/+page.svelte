@@ -34,7 +34,9 @@
   </p>
   <p>
     If you are in possession of a save file that is not recognized by the tools,
-    you can contact me on <a href="https://discordapp.com/users/433693716587216896">
+    you can contact me on <a
+      href="https://discordapp.com/users/433693716587216896"
+    >
       Discord
     </a>
     or at
@@ -88,6 +90,29 @@
       <strong>PC-Engine CD: </strong>.sav, .srm
     </li>
   </ul>
+  <h2>- How can i edit my PSP save?</h2>
+  <p>
+    PSP save files are encrypted by default when exported from a PSP or
+    generated with PPSSPP. You need to decrypt your save in order to edit it.
+  </p>
+  <p>If you're save has been generated with PPSSPP, follow those steps:</p>
+  <p>
+    Open the <strong> memstick</strong>
+    folder (on the root of the PPSSPP folder by default).
+  </p>
+  <p>
+    Navigate to
+    <strong>PSP</strong>
+    > <strong>SYSTEM</strong>, then open the <strong>ppsspp.ini</strong> file in
+    a text editor.
+  </p>
+  <p>
+    You should find a <strong>EncryptSave = True</strong> line. Replace
+    <strong>True</strong>
+    by <strong>False</strong> then save and quit.
+  </p>
+  <p>Now launch your game on PPSSPP, open you save and save again.</p>
+  <p>Now your save should be decrypted.</p>
 </div>
 
 <style lang="postcss">

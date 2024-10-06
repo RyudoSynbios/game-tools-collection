@@ -60,6 +60,11 @@
     "manufacturerId": "sony"
   },
   {
+    "id": "playstation-portable",
+    "name": "PlayStation Portable",
+    "manufacturerId": "sony"
+  },
+  {
     "id": "pc-engine-cd",
     "name": "PC-Engine CD",
     "manufacturerId": "nec"
