@@ -34,8 +34,8 @@ import {
   itemCount,
   itemNamesStartIndexes,
   itemOffsetShift,
+  specialAttackNamesStartIndexes,
   spellNamesStartIndexes,
-  weaponSpecialNamesStartIndexes,
 } from "./template";
 import { decodeKanji } from "./utils/decode";
 
@@ -174,8 +174,12 @@ export function overrideGetInt(
 
     const int = getInt(
       cache.partyMiscBaseOffset + itemInt.offset + index * 0x20,
-      itemInt.dataType as "int8" | "uint8" | "int16" | "uint16",
-      { bigEndian: itemInt.bigEndian },
+      itemInt.dataType as "bit" | "int8" | "uint8" | "int16" | "uint16",
+      {
+        bigEndian: itemInt.bigEndian,
+        binary: itemInt.binary,
+        bit: itemInt.bit,
+      },
       $dataViewAlt.x033,
     );
 
@@ -213,9 +217,13 @@ export function overrideSetInt(item: Item, value: string): boolean {
 
     setInt(
       cache.partyMiscBaseOffset + itemInt.offset + index * 0x20,
-      itemInt.dataType as "int8" | "uint8" | "int16" | "uint16",
+      itemInt.dataType as "bit" | "int8" | "uint8" | "int16" | "uint16",
       value,
-      { bigEndian: itemInt.bigEndian },
+      {
+        bigEndian: itemInt.bigEndian,
+        binary: itemInt.binary,
+        bit: itemInt.bit,
+      },
       "x033",
     );
 
@@ -360,13 +368,15 @@ export function getItemNames(): { [value: number]: string } {
   return names;
 }
 
-export function getSpellNames(): { [value: number]: string } {
-  const spellNamesStartIndex = getRegionArray(spellNamesStartIndexes);
+export function getSpecialAttackNames(): { [value: number]: string } {
+  const specialAttackNamesStartIndex = getRegionArray(
+    specialAttackNamesStartIndexes,
+  );
 
   const names: { [value: number]: string } = {};
 
-  for (let i = 0x0; i < 0x33; i += 0x1) {
-    names[i] = getText(spellNamesStartIndex + i);
+  for (let i = 0x0; i < 0xbc; i += 0x1) {
+    names[i] = getText(specialAttackNamesStartIndex + i);
   }
 
   names[0x0] = "-";
@@ -374,15 +384,13 @@ export function getSpellNames(): { [value: number]: string } {
   return names;
 }
 
-export function getWeaponSpecialNames(): { [value: number]: string } {
-  const weaponSpecialNamesStartIndex = getRegionArray(
-    weaponSpecialNamesStartIndexes,
-  );
+export function getSpellNames(): { [value: number]: string } {
+  const spellNamesStartIndex = getRegionArray(spellNamesStartIndexes);
 
   const names: { [value: number]: string } = {};
 
-  for (let i = 0x0; i < 0xbc; i += 0x1) {
-    names[i] = getText(weaponSpecialNamesStartIndex + i);
+  for (let i = 0x0; i < 0x33; i += 0x1) {
+    names[i] = getText(spellNamesStartIndex + i);
   }
 
   names[0x0] = "-";
