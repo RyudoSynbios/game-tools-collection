@@ -57,6 +57,7 @@
         @apply items-start;
       }
 
+      & :global(.gtc-autocomplete),
       & :global(.gtc-input),
       & :global(.gtc-select) {
         @apply m-0;
