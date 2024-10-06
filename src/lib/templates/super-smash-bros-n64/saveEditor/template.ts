@@ -452,6 +452,7 @@ const template: GameJson = {
               type: "variable",
               dataType: "uint8",
               resource: "languages",
+              hidden: [false, true, true, true],
               test: true,
             },
           ],
@@ -475,7 +476,7 @@ const template: GameJson = {
       0xb: "Ness",
     },
     completion: {
-      0x0: "Uncompleted",
+      0x0: "Incompleted",
       0x1: "Very Easy",
       0x2: "Easy",
       0x3: "Normal",

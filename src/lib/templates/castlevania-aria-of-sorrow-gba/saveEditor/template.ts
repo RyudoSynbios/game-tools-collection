@@ -48,6 +48,7 @@ const template: GameJson = {
               type: "variable",
               dataType: "uint8",
               resource: "languages",
+              hidden: [false, true, true],
               test: true,
             },
             {

@@ -60,7 +60,7 @@ const template: GameJson = {
                   test: true,
                 },
                 {
-                  name: "Sexe",
+                  name: "Sex",
                   offset: 0x2fc5,
                   type: "variable",
                   dataType: "uint8",
