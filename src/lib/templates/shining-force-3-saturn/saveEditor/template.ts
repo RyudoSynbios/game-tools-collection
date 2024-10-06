@@ -666,7 +666,7 @@ const template: GameJson = {
                                       offset: 0x2690,
                                       type: "variable",
                                       dataType: "uint8",
-                                      resource: "weaponSpecials",
+                                      resource: "specialAttacks",
                                       autocomplete: true,
                                     },
                                     {
@@ -674,7 +674,7 @@ const template: GameJson = {
                                       offset: 0x2691,
                                       type: "variable",
                                       dataType: "uint8",
-                                      resource: "weaponSpecials",
+                                      resource: "specialAttacks",
                                       autocomplete: true,
                                     },
                                     {
@@ -682,7 +682,7 @@ const template: GameJson = {
                                       offset: 0x2692,
                                       type: "variable",
                                       dataType: "uint8",
-                                      resource: "weaponSpecials",
+                                      resource: "specialAttacks",
                                       autocomplete: true,
                                     },
                                   ],
@@ -731,7 +731,7 @@ const template: GameJson = {
                                       offset: 0x2693,
                                       type: "variable",
                                       dataType: "uint8",
-                                      resource: "weaponSpecials",
+                                      resource: "specialAttacks",
                                       autocomplete: true,
                                     },
                                     {
@@ -739,7 +739,7 @@ const template: GameJson = {
                                       offset: 0x2694,
                                       type: "variable",
                                       dataType: "uint8",
-                                      resource: "weaponSpecials",
+                                      resource: "specialAttacks",
                                       autocomplete: true,
                                     },
                                     {
@@ -747,7 +747,7 @@ const template: GameJson = {
                                       offset: 0x2695,
                                       type: "variable",
                                       dataType: "uint8",
-                                      resource: "weaponSpecials",
+                                      resource: "specialAttacks",
                                       autocomplete: true,
                                     },
                                   ],
@@ -796,7 +796,7 @@ const template: GameJson = {
                                       offset: 0x2696,
                                       type: "variable",
                                       dataType: "uint8",
-                                      resource: "weaponSpecials",
+                                      resource: "specialAttacks",
                                       autocomplete: true,
                                     },
                                     {
@@ -804,7 +804,7 @@ const template: GameJson = {
                                       offset: 0x2697,
                                       type: "variable",
                                       dataType: "uint8",
-                                      resource: "weaponSpecials",
+                                      resource: "specialAttacks",
                                       autocomplete: true,
                                     },
                                     {
@@ -812,7 +812,7 @@ const template: GameJson = {
                                       offset: 0x2698,
                                       type: "variable",
                                       dataType: "uint8",
-                                      resource: "weaponSpecials",
+                                      resource: "specialAttacks",
                                       autocomplete: true,
                                     },
                                   ],
@@ -861,7 +861,7 @@ const template: GameJson = {
                                       offset: 0x2699,
                                       type: "variable",
                                       dataType: "uint8",
-                                      resource: "weaponSpecials",
+                                      resource: "specialAttacks",
                                       autocomplete: true,
                                     },
                                     {
@@ -869,7 +869,7 @@ const template: GameJson = {
                                       offset: 0x269a,
                                       type: "variable",
                                       dataType: "uint8",
-                                      resource: "weaponSpecials",
+                                      resource: "specialAttacks",
                                       autocomplete: true,
                                     },
                                     {
@@ -877,7 +877,7 @@ const template: GameJson = {
                                       offset: 0x269b,
                                       type: "variable",
                                       dataType: "uint8",
-                                      resource: "weaponSpecials",
+                                      resource: "specialAttacks",
                                       autocomplete: true,
                                     },
                                   ],
@@ -1740,7 +1740,7 @@ const template: GameJson = {
       0x28: "Tiamat",
       0x29: "Tanatos",
     },
-    weaponSpecials: {
+    specialAttacks: {
       0x0: "-",
       0x1: "Critical Hit",
       0x2: "Counter",
