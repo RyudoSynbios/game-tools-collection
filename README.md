@@ -29,6 +29,7 @@ Link to the website: [https://game-tools-collection.com](https://game-tools-coll
 | Legend of Zelda, The: A Link to the Past  | SNES     | Save       | EUR / USA / JAP / FRA / GER / CAN             |
 | Legend of Zelda, The: Link's Awakening DX | GBC      | Save       | EUR / USA / JAP / FRA / GER                   |
 | Legend of Zelda, The: Majora's Mask       | N64      | Save       | EUR / USA / JAP                               |
+| Mario Party                               | N64      | Save       | EUR / USA / JAP                               |
 | Marvel vs. Capcom 2: New Age of Heroes    | DC       | Save       | EUR / USA / JAP                               |
 | Mystic Quest Legend                       | SNES     | Save / Rom | EUR / USA / JAP / FRA / GER                   |
 | Mystical Ninja 2 Starring Goemon          | N64      | Save       | EUR / USA / JAP                               |
