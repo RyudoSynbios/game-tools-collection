@@ -53,7 +53,6 @@ const template: GameJson = {
         {
           name: "Pending Game",
           flex: true,
-
           disableTabIf: {
             offset: 0x310,
             type: "variable",

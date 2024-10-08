@@ -1059,7 +1059,6 @@ const template: GameJson = {
                               instances: 7,
                               enumeration: "Stage %d",
                               flex: true,
-                              vertical: true,
                               items: [
                                 {
                                   name: "Wins",
@@ -1217,7 +1216,6 @@ const template: GameJson = {
                               instances: 8,
                               enumeration: "Stage %d",
                               flex: true,
-                              vertical: true,
                               items: [
                                 {
                                   name: "Wins",
@@ -1448,7 +1446,6 @@ const template: GameJson = {
                               instances: 5,
                               enumeration: "Stage %d",
                               flex: true,
-                              vertical: true,
                               items: [
                                 {
                                   name: "Wins",
@@ -2135,7 +2132,6 @@ const template: GameJson = {
                               instances: 10,
                               resource: "rankings",
                               flex: true,
-                              vertical: true,
                               items: [
                                 {
                                   name: "Character",
@@ -2220,7 +2216,6 @@ const template: GameJson = {
                               instances: 10,
                               resource: "rankings",
                               flex: true,
-                              vertical: true,
                               items: [
                                 {
                                   name: "Character",
@@ -2230,7 +2225,6 @@ const template: GameJson = {
                                   resource: "characters",
                                   autocomplete: true,
                                 },
-
                                 {
                                   name: "Play Time",
                                   type: "group",
@@ -2306,7 +2300,6 @@ const template: GameJson = {
                               instances: 14,
                               resource: "rankings",
                               flex: true,
-                              vertical: true,
                               items: [
                                 {
                                   name: "Character",
@@ -2317,7 +2310,6 @@ const template: GameJson = {
                                   autocomplete: true,
                                   disabled: true,
                                 },
-
                                 {
                                   name: "Play Time",
                                   type: "group",
@@ -2403,7 +2395,6 @@ const template: GameJson = {
                               instances: 10,
                               resource: "rankings",
                               flex: true,
-                              vertical: true,
                               items: [
                                 {
                                   name: "Character",
@@ -2451,7 +2442,6 @@ const template: GameJson = {
                               instances: 10,
                               resource: "rankings",
                               flex: true,
-                              vertical: true,
                               items: [
                                 {
                                   name: "Character",
@@ -2499,7 +2489,6 @@ const template: GameJson = {
                               instances: 14,
                               resource: "rankings",
                               flex: true,
-                              vertical: true,
                               items: [
                                 {
                                   name: "Character",
@@ -2945,7 +2934,6 @@ const template: GameJson = {
                               dataType: "uint8",
                               resource: "difficulties",
                             },
-
                             {
                               name: "Life Gauge",
                               offset: 0x1383b,

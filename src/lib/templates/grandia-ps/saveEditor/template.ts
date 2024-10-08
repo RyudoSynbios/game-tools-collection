@@ -1729,7 +1729,6 @@ const template: GameJson = {
                                     shift: 0x0,
                                   },
                                 },
-
                                 {
                                   id: "skill-%index%",
                                   name: "Demon Ball",

@@ -1792,7 +1792,6 @@ const template: GameJson = {
                                           dataType: "boolean",
                                           hidden: true,
                                         },
-
                                         {
                                           name: "Unicolor",
                                           offset: 0x3bbd,
@@ -1800,7 +1799,6 @@ const template: GameJson = {
                                           dataType: "boolean",
                                           hidden: true,
                                         },
-
                                         {
                                           name: "Shiny",
                                           offset: 0x3bbf,
@@ -2360,7 +2358,6 @@ const template: GameJson = {
                                               dataType: "boolean",
                                               hidden: true,
                                             },
-
                                             {
                                               name: "Unicolor",
                                               offset: 0x382c + shift,
@@ -2368,7 +2365,6 @@ const template: GameJson = {
                                               dataType: "boolean",
                                               hidden: true,
                                             },
-
                                             {
                                               name: "Shiny",
                                               offset: 0x382e + shift,

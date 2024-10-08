@@ -598,7 +598,6 @@ const template: GameJson = {
                           dataType: "uint8",
                           max: 9,
                         },
-
                         {
                           name: "Save Count",
                           offset: 0x3ed,

@@ -4010,7 +4010,6 @@ const template: GameJson = {
                           dataType: "uint8",
                           max: 99,
                         },
-
                         {
                           name: "Ability Stud",
                           offset: 0xa0b6,
