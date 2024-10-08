@@ -7,7 +7,7 @@ import { getItem, updateResources } from "$lib/utils/parser";
 
 import { Item, ItemChecksum, ItemInt, ItemString, ItemTab } from "$lib/types";
 
-import { stories } from "./template";
+import { stories } from "./utils/resource";
 
 export function overrideItem(item: Item): Item | ItemChecksum | ItemTab {
   if ("id" in item && item.id === "checksum") {

@@ -1,51 +1,6 @@
 import type { GameJson, ItemTab } from "$lib/types";
 
-export const stories = [
-  {
-    name: "Hero Side",
-    stages: [
-      { name: "City Escape", character: "sonic", shift: 0x9f4 },
-      { name: "Metal Harbor", character: "sonic", shift: 0x7a8 },
-      { name: "Green Forest", character: "sonic", shift: 0x24c },
-      { name: "Pyramid Cave", character: "sonic", shift: 0x1570 },
-      { name: "Crazy Gadget", character: "sonic", shift: 0x10d8 },
-      { name: "Final Rush", character: "sonic", shift: 0x16f8 },
-      { name: "Prison Lane", character: "tails", shift: 0x6e4 },
-      { name: "Mission Street", character: "tails", shift: 0xd04 },
-      { name: "Route 101", character: "tails", shift: 0x2df0 },
-      { name: "Hidden Base", character: "tails", shift: 0x119c },
-      { name: "Eternal Engine", character: "tails", shift: 0x1260 },
-      { name: "Wild Canyon", character: "knuckles", shift: 0xc40 },
-      { name: "Pumpkin Hill", character: "knuckles", shift: 0x3d4 },
-      { name: "Aquatic Mine", character: "knuckles", shift: 0x55c },
-      { name: "Death Chamber", character: "knuckles", shift: 0x1324 },
-      { name: "Meteor Herd", character: "knuckles", shift: 0x1880 },
-    ],
-  },
-  {
-    name: "Dark Side",
-    stages: [
-      { name: "Radical Highway", character: "shadow", shift: 0xab8 },
-      { name: "White Jungle", character: "shadow", shift: 0x310 },
-      { name: "Sky Rail", character: "shadow", shift: 0x498 },
-      { name: "Final Chase", character: "shadow", shift: 0x1ea0 },
-      { name: "Iron Gate", character: "eggman", shift: 0x86c },
-      { name: "Sand Ocean", character: "eggman", shift: 0x1014 },
-      { name: "Lost Colony", character: "eggman", shift: 0x14ac },
-      { name: "Weapons Bed", character: "eggman", shift: 0x930 },
-      { name: "Cosmic Wall", character: "eggman", shift: 0x20ec },
-      { name: "Dry Lagoon", character: "rouge", shift: 0xdc8 },
-      { name: "Egg Quarters", character: "rouge", shift: 0x13e8 },
-      { name: "Security Hall", character: "rouge", shift: 0x620 },
-      { name: "Route 280", character: "rouge", shift: 0x2eb4 },
-      { name: "Mad Space", character: "rouge", shift: 0x21b0 },
-    ],
-  },
-  {
-    name: "Last",
-    stages: [{ name: "Cannon's Core", character: "last", shift: 0x1a08 }],
-  },
-];
+import { stories } from "./utils/resource";
 
 const template: GameJson = {
   validator: {
