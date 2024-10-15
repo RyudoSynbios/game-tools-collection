@@ -84,7 +84,7 @@ export function afterSetInt(item: Item): void {
     stories.forEach((story) =>
       story.stages.forEach((stage) => {
         for (let i = 0x0; i < 0x5; i += 0x1) {
-          const value = getInt(0x28b8 + stage.shift + i, "uint8");
+          const value = getInt(0x28b8 + stage.index * 0xc4 + i, "uint8");
 
           if (value === 5) {
             aRanks[stage.character].count += 1;
@@ -190,7 +190,7 @@ function updateEmblems(): void {
   stories.forEach((story) =>
     story.stages.forEach((stage) => {
       for (let i = 0x0; i < 0x5; i += 0x1) {
-        const value = getInt(0x28b8 + stage.shift + i, "uint8");
+        const value = getInt(0x28b8 + stage.index * 0xc4 + i, "uint8");
 
         if (value > 0) {
           emblemCount += 1;

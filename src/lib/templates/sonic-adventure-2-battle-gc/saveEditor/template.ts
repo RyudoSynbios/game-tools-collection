@@ -1094,89 +1094,91 @@ const template: GameJson = {
                         items: [
                           {
                             type: "tabs",
-                            items: [...Array(5).keys()].map((index) => ({
-                              name: `Mission ${index + 1}`,
-                              items: [
-                                {
-                                  type: "section",
-                                  flex: true,
-                                  items: [
-                                    {
-                                      id: "storyRank",
-                                      name: "Rank",
-                                      offset: 0x28b8 + stage.shift + index,
-                                      type: "variable",
-                                      dataType: "uint8",
-                                      resource: "ranks",
-                                    },
-                                    {
-                                      name: "Play Count",
-                                      offset: 0x28be + stage.shift + index * 2,
-                                      type: "variable",
-                                      dataType: "uint16",
-                                      bigEndian: true,
-                                    },
-                                  ],
-                                },
-                                {
-                                  length: 0xc,
-                                  type: "container",
-                                  instanceType: "section",
-                                  instances: 3,
-                                  resource: "rankings",
-                                  flex: true,
-                                  items: [
-                                    {
-                                      name: "Best Time",
-                                      type: "group",
-                                      mode: "chrono",
-                                      items: [
-                                        {
-                                          offset:
-                                            0x28d0 + stage.shift + index * 0x24,
-                                          type: "variable",
-                                          dataType: "uint8",
-                                          leadingZeros: 1,
-                                          max: 99,
-                                        },
-                                        {
-                                          offset:
-                                            0x28d1 + stage.shift + index * 0x24,
-                                          type: "variable",
-                                          dataType: "uint8",
-                                          leadingZeros: 1,
-                                          max: 59,
-                                        },
-                                        {
-                                          offset:
-                                            0x28d2 + stage.shift + index * 0x24,
-                                          type: "variable",
-                                          dataType: "uint8",
-                                          leadingZeros: 1,
-                                          max: 99,
-                                        },
-                                      ],
-                                    },
-                                    {
-                                      name: "Best Ring",
-                                      offset:
-                                        0x28c8 + stage.shift + index * 0x24,
-                                      type: "variable",
-                                      dataType: "uint16",
-                                      bigEndian: true,
-                                    },
-                                    {
-                                      name: "Best Score",
-                                      offset:
-                                        0x28cc + stage.shift + index * 0x24,
-                                      type: "variable",
-                                      dataType: "uint32",
-                                      bigEndian: true,
-                                    },
-                                  ],
-                                },
-                              ],
-                            })),
+                            items: [...Array(5).keys()].map((index) => {
+                              const shift = stage.index * 0xc4;
+
+                              return {
+                                name: `Mission ${index + 1}`,
+                                items: [
+                                  {
+                                    type: "section",
+                                    flex: true,
+                                    items: [
+                                      {
+                                        id: "storyRank",
+                                        name: "Rank",
+                                        offset: 0x28b8 + shift + index,
+                                        type: "variable",
+                                        dataType: "uint8",
+                                        resource: "ranks",
+                                      },
+                                      {
+                                        name: "Play Count",
+                                        offset: 0x28be + shift + index * 2,
+                                        type: "variable",
+                                        dataType: "uint16",
+                                        bigEndian: true,
+                                      },
+                                    ],
+                                  },
+                                  {
+                                    length: 0xc,
+                                    type: "container",
+                                    instanceType: "section",
+                                    instances: 3,
+                                    resource: "rankings",
+                                    flex: true,
+                                    items: [
+                                      {
+                                        name: "Best Time",
+                                        type: "group",
+                                        mode: "chrono",
+                                        items: [
+                                          {
+                                            offset:
+                                              0x28d0 + shift + index * 0x24,
+                                            type: "variable",
+                                            dataType: "uint8",
+                                            leadingZeros: 1,
+                                            max: 99,
+                                          },
+                                          {
+                                            offset:
+                                              0x28d1 + shift + index * 0x24,
+                                            type: "variable",
+                                            dataType: "uint8",
+                                            leadingZeros: 1,
+                                            max: 59,
+                                          },
+                                          {
+                                            offset:
+                                              0x28d2 + shift + index * 0x24,
+                                            type: "variable",
+                                            dataType: "uint8",
+                                            leadingZeros: 1,
+                                            max: 99,
+                                          },
+                                        ],
+                                      },
+                                      {
+                                        name: "Best Ring",
+                                        offset: 0x28c8 + shift + index * 0x24,
+                                        type: "variable",
+                                        dataType: "uint16",
+                                        bigEndian: true,
+                                      },
+                                      {
+                                        name: "Best Score",
+                                        offset: 0x28cc + shift + index * 0x24,
+                                        type: "variable",
+                                        dataType: "uint32",
+                                        bigEndian: true,
+                                      },
+                                    ],
+                                  },
+                                ],
+                              };
+                            }),
                           },
                         ],
                       })) as ItemTab[]),
