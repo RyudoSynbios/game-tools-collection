@@ -453,6 +453,17 @@
     }
   },
   {
+    "id": "timesplitters-2-ps2",
+    "name": "TimeSplitters 2",
+    "consoleId": "playstation-2",
+    "tools": {
+      "saveEditor": {
+        "createdAt": "2024-10-15",
+        "regions": ["🇪🇺", "🇺🇸", "🇯🇵"]
+      }
+    }
+  },
+  {
     "id": "wario-land-super-mario-land-3-gb",
     "name": "Wario Land: Super Mario Land 3",
     "consoleId": "game-boy",
