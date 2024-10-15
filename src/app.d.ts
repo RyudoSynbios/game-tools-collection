@@ -1,7 +1,5 @@
 // See https://kit.svelte.dev/docs/types#app
 
-import type { Bit } from "$lib/types";
-
 // for information about these interfaces
 declare global {
   namespace App {
@@ -16,12 +14,12 @@ declare global {
   }
 
   interface DataView {
-    getBit: (offset: number, bit: Bit) => number;
+    getBit: (offset: number, bit: number) => number;
     getLower4: (offset: number) => number;
     getUpper4: (offset: number) => number;
     getUint24: (offset: number, littleEndian?: boolean) => number;
     getInt24: (offset: number, littleEndian?: boolean) => number;
-    setBit: (offset: number, bit: Bit, value) => void;
+    setBit: (offset: number, bit: number, value) => void;
     setLower4: (offset: number, value: number) => void;
     setUpper4: (offset: number, value: number) => void;
     setUint24: (offset: number, value: number, littleEndian?: boolean) => void;

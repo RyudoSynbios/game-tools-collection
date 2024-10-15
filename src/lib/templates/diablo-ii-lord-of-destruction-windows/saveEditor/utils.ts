@@ -7,7 +7,6 @@ import { mergeUint8Arrays } from "$lib/utils/format";
 import { getItem, updateResources } from "$lib/utils/parser";
 
 import type {
-  Bit,
   Item,
   ItemChecksum,
   ItemContainer,
@@ -136,7 +135,7 @@ function decode(
 
     const int = getInt(offset, "uint8");
 
-    value += extractBinary(int, byteStart as Bit, byteLength) << shift;
+    value += extractBinary(int, byteStart, byteLength) << shift;
 
     length -= byteLength;
     byteStart += byteLength;

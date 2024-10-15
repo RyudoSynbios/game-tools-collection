@@ -7,7 +7,6 @@ import { getHeaderShift } from "$lib/utils/common/gameBoyAdvance";
 import { getItem, getShift } from "$lib/utils/parser";
 
 import type {
-  Bit,
   Item,
   ItemBitflag,
   ItemChecksum,
@@ -103,7 +102,7 @@ export function overrideGetInt(item: Item): [boolean, number | undefined] {
     let int = 1;
 
     for (let i = 3; i < 8; i += 1) {
-      if (getInt(itemInt.offset, "bit", { bit: i as Bit })) {
+      if (getInt(itemInt.offset, "bit", { bit: i })) {
         int += Math.pow(2, i - 3);
       }
     }
@@ -144,14 +143,9 @@ export function overrideSetInt(item: Item, value: string): boolean {
     int -= 1;
 
     for (let i = 3; i < 8; i += 1) {
-      setInt(
-        itemInt.offset,
-        "bit",
-        extractBit(int, (i - 3) as Bit) === true ? 1 : 0,
-        {
-          bit: i as Bit,
-        },
-      );
+      setInt(itemInt.offset, "bit", extractBit(int, i - 3) === true ? 1 : 0, {
+        bit: i,
+      });
     }
 
     return true;

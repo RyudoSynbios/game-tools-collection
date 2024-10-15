@@ -10,7 +10,7 @@ import {
   isPsvHeader,
 } from "$lib/utils/common/playstation";
 
-import type { Bit, Item, ItemContainer, ItemInt } from "$lib/types";
+import type { Item, ItemContainer, ItemInt } from "$lib/types";
 
 export function initHeaderShift(dataView: DataView): number {
   return getHeaderShift(dataView);
@@ -77,7 +77,7 @@ export function overrideGetInt(item: Item): [boolean, boolean | undefined] {
 
     const boolean = Boolean(
       getInt(itemInt.offset, "bit", {
-        bit: characterIndex as Bit,
+        bit: characterIndex,
       }),
     );
 
@@ -96,7 +96,7 @@ export function overrideSetInt(item: Item, value: string): boolean {
     const characterIndex = parseInt(split[1]);
 
     setInt(itemInt.offset, "bit", value, {
-      bit: characterIndex as Bit,
+      bit: characterIndex,
     });
 
     return true;

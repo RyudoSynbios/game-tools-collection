@@ -4,13 +4,7 @@ import { dataView, dataViewAlt, isDebug, isDirty } from "$lib/stores";
 import debug from "$lib/utils/debug";
 import { getObjKey, isPartial, makeOperations } from "$lib/utils/format";
 
-import type {
-  Binary,
-  Bit,
-  DataType,
-  DataTypeInt,
-  IntOperation,
-} from "$lib/types";
+import type { Binary, DataType, DataTypeInt, IntOperation } from "$lib/types";
 
 import { getResource } from "./parser";
 
@@ -126,13 +120,13 @@ export function dataTypeToValue(
   }
 }
 
-export function extractBit(number: number, bit: Bit): boolean {
+export function extractBit(number: number, bit: number): boolean {
   return (number & (0x1 << bit)) !== 0x0;
 }
 
 export function extractBinary(
   number: number,
-  bitStart: Bit,
+  bitStart: number,
   bitLength: number,
 ): number {
   const dataLength = Math.ceil((bitStart + bitLength) / 0x8);
@@ -228,7 +222,7 @@ export function getBitflags(
 
 export function getBitflag(
   offset: number,
-  flag: Bit,
+  flag: number,
   options: BitflagOptions = {},
 ): boolean {
   const bitflags = getBitflags(offset, options);
@@ -264,7 +258,7 @@ interface IntOptions {
   bigEndian?: boolean;
   binary?: Binary;
   binaryCodedDecimal?: boolean;
-  bit?: Bit;
+  bit?: number;
   operations?: IntOperation[];
 }
 

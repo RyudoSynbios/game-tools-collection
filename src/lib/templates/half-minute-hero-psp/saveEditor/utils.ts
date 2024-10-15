@@ -4,7 +4,7 @@ import { gameRegion } from "$lib/stores";
 import { getInt, getString, setInt } from "$lib/utils/bytes";
 import { getItem } from "$lib/utils/parser";
 
-import { Bit, Item, ItemInt, ItemString } from "$lib/types";
+import { Item, ItemInt, ItemString } from "$lib/types";
 
 import { authorizedEquipment, questPaths } from "./utils/resource";
 
@@ -314,7 +314,7 @@ export function afterSetInt(item: Item): void {
 
 interface Quest {
   index: number;
-  bit: Bit;
+  bit: number;
 }
 
 function updatePaths(offset: number, questIndex: number): void {
@@ -322,7 +322,7 @@ function updatePaths(offset: number, questIndex: number): void {
     const index = quest.nextQuests.findIndex((index) => index === questIndex);
 
     if (index !== -1) {
-      quests.push({ index: quest.index, bit: index as Bit });
+      quests.push({ index: quest.index, bit: index });
     }
 
     return quests;
@@ -332,7 +332,7 @@ function updatePaths(offset: number, questIndex: number): void {
     if (quest.index === questIndex) {
       quest.nextQuests.forEach((questIndex, index) => {
         if (questIndex !== undefined) {
-          quests.push({ index: questIndex, bit: index as Bit });
+          quests.push({ index: questIndex, bit: index });
         }
       });
     }

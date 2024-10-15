@@ -2,7 +2,7 @@ import { extractBit, getInt } from "$lib/utils/bytes";
 import { formatChecksum } from "$lib/utils/checksum";
 import { getRegionArray } from "$lib/utils/format";
 
-import type { Bit, ItemChecksum } from "$lib/types";
+import type { ItemChecksum } from "$lib/types";
 
 import MapViewer from "./components/MapViewer.svelte";
 
@@ -65,7 +65,7 @@ export function getDecompressedData(
     offset += 0x1;
 
     for (let i = 0x0; i < 0x8; i += 0x1) {
-      if (extractBit(int, i as Bit)) {
+      if (extractBit(int, i)) {
         d0 = (d0 & 0xff00) | (getInt(offset, "uint8") & 0xff);
 
         decompressedData[a5 & 0xffff] = d0 & 0xff;
@@ -139,7 +139,7 @@ export function getTiles(offset: number, size: number): Uint8Array {
 
     let clearFlag = false;
 
-    if (!extractBit(a5, 0 as Bit)) {
+    if (!extractBit(a5, 0)) {
       clearFlag = true;
     }
 

@@ -4,8 +4,6 @@ import debug from "$lib/utils/debug";
 import { applyPalette, getPalette } from "$lib/utils/graphics";
 import type Three from "$lib/utils/three";
 
-import type { Bit } from "$lib/types";
-
 import AssetViewer from "./components/AssetViewer.svelte";
 
 export interface Mesh {
@@ -58,7 +56,7 @@ export function getDecompressedData(offset: number): Uint8Array {
     }
 
     for (let i = 0x0; i < 0x8; i += 0x1) {
-      if (extractBit(mask, i as Bit)) {
+      if (extractBit(mask, i)) {
         const value = getInt(offset, "uint8");
 
         buffer[bufferIndex] = value;

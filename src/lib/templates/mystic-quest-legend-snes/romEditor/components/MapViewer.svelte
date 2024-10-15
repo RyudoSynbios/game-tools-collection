@@ -10,7 +10,7 @@
   import { capitalize, getRegionArray } from "$lib/utils/format";
   import { applyPalette, flipTileData, getPalette } from "$lib/utils/graphics";
 
-  import type { Bit, Palette } from "$lib/types";
+  import type { Palette } from "$lib/types";
 
   import {
     pointerToBackgroundsPointers,
@@ -153,7 +153,7 @@
         const tileIndex = getInt(tileIndexOffset + i * 0x4 + j, "uint8");
         const tileFlip = getInt(tileFlipIndexOffset + i, "uint8");
 
-        const flipX = extractBit(tileFlip, j as Bit);
+        const flipX = extractBit(tileFlip, j);
 
         let tileData = tilemapDatas[tileIndex];
 
@@ -421,7 +421,7 @@
       }
 
       for (let bit = 7; bit >= 0; bit -= 1) {
-        if (extractBit(chunkPosition, bit as Bit)) {
+        if (extractBit(chunkPosition, bit)) {
           let position =
             getInt(tilesPositionementOffset + count * 2, "uint16") / 0x40;
 

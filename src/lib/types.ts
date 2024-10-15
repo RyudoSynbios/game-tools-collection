@@ -1,5 +1,3 @@
-export type Bit = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7;
-
 export type Color = [number, number, number, number];
 
 export type ColorType = "ABGR555" | "BGR333" | "BGR555" | "RGBA555";
@@ -69,7 +67,7 @@ export type TimeUnit = "milliseconds" | "seconds" | "minutes" | "hours";
 export type Validator = { [key: number]: number[] };
 
 export interface Binary {
-  bitStart: Bit;
+  bitStart: number;
   bitLength: number;
 }
 
@@ -123,7 +121,7 @@ export interface GameJson {
 
 export interface ItemBitflag {
   offset: number;
-  bit: Bit;
+  bit: number;
   label: string;
   reversed?: boolean;
   separator?: boolean;
@@ -234,7 +232,7 @@ export interface ItemInt {
   bigEndian?: boolean;
   binary?: Binary;
   binaryCodedDecimal?: boolean;
-  bit?: Bit;
+  bit?: number;
   disableIfNegative?: boolean;
   leadingZeros?: number;
   operations?: IntOperation[];

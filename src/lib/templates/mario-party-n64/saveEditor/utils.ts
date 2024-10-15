@@ -5,7 +5,7 @@ import { getInt, setInt } from "$lib/utils/bytes";
 import { formatChecksum } from "$lib/utils/checksum";
 import { byteswapDataView, getHeaderShift } from "$lib/utils/common/nintendo64";
 
-import type { Bit, Item, ItemChecksum, ItemInt } from "$lib/types";
+import type { Item, ItemChecksum, ItemInt } from "$lib/types";
 
 export function initHeaderShift(dataView: DataView): number {
   return getHeaderShift(dataView, "eep");
@@ -98,7 +98,7 @@ export function afterSetInt(item: Item): void {
       "bit",
       value > 0x0 ? 0x1 : 0x0,
       {
-        bit: ((index + 1) % 8) as Bit,
+        bit: (index + 1) % 8,
       },
     );
   }
