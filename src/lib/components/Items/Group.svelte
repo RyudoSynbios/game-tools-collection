@@ -23,6 +23,10 @@
             <span>'</span>
           {:else if item.mode === "chrono" && index === 1}
             <span>"</span>
+          {:else if item.mode === "date" && index < 2}
+            <span>/</span>
+          {:else if item.mode === "date" && index >= 3}
+            <span>:</span>
           {:else if item.mode === "fraction"}
             <span>/</span>
           {:else if item.mode === "time"}
