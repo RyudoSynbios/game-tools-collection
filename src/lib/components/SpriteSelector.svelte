@@ -126,6 +126,8 @@
 
 <svelte:window on:click={handleDropdownClose} />
 
+<!-- svelte-ignore a11y-click-events-have-key-events -->
+<!-- svelte-ignore a11y-no-static-element-interactions -->
 <div class="gtc-spriteselector">
   <div
     class="gtc-spriteselector-main"

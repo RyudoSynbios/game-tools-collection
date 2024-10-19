@@ -303,6 +303,8 @@
   }
 </script>
 
+<!-- svelte-ignore a11y-click-events-have-key-events -->
+<!-- svelte-ignore a11y-no-static-element-interactions -->
 <div class="gtc-filevisualizer-backdrop" on:click={handleClose}>
   <div class="gtc-filevisualizer" on:click|stopPropagation>
     <div class="gtc-filevisualizer-toolbar">
