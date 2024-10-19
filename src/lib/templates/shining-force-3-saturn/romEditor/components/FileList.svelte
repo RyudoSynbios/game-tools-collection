@@ -4,11 +4,11 @@
   import { getFiles } from "$lib/utils/common/iso9660";
 
   let search = "";
-  let indexType = "hexadecimal";
+  let indexFormat = "hexadecimal";
   let text = "";
 
-  function handleIndexTypeChange(event: Event): void {
-    indexType = (event.target as HTMLInputElement).value;
+  function handleIndexFormatChange(event: Event): void {
+    indexFormat = (event.target as HTMLInputElement).value;
   }
 
   function handleSearchChange(event: Event): void {
@@ -50,13 +50,13 @@
       onChange={handleSearchChange}
     />
     <Select
-      label="Index Type"
-      value={indexType}
+      label="Index Format"
+      value={indexFormat}
       options={[
         { key: "hexadecimal", value: "Hexadecimal" },
         { key: "decimal", value: "Decimal" },
       ]}
-      onChange={handleIndexTypeChange}
+      onChange={handleIndexFormatChange}
     />
   </div>
   <div class="gtc-filelist-content">

@@ -15,7 +15,7 @@
 
   let display = "formatted";
   let type = "dialogs";
-  let indexType = "pageLine";
+  let indexFormat = "pageLine";
   let commonTexts: string[] = [];
   let dialogsTexts: string[] = [];
 
@@ -23,8 +23,8 @@
     display = (event.target as HTMLInputElement).value;
   }
 
-  function handleIndexTypeChange(event: Event): void {
-    indexType = (event.target as HTMLInputElement).value;
+  function handleIndexFormatChange(event: Event): void {
+    indexFormat = (event.target as HTMLInputElement).value;
   }
 
   function handleTypeChange(event: Event): void {
@@ -240,7 +240,7 @@
 
       let textIndex = index.toHex(3);
 
-      if (indexType === "pageLine") {
+      if (indexFormat === "pageLine") {
         textIndex = `P${index >> 0x8} L${(index & 0xff) + 0x1}`;
       }
 
@@ -279,13 +279,13 @@
       onChange={handleTypeChange}
     />
     <Select
-      label="Index Type"
-      value={indexType}
+      label="Index Format"
+      value={indexFormat}
       options={[
         { key: "hexadecimal", value: "Hexadecimal" },
         { key: "pageLine", value: "Page / Line" },
       ]}
-      onChange={handleIndexTypeChange}
+      onChange={handleIndexFormatChange}
     />
   </div>
   <div
