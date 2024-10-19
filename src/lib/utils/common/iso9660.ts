@@ -58,6 +58,7 @@ interface RootDirectory {
 }
 
 export interface File {
+  index: number;
   name: string;
   offset: number;
   size: number;
@@ -289,6 +290,7 @@ export function readIso9660(): void {
 
     if (!isDirectory) {
       iso.volume.rootDirectory.files.push({
+        index: iso.volume.rootDirectory.files.length,
         name,
         offset: getAbsoluteOffset(sectorLE * iso.volume.logicalBlockSizeLE),
         size: fileSizeLE,
