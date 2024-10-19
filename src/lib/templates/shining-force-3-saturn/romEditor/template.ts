@@ -3033,6 +3033,16 @@ const template: GameJson = {
           ],
         },
         {
+          name: "Files",
+          hidden: true,
+          items: [
+            {
+              type: "component",
+              component: "FileList",
+            },
+          ],
+        },
+        {
           name: "Unhandled Files",
           hidden: true,
           items: [

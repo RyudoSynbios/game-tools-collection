@@ -19,6 +19,7 @@ import { checkValidator } from "$lib/utils/validator";
 
 import type { Item, ItemContainer, ItemInt } from "$lib/types";
 
+import FileList from "./components/FileList.svelte";
 import ImageViewer from "./components/ImageViewer.svelte";
 import ModelViewer from "./components/ModelViewer.svelte";
 import Shops from "./components/Shops.svelte";
@@ -236,6 +237,7 @@ export function overrideSetInt(item: Item, value: string): boolean {
 export function getComponent(
   component: string,
 ):
+  | typeof FileList
   | typeof ImageViewer
   | typeof ModelViewer
   | typeof Shops
@@ -243,7 +245,9 @@ export function getComponent(
   | typeof TxtViewer
   | typeof VideoViewer
   | undefined {
-  if (component === "ImageViewer") {
+  if (component === "FileList") {
+    return FileList;
+  } else if (component === "ImageViewer") {
     return ImageViewer;
   } else if (component === "ModelViewer") {
     return ModelViewer;
