@@ -87,7 +87,13 @@
       <strong>PlayStation 2: </strong>.ps2
     </li>
     <li>
+      <strong>PlayStation Portable: </strong>Mostly .bin
+    </li>
+    <li>
       <strong>PC-Engine CD: </strong>.sav, .srm
+    </li>
+    <li>
+      <strong>Windows: </strong>Depend of the game
     </li>
   </ul>
   <h2>- How can i edit my PSP save?</h2>

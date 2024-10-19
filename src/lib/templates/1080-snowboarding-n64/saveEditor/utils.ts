@@ -45,10 +45,13 @@ export function afterSetInt(item: Item): void {
   if ("id" in item && item.id?.match(/contest-/)) {
     const itemInt = item as ItemInt;
 
+    const split = item.id.split("-");
+
+    const index = parseInt(split[1]);
+
     let int = 0;
 
-    const offset =
-      itemInt.offset - (parseInt(item.id.replace("contest-", "")) - 1) * 4;
+    const offset = itemInt.offset - (index - 1) * 0x4;
 
     for (let i = 0; i < 5; i += 1) {
       int += getInt(offset + i * 0x4, "uint32", { bigEndian: true });
