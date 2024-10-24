@@ -981,6 +981,7 @@ const template: GameJson = {
       0x2: "Ribbon",
       0x3: "Dog Food",
       0x4: "Bananas",
+      0x5: "Stick",
       0x6: "Honeycomb",
       0x7: "Pineapple",
       0x8: "Hibiscus",
