@@ -227,7 +227,7 @@ const template: GameJson = {
                       offset: 0x142,
                       type: "variable",
                       dataType: "upper4",
-                      resource: "sonic3&KnucklesCharacters",
+                      resource: "sonic3KnucklesCharacters",
                       test: true,
                     },
                     {
@@ -235,7 +235,7 @@ const template: GameJson = {
                       offset: 0x143,
                       type: "variable",
                       dataType: "uint8",
-                      resource: "sonic3&KnucklesZones",
+                      resource: "sonic3KnucklesZones",
                       autocomplete: true,
                       test: true,
                     },
@@ -310,11 +310,11 @@ const template: GameJson = {
                   flex: true,
                   items: [
                     {
-                      name: "Completed",
+                      name: "Progression",
                       offset: 0x8,
                       type: "variable",
                       dataType: "uint8",
-                      resource: "completed",
+                      resource: "progressions",
                     },
                     {
                       name: "Character",
@@ -358,11 +358,11 @@ const template: GameJson = {
                   flex: true,
                   items: [
                     {
-                      name: "New Save",
+                      name: "Progression",
                       offset: 0xc,
                       type: "variable",
                       dataType: "uint8",
-                      resource: "completed",
+                      resource: "progressions",
                     },
                     {
                       name: "Character",
@@ -406,11 +406,11 @@ const template: GameJson = {
                   flex: true,
                   items: [
                     {
-                      name: "New Save",
+                      name: "Progression",
                       offset: 0x10,
                       type: "variable",
                       dataType: "uint8",
-                      resource: "completed",
+                      resource: "progressions",
                     },
                     {
                       name: "Character",
@@ -461,9 +461,9 @@ const template: GameJson = {
       0x1: "Tails",
       0x2: "Knuckles",
     },
-    completed: {
-      0x0: "Yes",
-      0x80: "No",
+    progressions: {
+      0x0: "Cleared",
+      0x80: "-",
     },
     courses: {
       0x0: "Azure Lake",
@@ -477,22 +477,13 @@ const template: GameJson = {
       0x1: "Sonic ",
       0x2: "Tails",
     },
-    sonic3Zones: {
-      0x0: "Angel Island Zone",
-      0x1: "Hydrocity Zone",
-      0x2: "Marble Garden Zone",
-      0x3: "Carnival Night Zone",
-      0x5: "IceCap Zone",
-      0x6: "Launch Base Zone",
-      0x7: "Clear",
-    },
-    "sonic3&KnucklesCharacters": {
+    sonic3KnucklesCharacters: {
       0x0: "Sonic & Tails",
       0x1: "Sonic ",
       0x2: "Tails",
       0x3: "Knuckles",
     },
-    "sonic3&KnucklesZones": {
+    sonic3KnucklesZones: {
       0x0: "Angel Island Zone",
       0x1: "Hydrocity Zone",
       0x2: "Marble Garden Zone",
@@ -508,6 +499,18 @@ const template: GameJson = {
       0xc: "Death Egg Zone",
       0xd: "The Doomsday Zone",
     },
+    sonic3Zones: {
+      0x0: "Angel Island Zone",
+      0x1: "Hydrocity Zone",
+      0x2: "Marble Garden Zone",
+      0x3: "Carnival Night Zone",
+      0x5: "IceCap Zone",
+      0x6: "Launch Base Zone",
+      0x7: "Clear",
+    },
+  },
+  resourcesOrder: {
+    progressions: [0x80],
   },
 };
 

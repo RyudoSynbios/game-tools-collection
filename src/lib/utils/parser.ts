@@ -160,9 +160,8 @@ export function parseItem(
     return parseBitflags(newItem, shifts);
   } else if (newItem.type === "checksum") {
     if (newItem.control !== undefined) {
-      newItem.control.offsetStart =
-        getShift(shifts) + newItem.control.offsetStart;
-      newItem.control.offsetEnd = getShift(shifts) + newItem.control.offsetEnd;
+      newItem.control.offsetStart += getShift(shifts);
+      newItem.control.offsetEnd += getShift(shifts);
     }
 
     if (options.checksumsDisabled) {
@@ -204,7 +203,10 @@ export function parseItem(
   return newItem;
 }
 
-export function parseBitflags(item: ItemBitflags, shifts: number[]): any {
+export function parseBitflags(
+  item: ItemBitflags,
+  shifts: number[],
+): ItemBitflags {
   const flags = item.flags.reduce((flags: ItemBitflag[], flag) => {
     flag.offset += getShift(shifts);
 

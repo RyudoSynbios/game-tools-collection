@@ -494,7 +494,7 @@ export function getBigInt(
   if (offset < 0x0) {
     debug.error("Tried to read a negative offset");
 
-    return BigInt(0);
+    return BigInt(0x0);
   } else if (
     $dataView.byteLength === 0 ||
     offset + dataTypeToLength(dataType) - 1 > $dataView.byteLength - 1
@@ -503,10 +503,10 @@ export function getBigInt(
       `Tried to read bytes past the end of a buffer at offset 0x${offset.toHex()} of 0x${$dataView.byteLength.toHex()}`,
     );
 
-    return BigInt(0);
+    return BigInt(0x0);
   }
 
-  let int = BigInt(0);
+  let int = BigInt(0x0);
 
   switch (dataType) {
     case "int64":

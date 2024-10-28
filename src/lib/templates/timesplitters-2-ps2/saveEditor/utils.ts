@@ -156,7 +156,7 @@ export function overrideGetInt(
     const int1 = getInt(itemInt.offset, "int32");
     const int2 = getInt(itemInt.offset + 0x4, "int32");
 
-    if (int2 <= int1) {
+    if (int1 > 0x0 && int2 <= int1) {
       int = Math.floor((int2 / int1) * 100);
     }
 

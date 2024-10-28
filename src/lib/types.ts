@@ -233,7 +233,6 @@ export interface ItemInt {
   binary?: Binary;
   binaryCodedDecimal?: boolean;
   bit?: number;
-  disableIfNegative?: boolean;
   leadingZeros?: number;
   operations?: IntOperation[];
   min?: number;
@@ -247,6 +246,7 @@ export interface ItemInt {
   size?: "md" | "lg";
   autocomplete?: boolean;
   suffix?: string;
+  disableIfNegative?: boolean;
   disabled?: boolean;
   hidden?: boolean | boolean[];
   test?: boolean;

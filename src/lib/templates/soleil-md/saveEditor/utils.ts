@@ -249,6 +249,7 @@ export function afterSetInt(item: Item, flag: ItemBitflag): void {
           const isChecked = Boolean(
             getInt(flag.offset, "bit", { bit: flag.bit }),
           );
+
           setBitflag(flag.offset + 0x4, flag.bit, isChecked);
         });
       }
