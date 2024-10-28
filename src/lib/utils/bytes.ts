@@ -120,6 +120,14 @@ export function dataTypeToValue(
   }
 }
 
+export function cloneDataView(dataView: DataView): DataView {
+  const arrayBuffer = new ArrayBuffer(dataView.byteLength);
+
+  new Uint8Array(arrayBuffer).set(new Uint8Array(dataView.buffer));
+
+  return new DataView(arrayBuffer);
+}
+
 export function extractBit(number: number, bit: number): boolean {
   return (number & (0x1 << bit)) !== 0x0;
 }
