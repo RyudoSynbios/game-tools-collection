@@ -67,6 +67,7 @@ export function overrideItem(item: Item): Item {
         offset: 0x1c404,
         type: "variable",
         dataType: "uint8",
+        operator: "=",
         value: 0x0,
       };
     }

@@ -108,6 +108,7 @@ const template: GameJson = {
                     offset: 0x22,
                     type: "variable",
                     dataType: "uint8",
+                    operator: "=",
                     value: 0x0,
                   },
                   items: [
@@ -756,6 +757,7 @@ const template: GameJson = {
                     offset: 0x44,
                     type: "variable",
                     dataType: "uint8",
+                    operator: "=",
                     value: 0x0,
                   },
                   items: [
@@ -941,6 +943,7 @@ const template: GameJson = {
                     offset: 0x60,
                     type: "variable",
                     dataType: "uint8",
+                    operator: "=",
                     value: 0x0,
                   },
                   items: [
@@ -1152,6 +1155,7 @@ const template: GameJson = {
                     offset: 0x78,
                     type: "variable",
                     dataType: "uint8",
+                    operator: "=",
                     value: 0x0,
                   },
                   items: [
@@ -1370,6 +1374,7 @@ const template: GameJson = {
                     offset: 0x22,
                     type: "variable",
                     dataType: "uint8",
+                    operator: "=",
                     value: 0x0,
                   },
                   items: [
@@ -1559,6 +1564,7 @@ const template: GameJson = {
                     offset: 0x22,
                     type: "variable",
                     dataType: "uint8",
+                    operator: "=",
                     value: 0x0,
                   },
                   items: [

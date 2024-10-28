@@ -176,7 +176,7 @@ export function parseItem(
   }
 
   if (newItem.disableTabIf) {
-    newItem.disableTabIf = parseTabConditions(
+    newItem.disableTabIf = parseConditions(
       newItem.disableTabIf,
       shifts,
       instanceId,
@@ -250,6 +250,36 @@ export function parseComponent(
   };
 
   return parsedItem;
+}
+
+function parseConditions(
+  condition: ItemIntCondition | LogicalOperator<ItemIntCondition> | string,
+  shifts: number[],
+  instanceId: string,
+  instanceIndex: number,
+): string | Item | { [x: string]: Item[] } {
+  let parsedCondition;
+
+  if (typeof condition === "string") {
+    parsedCondition = condition;
+  } else if ("$and" in condition || "$or" in condition) {
+    const operand = getObjKey(condition, 0) as "$and" | "$or";
+
+    const parsedItems = condition[operand]!.map((subitem) =>
+      parseItem(subitem as Item, shifts, instanceId, instanceIndex),
+    );
+
+    parsedCondition = { [operand]: parsedItems };
+  } else {
+    parsedCondition = parseItem(
+      condition as ItemIntCondition,
+      shifts,
+      instanceId,
+      instanceIndex,
+    );
+  }
+
+  return parsedCondition;
 }
 
 export function parseContainer(
@@ -367,7 +397,7 @@ export function parseContainer(
 
     if (item.instanceType === "tabs") {
       if (item.disableSubinstanceIf) {
-        parsedSubitem.disableTabIf = parseTabConditions(
+        parsedSubitem.disableTabIf = parseConditions(
           item.disableSubinstanceIf,
           instanceShifts,
           instanceId,
@@ -404,36 +434,6 @@ export function parseContainer(
   }
 
   return parsedItem;
-}
-
-function parseTabConditions(
-  condition: ItemIntCondition | LogicalOperator<ItemIntCondition> | string,
-  shifts: number[],
-  instanceId: string,
-  instanceIndex: number,
-): string | Item | { [x: string]: Item[] } {
-  let parsedCondition;
-
-  if (typeof condition === "string") {
-    parsedCondition = condition;
-  } else if ("$and" in condition || "$or" in condition) {
-    const operand = getObjKey(condition, 0) as "$and" | "$or";
-
-    const parsedItems = condition[operand]!.map((subitem) =>
-      parseItem(subitem as Item, shifts, instanceId, instanceIndex),
-    );
-
-    parsedCondition = { [operand]: parsedItems };
-  } else {
-    parsedCondition = parseItem(
-      condition as ItemIntCondition,
-      shifts,
-      instanceId,
-      instanceIndex,
-    );
-  }
-
-  return parsedCondition;
 }
 
 export function checkMissingFields(item: Item): void {

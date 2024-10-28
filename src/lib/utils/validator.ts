@@ -1,10 +1,14 @@
 import { get } from "svelte/store";
 
 import { gameTemplate } from "$lib/stores";
-import { getInt } from "$lib/utils/bytes";
+import { getBigInt, getInt } from "$lib/utils/bytes";
 import { getObjKey } from "$lib/utils/format";
 
-import type { RegionValidator } from "$lib/types";
+import type {
+  ItemIntCondition,
+  LogicalOperator,
+  RegionValidator,
+} from "$lib/types";
 
 export function checkConditions(conditions: any, callback: any): boolean {
   if (conditions.$and || conditions.$or) {
@@ -36,6 +40,41 @@ export function reduceConditions(conditions: any, callback: any): any {
   }
 
   return callback(conditions);
+}
+
+export function checkIntConditions(
+  conditions: ItemIntCondition | LogicalOperator<ItemIntCondition>,
+): boolean {
+  return checkConditions(conditions, (condition: ItemIntCondition) => {
+    let int;
+
+    if (condition.dataType !== "int64" && condition.dataType !== "uint64") {
+      int = getInt(condition.offset, condition.dataType, {
+        bigEndian: condition.bigEndian,
+        binary: condition.binary,
+        bit: condition.bit,
+      });
+    } else {
+      int = getBigInt(condition.offset, condition.dataType, {
+        bigEndian: condition.bigEndian,
+      });
+    }
+
+    switch (condition.operator) {
+      case "=":
+        return int === condition.value;
+      case "!=":
+        return int !== condition.value;
+      case ">":
+        return int > condition.value;
+      case ">=":
+        return int >= condition.value;
+      case "<":
+        return int < condition.value;
+      case "<=":
+        return int <= condition.value;
+    }
+  });
 }
 
 export function checkValidator(

@@ -36,6 +36,7 @@ const template: GameJson = {
         offset: 0x2d,
         type: "variable",
         dataType: "uint8",
+        operator: "=",
         value: 0x0,
       },
       prependSubinstance: [

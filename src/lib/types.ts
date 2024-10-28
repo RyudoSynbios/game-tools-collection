@@ -264,6 +264,9 @@ export interface ItemIntCondition {
   type: "variable";
   dataType: Exclude<DataType, "boolean" | "string">;
   bigEndian?: boolean;
+  binary?: Binary;
+  bit?: number;
+  operator: "=" | "!=" | ">" | ">=" | "<" | "<=";
   value: number;
 }
 

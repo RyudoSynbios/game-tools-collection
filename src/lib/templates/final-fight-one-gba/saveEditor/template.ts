@@ -62,6 +62,7 @@ const template: GameJson = {
             offset: 0x6b,
             type: "variable",
             dataType: "uint8",
+            operator: "=",
             value: 0xff,
           },
           items: [

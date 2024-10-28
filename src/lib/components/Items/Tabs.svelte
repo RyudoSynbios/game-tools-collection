@@ -4,13 +4,12 @@
   import AccessTimeIcon from "$lib/assets/AccessTime.svelte";
   import Content from "$lib/components/Items/Content.svelte";
   import { gameJson, isDebug } from "$lib/stores";
-  import { getBigInt, getInt } from "$lib/utils/bytes";
   import { generateIdFromArray, getUtils } from "$lib/utils/format";
   import { getResource } from "$lib/utils/parser";
   import { scrollIntoViewIfNecessary } from "$lib/utils/ui";
-  import { checkConditions } from "$lib/utils/validator";
+  import { checkIntConditions } from "$lib/utils/validator";
 
-  import type { ItemIntCondition, ItemTab, ItemTabs } from "$lib/types";
+  import type { ItemTab, ItemTabs } from "$lib/types";
 
   export let item: ItemTabs;
 
@@ -160,27 +159,7 @@
         if (typeof newTab.disableTabIf === "string") {
           newTab.disabled = getUtils(newTab.disableTabIf, index);
         } else {
-          newTab.disabled = checkConditions(
-            newTab.disableTabIf,
-            (condition: ItemIntCondition) => {
-              let int;
-
-              if (
-                condition.dataType !== "int64" &&
-                condition.dataType !== "uint64"
-              ) {
-                int = getInt(condition.offset, condition.dataType, {
-                  bigEndian: condition.bigEndian,
-                });
-              } else {
-                int = getBigInt(condition.offset, condition.dataType, {
-                  bigEndian: condition.bigEndian,
-                });
-              }
-
-              return int === condition.value;
-            },
-          );
+          newTab.disabled = checkIntConditions(newTab.disableTabIf);
         }
       }
 
