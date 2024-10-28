@@ -87,6 +87,9 @@
       <strong>PlayStation 2: </strong>.ps2
     </li>
     <li>
+      <strong>PlayStation Portable: </strong>Mostly .bin
+    </li>
+    <li>
       <strong>PC-Engine CD: </strong>.sav, .srm
     </li>
   </ul>
