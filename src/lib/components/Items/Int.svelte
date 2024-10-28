@@ -19,11 +19,13 @@
   import {
     getIntMax,
     getIntMin,
+    getUtils,
     objToArrayKeyValue,
     round,
     utilsExists,
   } from "$lib/utils/format";
   import { getResource } from "$lib/utils/parser";
+  import { checkIntConditions } from "$lib/utils/validator";
 
   import type { ItemInt, ObjectKeyValue } from "$lib/types";
 
@@ -111,6 +113,14 @@
     if (item.disableIfNegative && isNegative) {
       item.disabled = true;
       value = 0;
+    }
+
+    if (item.hiddenConditions) {
+      if (typeof item.hiddenConditions === "string") {
+        item.hidden = getUtils(item.hiddenConditions);
+      } else {
+        item.hidden = checkIntConditions(item.hiddenConditions);
+      }
     }
 
     if (item.dataType === "float32") {

@@ -1,10 +1,24 @@
 <script lang="ts">
   import Int from "$lib/components/Items/Int.svelte";
-  import { isDebug } from "$lib/stores";
+  import { dataView, isDebug } from "$lib/stores";
 
   import type { ItemGroup } from "$lib/types";
+  import { getUtils } from "$lib/utils/format";
+  import { checkIntConditions } from "$lib/utils/validator";
 
   export let item: ItemGroup;
+
+  $: {
+    $dataView;
+
+    if (item.hiddenConditions) {
+      if (typeof item.hiddenConditions === "string") {
+        item.hidden = getUtils(item.hiddenConditions);
+      } else {
+        item.hidden = checkIntConditions(item.hiddenConditions);
+      }
+    }
+  }
 </script>
 
 {#if !item.hidden || $isDebug}

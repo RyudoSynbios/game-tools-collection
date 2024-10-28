@@ -184,6 +184,15 @@ export function parseItem(
     );
   }
 
+  if (newItem.hiddenConditions) {
+    newItem.hiddenConditions = parseConditions(
+      newItem.hiddenConditions,
+      shifts,
+      instanceId,
+      instanceIndex,
+    );
+  }
+
   if (newItem.items) {
     newItem.items = newItem.items.reduce((results: Item[], subitem: Item) => {
       const parsedItem = parseItem(
