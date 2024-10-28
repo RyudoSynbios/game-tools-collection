@@ -97,7 +97,9 @@ export function getRegionArray<T>(array: T[]): T {
 }
 
 export function isPartial(operations: IntOperation[] = []): boolean {
-  return operations.some((operation) => getObjKey(operation, 0) === "convert");
+  return operations.some((operation) =>
+    ["convert", "date"].includes(getObjKey(operation, 0)),
+  );
 }
 
 export function makeOperations(
@@ -139,11 +141,13 @@ export function makeOperations(
           }
           break;
         case "convert":
+        case "date":
           if (!reversed) {
             value = timestampToUnitValue(
               value,
               (operation[operationSymbol] as IntOperationConvert).from,
               (operation[operationSymbol] as IntOperationConvert).to,
+              operationSymbol === "date",
             );
           } else {
             value = unitValueToTimestamp(
@@ -252,30 +256,43 @@ export function round(value: number, decimals = 2): number {
   );
 }
 
+const units = [
+  "milliseconds",
+  "seconds",
+  "minutes",
+  "hours",
+  "day",
+  "month",
+  "year",
+];
+
 export function timestampToUnitValue(
   timestamp: number,
   entry: TimeUnit,
   output: TimeUnit,
+  isDate = false,
 ): number {
-  if (
-    ["milliseconds", "seconds", "minutes", "hours"].includes(entry) &&
-    ["milliseconds", "seconds", "minutes", "hours"].includes(output)
-  ) {
-    switch (output) {
-      case "milliseconds":
-        return moment.duration(timestamp, entry).milliseconds();
-      case "seconds":
-        return moment.duration(timestamp, entry).seconds();
-      case "minutes":
-        return moment.duration(timestamp, entry).minutes();
-      case "hours":
-        let hours = moment.duration(timestamp, entry).hours();
-        hours += moment.duration(timestamp, entry).days() * 24;
-        hours += moment.duration(timestamp, entry).months() * 24 * 31;
-        hours += moment.duration(timestamp, entry).years() * 24 * 31 * 12;
+  if (units.includes(entry) && units.includes(output)) {
+    if (isDate) {
+      const object = moment.unix(timestamp).toObject();
 
-        return hours;
+      switch (output) {
+        case "day":
+          return object.date;
+        case "month":
+          return object.months + 1;
+        case "year":
+          return object.years;
+      }
+
+      return moment.duration(timestamp, entry).get(output);
     }
+
+    if (output === "hours") {
+      return Math.floor(moment.duration(timestamp, entry).asHours());
+    }
+
+    return moment.duration(timestamp, entry).get(output);
   }
 
   return timestamp;
@@ -286,20 +303,8 @@ export function unitValueToTimestamp(
   entry: TimeUnit,
   output: TimeUnit,
 ): number {
-  if (
-    ["milliseconds", "seconds", "minutes", "hours"].includes(entry) &&
-    ["milliseconds", "seconds", "minutes", "hours"].includes(output)
-  ) {
-    switch (output) {
-      case "milliseconds":
-        return moment.duration(value, entry).asMilliseconds();
-      case "seconds":
-        return moment.duration(value, entry).asSeconds();
-      case "minutes":
-        return moment.duration(value, entry).asMinutes();
-      case "hours":
-        return moment.duration(value, entry).asHours();
-    }
+  if (units.includes(entry) && units.includes(output)) {
+    return moment.duration(value, entry).as(output);
   }
 
   return value;

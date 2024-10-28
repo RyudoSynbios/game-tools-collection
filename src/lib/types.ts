@@ -62,7 +62,14 @@ export type Resource = {
     | string;
 };
 
-export type TimeUnit = "milliseconds" | "seconds" | "minutes" | "hours";
+export type TimeUnit =
+  | "milliseconds"
+  | "seconds"
+  | "minutes"
+  | "hours"
+  | "day"
+  | "month"
+  | "year";
 
 export type Validator = { [key: number]: number[] };
 
@@ -217,7 +224,7 @@ export interface ItemContent {
 export interface ItemGroup {
   name?: string;
   type: "group";
-  mode?: "chrono" | "fraction" | "time";
+  mode?: "chrono" | "date" | "fraction" | "time";
   items: ItemInt[];
   hidden?: boolean | boolean[];
 }
