@@ -442,6 +442,17 @@
     }
   },
   {
+    "id": "super-smash-bros-melee-gc",
+    "name": "Super Smash Bros. Melee",
+    "consoleId": "gamecube",
+    "tools": {
+      "saveEditor": {
+        "createdAt": "2024-10-28",
+        "regions": ["🇪🇺", "🇺🇸", "🇯🇵"]
+      }
+    }
+  },
+  {
     "id": "super-street-fighter-ii-turbo-revival-gba",
     "name": "Super Street Fighter II Turbo Revival",
     "consoleId": "game-boy-advance",
