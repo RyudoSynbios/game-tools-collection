@@ -3,26 +3,11 @@
   import { dataViewAlt, gameJson } from "$lib/stores";
   import { getInt } from "$lib/utils/bytes";
 
-  import type { ItemTabs } from "$lib/types";
+  import type { Item, ItemTabs } from "$lib/types";
 
   import { getFileOffset, getScenario } from "../utils";
 
   let item: ItemTabs;
-
-  function getItemShift(shopIndex: number): number {
-    const scenario = getScenario();
-
-    let shift = 0x4;
-
-    if (
-      (scenario !== "3" && scenario !== "premium" && shopIndex === 2) ||
-      shopIndex === 3
-    ) {
-      shift = 0x8;
-    }
-
-    return shift;
-  }
 
   $: {
     $gameJson;
@@ -58,11 +43,11 @@
 
     const initialShopOffset = getFileOffset("x023", shopsOffset, dataView);
 
-    const debug: { offset: number; count: number }[] = [];
-    const weaponShops: { offset: number; count: number }[] = [];
-    const itemShops: { offset: number; count: number }[] = [];
-    const deals: { offset: number; count: number }[] = [];
-    const haggles: { offset: number; count: number }[] = [];
+    const debug: Item[][] = [];
+    const weaponShops: Item[][] = [];
+    const itemShops: Item[][] = [];
+    const deals: Item[][] = [];
+    const haggles: Item[][] = [];
 
     let isWeaponShops = true;
 
@@ -78,42 +63,76 @@
           isWeaponShops = false;
         }
 
-        let count = 0;
+        const items: Item[] = [];
 
-        if ((scenario === "3" || scenario === "premium") && index === 1) {
-          shopOffset += 0x4;
-        }
-
-        const shift = getItemShift(index + 0x1);
+        let itemOffset = shopOffset;
 
         while (true) {
-          const itemOffset = shopOffset + count * shift;
+          const hasMainFlag = (scenario === "3" || scenario === "premium") && index === 1; // prettier-ignore
+          const itemIndex = getInt(itemOffset, "uint32", { bigEndian: true }, dataView); // prettier-ignore
+          const itemFlag = getInt(itemOffset + 0x4, "uint32", { bigEndian: true }, dataView); // prettier-ignore
 
-          const itemIndex = getInt(
-            itemOffset,
-            "uint32",
-            { bigEndian: true },
-            dataView,
-          );
-
-          if (itemIndex === 0x0) {
+          if (
+            ((index === 0 || hasMainFlag) && itemIndex === 0x0) ||
+            (itemIndex === 0x0 && itemFlag === 0x0)
+          ) {
             break;
           }
 
-          count += 1;
+          const item: Item = {
+            name: `Item ${items.length + (hasMainFlag ? 0 : 1)}`,
+            dataViewAltKey: "x023",
+            offset: itemOffset,
+            type: "variable",
+            dataType: "uint32",
+            bigEndian: true,
+            resource: "itemNames",
+            autocomplete: true,
+          };
+
+          const flag: Item = {
+            name: `Flag (0x${itemFlag.toHex()})`,
+            dataViewAltKey: "x023",
+            offset: itemOffset,
+            type: "variable",
+            dataType: "uint32",
+            bigEndian: true,
+            min: 1,
+          };
+
+          if (hasMainFlag && items.length === 0) {
+            items.push({
+              ...flag,
+              name: `Flag (0x${itemIndex.toHex()})`,
+            });
+          } else {
+            if (index === 0 || hasMainFlag) {
+              items.push(item);
+            } else {
+              items.push({
+                type: "section",
+                flex: true,
+                items: [item, { ...flag, offset: itemOffset + 0x4 }],
+              });
+
+              itemOffset += 0x4;
+            }
+          }
+
+          itemOffset += 0x4;
         }
 
         if (shopOffset === initialShopOffset && debug.length === 0) {
-          debug.push({ offset: shopOffset, count });
+          debug.push(items);
         } else if (shopOffset !== initialShopOffset) {
           if (index === 0 && isWeaponShops) {
-            weaponShops.push({ offset: shopOffset, count });
+            weaponShops.push(items);
           } else if (index === 0) {
-            itemShops.push({ offset: shopOffset, count });
+            itemShops.push(items);
           } else if (index === 1) {
-            deals.push({ offset: shopOffset, count });
+            deals.push(items);
           } else if (index === 2) {
-            haggles.push({ offset: shopOffset, count });
+            haggles.push(items);
           }
         }
 
@@ -138,26 +157,36 @@
           {
             type: "tabs",
             vertical: true,
-            items: [...Array(tab.array.length).keys()].map((shopIndex) => ({
-              name: `${tab.name} ${tabIndex < 2 ? "Shop" : ""} ${
-                shopIndex + 0x1
-              }`,
-              flex: true,
-              items: [...Array(tab.array[shopIndex].count).keys()].map(
-                (index) => ({
-                  name: `Item ${index + 1}`,
-                  dataViewAltKey: "x023",
-                  offset:
-                    tab.array[shopIndex].offset +
-                    index * getItemShift(tabIndex),
-                  type: "variable",
-                  dataType: "uint32",
-                  bigEndian: true,
-                  resource: "itemNames",
-                  autocomplete: true,
-                }),
-              ),
-            })),
+            items: [...Array(tab.array.length).keys()].map((shopIndex) => {
+              let items = tab.array[shopIndex];
+
+              if (
+                (scenario === "3" || scenario === "premium") &&
+                tabIndex === 2 &&
+                tab.array[shopIndex].length > 0
+              ) {
+                items = [
+                  {
+                    type: "section",
+                    flex: true,
+                    items: [tab.array[shopIndex][0]],
+                  },
+                  {
+                    type: "section",
+                    flex: true,
+                    items: tab.array[shopIndex].slice(1),
+                  },
+                ];
+              }
+
+              return {
+                name: `${tab.name} ${tabIndex < 2 ? "Shop" : ""} ${
+                  shopIndex + 0x1
+                }`,
+                flex: ![2, 3].includes(tabIndex) ? true : false,
+                items,
+              };
+            }),
           },
         ],
       })),
