@@ -1,7 +1,7 @@
 import { get } from "svelte/store";
 
-import { gameTemplate } from "$lib/stores";
-import { getBigInt, getInt } from "$lib/utils/bytes";
+import { dataViewAlt, gameTemplate } from "$lib/stores";
+import { getBigInt, getInt, isDataViewAltExists } from "$lib/utils/bytes";
 import { getObjKey } from "$lib/utils/format";
 
 import type {
@@ -45,19 +45,28 @@ export function reduceConditions(conditions: any, callback: any): any {
 export function checkIntConditions(
   conditions: ItemIntCondition | LogicalOperator<ItemIntCondition>,
 ): boolean {
+  const $dataViewAlt = get(dataViewAlt);
+
   return checkConditions(conditions, (condition: ItemIntCondition) => {
+    let dataViewAlt;
+
+    if (isDataViewAltExists(condition.dataViewAltKey || "")) {
+      dataViewAlt = $dataViewAlt[condition.dataViewAltKey as string];
+    }
+
     let int;
 
+    // prettier-ignore
     if (condition.dataType !== "int64" && condition.dataType !== "uint64") {
       int = getInt(condition.offset, condition.dataType, {
         bigEndian: condition.bigEndian,
         binary: condition.binary,
         bit: condition.bit,
-      });
+      }, dataViewAlt);
     } else {
       int = getBigInt(condition.offset, condition.dataType, {
         bigEndian: condition.bigEndian,
-      });
+      }, dataViewAlt);
     }
 
     switch (condition.operator) {

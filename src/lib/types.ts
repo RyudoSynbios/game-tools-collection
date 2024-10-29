@@ -269,6 +269,7 @@ export interface ItemInt {
 }
 
 export interface ItemIntCondition {
+  dataViewAltKey?: string;
   offset: number;
   type: "variable";
   dataType: Exclude<DataType, "boolean" | "string">;
