@@ -1317,7 +1317,7 @@ const template: GameJson = {
                                   autocomplete: true,
                                 },
                                 {
-                                  name: "Ability On Use",
+                                  name: "Ability on Use",
                                   offset: 0x28,
                                   type: "variable",
                                   dataType: "uint16",
@@ -1363,7 +1363,6 @@ const template: GameJson = {
                     },
                     {
                       name: "Effects",
-                      flex: true,
                       items: [
                         {
                           type: "section",
