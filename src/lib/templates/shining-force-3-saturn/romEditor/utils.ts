@@ -91,7 +91,14 @@ export function overrideItem(item: Item): Item {
       );
     }
 
-    item.offset += cache.partyStatsBaseOffset;
+    if (item.type === "bitflags") {
+      item.flags.map((flag) => ({
+        ...flag,
+        offset: (flag.offset += cache.partyStatsBaseOffset),
+      }));
+    } else {
+      item.offset += cache.partyStatsBaseOffset;
+    }
   } else if ("id" in item && item.id === "items") {
     const itemContainer = item as ItemContainer;
 
@@ -109,7 +116,14 @@ export function overrideItem(item: Item): Item {
       );
     }
 
-    item.offset += cache.itemsBaseOffset;
+    if (item.type === "bitflags") {
+      item.flags.map((flag) => ({
+        ...flag,
+        offset: (flag.offset += cache.itemsBaseOffset),
+      }));
+    } else {
+      item.offset += cache.itemsBaseOffset;
+    }
   } else if ("id" in item && item.id === "enemies") {
     const itemContainer = item as ItemContainer;
 
@@ -119,7 +133,14 @@ export function overrideItem(item: Item): Item {
       cache.enemiesBaseOffset = getFileOffset("x019", 0x0, $dataViewAlt.x019);
     }
 
-    item.offset += cache.enemiesBaseOffset;
+    if (item.type === "bitflags") {
+      item.flags.map((flag) => ({
+        ...flag,
+        offset: (flag.offset += cache.enemiesBaseOffset),
+      }));
+    } else {
+      item.offset += cache.enemiesBaseOffset;
+    }
   } else if ("id" in item && item.id?.match(/assetViewer-/)) {
     const [, type] = item.id.split("-");
 

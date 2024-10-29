@@ -216,10 +216,13 @@ interface BitflagOptions {
 export function getBitflags(
   offset: number,
   options: BitflagOptions = {},
+  dataView?: DataView,
 ): boolean[] {
+  const $dataView = getDataView(dataView);
+
   const trueString = options.reversed ? "0" : "1";
 
-  const bitflags = (getInt(offset, "uint8") >>> 0x0)
+  const bitflags = (getInt(offset, "uint8", {}, $dataView) >>> 0x0)
     .toBinary()
     .split("")
     .map((bit) => bit === trueString)
@@ -232,8 +235,9 @@ export function getBitflag(
   offset: number,
   flag: number,
   options: BitflagOptions = {},
+  dataView?: DataView,
 ): boolean {
-  const bitflags = getBitflags(offset, options);
+  const bitflags = getBitflags(offset, options, dataView);
 
   return bitflags[flag];
 }
@@ -243,8 +247,20 @@ export function setBitflag(
   bit: number,
   value: boolean,
   options: BitflagOptions = {},
+  dataViewAltKey = "",
 ): void {
-  const bitflag = getBitflags(offset, { reversed: options.reversed });
+  let $dataView = get(dataView);
+  const $dataViewAlt = get(dataViewAlt);
+
+  if (isDataViewAltExists(dataViewAltKey)) {
+    $dataView = $dataViewAlt[dataViewAltKey];
+  }
+
+  const bitflag = getBitflags(
+    offset,
+    { reversed: options.reversed },
+    $dataView,
+  );
 
   bitflag[bit] = Boolean(value);
 
@@ -259,7 +275,7 @@ export function setBitflag(
     2,
   );
 
-  setInt(offset, "uint8", binary);
+  setInt(offset, "uint8", binary, {}, dataViewAltKey);
 }
 
 interface IntOptions {

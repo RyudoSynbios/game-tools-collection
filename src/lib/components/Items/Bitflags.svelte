@@ -1,7 +1,11 @@
 <script lang="ts">
   import Checkbox from "$lib/components/Checkbox.svelte";
-  import { dataView, gameUtils, isDebug } from "$lib/stores";
-  import { getBitflag, setBitflag } from "$lib/utils/bytes";
+  import { dataView, dataViewAlt, gameUtils, isDebug } from "$lib/stores";
+  import {
+    getBitflag,
+    isDataViewAltExists,
+    setBitflag,
+  } from "$lib/utils/bytes";
   import { utilsExists } from "$lib/utils/format";
 
   import type { ItemBitflag, ItemBitflags } from "$lib/types";
@@ -25,6 +29,7 @@
         flag.bit,
         (event.target as HTMLInputElement).checked,
         { reversed: item.reversed || flag.reversed },
+        item.dataViewAltKey,
       );
     }
 
@@ -44,6 +49,13 @@
       [isOverrided, flags] = $gameUtils.overrideGetInt(item);
     }
 
+    let dataViewAlt: DataView;
+
+    if (isDataViewAltExists(item.dataViewAltKey || "")) {
+      dataViewAlt = $dataViewAlt[item.dataViewAltKey as string];
+    }
+
+    // prettier-ignore
     if (!isOverrided) {
       flags = item.flags.reduce(
         (flags: (ItemBitflag & { checked: boolean })[], flag) => {
@@ -51,7 +63,7 @@
             ...flag,
             checked: getBitflag(flag.offset, flag.bit, {
               reversed: item.reversed || flag.reversed,
-            }),
+            }, dataViewAlt),
           });
 
           return flags;

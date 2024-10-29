@@ -139,6 +139,7 @@ export interface ItemBitflag {
 export interface ItemBitflags {
   id?: string;
   name?: string;
+  dataViewAltKey?: string;
   type: "bitflags";
   flags: ItemBitflag[];
   noMargin?: boolean;
