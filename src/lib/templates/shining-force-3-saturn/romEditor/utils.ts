@@ -33,8 +33,10 @@ import {
   enemyCount,
   enemyNamesStartIndexes,
   itemCount,
+  itemDescriptionsStartIndexes,
   itemNamesStartIndexes,
   itemOffsetShift,
+  itemTypesStartIndexes,
   specialAttackCount,
   specialAttackNamesStartIndexes,
   spellCount,
@@ -216,6 +218,14 @@ export function overrideGetInt(
     const names = getItemNames();
 
     return [true, names[index] || "???"];
+  } else if ("id" in item && item.id?.match(/iDescription-/)) {
+    const split = item.id.split("-");
+
+    const index = parseInt(split[1]);
+
+    const names = getItemDescriptions();
+
+    return [true, names[index] || "???"];
   } else if ("id" in item && item.id?.match(/eName-/)) {
     const split = item.id.split("-");
 
@@ -255,6 +265,20 @@ export function overrideSetInt(item: Item, value: string): boolean {
   }
 
   return false;
+}
+
+export function afterSetInt(item: Item): void {
+  const $dataViewAlt = get(dataViewAlt);
+
+  if ("id" in item && item.id === "iEffectType") {
+    const itemInt = item as ItemInt;
+
+    const int = getInt(itemInt.offset, "uint8", {}, $dataViewAlt.x002);
+
+    if (int === 0x11 || int === 0x12) {
+      setInt(itemInt.offset + 0x1, "uint8", 0x0, {}, "x002");
+    }
+  }
 }
 
 export function getComponent(
@@ -380,6 +404,59 @@ export function getEnemyNames(): { [value: number]: string } {
   return names;
 }
 
+export function getItemDescriptions(): { [value: number]: string } {
+  const itemDescriptionStartIndex = getRegionArray(
+    itemDescriptionsStartIndexes,
+  );
+  const count = getRegionArray(itemCount);
+
+  const names: { [value: number]: string } = {};
+
+  for (let i = 0x0; i < count; i += 0x1) {
+    names[i] = getText(itemDescriptionStartIndex + i);
+  }
+
+  names[0x0] = "-";
+
+  return names;
+}
+
+export function getItemEffectSpells(): { [value: number]: string } {
+  const scenario = getScenario();
+  const spellNames = getSpellNames();
+
+  const spells = [
+    0x0, 0x27, 0x12, 0x29, 0xc, 0x2, 0xd, 0xe, 0x5, 0xe, 0x1, 0x8, 0xb, 0x3,
+    0x4, 0x7, 0xa, 0x4,
+  ];
+
+  // prettier-ignore
+  switch (scenario) {
+    case "1":
+      spells.push(0x0, 0x26, 0x28);
+      break;
+    case "2":
+      spells.push(0x0, 0x26, 0x28, 0x34, 0x36, 0x37);
+      break;
+    case "3":
+    case "premium":
+      spells.push(0x35, 0x26, 0x28, 0x34, 0x36, 0x37, 0x9, 0x3e, 0x3f, 0x47, 0x1, 0x3, 0x46);
+      break;
+  }
+
+  const names: { [value: number]: string } = {};
+
+  spells.forEach((spell, index) => {
+    if (index === 0 || spell !== 0x0) {
+      names[index] = spellNames[spell];
+    }
+  });
+
+  names[0x0] = "-";
+
+  return names;
+}
+
 export function getItemNames(): { [value: number]: string } {
   const itemNamesStartIndex = getRegionArray(itemNamesStartIndexes);
   const count = getRegionArray(itemCount);
@@ -391,6 +468,43 @@ export function getItemNames(): { [value: number]: string } {
   }
 
   names[0x0] = "-";
+
+  return names;
+}
+
+export function getItemTypes(): { [value: number]: string } {
+  const itemTypesStartIndex = getRegionArray(itemTypesStartIndexes);
+
+  const scenario = getScenario();
+
+  const types = [
+    0x0, 0x1, 0xa, 0xb, 0xc, 0xd, 0xe, 0xf, 0x14, 0x15, 0x16, 0x1e, 0x1f, 0x20,
+    0x21, 0x32, 0x33, 0x34, 0x3c, 0x3d, 0x3e, 0x46, 0x47, 0x48, 0x4a, 0x50,
+    0x7a, 0x7b, 0x7c, 0x81,
+  ];
+
+  switch (scenario) {
+    case "2":
+      types.push(0x5a);
+      break;
+    case "3":
+    case "premium":
+      types.push(0x3f, 0x51, 0x52, 0x5a);
+      break;
+  }
+
+  const names: { [value: number]: string } = {};
+
+  types.forEach((type) => {
+    names[type] = getText(itemTypesStartIndex + type);
+  });
+
+  names[0x0] = "-";
+  names[0x1] = "Item";
+  names[0x7a] = "Bracer";
+  names[0x7b] = "Tiara";
+  names[0x7c] = "Helmet";
+  names[0x81] = "Accessory";
 
   return names;
 }
