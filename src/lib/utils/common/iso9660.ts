@@ -60,6 +60,7 @@ interface RootDirectory {
 export interface File {
   index: number;
   name: string;
+  isDirectory: boolean;
   offset: number;
   size: number;
 }
@@ -269,7 +270,11 @@ export function readIso9660(): void {
     for (let i = 0x0; i < nameLength; i += 0x1) {
       const charCode = getInt(offset + 0x21 + i, "uint8");
 
-      if (charCode !== 0x3b) {
+      if (charCode === 0x0) {
+        name = ".";
+      } else if (charCode === 0x1) {
+        name = "..";
+      } else if (charCode !== 0x3b) {
         name += String.fromCharCode(charCode);
       } else {
         break;
@@ -286,16 +291,13 @@ export function readIso9660(): void {
     // 6: Reserved
     // 7: Multi-extent
 
-    const isDirectory = extractBit(flags, 1);
-
-    if (!isDirectory) {
-      iso.volume.rootDirectory.files.push({
-        index: iso.volume.rootDirectory.files.length,
-        name,
-        offset: getAbsoluteOffset(sectorLE * iso.volume.logicalBlockSizeLE),
-        size: fileSizeLE,
-      });
-    }
+    iso.volume.rootDirectory.files.push({
+      index: iso.volume.rootDirectory.files.length,
+      name,
+      isDirectory: extractBit(flags, 1),
+      offset: getAbsoluteOffset(sectorLE * iso.volume.logicalBlockSizeLE),
+      size: fileSizeLE,
+    });
 
     offset += headerSize;
   }

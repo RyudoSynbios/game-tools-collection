@@ -23,16 +23,16 @@
     files
       .filter((file) => {
         if (search !== "") {
-          return file.index + 2 === parseInt(search);
+          return file.index === parseInt(search);
         }
         return file;
       })
       .sort((a, b) => a.index - b.index)
       .forEach((file) => {
-        let index = `${file.index + 2}`;
+        let index = `${file.index}`;
 
         if (indexFormat === "hexadecimal") {
-          index = (file.index + 2).toHex(4);
+          index = file.index.toHex(4);
         }
 
         text += `<p><b>${index}:</b> ${file.name}</p>`;

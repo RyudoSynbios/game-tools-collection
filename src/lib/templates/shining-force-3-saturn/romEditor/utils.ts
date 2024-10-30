@@ -670,7 +670,7 @@ export function getFilteredFiles(type: string): File[] {
       return type === "text";
     } else if (file.name.match(/^X8PC(.*?).BIN$/)) {
       return type === "battleCharacter";
-    } else {
+    } else if (!file.isDirectory) {
       return type === "asset";
     }
   });
