@@ -65,6 +65,7 @@ const template: GameJson = {
               instanceType: "tabs",
               instances: 142,
               resource: "monsterNames",
+              indexes: true,
               vertical: true,
               items: [
                 {
@@ -175,6 +176,7 @@ const template: GameJson = {
               instanceType: "tabs",
               instances: 258,
               resource: "mapNames",
+              indexes: true,
               vertical: true,
               flex: true,
               items: [

@@ -124,6 +124,7 @@ const template: GameJson = {
               instanceType: "tabs",
               instances: 0,
               resource: "characterNames",
+              indexes: true,
               vertical: true,
               items: [
                 {
@@ -1802,6 +1803,7 @@ const template: GameJson = {
               instanceType: "tabs",
               instances: 0,
               resource: "itemNames",
+              indexes: true,
               vertical: true,
               items: [
                 {
@@ -2088,6 +2090,7 @@ const template: GameJson = {
               instanceType: "tabs",
               instances: 0,
               resource: "enemyNames",
+              indexes: true,
               vertical: true,
               items: [
                 {

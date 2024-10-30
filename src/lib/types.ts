@@ -210,6 +210,7 @@ export interface ItemContainer {
   appendSubinstance?: ItemTab[];
   resource?: string;
   resourceOrder?: boolean;
+  indexes?: boolean;
   vertical?: boolean;
   flex?: boolean;
   noMargin?: boolean;
@@ -327,6 +328,7 @@ export interface ItemTab {
 export interface ItemTabs {
   id?: string;
   type: "tabs";
+  indexes?: boolean;
   vertical?: boolean;
   enumeration?: string;
   resource?: string;

@@ -311,6 +311,7 @@ export function parseContainer(
     enumeration: item.enumeration,
     resource: item.resource,
     resourceOrder: item.resourceOrder,
+    indexes: item.indexes,
     vertical: item.vertical,
     items: [],
   };
@@ -333,6 +334,7 @@ export function parseContainer(
     item.prependSubinstance.forEach((subitem: any) => {
       parsedItem.items.push({
         name: subitem.name,
+        indexes: subitem.indexes,
         vertical: subitem.vertical,
         items: subitem.items
           ? subitem.items.reduce((results: any, subitem: any) => {
@@ -422,6 +424,7 @@ export function parseContainer(
     item.appendSubinstance.forEach((subitem: any) => {
       parsedItem.items.push({
         name: subitem.name,
+        indexes: subitem.indexes,
         vertical: subitem.vertical,
         items: subitem.items
           ? subitem.items.reduce((results: any, subitem: any) => {

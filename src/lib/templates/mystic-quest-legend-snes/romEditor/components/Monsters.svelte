@@ -39,6 +39,7 @@
 
     item = {
       type: "tabs",
+      indexes: true,
       vertical: true,
       items: [...Array(81).keys()].map((index) => ({
         name: monsterNames[index],

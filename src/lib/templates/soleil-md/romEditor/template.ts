@@ -72,6 +72,7 @@ const template: GameJson = {
               instanceType: "tabs",
               instances: 141,
               enumeration: "Map %d",
+              indexes: true,
               vertical: true,
               flex: true,
               items: [

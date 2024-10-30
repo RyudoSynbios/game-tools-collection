@@ -18,3 +18,6 @@ export const gameUtils = writable({}) as any;
 export const isDebug = writable(getLocalStorage("debug") === "true");
 export const isDirty = writable(false);
 export const isFileVisualizerOpen = writable(false);
+export const showTabIndexes = writable(
+  getLocalStorage("showTabIndexes") === "true",
+);
