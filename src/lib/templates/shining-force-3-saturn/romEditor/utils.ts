@@ -35,7 +35,9 @@ import {
   itemCount,
   itemNamesStartIndexes,
   itemOffsetShift,
+  specialAttackCount,
   specialAttackNamesStartIndexes,
+  spellCount,
   spellNamesStartIndexes,
 } from "./template";
 import { decodeKanji } from "./utils/decode";
@@ -397,10 +399,11 @@ export function getSpecialAttackNames(): { [value: number]: string } {
   const specialAttackNamesStartIndex = getRegionArray(
     specialAttackNamesStartIndexes,
   );
+  const count = getRegionArray(specialAttackCount);
 
   const names: { [value: number]: string } = {};
 
-  for (let i = 0x0; i < 0xbc; i += 0x1) {
+  for (let i = 0x0; i < count; i += 0x1) {
     names[i] = getText(specialAttackNamesStartIndex + i);
   }
 
@@ -411,10 +414,11 @@ export function getSpecialAttackNames(): { [value: number]: string } {
 
 export function getSpellNames(): { [value: number]: string } {
   const spellNamesStartIndex = getRegionArray(spellNamesStartIndexes);
+  const count = getRegionArray(spellCount);
 
   const names: { [value: number]: string } = {};
 
-  for (let i = 0x0; i < 0x33; i += 0x1) {
+  for (let i = 0x0; i < count; i += 0x1) {
     names[i] = getText(spellNamesStartIndex + i);
   }
 
