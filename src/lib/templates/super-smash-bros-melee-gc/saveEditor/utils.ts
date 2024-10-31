@@ -99,7 +99,7 @@ export function overrideGetInt(item: Item): [boolean, number | undefined] {
   } else if ("id" in item && item.id === "vsPlayMatchTotal") {
     const itemInt = item as ItemInt;
 
-    let count = 0x0;
+    let count = 0;
 
     for (let i = 0x0; i < 0x5; i += 0x1) {
       count += getInt(itemInt.offset + i * 0x4, "uint32", { bigEndian: true });
@@ -307,7 +307,7 @@ export function afterSetInt(item: Item): void {
 
     const offset = itemInt.offset - characterIndex * 0xac - koIndex * 0x2;
 
-    let count = 0x0;
+    let count = 0;
 
     for (let i = 0x0; i <= 0x18; i += 0x1) {
       for (let j = 0x0; j <= 0x18; j += 0x1) {
@@ -334,7 +334,7 @@ export function afterSetInt(item: Item): void {
 
     const offset = itemInt.offset - index * 0x4;
 
-    let count = 0x0;
+    let count = 0;
 
     for (let i = 0x0; i < 0x5; i += 0x1) {
       const int = getInt(offset + i * 0x4, "uint32", {

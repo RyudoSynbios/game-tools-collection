@@ -129,7 +129,7 @@ export function afterSetInt(item: Item): void {
 
     const offset = itemInt.offset - index * 0x2;
 
-    let count = 0x0;
+    let count = 0;
 
     for (let i = 0x0; i < 0x3; i += 0x1) {
       count += getInt(offset + i * 0x2, "uint16", { bigEndian: true });
