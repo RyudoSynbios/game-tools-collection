@@ -18,6 +18,9 @@ export default {
           900: "#192231",
         },
       },
+      screens: {
+        "2xl": "1320px",
+      },
     },
     fontFamily: {
       roboto: ["Roboto"],

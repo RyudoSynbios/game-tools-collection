@@ -66,24 +66,6 @@
 
     width: 308px;
 
-    @media (max-width: 987px) {
-      &:nth-child(2n) {
-        @apply mr-0;
-      }
-    }
-
-    @media (min-width: 988px) and (max-width: 1311px) {
-      &:nth-child(3n) {
-        @apply mr-0;
-      }
-    }
-
-    @media (min-width: 1312px) {
-      &:nth-child(4n) {
-        @apply mr-0;
-      }
-    }
-
     & .gtc-tile-image {
       @apply relative;
 

@@ -131,16 +131,16 @@
 <style lang="postcss">
   .gtc-home {
     & .gtc-home-filters {
-      @apply flex mb-4;
+      @apply flex justify-center 2xl:justify-start flex-wrap;
 
       & input,
       & select {
-        @apply mr-2;
+        @apply mr-2 mb-2;
       }
     }
 
     .gtc-home-games {
-      @apply flex flex-wrap;
+      @apply flex flex-wrap justify-center 2xl:justify-start mt-2 -mr-4;
 
       & > p {
         @apply my-12 text-white;
