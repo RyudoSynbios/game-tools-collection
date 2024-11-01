@@ -475,6 +475,17 @@
     }
   },
   {
+    "id": "wario-land-3-gbc",
+    "name": "Wario Land 3",
+    "consoleId": "game-boy-color",
+    "tools": {
+      "saveEditor": {
+        "createdAt": "2024-11-01",
+        "regions": ["🏳️"]
+      }
+    }
+  },
+  {
     "id": "wario-land-super-mario-land-3-gb",
     "name": "Wario Land: Super Mario Land 3",
     "consoleId": "game-boy",

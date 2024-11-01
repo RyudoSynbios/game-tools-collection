@@ -45,6 +45,7 @@ Link to the website: [https://game-tools-collection.com](https://game-tools-coll
 | Super Smash Bros. Melee                   | GC       | Save       | EUR / USA / JAP                               |
 | Super Street Fighter II Turbo Revival     | GBA      | Save       | EUR / USA / JAP                               |
 | TimeSplitters 2                           | PS2      | Save       | EUR / USA / JAP                               |
+| Wario Land 3                              | GBC      | Save       | WORLD                                         |
 | Wario Land: Super Mario Land 3            | GB       | Save       | WORLD                                         |
 
 ---
