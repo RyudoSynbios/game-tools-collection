@@ -29,7 +29,7 @@
       for (let column = 0x0; column < 0x10; column += 0x1) {
         let tileData = [];
 
-        for (let tile = 0x0; tile < 0x80; tile += 0x1) {
+        for (let tile = 0x0; tile < 0x8; tile += 0x1) {
           const offset =
             albumOffset +
             photoIndex * 0x1000 +
