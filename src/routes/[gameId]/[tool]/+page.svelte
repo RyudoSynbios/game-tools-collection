@@ -53,8 +53,9 @@
   }
 
   function handleExitDebugMode(): void {
+    debugToolbarOpen = false;
+    $isDebug = false;
     setLocalStorage("debug", "false");
-    location.reload();
   }
 
   function handleFileChecksum(): void {
@@ -109,8 +110,8 @@
       logoClickCount += 1;
 
       if (logoClickCount === 5) {
+        $isDebug = true;
         setLocalStorage("debug", "true");
-        location.reload();
       }
     }
   }
