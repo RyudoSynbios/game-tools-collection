@@ -120,13 +120,10 @@ export function getSlots(
   for (let i = 1; i < 16; i += 1) {
     const offset = $fileHeaderShift + i * 0x80;
 
-    const isValid = validator.every((hex, j) => {
-      if (getInt(offset + 0xa + j, "uint8") === hex) {
-        return true;
-      }
-    });
-
-    if (isValid && getInt(offset, "uint8") === 0x51) {
+    if (
+      checkValidator(validator, offset + 0xa) &&
+      getInt(offset, "uint8") === 0x51
+    ) {
       if (
         order === "correspondance" ||
         (order === "memory" && index === validCount)

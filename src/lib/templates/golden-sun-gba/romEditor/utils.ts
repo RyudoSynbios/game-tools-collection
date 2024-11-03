@@ -240,7 +240,7 @@ export function getEnemyGroupNames(): { [value: number]: string } {
     );
   });
 
-  names[0] = "-";
+  names[0x0] = "-";
 
   return names;
 }
@@ -254,7 +254,7 @@ export function getEnemyNames(): { [value: number]: string } {
     names[index] = getText(enemyNamesStartIndex + index);
   });
 
-  names[0] = "-";
+  names[0x0] = "-";
 
   return names;
 }
@@ -282,7 +282,7 @@ export function getItemNames(): { [value: number]: string } {
     names[index] = getText(itemNamesStartIndex + index);
   });
 
-  names[0] = "-";
+  names[0x0] = "-";
 
   return names;
 }

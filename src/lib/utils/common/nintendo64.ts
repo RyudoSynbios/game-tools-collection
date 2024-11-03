@@ -156,13 +156,7 @@ export function getMpkNoteShift(shifts: number[]): number[] {
   for (let i = 0; i < 15; i += 1) {
     const offset = $fileHeaderShift + 0x300 + i * 0x20;
 
-    const isValid = validator.every((hex, j) => {
-      if (getInt(offset + j, "uint8") === hex) {
-        return true;
-      }
-    });
-
-    if (isValid) {
+    if (checkValidator(validator, offset)) {
       return [...shifts, getInt(offset + 0x7, "uint8") * 0x100];
     }
   }

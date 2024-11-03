@@ -328,11 +328,11 @@ export interface ItemTab {
 export interface ItemTabs {
   id?: string;
   type: "tabs";
-  indexes?: boolean;
-  vertical?: boolean;
   enumeration?: string;
   resource?: string;
   resourceOrder?: boolean;
+  indexes?: boolean;
+  vertical?: boolean;
   items: ItemTab[];
   hidden?: boolean | boolean[];
 }
