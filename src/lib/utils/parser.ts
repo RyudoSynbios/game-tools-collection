@@ -586,19 +586,29 @@ export function getResource(
   }
 }
 
-export function updateResources(resource = ""): void {
+export function updateResources(
+  resource = "",
+  overrideValues?: {
+    [value: number]: string;
+  },
+): void {
   const $gameJson = get(gameJson);
   const $gameTemplate = get(gameTemplate);
 
   let resources = { ...$gameTemplate.resources };
 
   if (resource && $gameTemplate.resources?.[resource]) {
-    if (typeof resources[resource] === "string") {
-      const value = getUtils(resources[resource] as string);
+    if (overrideValues) {
+      resources = {
+        ...$gameJson.resources,
+        [resource]: overrideValues,
+      };
+    } else if (typeof resources[resource] === "string") {
+      const values = getUtils(resources[resource] as string);
 
       resources = {
         ...$gameJson.resources,
-        [resource]: value,
+        [resource]: values,
       };
     }
   } else {
