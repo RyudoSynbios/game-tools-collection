@@ -1,7 +1,8 @@
-import { getInt, setInt } from "$lib/utils/bytes";
+import { getInt, getString, setInt } from "$lib/utils/bytes";
 import { formatChecksum } from "$lib/utils/checksum";
+import { getItem, updateResources } from "$lib/utils/parser";
 
-import type { Item, ItemChecksum, ItemInt } from "$lib/types";
+import type { Item, ItemChecksum, ItemInt, ItemString } from "$lib/types";
 
 export function overrideGetInt(item: Item): [boolean, number | undefined] {
   if ("id" in item && item.id?.match(/wc-/)) {
@@ -57,7 +58,13 @@ export function overrideSetInt(item: Item, value: string): boolean {
 }
 
 export function afterSetInt(item: Item): void {
-  if ("id" in item && item.id === "pStats") {
+  if ("id" in item && item.id?.match(/characterName-/)) {
+    const split = item.id.split("-");
+
+    const slotIndex = parseInt(split[1]);
+
+    updateCharacterNames(slotIndex);
+  } else if ("id" in item && item.id === "pStats") {
     const itemInt = item as ItemInt;
 
     const stat = getInt(itemInt.offset, "uint8");
@@ -82,4 +89,43 @@ export function generateChecksum(item: ItemChecksum): number {
   }
 
   return formatChecksum(checksum, item.dataType);
+}
+
+export function getCharacterNames(slotIndex: number): {
+  [value: number]: string;
+} {
+  if (isNaN(slotIndex)) {
+    return {};
+  }
+
+  const names: { [value: number]: string } = {};
+
+  const itemString = getItem(
+    `party-${slotIndex}-characterName-0`,
+  ) as ItemString;
+
+  [...Array(8).keys()].forEach((index) => {
+    const name = getString(
+      itemString.offset + index * 0x50,
+      itemString.length,
+      itemString.letterDataType,
+      {
+        resource: "letters",
+      },
+    );
+
+    names[index] = name.trim() || "???";
+  });
+
+  return names;
+}
+
+export function onSlotChange(slotIndex: number): void {
+  updateCharacterNames(slotIndex);
+}
+
+export function updateCharacterNames(slotIndex: number): void {
+  const values = getCharacterNames(slotIndex);
+
+  updateResources("characterNames", values);
 }

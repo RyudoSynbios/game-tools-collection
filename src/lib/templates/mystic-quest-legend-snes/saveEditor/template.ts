@@ -49,6 +49,7 @@ const template: GameJson = {
         operator: "=",
         value: 0x0,
       },
+      onTabChange: "onSlotChange(%d)",
       items: [
         {
           name: "Checksum",
@@ -164,17 +165,20 @@ const template: GameJson = {
               name: "Party",
               items: [
                 {
+                  id: "party-%index%",
                   length: 0x50,
                   type: "container",
                   instanceType: "tabs",
                   instances: 2,
-                  enumeration: "Character %d",
+                  resource: "characterNames",
                   items: [
                     {
+                      id: "%parent%",
                       type: "section",
                       flex: true,
                       items: [
                         {
+                          id: "%parent%-characterName-%index%",
                           name: "Name",
                           offset: 0x6,
                           length: 0x8,
@@ -777,6 +781,7 @@ const template: GameJson = {
       0x88: "Reuben 2 (auto)",
       0x8f: "-",
     },
+    characterNames: "getCharacterNames()",
     items: {
       0x10: "Cure",
       0x11: "Heal",
