@@ -22,7 +22,7 @@
   let selectedTab = 0;
   let tabs: ItemTabtWithIndex[];
   let previousId = "";
-  let previousSelectedTab = 0;
+  let previousSelectedTab = -1;
 
   beforeUpdate(() => {
     if (previousSelectedTab === selectedTab) {
@@ -188,6 +188,12 @@
     }
 
     checkTab();
+  }
+
+  $: {
+    if (item.onTabChange && selectedTab !== previousSelectedTab) {
+      getUtils(item.onTabChange.replace("%d", `${selectedTab}`));
+    }
   }
 </script>
 

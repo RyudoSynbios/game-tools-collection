@@ -212,6 +212,7 @@ export interface ItemContainer {
   resourceOrder?: boolean;
   indexes?: boolean;
   vertical?: boolean;
+  onTabChange?: string;
   flex?: boolean;
   noMargin?: boolean;
   items: Item[];
@@ -333,6 +334,7 @@ export interface ItemTabs {
   resourceOrder?: boolean;
   indexes?: boolean;
   vertical?: boolean;
+  onTabChange?: string;
   items: ItemTab[];
   hidden?: boolean | boolean[];
 }

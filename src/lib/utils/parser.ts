@@ -313,6 +313,7 @@ export function parseContainer(
     resourceOrder: item.resourceOrder,
     indexes: item.indexes,
     vertical: item.vertical,
+    onTabChange: item.onTabChange,
     items: [],
   };
 
