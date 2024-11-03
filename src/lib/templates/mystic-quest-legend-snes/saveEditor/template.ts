@@ -165,7 +165,7 @@ const template: GameJson = {
               name: "Party",
               items: [
                 {
-                  id: "party-%index%",
+                  id: "party",
                   length: 0x50,
                   type: "container",
                   instanceType: "tabs",
@@ -173,12 +173,11 @@ const template: GameJson = {
                   resource: "characterNames",
                   items: [
                     {
-                      id: "%parent%",
                       type: "section",
                       flex: true,
                       items: [
                         {
-                          id: "%parent%-characterName-%index%",
+                          id: "slot-%parent%-characterName-%index%",
                           name: "Name",
                           offset: 0x6,
                           length: 0x8,

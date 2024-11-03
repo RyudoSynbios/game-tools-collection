@@ -2,8 +2,9 @@
   import Tabs from "$lib/components/Items/Tabs.svelte";
   import { gameJson } from "$lib/stores";
   import { getRegionArray } from "$lib/utils/format";
+  import { getResource } from "$lib/utils/parser";
 
-  import type { ItemTabs } from "$lib/types";
+  import type { ItemTabs, Resource } from "$lib/types";
 
   import {
     monsterNamesLength,
@@ -14,8 +15,6 @@
     pointerToMonsterStats,
   } from "../template";
   import { pointerToOffset } from "../utils";
-
-  let monsterNames: { [value: number]: string };
 
   const namesOffset = pointerToOffset(pointerToMonsterNames);
   const namesLength = getRegionArray(monsterNamesLength);
@@ -30,19 +29,20 @@
 
   let item: ItemTabs;
 
+  let names: Resource;
+
   $: {
     $gameJson;
 
-    monsterNames = $gameJson.resources?.monsterNames as {
-      [value: number]: string;
-    };
+    names = getResource("monsterNames") as Resource;
 
     item = {
+      id: "monsters",
       type: "tabs",
       indexes: true,
       vertical: true,
       items: [...Array(81).keys()].map((index) => ({
-        name: monsterNames[index],
+        name: names[index] as string,
         items: [
           {
             type: "tabs",

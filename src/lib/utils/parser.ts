@@ -551,6 +551,10 @@ export function getItem(
 
   if (items) {
     return items.reduce((result: Item | undefined, item: Item) => {
+      if (result) {
+        return result;
+      }
+
       if ("id" in item && item.id === id) {
         return item;
       } else if ("items" in item) {

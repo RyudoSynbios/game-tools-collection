@@ -1,13 +1,13 @@
 import { get } from "svelte/store";
 
-import { gameJson, gameRegion } from "$lib/stores";
+import { gameRegion } from "$lib/stores";
 import { getInt, setInt } from "$lib/utils/bytes";
 import { decodeCamelotFont } from "$lib/utils/decode";
 import { getRegionArray } from "$lib/utils/format";
 import { applyPalette } from "$lib/utils/graphics";
-import { updateResources } from "$lib/utils/parser";
+import { getResource, updateResources } from "$lib/utils/parser";
 
-import type { Item, ItemInt, Palette } from "$lib/types";
+import type { Item, ItemInt, Palette, Resource } from "$lib/types";
 
 import AbilityIconSelector from "./components/AbilityIconSelector.svelte";
 import ItemIconSelector from "./components/ItemIconSelector.svelte";
@@ -300,14 +300,14 @@ export function getMapNames(): { [value: number]: string } {
 }
 
 export function getShopNames(): { [value: number]: string } {
-  const $gameJson = get(gameJson);
-
   const offset = getInt(getRegionArray(pointerToShops), "int24");
+
+  const shopTypes = getResource("shopTypes") as Resource;
 
   const names: { [value: number]: string } = {};
 
   [...Array(35).keys()].forEach((index) => {
-    names[index] = $gameJson.resources!.shopTypes[
+    names[index] = shopTypes[
       getInt(offset + 0x40 + index * 0x42, "uint8")
     ] as string;
   });

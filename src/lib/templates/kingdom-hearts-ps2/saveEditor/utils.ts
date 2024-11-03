@@ -1,6 +1,6 @@
 import { get } from "svelte/store";
 
-import { gameJson, gameRegion } from "$lib/stores";
+import { gameRegion } from "$lib/stores";
 import { getInt, getString, setInt } from "$lib/utils/bytes";
 import {
   customGetRegions,
@@ -11,7 +11,7 @@ import {
   unpackMemoryCard,
 } from "$lib/utils/common/playstation2";
 import { getObjKey } from "$lib/utils/format";
-import { getItem } from "$lib/utils/parser";
+import { getItem, getResource } from "$lib/utils/parser";
 
 import type {
   Item,
@@ -19,6 +19,7 @@ import type {
   ItemContainer,
   ItemInt,
   ItemString,
+  Resource,
 } from "$lib/types";
 
 export function beforeInitDataView(dataView: DataView): DataView {
@@ -138,19 +139,18 @@ export function overrideGetInt(item: Item): [boolean, string | undefined] {
 
 export function overrideSetInt(item: Item, value: string): boolean {
   const $gameRegion = get(gameRegion);
-  const $gameJson = get(gameJson);
 
   if ("id" in item && item.id === "name" && $gameRegion === 2) {
     const itemString = item as ItemString;
 
-    const resource = $gameJson.resources!.letters[2];
+    const letters = getResource("letters") as Resource;
 
     let count = 0x0;
 
     for (let i = 0x0; i < itemString.length * 2; i += 0x1, count += 0x1) {
       const offset = itemString.offset + i;
 
-      const index = Object.values(resource).findIndex(
+      const index = Object.values(letters[2]).findIndex(
         (letter) => letter === value[count],
       );
 
@@ -158,7 +158,7 @@ export function overrideSetInt(item: Item, value: string): boolean {
       let letterDataType: "uint8" | "uint16" = "uint8";
 
       if (index !== -1) {
-        int = parseInt(getObjKey(resource, index));
+        int = parseInt(getObjKey(letters[2], index));
 
         if (int > 0xff) {
           letterDataType = "uint16";

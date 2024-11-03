@@ -47,7 +47,6 @@ export function overrideGetInt(
     for (let i = 0x0; i < itemString.length; i += 0x2) {
       if (getInt(itemString.offset + i, "uint8") === 0x0) {
         string = string.substring(0, i / 2);
-
         break;
       }
     }

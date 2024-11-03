@@ -194,11 +194,11 @@ export interface ItemComponent {
 
 export interface ItemContainer {
   id?: string;
+  instanceId?: string;
   pointer?: number | number[];
   pointerDataType?: DataTypeInt;
   length: number;
   type: "container";
-  instanceId?: string;
   instances: number;
   instanceType: "section" | "tabs";
   enumeration?: string;

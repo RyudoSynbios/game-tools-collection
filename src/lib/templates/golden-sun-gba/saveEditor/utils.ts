@@ -305,9 +305,7 @@ export function getCharacterNames(slotIndex: number): {
 
   const names: { [value: number]: string } = {};
 
-  const itemString = getItem(
-    `party-${slotIndex}-characterName-0`,
-  ) as ItemString;
+  const itemString = getItem(`slot-${slotIndex}-characterName-0`) as ItemString;
 
   [...Array(8).keys()].forEach((index) => {
     const name = getString(

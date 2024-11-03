@@ -105,7 +105,7 @@
 
         & .gtc-tile-toollink,
         & .gtc-tile-tooldisabled {
-          @apply flex-1 px-2 py-1  text-xs text-center rounded;
+          @apply flex-1 px-2 py-1 text-xs text-center rounded;
         }
 
         & .gtc-tile-toollink {

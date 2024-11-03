@@ -1,10 +1,10 @@
 import { get } from "svelte/store";
 
-import { dataView, dataViewAlt, gameJson } from "$lib/stores";
+import { dataView, dataViewAlt } from "$lib/stores";
 import { extractBinary, getInt, setInt } from "$lib/utils/bytes";
 import { formatChecksum } from "$lib/utils/checksum";
 import { mergeUint8Arrays } from "$lib/utils/format";
-import { getItem, updateResources } from "$lib/utils/parser";
+import { getItem, getResource, updateResources } from "$lib/utils/parser";
 
 import type {
   Item,
@@ -12,6 +12,7 @@ import type {
   ItemContainer,
   ItemInt,
   ItemTab,
+  Resource,
 } from "$lib/types";
 
 export function beforeItemsParsing(): void {
@@ -90,19 +91,20 @@ export function afterSetInt(item: Item): void {
 
 export function getInventoryNames(): { [value: number]: string } {
   const $dataViewAlt = get(dataViewAlt);
-  const $gameJson = get(gameJson);
+
+  const itemTypes = getResource("itemTypes") as Resource;
 
   const names: { [value: number]: string } = {};
 
   [...Array(getItemCount()).keys()].forEach((index) => {
-    names[index] = $gameJson.resources!.itemTypes[
-      getInt(
-        0x5c + index * getItemLength(),
-        "uint32",
-        {},
-        $dataViewAlt.inventory,
-      )
-    ] as string;
+    const int = getInt(
+      0x5c + index * getItemLength(),
+      "uint32",
+      {},
+      $dataViewAlt.inventory,
+    );
+
+    names[index] = itemTypes[int] as string;
   });
 
   return names;
