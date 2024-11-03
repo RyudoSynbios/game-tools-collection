@@ -1,10 +1,10 @@
 import { get } from "svelte/store";
 
 import { fileHeaderShift } from "$lib/stores";
-import { extractBit, getInt, setInt } from "$lib/utils/bytes";
+import { extractBit, getInt, getString, setInt } from "$lib/utils/bytes";
 import { formatChecksum } from "$lib/utils/checksum";
 import { getHeaderShift } from "$lib/utils/common/gameBoyAdvance";
-import { getItem, getShift } from "$lib/utils/parser";
+import { getItem, getShift, updateResources } from "$lib/utils/parser";
 
 import type {
   Item,
@@ -12,6 +12,7 @@ import type {
   ItemChecksum,
   ItemContainer,
   ItemInt,
+  ItemString,
 } from "$lib/types";
 
 export function initHeaderShift(dataView: DataView): number {
@@ -200,10 +201,10 @@ export function afterSetInt(item: Item, flag: ItemBitflag): void {
       offset = itemInt.offset - 0x3f8 - offsetIndex + 1;
     }
 
-    const numberCharacters = getInt(offset, "uint8").toBitCount();
+    const characterCount = getInt(offset, "uint8").toBitCount();
 
     for (let i = 0x0; i < 0x4; i += 0x1) {
-      if (i < numberCharacters) {
+      if (i < characterCount) {
         const int = getInt(offset + 0x3f8 + i, "uint8");
 
         setInt(offset - 0x24 + i, "uint8", int);
@@ -211,6 +212,12 @@ export function afterSetInt(item: Item, flag: ItemBitflag): void {
         setInt(offset - 0x24 + i, "uint8", 0xff);
       }
     }
+  } else if ("id" in item && item.id?.match(/characterName-/)) {
+    const split = item.id.split("-");
+
+    const slotIndex = parseInt(split[1]);
+
+    updateCharacterNames(slotIndex);
   } else if ("id" in item && item.id?.match(/level-/)) {
     const itemInt = item as ItemInt;
 
@@ -287,4 +294,43 @@ export function generateChecksum(item: ItemChecksum): number {
   }
 
   return formatChecksum(checksum, item.dataType);
+}
+
+export function getCharacterNames(slotIndex: number): {
+  [value: number]: string;
+} {
+  if (isNaN(slotIndex)) {
+    return {};
+  }
+
+  const names: { [value: number]: string } = {};
+
+  const itemString = getItem(
+    `party-${slotIndex}-characterName-0`,
+  ) as ItemString;
+
+  [...Array(8).keys()].forEach((index) => {
+    const name = getString(
+      itemString.offset + index * 0x14c,
+      itemString.length,
+      itemString.letterDataType,
+      {
+        resource: "letters",
+      },
+    );
+
+    names[index] = name.trim() || "???";
+  });
+
+  return names;
+}
+
+export function onSlotChange(slotIndex: number): void {
+  updateCharacterNames(slotIndex);
+}
+
+export function updateCharacterNames(slotIndex: number): void {
+  const values = getCharacterNames(slotIndex);
+
+  updateResources("characterNames", values);
 }

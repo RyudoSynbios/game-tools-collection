@@ -25,6 +25,7 @@ const template: GameJson = {
       instanceType: "tabs",
       instances: 3,
       enumeration: "Slot %d",
+      onTabChange: "onSlotChange(%d)",
       items: [
         {
           type: "section",
@@ -385,7 +386,7 @@ const template: GameJson = {
                               offset: 0x448,
                               type: "variable",
                               dataType: "uint8",
-                              resource: "characters",
+                              resource: "characterNames",
                               autocomplete: true,
                             },
                             {
@@ -394,7 +395,7 @@ const template: GameJson = {
                               offset: 0x449,
                               type: "variable",
                               dataType: "uint8",
-                              resource: "characters",
+                              resource: "characterNames",
                               autocomplete: true,
                             },
                             {
@@ -403,7 +404,7 @@ const template: GameJson = {
                               offset: 0x44a,
                               type: "variable",
                               dataType: "uint8",
-                              resource: "characters",
+                              resource: "characterNames",
                               autocomplete: true,
                             },
                             {
@@ -412,7 +413,7 @@ const template: GameJson = {
                               offset: 0x44b,
                               type: "variable",
                               dataType: "uint8",
-                              resource: "characters",
+                              resource: "characterNames",
                               autocomplete: true,
                             },
                             {
@@ -420,7 +421,7 @@ const template: GameJson = {
                               offset: 0x2c,
                               type: "variable",
                               dataType: "uint8",
-                              resource: "characters",
+                              resource: "characterNames",
                               autocomplete: true,
                               hidden: true,
                             },
@@ -429,7 +430,7 @@ const template: GameJson = {
                               offset: 0x2d,
                               type: "variable",
                               dataType: "uint8",
-                              resource: "characters",
+                              resource: "characterNames",
                               autocomplete: true,
                               hidden: true,
                             },
@@ -438,7 +439,7 @@ const template: GameJson = {
                               offset: 0x2e,
                               type: "variable",
                               dataType: "uint8",
-                              resource: "characters",
+                              resource: "characterNames",
                               autocomplete: true,
                               hidden: true,
                             },
@@ -447,7 +448,7 @@ const template: GameJson = {
                               offset: 0x2f,
                               type: "variable",
                               dataType: "uint8",
-                              resource: "characters",
+                              resource: "characterNames",
                               autocomplete: true,
                               hidden: true,
                             },
@@ -463,20 +464,24 @@ const template: GameJson = {
               name: "Party",
               items: [
                 {
+                  id: "party-%index%",
                   length: 0x14c,
                   type: "container",
                   instanceType: "tabs",
                   instances: 8,
-                  resource: "characters",
+                  resource: "characterNames",
                   vertical: true,
                   items: [
                     {
+                      id: "%parent%",
                       type: "tabs",
                       items: [
                         {
+                          id: "%parent%",
                           name: "Status",
                           items: [
                             {
+                              id: "%parent%",
                               type: "section",
                               flex: true,
                               items: [
@@ -490,6 +495,7 @@ const template: GameJson = {
                                   hidden: true,
                                 },
                                 {
+                                  id: "%parent%-characterName-%index%",
                                   name: "Name",
                                   offset: 0x510,
                                   length: 0x5,
@@ -1137,6 +1143,7 @@ const template: GameJson = {
       0x6: "Sheba",
       0x7: "PC07",
     },
+    characterNames: "getCharacterNames()",
     classes: {
       0x0: "NPC",
       0x1: "Squire",
