@@ -12,7 +12,7 @@ import {
 import debug from "$lib/utils/debug";
 import { utilsExists } from "$lib/utils/format";
 
-import type { DataType } from "$lib/types";
+import type { DataType, ItemChecksum } from "$lib/types";
 
 export function formatChecksum(
   checksum: number,
@@ -80,4 +80,21 @@ export function updateChecksums(): void {
         }`,
       );
     });
+}
+
+export function generateCrcCcitt(
+  item: ItemChecksum,
+  dataArray: number[],
+  dataView = new DataView(new ArrayBuffer(0)),
+): number {
+  let checksum = dataTypeToValue(item.dataType);
+
+  for (let i = item.control.offsetStart; i < item.control.offsetEnd; i += 0x1) {
+    const index =
+      (((getInt(i, "uint8", {}, dataView) ^ checksum) & 0xff) << 0x2) / 0x4;
+
+    checksum = dataArray[index] ^ (checksum >>> 0x8);
+  }
+
+  return checksum;
 }

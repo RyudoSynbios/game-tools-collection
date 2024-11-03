@@ -8,7 +8,7 @@ import {
   setBitflag,
   setInt,
 } from "$lib/utils/bytes";
-import { formatChecksum } from "$lib/utils/checksum";
+import { formatChecksum, generateCrcCcitt } from "$lib/utils/checksum";
 import {
   customGetRegions,
   getSaves,
@@ -313,15 +313,7 @@ const dataArray = [
 ];
 
 export function generateChecksum(item: ItemChecksum): number {
-  let checksum = 0xffffffff;
-
-  for (let i = item.control.offsetStart; i < item.control.offsetEnd; i += 0x1) {
-    const index = (((getInt(i, "uint8") ^ checksum) & 0xff) << 0x2) / 0x4;
-
-    checksum = dataArray[index] ^ (checksum >>> 0x8);
-  }
-
-  checksum = ~checksum;
+  const checksum = ~generateCrcCcitt(item, dataArray);
 
   return formatChecksum(checksum, item.dataType);
 }
