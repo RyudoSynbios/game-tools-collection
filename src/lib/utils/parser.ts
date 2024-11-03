@@ -109,6 +109,7 @@ interface ParseItemOptions {
 export function parseItem(
   item: Item,
   shifts: number[],
+  parentId = "",
   instanceId = "",
   instanceIndex = 0,
   options: ParseItemOptions = {},
@@ -127,7 +128,9 @@ export function parseItem(
   }
 
   if (newItem.id !== undefined) {
-    newItem.id = newItem.id.replace("%index%", instanceIndex);
+    newItem.id = newItem.id
+      .replace("%parent%", parentId)
+      .replace("%index%", instanceIndex);
   }
 
   if (newItem.name !== undefined) {
@@ -198,6 +201,7 @@ export function parseItem(
       const parsedItem = parseItem(
         subitem,
         shifts,
+        newItem.id,
         instanceId,
         instanceIndex,
         options,
@@ -275,7 +279,7 @@ function parseConditions(
     const operand = getObjKey(condition, 0) as "$and" | "$or";
 
     const parsedItems = condition[operand]!.map((subitem) =>
-      parseItem(subitem as Item, shifts, instanceId, instanceIndex),
+      parseItem(subitem as Item, shifts, instanceId, instanceId, instanceIndex),
     );
 
     parsedCondition = { [operand]: parsedItems };
@@ -283,6 +287,7 @@ function parseConditions(
     parsedCondition = parseItem(
       condition as ItemIntCondition,
       shifts,
+      instanceId,
       instanceId,
       instanceIndex,
     );
@@ -340,6 +345,7 @@ export function parseContainer(
               const parsedItem = parseItem(
                 subitem,
                 shifts,
+                item.id,
                 instanceId,
                 instanceIndex,
                 options,
@@ -379,6 +385,7 @@ export function parseContainer(
             const parsedItem = parseItem(
               subitem,
               instanceShifts,
+              item.id,
               instanceId,
               index,
               { checksumsDisabled: disabled },
@@ -428,6 +435,7 @@ export function parseContainer(
               const parsedItem = parseItem(
                 subitem,
                 shifts,
+                item.id,
                 instanceId,
                 instanceIndex,
                 options,
