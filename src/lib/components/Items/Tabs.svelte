@@ -288,10 +288,10 @@
     }
 
     &.gtc-tabs-vertical {
-      @apply flex;
+      @apply md:flex;
 
       & > ul {
-        @apply block mr-4 no-scrollbar overflow-scroll;
+        @apply block mr-4 mb-4 md:mb-0 no-scrollbar overflow-scroll;
 
         min-width: 200px;
       }
