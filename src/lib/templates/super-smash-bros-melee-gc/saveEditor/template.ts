@@ -566,27 +566,11 @@ const template: GameJson = {
                                   dataType: "uint32",
                                   bigEndian: true,
                                   max: 9,
-                                  hiddenConditions: {
-                                    offset: 0x760,
-                                    type: "variable",
-                                    dataType: "bit",
-                                    bit: 7,
-                                    operator: "!=",
-                                    value: 0x0,
-                                  },
                                 },
                                 {
                                   name: "Highscore",
                                   type: "group",
                                   mode: "chrono",
-                                  hiddenConditions: {
-                                    offset: 0x760,
-                                    type: "variable",
-                                    dataType: "bit",
-                                    bit: 7,
-                                    operator: "=",
-                                    value: 0x0,
-                                  },
                                   items: [
                                     {
                                       id: "targetTestHighscore-%index%",
@@ -848,27 +832,11 @@ const template: GameJson = {
                                       dataType: "uint32",
                                       bigEndian: true,
                                       max: 9,
-                                      hiddenConditions: {
-                                        offset: 0x760,
-                                        type: "variable",
-                                        dataType: "bit",
-                                        bit: 6,
-                                        operator: "!=",
-                                        value: 0x0,
-                                      },
                                     },
                                     {
                                       name: "Highscore",
                                       type: "group",
                                       mode: "chrono",
-                                      hiddenConditions: {
-                                        offset: 0x760,
-                                        type: "variable",
-                                        dataType: "bit",
-                                        bit: 6,
-                                        operator: "=",
-                                        value: 0x0,
-                                      },
                                       items: [
                                         {
                                           offset: 0x77c,
@@ -947,27 +915,11 @@ const template: GameJson = {
                                       dataType: "uint32",
                                       bigEndian: true,
                                       max: 99,
-                                      hiddenConditions: {
-                                        offset: 0x760,
-                                        type: "variable",
-                                        dataType: "bit",
-                                        bit: 5,
-                                        operator: "!=",
-                                        value: 0x0,
-                                      },
                                     },
                                     {
                                       name: "Highscore",
                                       type: "group",
                                       mode: "chrono",
-                                      hiddenConditions: {
-                                        offset: 0x760,
-                                        type: "variable",
-                                        dataType: "bit",
-                                        bit: 5,
-                                        operator: "=",
-                                        value: 0x0,
-                                      },
                                       items: [
                                         {
                                           offset: 0x780,

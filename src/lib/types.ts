@@ -232,10 +232,6 @@ export interface ItemGroup {
   items: ItemInt[];
   hint?: string;
   hidden?: boolean | boolean[];
-  hiddenConditions?:
-    | ItemIntCondition
-    | LogicalOperator<ItemIntCondition>
-    | string;
 }
 
 export interface ItemInt {
@@ -266,10 +262,6 @@ export interface ItemInt {
   disableIfNegative?: boolean;
   disabled?: boolean;
   hidden?: boolean | boolean[];
-  hiddenConditions?:
-    | ItemIntCondition
-    | LogicalOperator<ItemIntCondition>
-    | string;
   test?: boolean;
 }
 

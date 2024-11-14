@@ -203,14 +203,6 @@ export function parseItem(
     );
   }
 
-  if (newItem.hiddenConditions) {
-    newItem.hiddenConditions = parseConditions(
-      newItem.hiddenConditions,
-      shifts,
-      parents,
-    );
-  }
-
   if (newItem.items) {
     newItem.items = newItem.items.reduce((results: Item[], subitem: Item) => {
       const parsedItem = parseItem(subitem, shifts, parents, options);
