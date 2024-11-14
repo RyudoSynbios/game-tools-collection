@@ -29,6 +29,11 @@ import type {
   Resource,
 } from "$lib/types";
 
+interface ItemParent {
+  id: string;
+  index: number;
+}
+
 let checksums: ItemChecksum[];
 
 export function enrichGameJson(): void {
@@ -109,9 +114,7 @@ interface ParseItemOptions {
 export function parseItem(
   item: Item,
   shifts: number[],
-  parentId = "",
-  instanceId = "",
-  instanceIndex = 0,
+  parents: ItemParent[] = [],
   options: ParseItemOptions = {},
 ): Item {
   const $gameUtils = get(gameUtils) as any;
@@ -123,13 +126,27 @@ export function parseItem(
 
   let newItem = clone(item) as any;
 
+  let instanceIndex = 0;
+
+  if (parents.length > 0) {
+    instanceIndex = parents[parents.length - 1].index;
+  }
+
   if (utilsExists("overrideItem")) {
     newItem = $gameUtils.overrideItem(newItem, instanceIndex);
   }
 
   if (newItem.id !== undefined) {
+    let parentIndex = 0;
+
+    if (newItem.id.match(/%parent%/)) {
+      if (parents.length > 0) {
+        parentIndex = parents[parents.length - 2].index;
+      }
+    }
+
     newItem.id = newItem.id
-      .replace("%parent%", parentId)
+      .replace("%parent%", parentIndex)
       .replace("%index%", instanceIndex);
   }
 
@@ -173,17 +190,16 @@ export function parseItem(
 
     checksums.push(newItem as ItemChecksum);
   } else if (newItem.type === "component") {
-    return parseComponent(newItem, shifts, instanceId, instanceIndex);
+    return parseComponent(newItem, shifts, parents);
   } else if (newItem.type === "container") {
-    return parseContainer(newItem, shifts, instanceId, instanceIndex, options);
+    return parseContainer(newItem, shifts, parents, options);
   }
 
   if (newItem.disableTabIf) {
     newItem.disableTabIf = parseConditions(
       newItem.disableTabIf,
       shifts,
-      instanceId,
-      instanceIndex,
+      parents,
     );
   }
 
@@ -191,21 +207,13 @@ export function parseItem(
     newItem.hiddenConditions = parseConditions(
       newItem.hiddenConditions,
       shifts,
-      instanceId,
-      instanceIndex,
+      parents,
     );
   }
 
   if (newItem.items) {
     newItem.items = newItem.items.reduce((results: Item[], subitem: Item) => {
-      const parsedItem = parseItem(
-        subitem,
-        shifts,
-        newItem.id,
-        instanceId,
-        instanceIndex,
-        options,
-      );
+      const parsedItem = parseItem(subitem, shifts, parents, options);
 
       results.push(parsedItem);
 
@@ -243,14 +251,15 @@ export function parseBitflags(
 export function parseComponent(
   item: ItemComponent,
   shifts: number[],
-  instanceId: string,
-  instanceIndex: number,
+  parents: ItemParent[],
 ): any {
   let props = item.props || {};
 
   props = Object.entries(props).reduce(
     (results: { [key: string]: any }, [key, value]) => {
-      results[key] = value === instanceId ? instanceIndex : value;
+      const instance = parents.find((parent) => parent.id === value);
+
+      results[key] = instance !== undefined ? instance.index : value;
 
       return results;
     },
@@ -268,8 +277,7 @@ export function parseComponent(
 function parseConditions(
   condition: ItemIntCondition | LogicalOperator<ItemIntCondition> | string,
   shifts: number[],
-  instanceId: string,
-  instanceIndex: number,
+  parents: ItemParent[],
 ): string | Item | { [x: string]: Item[] } {
   let parsedCondition;
 
@@ -279,18 +287,12 @@ function parseConditions(
     const operand = getObjKey(condition, 0) as "$and" | "$or";
 
     const parsedItems = condition[operand]!.map((subitem) =>
-      parseItem(subitem as Item, shifts, instanceId, instanceId, instanceIndex),
+      parseItem(subitem as Item, shifts, parents),
     );
 
     parsedCondition = { [operand]: parsedItems };
   } else {
-    parsedCondition = parseItem(
-      condition as ItemIntCondition,
-      shifts,
-      instanceId,
-      instanceId,
-      instanceIndex,
-    );
+    parsedCondition = parseItem(condition as ItemIntCondition, shifts, parents);
   }
 
   return parsedCondition;
@@ -299,16 +301,11 @@ function parseConditions(
 export function parseContainer(
   item: ItemContainer,
   shifts: number[],
-  instanceId: string,
-  instanceIndex: number,
+  parents: ItemParent[],
   options: ParseItemOptions,
 ): any {
   const $gameTemplate = get(gameTemplate);
   const $gameUtils = get(gameUtils) as any;
-
-  if (!instanceId && item.instanceId) {
-    instanceId = item.instanceId;
-  }
 
   const parsedItem: any = {
     id: item.id,
@@ -319,6 +316,7 @@ export function parseContainer(
     indexes: item.indexes,
     vertical: item.vertical,
     onTabChange: item.onTabChange,
+    hidden: item.hidden,
     items: [],
   };
 
@@ -342,14 +340,7 @@ export function parseContainer(
         name: subitem.name,
         items: subitem.items
           ? subitem.items.reduce((results: any, subitem: any) => {
-              const parsedItem = parseItem(
-                subitem,
-                shifts,
-                item.id,
-                instanceId,
-                instanceIndex,
-                options,
-              );
+              const parsedItem = parseItem(subitem, shifts, parents, options);
 
               results.push(parsedItem);
 
@@ -382,14 +373,14 @@ export function parseContainer(
       disabled,
       items: item.items
         ? item.items.reduce((results: any, subitem: any) => {
-            const parsedItem = parseItem(
-              subitem,
-              instanceShifts,
-              item.id,
-              instanceId,
-              index,
-              { checksumsDisabled: disabled },
-            );
+            const itemParents = [
+              ...parents,
+              { id: item.instanceId || "", index: index },
+            ];
+
+            const parsedItem = parseItem(subitem, instanceShifts, itemParents, {
+              checksumsDisabled: disabled,
+            });
 
             results.push(parsedItem);
 
@@ -417,8 +408,7 @@ export function parseContainer(
         parsedSubitem.disableTabIf = parseConditions(
           item.disableSubinstanceIf,
           instanceShifts,
-          instanceId,
-          instanceIndex,
+          parents,
         );
       }
     }
@@ -432,14 +422,7 @@ export function parseContainer(
         name: subitem.name,
         items: subitem.items
           ? subitem.items.reduce((results: any, subitem: any) => {
-              const parsedItem = parseItem(
-                subitem,
-                shifts,
-                item.id,
-                instanceId,
-                instanceIndex,
-                options,
-              );
+              const parsedItem = parseItem(subitem, shifts, parents, options);
 
               results.push(parsedItem);
 
