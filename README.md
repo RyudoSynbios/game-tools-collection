@@ -16,6 +16,7 @@ Link to the website: [https://game-tools-collection.com](https://game-tools-coll
 | Dead or Alive 2                           | PS2      | Save       | EUR                                           |
 | Diablo II: Lord of Destruction            | WIN      | Save       | WORLD                                         |
 | Donkey Kong Land                          | GB       | Save       | EUR / USA / JAP                               |
+| Final Fantasy IX                          | PS       | Save       | EUR / USA / JAP / FRA / GER / ITA / SPA       |
 | Final Fight One                           | GBA      | Save       | EUR / USA / JAP                               |
 | Game & Watch Gallery 3                    | GBC      | Save       | EUR / USA / JAP / AUS                         |
 | Game Boy Camera                           | GB       | Save       | EUR / USA / JAP                               |
