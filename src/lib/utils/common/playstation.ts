@@ -92,6 +92,7 @@ export function getSlots(
   order: "correspondance" | "memory",
   shifts: number[],
   index: number,
+  leadingZeros = 0,
 ): [boolean, number[] | undefined] {
   const $fileHeaderShift = get(fileHeaderShift);
   const $gameRegion = get(gameRegion);
@@ -104,7 +105,11 @@ export function getSlots(
   let validator = region[0];
 
   if (order === "correspondance") {
-    validator = [...validator, 0x30 + index];
+    if (index > 9 || leadingZeros > 0) {
+      validator = [...validator, 0x30 + Math.floor(index / 10)];
+    }
+
+    validator = [...validator, 0x30 + (index % 10)];
   }
 
   if (isPsvHeader()) {
