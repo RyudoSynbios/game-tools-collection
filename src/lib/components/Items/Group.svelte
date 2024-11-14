@@ -1,22 +1,17 @@
 <script lang="ts">
   import Int from "$lib/components/Items/Int.svelte";
-  import { dataView, isDebug } from "$lib/stores";
+  import { dataView, gameUtils, isDebug } from "$lib/stores";
 
   import type { ItemGroup } from "$lib/types";
-  import { getUtils } from "$lib/utils/format";
-  import { checkIntConditions } from "$lib/utils/validator";
+  import { utilsExists } from "$lib/utils/format";
 
   export let item: ItemGroup;
 
   $: {
     $dataView;
 
-    if (item.hiddenConditions) {
-      if (typeof item.hiddenConditions === "string") {
-        item.hidden = getUtils(item.hiddenConditions);
-      } else {
-        item.hidden = checkIntConditions(item.hiddenConditions);
-      }
+    if (utilsExists("overrideItem")) {
+      item = $gameUtils.overrideItem(item);
     }
   }
 </script>

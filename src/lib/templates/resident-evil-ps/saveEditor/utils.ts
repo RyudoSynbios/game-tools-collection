@@ -61,6 +61,58 @@ export function overrideParseContainerItemsShifts(
   return [false, undefined];
 }
 
+export function overrideItem(item: Item): Item {
+  if ("id" in item && item.id?.match(/itemSlots-/)) {
+    const itemInt = item as ItemInt;
+
+    const character = getInt(itemInt.offset + 0x24, "bit", { bit: 0 });
+
+    if (character === 0x1) {
+      itemInt.max = 6;
+    }
+
+    return itemInt;
+  } else if (
+    "id" in item &&
+    (item.id?.match(/item-/) || item.id?.match(/quantity-/))
+  ) {
+    const itemInt = item as ItemInt;
+
+    const split = item.id.split("-");
+
+    const index = parseInt(split[1]);
+
+    let offset = itemInt.offset - 0x11d - index * 0x2;
+
+    if (item.id.match(/quantity-/)) {
+      offset -= 0x1;
+    }
+
+    const int = getInt(offset, "uint8");
+
+    itemInt.disabled = index >= int;
+
+    return itemInt;
+  }
+
+  return item;
+}
+
+export function overrideGetInt(item: Item): [boolean, number | undefined] {
+  if (
+    "id" in item &&
+    (item.id?.match(/item-/) || item.id?.match(/quantity-/))
+  ) {
+    const itemInt = item as ItemInt;
+
+    if (itemInt.disabled) {
+      return [true, 0x0];
+    }
+  }
+
+  return [false, undefined];
+}
+
 export function afterSetInt(item: Item): void {
   if ("id" in item && item.id === "location") {
     const itemInt = item as ItemInt;

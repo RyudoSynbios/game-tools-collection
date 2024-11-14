@@ -2411,6 +2411,7 @@ const template: GameJson = {
                       flex: true,
                       items: [
                         {
+                          id: "heldItem-0",
                           name: "Item 1",
                           offset: 0x3ad8,
                           type: "variable",
@@ -2420,6 +2421,7 @@ const template: GameJson = {
                           autocomplete: true,
                         },
                         {
+                          id: "heldItem-1",
                           name: "Item 2",
                           offset: 0x3ada,
                           type: "variable",
@@ -2429,6 +2431,7 @@ const template: GameJson = {
                           autocomplete: true,
                         },
                         {
+                          id: "heldItem-2",
                           name: "Item 3",
                           offset: 0x3adc,
                           type: "variable",
@@ -2438,6 +2441,7 @@ const template: GameJson = {
                           autocomplete: true,
                         },
                         {
+                          id: "heldItem-3",
                           name: "Item 4",
                           offset: 0x3ade,
                           type: "variable",
@@ -2447,6 +2451,7 @@ const template: GameJson = {
                           autocomplete: true,
                         },
                         {
+                          id: "heldItem-4",
                           name: "Item 5",
                           offset: 0x3ae0,
                           type: "variable",
@@ -2481,6 +2486,7 @@ const template: GameJson = {
                       flex: true,
                       items: [
                         {
+                          id: "bmItem-0",
                           name: "Item 1",
                           offset: 0x3a98,
                           type: "variable",
@@ -2490,6 +2496,7 @@ const template: GameJson = {
                           autocomplete: true,
                         },
                         {
+                          id: "bmItem-1",
                           name: "Item 2",
                           offset: 0x3a9a,
                           type: "variable",
@@ -2499,6 +2506,7 @@ const template: GameJson = {
                           autocomplete: true,
                         },
                         {
+                          id: "bmItem-2",
                           name: "Item 3",
                           offset: 0x3a9c,
                           type: "variable",
@@ -2508,6 +2516,7 @@ const template: GameJson = {
                           autocomplete: true,
                         },
                         {
+                          id: "bmItem-3",
                           name: "Item 4",
                           offset: 0x3a9e,
                           type: "variable",
@@ -2517,6 +2526,7 @@ const template: GameJson = {
                           autocomplete: true,
                         },
                         {
+                          id: "bmItem-4",
                           name: "Item 5",
                           offset: 0x3aa0,
                           type: "variable",
@@ -2526,6 +2536,7 @@ const template: GameJson = {
                           autocomplete: true,
                         },
                         {
+                          id: "bmItem-5",
                           name: "Item 6",
                           offset: 0x3aa2,
                           type: "variable",
@@ -2535,6 +2546,7 @@ const template: GameJson = {
                           autocomplete: true,
                         },
                         {
+                          id: "bmItem-6",
                           name: "Item 7",
                           offset: 0x3aa4,
                           type: "variable",
@@ -2544,6 +2556,7 @@ const template: GameJson = {
                           autocomplete: true,
                         },
                         {
+                          id: "bmItem-7",
                           name: "Item 8",
                           offset: 0x3aa6,
                           type: "variable",
@@ -2553,6 +2566,7 @@ const template: GameJson = {
                           autocomplete: true,
                         },
                         {
+                          id: "bmItem-8",
                           name: "Item 9",
                           offset: 0x3aa8,
                           type: "variable",
@@ -2562,6 +2576,7 @@ const template: GameJson = {
                           autocomplete: true,
                         },
                         {
+                          id: "bmItem-9",
                           name: "Item 10",
                           offset: 0x3aaa,
                           type: "variable",
@@ -2571,6 +2586,7 @@ const template: GameJson = {
                           autocomplete: true,
                         },
                         {
+                          id: "bmItem-10",
                           name: "Item 11",
                           offset: 0x3aac,
                           type: "variable",
@@ -2580,6 +2596,7 @@ const template: GameJson = {
                           autocomplete: true,
                         },
                         {
+                          id: "bmItem-11",
                           name: "Item 12",
                           offset: 0x3aae,
                           type: "variable",
@@ -2589,6 +2606,7 @@ const template: GameJson = {
                           autocomplete: true,
                         },
                         {
+                          id: "bmItem-12",
                           name: "Item 13",
                           offset: 0x3ab0,
                           type: "variable",
@@ -2598,6 +2616,7 @@ const template: GameJson = {
                           autocomplete: true,
                         },
                         {
+                          id: "bmItem-13",
                           name: "Item 14",
                           offset: 0x3ab2,
                           type: "variable",
@@ -2607,6 +2626,7 @@ const template: GameJson = {
                           autocomplete: true,
                         },
                         {
+                          id: "bmItem-14",
                           name: "Item 15",
                           offset: 0x3ab4,
                           type: "variable",
@@ -2616,6 +2636,7 @@ const template: GameJson = {
                           autocomplete: true,
                         },
                         {
+                          id: "bmItem-15",
                           name: "Item 16",
                           offset: 0x3ab6,
                           type: "variable",
@@ -2625,6 +2646,7 @@ const template: GameJson = {
                           autocomplete: true,
                         },
                         {
+                          id: "bmItem-16",
                           name: "Item 17",
                           offset: 0x3ab8,
                           type: "variable",
@@ -2634,6 +2656,7 @@ const template: GameJson = {
                           autocomplete: true,
                         },
                         {
+                          id: "bmItem-17",
                           name: "Item 18",
                           offset: 0x3aba,
                           type: "variable",
@@ -2643,6 +2666,7 @@ const template: GameJson = {
                           autocomplete: true,
                         },
                         {
+                          id: "bmItem-18",
                           name: "Item 19",
                           offset: 0x3abc,
                           type: "variable",
@@ -2652,6 +2676,7 @@ const template: GameJson = {
                           autocomplete: true,
                         },
                         {
+                          id: "bmItem-19",
                           name: "Item 20",
                           offset: 0x3abe,
                           type: "variable",
@@ -2661,6 +2686,7 @@ const template: GameJson = {
                           autocomplete: true,
                         },
                         {
+                          id: "bmItem-20",
                           name: "Item 21",
                           offset: 0x3ac0,
                           type: "variable",
@@ -2670,6 +2696,7 @@ const template: GameJson = {
                           autocomplete: true,
                         },
                         {
+                          id: "bmItem-21",
                           name: "Item 22",
                           offset: 0x3ac2,
                           type: "variable",
@@ -2679,6 +2706,7 @@ const template: GameJson = {
                           autocomplete: true,
                         },
                         {
+                          id: "bmItem-22",
                           name: "Item 23",
                           offset: 0x3ac4,
                           type: "variable",
@@ -2688,6 +2716,7 @@ const template: GameJson = {
                           autocomplete: true,
                         },
                         {
+                          id: "bmItem-23",
                           name: "Item 24",
                           offset: 0x3ac6,
                           type: "variable",
@@ -2697,6 +2726,7 @@ const template: GameJson = {
                           autocomplete: true,
                         },
                         {
+                          id: "bmItem-24",
                           name: "Item 25",
                           offset: 0x3ac8,
                           type: "variable",
@@ -2706,6 +2736,7 @@ const template: GameJson = {
                           autocomplete: true,
                         },
                         {
+                          id: "bmItem-25",
                           name: "Item 26",
                           offset: 0x3aca,
                           type: "variable",
@@ -2715,6 +2746,7 @@ const template: GameJson = {
                           autocomplete: true,
                         },
                         {
+                          id: "bmItem-26",
                           name: "Item 27",
                           offset: 0x3acc,
                           type: "variable",
@@ -2724,6 +2756,7 @@ const template: GameJson = {
                           autocomplete: true,
                         },
                         {
+                          id: "bmItem-27",
                           name: "Item 28",
                           offset: 0x3ace,
                           type: "variable",
@@ -2733,6 +2766,7 @@ const template: GameJson = {
                           autocomplete: true,
                         },
                         {
+                          id: "bmItem-28",
                           name: "Item 29",
                           offset: 0x3ad0,
                           type: "variable",
@@ -2742,6 +2776,7 @@ const template: GameJson = {
                           autocomplete: true,
                         },
                         {
+                          id: "bmItem-29",
                           name: "Item 30",
                           offset: 0x3ad2,
                           type: "variable",
@@ -2751,6 +2786,7 @@ const template: GameJson = {
                           autocomplete: true,
                         },
                         {
+                          id: "bmItem-30",
                           name: "Item 31",
                           offset: 0x3ad4,
                           type: "variable",
@@ -2760,6 +2796,7 @@ const template: GameJson = {
                           autocomplete: true,
                         },
                         {
+                          id: "bmItem-31",
                           name: "Item 32",
                           offset: 0x3ad6,
                           type: "variable",

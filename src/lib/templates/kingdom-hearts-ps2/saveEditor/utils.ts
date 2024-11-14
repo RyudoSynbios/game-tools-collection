@@ -76,7 +76,27 @@ export function overrideParseContainerItemsShifts(
   return [false, undefined];
 }
 
-export function overrideGetInt(item: Item): [boolean, string | undefined] {
+export function overrideItem(item: Item): Item {
+  if ("id" in item && item.id?.match(/item-/)) {
+    const itemInt = item as ItemInt;
+
+    const split = item.id.split("-");
+
+    const index = parseInt(split[1]);
+
+    const int = getInt(itemInt.offset - 0x1 - index, "uint8");
+
+    itemInt.disabled = index >= int;
+
+    return itemInt;
+  }
+
+  return item;
+}
+
+export function overrideGetInt(
+  item: Item,
+): [boolean, number | string | undefined] {
   const $gameRegion = get(gameRegion);
 
   if ("id" in item && item.id === "name") {
@@ -132,6 +152,12 @@ export function overrideGetInt(item: Item): [boolean, string | undefined] {
     }
 
     return [true, name];
+  } else if ("id" in item && item.id?.match(/item-/)) {
+    const itemInt = item as ItemInt;
+
+    if (itemInt.disabled) {
+      return [true, 0x0];
+    }
   }
 
   return [false, undefined];

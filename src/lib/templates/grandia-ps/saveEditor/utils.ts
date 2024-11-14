@@ -70,6 +70,24 @@ export function overrideParseContainerItemsShifts(
   return [false, undefined];
 }
 
+export function overrideItem(item: Item): Item {
+  if ("id" in item && item.id === "location") {
+    const itemInt = item as ItemInt;
+
+    let disc = getInt(itemInt.offset + 0x35, "uint8");
+
+    if (disc === 0x82) {
+      disc = 0xc;
+    }
+
+    itemInt.resource = `disc${disc}Locations`;
+
+    return itemInt;
+  }
+
+  return item;
+}
+
 export function overrideGetInt(item: Item): [boolean, boolean | undefined] {
   if ("id" in item && item.id?.match(/skill-/)) {
     const itemInt = item as ItemInt;

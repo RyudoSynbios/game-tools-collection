@@ -550,7 +550,7 @@ const template: GameJson = {
                               flex: true,
                               items: [
                                 {
-                                  id: "targetTestProgression-%index%",
+                                  id: "targetTest-%index%",
                                   name: "Progression",
                                   offset: 0x760,
                                   type: "variable",
@@ -559,7 +559,7 @@ const template: GameJson = {
                                   resource: "progressions",
                                 },
                                 {
-                                  id: "targetTestHighscore-%index%",
+                                  id: "targetTest-count-%index%",
                                   name: "Highscore",
                                   offset: 0x778,
                                   type: "variable",
@@ -568,12 +568,13 @@ const template: GameJson = {
                                   max: 9,
                                 },
                                 {
+                                  id: "targetTest-group-%index%",
                                   name: "Highscore",
                                   type: "group",
                                   mode: "chrono",
                                   items: [
                                     {
-                                      id: "targetTestHighscore-%index%",
+                                      id: "targetTest-time-%index%",
                                       offset: 0x778,
                                       type: "variable",
                                       dataType: "uint32",
@@ -590,7 +591,7 @@ const template: GameJson = {
                                       max: 59,
                                     },
                                     {
-                                      id: "targetTestHighscore-%index%",
+                                      id: "targetTest-time-%index%",
                                       offset: 0x778,
                                       type: "variable",
                                       dataType: "uint32",
@@ -608,7 +609,7 @@ const template: GameJson = {
                                       max: 59,
                                     },
                                     {
-                                      id: "targetTestHighscore-%index%",
+                                      id: "targetTest-time-%index%",
                                       offset: 0x778,
                                       type: "variable",
                                       dataType: "uint32",
@@ -817,7 +818,7 @@ const template: GameJson = {
                                   flex: true,
                                   items: [
                                     {
-                                      id: "10ManMelee",
+                                      id: "10ManMelee-%index%",
                                       name: "Progression",
                                       offset: 0x760,
                                       type: "variable",
@@ -826,6 +827,7 @@ const template: GameJson = {
                                       resource: "progressions",
                                     },
                                     {
+                                      id: "10ManMelee-count-%index%",
                                       name: "Highscore",
                                       offset: 0x77c,
                                       type: "variable",
@@ -834,6 +836,7 @@ const template: GameJson = {
                                       max: 9,
                                     },
                                     {
+                                      id: "10ManMelee-group-%index%",
                                       name: "Highscore",
                                       type: "group",
                                       mode: "chrono",
@@ -900,7 +903,7 @@ const template: GameJson = {
                                   flex: true,
                                   items: [
                                     {
-                                      id: "100ManMelee",
+                                      id: "100ManMelee-%index%",
                                       name: "Progression",
                                       offset: 0x760,
                                       type: "variable",
@@ -909,6 +912,7 @@ const template: GameJson = {
                                       resource: "progressions",
                                     },
                                     {
+                                      id: "100ManMelee-count-%index%",
                                       name: "Highscore",
                                       offset: 0x780,
                                       type: "variable",
@@ -917,6 +921,7 @@ const template: GameJson = {
                                       max: 99,
                                     },
                                     {
+                                      id: "100ManMelee-group-%index%",
                                       name: "Highscore",
                                       type: "group",
                                       mode: "chrono",

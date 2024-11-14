@@ -178,6 +178,31 @@ let cache: {
   texts: [],
 };
 
+export function overrideItem(item: Item): Item {
+  const $dataViewAlt = get(dataViewAlt);
+
+  if ("id" in item && item.id === "iEffectValue") {
+    const itemInt = item as ItemInt;
+
+    const int = getInt(itemInt.offset - 0x1, "uint8", {}, $dataViewAlt.x002);
+
+    if (int === 0x11) {
+      itemInt.name = "Spell";
+      itemInt.resource = "itemEffectSpells";
+    } else if (int === 0x12) {
+      itemInt.name = "Special";
+      itemInt.resource = "specialAttackNames";
+    } else {
+      itemInt.name = "Value";
+      itemInt.resource = undefined;
+    }
+
+    return itemInt;
+  }
+
+  return item;
+}
+
 export function overrideGetInt(
   item: Item,
 ): [boolean, number | string | undefined] {

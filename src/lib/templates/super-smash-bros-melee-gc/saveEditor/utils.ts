@@ -10,6 +10,7 @@ import {
   setInt,
 } from "$lib/utils/bytes";
 import { round } from "$lib/utils/format";
+import { getItem } from "$lib/utils/parser";
 
 import { Item, ItemBitflags, ItemChecksum, ItemInt } from "$lib/types";
 
@@ -51,6 +52,30 @@ export function overrideParseItem(item: Item): Item {
     if ($gameRegion === 0 && index === 0x124) {
       itemInt.hidden = true;
     }
+  }
+
+  return item;
+}
+
+export function overrideItem(item: Item): Item {
+  if ("id" in item && item.id?.match(/-(count|group)-/)) {
+    const itemInt = item as ItemInt;
+
+    const [, type] = item.id.split("-");
+
+    const progression = getItem(item.id.replace(`-${type}`, "")) as ItemInt;
+
+    const int = getInt(progression.offset, "bit", { bit: progression.bit });
+
+    if (type === "count" && int === 0x1) {
+      itemInt.hidden = true;
+    } else if (type === "group" && int === 0x0) {
+      itemInt.hidden = true;
+    } else {
+      itemInt.hidden = false;
+    }
+
+    return itemInt;
   }
 
   return item;
@@ -195,7 +220,7 @@ export function afterSetInt(item: Item): void {
 
     setBoolean(offset + 0x1aa, standardsChecked);
     setBoolean(offset + 0x1ab, allChecked);
-  } else if ("id" in item && item.id?.match(/targetTestProgression-/)) {
+  } else if ("id" in item && item.id?.match(/targetTest-[0-9]/)) {
     const itemInt = item as ItemInt;
 
     const split = item.id.split("-");
@@ -211,12 +236,12 @@ export function afterSetInt(item: Item): void {
     setBitflag(offset + 0x8, index % 8, isCleared);
     setBitflag(offset + 0x14, index % 8, isCleared);
     setInt(itemInt.offset + 0x18, "uint32", 0x0, { bigEndian: true });
-  } else if ("id" in item && item.id?.match(/targetTestHighscore-/)) {
+  } else if ("id" in item && item.id?.match(/targetTest-/)) {
     const itemInt = item as ItemInt;
 
     const split = item.id.split("-");
 
-    const index = parseInt(split[1]);
+    const index = parseInt(split[2]);
 
     const offset = itemInt.offset - index * 0xac;
 
@@ -237,15 +262,15 @@ export function afterSetInt(item: Item): void {
     setInt(offset - 0x668 + index * 0x4, "uint32", int, { bigEndian: true });
   } else if (
     "id" in item &&
-    (item.id === "10ManMelee" || item.id === "100ManMelee")
+    (item.id?.match(/10ManMelee-[0-9]/) || item.id?.match(/100ManMelee-[0-9]/))
   ) {
     const itemInt = item as ItemInt;
 
     let shift = 0x0;
 
-    if (item.id === "10ManMelee") {
+    if (item.id.match(/10ManMelee-/)) {
       shift = 0x1c;
-    } else if (item.id === "100ManMelee") {
+    } else if (item.id.match(/100ManMelee-/)) {
       shift = 0x20;
     }
 

@@ -2008,6 +2008,7 @@ const template: GameJson = {
                                   autocomplete: true,
                                 },
                                 {
+                                  id: "iEffectValue",
                                   name: "Value",
                                   dataViewAltKey: "x002",
                                   offset: 0xf,

@@ -42,6 +42,52 @@ export function overrideParseItem(item: Item): Item | ItemChecksum | ItemTab {
   return item;
 }
 
+export function overrideItem(item: Item): Item {
+  if (
+    "id" in item &&
+    (item.id?.match(/heldItem-/) || item.id?.match(/bmItem-/))
+  ) {
+    const itemInt = item as ItemInt;
+
+    const split = item.id.split("-");
+
+    const index = parseInt(split[1]);
+
+    let shift = 0x0;
+
+    if (item.id.match(/heldItem-/)) {
+      shift = 0x44;
+    } else if (item.id.match(/bmItem-/)) {
+      shift = 0x8;
+    }
+
+    const int = getInt(itemInt.offset - shift - index * 0x2, "uint32", {
+      bigEndian: true,
+    });
+
+    itemInt.disabled = index >= int;
+
+    return itemInt;
+  }
+
+  return item;
+}
+
+export function overrideGetInt(item: Item): [boolean, number | undefined] {
+  if (
+    "id" in item &&
+    (item.id?.match(/heldItem-/) || item.id?.match(/bmItem-/))
+  ) {
+    const itemInt = item as ItemInt;
+
+    if (itemInt.disabled) {
+      return [true, 0x0];
+    }
+  }
+
+  return [false, undefined];
+}
+
 export function afterSetInt(item: Item): void {
   if ("id" in item && item.id?.match(/storyProgression-/)) {
     const itemInt = item as ItemInt;
