@@ -226,6 +226,7 @@ export interface ItemContent {
 }
 
 export interface ItemGroup {
+  id?: string;
   name?: string;
   type: "group";
   mode?: "chrono" | "date" | "fraction" | "time";

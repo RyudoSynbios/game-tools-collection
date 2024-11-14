@@ -60,11 +60,8 @@ const template: GameJson = {
                       name: "Character",
                       offset: 0x22b,
                       type: "variable",
-                      dataType: "uint8",
-                      binary: {
-                        bitStart: 0,
-                        bitLength: 1,
-                      },
+                      dataType: "bit",
+                      bit: 0,
                       resource: "characters",
                       disabled: true,
                     },
