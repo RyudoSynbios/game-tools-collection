@@ -14,6 +14,7 @@
   export let leadingZeros = 0;
   export let value: bigint | number | string;
   export let size: "md" | "lg" = "md";
+  export let hint = "";
   export let suffix = "";
   export let debug = false;
   export let disabled = false;
@@ -89,9 +90,14 @@
   class:gtc-input-suffix={suffix}
 >
   {#if label}
-    <p>{label}</p>
+    <div class="gtc-input-label">
+      <p>{label}</p>
+      {#if hint}
+        <span data-title={hint}>?</span>
+      {/if}
+    </div>
   {/if}
-  <div>
+  <div class="gtc-input-content">
     <input
       {type}
       {placeholder}
@@ -122,13 +128,15 @@
     }
 
     &.gtc-input-disabled {
-      & input,
-      & span {
-        @apply bg-gray-100 bg-opacity-30;
-      }
+      & .gtc-input-content {
+        & input,
+        & span {
+          @apply bg-gray-100 bg-opacity-30;
+        }
 
-      span {
-        @apply text-primary-500;
+        span {
+          @apply text-primary-500;
+        }
       }
     }
 
@@ -140,11 +148,19 @@
       width: 160px;
     }
 
-    & p {
-      @apply mb-2 text-sm font-bold;
+    & .gtc-input-label {
+      @apply flex items-center justify-between mb-2;
+
+      & p {
+        @apply text-sm font-bold;
+      }
+
+      & span {
+        @apply w-5 text-sm text-center font-bold bg-primary-400 rounded cursor-pointer;
+      }
     }
 
-    & div {
+    & .gtc-input-content {
       @apply flex;
 
       & span {

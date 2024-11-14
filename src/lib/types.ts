@@ -142,6 +142,7 @@ export interface ItemBitflags {
   dataViewAltKey?: string;
   type: "bitflags";
   flags: ItemBitflag[];
+  hint?: string;
   noMargin?: boolean;
   reversed?: boolean;
   disabled?: boolean;
@@ -229,6 +230,7 @@ export interface ItemGroup {
   type: "group";
   mode?: "chrono" | "date" | "fraction" | "time";
   items: ItemInt[];
+  hint?: string;
   hidden?: boolean | boolean[];
   hiddenConditions?:
     | ItemIntCondition
@@ -259,6 +261,7 @@ export interface ItemInt {
   };
   size?: "md" | "lg";
   autocomplete?: boolean;
+  hint?: string;
   suffix?: string;
   disableIfNegative?: boolean;
   disabled?: boolean;

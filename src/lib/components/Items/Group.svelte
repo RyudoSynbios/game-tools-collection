@@ -24,7 +24,12 @@
 {#if !item.hidden || $isDebug}
   <div class="gtc-group" class:gtc-group-debug={item.hidden}>
     {#if item.name}
-      <p>{@html item.name}</p>
+      <div class="gtc-group-label">
+        <p>{@html item.name}</p>
+        {#if item.hint}
+          <span data-title={item.hint}>?</span>
+        {/if}
+      </div>
     {/if}
     <div
       class="gtc-group-content"
@@ -64,8 +69,16 @@
       @apply text-orange-800 bg-orange-950;
     }
 
-    & p {
-      @apply px-2 pt-2 text-sm font-bold;
+    & .gtc-group-label {
+      @apply flex items-center justify-between px-2;
+
+      & p {
+        @apply mt-2 text-sm font-bold;
+      }
+
+      & span {
+        @apply mt-2 w-5 text-sm text-center font-bold bg-primary-400 rounded cursor-pointer;
+      }
     }
 
     & .gtc-group-content {

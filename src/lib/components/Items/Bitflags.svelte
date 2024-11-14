@@ -81,7 +81,12 @@
     class:gtc-bitflags-nomargin={item.noMargin}
   >
     {#if item.name}
-      <p>{@html item.name}</p>
+      <div class="gtc-bitflags-label">
+        <p>{@html item.name}</p>
+        {#if item.hint}
+          <span data-title={item.hint}>?</span>
+        {/if}
+      </div>
     {/if}
     {#each flags as flag}
       {#if !flag.hidden || $isDebug}
@@ -123,8 +128,20 @@
       }
     }
 
-    & p {
-      @apply mb-2 text-sm font-bold;
+    & .gtc-bitflags-label {
+      @apply flex items-center justify-between mb-2;
+
+      & p {
+        @apply text-sm font-bold;
+      }
+
+      & span {
+        @apply w-5 text-sm text-center font-bold bg-primary-400 rounded cursor-pointer;
+      }
+    }
+
+    .gtc-bitflag p {
+      @apply mb-2;
     }
   }
 </style>

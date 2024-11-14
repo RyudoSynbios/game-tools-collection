@@ -80,6 +80,22 @@ select {
   @apply p-1 text-sm;
 }
 
+[data-title] {
+  @apply relative;
+}
+
+[data-title]:hover:after {
+  @apply opacity-100 visible;
+
+  transition: all 0.1s ease 0.5s;
+}
+
+[data-title]:after {
+  @apply absolute top-8 p-1 w-64 text-xs bg-primary-500 rounded shadow-md -translate-x-1/2 opacity-0 invisible z-50;
+
+  content: attr(data-title);
+}
+
 ::-webkit-scrollbar {
   @apply w-2 h-2 bg-primary-800 rounded;
 }

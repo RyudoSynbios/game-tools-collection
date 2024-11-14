@@ -7,6 +7,7 @@
   export let value: bigint | number | string;
   export let options: { key: string; value: string }[];
   export let size: "md" | "lg" = "md";
+  export let hint = "";
   export let debug = false;
   export let disabled = false;
   export let test = false;
@@ -219,7 +220,12 @@
   bind:this={rootEl}
 >
   {#if label}
-    <p>{label}</p>
+    <div class="gtc-autocomplete-label">
+      <p>{label}</p>
+      {#if hint}
+        <span data-title={hint}>?</span>
+      {/if}
+    </div>
   {/if}
   <div
     class="gtc-autocomplete-input"
@@ -271,8 +277,16 @@
       @apply text-orange-800 bg-orange-950;
     }
 
-    & p {
-      @apply mb-2 text-sm font-bold;
+    & .gtc-autocomplete-label {
+      @apply flex items-center justify-between mb-2;
+
+      & p {
+        @apply text-sm font-bold;
+      }
+
+      & span {
+        @apply w-5 text-sm text-center font-bold bg-primary-400 rounded cursor-pointer;
+      }
     }
 
     &.gtc-autocomplete-disabled .gtc-autocomplete-input {

@@ -157,6 +157,7 @@
         leadingZeros={item.leadingZeros}
         {value}
         size={item.size}
+        hint={item.hint}
         suffix={item.suffix}
         debug={item.hidden}
         disabled={item.disabled}
@@ -169,6 +170,7 @@
         {value}
         {options}
         size={item.size}
+        hint={item.hint}
         debug={item.hidden}
         disabled={item.disabled}
         test={item.test}
@@ -181,6 +183,7 @@
         {value}
         {options}
         size={item.size}
+        hint={item.hint}
         debug={item.hidden}
         disabled={item.disabled}
         test={item.test}
