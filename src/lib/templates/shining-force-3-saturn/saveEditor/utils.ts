@@ -25,7 +25,7 @@ export function beforeInitDataView(dataView: DataView): DataView {
   return new DataView(uint8Array.buffer);
 }
 
-export function overrideItem(
+export function overrideParseItem(
   item: Item & ItemTab,
   instanceIndex: number,
 ): Item | ItemTab {

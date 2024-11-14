@@ -8,7 +8,7 @@ import { Item, ItemInt, ItemString } from "$lib/types";
 
 import { authorizedEquipment, questPaths } from "./utils/resource";
 
-export function overrideItem(item: Item): Item {
+export function overrideParseItem(item: Item): Item {
   const $gameRegion = get(gameRegion);
 
   if ("id" in item && item.id === "name" && $gameRegion === 1) {

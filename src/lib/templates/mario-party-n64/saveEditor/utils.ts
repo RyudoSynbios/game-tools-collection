@@ -15,7 +15,7 @@ export function beforeInitDataView(dataView: DataView): DataView {
   return byteswapDataView("eep", dataView);
 }
 
-export function overrideItem(item: Item): Item {
+export function overrideParseItem(item: Item): Item {
   const $gameRegion = get(gameRegion);
 
   if (

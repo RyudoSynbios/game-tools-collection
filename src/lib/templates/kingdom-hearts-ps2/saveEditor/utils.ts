@@ -34,7 +34,7 @@ export function onInitFailed(): void {
   resetMemoryCard();
 }
 
-export function overrideItem(item: Item): Item {
+export function overrideParseItem(item: Item): Item {
   const $gameRegion = get(gameRegion);
 
   if ("id" in item && item.id === "slots") {

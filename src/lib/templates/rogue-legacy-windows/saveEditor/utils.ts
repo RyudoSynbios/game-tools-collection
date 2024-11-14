@@ -50,7 +50,7 @@ export function onReady(): void {
   }
 }
 
-export function overrideItem(item: Item): Item | ItemTab {
+export function overrideParseItem(item: Item): Item | ItemTab {
   const $fileName = get(fileName);
 
   if ("id" in item && item.id === "main") {

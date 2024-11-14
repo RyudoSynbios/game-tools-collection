@@ -30,7 +30,7 @@ export function beforeInitDataView(dataView: DataView): DataView {
   return byteswapDataView("fla", dataView);
 }
 
-export function overrideItem(item: Item): Item | ItemTab {
+export function overrideParseItem(item: Item): Item | ItemTab {
   const $gameRegion = get(gameRegion);
 
   if ("id" in item && item.id === "checksum" && $gameRegion === 2) {

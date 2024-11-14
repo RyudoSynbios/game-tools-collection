@@ -132,8 +132,8 @@ export function parseItem(
     instanceIndex = parents[parents.length - 1].index;
   }
 
-  if (utilsExists("overrideItem")) {
-    newItem = $gameUtils.overrideItem(newItem, instanceIndex);
+  if (utilsExists("overrideParseItem")) {
+    newItem = $gameUtils.overrideParseItem(newItem, instanceIndex);
   }
 
   if (newItem.id !== undefined) {

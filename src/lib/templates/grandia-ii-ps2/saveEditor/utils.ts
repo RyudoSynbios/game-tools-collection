@@ -22,7 +22,7 @@ export function onInitFailed(): void {
   resetMemoryCard();
 }
 
-export function overrideItem(item: Item): Item {
+export function overrideParseItem(item: Item): Item {
   if ("id" in item && item.id === "slots") {
     const itemContainer = item as ItemContainer;
 

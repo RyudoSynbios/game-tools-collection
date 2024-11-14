@@ -34,7 +34,7 @@ export function beforeItemsParsing(): void {
   loadInventory(offset);
 }
 
-export function overrideItem(item: Item): Item | ItemTab {
+export function overrideParseItem(item: Item): Item | ItemTab {
   if ("id" in item && item.id?.match(/skill-/)) {
     const itemTab = item as ItemTab;
 

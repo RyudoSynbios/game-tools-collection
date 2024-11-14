@@ -9,7 +9,7 @@ import { Item, ItemChecksum, ItemInt, ItemString, ItemTab } from "$lib/types";
 
 import { stories } from "./utils/resource";
 
-export function overrideItem(item: Item): Item | ItemChecksum | ItemTab {
+export function overrideParseItem(item: Item): Item | ItemChecksum | ItemTab {
   if ("id" in item && item.id === "checksum") {
     const itemChecksum = item as ItemChecksum;
 

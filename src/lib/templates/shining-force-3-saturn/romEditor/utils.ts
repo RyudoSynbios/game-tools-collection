@@ -72,7 +72,7 @@ export function beforeItemsParsing(): void {
   });
 }
 
-export function overrideItem(item: Item): Item {
+export function overrideParseItem(item: Item): Item {
   const $dataViewAlt = get(dataViewAlt);
 
   if ("id" in item && item.id === "party") {

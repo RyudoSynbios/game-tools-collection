@@ -34,7 +34,7 @@ export function onInitFailed(): void {
   resetMemoryCard();
 }
 
-export function overrideItem(item: Item & ItemSection): Item | ItemTab {
+export function overrideParseItem(item: Item & ItemSection): Item | ItemTab {
   const $gameTemplate = get(gameTemplate);
 
   if ("id" in item && item.id === "characterPercentageTag") {

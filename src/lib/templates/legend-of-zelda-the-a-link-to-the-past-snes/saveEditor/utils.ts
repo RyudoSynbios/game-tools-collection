@@ -37,7 +37,7 @@ export function overrideGetRegions(dataView: DataView): string[] {
   return [];
 }
 
-export function overrideItem(item: Item): Item {
+export function overrideParseItem(item: Item): Item {
   const $gameRegion = get(gameRegion);
 
   if ("id" in item && item.id === "name" && $gameRegion === 1) {

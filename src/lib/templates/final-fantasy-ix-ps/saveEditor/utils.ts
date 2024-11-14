@@ -50,7 +50,7 @@ export function getComponent(component: string): typeof Abilities | undefined {
   }
 }
 
-export function overrideItem(item: Item): Item {
+export function overrideParseItem(item: Item): Item {
   const $gameRegion = get(gameRegion);
 
   if (
