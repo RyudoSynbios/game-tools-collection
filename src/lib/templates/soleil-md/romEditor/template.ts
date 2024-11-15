@@ -88,7 +88,6 @@ const template: GameJson = {
       ],
     },
   ],
-  resources: {},
 };
 
 export default template;

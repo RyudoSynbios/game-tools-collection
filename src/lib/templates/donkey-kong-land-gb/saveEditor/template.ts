@@ -345,6 +345,14 @@ const template: GameJson = {
       0x307: "Level 4-8",
     },
   },
+  resourcesLabels: {
+    levels: {
+      0x0: "Level 1",
+      0x100: "Level 2",
+      0x200: "Level 3",
+      0x300: "Level 4",
+    },
+  },
 };
 
 export default template;

@@ -3637,6 +3637,28 @@ const template: GameJson = {
       0x6: "1",
     },
   },
+  resourcesLabels: {
+    cards: {
+      0x1: "Energy Cards",
+      0x8: "Pokémon Cards",
+      0xc3: "Trainer Cards",
+    },
+    locations: {
+      0x0: "World Map",
+      0x1: "Mason Laboratory",
+      0x3: "Ishinara's House",
+      0x4: "Fighting Club",
+      0x7: "Rock Club",
+      0xa: "Water Club",
+      0xd: "Lightning Club",
+      0x10: "Grass Club",
+      0x13: "Psychic Club",
+      0x16: "Science Club",
+      0x19: "Fire Club",
+      0x1c: "Challenge Hall",
+      0x1f: "Pokémon Dome",
+    },
+  },
   resourcesOrder: {
     messageSpeeds: [0x6, 0x4, 0x2, 0x1, 0x0],
   },

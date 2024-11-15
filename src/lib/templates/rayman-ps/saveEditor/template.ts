@@ -128,6 +128,7 @@ const template: GameJson = {
                       type: "variable",
                       dataType: "uint8",
                       resource: "levels",
+                      size: "lg",
                       autocomplete: true,
                     },
                     {
@@ -758,6 +759,12 @@ const template: GameJson = {
       0x17: "Candy Chateau (Save)",
     },
   },
+  resourcesLabels: {
+    levels: {
+      0x0: "Levels",
+      0x12: "Save Points",
+    },
+  }
 };
 
 export default template;

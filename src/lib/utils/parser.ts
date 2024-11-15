@@ -68,6 +68,8 @@ export function enrichGameJson(): void {
     items,
     checksums,
     resources: $gameTemplate.resources,
+    resourcesGroups: $gameTemplate.resourcesGroups,
+    resourcesLabels: $gameTemplate.resourcesLabels,
     resourcesOrder: $gameTemplate.resourcesOrder,
   };
 

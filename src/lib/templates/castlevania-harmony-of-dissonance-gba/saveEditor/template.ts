@@ -3319,6 +3319,24 @@ const template: GameJson = {
       0xff: "-",
     },
   },
+  resourcesGroups: {
+    locations: [
+      {
+        name: "Castle A",
+        options: [
+          0x0838, 0x0e3e, 0x0f6e, 0x1022, 0x110c, 0x115a, 0x153c, 0x1656,
+          0x1728, 0x1872, 0x1c16, 0x1c22, 0x1d58, 0x2120,
+        ],
+      },
+      {
+        name: "Castle B",
+        options: [
+          0x0839, 0x0e3f, 0x0f6f, 0x1023, 0x110d, 0x115b, 0x153d, 0x1657,
+          0x1729, 0x1873, 0x1c17, 0x1c23, 0x1d59, 0x2121,
+        ],
+      },
+    ],
+  },
   resourcesOrder: {
     accessories: [0xff],
     armors: [0xff],

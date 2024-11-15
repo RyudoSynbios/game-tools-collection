@@ -3004,6 +3004,21 @@ const template: GameJson = {
       0x1: "Game Complete",
     },
   },
+  resourcesLabels: {
+    locations: {
+      0xe: "Castle Corridor",
+      0x10e: "Chapel",
+      0x20c: "Study",
+      0x315: "Dance Hall",
+      0x414: "Inner Quarters",
+      0x50b: "Floating Garden",
+      0x60f: "Clock Tower",
+      0x727: "Undergrounds",
+      0x815: "The Arena",
+      0x916: "Top Floor",
+      0xb01: "Chaotic Realm",
+    },
+  },
   resourcesOrder: {
     accessories: [0xff],
     body: [0xff],

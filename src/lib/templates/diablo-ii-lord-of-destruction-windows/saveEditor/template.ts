@@ -70,6 +70,7 @@ const template: GameJson = {
               dataType: "uint8",
               resource: "progressions",
               size: "lg",
+              autocomplete: true,
             },
             {
               id: "gold",
@@ -3970,6 +3971,13 @@ const template: GameJson = {
       0xd: "Hell: Act 3 Completed",
       0xe: "Hell: Act 4 Completed",
       0xf: "Hell: Act 5 Completed",
+    },
+  },
+  resourcesLabels: {
+    progressions: {
+      0x1: "Normal",
+      0x6: "Nightmare",
+      0xb: "Hell",
     },
   },
 };

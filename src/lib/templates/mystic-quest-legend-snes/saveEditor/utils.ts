@@ -4,6 +4,30 @@ import { getItem, updateResources } from "$lib/utils/parser";
 
 import type { Item, ItemChecksum, ItemInt, ItemString } from "$lib/types";
 
+export function overrideItem(item: Item): Item {
+  if ("id" in item && item.id?.match(/character-/)) {
+    const itemInt = item as ItemInt;
+
+    const split = item.id.split("-");
+
+    const index = parseInt(split[1]);
+
+    itemInt.disabled = index === 0;
+
+    return itemInt;
+  } else if ("id" in item && item.id === "characterLevel") {
+    const itemInt = item as ItemInt;
+
+    const int = getInt(itemInt.offset, "uint8");
+
+    itemInt.disabled = int === 0xff;
+
+    return itemInt;
+  }
+
+  return item;
+}
+
 export function overrideGetInt(item: Item): [boolean, number | undefined] {
   if ("id" in item && item.id?.match(/wc-/)) {
     const itemInt = item as ItemInt;
@@ -64,6 +88,20 @@ export function afterSetInt(item: Item): void {
     const slotIndex = parseInt(split[1]);
 
     updateCharacterNames(slotIndex);
+  } else if ("id" in item && item.id?.match(/character-/)) {
+    const itemInt = item as ItemInt;
+
+    const character = getInt(itemInt.offset, "uint8", {
+      binary: itemInt.binary,
+    });
+
+    let level = 0x1;
+
+    if (character === 0xf) {
+      level = 0xff;
+    }
+
+    setInt(itemInt.offset - 0x10, "uint8", level);
   } else if ("id" in item && item.id === "pStats") {
     const itemInt = item as ItemInt;
 

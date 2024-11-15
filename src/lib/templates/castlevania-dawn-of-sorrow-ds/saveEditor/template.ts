@@ -3844,6 +3844,22 @@ const template: GameJson = {
       0x1: "Clear",
     },
   },
+  resourcesLabels: {
+    locations: {
+      0x17: "The Lost Village",
+      0x13c: "Demon Guest House",
+      0x222: "Wizardry Lab",
+      0x321: "Garden of Madness",
+      0x416: "The Dark Chapel",
+      0x51c: "Condemned Tower",
+      0x60d: "Mine of Judgment",
+      0x71e: "Subterranean Hell",
+      0x80f: "Silenced Ruins",
+      0x907: "Cursed Clock Tower",
+      0xa1d: "The Pinnacle",
+      0xb20: "The Abyss",
+    },
+  },
   resourcesOrder: {
     accessories: [0xffff],
     body: [0xffff],

@@ -13118,6 +13118,14 @@ const template: GameJson = {
       0x10: "End of the world",
     },
   },
+  resourcesLabels: {
+    weapons: {
+      0x51: "Keyblades",
+      0x67: "Staffs",
+      0x77: "Shields",
+      0x87: "Miscellaneous",
+    },
+  },
   resourcesOrder: {
     characters: [0xff],
     magics: [0xff],

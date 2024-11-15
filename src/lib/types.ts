@@ -62,6 +62,10 @@ export type Resource = {
     | string;
 };
 
+export type ResourceGroups = { name: string; options: number[] }[];
+
+export type ResourceLabels = { [key: number]: string };
+
 export type TimeUnit =
   | "milliseconds"
   | "seconds"
@@ -121,6 +125,12 @@ export interface GameJson {
   checksums?: ItemChecksum[];
   items: Item[];
   resources?: Resource;
+  resourcesGroups?: {
+    [key: string]: ResourceGroups;
+  };
+  resourcesLabels?: {
+    [key: string]: ResourceLabels;
+  };
   resourcesOrder?: {
     [key: string]: number[];
   };

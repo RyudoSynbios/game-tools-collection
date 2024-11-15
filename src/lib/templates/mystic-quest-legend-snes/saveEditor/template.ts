@@ -129,6 +129,7 @@ const template: GameJson = {
                       type: "variable",
                       dataType: "uint8",
                       resource: "locations",
+                      size: "lg",
                       autocomplete: true,
                     },
                     {
@@ -189,14 +190,20 @@ const template: GameJson = {
                           test: true,
                         },
                         {
+                          id: "character-%index%",
                           name: "Character",
                           offset: 0x26,
                           type: "variable",
                           dataType: "uint8",
+                          binary: {
+                            bitStart: 0,
+                            bitLength: 7,
+                          },
                           resource: "characters",
                           autocomplete: true,
                         },
                         {
+                          id: "characterLevel",
                           name: "Level",
                           offset: 0x16,
                           type: "variable",
@@ -688,6 +695,14 @@ const template: GameJson = {
                           resource: "lifeIndicate",
                         },
                         {
+                          name: "Control",
+                          offset: 0x76,
+                          type: "variable",
+                          dataType: "bit",
+                          bit: 7,
+                          resource: "controls",
+                        },
+                        {
                           name: "Message Speed",
                           offset: 0xbd,
                           type: "variable",
@@ -762,25 +777,21 @@ const template: GameJson = {
   resources: {
     characters: {
       0x0: "Benjamin",
-      0x1: "Kaeli 1 (manual)",
-      0x2: "Tristam 1 (manual)",
-      0x3: "Phoebe 1 (manual)",
-      0x4: "Reuben 1 (manual)",
-      0x5: "Kaeli 2 (manual)",
-      0x6: "Tristam 2 (manual)",
-      0x7: "Phoebe 2 (manual)",
-      0x8: "Reuben 2 (manual)",
-      0x81: "Kaeli 1 (auto)",
-      0x82: "Tristam 1 (auto)",
-      0x83: "Phoebe 1 (auto)",
-      0x84: "Reuben 1 (auto)",
-      0x85: "Kaeli 2 (auto)",
-      0x86: "Tristam 2 (auto)",
-      0x87: "Phoebe 2 (auto)",
-      0x88: "Reuben 2 (auto)",
-      0x8f: "-",
+      0x1: "Kaeli (1st Encounter)",
+      0x2: "Tristam (1st Encounter)",
+      0x3: "Phoebe (1st Encounter)",
+      0x4: "Reuben (1st Encounter)",
+      0x5: "Kaeli (2nd Encounter)",
+      0x6: "Tristam (2nd Encounter)",
+      0x7: "Phoebe (2nd Encounter)",
+      0x8: "Reuben (2nd Encounter)",
+      0xf: "-",
     },
     characterNames: "getCharacterNames()",
+    controls: {
+      0x0: "Manual",
+      0x1: "Auto",
+    },
     items: {
       0x10: "Cure",
       0x11: "Heal",
@@ -1300,7 +1311,7 @@ const template: GameJson = {
       0x13: "Bone Dungeon 1F",
       0x14: "Bone Dungeon B1",
       0x15: "Bone Dungeon B2",
-      0x16: "Bone Dungeon B2",
+      0x16: "Bone Dungeon B2 (Boss)",
       0x17: "Libra Temple",
       0x18: "Aquaria (Frozen)",
       0x19: "Aquaria (Unfrozen)",
@@ -1309,7 +1320,7 @@ const template: GameJson = {
       0x1c: "Wintry Cave 1F",
       0x1d: "Wintry Cave 2F",
       0x1e: "Wintry Cave 3F",
-      0x1f: "Wintry Cave 3F",
+      0x1f: "Wintry Cave 3F (Boss)",
       0x20: "Life Temple",
       0x21: "Falls Basin",
       0x22: "Ice Pyramid B1",
@@ -1320,7 +1331,7 @@ const template: GameJson = {
       0x27: "Ice Pyramid 5F",
       0x28: "Ice Pyramid",
       0x29: "Ice Pyramid",
-      0x2a: "Ice Pyramid",
+      0x2a: "Ice Pyramid (Boss)",
       0x2b: "Spencer's Place (Blocked)",
       0x2c: "Spencer's Place",
       0x2d: "Spencer's Place",
@@ -1368,11 +1379,11 @@ const template: GameJson = {
       0x57: "Pazuzu's Tower 5F",
       0x58: "Pazuzu's Tower 6F",
       0x59: "Pazuzu's Tower 7F",
-      0x5a: "Pazuzu's Tower",
-      0x5b: "Pazuzu's Tower",
-      0x5c: "Pazuzu's Tower",
-      0x5d: "Pazuzu's Tower",
-      0x5e: "Pazuzu's Tower",
+      0x5a: "Pazuzu's Tower (Stairs)",
+      0x5b: "Pazuzu's Tower (Stairs)",
+      0x5c: "Pazuzu's Tower (Stairs)",
+      0x5d: "Pazuzu's Tower (Stairs)",
+      0x5e: "Pazuzu's Tower (Stairs)",
       0x5f: "Light Temple",
       0x60: "Ship Dock",
       0x61: "Deck",
@@ -1412,12 +1423,138 @@ const template: GameJson = {
       0xff: "-",
     },
   },
-  resourcesOrder: {
+  resourcesGroups: {
     characters: [
-      0x8f, 0x0, 0x1, 0x81, 0x2, 0x82, 0x3, 0x83, 0x4, 0x84, 0x5, 0x85, 0x6,
-      0x86, 0x7, 0x87, 0x8, 0x88,
+      { name: "Benjamin", options: [0x0] },
+      { name: "Kaeli", options: [0x1, 0x5] },
+      { name: "Tristam", options: [0x2, 0x6] },
+      { name: "Phoebe", options: [0x3, 0x7] },
+      { name: "Reuben", options: [0x4, 0x8] },
     ],
+    locations: [
+      {
+        name: "World Map",
+        options: [0x0],
+      },
+      {
+        name: "Hill of Destiny",
+        options: [0xc],
+      },
+      {
+        name: "Level Forest",
+        options: [0xd, 0xe],
+      },
+      {
+        name: "Foresta",
+        options: [0xf, 0x10, 0x11],
+      },
+      {
+        name: "Bone Dungeon",
+        options: [0x13, 0x14, 0x15, 0x16],
+      },
+      {
+        name: "Focus Tower",
+        options: [0x8, 0x9, 0xa, 0xb],
+      },
+      {
+        name: "Aquaria",
+        options: [0x18, 0x19, 0x1a, 0x1b],
+      },
+      {
+        name: "Wintry Cave",
+        options: [0x1c, 0x1d, 0x1e, 0x1f],
+      },
+      {
+        name: "Falls Basin",
+        options: [0x21],
+      },
+      {
+        name: "Ice Pyramid",
+        options: [0x22, 0x23, 0x24, 0x25, 0x26, 0x27, 0x28, 0x29, 0x2a],
+      },
+      {
+        name: "Spencer's Place",
+        options: [0x2b, 0x2c, 0x2d],
+      },
+      {
+        name: "Fireburg",
+        options: [0x2f, 0x30, 0x31],
+      },
+      {
+        name: "Mine",
+        options: [0x32, 0x33, 0x34],
+      },
+      {
+        name: "Volcano",
+        options: [0x36, 0x37, 0x38],
+      },
+      {
+        name: "Lava Dome",
+        options: [0x39, 0x3a, 0x3b, 0x3c, 0x3d, 0x3e, 0x3f, 0x40, 0x41],
+      },
+      {
+        name: "Rope Bridge",
+        options: [0x42],
+      },
+      {
+        name: "Alive Forest",
+        options: [0x43],
+      },
+      {
+        name: "Giant Tree",
+        options: [0x44, 0x45, 0x46, 0x47, 0x48, 0x49, 0x4a, 0x4b, 0x4c],
+      },
+      {
+        name: "Windia",
+        options: [0x50, 0x51, 0x52],
+      },
+      {
+        name: "Mount Gale",
+        options: [0x4f],
+      },
+      {
+        name: "Pazuzu's Tower",
+        options: [
+          0x53, 0x54, 0x55, 0x56, 0x57, 0x58, 0x59, 0x5a, 0x5b, 0x5c, 0x5d,
+          0x5e,
+        ],
+      },
+      {
+        name: "Ship Dock",
+        options: [0x6, 0x60],
+      },
+      {
+        name: "Mac's Ship",
+        options: [0x61, 0x62, 0x63, 0x64],
+      },
+      {
+        name: "Doom Castle",
+        options: [0x7, 0x65, 0x66, 0x67, 0x68, 0x69, 0x6a, 0x6b],
+      },
+      {
+        name: "Temples",
+        options: [0x12, 0x17, 0x20, 0x2e, 0x35, 0x4d, 0x4e, 0x5f],
+      },
+      {
+        name: "Debug",
+        options: [0x1, 0x6c, 0xaa, 0xab, 0xb2, 0xb3, 0xba],
+      },
+    ],
+  },
+  resourcesOrder: {
+    characters: [0xf],
     items: [0xff],
+    locations: [
+      0x0, 0xc, 0xd, 0xe, 0xf, 0x10, 0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x8,
+      0x9, 0xa, 0xb, 0x17, 0x18, 0x19, 0x1a, 0x1b, 0x1c, 0x1d, 0x1e, 0x1f, 0x20,
+      0x21, 0x23, 0x24, 0x25, 0x26, 0x27, 0x22, 0x28, 0x29, 0x2a, 0x2b, 0x2c,
+      0x2d, 0x2f, 0x30, 0x31, 0x32, 0x33, 0x34, 0x35, 0x2e, 0x36, 0x37, 0x38,
+      0x39, 0x3a, 0x3b, 0x3c, 0x3d, 0x3e, 0x3f, 0x40, 0x41, 0x42, 0x43, 0x44,
+      0x45, 0x46, 0x47, 0x48, 0x49, 0x4a, 0x4b, 0x4c, 0x4d, 0x50, 0x51, 0x52,
+      0x4e, 0x4f, 0x53, 0x54, 0x55, 0x56, 0x57, 0x58, 0x59, 0x5a, 0x5b, 0x5c,
+      0x5d, 0x5e, 0x6, 0x60, 0x61, 0x62, 0x63, 0x64, 0x5f, 0x7, 0x65, 0x66,
+      0x67, 0x68, 0x69, 0x6a, 0x6b, 0x1, 0x6c, 0xaa, 0xab, 0xb2, 0xb3, 0xba,
+    ],
     weapons: [0xff],
   },
 };

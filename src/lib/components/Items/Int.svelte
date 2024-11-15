@@ -25,7 +25,12 @@
   } from "$lib/utils/format";
   import { getResource } from "$lib/utils/parser";
 
-  import type { ItemInt, ObjectKeyValue } from "$lib/types";
+  import type {
+    ItemInt,
+    ObjectKeyValue,
+    ResourceGroups,
+    ResourceLabels,
+  } from "$lib/types";
 
   export let item: ItemInt & { hidden?: boolean };
 
@@ -64,6 +69,8 @@
   let max: number;
   let value: bigint | number | string;
   let options: ObjectKeyValue<string>[];
+  let groups: ResourceGroups;
+  let labels: ResourceLabels;
 
   $: {
     $dataView;
@@ -126,15 +133,17 @@
     }
 
     options = [];
+    groups = [];
+    labels = {};
 
     let resource = getResource(item.resource, true);
 
     if (item.resource && resource) {
-      const order =
-        ($gameJson.resourcesOrder && $gameJson.resourcesOrder[item.resource]) ||
-        [];
+      const order = $gameJson.resourcesOrder?.[item.resource] || [];
 
       options = objToArrayKeyValue(resource, order);
+      groups = $gameJson.resourcesGroups?.[item.resource] || [];
+      labels = $gameJson.resourcesLabels?.[item.resource] || {};
     }
   }
 </script>
@@ -163,6 +172,8 @@
         label={item.name}
         {value}
         {options}
+        {groups}
+        {labels}
         size={item.size}
         hint={item.hint}
         debug={item.hidden}

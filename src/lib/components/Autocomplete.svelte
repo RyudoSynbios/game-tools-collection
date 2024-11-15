@@ -3,9 +3,13 @@
   import { isDebug } from "$lib/stores";
   import { scrollIntoViewIfNecessary } from "$lib/utils/ui";
 
+  import type { ResourceGroups, ResourceLabels } from "$lib/types";
+
   export let label = "";
   export let value: bigint | number | string;
   export let options: { key: string; value: string }[];
+  export let groups: ResourceGroups = [];
+  export let labels: ResourceLabels = {};
   export let size: "md" | "lg" = "md";
   export let hint = "";
   export let debug = false;
@@ -13,13 +17,18 @@
   export let test = false;
   export let onChange: (event: Event) => void;
 
+  interface GroupOptions {
+    name: string;
+    options: { key: string; value: string }[];
+  }
+
   let rootEl: HTMLDivElement;
   let inputEl: HTMLInputElement;
   let inputHiddenEl: HTMLInputElement;
   let dropdownEl: HTMLUListElement;
   let isFocused = false;
   let isDropdownOpen = false;
-  let filteredOptions: { key: string; value: string }[] = [];
+  let filteredGroupOptions: GroupOptions[] = [];
   let valueDisplayed = "";
   let lastValueDisplayed = "";
 
@@ -34,9 +43,69 @@
     isDropdownOpen = false;
   }
 
+  function filterGroupOptions(search = ""): GroupOptions[] {
+    let filteredOptions = options;
+
+    if (search !== "") {
+      const words = search.split(/\s+/g).filter((word) => word !== "");
+
+      filteredOptions = options.filter((option) =>
+        words.every((word) =>
+          option.value.toLowerCase().match(word.toLowerCase()),
+        ),
+      );
+    }
+
+    const labelKeys = Object.keys(labels);
+
+    const filteredGroupOptions = filteredOptions
+      .reduce((filteredGroups: GroupOptions[], option) => {
+        let groupIndex = 0;
+        let groupName = "";
+
+        if (groups.length > 0) {
+          groupIndex = groups.findIndex((group) =>
+            group.options.includes(parseInt(option.key)),
+          );
+
+          if (groupIndex !== -1) {
+            groupName = groups[groupIndex].name;
+          }
+
+          groupIndex += 1;
+        } else if (labelKeys.length > 0) {
+          groupIndex = labelKeys.reduce((result, key, index) => {
+            if (parseInt(key) <= parseInt(option.key)) {
+              result = index + 1;
+            }
+
+            return result;
+          }, 0);
+
+          if (groupIndex > 0) {
+            groupName = labels[parseInt(labelKeys[groupIndex - 1])];
+          }
+        }
+
+        if (!filteredGroups[groupIndex]) {
+          filteredGroups[groupIndex] = {
+            name: groupName,
+            options: [],
+          };
+        }
+
+        filteredGroups[groupIndex].options.push(option);
+
+        return filteredGroups;
+      }, [])
+      .filter((group) => group);
+
+    return filteredGroupOptions;
+  }
+
   function handleDropdownOpen(): void {
     if (!disabled && !isDropdownOpen) {
-      filteredOptions = options;
+      filteredGroupOptions = filterGroupOptions();
       inputEl.select();
 
       isDropdownOpen = true;
@@ -75,17 +144,7 @@
 
     const search = (event.target as HTMLInputElement).value;
 
-    const words = search.split(/\s+/g).filter((word) => word !== "");
-
-    if (search !== "") {
-      filteredOptions = options.filter((option) =>
-        words.every((word) =>
-          option.value.toLowerCase().match(word.toLowerCase()),
-        ),
-      );
-    } else {
-      filteredOptions = options;
-    }
+    filteredGroupOptions = filterGroupOptions(search);
   }
 
   function handleFocusOff(event?: Event): void {
@@ -250,14 +309,23 @@
   />
   {#if isDropdownOpen}
     <ul class="gtc-autocomplete-dropdown" bind:this={dropdownEl}>
-      {#if filteredOptions.length > 0}
-        {#each filteredOptions as option}
-          <li
-            class:gtc-autocomplete-highlight={option.key === `${value}`}
-            on:click={() => handleChange(option)}
-            on:mousemove={handleHover}
-          >
-            {option.value}
+      {#if filteredGroupOptions.length > 0}
+        {#each filteredGroupOptions as group}
+          <li class="gtc-autocomplete-dropdown-group">
+            {#if group.name}
+              <div class="gtc-autocomplete-dropdownlabel">{group.name}</div>
+            {/if}
+            <ul>
+              {#each group.options as option}
+                <li
+                  class:gtc-autocomplete-highlight={option.key === `${value}`}
+                  on:click={() => handleChange(option)}
+                  on:mousemove={handleHover}
+                >
+                  {option.value}
+                </li>
+              {/each}
+            </ul>
           </li>
         {/each}
       {:else}
@@ -324,20 +392,26 @@
       width: calc(100% - 1rem);
       max-height: 40vh;
 
-      & li {
-        @apply px-2;
-
-        &:not(.gtc-autocomplete-nohover):global(.gtc-autocomplete-hover) {
-          @apply bg-sky-400;
+      & .gtc-autocomplete-dropdown-group {
+        & .gtc-autocomplete-dropdownlabel {
+          @apply sticky top-0 px-2 py-2 font-bold bg-white;
         }
 
-        &.gtc-autocomplete-highlight {
-          @apply bg-sky-600;
-        }
+        & li {
+          @apply px-2;
 
-        &.gtc-autocomplete-nohover {
-          @apply text-primary-300;
+          &:global(.gtc-autocomplete-hover) {
+            @apply bg-sky-400;
+          }
+
+          &.gtc-autocomplete-highlight {
+            @apply bg-sky-600;
+          }
         }
+      }
+
+      & .gtc-autocomplete-nohover {
+        @apply px-2 text-primary-300;
       }
 
       &::-webkit-scrollbar-corner,

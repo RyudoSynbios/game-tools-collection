@@ -3508,6 +3508,25 @@ const template: GameJson = {
       0x1: "English",
     },
   },
+  resourcesLabels: {
+    chaoItems: {
+      0x100: "Eggs",
+      0x305: "Fruits",
+      0x700: "Seeds",
+      0x903: "Hats",
+      0x1000: "Screen Themes",
+    },
+    chaoTypes: {
+      0x1: "Child",
+      0x5: "Normal",
+      0x8: "Swim",
+      0xb: "Fly",
+      0xe: "Run",
+      0x11: "Power",
+      0x14: "Chaos",
+      0x17: "Miscellaneous",
+    },
+  },
   resourcesOrder: {
     chaoRaceBeginnerProgressions: [0xff],
     chaoRaceChallengeProgressions: [0xff],
