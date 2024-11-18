@@ -382,7 +382,7 @@ const template: GameJson = {
                       ],
                     },
                     {
-                      name: "Equipped Items",
+                      name: "Equipped Gears",
                       flex: true,
                       items: [
                         {

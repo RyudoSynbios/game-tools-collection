@@ -408,7 +408,7 @@ const template: GameJson = {
                       ],
                     },
                     {
-                      name: "Equipped Items",
+                      name: "Equipped Gears",
                       items: [
                         {
                           type: "section",
@@ -2662,6 +2662,7 @@ const template: GameJson = {
                       offset: 0x418,
                       type: "variable",
                       dataType: "uint32",
+                      min: 1,
                       max: 99,
                     },
                     {

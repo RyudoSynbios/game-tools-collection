@@ -32,20 +32,26 @@ export function overrideGetInt(
   return [false, undefined];
 }
 
-export function afterSetInt(item: Item, flag: ItemBitflag): void {
+export function overrideSetInt(
+  item: Item,
+  value: string,
+  flag: ItemBitflag,
+): boolean {
+  if ("id" in item && item.id === "abilities") {
+    setInt(flag.offset, flag.bit === 0 ? "lower4" : "upper4", value);
+
+    return true;
+  }
+
+  return false;
+}
+
+export function afterSetInt(item: Item): void {
   if ("id" in item && item.id === "gold") {
     const itemInt = item as ItemInt;
 
     const value = getInt(itemInt.offset, "uint32");
 
     setInt(itemInt.offset + 0x170, "uint32", value);
-  } else if ("id" in item && item.id === "abilities") {
-    const isChecked = Boolean(getInt(flag.offset, "bit", { bit: flag.bit }));
-
-    setInt(
-      flag.offset,
-      flag.bit === 0 ? "lower4" : "upper4",
-      isChecked ? 1 : 0,
-    );
   }
 }
