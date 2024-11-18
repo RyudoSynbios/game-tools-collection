@@ -1,9 +1,11 @@
 import { get } from "svelte/store";
 
-import { fileHeaderShift } from "$lib/stores";
+import { dataView, fileHeaderShift } from "$lib/stores";
 import { getInt, setInt } from "$lib/utils/bytes";
-import { formatChecksum } from "$lib/utils/checksum";
-import { getHeaderShift } from "$lib/utils/common/nintendoDs";
+import {
+  generateBiosChecksum,
+  getHeaderShift,
+} from "$lib/utils/common/nintendoDs";
 import { getItem } from "$lib/utils/parser";
 
 import type {
@@ -113,13 +115,8 @@ export function afterSetInt(item: Item, flag: ItemBitflag): void {
   }
 }
 
-const values = [
-  0x0000, 0xcc01, 0xd801, 0x1400, 0xf001, 0x3c00, 0x2800, 0xe401, 0xa001,
-  0x6c00, 0x7800, 0xb401, 0x5000, 0x9c01, 0x8801, 0x4400,
-];
-
-// Adapted from https://github.com/OpenEmu/DeSmuME-Core/blob/42d926603872451f1a1fb8aef16a2e65acdba76f/src/bios.cpp#L1071
 export function generateChecksum(item: ItemChecksum): number {
+  const $dataView = get(dataView);
   const $fileHeaderShift = get(fileHeaderShift);
 
   let offset = $fileHeaderShift + 0x90;
@@ -132,25 +129,7 @@ export function generateChecksum(item: ItemChecksum): number {
     offset += (index + 1) * 0x4;
   }
 
-  let checksum = getInt(offset, "uint16");
+  const salt = getInt(offset, "uint16");
 
-  for (let i = item.control.offsetStart; i < item.control.offsetEnd; i += 0x2) {
-    const int = getInt(i, "uint16");
-
-    for (let j = 0x0; j < 0x4; j += 0x1) {
-      let value = values[checksum & 0xf];
-
-      checksum >>= 0x4;
-
-      checksum ^= value;
-
-      const valueTmp = int >> (j * 0x4);
-
-      value = values[valueTmp & 0xf];
-
-      checksum ^= value;
-    }
-  }
-
-  return formatChecksum(checksum, item.dataType);
+  return generateBiosChecksum(item, salt, $dataView);
 }

@@ -12,21 +12,14 @@ const template: GameJson = {
   },
   items: [
     {
-      type: "section",
-      flex: true,
-      hidden: true,
-      items: [
-        {
-          name: "Checksum System",
-          offset: 0x80,
-          type: "checksum",
-          dataType: "uint16",
-          control: {
-            offsetStart: 0x0,
-            offsetEnd: 0x70,
-          },
-        },
-      ],
+      name: "Checksum System",
+      offset: 0x80,
+      type: "checksum",
+      dataType: "uint16",
+      control: {
+        offsetStart: 0x0,
+        offsetEnd: 0x70,
+      },
     },
     {
       length: 0x540,
