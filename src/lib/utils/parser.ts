@@ -134,10 +134,6 @@ export function parseItem(
     instanceIndex = parents[parents.length - 1].index;
   }
 
-  if (utilsExists("overrideParseItem")) {
-    newItem = $gameUtils.overrideParseItem(newItem, instanceIndex);
-  }
-
   if (newItem.id !== undefined) {
     let parentIndex = 0;
 
@@ -150,6 +146,10 @@ export function parseItem(
     newItem.id = newItem.id
       .replace("%parent%", parentIndex)
       .replace("%index%", instanceIndex);
+  }
+
+  if (utilsExists("overrideParseItem")) {
+    newItem = $gameUtils.overrideParseItem(newItem, instanceIndex);
   }
 
   if (newItem.name !== undefined) {
