@@ -3,8 +3,12 @@
 
   import AccessTimeIcon from "$lib/assets/AccessTime.svelte";
   import Content from "$lib/components/Items/Content.svelte";
-  import { gameJson, isDebug, showTabIndexes } from "$lib/stores";
-  import { generateIdFromArray, getUtils } from "$lib/utils/format";
+  import { gameJson, gameUtils, isDebug, showTabIndexes } from "$lib/stores";
+  import {
+    generateIdFromArray,
+    getUtils,
+    utilsExists,
+  } from "$lib/utils/format";
   import { getResource } from "$lib/utils/parser";
   import { scrollIntoViewIfNecessary } from "$lib/utils/ui";
   import { checkIntConditions } from "$lib/utils/validator";
@@ -115,6 +119,10 @@
     } else {
       handleFocusOff(event);
     }
+  }
+
+  if (utilsExists("overrideItem")) {
+    item = $gameUtils.overrideItem(item);
   }
 
   $: {
