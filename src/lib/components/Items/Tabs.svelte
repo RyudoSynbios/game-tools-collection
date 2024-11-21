@@ -253,6 +253,8 @@
   .gtc-tabs {
     @apply flex-1;
 
+    min-height: 50vh;
+
     & > ul {
       @apply flex flex-wrap bg-primary-700 rounded overflow-hidden;
 
