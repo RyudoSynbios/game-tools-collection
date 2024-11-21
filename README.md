@@ -12,6 +12,7 @@ Link to the website: [https://game-tools-collection.com](https://game-tools-coll
 | Castlevania: Circle of the Moon           | GBA      | Save / Rom | EUR / USA / JAP                               |
 | Castlevania: Dawn of Sorrow               | DS       | Save       | EUR / USA / JAP                               |
 | Castlevania: Harmony of Dissonance        | GBA      | Save       | EUR / USA / JAP                               |
+| Castlevania: Order of Ecclesia            | DS       | Save       | EUR / USA / JAP / KOR                         |
 | Castlevania: Symphony of the Night        | PS       | Save       | EUR / USA / JAP                               |
 | Dead or Alive 2                           | PS2      | Save       | EUR                                           |
 | Diablo II: Lord of Destruction            | WIN      | Save       | WORLD                                         |

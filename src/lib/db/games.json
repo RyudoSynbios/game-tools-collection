@@ -96,6 +96,17 @@
     }
   },
   {
+    "id": "castlevania-order-of-ecclesia-ds",
+    "name": "Castlevania: Order of Ecclesia",
+    "consoleId": "nintendo-ds",
+    "tools": {
+      "saveEditor": {
+        "createdAt": "2024-11-21",
+        "regions": ["🇪🇺", "🇺🇸", "🇯🇵", "🇰🇷"]
+      }
+    }
+  },
+  {
     "id": "castlevania-symphony-of-the-night-ps",
     "name": "Castlevania: Symphony of the Night",
     "consoleId": "playstation",
