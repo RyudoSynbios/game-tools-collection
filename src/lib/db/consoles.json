@@ -25,6 +25,11 @@
     "manufacturerId": "nintendo"
   },
   {
+    "id": "nintendo-entertainment-system",
+    "name": "Nintendo Entertainment System",
+    "manufacturerId": "nintendo"
+  },
+  {
     "id": "super-nintendo",
     "name": "Super Nintendo",
     "manufacturerId": "nintendo"

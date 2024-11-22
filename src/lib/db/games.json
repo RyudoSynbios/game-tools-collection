@@ -265,6 +265,17 @@
     }
   },
   {
+    "id": "kirby-s-adventure-nes",
+    "name": "Kirby's Adventure",
+    "consoleId": "nintendo-entertainment-system",
+    "tools": {
+      "saveEditor": {
+        "createdAt": "2024-11-22",
+        "regions": ["🇪🇺", "🇺🇸", "🇯🇵", "🇫🇷", "🇩🇪", "🇨🇦"]
+      }
+    }
+  },
+  {
     "id": "konami-krazy-racers-gba",
     "name": "Konami Krazy Racers",
     "consoleId": "game-boy-advance",

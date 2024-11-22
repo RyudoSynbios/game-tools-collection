@@ -27,6 +27,7 @@ Link to the website: [https://game-tools-collection.com](https://game-tools-coll
 | Grandia II                                | PS2      | Save       | EUR / USA / JAP                               |
 | Half-Minute Hero                          | PSP      | Save       | EUR / USA / JAP                               |
 | Kingdom Hearts                            | PS2      | Save       | EUR / USA / JAP / FRA / GER / ITA / SPA / AUS |
+| Kirby's Adventure                         | NES      | Save       | EUR / USA / JAP / FRA / GER / CAN             |
 | Konami Krazy Racers                       | GBA      | Save       | EUR / USA / JAP                               |
 | Legend of Zelda, The: A Link to the Past  | SNES     | Save       | EUR / USA / JAP / FRA / GER / CAN             |
 | Legend of Zelda, The: Link's Awakening DX | GBC      | Save       | EUR / USA / JAP / FRA / GER                   |

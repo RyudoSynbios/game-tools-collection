@@ -64,6 +64,9 @@
       >)
     </li>
     <li>
+      <strong>Nintendo Entertainment System: </strong>.sav, .srm
+    </li>
+    <li>
       <strong>Super Nintendo: </strong>.sav, .srm
     </li>
     <li>
