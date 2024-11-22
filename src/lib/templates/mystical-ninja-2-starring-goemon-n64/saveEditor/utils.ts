@@ -52,6 +52,10 @@ export function overrideGetRegions(
     itemChecksum.control.offsetStart += shift;
     itemChecksum.control.offsetEnd += shift;
 
+    if (dataView.byteLength < itemChecksum.control.offsetEnd) {
+      return [];
+    }
+
     const checksum = generateChecksum(itemChecksum, dataView);
 
     if (

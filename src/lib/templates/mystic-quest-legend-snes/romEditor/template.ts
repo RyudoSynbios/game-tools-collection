@@ -135,7 +135,7 @@ const template: GameJson = {
           },
         ],
       },
-      usa_rev1: {
+      usarev1: {
         $and: [
           {
             0x7fc0: [

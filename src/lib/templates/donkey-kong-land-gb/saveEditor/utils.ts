@@ -34,7 +34,7 @@ export function generateChecksum(item: ItemChecksum): number {
     checksumByte2 ^= getInt(i, "uint8");
   }
 
-  const checksum = (checksumByte1 << 0x8) | checksumByte2;
+  const checksum = (checksumByte1 << 0x8) | (checksumByte2 & 0xff);
 
   return formatChecksum(checksum, item.dataType);
 }
