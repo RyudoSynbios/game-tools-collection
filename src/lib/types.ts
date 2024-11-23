@@ -33,6 +33,11 @@ export type DataTypeInt =
   | "uint64"
   | "float32";
 
+export type DebugTools = {
+  showInputValues?: boolean;
+  showTabIndexes?: boolean;
+};
+
 export type IntOperation = { [operand: string]: number | IntOperationConvert };
 
 export type IntOperationConvert = { from: TimeUnit; to: TimeUnit };

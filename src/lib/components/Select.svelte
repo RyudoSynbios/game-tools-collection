@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { dataView, isDebug } from "$lib/stores";
+  import { dataView, debugTools, isDebug } from "$lib/stores";
 
   export let label = "";
   export let type: "number" | "string" = "string";
@@ -20,6 +20,14 @@
 
     if (selectEl) {
       selectEl.value = value.toString();
+    }
+
+    if (
+      $isDebug &&
+      $debugTools.showInputValues &&
+      !options.find((option) => option.key === `${value}`)
+    ) {
+      options.push({ key: `${value}`, value: "???" });
     }
   }
 </script>
@@ -47,6 +55,9 @@
   >
     {#each options as option}
       <option value={type === "number" ? parseInt(option.key) : option.key}>
+        {#if $isDebug && $debugTools.showInputValues}
+          {parseInt(option.key).toHex()}:
+        {/if}
         {option.value}
       </option>
     {/each}

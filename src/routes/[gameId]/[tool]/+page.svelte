@@ -13,6 +13,7 @@
   import SettingsIcon from "$lib/assets/Settings.svelte";
   import {
     dataView,
+    debugTools,
     fileName,
     gameJson,
     gameTemplate,
@@ -20,7 +21,6 @@
     isDebug,
     isDirty,
     isFileVisualizerOpen,
-    showTabIndexes,
   } from "$lib/stores";
   import { updateChecksums } from "$lib/utils/checksum";
   import { getGame } from "$lib/utils/db.js";
@@ -116,9 +116,14 @@
     }
   }
 
+  function handleShowInputValuesToggle(): void {
+    $debugTools.showInputValues = !$debugTools.showInputValues;
+    setLocalStorage("debugTools", `${JSON.stringify($debugTools)}`);
+  }
+
   function handleShowTabIndexesToggle(): void {
-    $showTabIndexes = !$showTabIndexes;
-    setLocalStorage("showTabIndexes", `${$showTabIndexes}`);
+    $debugTools.showTabIndexes = !$debugTools.showTabIndexes;
+    setLocalStorage("debugTools", `${JSON.stringify($debugTools)}`);
   }
 
   onDestroy(() => {
@@ -166,7 +171,14 @@
               <ul>
                 <li on:click={handleShowTabIndexesToggle}>
                   Show tab indexes
-                  <input type="checkbox" checked={$showTabIndexes} />
+                  <input type="checkbox" checked={$debugTools.showTabIndexes} />
+                </li>
+                <li on:click={handleShowInputValuesToggle}>
+                  Show input values
+                  <input
+                    type="checkbox"
+                    checked={$debugTools.showInputValues}
+                  />
                 </li>
                 <li on:click={handleExitDebugMode}>Exit debug mode</li>
               </ul>

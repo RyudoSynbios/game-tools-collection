@@ -1,11 +1,14 @@
 import { writable } from "svelte/store";
 
-import type { GameJson } from "$lib/types";
+import type { DebugTools, GameJson } from "$lib/types";
 
 import { getLocalStorage } from "./utils/format";
 
+const lsDebugTools = JSON.parse(getLocalStorage("debugTools") || "{}");
+
 export const dataView = writable(new DataView(new ArrayBuffer(0)));
 export const dataViewAlt = writable<{ [key: string]: DataView }>({});
+export const debugTools = writable(lsDebugTools as DebugTools);
 export const fileHeaderShift = writable(0x0);
 export const fileIsLoading = writable(false);
 export const fileName = writable("");
@@ -18,6 +21,3 @@ export const gameUtils = writable({}) as any;
 export const isDebug = writable(getLocalStorage("debug") === "true");
 export const isDirty = writable(false);
 export const isFileVisualizerOpen = writable(false);
-export const showTabIndexes = writable(
-  getLocalStorage("showTabIndexes") === "true",
-);
