@@ -45,6 +45,10 @@
 
     let isOverrided = false;
 
+    if (utilsExists("overrideItem")) {
+      item = $gameUtils.overrideItem(item);
+    }
+
     if (utilsExists("overrideGetInt")) {
       [isOverrided, flags] = $gameUtils.overrideGetInt(item);
     }
