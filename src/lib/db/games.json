@@ -320,6 +320,17 @@
     }
   },
   {
+    "id": "lylat-wars-n64",
+    "name": "Lylat Wars",
+    "consoleId": "nintendo-64",
+    "tools": {
+      "saveEditor": {
+        "createdAt": "2024-11-24",
+        "regions": ["🇪🇺", "🇺🇸", "🇯🇵", "🇦🇺"]
+      }
+    }
+  },
+  {
     "id": "mario-party-n64",
     "name": "Mario Party",
     "consoleId": "nintendo-64",
