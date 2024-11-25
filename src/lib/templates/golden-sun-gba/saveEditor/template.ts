@@ -38,7 +38,7 @@ const template: GameJson = {
               type: "checksum",
               dataType: "uint16",
               control: {
-                offsetStart: 0xc,
+                offsetStart: 0x10,
                 offsetEnd: 0x1000,
               },
             },
@@ -49,7 +49,7 @@ const template: GameJson = {
               type: "checksum",
               dataType: "uint16",
               control: {
-                offsetStart: 0xc,
+                offsetStart: 0x10,
                 offsetEnd: 0x1000,
               },
             },
@@ -314,7 +314,7 @@ const template: GameJson = {
                           name: "Location",
                           offset: 0x410,
                           type: "variable",
-                          dataType: "uint8",
+                          dataType: "uint16",
                           resource: "locations",
                           size: "lg",
                           autocomplete: true,
@@ -510,6 +510,12 @@ const template: GameJson = {
                                   resource: "classes",
                                   autocomplete: true,
                                 },
+                              ],
+                            },
+                            {
+                              type: "section",
+                              flex: true,
+                              items: [
                                 {
                                   id: "level-%index%",
                                   name: "Level",
@@ -594,25 +600,25 @@ const template: GameJson = {
                               flex: true,
                               items: [
                                 {
-                                  name: "Attack",
+                                  name: "Base Attack",
                                   offset: 0x528,
                                   type: "variable",
                                   dataType: "uint16",
                                 },
                                 {
-                                  name: "Defense",
+                                  name: "Base Defense",
                                   offset: 0x52a,
                                   type: "variable",
                                   dataType: "uint16",
                                 },
                                 {
-                                  name: "Agility",
+                                  name: "Base Agility",
                                   offset: 0x52c,
                                   type: "variable",
                                   dataType: "uint16",
                                 },
                                 {
-                                  name: "Luck",
+                                  name: "Base Luck",
                                   offset: 0x52e,
                                   type: "variable",
                                   dataType: "uint8",
@@ -779,6 +785,7 @@ const template: GameJson = {
                                     { offset: 0x608, bit: 4, label: "Sap" },
                                     { offset: 0x608, bit: 5, label: "Ground" },
                                     { offset: 0x608, bit: 6, label: "Bane" },
+                                    { offset: 0x608, bit: 7, label: "???", hidden: true },
                                   ],
                                 },
                                 {
@@ -793,6 +800,7 @@ const template: GameJson = {
                                     { offset: 0x60c, bit: 4, label: "Hail" },
                                     { offset: 0x60c, bit: 5, label: "Tonic" },
                                     { offset: 0x60c, bit: 6, label: "Dew" },
+                                    { offset: 0x60c, bit: 7, label: "???", hidden: true },
                                   ],
                                 },
                                 {
@@ -807,6 +815,7 @@ const template: GameJson = {
                                     { offset: 0x610, bit: 4, label: "Ember" },
                                     { offset: 0x610, bit: 5, label: "Flash" },
                                     { offset: 0x610, bit: 6, label: "Torch" },
+                                    { offset: 0x610, bit: 7, label: "???", hidden: true },
                                   ],
                                 },
                                 {
@@ -821,6 +830,7 @@ const template: GameJson = {
                                     { offset: 0x614, bit: 4, label: "Kite" },
                                     { offset: 0x614, bit: 5, label: "Squall" },
                                     { offset: 0x614, bit: 6, label: "Luff" },
+                                    { offset: 0x614, bit: 7, label: "???", hidden: true },
                                   ],
                                 },
                               ],
@@ -842,6 +852,7 @@ const template: GameJson = {
                                     { offset: 0x618, bit: 4, label: "Sap" },
                                     { offset: 0x618, bit: 5, label: "Ground" },
                                     { offset: 0x618, bit: 6, label: "Bane" },
+                                    { offset: 0x618, bit: 7, label: "???", hidden: true },
                                   ],
                                 },
                                 {
@@ -856,6 +867,7 @@ const template: GameJson = {
                                     { offset: 0x61c, bit: 4, label: "Hail" },
                                     { offset: 0x61c, bit: 5, label: "Tonic" },
                                     { offset: 0x61c, bit: 6, label: "Dew" },
+                                    { offset: 0x61c, bit: 7, label: "???", hidden: true },
                                   ],
                                 },
                                 {
@@ -870,6 +882,7 @@ const template: GameJson = {
                                     { offset: 0x620, bit: 4, label: "Ember" },
                                     { offset: 0x620, bit: 5, label: "Flash" },
                                     { offset: 0x620, bit: 6, label: "Torch" },
+                                    { offset: 0x620, bit: 7, label: "???", hidden: true },
                                   ],
                                 },
                                 {
@@ -884,6 +897,7 @@ const template: GameJson = {
                                     { offset: 0x624, bit: 4, label: "Kite" },
                                     { offset: 0x624, bit: 5, label: "Squall" },
                                     { offset: 0x624, bit: 6, label: "Luff" },
+                                    { offset: 0x624, bit: 7, label: "???", hidden: true },
                                   ],
                                 },
                               ],
@@ -1104,14 +1118,14 @@ const template: GameJson = {
                   resource: "optionBoolean",
                 },
                 {
-                  name: "Window Color (Save Preview",
+                  name: "Window Color (Save Preview)",
                   offset: 0x34,
                   type: "variable",
                   dataType: "uint8",
                   hidden: true,
                 },
                 {
-                  name: "Window Brightness (Save Preview",
+                  name: "Window Brightness (Save Preview)",
                   offset: 0x35,
                   type: "variable",
                   dataType: "uint8",
@@ -2186,7 +2200,7 @@ const template: GameJson = {
         ],
       },
       {
-        name: "Legwear",
+        name: "Legwears",
         options: [0x100, 0x101, 0x102, 0x103],
       },
       {

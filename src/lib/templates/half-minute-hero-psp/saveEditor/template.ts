@@ -13,8 +13,8 @@ const template: GameJson = {
       },
     },
     text: "Drag 'n' drop here or click to add a save file.",
-    error: "Not a valid save file.",
     hint: "Only works with decrypted saves (see FAQ).",
+    error: "Not a valid save file.",
   },
   items: [
     {
