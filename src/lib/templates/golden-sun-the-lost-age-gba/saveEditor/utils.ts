@@ -1,0 +1,333 @@
+import { get } from "svelte/store";
+
+import { fileHeaderShift } from "$lib/stores";
+import { extractBit, getInt, getString, setInt } from "$lib/utils/bytes";
+import { formatChecksum } from "$lib/utils/checksum";
+import { getHeaderShift } from "$lib/utils/common/gameBoyAdvance";
+import { getItem, updateResources } from "$lib/utils/parser";
+
+import type {
+  Item,
+  ItemBitflag,
+  ItemChecksum,
+  ItemContainer,
+  ItemInt,
+  ItemString,
+} from "$lib/types";
+
+export function initHeaderShift(dataView: DataView): number {
+  return getHeaderShift(dataView);
+}
+
+export function overrideParseContainerItemsShifts(
+  item: ItemContainer,
+  shifts: number[],
+  index: number,
+): [boolean, number[] | undefined] {
+  const $fileHeaderShift = get(fileHeaderShift);
+
+  if (item.id === "slots") {
+    for (let i = 0x0; i < item.length * 0x5; i += item.length) {
+      const saveIndex = getInt($fileHeaderShift + i + 0x7, "uint8");
+
+      if (saveIndex === index) {
+        return [true, [...shifts, i]];
+      }
+    }
+
+    return [true, [-1]];
+  }
+
+  return [false, undefined];
+}
+
+export function overrideItem(item: Item): Item {
+  if ("id" in item && item.id?.match(/formation-/)) {
+    const itemInt = item as ItemInt;
+
+    const split = item.id.split("-");
+
+    const index = parseInt(split[1]);
+
+    if (index > 0) {
+      const int = getInt(
+        itemInt.offset - 0x418 - (index - 0x1),
+        "uint8",
+      ).toBitCount();
+
+      itemInt.disabled = index > int;
+    }
+
+    return itemInt;
+  }
+
+  return item;
+}
+
+export function overrideGetInt(item: Item): [boolean, number | undefined] {
+  if ("id" in item && item.id === "formation-0") {
+    const itemInt = item as ItemInt;
+
+    const int = getInt(itemInt.offset, "uint8").toBitCount();
+
+    return [true, int];
+  } else if ("id" in item && item.id?.match(/formation-/)) {
+    const itemInt = item as ItemInt;
+
+    if (itemInt.disabled) {
+      return [true, 0xff];
+    }
+  } else if ("id" in item && item.id === "item") {
+    const itemInt = item as ItemInt;
+
+    let int = getInt(itemInt.offset, "uint8");
+
+    if (getInt(itemInt.offset + 0x1, "bit", { bit: 0 })) {
+      int += 0x100;
+    }
+
+    return [true, int];
+  } else if ("id" in item && item.id === "quantity") {
+    const itemInt = item as ItemInt;
+
+    let int = 1;
+
+    for (let i = 3; i < 8; i += 1) {
+      if (getInt(itemInt.offset, "bit", { bit: i })) {
+        int += Math.pow(2, i - 3);
+      }
+    }
+
+    return [true, int];
+  }
+
+  return [false, undefined];
+}
+
+export function overrideSetInt(item: Item, value: string): boolean {
+  if ("id" in item && item.id === "formation-0") {
+    const itemInt = item as ItemInt;
+
+    let int = 0x0;
+
+    for (let i = 0x0; i < parseInt(value); i += 0x1) {
+      int = (int << 0x1) + 1;
+    }
+
+    setInt(itemInt.offset, "uint8", int);
+
+    return true;
+  } else if ("id" in item && item.id === "item") {
+    const itemInt = item as ItemInt;
+
+    const int = parseInt(value);
+
+    setInt(itemInt.offset, "uint8", int);
+    setInt(itemInt.offset + 0x1, "bit", int >= 0x100 ? 1 : 0, { bit: 0 });
+
+    return true;
+  } else if ("id" in item && item.id === "quantity") {
+    const itemInt = item as ItemInt;
+
+    let int = parseInt(value);
+
+    int -= 1;
+
+    for (let i = 3; i < 8; i += 1) {
+      setInt(itemInt.offset, "bit", extractBit(int, i - 3) === true ? 1 : 0, {
+        bit: i,
+      });
+    }
+
+    return true;
+  }
+
+  return false;
+}
+
+export function afterSetInt(item: Item, flag: ItemBitflag): void {
+  if ("id" in item && item.id?.match(/playTime-/)) {
+    const itemInt = item as ItemInt;
+
+    const int = getInt(itemInt.offset, "uint32");
+
+    setInt(itemInt.offset - 0x234, "uint32", int);
+    setInt(itemInt.offset + 0xdbc, "uint32", int);
+  } else if ("id" in item && item.id === "gold") {
+    const itemInt = item as ItemInt;
+
+    const int = getInt(itemInt.offset, "uint32");
+
+    setInt(itemInt.offset - 0x23c, "uint32", int);
+  } else if ("id" in item && item.id?.match(/position-/)) {
+    const itemInt = item as ItemInt;
+
+    const camera = getItem(item.id.replace("position", "camera")) as ItemInt;
+
+    if (camera) {
+      const int = getInt(itemInt.offset, "uint32");
+
+      setInt(camera.offset, "uint32", int);
+    }
+  } else if ("id" in item && item.id?.match(/formation-/)) {
+    const itemInt = item as ItemInt;
+
+    const split = item.id.split("-");
+
+    let offset = 0x0;
+
+    const offsetIndex = parseInt(split[1]);
+
+    if (offsetIndex === 0) {
+      offset = itemInt.offset;
+    } else {
+      offset = itemInt.offset - 0x418 - offsetIndex + 1;
+    }
+
+    const characterCount = getInt(offset, "uint8").toBitCount();
+
+    for (let i = 0x0; i < 0x4; i += 0x1) {
+      if (i < characterCount) {
+        const int = getInt(offset + 0x418 + i, "uint8");
+
+        setInt(offset - 0x24 + i, "uint8", int);
+      } else {
+        setInt(offset - 0x24 + i, "uint8", 0xff);
+      }
+    }
+
+    updateDjinnPreview(offset + 0x5d8);
+  } else if ("id" in item && item.id?.match(/characterName-/)) {
+    const split = item.id.split("-");
+
+    const slotIndex = parseInt(split[1]);
+
+    updateCharacterNames(slotIndex);
+  } else if ("id" in item && item.id?.match(/level-/)) {
+    const itemInt = item as ItemInt;
+
+    const split = item.id.split("-");
+
+    const characterIndex = parseInt(split[1]);
+
+    if (characterIndex === 4) {
+      const int = getInt(itemInt.offset, "uint8");
+
+      setInt(itemInt.offset - 0xa53, "uint8", int);
+    }
+  } else if ("id" in item && item.id?.match(/class-/)) {
+    const itemInt = item as ItemInt;
+
+    const split = item.id.split("-");
+
+    const characterIndex = parseInt(split[1]);
+
+    if (characterIndex === 0) {
+      const int = getInt(itemInt.offset, "uint8");
+
+      setInt(itemInt.offset - 0x63c, "uint8", int);
+    }
+  } else if ("id" in item && item.id?.match(/djinn-/)) {
+    const split = item.id.split("-");
+
+    const characterIndex = parseInt(split[1]);
+    const elementIndex = parseInt(split[2]);
+
+    const offset =
+      flag.offset -
+      (flag.offset % 4) -
+      characterIndex * 0x14c -
+      (elementIndex - 1) * 0x4;
+
+    updateDjinnPreview(offset);
+  } else if ("id" in item && item.id?.match(/djinnSet-/)) {
+    const split = item.id.split("-");
+
+    const elementIndex = parseInt(split[1]);
+
+    const offset = flag.offset - (flag.offset % 4);
+
+    let int = 0;
+
+    for (let i = 0x0; i < 0x3; i += 0x1) {
+      int += getInt(offset + i, "uint8").toBitCount();
+    }
+
+    setInt(offset + 0x14 - (elementIndex - 1) * 3, "uint8", int);
+  } else if (
+    "id" in item &&
+    (item.id === "windowColor" || item.id === "windowBrightness")
+  ) {
+    const itemInt = item as ItemInt;
+
+    const int = getInt(itemInt.offset, "uint8");
+
+    setInt(itemInt.offset - 0x441, "uint8", int);
+  }
+}
+
+export function generateChecksum(item: ItemChecksum): number {
+  let checksum = 0x0;
+
+  for (let i = item.control.offsetStart; i < item.control.offsetEnd; i += 0x1) {
+    checksum += getInt(i, "uint8");
+  }
+
+  return formatChecksum(checksum, item.dataType);
+}
+
+export function updateDjinnPreview(offset: number): void {
+  const characterCount = getInt(offset - 0x5d8, "uint8").toBitCount();
+
+  const elements = [0, 0, 0, 0];
+
+  for (let i = 0x0; i < characterCount; i += 0x1) {
+    const formation = getInt(offset - 0x1c0 + i, "uint8");
+
+    for (let j = 0x0; j < 0x4; j += 0x1) {
+      elements[j] |= getInt(offset + formation * 0x14c + j * 0x4, "uint32");
+    }
+  }
+
+  setInt(offset - 0x600, "uint8", elements[0].toBitCount());
+  setInt(offset - 0x5ff, "uint8", elements[1].toBitCount());
+  setInt(offset - 0x5fe, "uint8", elements[2].toBitCount());
+  setInt(offset - 0x5fd, "uint8", elements[3].toBitCount());
+}
+
+export function getCharacterNames(slotIndex: number): {
+  [value: number]: string;
+} {
+  if (isNaN(slotIndex)) {
+    return {};
+  }
+
+  const names: { [value: number]: string } = {};
+
+  const itemString = getItem(`slot-${slotIndex}-characterName-0`) as ItemString;
+
+  [...Array(8).keys()].forEach((index) => {
+    const name = getString(
+      itemString.offset + index * 0x14c,
+      itemString.length,
+      itemString.letterDataType,
+      {
+        resource: "letters",
+      },
+    );
+
+    names[index] = name.trim() || "???";
+  });
+
+  return names;
+}
+
+export function onSlotChange(slotIndex: number): void {
+  updateCharacterNames(slotIndex);
+}
+
+export function updateCharacterNames(slotIndex: number): void {
+  const values = getCharacterNames(slotIndex);
+
+  updateResources("characterNames", values);
+}

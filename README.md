@@ -22,6 +22,7 @@ Link to the website: [https://game-tools-collection.com](https://game-tools-coll
 | Game & Watch Gallery 3                    | GBC      | Save       | EUR / USA / JAP / AUS                         |
 | Game Boy Camera                           | GB       | Save       | EUR / USA / JAP                               |
 | Golden Sun                                | GBA      | Save / Rom | EUR / USA / JAP / FRA / GER / ITA / SPA       |
+| Golden Sun: The Lost Age                  | GBA      | Save       | EUR / USA / JAP / FRA / GER / ITA / SPA       |
 | GoldenEye 007                             | N64      | Save       | EUR / USA / JAP                               |
 | Grandia                                   | PS       | Save       | EUR / USA / JAP / FRA / GER                   |
 | Grandia II                                | PS2      | Save       | EUR / USA / JAP                               |
