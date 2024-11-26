@@ -236,16 +236,16 @@ export function onReset(): void {
   resetMemoryCard();
 }
 
-export function getSlotNames(): string[] {
+export function getSlotNames(): Resource {
   const saves = getSaves();
 
-  const names = saves.reduce((names: string[], save) => {
+  const names = saves.reduce((names: Resource, save, index) => {
     const name = save.directory.name.slice(-2);
 
-    names.push(`Slot ${name.replace(/^0/, "")}`);
+    names[index] = `Slot ${name.replace(/^0/, "")}`;
 
     return names;
-  }, []);
+  }, {});
 
   return names;
 }

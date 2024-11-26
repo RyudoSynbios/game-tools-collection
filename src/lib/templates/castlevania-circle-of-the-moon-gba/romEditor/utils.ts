@@ -549,7 +549,7 @@ export function getText(index: number): string {
 
   let offset = getInt(offsetTexts + (index - 0x8001) * 0x4, "uint24");
 
-  const letters = getResource("letters", true) as Resource;
+  const letters = getResource("letters") as Resource;
 
   let text = "";
 

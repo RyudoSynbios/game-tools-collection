@@ -280,7 +280,7 @@ export function getText(offset: number, length: number): string {
     return "???";
   }
 
-  const letters = getResource("letters", true) as Resource;
+  const letters = getResource("letters") as Resource;
 
   let text = "";
 

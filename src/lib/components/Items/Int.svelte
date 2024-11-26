@@ -136,7 +136,7 @@
     groups = [];
     labels = {};
 
-    let resource = getResource(item.resource, true);
+    let resource = getResource(item.resource);
 
     if (item.resource && resource) {
       const order = $gameJson.resourcesOrder?.[item.resource] || [];

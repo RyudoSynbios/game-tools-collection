@@ -3,7 +3,6 @@ import { get } from "svelte/store";
 import {
   fileHeaderShift,
   gameJson,
-  gameRegion,
   gameTemplate,
   gameUtils,
   isDebug,
@@ -549,18 +548,14 @@ export function getItem(
   }
 }
 
-export function getResource(
-  key = "",
-  filterRegion = false,
-): Resource | undefined {
+export function getResource(key = ""): Resource | undefined {
   const $gameJson = get(gameJson);
-  const $gameRegion = get(gameRegion);
 
   let resource = key ? $gameJson.resources?.[key] : undefined;
 
   if (resource) {
-    if (filterRegion && Array.isArray(resource)) {
-      resource = resource[$gameRegion];
+    if (Array.isArray(resource)) {
+      resource = getRegionArray(resource);
     }
 
     return resource as Resource;

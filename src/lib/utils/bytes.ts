@@ -634,7 +634,7 @@ export function getString(
       break;
     }
 
-    const resource = getResource(options.resource, true);
+    const resource = getResource(options.resource);
 
     if (resource) {
       const char = resource[int];
@@ -683,7 +683,7 @@ export function setString(
       break;
     }
 
-    const resource = getResource(options.resource, true);
+    const resource = getResource(options.resource);
 
     let int = fallback;
 

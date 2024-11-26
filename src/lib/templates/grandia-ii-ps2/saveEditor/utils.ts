@@ -8,7 +8,7 @@ import {
   unpackMemoryCard,
 } from "$lib/utils/common/playstation2";
 
-import type { Item, ItemContainer, ItemInt } from "$lib/types";
+import type { Item, ItemContainer, ItemInt, Resource } from "$lib/types";
 
 export function beforeInitDataView(dataView: DataView): DataView {
   return unpackMemoryCard(dataView);
@@ -150,16 +150,16 @@ export function onReset(): void {
   resetMemoryCard();
 }
 
-export function getSlotNames(): string[] {
+export function getSlotNames(): Resource {
   const saves = getSaves();
 
-  const names = saves.reduce((names: string[], save) => {
+  const names = saves.reduce((names: Resource, save, index) => {
     const name = save.directory.name.slice(-2);
 
-    names.push(`Slot ${parseInt(name) + 1}`);
+    names[index] = `Slot ${parseInt(name) + 1}`;
 
     return names;
-  }, []);
+  }, {});
 
   return names;
 }

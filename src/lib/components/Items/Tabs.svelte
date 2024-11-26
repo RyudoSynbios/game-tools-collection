@@ -144,7 +144,7 @@
         const enumeratedName =
           item.enumeration?.replace("%d", `${enumerationCount + 1}`) || "";
 
-        let resource = getResource(item.resource, false);
+        let resource = getResource(item.resource);
 
         if (resource) {
           const name = resource[enumerationCount] as string;

@@ -26,6 +26,7 @@ import type {
   ItemChecksum,
   ItemContainer,
   ItemInt,
+  Resource,
 } from "$lib/types";
 
 export function beforeInitDataView(dataView: DataView): DataView {
@@ -326,10 +327,10 @@ export function onReset(): void {
   resetMemoryCard();
 }
 
-export function getProfileNames(): string[] {
+export function getProfileNames(): Resource {
   const profileCountItem = getItem("profileCount") as ItemInt;
 
-  const names = [];
+  const names: Resource = {};
 
   for (let i = 0x0; i < 0x10; i += 0x1) {
     names[i] = getString(
