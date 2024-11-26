@@ -80,6 +80,29 @@ export function overrideParseContainerItemsShifts(
   return [false, undefined];
 }
 
+export function overrideItem(item: Item): Item {
+  if ("id" in item && item.id?.match(/formation-/)) {
+    const itemInt = item as ItemInt;
+
+    const split = item.id.split("-");
+
+    const index = parseInt(split[1]);
+
+    if (index > 0) {
+      const int = getInt(
+        itemInt.offset - 0x3f8 - (index - 0x1),
+        "uint8",
+      ).toBitCount();
+
+      itemInt.disabled = index > int;
+    }
+
+    return itemInt;
+  }
+
+  return item;
+}
+
 export function overrideGetInt(item: Item): [boolean, number | undefined] {
   if ("id" in item && item.id === "formation-0") {
     const itemInt = item as ItemInt;
@@ -87,6 +110,12 @@ export function overrideGetInt(item: Item): [boolean, number | undefined] {
     const int = getInt(itemInt.offset, "uint8").toBitCount();
 
     return [true, int];
+  } else if ("id" in item && item.id?.match(/formation-/)) {
+    const itemInt = item as ItemInt;
+
+    if (itemInt.disabled) {
+      return [true, 0xff];
+    }
   } else if ("id" in item && item.id === "item") {
     const itemInt = item as ItemInt;
 
@@ -212,6 +241,8 @@ export function afterSetInt(item: Item, flag: ItemBitflag): void {
         setInt(offset - 0x24 + i, "uint8", 0xff);
       }
     }
+
+    updateDjinnPreview(offset + 0x5b8);
   } else if ("id" in item && item.id?.match(/characterName-/)) {
     const split = item.id.split("-");
 
@@ -249,31 +280,26 @@ export function afterSetInt(item: Item, flag: ItemBitflag): void {
     const elementIndex = parseInt(split[2]);
 
     const offset =
-      flag.offset - characterIndex * 0x14c - (elementIndex - 1) * 0x4;
+      flag.offset -
+      (flag.offset % 4) -
+      characterIndex * 0x14c -
+      (elementIndex - 1) * 0x4;
 
-    const elements = [0, 0, 0, 0];
-
-    for (let i = 0x0; i < 0x8; i += 0x1) {
-      for (let j = 0x0; j < 0x4; j += 0x1) {
-        elements[j] += getInt(
-          offset + i * 0x14c + j * 0x4,
-          "uint8",
-        ).toBitCount();
-      }
-    }
-
-    setInt(offset - 0x5e0, "uint8", Math.min(elements[0], 7));
-    setInt(offset - 0x5df, "uint8", Math.min(elements[1], 7));
-    setInt(offset - 0x5de, "uint8", Math.min(elements[2], 7));
-    setInt(offset - 0x5dd, "uint8", Math.min(elements[3], 7));
+    updateDjinnPreview(offset);
   } else if ("id" in item && item.id?.match(/djinnSet-/)) {
     const split = item.id.split("-");
 
     const elementIndex = parseInt(split[1]);
 
-    const int = getInt(flag.offset, "uint8").toBitCount();
+    const offset = flag.offset - (flag.offset % 4);
 
-    setInt(flag.offset + 0x14 - (elementIndex - 1) * 3, "uint8", int);
+    let int = 0;
+
+    for (let i = 0x0; i < 0x3; i += 0x1) {
+      int += getInt(offset + i, "uint8").toBitCount();
+    }
+
+    setInt(offset + 0x14 - (elementIndex - 1) * 3, "uint8", int);
   } else if (
     "id" in item &&
     (item.id === "windowColor" || item.id === "windowBrightness")
@@ -294,6 +320,25 @@ export function generateChecksum(item: ItemChecksum): number {
   }
 
   return formatChecksum(checksum, item.dataType);
+}
+
+export function updateDjinnPreview(offset: number): void {
+  const characterCount = getInt(offset - 0x5b8, "uint8").toBitCount();
+
+  const elements = [0, 0, 0, 0];
+
+  for (let i = 0x0; i < characterCount; i += 0x1) {
+    const formation = getInt(offset - 0x1c0 + i, "uint8");
+
+    for (let j = 0x0; j < 0x4; j += 0x1) {
+      elements[j] |= getInt(offset + formation * 0x14c + j * 0x4, "uint32");
+    }
+  }
+
+  setInt(offset - 0x5e0, "uint8", elements[0].toBitCount());
+  setInt(offset - 0x5df, "uint8", elements[1].toBitCount());
+  setInt(offset - 0x5de, "uint8", elements[2].toBitCount());
+  setInt(offset - 0x5dd, "uint8", elements[3].toBitCount());
 }
 
 export function getCharacterNames(slotIndex: number): {
