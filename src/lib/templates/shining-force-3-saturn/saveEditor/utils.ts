@@ -1,28 +1,36 @@
 import { get } from "svelte/store";
 
-import { dataView, gameTemplate } from "$lib/stores";
+import { gameRegion, gameTemplate } from "$lib/stores";
 import { getInt, setInt } from "$lib/utils/bytes";
 import { formatChecksum } from "$lib/utils/checksum";
+import {
+  customGetRegions,
+  getSaves,
+  getSlots,
+  repackMemorySystem,
+  resetMemorySystem,
+  unpackMemorySystem,
+} from "$lib/utils/common/saturn";
 import { clone } from "$lib/utils/format";
 
-import type { Item, ItemChecksum, ItemInt, ItemTab } from "$lib/types";
+import type {
+  Item,
+  ItemChecksum,
+  ItemContainer,
+  ItemInt,
+  ItemTab,
+} from "$lib/types";
 
 export function beforeInitDataView(dataView: DataView): DataView {
-  const array = [];
+  return unpackMemorySystem(dataView);
+}
 
-  for (let i = 0x0; i < dataView.byteLength; i += 0x1) {
-    const int = getInt(i, "uint8", {}, dataView);
+export function overrideGetRegions(): string[] {
+  return customGetRegions();
+}
 
-    if (i >= 0xc0 && i !== 0x3840 && i % 0x40 === 0 && int === 0) {
-      i += 0x3;
-    } else {
-      array.push(int);
-    }
-  }
-
-  const uint8Array = new Uint8Array(array);
-
-  return new DataView(uint8Array.buffer);
+export function onInitFailed(): void {
+  resetMemorySystem();
 }
 
 export function overrideParseItem(
@@ -31,7 +39,13 @@ export function overrideParseItem(
 ): Item | ItemTab {
   const $gameTemplate = get(gameTemplate);
 
-  if ("id" in item && item.id === "friendship") {
+  if ("id" in item && item.id === "slots") {
+    const itemContainer = item as ItemContainer;
+
+    const saves = getSaves();
+
+    itemContainer.instances = saves.length;
+  } else if ("id" in item && item.id === "friendship") {
     const itemTab = item as ItemTab;
     const itemInt = itemTab.items[0] as ItemInt;
 
@@ -71,6 +85,18 @@ export function overrideParseItem(
   return item;
 }
 
+export function overrideParseContainerItemsShifts(
+  item: ItemContainer,
+  shifts: number[],
+  index: number,
+): [boolean, number[] | undefined] {
+  if (item.id === "slots") {
+    return getSlots(index);
+  }
+
+  return [false, undefined];
+}
+
 export function afterSetInt(item: Item): void {
   if ("id" in item && item.id === "location") {
     const itemInt = item as ItemInt;
@@ -92,25 +118,9 @@ export function generateChecksum(item: ItemChecksum): number {
 }
 
 export function beforeSaving(): ArrayBufferLike {
-  const $dataView = get(dataView);
+  return repackMemorySystem();
+}
 
-  const array = [];
-
-  let j = 0x0;
-
-  for (let i = 0x0; i < $dataView.byteLength; i += 0x1) {
-    if (i >= 0xc0 && j % 0x40 === 0 && getInt(i, "uint8") !== 0x80) {
-      array.push(0x0, 0x0, 0x0, 0x0);
-
-      j += 0x4;
-    }
-
-    array.push(getInt(i, "uint8"));
-
-    j += 0x1;
-  }
-
-  const uint8Array = new Uint8Array(array);
-
-  return uint8Array.buffer;
+export function onReset(): void {
+  resetMemorySystem();
 }

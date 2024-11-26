@@ -1,5 +1,329 @@
+import { get } from "svelte/store";
+
+import { dataView, gameRegion, gameTemplate } from "$lib/stores";
+
+import { Validator } from "$lib/types";
+
 import { getInt, getString } from "../bytes";
+import { getObjKey, mergeUint8Arrays, numberArrayToString } from "../format";
 import { checkValidator } from "../validator";
+
+interface File {
+  isUsed: boolean;
+  name: string;
+  offset: number;
+  dataOffset: number;
+  size: number;
+}
+
+interface MemorySystem {
+  type: "external" | "internal";
+  blockSize: number;
+  allocOffset: number;
+  headerSize: number;
+  files: File[];
+}
+
+interface Save {
+  file: File;
+  offset: number;
+}
+
+// Global objects
+
+let memorySystem = {} as MemorySystem;
+let memorySystemRaw = new DataView(new ArrayBuffer(0));
+let saves: Save[] = [];
+let filteredSaves: Save[] = [];
+
+export function generateMemorySystem(dataView: DataView): void {
+  memorySystemRaw = dataView;
+
+  const validator = [
+    0x42, 0x61, 0x63, 0x6b, 0x55, 0x70, 0x52, 0x61, 0x6d, 0x20, 0x46, 0x6f,
+    0x72, 0x6d, 0x61, 0x74,
+  ]; // "BackUpRam Format";
+
+  memorySystem.headerSize = 0x24;
+  memorySystem.files = [];
+
+  let count = 0;
+
+  for (let i = 0x0; i < dataView.byteLength; i += 0x10) {
+    if (checkValidator(validator, i, dataView)) {
+      count += 1;
+    } else {
+      break;
+    }
+  }
+
+  switch (count) {
+    case 4:
+      memorySystem.type = "internal";
+      memorySystem.blockSize = 0x40;
+      break;
+    case 32:
+      memorySystem.type = "external";
+      memorySystem.blockSize = 0x200;
+      break;
+  }
+
+  if (!memorySystem.type) {
+    return;
+  }
+
+  memorySystem.allocOffset = count * 0x20;
+
+  readFile(dataView, memorySystem.allocOffset);
+}
+
+export function resetMemorySystem(): void {
+  memorySystem = {} as MemorySystem;
+  memorySystemRaw = new DataView(new ArrayBuffer(0));
+  saves = [];
+  filteredSaves = [];
+}
+
+function readFile(dataView: DataView, offset: number): void {
+  const isUsed = getInt(offset, "uint8", {}, dataView) === 0x80;
+  const size = getInt(offset + 0x20, "uint16", { bigEndian: true }, dataView);
+
+  if (size === 0x0) {
+    return;
+  }
+
+  const name = [...Array(0xc).keys()].reduce((string, index) => {
+    const char = getInt(offset + 0x4 + index, "uint8", {}, dataView);
+
+    if (char === 0x0) {
+      return string;
+    }
+
+    return (string += String.fromCharCode(char));
+  }, "");
+
+  let dataOffset = offset + 0x22;
+
+  while (true) {
+    const int = getInt(dataOffset, "uint16", { bigEndian: true }, dataView);
+
+    dataOffset += 0x2;
+
+    if (dataOffset % memorySystem.blockSize === 0x0) {
+      dataOffset += 0x4;
+    }
+
+    if (int === 0x0) {
+      break;
+    }
+  }
+
+  let endOffset = dataOffset;
+
+  for (let i = 0x0; i < size; i += 0x1) {
+    if (endOffset % memorySystem.blockSize === 0x0) {
+      endOffset += 0x4;
+      i -= 0x1;
+    } else {
+      endOffset += 0x1;
+    }
+  }
+
+  memorySystem.files.push({
+    isUsed,
+    name,
+    offset,
+    dataOffset,
+    size,
+  });
+
+  offset =
+    Math.ceil(endOffset / memorySystem.blockSize) * memorySystem.blockSize;
+
+  readFile(dataView, offset);
+}
+
+function writeFile(file: File, blob: ArrayBuffer): void {
+  const memorySystemRawTmp = new Uint8Array(memorySystemRaw.buffer);
+
+  const header = new Uint8Array(blob.slice(0x0, memorySystem.headerSize));
+
+  memorySystemRawTmp.set(header, file.offset);
+
+  let offset = file.dataOffset;
+
+  let size = memorySystem.headerSize;
+
+  while (size < file.size + memorySystem.headerSize) {
+    const end = memorySystem.blockSize - (offset % memorySystem.blockSize);
+
+    const part = new Uint8Array(blob.slice(size, size + end));
+
+    memorySystemRawTmp.set(part, offset);
+
+    offset += end + 0x4;
+    size += end;
+  }
+
+  memorySystemRaw = new DataView(memorySystemRawTmp.buffer);
+}
+
+export function isMemorySystem(dataView: DataView): boolean {
+  const validator = [
+    0x42, 0x61, 0x63, 0x6b, 0x55, 0x70, 0x52, 0x61, 0x6d, 0x20, 0x46, 0x6f,
+    0x72, 0x6d, 0x61, 0x74,
+  ]; // "BackUpRam Format"
+
+  if (checkValidator(validator, 0x0, dataView)) {
+    return true;
+  }
+
+  return false;
+}
+
+export function isUnpackedMemorySystem(): boolean {
+  return Boolean(memorySystem);
+}
+
+function getHeader(dataView: DataView, file: File): Uint8Array {
+  return new Uint8Array(
+    dataView.buffer.slice(file.offset, file.offset + memorySystem.headerSize),
+  );
+}
+
+export function unpackMemorySystem(dataView: DataView): DataView {
+  const $gameTemplate = get(gameTemplate);
+
+  if (isMemorySystem(dataView)) {
+    generateMemorySystem(dataView);
+
+    const uint8Arrays: Uint8Array[] = [];
+
+    let offset = 0x0;
+
+    Object.values($gameTemplate.validator.regions).forEach((condition) => {
+      const validator: number[] = Object.values(condition)[0];
+
+      const validatorStringified = numberArrayToString(validator);
+
+      memorySystem.files.forEach((file) => {
+        if (file.isUsed && file.name.includes(validatorStringified)) {
+          const header = getHeader(dataView, file);
+
+          uint8Arrays.push(header);
+
+          const padding = 0x10 - ((file.size + memorySystem.headerSize) % 0x10);
+
+          const uint8Array = new Uint8Array(file.size + padding);
+
+          let size = 0x0;
+
+          for (let i = file.dataOffset; size < file.size; i += 0x1) {
+            if (i % memorySystem.blockSize === 0x0) {
+              i += 0x3;
+            } else {
+              uint8Array[size] = getInt(i, "uint8", {}, dataView);
+
+              if (i >= file.dataOffset) {
+                size += 0x1;
+              }
+            }
+          }
+
+          uint8Arrays.push(uint8Array);
+
+          saves.push({ file, offset });
+
+          offset += header.byteLength + uint8Array.byteLength;
+        }
+      });
+    });
+
+    const uint8Array = mergeUint8Arrays(...uint8Arrays);
+
+    return new DataView(uint8Array.buffer);
+  }
+
+  return dataView;
+}
+
+export function repackMemorySystem(): ArrayBufferLike {
+  const $dataView = get(dataView);
+
+  if (isUnpackedMemorySystem()) {
+    saves.forEach((save) => {
+      const blob = $dataView.buffer.slice(
+        save.offset,
+        save.offset + save.file.size,
+      );
+
+      writeFile(save.file, blob);
+    });
+
+    return memorySystemRaw.buffer;
+  }
+
+  return $dataView.buffer;
+}
+
+export function customGetRegions(): string[] {
+  const $gameTemplate = get(gameTemplate);
+
+  const regions: string[] = [];
+
+  Object.entries($gameTemplate.validator.regions).forEach(
+    ([region, condition]) => {
+      const validator = Object.values(condition)[0] as number[];
+
+      if (isUnpackedMemorySystem()) {
+        const validatorStringified = numberArrayToString(validator);
+
+        if (
+          saves.some((save) => save.file.name.includes(validatorStringified))
+        ) {
+          regions.push(region);
+        }
+      }
+    },
+  );
+
+  return regions;
+}
+
+export function generateFilteredSaves(): void {
+  const $gameRegion = get(gameRegion);
+  const $gameTemplate = get(gameTemplate);
+
+  const region = $gameTemplate.validator.regions[
+    getObjKey($gameTemplate.validator.regions, $gameRegion)
+  ] as Validator;
+
+  const validator = region[0];
+
+  const validatorStringified = numberArrayToString(validator);
+
+  filteredSaves = saves
+    .filter((save) => save.file.name.includes(validatorStringified))
+    .sort((a, b) => a.file.name.localeCompare(b.file.name));
+}
+
+export function getSaves(): Save[] {
+  if (filteredSaves.length === 0) {
+    generateFilteredSaves();
+  }
+
+  return filteredSaves;
+}
+
+export function getSlots(index: number): [boolean, number[] | undefined] {
+  const saves = getSaves();
+
+  if (saves[index]) {
+    return [true, [saves[index].offset]];
+  }
+
+  return [true, [-1]];
+}
 
 interface Cpk {
   film: Film;

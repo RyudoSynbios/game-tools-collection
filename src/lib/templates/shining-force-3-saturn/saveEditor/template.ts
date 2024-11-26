@@ -6,50 +6,32 @@ const template: GameJson = {
   validator: {
     regions: {
       europe_usa_japan: {
-        0x84: [
-          0x53, 0x46, 0x4f, 0x52, 0x43, 0x45, 0x33, 0x31, 0x5f, 0x30, 0x31,
-        ], // "SFORCE31_01"
+        0x0: [0x53, 0x46, 0x4f, 0x52, 0x43, 0x45, 0x33, 0x31, 0x5f], // "SFORCE31_"
       },
     },
     text: "Drag 'n' drop here or click to add a save file.",
-    hint: "Currently only works with System saves (.bkr files).<br />Scenarios 2 and 3 will be available later.",
+    hint: "Scenarios 2 and 3 will be available later.",
     error: "Not a valid save file.",
   },
   items: [
     {
-      length: 0x3448,
+      id: "slots",
+      length: 0x0,
       type: "container",
       instanceType: "tabs",
-      instances: 2,
+      instances: 0,
       enumeration: "Slot %d",
-      disableSubinstanceIf: {
-        $or: [
-          {
-            offset: 0x80,
-            type: "variable",
-            dataType: "uint8",
-            operator: "=",
-            value: 0x0,
-          },
-          {
-            offset: 0x84,
-            type: "variable",
-            dataType: "uint8",
-            operator: "=",
-            value: 0x0,
-          },
-        ],
-      },
       items: [
         {
+          id: "checksum",
           name: "Checksum",
-          offset: 0x266,
+          offset: 0x2a,
           type: "checksum",
           dataType: "uint16",
           bigEndian: true,
           control: {
-            offsetStart: 0x26a,
-            offsetEnd: 0x34c8,
+            offsetStart: 0x2c,
+            offsetEnd: 0x328c,
           },
         },
         {
@@ -61,7 +43,7 @@ const template: GameJson = {
               items: [
                 {
                   name: "Filename",
-                  offset: 0x90,
+                  offset: 0x10,
                   length: 0x7,
                   type: "variable",
                   dataType: "string",
@@ -75,7 +57,7 @@ const template: GameJson = {
                   mode: "time",
                   items: [
                     {
-                      offset: 0x270,
+                      offset: 0x34,
                       type: "variable",
                       dataType: "uint32",
                       operations: [
@@ -86,7 +68,7 @@ const template: GameJson = {
                       bigEndian: true,
                     },
                     {
-                      offset: 0x270,
+                      offset: 0x34,
                       type: "variable",
                       dataType: "uint32",
                       operations: [
@@ -98,7 +80,7 @@ const template: GameJson = {
                       bigEndian: true,
                     },
                     {
-                      offset: 0x270,
+                      offset: 0x34,
                       type: "variable",
                       dataType: "uint32",
                       operations: [
@@ -113,7 +95,7 @@ const template: GameJson = {
                 },
                 {
                   name: "Gold",
-                  offset: 0x278,
+                  offset: 0x3c,
                   type: "variable",
                   dataType: "uint32",
                   bigEndian: true,
@@ -122,7 +104,7 @@ const template: GameJson = {
                 {
                   id: "location",
                   name: "Location",
-                  offset: 0x27d,
+                  offset: 0x41,
                   type: "variable",
                   dataType: "uint8",
                   resource: "locations",
@@ -131,7 +113,7 @@ const template: GameJson = {
                 },
                 {
                   name: "Linked to Location",
-                  offset: 0x281,
+                  offset: 0x45,
                   type: "variable",
                   dataType: "uint8",
                   resource: "locations",
@@ -162,7 +144,7 @@ const template: GameJson = {
                               items: [
                                 {
                                   name: "Name",
-                                  offset: 0x2658,
+                                  offset: 0x241c,
                                   length: 0x8,
                                   type: "variable",
                                   dataType: "string",
@@ -172,7 +154,7 @@ const template: GameJson = {
                                 },
                                 {
                                   name: "Class",
-                                  offset: 0x26d0,
+                                  offset: 0x2494,
                                   type: "variable",
                                   dataType: "uint8",
                                   resource: "classes",
@@ -180,14 +162,14 @@ const template: GameJson = {
                                 },
                                 {
                                   name: "Gender",
-                                  offset: 0x2667,
+                                  offset: 0x242b,
                                   type: "variable",
                                   dataType: "uint8",
                                   resource: "genders",
                                 },
                                 {
                                   name: "Control Type",
-                                  offset: 0x26ef,
+                                  offset: 0x24b3,
                                   type: "variable",
                                   dataType: "uint8",
                                   resource: "controlTypes",
@@ -200,7 +182,7 @@ const template: GameJson = {
                               items: [
                                 {
                                   name: "Level",
-                                  offset: 0x266b,
+                                  offset: 0x242f,
                                   type: "variable",
                                   dataType: "uint8",
                                   min: 1,
@@ -208,7 +190,7 @@ const template: GameJson = {
                                 },
                                 {
                                   name: "Experience",
-                                  offset: 0x26ed,
+                                  offset: 0x24b1,
                                   type: "variable",
                                   dataType: "uint8",
                                   max: 99,
@@ -219,14 +201,14 @@ const template: GameJson = {
                                   mode: "fraction",
                                   items: [
                                     {
-                                      offset: 0x26da,
+                                      offset: 0x249e,
                                       type: "variable",
                                       dataType: "uint16",
                                       bigEndian: true,
                                       max: 999,
                                     },
                                     {
-                                      offset: 0x2668,
+                                      offset: 0x242c,
                                       type: "variable",
                                       dataType: "uint16",
                                       bigEndian: true,
@@ -241,12 +223,12 @@ const template: GameJson = {
                                   mode: "fraction",
                                   items: [
                                     {
-                                      offset: 0x26dc,
+                                      offset: 0x24a0,
                                       type: "variable",
                                       dataType: "uint8",
                                     },
                                     {
-                                      offset: 0x266a,
+                                      offset: 0x242e,
                                       type: "variable",
                                       dataType: "uint8",
                                     },
@@ -260,37 +242,37 @@ const template: GameJson = {
                               items: [
                                 {
                                   name: "Attack",
-                                  offset: 0x266c,
+                                  offset: 0x2430,
                                   type: "variable",
                                   dataType: "uint8",
                                 },
                                 {
                                   name: "Defense",
-                                  offset: 0x266d,
+                                  offset: 0x2431,
                                   type: "variable",
                                   dataType: "uint8",
                                 },
                                 {
                                   name: "Agility",
-                                  offset: 0x266e,
+                                  offset: 0x2432,
                                   type: "variable",
                                   dataType: "uint8",
                                 },
                                 {
                                   name: "Speed",
-                                  offset: 0x266f,
+                                  offset: 0x2433,
                                   type: "variable",
                                   dataType: "uint8",
                                 },
                                 {
                                   name: "Luck",
-                                  offset: 0x2670,
+                                  offset: 0x2434,
                                   type: "variable",
                                   dataType: "uint8",
                                 },
                                 {
                                   name: "Move",
-                                  offset: 0x26e0,
+                                  offset: 0x24a4,
                                   type: "variable",
                                   dataType: "uint8",
                                   max: 15,
@@ -304,67 +286,67 @@ const template: GameJson = {
                               items: [
                                 {
                                   name: "Alive",
-                                  offset: 0x26f1,
+                                  offset: 0x24b5,
                                   type: "variable",
                                   dataType: "boolean",
                                 },
                                 {
                                   name: "Asleep",
-                                  offset: 0x26f2,
+                                  offset: 0x24b6,
                                   type: "variable",
                                   dataType: "boolean",
                                 },
                                 {
                                   name: "Confused",
-                                  offset: 0x26f3,
+                                  offset: 0x24b7,
                                   type: "variable",
                                   dataType: "boolean",
                                 },
                                 {
                                   name: "Illusion",
-                                  offset: 0x26f4,
+                                  offset: 0x24b8,
                                   type: "variable",
                                   dataType: "boolean",
                                 },
                                 {
                                   name: "Silenced",
-                                  offset: 0x26f5,
+                                  offset: 0x24b9,
                                   type: "variable",
                                   dataType: "boolean",
                                 },
                                 {
                                   name: "Paralyzed",
-                                  offset: 0x26f6,
+                                  offset: 0x24ba,
                                   type: "variable",
                                   dataType: "boolean",
                                 },
                                 {
                                   name: "Poisoned",
-                                  offset: 0x26f7,
+                                  offset: 0x24bb,
                                   type: "variable",
                                   dataType: "boolean",
                                 },
                                 {
                                   name: "Charmed",
-                                  offset: 0x26f8,
+                                  offset: 0x24bc,
                                   type: "variable",
                                   dataType: "boolean",
                                 },
                                 {
                                   name: "Cursed",
-                                  offset: 0x26fa,
+                                  offset: 0x24be,
                                   type: "variable",
                                   dataType: "boolean",
                                 },
                                 {
                                   name: "Berserk",
-                                  offset: 0x26c,
+                                  offset: 0x30,
                                   type: "variable",
                                   dataType: "boolean",
                                 },
                                 {
                                   name: "Frozen",
-                                  offset: 0x26d,
+                                  offset: 0x31,
                                   type: "variable",
                                   dataType: "boolean",
                                 },
@@ -386,7 +368,7 @@ const template: GameJson = {
                                   items: [
                                     {
                                       name: "Spell 1",
-                                      offset: 0x267c,
+                                      offset: 0x2440,
                                       type: "variable",
                                       dataType: "uint8",
                                       resource: "spells",
@@ -394,7 +376,7 @@ const template: GameJson = {
                                     },
                                     {
                                       name: "Level",
-                                      offset: 0x267d,
+                                      offset: 0x2441,
                                       type: "variable",
                                       dataType: "uint8",
                                       max: 4,
@@ -407,7 +389,7 @@ const template: GameJson = {
                                   items: [
                                     {
                                       name: "Spell 2",
-                                      offset: 0x267e,
+                                      offset: 0x2442,
                                       type: "variable",
                                       dataType: "uint8",
                                       resource: "spells",
@@ -415,7 +397,7 @@ const template: GameJson = {
                                     },
                                     {
                                       name: "Level",
-                                      offset: 0x267f,
+                                      offset: 0x2443,
                                       type: "variable",
                                       dataType: "uint8",
                                       max: 4,
@@ -428,7 +410,7 @@ const template: GameJson = {
                                   items: [
                                     {
                                       name: "Spell 3",
-                                      offset: 0x2680,
+                                      offset: 0x2444,
                                       type: "variable",
                                       dataType: "uint8",
                                       resource: "spells",
@@ -436,7 +418,7 @@ const template: GameJson = {
                                     },
                                     {
                                       name: "Level",
-                                      offset: 0x2681,
+                                      offset: 0x2445,
                                       type: "variable",
                                       dataType: "uint8",
                                       max: 4,
@@ -449,7 +431,7 @@ const template: GameJson = {
                                   items: [
                                     {
                                       name: "Spell 4",
-                                      offset: 0x2682,
+                                      offset: 0x2446,
                                       type: "variable",
                                       dataType: "uint8",
                                       resource: "spells",
@@ -457,7 +439,7 @@ const template: GameJson = {
                                     },
                                     {
                                       name: "Level",
-                                      offset: 0x2683,
+                                      offset: 0x2447,
                                       type: "variable",
                                       dataType: "uint8",
                                       max: 4,
@@ -472,19 +454,19 @@ const template: GameJson = {
                               items: [
                                 {
                                   name: "Fire",
-                                  offset: 0x26e6,
+                                  offset: 0x24aa,
                                   type: "variable",
                                   dataType: "int8",
                                 },
                                 {
                                   name: "Lightning",
-                                  offset: 0x26e8,
+                                  offset: 0x24ac,
                                   type: "variable",
                                   dataType: "int8",
                                 },
                                 {
                                   name: "Light",
-                                  offset: 0x26ea,
+                                  offset: 0x24ae,
                                   type: "variable",
                                   dataType: "int8",
                                 },
@@ -496,19 +478,19 @@ const template: GameJson = {
                               items: [
                                 {
                                   name: "Ice",
-                                  offset: 0x26e7,
+                                  offset: 0x24ab,
                                   type: "variable",
                                   dataType: "int8",
                                 },
                                 {
                                   name: "Wind",
-                                  offset: 0x26e9,
+                                  offset: 0x24ad,
                                   type: "variable",
                                   dataType: "int8",
                                 },
                                 {
                                   name: "Darkness",
-                                  offset: 0x26eb,
+                                  offset: 0x24af,
                                   type: "variable",
                                   dataType: "int8",
                                 },
@@ -528,7 +510,7 @@ const template: GameJson = {
                                   type: "group",
                                   items: [
                                     {
-                                      offset: 0x2684,
+                                      offset: 0x2448,
                                       type: "variable",
                                       dataType: "uint16",
                                       bigEndian: true,
@@ -540,7 +522,7 @@ const template: GameJson = {
                                       autocomplete: true,
                                     },
                                     {
-                                      offset: 0x2684,
+                                      offset: 0x2448,
                                       type: "variable",
                                       dataType: "bit",
                                       bit: 6,
@@ -553,7 +535,7 @@ const template: GameJson = {
                                   type: "group",
                                   items: [
                                     {
-                                      offset: 0x2686,
+                                      offset: 0x244a,
                                       type: "variable",
                                       dataType: "uint16",
                                       bigEndian: true,
@@ -565,7 +547,7 @@ const template: GameJson = {
                                       autocomplete: true,
                                     },
                                     {
-                                      offset: 0x2686,
+                                      offset: 0x244a,
                                       type: "variable",
                                       dataType: "bit",
                                       bit: 6,
@@ -585,7 +567,7 @@ const template: GameJson = {
                                   type: "group",
                                   items: [
                                     {
-                                      offset: 0x2688,
+                                      offset: 0x244c,
                                       type: "variable",
                                       dataType: "uint16",
                                       bigEndian: true,
@@ -597,7 +579,7 @@ const template: GameJson = {
                                       autocomplete: true,
                                     },
                                     {
-                                      offset: 0x2688,
+                                      offset: 0x244c,
                                       type: "variable",
                                       dataType: "bit",
                                       bit: 6,
@@ -610,7 +592,7 @@ const template: GameJson = {
                                   type: "group",
                                   items: [
                                     {
-                                      offset: 0x268a,
+                                      offset: 0x244e,
                                       type: "variable",
                                       dataType: "uint16",
                                       bigEndian: true,
@@ -622,7 +604,7 @@ const template: GameJson = {
                                       autocomplete: true,
                                     },
                                     {
-                                      offset: 0x268a,
+                                      offset: 0x244e,
                                       type: "variable",
                                       dataType: "bit",
                                       bit: 6,
@@ -641,7 +623,7 @@ const template: GameJson = {
                                   type: "group",
                                   items: [
                                     {
-                                      offset: 0x268c,
+                                      offset: 0x2450,
                                       type: "variable",
                                       dataType: "uint16",
                                       bigEndian: true,
@@ -653,7 +635,7 @@ const template: GameJson = {
                                       autocomplete: true,
                                     },
                                     {
-                                      offset: 0x268c,
+                                      offset: 0x2450,
                                       type: "variable",
                                       dataType: "bit",
                                       bit: 6,
@@ -666,7 +648,7 @@ const template: GameJson = {
                                   type: "group",
                                   items: [
                                     {
-                                      offset: 0x268e,
+                                      offset: 0x2452,
                                       type: "variable",
                                       dataType: "uint16",
                                       bigEndian: true,
@@ -678,7 +660,7 @@ const template: GameJson = {
                                       autocomplete: true,
                                     },
                                     {
-                                      offset: 0x268e,
+                                      offset: 0x2452,
                                       type: "variable",
                                       dataType: "bit",
                                       bit: 6,
@@ -704,7 +686,7 @@ const template: GameJson = {
                                   items: [
                                     {
                                       name: "Type",
-                                      offset: 0x26ba,
+                                      offset: 0x247e,
                                       type: "variable",
                                       dataType: "uint8",
                                       resource: "itemTypes",
@@ -712,14 +694,14 @@ const template: GameJson = {
                                     },
                                     {
                                       name: "Level",
-                                      offset: 0x26bb,
+                                      offset: 0x247f,
                                       type: "variable",
                                       dataType: "uint8",
                                       max: 3,
                                     },
                                     {
                                       name: "Experience",
-                                      offset: 0x26bc,
+                                      offset: 0x2480,
                                       type: "variable",
                                       dataType: "uint16",
                                       bigEndian: true,
@@ -732,7 +714,7 @@ const template: GameJson = {
                                   items: [
                                     {
                                       name: "Special 1",
-                                      offset: 0x2690,
+                                      offset: 0x2454,
                                       type: "variable",
                                       dataType: "uint8",
                                       resource: "specialAttacks",
@@ -740,7 +722,7 @@ const template: GameJson = {
                                     },
                                     {
                                       name: "Special 2",
-                                      offset: 0x2691,
+                                      offset: 0x2455,
                                       type: "variable",
                                       dataType: "uint8",
                                       resource: "specialAttacks",
@@ -748,7 +730,7 @@ const template: GameJson = {
                                     },
                                     {
                                       name: "Special 3",
-                                      offset: 0x2692,
+                                      offset: 0x2456,
                                       type: "variable",
                                       dataType: "uint8",
                                       resource: "specialAttacks",
@@ -769,7 +751,7 @@ const template: GameJson = {
                                   items: [
                                     {
                                       name: "Type",
-                                      offset: 0x26be,
+                                      offset: 0x2482,
                                       type: "variable",
                                       dataType: "uint8",
                                       resource: "itemTypes",
@@ -777,14 +759,14 @@ const template: GameJson = {
                                     },
                                     {
                                       name: "Level",
-                                      offset: 0x26bf,
+                                      offset: 0x2483,
                                       type: "variable",
                                       dataType: "uint8",
                                       max: 3,
                                     },
                                     {
                                       name: "Experience",
-                                      offset: 0x26c0,
+                                      offset: 0x2484,
                                       type: "variable",
                                       dataType: "uint16",
                                       bigEndian: true,
@@ -797,7 +779,7 @@ const template: GameJson = {
                                   items: [
                                     {
                                       name: "Special 1",
-                                      offset: 0x2693,
+                                      offset: 0x2457,
                                       type: "variable",
                                       dataType: "uint8",
                                       resource: "specialAttacks",
@@ -805,7 +787,7 @@ const template: GameJson = {
                                     },
                                     {
                                       name: "Special 2",
-                                      offset: 0x2694,
+                                      offset: 0x2458,
                                       type: "variable",
                                       dataType: "uint8",
                                       resource: "specialAttacks",
@@ -813,7 +795,7 @@ const template: GameJson = {
                                     },
                                     {
                                       name: "Special 3",
-                                      offset: 0x2695,
+                                      offset: 0x2459,
                                       type: "variable",
                                       dataType: "uint8",
                                       resource: "specialAttacks",
@@ -834,7 +816,7 @@ const template: GameJson = {
                                   items: [
                                     {
                                       name: "Type",
-                                      offset: 0x26c2,
+                                      offset: 0x2486,
                                       type: "variable",
                                       dataType: "uint8",
                                       resource: "itemTypes",
@@ -842,14 +824,14 @@ const template: GameJson = {
                                     },
                                     {
                                       name: "Level",
-                                      offset: 0x26c3,
+                                      offset: 0x2487,
                                       type: "variable",
                                       dataType: "uint8",
                                       max: 3,
                                     },
                                     {
                                       name: "Experience",
-                                      offset: 0x26c4,
+                                      offset: 0x2488,
                                       type: "variable",
                                       dataType: "uint16",
                                       bigEndian: true,
@@ -862,7 +844,7 @@ const template: GameJson = {
                                   items: [
                                     {
                                       name: "Special 1",
-                                      offset: 0x2696,
+                                      offset: 0x245a,
                                       type: "variable",
                                       dataType: "uint8",
                                       resource: "specialAttacks",
@@ -870,7 +852,7 @@ const template: GameJson = {
                                     },
                                     {
                                       name: "Special 2",
-                                      offset: 0x2697,
+                                      offset: 0x245b,
                                       type: "variable",
                                       dataType: "uint8",
                                       resource: "specialAttacks",
@@ -878,7 +860,7 @@ const template: GameJson = {
                                     },
                                     {
                                       name: "Special 3",
-                                      offset: 0x2698,
+                                      offset: 0x245c,
                                       type: "variable",
                                       dataType: "uint8",
                                       resource: "specialAttacks",
@@ -899,7 +881,7 @@ const template: GameJson = {
                                   items: [
                                     {
                                       name: "Type",
-                                      offset: 0x26c6,
+                                      offset: 0x248a,
                                       type: "variable",
                                       dataType: "uint8",
                                       resource: "itemTypes",
@@ -907,14 +889,14 @@ const template: GameJson = {
                                     },
                                     {
                                       name: "Level",
-                                      offset: 0x26c7,
+                                      offset: 0x248b,
                                       type: "variable",
                                       dataType: "uint8",
                                       max: 3,
                                     },
                                     {
                                       name: "Experience",
-                                      offset: 0x26c8,
+                                      offset: 0x248c,
                                       type: "variable",
                                       dataType: "uint16",
                                       bigEndian: true,
@@ -927,7 +909,7 @@ const template: GameJson = {
                                   items: [
                                     {
                                       name: "Special 1",
-                                      offset: 0x2699,
+                                      offset: 0x245d,
                                       type: "variable",
                                       dataType: "uint8",
                                       resource: "specialAttacks",
@@ -935,7 +917,7 @@ const template: GameJson = {
                                     },
                                     {
                                       name: "Special 2",
-                                      offset: 0x269a,
+                                      offset: 0x245e,
                                       type: "variable",
                                       dataType: "uint8",
                                       resource: "specialAttacks",
@@ -943,7 +925,7 @@ const template: GameJson = {
                                     },
                                     {
                                       name: "Special 3",
-                                      offset: 0x269b,
+                                      offset: 0x245f,
                                       type: "variable",
                                       dataType: "uint8",
                                       resource: "specialAttacks",
@@ -962,7 +944,7 @@ const template: GameJson = {
                           items: [
                             {
                               name: "Dummy",
-                              offset: 0x80c,
+                              offset: 0x5d0,
                               type: "variable",
                               dataType: "uint8",
                               max: 45,
@@ -979,7 +961,7 @@ const template: GameJson = {
                           items: [
                             {
                               name: "Kills",
-                              offset: 0x26d2,
+                              offset: 0x2496,
                               type: "variable",
                               dataType: "uint16",
                               bigEndian: true,
@@ -987,7 +969,7 @@ const template: GameJson = {
                             },
                             {
                               name: "Loses",
-                              offset: 0x26d1,
+                              offset: 0x2495,
                               type: "variable",
                               dataType: "uint8",
                             },
@@ -1005,140 +987,140 @@ const template: GameJson = {
               items: [
                 {
                   name: "Synbios",
-                  offset: 0x40c,
+                  offset: 0x1d0,
                   type: "variable",
                   dataType: "lower4",
                   resource: "formations",
                 },
                 {
                   name: "Dantares",
-                  offset: 0x40c,
+                  offset: 0x1d0,
                   type: "variable",
                   dataType: "upper4",
                   resource: "formations",
                 },
                 {
                   name: "Masqurin",
-                  offset: 0x40d,
+                  offset: 0x1d1,
                   type: "variable",
                   dataType: "lower4",
                   resource: "formations",
                 },
                 {
                   name: "Grace",
-                  offset: 0x40d,
+                  offset: 0x1d1,
                   type: "variable",
                   dataType: "upper4",
                   resource: "formations",
                 },
                 {
                   name: "Hayward",
-                  offset: 0x40e,
+                  offset: 0x1d2,
                   type: "variable",
                   dataType: "lower4",
                   resource: "formations",
                 },
                 {
                   name: "Obright",
-                  offset: 0x40e,
+                  offset: 0x1d2,
                   type: "variable",
                   dataType: "upper4",
                   resource: "formations",
                 },
                 {
                   name: "Irene",
-                  offset: 0x40f,
+                  offset: 0x1d3,
                   type: "variable",
                   dataType: "lower4",
                   resource: "formations",
                 },
                 {
                   name: "Julian",
-                  offset: 0x40f,
+                  offset: 0x1d3,
                   type: "variable",
                   dataType: "upper4",
                   resource: "formations",
                 },
                 {
                   name: "Cybel",
-                  offset: 0x410,
+                  offset: 0x1d4,
                   type: "variable",
                   dataType: "lower4",
                   resource: "formations",
                 },
                 {
                   name: "Eldar",
-                  offset: 0x410,
+                  offset: 0x1d4,
                   type: "variable",
                   dataType: "upper4",
                   resource: "formations",
                 },
                 {
                   name: "Kahn",
-                  offset: 0x411,
+                  offset: 0x1d5,
                   type: "variable",
                   dataType: "lower4",
                   resource: "formations",
                 },
                 {
                   name: "Noon",
-                  offset: 0x411,
+                  offset: 0x1d5,
                   type: "variable",
                   dataType: "upper4",
                   resource: "formations",
                 },
                 {
                   name: "Justin",
-                  offset: 0x412,
+                  offset: 0x1d6,
                   type: "variable",
                   dataType: "lower4",
                   resource: "formations",
                 },
                 {
                   name: "Horst",
-                  offset: 0x412,
+                  offset: 0x1d6,
                   type: "variable",
                   dataType: "upper4",
                   resource: "formations",
                 },
                 {
                   name: "Penn",
-                  offset: 0x413,
+                  offset: 0x1d7,
                   type: "variable",
                   dataType: "lower4",
                   resource: "formations",
                 },
                 {
                   name: "Ratchet",
-                  offset: 0x413,
+                  offset: 0x1d7,
                   type: "variable",
                   dataType: "upper4",
                   resource: "formations",
                 },
                 {
                   name: "Frank",
-                  offset: 0x414,
+                  offset: 0x1d8,
                   type: "variable",
                   dataType: "lower4",
                   resource: "formations",
                 },
                 {
                   name: "Hagane",
-                  offset: 0x414,
+                  offset: 0x1d8,
                   type: "variable",
                   dataType: "upper4",
                   resource: "formations",
                 },
                 {
                   name: "Murasame",
-                  offset: 0x415,
+                  offset: 0x1d9,
                   type: "variable",
                   dataType: "lower4",
                   resource: "formations",
                 },
                 {
                   name: "Fynnding",
-                  offset: 0x415,
+                  offset: 0x1d9,
                   type: "variable",
                   dataType: "upper4",
                   resource: "formations",
@@ -1150,7 +1132,7 @@ const template: GameJson = {
               flex: true,
               items: Object.entries(items).map(([offset, name]) => ({
                 name,
-                offset: 0x60c + parseInt(offset),
+                offset: 0x3d0 + parseInt(offset),
                 type: "variable",
                 dataType: "uint8",
                 max: 99,
@@ -1168,9 +1150,9 @@ const template: GameJson = {
                 {
                   type: "bitflags",
                   flags: [
-                    { offset: 0x4d1, bit: 0, label: "Talk after Bulsome 4 talk" },
-                    { offset: 0x535, bit: 3, label: "Balsamo Inn Chest" },
-                    { offset: 0x54c, bit: 5, label: "Balsamo House 1 5 Gold" },
+                    { offset: 0x295, bit: 0, label: "Talk after Bulsome 4 talk" },
+                    { offset: 0x2f9, bit: 3, label: "Balsamo Inn Chest" },
+                    { offset: 0x310, bit: 5, label: "Balsamo House 1 5 Gold" },
                   ],
                 },
               ],
@@ -1184,14 +1166,14 @@ const template: GameJson = {
                   items: [
                     {
                       name: "Message Speed",
-                      offset: 0x368,
+                      offset: 0x12c,
                       type: "variable",
                       dataType: "uint8",
                       resource: "messageSpeeds",
                     },
                     {
                       name: "Message Shadow",
-                      offset: 0x364,
+                      offset: 0x128,
                       type: "variable",
                       dataType: "uint8",
                       resource: "optionBoolean",
@@ -1204,21 +1186,21 @@ const template: GameJson = {
                   items: [
                     {
                       name: "Window Color",
-                      offset: 0x361,
+                      offset: 0x125,
                       type: "variable",
                       dataType: "uint8",
                       max: 23,
                     },
                     {
                       name: "Window Brightness",
-                      offset: 0x362,
+                      offset: 0x126,
                       type: "variable",
                       dataType: "uint8",
                       max: 15,
                     },
                     {
                       name: "Window Transparency",
-                      offset: 0x365,
+                      offset: 0x129,
                       type: "variable",
                       dataType: "uint8",
                       max: 15,
@@ -1231,14 +1213,14 @@ const template: GameJson = {
                   items: [
                     {
                       name: "Sound",
-                      offset: 0x369,
+                      offset: 0x12d,
                       type: "variable",
                       dataType: "uint8",
                       resource: "sounds",
                     },
                     {
                       name: "Voice",
-                      offset: 0x366,
+                      offset: 0x12a,
                       type: "variable",
                       dataType: "uint8",
                       resource: "optionBoolean",
@@ -1251,14 +1233,14 @@ const template: GameJson = {
                   items: [
                     {
                       name: "Auto Camera Angle",
-                      offset: 0x387,
+                      offset: 0x14b,
                       type: "variable",
                       dataType: "uint8",
                       resource: "optionBoolean",
                     },
                     {
                       name: "Auto Camera Angle",
-                      offset: 0x430,
+                      offset: 0x1f4,
                       type: "variable",
                       dataType: "uint8",
                       hidden: true,
@@ -1271,14 +1253,14 @@ const template: GameJson = {
                   items: [
                     {
                       name: "Battle Guide",
-                      offset: 0x389,
+                      offset: 0x14d,
                       type: "variable",
                       dataType: "uint8",
                       resource: "optionBoolean",
                     },
                     {
                       name: "Battle Message",
-                      offset: 0x367,
+                      offset: 0x12b,
                       type: "variable",
                       dataType: "uint8",
                       resource: "optionBoolean",
@@ -1287,7 +1269,7 @@ const template: GameJson = {
                 },
                 {
                   name: "Battle Difficulty",
-                  offset: 0x42f,
+                  offset: 0x1f3,
                   type: "variable",
                   dataType: "uint8",
                   resource: "difficulties",
