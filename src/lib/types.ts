@@ -131,7 +131,7 @@ export interface GameJson {
   items: Item[];
   resources?: Resource;
   resourcesGroups?: {
-    [key: string]: ResourceGroups;
+    [key: string]: ResourceGroups | string;
   };
   resourcesLabels?: {
     [key: string]: ResourceLabels;

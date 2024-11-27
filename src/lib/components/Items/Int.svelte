@@ -142,7 +142,7 @@
       const order = $gameJson.resourcesOrder?.[item.resource] || [];
 
       options = objToArrayKeyValue(resource, order);
-      groups = $gameJson.resourcesGroups?.[item.resource] || [];
+      groups = ($gameJson.resourcesGroups?.[item.resource] as ResourceGroups) || [];
       labels = $gameJson.resourcesLabels?.[item.resource] || {};
     }
   }

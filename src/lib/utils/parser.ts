@@ -77,6 +77,7 @@ export function enrichGameJson(): void {
   // TODO: Find a way to not dissociate in 2 gameJson.set (useful for utils that required $gameJson)
 
   updateResources();
+  updateResourcesGroups();
 
   if (utilsExists("onReady")) {
     $gameUtils.onReady();
@@ -603,4 +604,37 @@ export function updateResources(
   }
 
   gameJson.set({ ...$gameJson, resources });
+}
+
+export function updateResourcesGroups(resource = ""): void {
+  const $gameJson = get(gameJson);
+  const $gameTemplate = get(gameTemplate);
+
+  let resourcesGroups = { ...$gameTemplate.resourcesGroups };
+
+  if (resource && $gameTemplate.resourcesGroups?.[resource]) {
+    if (typeof resourcesGroups[resource] === "string") {
+      const values = getUtils(resourcesGroups[resource] as string);
+
+      resourcesGroups = {
+        ...$gameJson.resourcesGroups,
+        [resource]: values,
+      };
+    }
+  } else {
+    resourcesGroups = Object.entries(resourcesGroups).reduce(
+      (results: any, [key, value]) => {
+        if (typeof value === "string") {
+          value = getUtils(value as string);
+        }
+
+        results[key] = value;
+
+        return results;
+      },
+      {},
+    );
+  }
+
+  gameJson.set({ ...$gameJson, resourcesGroups });
 }
