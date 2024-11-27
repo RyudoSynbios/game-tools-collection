@@ -4,7 +4,7 @@ import { dataView, gameRegion, gameTemplate } from "$lib/stores";
 
 import { Validator } from "$lib/types";
 
-import { getInt, getString } from "../bytes";
+import { addPadding, getInt, getString, removePadding } from "../bytes";
 import { getObjKey, mergeUint8Arrays, numberArrayToString } from "../format";
 import { checkValidator } from "../validator";
 
@@ -18,6 +18,7 @@ interface File {
 
 interface MemorySystem {
   type: "external" | "internal";
+  paddedValue?: number;
   blockSize: number;
   allocOffset: number;
   headerSize: number;
@@ -36,45 +37,67 @@ let memorySystemRaw = new DataView(new ArrayBuffer(0));
 let saves: Save[] = [];
 let filteredSaves: Save[] = [];
 
-export function generateMemorySystem(dataView: DataView): void {
-  memorySystemRaw = dataView;
+const blockValidator = [...new Array(0x10).fill(0x0)];
 
-  const validator = [
-    0x42, 0x61, 0x63, 0x6b, 0x55, 0x70, 0x52, 0x61, 0x6d, 0x20, 0x46, 0x6f,
-    0x72, 0x6d, 0x61, 0x74,
-  ]; // "BackUpRam Format";
+const memoryHeaderValidator = [
+  0x42, 0x61, 0x63, 0x6b, 0x55, 0x70, 0x52, 0x61, 0x6d, 0x20, 0x46, 0x6f, 0x72,
+  0x6d, 0x61, 0x74,
+]; // "BackUpRam Format"
+
+export function generateMemorySystem(dataView: DataView): DataView {
+  const isPadded = getInt(0x0, "uint8", {}, dataView) !== 0x42;
 
   memorySystem.headerSize = 0x24;
   memorySystem.files = [];
 
-  let count = 0;
+  if (!checkSaturnValidator(memoryHeaderValidator, 0x0, dataView)) {
+    return dataView;
+  }
+
+  let headerCount = 0;
+  let blockCount = 0;
 
   for (let i = 0x0; i < dataView.byteLength; i += 0x10) {
-    if (checkValidator(validator, i, dataView)) {
-      count += 1;
+    if (checkSaturnValidator(memoryHeaderValidator, i, dataView)) {
+      headerCount += 1;
+    } else if (
+      (isPadded && checkSaturnValidator(blockValidator, i, dataView)) ||
+      checkValidator(blockValidator, i, dataView)
+    ) {
+      blockCount += 1;
     } else {
       break;
     }
   }
 
-  switch (count) {
-    case 4:
-      memorySystem.type = "internal";
-      memorySystem.blockSize = 0x40;
-      break;
-    case 32:
-      memorySystem.type = "external";
-      memorySystem.blockSize = 0x200;
-      break;
+  if (headerCount === 4 && blockCount === 4) {
+    memorySystem.type = "internal";
+    memorySystem.blockSize = 0x40;
+  } else if (headerCount === 4 && blockCount === 124) {
+    memorySystem.type = "external";
+    memorySystem.blockSize = 0x400;
+  } else {
+    memorySystem.type = "external";
+    memorySystem.blockSize = 0x200;
   }
 
   if (!memorySystem.type) {
-    return;
+    return dataView;
   }
 
-  memorySystem.allocOffset = count * 0x20;
+  if (isPadded) {
+    memorySystem.paddedValue = getInt(0x0, "uint8", {}, dataView);
+
+    dataView = removePadding(dataView);
+  }
+
+  memorySystemRaw = dataView;
+
+  memorySystem.allocOffset = (headerCount + blockCount) * 0x10;
 
   readFile(dataView, memorySystem.allocOffset);
+
+  return dataView;
 }
 
 export function resetMemorySystem(): void {
@@ -168,17 +191,26 @@ function writeFile(file: File, blob: ArrayBuffer): void {
   memorySystemRaw = new DataView(memorySystemRawTmp.buffer);
 }
 
+function checkSaturnValidator(
+  validator: number[],
+  offset: number,
+  dataView: DataView,
+): boolean {
+  const isValid = checkValidator(validator, offset, dataView);
+
+  const isPaddedValid = validator.every((int, index) => {
+    if (
+      getInt(offset * 0x2 + 0x1 + index * 0x2, "uint8", {}, dataView) === int
+    ) {
+      return true;
+    }
+  });
+
+  return isValid || isPaddedValid;
+}
+
 export function isMemorySystem(dataView: DataView): boolean {
-  const validator = [
-    0x42, 0x61, 0x63, 0x6b, 0x55, 0x70, 0x52, 0x61, 0x6d, 0x20, 0x46, 0x6f,
-    0x72, 0x6d, 0x61, 0x74,
-  ]; // "BackUpRam Format"
-
-  if (checkValidator(validator, 0x0, dataView)) {
-    return true;
-  }
-
-  return false;
+  return checkSaturnValidator(memoryHeaderValidator, 0x0, dataView);
 }
 
 export function isUnpackedMemorySystem(): boolean {
@@ -195,7 +227,7 @@ export function unpackMemorySystem(dataView: DataView): DataView {
   const $gameTemplate = get(gameTemplate);
 
   if (isMemorySystem(dataView)) {
-    generateMemorySystem(dataView);
+    dataView = generateMemorySystem(dataView);
 
     const uint8Arrays: Uint8Array[] = [];
 
@@ -259,6 +291,10 @@ export function repackMemorySystem(): ArrayBufferLike {
 
       writeFile(save.file, blob);
     });
+
+    if (memorySystem.paddedValue !== undefined) {
+      memorySystemRaw = addPadding(memorySystemRaw, memorySystem.paddedValue);
+    }
 
     return memorySystemRaw.buffer;
   }

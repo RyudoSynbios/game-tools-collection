@@ -80,7 +80,7 @@
       <strong>Mega Drive: </strong>.sav, .srm
     </li>
     <li>
-      <strong>Sega Saturn: </strong>.bkr (<i>System saves</i>)
+      <strong>Sega Saturn: </strong>.bcr, .bkr, .bin
     </li>
     <li>
       <strong>PlayStation: </strong>.mcr, .srm, .psv (<i>PlayStation 3</i>),
@@ -96,6 +96,11 @@
       <strong>PC-Engine CD: </strong>.sav, .srm
     </li>
   </ul>
+  <h2>- My .bcr file won't load</h2>
+  <p>Your save file may be compressed.</p>
+  <p>
+    Try changing the extension to <strong>*.gz</strong>, then decompress it.
+  </p>
   <h2>- How can i edit my PSP save?</h2>
   <p>
     PSP save files are encrypted by default when exported from a PSP or
@@ -103,7 +108,7 @@
   </p>
   <p>If you're save has been generated with PPSSPP, follow those steps:</p>
   <p>
-    Open the <strong> memstick</strong>
+    Open the <strong>memstick</strong>
     folder (on the root of the PPSSPP folder by default).
   </p>
   <p>
