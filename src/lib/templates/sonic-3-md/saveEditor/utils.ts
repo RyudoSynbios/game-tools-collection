@@ -1,23 +1,13 @@
 import { get } from "svelte/store";
 
 import { dataView } from "$lib/stores";
-import { getInt, setInt } from "$lib/utils/bytes";
+import { addPadding, getInt, removePadding, setInt } from "$lib/utils/bytes";
 import { formatChecksum } from "$lib/utils/checksum";
 
 import type { Item, ItemBitflag, ItemChecksum } from "$lib/types";
 
 export function beforeInitDataView(dataView: DataView): DataView {
-  const array = [];
-
-  for (let i = 0x0; i < dataView.byteLength; i += 0x1) {
-    if (i % 0x2 !== 0) {
-      array.push(getInt(i, "uint8", {}, dataView));
-    }
-  }
-
-  const uint8Array = new Uint8Array(array);
-
-  return new DataView(uint8Array.buffer);
+  return removePadding(dataView);
 }
 
 export function afterSetInt(item: Item, flag: ItemBitflag): void {
@@ -52,23 +42,7 @@ export function generateChecksum(item: ItemChecksum): number {
 export function beforeSaving(): ArrayBufferLike {
   const $dataView = get(dataView);
 
-  const array = [];
+  const paddedDataView = addPadding($dataView, 0xff);
 
-  let j = 0x0;
-
-  for (let i = 0x0; i < $dataView.byteLength; i += 0x1) {
-    if (j % 0x2 === 0) {
-      array.push(0xff);
-
-      j += 0x1;
-    }
-
-    array.push(getInt(i, "uint8"));
-
-    j += 0x1;
-  }
-
-  const uint8Array = new Uint8Array(array);
-
-  return uint8Array.buffer;
+  return paddedDataView.buffer;
 }

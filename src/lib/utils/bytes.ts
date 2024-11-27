@@ -65,6 +65,95 @@ export function byteswap(
   return new DataView(uint8Array.buffer);
 }
 
+export function addPadding(
+  dataView?: DataView,
+  value = 0x0,
+  type: "even" | "odd" = "even",
+  start = 0x0,
+  end?: number,
+): DataView {
+  const $dataView = getDataView(dataView);
+
+  if (!end) {
+    end = $dataView.byteLength;
+  }
+
+  const array = [];
+
+  if (start > 0x0) {
+    for (let i = 0x0; i < start; i += 0x1) {
+      array.push(getInt(i, "uint8", {}, $dataView));
+    }
+  }
+
+  let j = 0x0;
+
+  for (let i = 0x0; i < end; i += 0x1) {
+    if (
+      (type === "even" && j % 0x2 === 0) ||
+      (type === "odd" && j % 0x2 !== 0)
+    ) {
+      array.push(value);
+
+      j += 0x1;
+    }
+
+    array.push(getInt(i, "uint8", {}, $dataView));
+
+    j += 0x1;
+  }
+
+  if (end < $dataView.byteLength) {
+    for (let i = end; i < $dataView.byteLength; i += 0x1) {
+      array.push(getInt(i, "uint8", {}, $dataView));
+    }
+  }
+
+  const uint8Array = new Uint8Array(array);
+
+  return new DataView(uint8Array.buffer);
+}
+
+export function removePadding(
+  dataView?: DataView,
+  type: "even" | "odd" = "even",
+  start = 0x0,
+  end?: number,
+): DataView {
+  const $dataView = getDataView(dataView);
+
+  if (!end) {
+    end = $dataView.byteLength;
+  }
+
+  const array = [];
+
+  if (start > 0x0) {
+    for (let i = 0x0; i < start; i += 0x1) {
+      array.push(getInt(i, "uint8", {}, $dataView));
+    }
+  }
+
+  for (let i = start; i < end; i += 0x1) {
+    if (
+      (type === "even" && i % 0x2 !== 0) ||
+      (type === "odd" && i % 0x2 === 0)
+    ) {
+      array.push(getInt(i, "uint8", {}, dataView));
+    }
+  }
+
+  if (end < $dataView.byteLength) {
+    for (let i = end; i < $dataView.byteLength; i += 0x1) {
+      array.push(getInt(i, "uint8", {}, $dataView));
+    }
+  }
+
+  const uint8Array = new Uint8Array(array);
+
+  return new DataView(uint8Array.buffer);
+}
+
 export function dataTypeToLength(
   dataType: Exclude<DataType, "string">,
 ): number {
