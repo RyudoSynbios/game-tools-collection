@@ -38,6 +38,7 @@ describe(game, () => {
     ["should load a BKR save (Scenario 1) (Japan) (Rev A)", "scenario1-japan-reva.bkr", [               't|["Slot 1"]'         , "s|1$1", "s|2$2", "s|1$3" , "c|0x0000f341", "i|こ\"うかく", "w|さ\"うかく", "c|0x0000f342"]],
     ["should load a BCR save (Scenario 2) (Patched)"      ,    "scenario2-patched.bcr", [               't|["Slot 1"]'         , "s|1$1", "s|2$2", "s|21$3", "c|0x00023910", "i|PASS"    , "w|QASS"     , "c|0x00023911"]],
     ["should load a BCR save (Scenario 3) (Patched)"      ,    "scenario3-patched.bcr", [               't|["Slot 1","Slot 2"]', "s|2$1", "s|2$2", "s|8$3" , "c|0x00037886", "i|PASS"    , "w|QASS"     , "c|0x00037887"]],
+    ["should load a Hook save (Scenario 2) (Patched)"     ,       "scenario2-hook.bin", [               't|["Slot 1"]'         , "s|1$1", "s|2$2", "s|21$3", "c|0x0002381d", "i|PASS"    , "w|QASS"     , "c|0x0002381e"]],
   ])("%s", async (...args) =>
     await snippet(`${game}/${args[1]}`, args[2]),
   );

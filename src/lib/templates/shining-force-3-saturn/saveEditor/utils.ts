@@ -7,6 +7,7 @@ import {
   customGetRegions,
   getSaves,
   getSlots,
+  isUnpackedMemorySystem,
   repackMemorySystem,
   resetMemorySystem,
   unpackMemorySystem,
@@ -18,6 +19,7 @@ import type {
   ItemChecksum,
   ItemContainer,
   ItemInt,
+  ItemSection,
   ItemTab,
   ItemTabs,
   Resource,
@@ -41,8 +43,47 @@ export function beforeInitDataView(dataView: DataView): DataView {
   return unpackMemorySystem(dataView);
 }
 
-export function overrideGetRegions(): string[] {
-  return customGetRegions();
+export function overrideGetRegions(dataView: DataView): string[] {
+  const $gameTemplate = get(gameTemplate);
+
+  const regions = customGetRegions();
+
+  if (regions.length > 0) {
+    return regions;
+  }
+
+  // Check if save is a hook file
+  for (let i = 0x0; i < 0x3; i += 0x1) {
+    const itemChecksum = clone(
+      ($gameTemplate.items[0] as ItemSection).items[0],
+    ) as ItemChecksum;
+
+    itemChecksum.offset -= 0x10;
+    itemChecksum.control.offsetStart -= 0x10;
+    itemChecksum.control.offsetEnd = [0x3288, 0x3f98, 0x5f38][i] - 0x10;
+
+    if (dataView.byteLength < itemChecksum.control.offsetEnd) {
+      return [];
+    }
+
+    const checksum = generateChecksum(itemChecksum, dataView);
+
+    if (
+      checksum ===
+      getInt(itemChecksum.offset, "uint32", { bigEndian: true }, dataView)
+    ) {
+      switch (i) {
+        case 0x0:
+          return ["scenario1"];
+        case 0x1:
+          return ["scenario2"];
+        case 0x2:
+          return ["scenario3"];
+      }
+    }
+  }
+
+  return [];
 }
 
 export function onInitFailed(): void {
@@ -56,7 +97,7 @@ export function overrideParseItem(
   const $gameRegion = get(gameRegion);
   const $gameTemplate = get(gameTemplate);
 
-  if ("id" in item && item.id === "slots") {
+  if ("id" in item && item.id === "slots" && isUnpackedMemorySystem()) {
     const itemContainer = item as ItemContainer;
 
     const saves = getSaves();
@@ -66,9 +107,9 @@ export function overrideParseItem(
     const itemChecksum = item as ItemChecksum;
 
     if ($gameRegion === 1) {
-      itemChecksum.control.offsetEnd = 0x3f9c;
+      itemChecksum.control.offsetEnd = 0x3f98;
     } else if ($gameRegion === 2) {
-      itemChecksum.control.offsetEnd = 0x5f3c;
+      itemChecksum.control.offsetEnd = 0x5f38;
     }
 
     return itemChecksum;
@@ -212,7 +253,11 @@ export function overrideParseContainerItemsShifts(
   const $gameRegion = get(gameRegion);
 
   if (item.id === "slots") {
-    return getSlots(index);
+    if (isUnpackedMemorySystem()) {
+      return getSlots(index);
+    }
+
+    return [true, [-0x10]];
   } else if (item.id === "party" && $gameRegion === 2) {
     return [true, [...shifts, index * item.length + 0x11e0]];
   }
@@ -230,11 +275,14 @@ export function afterSetInt(item: Item): void {
   }
 }
 
-export function generateChecksum(item: ItemChecksum): number {
+export function generateChecksum(
+  item: ItemChecksum,
+  dataView = new DataView(new ArrayBuffer(0)),
+): number {
   let checksum = 0x0;
 
   for (let i = item.control.offsetStart; i < item.control.offsetEnd; i += 0x1) {
-    checksum += getInt(i, "uint8");
+    checksum += getInt(i, "uint8", {}, dataView);
   }
 
   return formatChecksum(checksum, item.dataType);
