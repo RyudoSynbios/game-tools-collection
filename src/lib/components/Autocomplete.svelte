@@ -201,12 +201,16 @@
         dropdownEl.querySelector(".gtc-autocomplete-hover") ||
         dropdownEl.querySelector(".gtc-autocomplete-highlight");
 
+      const dropdownLiNodes = dropdownEl.querySelectorAll(
+        ".gtc-autocomplete-dropdown-group li",
+      );
+
       if (!hoverElementEl) {
         hoverElementEl = dropdownEl.querySelector(
           "li:first-child",
         ) as HTMLLIElement;
       } else {
-        index = [...dropdownEl.childNodes].indexOf(hoverElementEl);
+        index = [...dropdownLiNodes].indexOf(hoverElementEl);
       }
 
       removeAllHover();
@@ -216,17 +220,17 @@
           index -= 1;
 
           if (index < 0) {
-            index = dropdownEl.childNodes.length - 2;
+            index = dropdownLiNodes.length - 1;
           }
         } else if (event.key === "ArrowDown") {
           index += 1;
 
-          if (index > dropdownEl.childNodes.length - 2) {
+          if (index > dropdownLiNodes.length - 1) {
             index = 0;
           }
         }
 
-        let newHoverElementEl = dropdownEl.childNodes[index] as HTMLLIElement;
+        let newHoverElementEl = dropdownLiNodes[index] as HTMLLIElement;
 
         newHoverElementEl?.classList.add("gtc-autocomplete-hover");
 
