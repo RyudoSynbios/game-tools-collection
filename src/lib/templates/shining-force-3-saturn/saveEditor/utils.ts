@@ -11,7 +11,7 @@ import {
   resetMemorySystem,
   unpackMemorySystem,
 } from "$lib/utils/common/saturn";
-import { clone } from "$lib/utils/format";
+import { clone, getRegionArray } from "$lib/utils/format";
 
 import type {
   Item,
@@ -19,7 +19,23 @@ import type {
   ItemContainer,
   ItemInt,
   ItemTab,
+  ItemTabs,
+  Resource,
+  ResourceGroups,
 } from "$lib/types";
+
+import {
+  itemTypes as itemTypesS1,
+  itemsDetails as itemsDetailsS1,
+} from "./utils/scenario1/resource";
+import {
+  itemTypes as itemTypesS2,
+  itemsDetails as itemsDetailsS2,
+} from "./utils/scenario2/resource";
+import {
+  itemTypes as itemTypesS3,
+  itemsDetails as itemsDetailsS3,
+} from "./utils/scenario3/resource";
 
 export function beforeInitDataView(dataView: DataView): DataView {
   return unpackMemorySystem(dataView);
@@ -37,6 +53,7 @@ export function overrideParseItem(
   item: Item & ItemTab,
   instanceIndex: number,
 ): Item | ItemTab {
+  const $gameRegion = get(gameRegion);
   const $gameTemplate = get(gameTemplate);
 
   if ("id" in item && item.id === "slots") {
@@ -45,6 +62,26 @@ export function overrideParseItem(
     const saves = getSaves();
 
     itemContainer.instances = saves.length;
+  } else if ("id" in item && item.id === "checksum") {
+    const itemChecksum = item as ItemChecksum;
+
+    if ($gameRegion === 1) {
+      itemChecksum.control.offsetEnd = 0x3f9c;
+    } else if ($gameRegion === 2) {
+      itemChecksum.control.offsetEnd = 0x5f3c;
+    }
+
+    return itemChecksum;
+  } else if ("id" in item && item.id === "party") {
+    const itemContainer = item as ItemContainer;
+
+    if ($gameRegion === 1) {
+      itemContainer.instances = 40;
+    } else if ($gameRegion === 2) {
+      itemContainer.instances = 59;
+    }
+
+    return itemContainer;
   } else if ("id" in item && item.id === "friendship") {
     const itemTab = item as ItemTab;
     const itemInt = itemTab.items[0] as ItemInt;
@@ -54,11 +91,11 @@ export function overrideParseItem(
     let offset =
       itemInt.offset + instanceIndex * (Math.max(0, instanceIndex - 1) / 2);
 
-    for (
-      let i = 0;
-      i < Object.keys($gameTemplate.resources!.characters).length - 1;
-      i += 1
-    ) {
+    const characters = getRegionArray(
+      $gameTemplate.resources!.characters as Resource[],
+    );
+
+    for (let i = 0; i < Object.keys(characters).length - 1; i += 1) {
       const characterIndexReached = i >= instanceIndex;
       const characterIndex = i + (characterIndexReached ? 1 : 0);
       const newItemInt = clone(itemInt);
@@ -71,13 +108,95 @@ export function overrideParseItem(
         offset += characterIndex - 1;
       }
 
-      newItemInt.name = $gameTemplate.resources!.characters[
-        characterIndex
-      ] as string;
+      newItemInt.name = characters[characterIndex] as string;
       newItemInt.offset = offset;
 
       itemTab.items.push(newItemInt);
     }
+
+    return itemTab;
+  } else if ("id" in item && item.id === "formation") {
+    const itemTab = item as ItemTab;
+    const itemInt = itemTab.items[0] as ItemInt;
+
+    itemTab.items = [];
+
+    const characters = getRegionArray(
+      $gameTemplate.resources!.characters as Resource[],
+    );
+
+    let section = [];
+
+    for (let i = 0; i < Object.keys(characters).length; i += 1) {
+      const newItemInt = clone(itemInt);
+
+      newItemInt.name = characters[i] as string;
+      newItemInt.offset = itemInt.offset + i / 2;
+      newItemInt.dataType = i % 2 === 0 ? "lower4" : "upper4";
+
+      section.push(newItemInt);
+
+      if (section.length % 20 === 0) {
+        itemTab.items.push({
+          type: "section",
+          flex: true,
+          items: section,
+        });
+
+        section = [];
+      }
+    }
+
+    if (section.length > 0) {
+      itemTab.items.push({
+        type: "section",
+        flex: true,
+        items: section,
+      });
+    }
+
+    return itemTab;
+  } else if ("id" in item && item.id === "headquartersInventory") {
+    const itemTab = item as ItemTab;
+    const itemInt = itemTab.items[0] as ItemInt;
+
+    const itemTabs = { type: "tabs", vertical: true, items: [] } as ItemTabs;
+
+    const groups = getItemGroups();
+
+    groups.forEach((group) => {
+      itemTabs.items.push({
+        name: group.name,
+        flex: true,
+        items: group.items.reduce((items: ItemInt[], item) => {
+          const newItemInt = clone(itemInt);
+
+          newItemInt.name = item.name;
+
+          if ($gameRegion === 2) {
+            if (item.index >= 0x54 && item.index <= 0x67) {
+              newItemInt.offset += item.index + 0x42;
+            } else if (item.index === 0xf3) {
+              newItemInt.offset += 0xaa;
+            } else if (item.index === 0x11e) {
+              newItemInt.offset += 0xab;
+            } else {
+              newItemInt.offset += Math.ceil((item.index + 0x1) / 0x2) - 0x1;
+              newItemInt.dataType = item.index % 2 === 0 ? "upper4" : "lower4";
+              newItemInt.max = 9;
+            }
+          } else {
+            newItemInt.offset += item.index;
+          }
+
+          items.push(newItemInt);
+
+          return items;
+        }, []),
+      });
+    });
+
+    itemTab.items = [itemTabs];
 
     return itemTab;
   }
@@ -90,8 +209,12 @@ export function overrideParseContainerItemsShifts(
   shifts: number[],
   index: number,
 ): [boolean, number[] | undefined] {
+  const $gameRegion = get(gameRegion);
+
   if (item.id === "slots") {
     return getSlots(index);
+  } else if (item.id === "party" && $gameRegion === 2) {
+    return [true, [...shifts, index * item.length + 0x11e0]];
   }
 
   return [false, undefined];
@@ -123,4 +246,60 @@ export function beforeSaving(): ArrayBufferLike {
 
 export function onReset(): void {
   resetMemorySystem();
+}
+
+interface ItemGroup {
+  name: string;
+  items: {
+    index: number;
+    name: string;
+    type: number;
+  }[];
+}
+
+function getItemGroups(): ItemGroup[] {
+  const $gameRegion = get(gameRegion);
+
+  let itemsDetails;
+  let itemTypes;
+
+  switch ($gameRegion) {
+    case 0:
+      itemsDetails = itemsDetailsS1;
+      itemTypes = itemTypesS1;
+      break;
+    case 1:
+      itemsDetails = itemsDetailsS2;
+      itemTypes = itemTypesS2;
+      break;
+    case 2:
+      itemsDetails = itemsDetailsS3;
+      itemTypes = itemTypesS3;
+      break;
+  }
+
+  return Object.entries(itemTypes as { [key: string]: string }).reduce(
+    (tabs: ItemGroup[], [key, value]) => {
+      const offset = parseInt(key);
+      const items = itemsDetails!.filter((item) => item.type === offset);
+
+      tabs.push({ name: value, items });
+
+      return tabs;
+    },
+    [],
+  );
+}
+
+export function getItemResourceGroups(): ResourceGroups {
+  const groups = getItemGroups();
+
+  return groups.reduce((groups: ResourceGroups, group) => {
+    groups.push({
+      name: group.name,
+      options: group.items.map((item) => item.index),
+    });
+
+    return groups;
+  }, []);
 }
