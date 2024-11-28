@@ -34,7 +34,7 @@
 <div class="gtc-app">
   <div class="gtc-header">
     <div class="gtc-header-inner">
-      <a href="/">Game Tools Collection</a>
+      <a class="gtc-header-logo" href="/">Game Tools Collection</a>
       <div>
         <a
           href="https://github.com/RyudoSynbios/game-tools-collection"
@@ -64,6 +64,10 @@
 
       & .gtc-header-inner {
         @apply relative mx-auto flex justify-between w-full max-w-7xl;
+
+        .gtc-header-logo {
+          @apply font-bold;
+        }
 
         & div {
           @apply flex;
