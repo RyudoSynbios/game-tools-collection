@@ -47,7 +47,7 @@ const memoryHeaderValidator = [
 export function generateMemorySystem(dataView: DataView): DataView {
   const isPadded = getInt(0x0, "uint8", {}, dataView) !== 0x42;
 
-  memorySystem.headerSize = 0x24;
+  memorySystem.headerSize = 0x20;
   memorySystem.files = [];
 
   if (!checkSaturnValidator(memoryHeaderValidator, 0x0, dataView)) {
