@@ -214,7 +214,7 @@ export function isMemorySystem(dataView: DataView): boolean {
 }
 
 export function isUnpackedMemorySystem(): boolean {
-  return Boolean(memorySystem);
+  return Boolean(memorySystem.type);
 }
 
 function getHeader(dataView: DataView, file: File): Uint8Array {
