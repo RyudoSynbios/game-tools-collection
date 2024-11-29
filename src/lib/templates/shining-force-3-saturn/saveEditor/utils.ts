@@ -13,6 +13,7 @@ import {
   unpackMemorySystem,
 } from "$lib/utils/common/saturn";
 import { clone, getRegionArray } from "$lib/utils/format";
+import { getItem } from "$lib/utils/parser";
 
 import type {
   Item,
@@ -123,7 +124,7 @@ export function overrideParseItem(
     }
 
     return itemContainer;
-  } else if ("id" in item && item.id === "friendship") {
+  } else if ("id" in item && item.id?.match(/friendship-/)) {
     const itemTab = item as ItemTab;
     const itemInt = itemTab.items[0] as ItemInt;
 
@@ -263,6 +264,34 @@ export function overrideParseContainerItemsShifts(
   }
 
   return [false, undefined];
+}
+
+export function overrideGetInt(item: Item): [boolean, number | undefined] {
+  if ("id" in item && item.id?.match(/setFriendship-/)) {
+    return [true, 0xff];
+  }
+
+  return [false, undefined];
+}
+
+export function overrideSetInt(item: Item, value: string): boolean {
+  if ("id" in item && item.id?.match(/setFriendship-/)) {
+    const friendshipSection = getItem(
+      item.id.replace("setFriendship", "friendship"),
+    ) as ItemSection;
+
+    if (parseInt(value) === 0xff) {
+      return true;
+    }
+
+    (friendshipSection.items as ItemInt[]).forEach((item) => {
+      setInt(item.offset, "uint8", value);
+    });
+
+    return true;
+  }
+
+  return false;
 }
 
 export function afterSetInt(item: Item): void {

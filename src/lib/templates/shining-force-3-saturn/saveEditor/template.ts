@@ -966,20 +966,35 @@ const template: GameJson = {
                           ],
                         },
                         {
-                          id: "friendship",
                           name: "Friendship",
                           flex: true,
                           items: [
                             {
-                              name: "Dummy",
+                              id: "setFriendship-%index%",
+                              name: "Set all characters",
                               offset: 0x5cc,
                               type: "variable",
                               dataType: "uint8",
-                              max: 45,
-                              overrideShift: {
-                                parent: 1,
-                                shift: 0x0,
-                              },
+                              resource: "friendships",
+                              hint: "Ally: 0\nPartner: 10\nFriend: 20\nTrusted: 30\nSoul Mate: 45",
+                            },
+                            {
+                              id: "friendship-%index%",
+                              type: "section",
+                              flex: true,
+                              items: [
+                                {
+                                  name: "Dummy",
+                                  offset: 0x5cc,
+                                  type: "variable",
+                                  dataType: "uint8",
+                                  max: 45,
+                                  overrideShift: {
+                                    parent: 1,
+                                    shift: 0x0,
+                                  },
+                                },
+                              ],
                             },
                           ],
                         },
@@ -1206,6 +1221,14 @@ const template: GameJson = {
       0x9: "Reserve (Scenario 1)",
       0xa: "Reserve (Scenario 2)",
       0xb: "Reserve (Scenario 3)",
+    },
+    friendships: {
+      0x0: "Ally",
+      0xa: "Partner",
+      0x14: "Friend",
+      0x1e: "Trusted",
+      0x2d: "Soul Mate",
+      0xff: "-",
     },
     genders: {
       0x1: "Male",
@@ -1450,6 +1473,9 @@ const template: GameJson = {
   },
   resourcesGroups: {
     items: "getItemResourceGroups()",
+  },
+  resourcesOrder: {
+    friendships: [0xff],
   },
 };
 
