@@ -126,7 +126,7 @@ export function overrideSetInt(item: Item, value: string): boolean {
     }
 
     // prettier-ignore
-    setInt(itemInt.offset - (index === 0 ? 0x830 : 0x432), "uint8", resultAvailable);
+    setInt(itemInt.offset - questIndex * 0x7c - (index === 0 ? 0x830 : 0x432), "uint8", resultAvailable);
     setInt(itemInt.offset, "uint16", cleared);
     setInt(itemInt.offset - (0x8 + index * 0x2), "uint32", unlocked);
 
