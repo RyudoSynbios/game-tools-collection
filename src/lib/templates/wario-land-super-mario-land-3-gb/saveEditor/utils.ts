@@ -5,9 +5,7 @@ import type { Item, ItemBitflag, ItemChecksum } from "$lib/types";
 
 export function afterSetInt(item: Item, flag: ItemBitflag): void {
   if ("id" in item && item.id?.match(/level-/)) {
-    const split = item.id.split("-");
-
-    const offsetIndex = parseInt(split[1]);
+    const [offsetIndex] = item.id.splitInt();
 
     const offset = flag.offset - offsetIndex + 1;
 

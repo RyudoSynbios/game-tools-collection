@@ -38,9 +38,7 @@ export function overrideParseItem(item: Item): Item | ItemTab {
   if ("id" in item && item.id?.match(/skill-/)) {
     const itemTab = item as ItemTab;
 
-    const split = item.id.split("-");
-
-    const skillClass = parseInt(split[1]);
+    const [skillClass] = item.id.splitInt();
 
     const heroClass = getItem("class") as ItemInt;
 

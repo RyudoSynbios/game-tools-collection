@@ -78,9 +78,7 @@ export function overrideItem(item: Item): Item {
   ) {
     const itemInt = item as ItemInt;
 
-    const split = item.id.split("-");
-
-    const index = parseInt(split[1]);
+    const [index] = item.id.splitInt();
 
     let offset = itemInt.offset - 0x11d - index * 0x2;
 

@@ -50,9 +50,7 @@ export function overrideItem(item: Item): Item {
   if ("id" in item && (item.id?.match(/book-/) || item.id?.match(/skill-/))) {
     const itemInt = item as ItemInt;
 
-    const split = item.id.split("-");
-
-    const index = parseInt(split[1]);
+    const [index] = item.id.splitInt();
 
     let offset = itemInt.offset - 0x1 - index * 0x4;
 
@@ -95,9 +93,7 @@ export function overrideGetInt(item: Item): [boolean, number | undefined] {
   if ("id" in item && item.id?.match(/formation-/)) {
     const itemInt = item as ItemInt;
 
-    const split = item.id.split("-");
-
-    const index = parseInt(split[1]);
+    const [index] = item.id.splitInt();
 
     const int = getFormation(itemInt.offset, index);
 
@@ -120,9 +116,7 @@ export function overrideSetInt(item: Item, value: string): boolean {
   if ("id" in item && item.id?.match(/formation-/)) {
     const itemInt = item as ItemInt;
 
-    const split = item.id.split("-");
-
-    const index = parseInt(split[1]);
+    const [index] = item.id.splitInt();
 
     let int = getInt(itemInt.offset, "uint8");
 

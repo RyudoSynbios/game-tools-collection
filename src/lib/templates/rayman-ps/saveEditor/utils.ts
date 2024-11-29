@@ -68,9 +68,7 @@ export function afterSetInt(item: Item): void {
 
     setInt(itemInt.offset + 0x77, "uint8", health);
   } else if ("id" in item && item.id?.match(/level-/)) {
-    const split = item.id.split("-");
-
-    const slotIndex = split[2];
+    const [, , slotIndex] = item.id.split("-");
 
     let int = 0;
 

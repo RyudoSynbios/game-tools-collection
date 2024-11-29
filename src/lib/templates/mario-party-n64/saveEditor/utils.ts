@@ -82,9 +82,7 @@ export function afterSetInt(item: Item): void {
   if ("id" in item && item.id?.match(/boardPlayed-/)) {
     const itemInt = item as ItemInt;
 
-    const split = item.id.split("-");
-
-    const index = parseInt(split[1]);
+    const [index] = item.id.splitInt();
 
     const value = getInt(itemInt.offset, "uint16", {
       bigEndian: true,

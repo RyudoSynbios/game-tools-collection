@@ -132,9 +132,7 @@ export function afterSetInt(item: Item, flag: ItemBitflag): void {
     setInt(itemInt.offset - 0x3, "uint8", int);
     setInt(itemInt.offset - 0x2, "uint8", int);
   } else if ("id" in item && item.id?.match(/levels-/)) {
-    const split = item.id.split("-");
-
-    const index = parseInt(split[1]);
+    const [index] = item.id.splitInt();
 
     let offset = flag.offset - index;
 

@@ -122,9 +122,7 @@ export function generateChecksum(item: ItemChecksum): number {
   let offset = $fileHeaderShift + 0x90;
 
   if (item.id?.match(/checksumSlot-/)) {
-    const split = item.id.split("-");
-
-    const index = parseInt(split[1]);
+    const [index] = item.id.splitInt();
 
     offset += (index + 1) * 0x4;
   }

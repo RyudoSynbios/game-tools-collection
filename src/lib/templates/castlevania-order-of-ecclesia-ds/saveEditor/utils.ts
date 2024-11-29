@@ -25,9 +25,7 @@ export function overrideParseItem(item: Item): Item {
   if ("id" in item && item.id?.match(/progression-/)) {
     const itemInt = item as ItemInt;
 
-    const split = item.id.split("-");
-
-    const index = parseInt(split[1]);
+    const [index] = item.id.splitInt();
 
     itemInt.bit! += index;
 
@@ -123,9 +121,7 @@ export function overrideSetInt(
   } else if ("id" in item && item.id?.match(/bonusStats-/)) {
     const itemInt = item as ItemInt;
 
-    const split = item.id.split("-");
-
-    const index = parseInt(split[1]);
+    const [index] = item.id.splitInt();
 
     const offset = itemInt.offset - index * 0x2 + 0x4e6;
 
@@ -196,11 +192,8 @@ export function afterSetInt(item: Item, flag: ItemBitflag): void {
   } else if ("id" in item && item.id?.match(/quests-/)) {
     const itemInt = item as ItemInt;
 
-    const split = item.id.split("-");
-
-    const slot = split[1];
-    const character = split[3];
-    const flagIndex = parseInt(split[4]);
+    const [, slot, , character] = item.id.split("-");
+    const [, flagIndex] = item.id.splitInt();
 
     const questStatus = getInt(itemInt.offset, "uint8", {
       binary: itemInt.binary,

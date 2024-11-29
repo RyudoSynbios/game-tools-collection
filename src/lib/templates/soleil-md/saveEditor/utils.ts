@@ -236,10 +236,7 @@ export function afterSetInt(item: Item, flag: ItemBitflag): void {
   } else if ("id" in item && item.id?.match(/equippedAnimal-/)) {
     const itemInt = item as ItemInt;
 
-    const split = item.id.split("-");
-
-    const animalSlot = split[1];
-    const slotIndex = split[2];
+    const [, animalSlot, slotIndex] = item.id.split("-");
 
     const animals = getItem(`animals-${slotIndex}`) as ItemBitflags;
 

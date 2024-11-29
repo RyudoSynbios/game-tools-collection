@@ -34,6 +34,7 @@ declare global {
 
   interface String {
     reverse: () => string;
+    splitInt: () => number[];
   }
 }
 

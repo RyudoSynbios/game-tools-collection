@@ -209,9 +209,7 @@ export function overrideGetInt(
   const $dataViewAlt = get(dataViewAlt);
 
   if ("id" in item && item.id?.match(/cName-/)) {
-    const split = item.id.split("-");
-
-    const index = parseInt(split[1]);
+    const [index] = item.id.splitInt();
 
     const names = getCharacterNames();
 
@@ -236,25 +234,19 @@ export function overrideGetInt(
 
     return [true, int];
   } else if ("id" in item && item.id?.match(/iName-/)) {
-    const split = item.id.split("-");
-
-    const index = parseInt(split[1]);
+    const [index] = item.id.splitInt();
 
     const names = getItemNames();
 
     return [true, names[index] || "???"];
   } else if ("id" in item && item.id?.match(/iDescription-/)) {
-    const split = item.id.split("-");
-
-    const index = parseInt(split[1]);
+    const [index] = item.id.splitInt();
 
     const names = getItemDescriptions();
 
     return [true, names[index] || "???"];
   } else if ("id" in item && item.id?.match(/eName-/)) {
-    const split = item.id.split("-");
-
-    const index = parseInt(split[1]);
+    const [index] = item.id.splitInt();
 
     const names = getEnemyNames();
 

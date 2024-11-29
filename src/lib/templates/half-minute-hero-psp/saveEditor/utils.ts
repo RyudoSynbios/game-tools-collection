@@ -55,9 +55,7 @@ export function overrideGetInt(
   } else if ("id" in item && item.id?.match(/hero30Progression-/)) {
     const itemInt = item as ItemInt;
 
-    const split = item.id.split("-");
-
-    const index = parseInt(split[2]);
+    const [, index] = item.id.splitInt();
 
     let int = 0x0;
 
@@ -103,10 +101,7 @@ export function overrideSetInt(item: Item, value: string): boolean {
   if ("id" in item && item.id?.match(/hero30Progression-/)) {
     const itemInt = item as ItemInt;
 
-    const split = item.id.split("-");
-
-    const questIndex = parseInt(split[1]);
-    const index = parseInt(split[2]);
+    const [questIndex, index] = item.id.splitInt();
 
     let resultAvailable = 0x0;
     let cleared = 0x0;
@@ -261,9 +256,7 @@ export function afterSetInt(item: Item): void {
   } else if ("id" in item && item.id?.match(/hero30Title-/)) {
     const itemInt = item as ItemInt;
 
-    const split = item.id.split("-");
-
-    const index = parseInt(split[1]);
+    const [index] = item.id.splitInt();
 
     const int = getInt(itemInt.offset, "uint16");
 
@@ -271,9 +264,7 @@ export function afterSetInt(item: Item): void {
   } else if ("id" in item && item.id?.match(/hero300Progression-/)) {
     const itemInt = item as ItemInt;
 
-    const split = item.id.split("-");
-
-    const index = parseInt(split[1]);
+    const [index] = item.id.splitInt();
 
     const offset = itemInt.offset - index * 0x400;
 
@@ -295,9 +286,7 @@ export function afterSetInt(item: Item): void {
   } else if ("id" in item && item.id?.match(/knight30Item-/)) {
     const itemInt = item as ItemInt;
 
-    const split = item.id.split("-");
-
-    const index = parseInt(split[1]);
+    const [index] = item.id.splitInt();
 
     const offset = itemInt.offset - index * 0x4;
 

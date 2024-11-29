@@ -28,9 +28,7 @@ export function overrideGetInt(
   } else if ("id" in item && item.id?.match(/powerUp-/)) {
     const itemBoolean = item as ItemBoolean;
 
-    const split = item.id.split("-");
-
-    const index = parseInt(split[1]);
+    const [index] = item.id.splitInt();
 
     const int = getInt(itemBoolean.offset, "uint8");
 
@@ -100,9 +98,7 @@ export function overrideSetInt(item: Item, value: string): boolean {
   } else if ("id" in item && item.id?.match(/powerUp-/)) {
     const itemBoolean = item as ItemBoolean;
 
-    const split = item.id.split("-");
-
-    let int = parseInt(split[1]);
+    let [int] = item.id.splitInt();
 
     if (!value) {
       int -= 1;

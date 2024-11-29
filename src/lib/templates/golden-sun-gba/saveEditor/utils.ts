@@ -84,9 +84,7 @@ export function overrideItem(item: Item): Item {
   if ("id" in item && item.id?.match(/formation-/)) {
     const itemInt = item as ItemInt;
 
-    const split = item.id.split("-");
-
-    const index = parseInt(split[1]);
+    const [index] = item.id.splitInt();
 
     if (index > 0) {
       const int = getInt(
@@ -218,11 +216,9 @@ export function afterSetInt(item: Item, flag: ItemBitflag): void {
   } else if ("id" in item && item.id?.match(/formation-/)) {
     const itemInt = item as ItemInt;
 
-    const split = item.id.split("-");
+    const [offsetIndex] = item.id.splitInt();
 
     let offset = 0x0;
-
-    const offsetIndex = parseInt(split[1]);
 
     if (offsetIndex === 0) {
       offset = itemInt.offset;
@@ -244,17 +240,13 @@ export function afterSetInt(item: Item, flag: ItemBitflag): void {
 
     updateDjinnPreview(offset + 0x5b8);
   } else if ("id" in item && item.id?.match(/characterName-/)) {
-    const split = item.id.split("-");
-
-    const slotIndex = parseInt(split[1]);
+    const [slotIndex] = item.id.splitInt();
 
     updateCharacterNames(slotIndex);
   } else if ("id" in item && item.id?.match(/level-/)) {
     const itemInt = item as ItemInt;
 
-    const split = item.id.split("-");
-
-    const characterIndex = parseInt(split[1]);
+    const [characterIndex] = item.id.splitInt();
 
     if (characterIndex === 0) {
       const int = getInt(itemInt.offset, "uint8");
@@ -264,9 +256,7 @@ export function afterSetInt(item: Item, flag: ItemBitflag): void {
   } else if ("id" in item && item.id?.match(/class-/)) {
     const itemInt = item as ItemInt;
 
-    const split = item.id.split("-");
-
-    const characterIndex = parseInt(split[1]);
+    const [characterIndex] = item.id.splitInt();
 
     if (characterIndex === 0) {
       const int = getInt(itemInt.offset, "uint8");
@@ -274,10 +264,7 @@ export function afterSetInt(item: Item, flag: ItemBitflag): void {
       setInt(itemInt.offset - 0x61c, "uint8", int);
     }
   } else if ("id" in item && item.id?.match(/djinn-/)) {
-    const split = item.id.split("-");
-
-    const characterIndex = parseInt(split[1]);
-    const elementIndex = parseInt(split[2]);
+    const [characterIndex, elementIndex] = item.id.splitInt();
 
     const offset =
       flag.offset -
@@ -287,9 +274,7 @@ export function afterSetInt(item: Item, flag: ItemBitflag): void {
 
     updateDjinnPreview(offset);
   } else if ("id" in item && item.id?.match(/djinnSet-/)) {
-    const split = item.id.split("-");
-
-    const elementIndex = parseInt(split[1]);
+    const [elementIndex] = item.id.splitInt();
 
     const offset = flag.offset - (flag.offset % 4);
 

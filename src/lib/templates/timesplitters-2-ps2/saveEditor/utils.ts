@@ -183,9 +183,7 @@ export function afterSetInt(item: Item, flag: ItemBitflag): void {
   if ("id" in item && item.id?.match(/story-/)) {
     const isChecked = getBitflag(flag.offset, flag.bit);
 
-    const split = item.id.split("-");
-
-    const index = parseInt(split[1]);
+    const [index] = item.id.splitInt();
 
     const baseOffset = flag.offset - index * 0x4;
 
@@ -201,10 +199,8 @@ export function afterSetInt(item: Item, flag: ItemBitflag): void {
   } else if ("id" in item && item.id?.match(/award-/)) {
     const itemInt = item as ItemInt;
 
-    const split = item.id.split("-");
-
-    const type = split[1];
-    const index = parseInt(split[2]);
+    const [, type] = item.id.split("-");
+    const [index] = item.id.splitInt();
 
     const value = getInt(itemInt.offset, "uint32");
 

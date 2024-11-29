@@ -218,10 +218,7 @@ export function afterSetInt(item: Item, flag: ItemBitflag): void {
   } else if ("id" in item && item.id?.match(/formation-/)) {
     const itemInt = item as ItemInt;
 
-    const split = item.id.split("-");
-
-    const slotIndex = parseInt(split[1]);
-    const formationIndex = parseInt(split[3]);
+    const [slotIndex, formationIndex] = item.id.splitInt();
 
     const characterIndex = getInt(itemInt.offset, "uint8");
 
@@ -311,9 +308,7 @@ export function afterSetInt(item: Item, flag: ItemBitflag): void {
       },
     );
   } else if ("id" in item && item.id?.match(/characterName-/)) {
-    const split = item.id.split("-");
-
-    const slotIndex = parseInt(split[1]);
+    const [slotIndex] = item.id.splitInt();
 
     updateCharacterNames(slotIndex);
   } else if ("id" in item && item.id === "item") {

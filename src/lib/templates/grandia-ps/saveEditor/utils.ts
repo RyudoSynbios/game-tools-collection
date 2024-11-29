@@ -92,9 +92,7 @@ export function overrideGetInt(item: Item): [boolean, boolean | undefined] {
   if ("id" in item && item.id?.match(/skill-/)) {
     const itemInt = item as ItemInt;
 
-    const split = item.id.split("-");
-
-    const characterIndex = parseInt(split[1]);
+    const [characterIndex] = item.id.splitInt();
 
     const boolean = Boolean(
       getInt(itemInt.offset, "bit", {
@@ -112,9 +110,7 @@ export function overrideSetInt(item: Item, value: string): boolean {
   if ("id" in item && item.id?.match(/skill-/)) {
     const itemInt = item as ItemInt;
 
-    const split = item.id.split("-");
-
-    const characterIndex = parseInt(split[1]);
+    const [characterIndex] = item.id.splitInt();
 
     setInt(itemInt.offset, "bit", value, {
       bit: characterIndex,

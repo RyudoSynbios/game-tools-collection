@@ -40,9 +40,7 @@ export function overrideParseItem(item: Item): Item {
   if ("id" in item && item.id?.match(/trophy-/)) {
     const itemInt = item as ItemInt;
 
-    const split = item.id.split("-");
-
-    const index = parseInt(split[1]);
+    const [index] = item.id.splitInt();
 
     const resource: { [key: number]: string } =
       $gameRegion === 0 ? trophiesEurope : trophiesUsaJapan;
@@ -85,9 +83,7 @@ export function overrideGetInt(item: Item): [boolean, number | undefined] {
   if ("id" in item && item.id?.match(/cleared-/)) {
     const itemInt = item as ItemInt;
 
-    const split = item.id.split("-");
-
-    const mode = parseInt(split[1]);
+    const [mode] = item.id.splitInt();
 
     const int =
       getInt(itemInt.offset - 0x4 - mode, "bit", { bit: 3 - mode }) +
@@ -140,10 +136,7 @@ export function overrideSetInt(item: Item, value: string): boolean {
   if ("id" in item && item.id?.match(/cleared-/)) {
     const itemInt = item as ItemInt;
 
-    const split = item.id.split("-");
-
-    const mode = parseInt(split[1]);
-    const characterIndex = parseInt(split[2]);
+    const [mode, characterIndex] = item.id.splitInt();
 
     const int = parseInt(value);
 
@@ -223,9 +216,7 @@ export function afterSetInt(item: Item): void {
   } else if ("id" in item && item.id?.match(/targetTest-[0-9]/)) {
     const itemInt = item as ItemInt;
 
-    const split = item.id.split("-");
-
-    const index = parseInt(split[1]);
+    const [index] = item.id.splitInt();
 
     const offset =
       itemInt.offset - index * 0xac - 0x719 - Math.floor(index / 0x8);
@@ -239,9 +230,7 @@ export function afterSetInt(item: Item): void {
   } else if ("id" in item && item.id?.match(/targetTest-/)) {
     const itemInt = item as ItemInt;
 
-    const split = item.id.split("-");
-
-    const index = parseInt(split[2]);
+    const [index] = item.id.splitInt();
 
     const offset = itemInt.offset - index * 0xac;
 
@@ -251,9 +240,7 @@ export function afterSetInt(item: Item): void {
   } else if ("id" in item && item.id?.match(/homeRunContest-/)) {
     const itemInt = item as ItemInt;
 
-    const split = item.id.split("-");
-
-    const index = parseInt(split[1]);
+    const [index] = item.id.splitInt();
 
     const offset = itemInt.offset - index * 0xac;
 
@@ -285,9 +272,7 @@ export function afterSetInt(item: Item): void {
   } else if ("id" in item && item.id?.match(/training-/)) {
     const itemInt = item as ItemInt;
 
-    const split = item.id.split("-");
-
-    const index = parseInt(split[1]);
+    const [index] = item.id.splitInt();
 
     const offset = itemInt.offset - index * 0xac;
 
@@ -297,9 +282,7 @@ export function afterSetInt(item: Item): void {
   } else if ("id" in item && item.id?.match(/trophy-/)) {
     const itemInt = item as ItemInt;
 
-    const split = item.id.split("-");
-
-    const index = parseInt(split[1]);
+    const [index] = item.id.splitInt();
 
     const offset = itemInt.offset - index * 0x2;
 
@@ -322,13 +305,10 @@ export function afterSetInt(item: Item): void {
     }
 
     setInt(offset - 0x5, "uint16", count, { bigEndian: true });
-  } else if ("id" in item && item.id?.match(/kos/)) {
+  } else if ("id" in item && item.id?.match(/kos-/)) {
     const itemInt = item as ItemInt;
 
-    const split = item.id.split("-");
-
-    const characterIndex = parseInt(split[1]);
-    const koIndex = parseInt(split[2]);
+    const [characterIndex, koIndex] = item.id.splitInt();
 
     const offset = itemInt.offset - characterIndex * 0xac - koIndex * 0x2;
 
@@ -353,9 +333,7 @@ export function afterSetInt(item: Item): void {
   } else if ("id" in item && item.id?.match(/vsMatchTotal-/)) {
     const itemInt = item as ItemInt;
 
-    const split = item.id.split("-");
-
-    const index = parseInt(split[1]);
+    const [index] = item.id.splitInt();
 
     const offset = itemInt.offset - index * 0x4;
 

@@ -162,11 +162,9 @@ export function afterSetInt(item: Item, flag: ItemBitflag): void {
     item.id?.match(/entryPass-/) &&
     flag.label.match(/Entry Pass/)
   ) {
-    const split = item.id.split("-");
+    const [, region, index] = item.id.split("-");
 
-    const region = split[1];
-    const index = split[2];
-    let clearedOffset = parseInt(split[3] || "0");
+    let [, clearedOffset] = item.id.splitInt();
 
     const isChecked = Boolean(getInt(flag.offset, "bit", { bit: flag.bit }));
 
@@ -214,9 +212,7 @@ export function afterSetInt(item: Item, flag: ItemBitflag): void {
 
     setInt(entryPassCount.offset, "uint8", int);
   } else if ("id" in item && item.id?.match(/castleCleared-/)) {
-    const split = item.id.split("-");
-
-    const clearedOffset = parseInt(split[1]);
+    const [clearedOffset] = item.id.splitInt();
 
     const isChecked = getInt(flag.offset, "bit", { bit: flag.bit });
 

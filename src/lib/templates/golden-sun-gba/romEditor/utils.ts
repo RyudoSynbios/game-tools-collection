@@ -50,9 +50,7 @@ export function overrideGetInt(
   item: Item,
 ): [boolean, number | string | undefined] {
   if ("id" in item && item.id?.match(/getResource-/)) {
-    const split = item.id.split("-");
-
-    const index = parseInt(split[2]);
+    const [index] = item.id.splitInt();
 
     let resource: { [value: number]: string } = {};
 
@@ -86,9 +84,7 @@ export function overrideGetInt(
   } else if ("id" in item && item.id?.match(/eExperience-/)) {
     const itemInt = item as ItemInt;
 
-    const split = item.id.split("-");
-
-    const index = parseInt(split[1]);
+    const [index] = item.id.splitInt();
 
     const partyExperiencesPointer = getRegionArray(pointerToPartyExperiences);
 
@@ -112,9 +108,7 @@ export function overrideSetInt(item: Item, value: string): boolean {
   if ("id" in item && item.id?.match(/eExperience-/)) {
     const itemInt = item as ItemInt;
 
-    const split = item.id.split("-");
-
-    const index = parseInt(split[1]);
+    const [index] = item.id.splitInt();
 
     const partyExperiencesPointer = getRegionArray(pointerToPartyExperiences);
 

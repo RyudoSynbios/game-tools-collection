@@ -139,9 +139,7 @@ export function overrideGetInt(item: Item): [boolean, number | undefined] {
   } else if ("id" in item && item.id?.match(/notes-/)) {
     const itemInt = item as ItemInt;
 
-    const split = item.id.split("-");
-
-    const index = parseInt(split[1]);
+    const [index] = item.id.splitInt();
 
     const binary = getNotesBinary(itemInt.offset);
 
@@ -157,9 +155,7 @@ export function overrideSetInt(item: Item, value: string): boolean {
   if ("id" in item && item.id?.match(/notes-/)) {
     const itemInt = item as ItemInt;
 
-    const split = item.id.split("-");
-
-    const index = parseInt(split[1]);
+    const [index] = item.id.splitInt();
 
     let int = parseInt(value);
 

@@ -8,9 +8,7 @@ export function overrideItem(item: Item): Item {
   if ("id" in item && item.id?.match(/character-/)) {
     const itemInt = item as ItemInt;
 
-    const split = item.id.split("-");
-
-    const index = parseInt(split[1]);
+    const [index] = item.id.splitInt();
 
     itemInt.disabled = index === 0;
 
@@ -83,9 +81,7 @@ export function overrideSetInt(item: Item, value: string): boolean {
 
 export function afterSetInt(item: Item): void {
   if ("id" in item && item.id?.match(/characterName-/)) {
-    const split = item.id.split("-");
-
-    const slotIndex = parseInt(split[1]);
+    const [slotIndex] = item.id.splitInt();
 
     updateCharacterNames(slotIndex);
   } else if ("id" in item && item.id?.match(/character-/)) {

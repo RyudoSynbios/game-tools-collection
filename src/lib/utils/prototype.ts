@@ -137,3 +137,15 @@ Number.prototype.toHex = function (length = 0) {
 String.prototype.reverse = function () {
   return this.split("").reverse().join("");
 };
+
+String.prototype.splitInt = function (): number[] {
+  const split = this.split("-");
+
+  return split.reduce((strings: number[], string) => {
+    if (string.match(/^[0-9]+$/)) {
+      strings.push(parseInt(string));
+    }
+
+    return strings;
+  }, []);
+};

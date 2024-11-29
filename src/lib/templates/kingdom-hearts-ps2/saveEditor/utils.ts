@@ -80,9 +80,7 @@ export function overrideItem(item: Item): Item {
   if ("id" in item && item.id?.match(/item-/)) {
     const itemInt = item as ItemInt;
 
-    const split = item.id.split("-");
-
-    const index = parseInt(split[1]);
+    const [index] = item.id.splitInt();
 
     const int = getInt(itemInt.offset - 0x1 - index, "uint8");
 
@@ -212,10 +210,7 @@ export function afterSetInt(item: Item): void {
   } else if ("id" in item && item.id?.match(/trinity-/)) {
     const itemBitflags = item as ItemBitflags;
 
-    const split = item.id.split("-");
-
-    const type = split[1];
-    const slotIndex = split[2];
+    const [, type, slotIndex] = item.id.split("-");
 
     const countItem = getItem(`count-trinity-${type}-${slotIndex}`) as ItemInt;
 

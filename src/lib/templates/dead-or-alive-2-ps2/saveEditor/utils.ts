@@ -93,9 +93,7 @@ export function overrideGetInt(item: Item): [boolean, boolean | undefined] {
   if ("id" in item && item.id?.match(/costume-/)) {
     const itemBoolean = item as ItemBoolean;
 
-    const split = item.id.split("-");
-
-    const index = parseInt(split[1]);
+    const [index] = item.id.splitInt();
 
     const int = getInt(itemBoolean.offset, "uint8");
 
@@ -111,9 +109,7 @@ export function overrideSetInt(item: Item, value: string): boolean {
   if ("id" in item && item.id?.match(/costume-/)) {
     const itemBoolean = item as ItemBoolean;
 
-    const split = item.id.split("-");
-
-    let int = parseInt(split[1]);
+    let [int] = item.id.splitInt();
 
     if (!value) {
       int -= 1;
@@ -137,13 +133,14 @@ export function afterSetInt(item: Item): void {
   } else if ("id" in item && item.id?.match(/item-/)) {
     const itemInt = item as ItemInt;
 
-    const split = item.id.split("-");
+    let [offset] = item.id.splitInt();
+    const [, bit] = item.id.splitInt();
 
     const collection = getItem("collection") as ItemBitflags;
 
-    const offset = collection.flags[0].offset + parseInt(split[1]);
-    const bit = parseInt(split[2]);
     const isChecked = getInt(itemInt.offset, "uint8") > 0;
+
+    offset += collection.flags[0].offset;
 
     setBitflag(offset, bit, isChecked);
   }

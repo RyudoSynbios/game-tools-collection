@@ -51,10 +51,7 @@ export function overrideItem(item: Item): Item {
   if ("id" in item && (item.id?.match(/planet-/) || item.id?.match(/hits-/))) {
     const itemInt = item as ItemInt;
 
-    const split = item.id.split("-");
-
-    const offset = parseInt(split[1]);
-    const index = parseInt(split[2]);
+    const [offset, index] = item.id.splitInt();
 
     const completedMissions = getInt(offset, "uint8");
 
@@ -64,10 +61,7 @@ export function overrideItem(item: Item): Item {
   } else if ("id" in item && item.id?.match(/bitflags-/)) {
     const itemBitflags = item as ItemBitflags;
 
-    const split = item.id.split("-");
-
-    const offset = parseInt(split[1]);
-    const index = parseInt(split[2]);
+    const [offset, index] = item.id.splitInt();
 
     const completedMissions = getInt(offset, "uint8");
 
@@ -87,9 +81,7 @@ export function overrideGetInt(
   if ("id" in item && item.id?.match(/totalHits-/)) {
     const itemInt = item as ItemInt;
 
-    const split = item.id.split("-");
-
-    const index = parseInt(split[1]);
+    const [index] = item.id.splitInt();
 
     const completedMissions = getInt(itemInt.offset + index, "uint8");
 
@@ -109,9 +101,7 @@ export function overrideGetInt(
   } else if ("id" in item && item.id?.match(/totalAllies-/)) {
     const itemInt = item as ItemInt;
 
-    const split = item.id.split("-");
-
-    const index = parseInt(split[1]);
+    const [index] = item.id.splitInt();
 
     const completedMissions = getInt(itemInt.offset + index, "uint8");
 

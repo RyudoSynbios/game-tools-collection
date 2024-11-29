@@ -49,9 +49,7 @@ export function overrideItem(item: Item): Item {
   ) {
     const itemInt = item as ItemInt;
 
-    const split = item.id.split("-");
-
-    const index = parseInt(split[1]);
+    const [index] = item.id.splitInt();
 
     let shift = 0x0;
 
@@ -92,9 +90,7 @@ export function afterSetInt(item: Item): void {
   if ("id" in item && item.id?.match(/storyProgression-/)) {
     const itemInt = item as ItemInt;
 
-    const split = item.id.split("-");
-
-    const index = parseInt(split[1]);
+    const [index] = item.id.splitInt();
 
     const progression = getInt(itemInt.offset, "uint8");
 
@@ -151,9 +147,7 @@ export function afterSetInt(item: Item): void {
   } else if ("id" in item && item.id?.match(/bossProgression-/)) {
     const itemInt = item as ItemInt;
 
-    const split = item.id.split("-");
-
-    const index = parseInt(split[1]);
+    const [index] = item.id.splitInt();
 
     const offset = itemInt.offset - 0xc4 * index + 0x4be + index;
 
@@ -169,9 +163,7 @@ export function afterSetInt(item: Item): void {
   } else if ("id" in item && item.id?.match(/chaoKarateCount-/)) {
     const itemInt = item as ItemInt;
 
-    const split = item.id.split("-");
-
-    const index = parseInt(split[1]);
+    const [index] = item.id.splitInt();
 
     const offset = itemInt.offset - index * 0x2;
 
