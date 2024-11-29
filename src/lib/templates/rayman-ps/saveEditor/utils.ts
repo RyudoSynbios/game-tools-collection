@@ -75,7 +75,7 @@ export function afterSetInt(item: Item): void {
     const progression = getItem(`progression-${slotIndex}`) as ItemString;
 
     if (progression) {
-      for (let i = 0; i < 17; i += 1) {
+      for (let i = 0; i < 18; i += 1) {
         let progressionCount = 0;
         let totalCount = 0;
 
@@ -91,7 +91,7 @@ export function afterSetInt(item: Item): void {
               totalCount += getInt(itemBitflag.offset, "bit", {
                 bit: itemBitflag.bit,
               });
-            } else if (index >= 2) {
+            } else if (index >= 1) {
               const value = getInt(itemBitflag.offset, "bit", {
                 bit: itemBitflag.bit,
               });
