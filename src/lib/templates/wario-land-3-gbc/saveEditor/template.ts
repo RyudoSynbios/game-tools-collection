@@ -50,7 +50,7 @@ const template: GameJson = {
                   type: "variable",
                   dataType: "uint32",
                   bigEndian: true,
-                  disabled: true,
+                  hidden: true,
                   test: true,
                 },
                 {

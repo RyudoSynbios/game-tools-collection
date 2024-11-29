@@ -149,6 +149,7 @@ const template: GameJson = {
                               offset: 0xa,
                               type: "variable",
                               dataType: "uint16",
+                              hidden: true,
                             },
                             {
                               id: "gold",

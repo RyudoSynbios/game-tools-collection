@@ -168,6 +168,12 @@ const template: GameJson = {
                             },
                           ],
                         },
+                      ],
+                    },
+                    {
+                      type: "section",
+                      flex: true,
+                      items: [
                         {
                           id: "emblems",
                           name: "Emblems",
@@ -176,12 +182,6 @@ const template: GameJson = {
                           dataType: "uint8",
                           disabled: true,
                         },
-                      ],
-                    },
-                    {
-                      type: "section",
-                      flex: true,
-                      items: [
                         {
                           name: "Emblem Results Play Time",
                           type: "group",
@@ -245,6 +245,7 @@ const template: GameJson = {
                           type: "variable",
                           dataType: "uint32",
                           bigEndian: true,
+                          hidden: true,
                         },
                       ],
                     },
