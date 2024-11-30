@@ -4,7 +4,7 @@
 
   import type { ItemSection, ItemString, Resource } from "$lib/types";
 
-  import { abilities } from "../saveEditor/utils/resource";
+  import { abilities } from "../utils/resource";
   import Section from "$lib/components/Items/Section.svelte";
 
   export let slotIndex: number;

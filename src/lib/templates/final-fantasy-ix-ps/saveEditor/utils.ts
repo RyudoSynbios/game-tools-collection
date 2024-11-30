@@ -22,7 +22,7 @@ import type {
   ItemString,
 } from "$lib/types";
 
-import Abilities from "../components/Abilities.svelte";
+import Abilities from "./components/Abilities.svelte";
 import { mognetLetters } from "./utils/resource";
 
 export function initHeaderShift(dataView: DataView): number {
