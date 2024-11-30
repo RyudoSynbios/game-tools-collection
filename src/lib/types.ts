@@ -320,6 +320,10 @@ export interface ItemString {
   zeroTerminated?: boolean;
   regex?: string;
   resource?: string;
+  overrideShift?: {
+    parent: number;
+    shift: number;
+  };
   size?: "md" | "lg";
   disabled?: boolean;
   hidden?: boolean | boolean[];
