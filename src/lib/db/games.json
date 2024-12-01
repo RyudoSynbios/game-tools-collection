@@ -118,6 +118,17 @@
     }
   },
   {
+    "id": "crash-bandicoot-ps",
+    "name": "Crash Bandicoot",
+    "consoleId": "playstation",
+    "tools": {
+      "saveEditor": {
+        "createdAt": "2024-12-01",
+        "regions": ["🇪🇺", "🇺🇸", "🇯🇵", "🇦🇺"]
+      }
+    }
+  },
+  {
     "id": "dead-or-alive-2-ps2",
     "name": "Dead or Alive 2",
     "consoleId": "playstation-2",

@@ -14,6 +14,7 @@ Link to the website: [https://game-tools-collection.com](https://game-tools-coll
 | Castlevania: Harmony of Dissonance        | GBA      | Save       | EUR / USA / JAP                               |
 | Castlevania: Order of Ecclesia            | DS       | Save       | EUR / USA / JAP / KOR                         |
 | Castlevania: Symphony of the Night        | PS       | Save       | EUR / USA / JAP                               |
+| Crash Bandicoot                           | PS       | Save       | EUR / USA / JAP / AUS                         |
 | Dead or Alive 2                           | PS2      | Save       | EUR                                           |
 | Diablo II: Lord of Destruction            | WIN      | Save       | WORLD                                         |
 | Donkey Kong Land                          | GB       | Save       | EUR / USA / JAP                               |
