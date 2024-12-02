@@ -50,7 +50,7 @@ export function overrideParseContainerItemsShifts(
 
       const iconFrames = getInt(shift + 0x2, "lower4");
 
-      return [true, [...shifts, 0x80 + iconFrames * 0x80]];
+      return [true, [...shifts, (iconFrames - 1) * 0x80]];
     }
 
     const shift = getShift(slot[1] as number[]);
@@ -58,7 +58,7 @@ export function overrideParseContainerItemsShifts(
     if (shift !== -1) {
       const iconFrames = getInt(shift + 0x2, "lower4");
 
-      return [true, [shift, 0x80 + iconFrames * 0x80]];
+      return [true, [shift, (iconFrames - 1) * 0x80]];
     }
 
     return slot;
