@@ -6,7 +6,7 @@ import { formatChecksum } from "$lib/utils/checksum";
 import {
   customGetRegions,
   getSaves,
-  getSlots,
+  getSlotShifts,
   isUnpackedMemorySystem,
   repackMemorySystem,
   resetMemorySystem,
@@ -255,7 +255,7 @@ export function overrideParseContainerItemsShifts(
 
   if (item.id === "slots") {
     if (isUnpackedMemorySystem()) {
-      return getSlots(index);
+      return getSlotShifts(index);
     }
 
     return [true, [-0x10]];

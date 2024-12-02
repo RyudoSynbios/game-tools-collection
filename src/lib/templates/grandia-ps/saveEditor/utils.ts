@@ -6,7 +6,7 @@ import {
   customGetRegions,
   getHeaderShift,
   getPsvHeaderShift,
-  getSlots,
+  getSlotShifts,
   isPsvHeader,
 } from "$lib/utils/common/playstation";
 import { getResource } from "$lib/utils/parser";
@@ -64,7 +64,7 @@ export function overrideParseContainerItemsShifts(
   index: number,
 ): [boolean, number[] | undefined] {
   if (item.id === "slots") {
-    return getSlots("correspondance", shifts, index);
+    return getSlotShifts("correspondance", shifts, index);
   }
 
   return [false, undefined];

@@ -672,7 +672,7 @@ export function getSaves(): Save[] {
   return filteredSaves;
 }
 
-export function getSlots(index: number): [boolean, number[] | undefined] {
+export function getSlotShifts(index: number): [boolean, number[] | undefined] {
   const saves = getSaves();
 
   if (saves[index]) {

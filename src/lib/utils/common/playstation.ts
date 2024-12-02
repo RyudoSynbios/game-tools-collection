@@ -88,7 +88,7 @@ export function customGetRegions(dataView: DataView, shift: number): string[] {
   return getRegions(dataView, shift, overridedRegions);
 }
 
-export function getSlots(
+export function getSlotShifts(
   order: "correspondance" | "memory",
   shifts: number[],
   index: number,
