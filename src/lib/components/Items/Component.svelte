@@ -2,10 +2,10 @@
   import { SvelteComponent } from "svelte";
 
   import { gameUtils } from "$lib/stores";
+  import debug from "$lib/utils/debug";
   import { utilsExists } from "$lib/utils/format";
 
   import type { ItemComponent } from "$lib/types";
-  import debug from "$lib/utils/debug";
 
   export let item: ItemComponent;
 

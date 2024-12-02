@@ -57,13 +57,13 @@
 
 <style lang="postcss">
   .gtc-app {
-    @apply flex flex-col h-screen;
+    @apply flex h-screen flex-col;
 
     & .gtc-header {
-      @apply fixed top-0 inset-x-0 flex p-4 text-white bg-primary-900 z-10;
+      @apply fixed inset-x-0 top-0 z-10 flex bg-primary-900 p-4 text-white;
 
       & .gtc-header-inner {
-        @apply relative mx-auto flex justify-between w-full max-w-7xl;
+        @apply relative mx-auto flex w-full max-w-7xl justify-between;
 
         .gtc-header-logo {
           @apply font-bold;
@@ -88,12 +88,12 @@
     }
 
     & .gtc-body {
-      @apply flex-1 flex flex-col p-4;
+      @apply flex flex-1 flex-col p-4;
 
       padding-top: 72px;
 
       & .gtc-body-inner {
-        @apply flex-1 flex flex-col mx-auto w-full max-w-7xl;
+        @apply mx-auto flex w-full max-w-7xl flex-1 flex-col;
       }
     }
   }

@@ -62,7 +62,7 @@
 
 <style lang="postcss">
   .gtc-tile {
-    @apply mr-4 mb-4 shadow-xl;
+    @apply mb-4 mr-4 shadow-xl;
 
     width: 308px;
 
@@ -86,10 +86,10 @@
     }
 
     & .gtc-tile-content {
-      @apply pt-2 bg-primary-900 rounded-b;
+      @apply rounded-b bg-primary-900 pt-2;
 
       & p:first-of-type {
-        @apply text-white text-ellipsis overflow-hidden whitespace-nowrap;
+        @apply overflow-hidden text-ellipsis whitespace-nowrap text-white;
       }
 
       & p {
@@ -101,18 +101,18 @@
       }
 
       & .gtc-tile-tools {
-        @apply flex mt-2 border-t border-primary-600;
+        @apply mt-2 flex border-t border-primary-600;
 
         & .gtc-tile-toollink,
         & .gtc-tile-tooldisabled {
-          @apply flex-1 px-2 py-1 text-xs text-center rounded;
+          @apply flex-1 rounded px-2 py-1 text-center text-xs;
         }
 
         & .gtc-tile-toollink {
           @apply text-white;
 
           & div {
-            @apply flex items-center justify-center flex-wrap h-8;
+            @apply flex h-8 flex-wrap items-center justify-center;
           }
 
           &:hover {

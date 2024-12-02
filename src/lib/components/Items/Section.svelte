@@ -33,11 +33,11 @@
     }
 
     &.gtc-section-background {
-      @apply mr-4 mb-4 p-2 w-fit bg-primary-700 rounded;
+      @apply mb-4 mr-4 w-fit rounded bg-primary-700 p-2;
     }
 
     &.gtc-section-debug {
-      @apply text-orange-800 bg-orange-950;
+      @apply bg-orange-950 text-orange-800;
     }
 
     &.gtc-section-flex1 {

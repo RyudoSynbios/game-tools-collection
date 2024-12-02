@@ -35,7 +35,7 @@
 
 <style lang="postcss">
   .gtc-about {
-    @apply mt-4 p-4 text-white bg-primary-900 rounded;
+    @apply mt-4 rounded bg-primary-900 p-4 text-white;
 
     & p {
       @apply mb-4 text-sm;

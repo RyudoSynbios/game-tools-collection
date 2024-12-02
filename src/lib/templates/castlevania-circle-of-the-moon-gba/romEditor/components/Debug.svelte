@@ -6,8 +6,8 @@
   import { getRegionArray } from "$lib/utils/format";
   import { applyPalette, getPalette } from "$lib/utils/graphics";
 
-  import { getDecompressedGraphic } from "../utils";
   import { pointerToDssCardsGraphics } from "../template";
+  import { getDecompressedGraphic } from "../utils";
 
   let canvasEl: HTMLDivElement;
 

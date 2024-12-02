@@ -128,7 +128,7 @@
 
 <style lang="postcss">
   .gtc-faq {
-    @apply mt-4 p-4 text-white bg-primary-900 rounded;
+    @apply mt-4 rounded bg-primary-900 p-4 text-white;
 
     h2:not(:first-of-type) {
       @apply mt-8;

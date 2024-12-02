@@ -171,23 +171,23 @@
 
 <style lang="postcss">
   .gtc-dropzone {
-    @apply p-2 bg-primary-900 rounded select-none;
+    @apply select-none rounded bg-primary-900 p-2;
 
     width: 600px;
     height: 400px;
 
     & .gtc-dropzone-inner {
-      @apply flex flex-col items-center justify-center p-4 w-full h-full text-white border-2 border-dashed cursor-pointer border-primary-500;
+      @apply flex h-full w-full cursor-pointer flex-col items-center justify-center border-2 border-dashed border-primary-500 p-4 text-white;
 
       &.gtc-dropzone-dragging {
       }
 
       & .gtc-dropzone-hint {
-        @apply text-primary-400 text-center;
+        @apply text-center text-primary-400;
       }
 
       & .gtc-dropzone-error {
-        @apply text-primary-300 text-center;
+        @apply text-center text-primary-300;
       }
 
       & input {

@@ -8,7 +8,7 @@ import type Three from "$lib/utils/three";
 import type { Palette } from "$lib/types";
 
 import { getDecompressedData, getScenario, isDummy } from "../utils";
-import { type Texture, getIndices, getMaterials, getVertices } from "./model";
+import { getIndices, getMaterials, getVertices, type Texture } from "./model";
 
 export async function addObject(
   baseOffset: number,

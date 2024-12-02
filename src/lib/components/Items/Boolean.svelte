@@ -85,7 +85,7 @@
   .gtc-boolean {
     &.gtc-boolean-debug {
       & :global(.gtc-checkbox) {
-        @apply text-orange-800 bg-orange-950;
+        @apply bg-orange-950 text-orange-800;
       }
     }
 

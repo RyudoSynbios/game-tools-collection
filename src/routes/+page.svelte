@@ -1,6 +1,6 @@
 <script lang="ts">
   import GameTile from "$lib/components/GameTile.svelte";
-  import { type Order, type Tool, getConsoles, getGames } from "$lib/utils/db";
+  import { getConsoles, getGames, type Order, type Tool } from "$lib/utils/db";
 
   let consoles = getConsoles();
   let games = getGames();
@@ -131,16 +131,16 @@
 <style lang="postcss">
   .gtc-home {
     & .gtc-home-filters {
-      @apply flex justify-center 2xl:justify-start flex-wrap;
+      @apply flex flex-wrap justify-center 2xl:justify-start;
 
       & input,
       & select {
-        @apply mr-2 mb-2;
+        @apply mb-2 mr-2;
       }
     }
 
     .gtc-home-games {
-      @apply flex flex-wrap justify-center 2xl:justify-start mt-2 -mr-4;
+      @apply -mr-4 mt-2 flex flex-wrap justify-center 2xl:justify-start;
 
       & > p {
         @apply my-12 text-white;
@@ -148,7 +148,7 @@
     }
 
     & .gtc-home-description {
-      @apply mt-4 p-4 text-white bg-primary-900 rounded;
+      @apply mt-4 rounded bg-primary-900 p-4 text-white;
 
       & a {
         @apply font-bold;
@@ -165,7 +165,7 @@
 
     & input,
     & select {
-      @apply text-xs rounded bg-primary-600;
+      @apply rounded bg-primary-600 text-xs;
     }
 
     & input {

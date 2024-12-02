@@ -18,9 +18,9 @@
     setTextureManipulations,
     setTextureOffsets,
     setTexturePaletteLength,
+    type Mesh,
+    type Texture,
   } from "../utils";
-
-  import type { Mesh, Texture } from "../utils";
 
   export let assetIndex: number;
 
@@ -475,11 +475,11 @@
 
       & .gtc-assetviewer-canvas,
       & .gtc-assetviewer-three {
-        @apply self-start p-2 w-fit bg-primary-700 rounded;
+        @apply w-fit self-start rounded bg-primary-700 p-2;
       }
 
       & .gtc-assetviewer-canvas {
-        @apply shrink-0 mr-4 min-w-36;
+        @apply mr-4 min-w-36 shrink-0;
 
         &.gtc-assetviewer-canvas-sprite {
           @apply min-w-0;

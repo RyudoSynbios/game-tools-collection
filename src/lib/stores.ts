@@ -8,7 +8,7 @@ const lsDebugTools = JSON.parse(getLocalStorage("debugTools") || "{}");
 
 export const dataView = writable(new DataView(new ArrayBuffer(0)));
 export const dataViewAlt = writable<{ [key: string]: DataView }>({});
-export const debugTools = writable(lsDebugTools as DebugTools);
+export const debugTools = writable<DebugTools>(lsDebugTools);
 export const fileHeaderShift = writable(0x0);
 export const fileIsLoading = writable(false);
 export const fileName = writable("");

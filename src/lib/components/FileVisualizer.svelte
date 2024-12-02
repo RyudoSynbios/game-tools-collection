@@ -13,11 +13,10 @@
     isFileVisualizerOpen,
   } from "$lib/stores";
   import { dataTypeToLength, getInt } from "$lib/utils/bytes";
-  import { parseItem } from "$lib/utils/fileVisualizer";
-
-  import type {
-    HighlightedOffset,
-    HighlightedOffsets,
+  import {
+    parseItem,
+    type HighlightedOffset,
+    type HighlightedOffsets,
   } from "$lib/utils/fileVisualizer";
 
   import type { DataTypeInt } from "$lib/types";
@@ -446,12 +445,12 @@
 
 <style lang="postcss">
   .gtc-filevisualizer-backdrop {
-    @apply fixed inset-0 flex items-center justify-center py-8 bg-black/50;
+    @apply fixed inset-0 flex items-center justify-center bg-black/50 py-8;
 
     z-index: 10000;
 
     & .gtc-filevisualizer {
-      @apply flex p-4 h-full bg-primary-900 rounded-xl;
+      @apply flex h-full rounded-xl bg-primary-900 p-4;
 
       & .gtc-filevisualizer-toolbar {
         @apply pr-4;
@@ -459,7 +458,7 @@
         & .gtc-filevisualizer-dataview,
         & .gtc-filevisualizer-goto,
         & .gtc-filevisualizer-search {
-          @apply flex justify-between items-end mb-4 p-2 bg-primary-700 rounded;
+          @apply mb-4 flex items-end justify-between rounded bg-primary-700 p-2;
 
           & :global(.gtc-input),
           & :global(.gtc-select) {
@@ -467,7 +466,7 @@
           }
 
           & button {
-            @apply text-red-100 leading-4 bg-primary-400;
+            @apply bg-primary-400 leading-4 text-red-100;
 
             &:hover {
               @apply bg-primary-300;
@@ -509,13 +508,13 @@
           }
 
           & :global(.gtc-checkbox) {
-            @apply absolute top-2 right-2;
+            @apply absolute right-2 top-2;
           }
         }
       }
 
       & .gtc-filevisualizer-content {
-        @apply text-white overflow-y-auto;
+        @apply overflow-y-auto text-white;
 
         width: 758px;
 
@@ -523,7 +522,7 @@
           @apply flex;
 
           & .gtc-filevisualizer-offsets {
-            @apply px-4 h-6 font-source text-center uppercase bg-primary-800;
+            @apply h-6 bg-primary-800 px-4 text-center font-source uppercase;
           }
 
           & .gtc-filevisualizer-bytes {
@@ -536,14 +535,14 @@
 
           & .gtc-filevisualizer-ascii,
           & .gtc-filevisualizer-bytes {
-            @apply flex content-start flex-wrap px-2;
+            @apply flex flex-wrap content-start px-2;
 
             & .gtc-filevisualizer-hex {
-              @apply px-1 w-7 h-6 font-source text-center uppercase;
+              @apply h-6 w-7 px-1 text-center font-source uppercase;
             }
 
             & .gtc-filevisualizer-char {
-              @apply h-6 font-source text-center;
+              @apply h-6 text-center font-source;
 
               width: 0.625rem;
             }
@@ -606,7 +605,7 @@
       }
 
       & .gtc-filevisualizer-tooltip {
-        @apply fixed top-0 right-0 hidden px-4 py-2 text-sm text-white bg-primary-900 opacity-90 rounded whitespace-pre-wrap;
+        @apply fixed right-0 top-0 hidden whitespace-pre-wrap rounded bg-primary-900 px-4 py-2 text-sm text-white opacity-90;
 
         width: fit-content;
 

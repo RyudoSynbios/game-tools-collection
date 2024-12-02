@@ -351,21 +351,21 @@
 
 <style lang="postcss">
   .gtc-autocomplete {
-    @apply relative mr-4 mb-4 p-2 w-fit bg-primary-700 rounded;
+    @apply relative mb-4 mr-4 w-fit rounded bg-primary-700 p-2;
 
     &.gtc-autocomplete-debug {
-      @apply text-orange-800 bg-orange-950;
+      @apply bg-orange-950 text-orange-800;
     }
 
     & .gtc-autocomplete-label {
-      @apply flex items-center justify-between mb-2;
+      @apply mb-2 flex items-center justify-between;
 
       & p {
         @apply text-sm font-bold;
       }
 
       & span {
-        @apply w-5 text-sm text-center font-bold bg-primary-400 rounded cursor-pointer;
+        @apply w-5 cursor-pointer rounded bg-primary-400 text-center text-sm font-bold;
       }
     }
 
@@ -386,7 +386,7 @@
       }
 
       & :global(svg) {
-        @apply w-4 h-8 bg-white;
+        @apply h-8 w-4 bg-white;
       }
 
       &.gtc-autocomplete-input-lg input {
@@ -399,14 +399,14 @@
     }
 
     & .gtc-autocomplete-dropdown {
-      @apply absolute text-primary-900 text-sm bg-white overflow-auto z-10;
+      @apply absolute z-10 overflow-auto bg-white text-sm text-primary-900;
 
       width: calc(100% - 1rem);
       max-height: 40vh;
 
       & .gtc-autocomplete-dropdown-group {
         & .gtc-autocomplete-dropdownlabel {
-          @apply sticky top-0 px-2 py-2 font-bold bg-white;
+          @apply sticky top-0 bg-white px-2 py-2 font-bold;
         }
 
         & li {

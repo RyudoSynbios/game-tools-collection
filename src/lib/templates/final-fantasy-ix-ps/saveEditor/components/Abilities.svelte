@@ -1,11 +1,11 @@
 <script lang="ts">
+  import Section from "$lib/components/Items/Section.svelte";
   import { getInt } from "$lib/utils/bytes";
   import { getItem, getResource } from "$lib/utils/parser";
 
   import type { ItemSection, ItemString, Resource } from "$lib/types";
 
   import { abilities } from "../utils/resource";
-  import Section from "$lib/components/Items/Section.svelte";
 
   export let slotIndex: number;
   export let characterIndex: number;

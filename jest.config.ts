@@ -1,5 +1,3 @@
-import type { Config } from "jest";
-
 export default {
   preset: "jest-puppeteer",
   globals: {
@@ -11,4 +9,4 @@ export default {
   transform: {
     "^.+\\.ts?$": "ts-jest",
   },
-} as Config;
+};

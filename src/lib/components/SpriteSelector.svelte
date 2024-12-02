@@ -145,7 +145,7 @@
 
 <style lang="postcss">
   .gtc-spriteselector {
-    @apply relative self-start mr-4 mb-4 p-2 bg-primary-700 rounded z-20;
+    @apply relative z-20 mb-4 mr-4 self-start rounded bg-primary-700 p-2;
 
     & .gtc-spriteselector-main {
       @apply cursor-pointer;
@@ -156,7 +156,7 @@
     }
 
     & .gtc-spriteselector-dropdown {
-      @apply absolute top-0 left-full hidden p-2 bg-primary-700 rounded overflow-auto shadow-xl;
+      @apply absolute left-full top-0 hidden overflow-auto rounded bg-primary-700 p-2 shadow-xl;
 
       max-height: 40vh;
 

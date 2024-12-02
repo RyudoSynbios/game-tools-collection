@@ -1,12 +1,27 @@
 {
-  "plugins": ["@trivago/prettier-plugin-sort-imports"],
   "importOrder": [
     "^@|^[a-z]",
+    "",
+    "^\\$app.*$",
     "^\\$lib/(?!types).*$",
+    "",
     "^\\$lib/types$",
+    "",
     "^[./]",
+    "",
     "(.*)"
   ],
-  "importOrderSeparation": true,
-  "importOrderSortSpecifiers": true
+  "overrides": [
+    {
+      "files": "*.svelte",
+      "options": {
+        "parser": "svelte"
+      }
+    }
+  ],
+  "plugins": [
+    "@ianvs/prettier-plugin-sort-imports",
+    "prettier-plugin-svelte",
+    "prettier-plugin-tailwindcss"
+  ]
 }

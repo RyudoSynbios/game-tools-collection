@@ -28,16 +28,16 @@ import type {
 } from "$lib/types";
 
 import {
-  itemTypes as itemTypesS1,
   itemsDetails as itemsDetailsS1,
+  itemTypes as itemTypesS1,
 } from "./utils/scenario1/resource";
 import {
-  itemTypes as itemTypesS2,
   itemsDetails as itemsDetailsS2,
+  itemTypes as itemTypesS2,
 } from "./utils/scenario2/resource";
 import {
-  itemTypes as itemTypesS3,
   itemsDetails as itemsDetailsS3,
+  itemTypes as itemTypesS3,
 } from "./utils/scenario3/resource";
 
 export function beforeInitDataView(dataView: DataView): DataView {

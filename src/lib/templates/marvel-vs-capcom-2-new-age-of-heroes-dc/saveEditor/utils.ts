@@ -3,8 +3,11 @@ import { get } from "svelte/store";
 import { dataView, gameRegion, gameTemplate } from "$lib/stores";
 import { getInt, setInt } from "$lib/utils/bytes";
 import { formatChecksum } from "$lib/utils/checksum";
-import { generateVmuChecksum, isDciFile } from "$lib/utils/common/dreamcast";
-import { byteswapDataView } from "$lib/utils/common/dreamcast";
+import {
+  byteswapDataView,
+  generateVmuChecksum,
+  isDciFile,
+} from "$lib/utils/common/dreamcast";
 import { getObjKey } from "$lib/utils/format";
 
 import type {

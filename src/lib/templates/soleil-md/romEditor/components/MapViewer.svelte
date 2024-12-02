@@ -439,7 +439,7 @@
     }
 
     & .gtc-mapviewer-inputs {
-      @apply flex mb-2;
+      @apply mb-2 flex;
 
       & :global(label) {
         @apply mr-4;
@@ -448,7 +448,7 @@
 
     & .gtc-mapviewer-canvasdebug,
     & .gtc-mapviewer-canvas {
-      @apply self-start p-2 w-fit bg-primary-700 rounded;
+      @apply w-fit self-start rounded bg-primary-700 p-2;
     }
 
     & .gtc-mapviewer-canvasdebug {

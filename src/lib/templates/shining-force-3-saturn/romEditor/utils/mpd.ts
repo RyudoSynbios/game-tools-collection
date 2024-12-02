@@ -16,11 +16,11 @@ import type { Palette } from "$lib/types";
 
 import { getDecompressedData, getFileOffset, getScenario } from "../utils";
 import {
-  type Texture,
   generateTexture,
   getIndices,
   getMaterials,
   getVertices,
+  type Texture,
 } from "./model";
 
 export async function addBattlefieldFloor(

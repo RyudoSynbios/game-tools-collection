@@ -7,10 +7,10 @@
   import EjectIcon from "$lib/assets/Eject.svelte";
   import ManageSearchIcon from "$lib/assets/ManageSearch.svelte";
   import SaveIcon from "$lib/assets/Save.svelte";
+  import SettingsIcon from "$lib/assets/Settings.svelte";
   import Dropzone from "$lib/components/Dropzone.svelte";
   import FileVisualizer from "$lib/components/FileVisualizer.svelte";
   import Content from "$lib/components/Items/Content.svelte";
-  import SettingsIcon from "$lib/assets/Settings.svelte";
   import {
     dataView,
     debugTools,
@@ -26,6 +26,7 @@
   import { getGame } from "$lib/utils/db.js";
   import { setLocalStorage, utilsExists } from "$lib/utils/format";
   import { reset } from "$lib/utils/state";
+
   import type { Game, GameJson } from "$lib/types";
 
   const game = getGame($page.params["gameId"]) as Game;
@@ -218,10 +219,10 @@
 
 <style lang="postcss">
   .gtc-tool {
-    @apply flex-1 flex flex-col;
+    @apply flex flex-1 flex-col;
 
     .gtc-tool-banner {
-      @apply flex items-center justify-between mb-4 h-10;
+      @apply mb-4 flex h-10 items-center justify-between;
 
       & img {
         height: 180%;
@@ -231,10 +232,10 @@
         @apply flex;
 
         & button {
-          @apply flex ml-2;
+          @apply ml-2 flex;
 
           &.gtc-tool-checksums {
-            @apply text-blue-100 bg-blue-900;
+            @apply bg-blue-900 text-blue-100;
 
             &:hover {
               @apply bg-blue-700;
@@ -242,7 +243,7 @@
           }
 
           &.gtc-tool-eject {
-            @apply text-red-100 bg-red-900;
+            @apply bg-red-900 text-red-100;
 
             &:hover {
               @apply bg-red-700;
@@ -250,7 +251,7 @@
           }
 
           &.gtc-tool-filevisualizer {
-            @apply text-indigo-100 bg-indigo-900;
+            @apply bg-indigo-900 text-indigo-100;
 
             &:hover {
               @apply bg-indigo-700;
@@ -258,7 +259,7 @@
           }
 
           &.gtc-tool-save {
-            @apply text-green-100 bg-green-900;
+            @apply bg-green-900 text-green-100;
 
             &:hover {
               @apply bg-green-700;
@@ -266,7 +267,7 @@
           }
 
           & :global(svg) {
-            @apply -ml-1 mr-2 w-5 h-5;
+            @apply -ml-1 mr-2 h-5 w-5;
           }
         }
 
@@ -274,7 +275,7 @@
           @apply relative;
 
           & .gtc-tool-debugtoolbar-focus {
-            @apply text-white bg-primary-300;
+            @apply bg-primary-300 text-white;
           }
 
           & :global(svg) {
@@ -282,17 +283,17 @@
           }
 
           & ul {
-            @apply absolute top-10 left-2 py-1 w-40 text-xs bg-primary-500 rounded;
+            @apply absolute left-2 top-10 w-40 rounded bg-primary-500 py-1 text-xs;
 
             & li {
-              @apply flex px-2 py-1 cursor-pointer;
+              @apply flex cursor-pointer px-2 py-1;
 
               &:hover {
                 @apply bg-primary-400;
               }
 
               & input[type="checkbox"] {
-                @apply w-2.5 ml-2 cursor-pointer accent-primary-400;
+                @apply ml-2 w-2.5 cursor-pointer accent-primary-400;
               }
             }
           }
@@ -301,7 +302,7 @@
     }
 
     & .gtc-tool-dropzone {
-      @apply flex-1 flex items-center justify-center;
+      @apply flex flex-1 items-center justify-center;
     }
   }
 </style>

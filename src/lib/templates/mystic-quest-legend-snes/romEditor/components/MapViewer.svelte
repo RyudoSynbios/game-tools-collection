@@ -5,8 +5,8 @@
   import { isDebug } from "$lib/stores";
   import { extractBit, getInt } from "$lib/utils/bytes";
   import Canvas, { type Axis } from "$lib/utils/canvas";
-  import debug from "$lib/utils/debug";
   import { getTileData } from "$lib/utils/common/superNintendo";
+  import debug from "$lib/utils/debug";
   import { capitalize, getRegionArray } from "$lib/utils/format";
   import { applyPalette, flipTileData, getPalette } from "$lib/utils/graphics";
 
@@ -21,8 +21,8 @@
     pointerToMovingSprites,
     pointerToRooms,
     pointerToRoomsTable,
-    pointerToSpriteSetIndex,
     pointerToSpriteSet,
+    pointerToSpriteSetIndex,
     pointerToSpritesPalettes,
     pointerToStaticSprites,
     pointerToTilemapPalettes,
@@ -864,7 +864,7 @@
 <style lang="postcss">
   .gtc-mapviewer {
     & .gtc-mapviewer-inputs {
-      @apply flex mb-2;
+      @apply mb-2 flex;
 
       & :global(label) {
         @apply mr-4;
@@ -873,7 +873,7 @@
 
     & .gtc-mapviewer-canvasdebug,
     & .gtc-mapviewer-canvas {
-      @apply self-start p-2 w-fit bg-primary-700 rounded;
+      @apply w-fit self-start rounded bg-primary-700 p-2;
     }
 
     & .gtc-mapviewer-canvasdebug {

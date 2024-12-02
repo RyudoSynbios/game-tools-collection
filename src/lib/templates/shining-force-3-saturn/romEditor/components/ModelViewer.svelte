@@ -394,11 +394,11 @@
 
       & .gtc-modelviewer-canvas,
       & .gtc-modelviewer-three {
-        @apply self-start p-2 w-fit bg-primary-700 rounded;
+        @apply w-fit self-start rounded bg-primary-700 p-2;
       }
 
       & .gtc-modelviewer-canvas {
-        @apply shrink-0 mr-4 min-w-36;
+        @apply mr-4 min-w-36 shrink-0;
 
         &.gtc-modelviewer-canvas-hidden {
           @apply hidden;

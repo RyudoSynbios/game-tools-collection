@@ -3,7 +3,6 @@ import { get } from "svelte/store";
 import { dataView, dataViewAlt, gameRegion } from "$lib/stores";
 import { getInt, setInt } from "$lib/utils/bytes";
 import {
-  type File,
   customGetRegions,
   getFile,
   getFiles,
@@ -11,6 +10,7 @@ import {
   readIso9660,
   resetIso9660,
   writeFile,
+  type File,
 } from "$lib/utils/common/iso9660";
 import { decodeCamelotFont, decodeWindows31J } from "$lib/utils/decode";
 import { getRegionArray } from "$lib/utils/format";

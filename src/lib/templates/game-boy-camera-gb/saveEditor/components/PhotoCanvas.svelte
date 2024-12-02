@@ -91,6 +91,6 @@
 
 <style lang="postcss">
   .gtc-photocanvas {
-    @apply mr-4 mb-4 p-2 w-fit bg-primary-700 rounded;
+    @apply mb-4 mr-4 w-fit rounded bg-primary-700 p-2;
   }
 </style>

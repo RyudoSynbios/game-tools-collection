@@ -112,12 +112,12 @@
 
 <style lang="postcss">
   .gtc-bitflags {
-    @apply mr-4 mb-4 p-2 w-fit h-fit bg-primary-700 rounded;
+    @apply mb-4 mr-4 h-fit w-fit rounded bg-primary-700 p-2;
 
     min-width: 196px;
 
     &.gtc-bitflags-debug {
-      @apply text-orange-800 bg-orange-950;
+      @apply bg-orange-950 text-orange-800;
     }
 
     &.gtc-bitflags-nomargin {
@@ -127,20 +127,20 @@
     & .gtc-bitflag {
       &.gtc-bitflag-debug {
         & :global(.gtc-checkbox) {
-          @apply text-orange-800 bg-orange-950;
+          @apply bg-orange-950 text-orange-800;
         }
       }
     }
 
     & .gtc-bitflags-label {
-      @apply flex items-center justify-between mb-2;
+      @apply mb-2 flex items-center justify-between;
 
       & p {
         @apply text-sm font-bold;
       }
 
       & span {
-        @apply w-5 text-sm text-center font-bold bg-primary-400 rounded cursor-pointer;
+        @apply w-5 cursor-pointer rounded bg-primary-400 text-center text-sm font-bold;
       }
     }
 

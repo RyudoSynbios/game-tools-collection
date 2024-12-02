@@ -52,12 +52,12 @@
 
 <style lang="postcss">
   .gtc-regionmodal-backdrop {
-    @apply absolute inset-0 flex items-center justify-center text-white bg-black/50;
+    @apply absolute inset-0 flex items-center justify-center bg-black/50 text-white;
 
     z-index: 10000;
 
     & .gtc-regionmodal {
-      @apply flex flex-col items-center justify-center p-4 bg-primary-900 rounded-xl;
+      @apply flex flex-col items-center justify-center rounded-xl bg-primary-900 p-4;
 
       width: 600px;
       height: 400px;

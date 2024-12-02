@@ -9,6 +9,6 @@
 
 <style lang="postcss">
   .gtc-icon-accesstime {
-    @apply max-w-full max-h-full fill-current;
+    @apply max-h-full max-w-full fill-current;
   }
 </style>

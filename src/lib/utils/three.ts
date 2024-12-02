@@ -10,7 +10,6 @@ import {
   Group,
   Mesh,
   MeshBasicMaterial,
-  type MeshBasicMaterialParameters,
   MeshLambertMaterial,
   MirroredRepeatWrapping,
   NearestFilter,
@@ -18,12 +17,13 @@ import {
   PerspectiveCamera,
   Raycaster,
   RepeatWrapping,
-  SRGBColorSpace,
   Scene,
+  SRGBColorSpace,
   TextureLoader,
   Vector2,
   Vector3,
   WebGLRenderer,
+  type MeshBasicMaterialParameters,
 } from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import { GUI } from "three/examples/jsm/libs/lil-gui.module.min.js";

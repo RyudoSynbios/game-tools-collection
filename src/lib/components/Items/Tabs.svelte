@@ -256,19 +256,19 @@
     min-height: 50vh;
 
     & > ul {
-      @apply flex flex-wrap bg-primary-700 rounded overflow-hidden;
+      @apply flex flex-wrap overflow-hidden rounded bg-primary-700;
 
       & > .gtc-tab {
-        @apply flex items-center px-4 py-2 h-9 text-sm cursor-pointer;
+        @apply flex h-9 cursor-pointer items-center px-4 py-2 text-sm;
 
         &:hover:not(.gtc-tab-debug):not(.gtc-tab-disabled):not(
             .gtc-tab-highlight
           ) {
-          @apply bg-primary-400 rounded;
+          @apply rounded bg-primary-400;
         }
 
         &.gtc-tab-debug {
-          @apply text-orange-800 bg-orange-950;
+          @apply bg-orange-950 text-orange-800;
         }
 
         &.gtc-tab-disabled {
@@ -276,15 +276,15 @@
         }
 
         &.gtc-tab-highlight:not(.gtc-tab-disabled) {
-          @apply text-white bg-primary-300 rounded;
+          @apply rounded bg-primary-300 text-white;
 
           &.gtc-tab-debug {
-            @apply text-orange-100 bg-orange-900;
+            @apply bg-orange-900 text-orange-100;
           }
         }
 
         & .gtc-tab-index {
-          @apply mr-1 text-gray-600 text-xs;
+          @apply mr-1 text-xs text-gray-600;
         }
 
         & > :global(svg) {
@@ -301,13 +301,13 @@
       @apply md:flex;
 
       & > ul {
-        @apply block mr-4 mb-4 md:mb-0 no-scrollbar overflow-scroll;
+        @apply mb-4 mr-4 block overflow-scroll no-scrollbar md:mb-0;
 
         min-width: 200px;
       }
 
       & > .gtc-tabs-content {
-        @apply flex-1 pt-0 overflow-scroll;
+        @apply flex-1 overflow-scroll pt-0;
       }
     }
   }

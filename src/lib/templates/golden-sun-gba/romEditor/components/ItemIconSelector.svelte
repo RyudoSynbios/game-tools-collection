@@ -5,8 +5,8 @@
   import { getPalette } from "$lib/utils/graphics";
 
   import {
-    pointerToItems,
     pointerToItemGraphicsPointers,
+    pointerToItems,
     pointerToPalettes,
   } from "../template";
   import { getSprite } from "../utils";

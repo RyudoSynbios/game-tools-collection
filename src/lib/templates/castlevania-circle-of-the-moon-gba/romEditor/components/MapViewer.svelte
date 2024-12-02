@@ -664,7 +664,7 @@
       @apply flex;
 
       & .gtc-mapviewer-layers {
-        @apply mr-4 mb-4 p-2 w-fit bg-primary-700 rounded;
+        @apply mb-4 mr-4 w-fit rounded bg-primary-700 p-2;
 
         & p {
           @apply mb-2 text-sm font-bold;
@@ -682,7 +682,7 @@
 
     & .gtc-mapviewer-canvasdebug,
     & .gtc-mapviewer-canvas {
-      @apply self-start p-2 w-fit bg-primary-700 rounded;
+      @apply w-fit self-start rounded bg-primary-700 p-2;
     }
 
     & .gtc-mapviewer-canvasdebug {

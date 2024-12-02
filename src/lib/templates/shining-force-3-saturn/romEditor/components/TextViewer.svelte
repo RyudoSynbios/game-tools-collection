@@ -313,7 +313,7 @@
     }
 
     & .gtc-textviewer-content {
-      @apply p-2 text-sm whitespace-pre-line bg-primary-700 rounded;
+      @apply whitespace-pre-line rounded bg-primary-700 p-2 text-sm;
 
       &.gtc-textviewer-content-formatted {
         @apply text-white;

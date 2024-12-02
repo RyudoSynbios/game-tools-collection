@@ -64,6 +64,6 @@
 
 <style lang="postcss">
   .gtc-imageviewer {
-    @apply self-start p-2 w-fit bg-primary-700 rounded;
+    @apply w-fit self-start rounded bg-primary-700 p-2;
   }
 </style>

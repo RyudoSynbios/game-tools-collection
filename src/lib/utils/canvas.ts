@@ -1,5 +1,5 @@
 import { Application } from "@pixi/app";
-import { BaseTexture, BufferResource, Texture, extensions } from "@pixi/core";
+import { BaseTexture, BufferResource, extensions, Texture } from "@pixi/core";
 import { Container } from "@pixi/display";
 import "@pixi/events";
 import { Extract } from "@pixi/extract";

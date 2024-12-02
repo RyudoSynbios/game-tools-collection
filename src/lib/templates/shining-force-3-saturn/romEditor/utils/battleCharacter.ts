@@ -5,7 +5,7 @@ import Canvas from "$lib/utils/canvas";
 import type Three from "$lib/utils/three";
 
 import { getDecompressedData, getFilteredFiles } from "../utils";
-import { type Texture, getIndices, getMaterials, getVertices } from "./model";
+import { getIndices, getMaterials, getVertices, type Texture } from "./model";
 
 export async function addObject(
   baseOffset: number,

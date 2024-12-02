@@ -14,8 +14,8 @@ import Debug from "./components/Debug.svelte";
 import MapViewer from "./components/MapViewer.svelte";
 import {
   pointerToItemTexts,
-  pointerToMapTexts,
   pointerToMapsPointers,
+  pointerToMapTexts,
   pointerToMonsterTexts,
   pointerToTexts,
   shinyArmorSpriteGraphics,

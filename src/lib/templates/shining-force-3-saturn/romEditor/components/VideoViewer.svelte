@@ -2,8 +2,9 @@
   import { onDestroy, onMount } from "svelte";
 
   import Canvas from "$lib/utils/canvas";
-  import { getFileData } from "../utils";
   import { isCpk, unpackCpk } from "$lib/utils/common/saturn";
+
+  import { getFileData } from "../utils";
 
   export let assetIndex: number;
 
@@ -50,6 +51,6 @@
 
 <style lang="postcss">
   .gtc-videoviewer {
-    @apply self-start p-2 w-fit bg-primary-700 rounded;
+    @apply w-fit self-start rounded bg-primary-700 p-2;
   }
 </style>

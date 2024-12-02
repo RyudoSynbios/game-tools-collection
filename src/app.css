@@ -38,7 +38,7 @@
 }
 
 body {
-  @apply text-primary-300 bg-primary-800;
+  @apply bg-primary-800 text-primary-300;
 }
 
 canvas {
@@ -46,15 +46,15 @@ canvas {
 }
 
 button {
-  @apply px-4 py-2 text-sm text-primary-300 bg-primary-700 rounded;
+  @apply rounded bg-primary-700 px-4 py-2 text-sm text-primary-300;
 
   &:hover {
-    @apply text-white bg-primary-300;
+    @apply bg-primary-300 text-white;
   }
 }
 
 h1 {
-  @apply mb-4 font-black text-2xl;
+  @apply mb-4 text-2xl font-black;
 }
 
 h2 {
@@ -85,31 +85,31 @@ select {
 }
 
 [data-title]:hover:after {
-  @apply opacity-100 visible;
+  @apply visible opacity-100;
 
   transition: all 0.1s ease 0.5s;
 }
 
 [data-title]:after {
-  @apply absolute top-8 p-1 w-64 text-xs bg-primary-500 whitespace-pre rounded shadow-md -translate-x-1/2 opacity-0 invisible z-50;
+  @apply invisible absolute top-8 z-50 w-64 -translate-x-1/2 whitespace-pre rounded bg-primary-500 p-1 text-xs opacity-0 shadow-md;
 
   content: attr(data-title);
 }
 
 ::-webkit-scrollbar {
-  @apply w-2 h-2 bg-primary-800 rounded;
+  @apply h-2 w-2 rounded bg-primary-800;
 }
 
 ::-webkit-scrollbar-corner {
-  @apply bg-primary-800 rounded;
+  @apply rounded bg-primary-800;
 }
 
 ::-webkit-scrollbar-track {
-  @apply bg-primary-800 rounded;
+  @apply rounded bg-primary-800;
 }
 
 ::-webkit-scrollbar-thumb {
-  @apply bg-primary-700 rounded;
+  @apply rounded bg-primary-700;
 
   &:hover {
     @apply bg-primary-400;
@@ -117,7 +117,7 @@ select {
 }
 
 .gtc-three-message {
-  @apply absolute top-1/2 left-1/2 text-xl font-bold -translate-x-1/2 -translate-y-1/2;
+  @apply absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-xl font-bold;
 }
 
 .lil-gui {
@@ -125,5 +125,5 @@ select {
 }
 
 .lil-gui.root {
-  @apply absolute top-2 right-2;
+  @apply absolute right-2 top-2;
 }

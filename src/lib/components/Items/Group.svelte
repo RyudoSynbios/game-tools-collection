@@ -1,9 +1,9 @@
 <script lang="ts">
   import Int from "$lib/components/Items/Int.svelte";
   import { dataView, gameUtils, isDebug } from "$lib/stores";
+  import { utilsExists } from "$lib/utils/format";
 
   import type { ItemGroup } from "$lib/types";
-  import { utilsExists } from "$lib/utils/format";
 
   export let item: ItemGroup;
 
@@ -56,12 +56,12 @@
 
 <style lang="postcss">
   .gtc-group {
-    @apply mr-4 mb-4 w-fit bg-primary-700 rounded;
+    @apply mb-4 mr-4 w-fit rounded bg-primary-700;
 
     min-width: 196px;
 
     &.gtc-group-debug {
-      @apply text-orange-800 bg-orange-950;
+      @apply bg-orange-950 text-orange-800;
     }
 
     & .gtc-group-label {
@@ -72,7 +72,7 @@
       }
 
       & span {
-        @apply mt-2 w-5 text-sm text-center font-bold bg-primary-400 rounded cursor-pointer;
+        @apply mt-2 w-5 cursor-pointer rounded bg-primary-400 text-center text-sm font-bold;
       }
     }
 

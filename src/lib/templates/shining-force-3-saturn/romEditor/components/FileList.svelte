@@ -71,7 +71,7 @@
     }
 
     & .gtc-filelist-content {
-      @apply p-2 whitespace-pre-line bg-primary-700 rounded;
+      @apply whitespace-pre-line rounded bg-primary-700 p-2;
     }
   }
 </style>
