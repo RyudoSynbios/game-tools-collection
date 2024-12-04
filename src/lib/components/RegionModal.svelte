@@ -28,6 +28,7 @@
     "Australia",
     "Canada",
     "Korea",
+    "Asia",
   ];
 
   regionsFormatted.sort(
