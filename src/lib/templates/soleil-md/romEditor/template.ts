@@ -44,8 +44,8 @@ const template: GameJson = {
         ],
       },
     },
-    text: "Drag 'n' drop here or click to add a save file.",
-    error: "Not a valid save file.",
+    text: "Drag 'n' drop here or click to add a rom file.",
+    error: "Not a valid rom file.",
   },
   items: [
     {
