@@ -3,7 +3,13 @@
 
   import AccessTimeIcon from "$lib/assets/AccessTime.svelte";
   import Content from "$lib/components/Items/Content.svelte";
-  import { debugTools, gameJson, gameUtils, isDebug } from "$lib/stores";
+  import {
+    dataView,
+    debugTools,
+    gameJson,
+    gameUtils,
+    isDebug,
+  } from "$lib/stores";
   import {
     generateIdFromArray,
     getUtils,
@@ -126,6 +132,8 @@
   }
 
   $: {
+    $dataView;
+
     if (rootEl && item.vertical) {
       const rootY = rootEl.getBoundingClientRect().y;
       const rootHeight = innerHeight - rootY - 16;
