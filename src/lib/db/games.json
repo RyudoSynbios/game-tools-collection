@@ -151,6 +151,17 @@
     }
   },
   {
+    "id": "dissidia-012-duodecim-final-fantasy-psp",
+    "name": "Dissidia 012: Duodecim Final Fantasy",
+    "consoleId": "playstation-portable",
+    "tools": {
+      "saveEditor": {
+        "createdAt": "2024-12-xx",
+        "regions": ["🇪🇺", "🇺🇸", "🇯🇵"]
+      }
+    }
+  },
+  {
     "id": "donkey-kong-land-gb",
     "name": "Donkey Kong Land",
     "consoleId": "game-boy",
