@@ -1685,7 +1685,7 @@ const template: GameJson = {
                         { offset: 0x441, bit: 0, label: "All Variations" },
                         { offset: 0x441, bit: 1, label: "All on One" },
                         { offset: 0x441, bit: 2, label: "Lethal Weapon" },
-                        { offset: 0x441, bit: 3, label: "Berseker" },
+                        { offset: 0x441, bit: 3, label: "Berserker" },
                       ],
                     },
                     {

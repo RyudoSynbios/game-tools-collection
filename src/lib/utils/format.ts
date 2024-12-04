@@ -322,7 +322,7 @@ export function getUtils(value = "", ...params: any[]): any {
       .exec(method)![1]
       .split(",")
       .forEach((param) => {
-        if (!param.match(/'/)) {
+        if (param.match(/[0-9]+/)) {
           params.push(parseInt(param));
         } else {
           params.push(param.replaceAll("'", ""));

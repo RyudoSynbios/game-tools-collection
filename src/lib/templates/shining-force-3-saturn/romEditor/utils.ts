@@ -96,10 +96,9 @@ export function overrideParseItem(item: Item): Item {
     }
 
     if (item.type === "bitflags") {
-      item.flags.map((flag) => ({
-        ...flag,
-        offset: (flag.offset += cache.partyStatsBaseOffset),
-      }));
+      item.flags.forEach((flag) => {
+        flag.offset += cache.partyStatsBaseOffset;
+      });
     } else {
       item.offset += cache.partyStatsBaseOffset;
     }
@@ -121,10 +120,9 @@ export function overrideParseItem(item: Item): Item {
     }
 
     if (item.type === "bitflags") {
-      item.flags.map((flag) => ({
-        ...flag,
-        offset: (flag.offset += cache.itemsBaseOffset),
-      }));
+      item.flags.forEach((flag) => {
+        flag.offset += cache.itemsBaseOffset;
+      });
     } else {
       item.offset += cache.itemsBaseOffset;
     }
@@ -138,10 +136,9 @@ export function overrideParseItem(item: Item): Item {
     }
 
     if (item.type === "bitflags") {
-      item.flags.map((flag) => ({
-        ...flag,
-        offset: (flag.offset += cache.enemiesBaseOffset),
-      }));
+      item.flags.forEach((flag) => {
+        flag.offset += cache.enemiesBaseOffset;
+      });
     } else {
       item.offset += cache.enemiesBaseOffset;
     }

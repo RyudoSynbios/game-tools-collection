@@ -9,7 +9,7 @@ const template: GameJson = {
       world: true,
     },
     text: "Drag 'n' drop here or click to add a save file.",
-    hint: 'Only works with v1.4.0 or above.<br />Main: "RogueLegacyPlayer.rcdat"<br />Manor: "RogueLegacyBP.rcdat"',
+    hint: 'Only works with v1.4.0 or above.\nMain: "RogueLegacyPlayer.rcdat"\nManor: "RogueLegacyBP.rcdat"',
     error: "Not a valid save file.",
   },
   items: [

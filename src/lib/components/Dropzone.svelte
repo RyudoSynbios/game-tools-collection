@@ -183,7 +183,7 @@
       }
 
       & .gtc-dropzone-hint {
-        @apply text-center text-primary-400;
+        @apply whitespace-pre-line text-center text-primary-400;
       }
 
       & .gtc-dropzone-error {
