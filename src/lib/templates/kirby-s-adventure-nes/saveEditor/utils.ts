@@ -5,7 +5,7 @@ import { getInt, setInt } from "$lib/utils/bytes";
 import { formatChecksum } from "$lib/utils/checksum";
 import { clone } from "$lib/utils/format";
 
-import {
+import type {
   Item,
   ItemBitflag,
   ItemBitflags,

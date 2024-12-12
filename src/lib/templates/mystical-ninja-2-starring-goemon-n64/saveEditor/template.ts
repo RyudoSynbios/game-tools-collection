@@ -1661,12 +1661,12 @@ const template: GameJson = {
       0x3: "Fish rice balls",
     },
     levelsAccess: {
-      0: 0x0,
-      1: 0x3,
+      0x0: "0",
+      0x1: "3",
     },
     castlesCleared: {
-      0: 0x0,
-      1: 0x7,
+      0x0: "0",
+      0x1: "7",
     },
     languages: [
       // Europe

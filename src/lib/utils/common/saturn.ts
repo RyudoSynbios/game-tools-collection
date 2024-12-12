@@ -2,7 +2,7 @@ import { get } from "svelte/store";
 
 import { dataView, gameRegion, gameTemplate } from "$lib/stores";
 
-import { Validator } from "$lib/types";
+import type { Validator } from "$lib/types";
 
 import { addPadding, getInt, getString, removePadding } from "../bytes";
 import { getObjKey, mergeUint8Arrays, numberArrayToString } from "../format";

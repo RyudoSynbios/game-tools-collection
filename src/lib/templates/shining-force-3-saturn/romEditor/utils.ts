@@ -17,7 +17,7 @@ import { getRegionArray } from "$lib/utils/format";
 import { getItem, updateResources } from "$lib/utils/parser";
 import { checkValidator } from "$lib/utils/validator";
 
-import type { Item, ItemContainer, ItemInt } from "$lib/types";
+import type { Item, ItemContainer, ItemInt, Resource } from "$lib/types";
 
 import FileList from "./components/FileList.svelte";
 import ImageViewer from "./components/ImageViewer.svelte";
@@ -347,10 +347,10 @@ export function onReset(): void {
   resetIso9660();
 }
 
-export function getAssetNames(type: string): { [value: number]: string } {
+export function getAssetNames(type: string): Resource {
   const files = getFilteredFiles(type);
 
-  const names: { [value: number]: string } = {};
+  const names: Resource = {};
 
   files.forEach((file, index) => {
     names[index] = file.name;
@@ -359,13 +359,13 @@ export function getAssetNames(type: string): { [value: number]: string } {
   return names;
 }
 
-export function getCharacterNames(): { [value: number]: string } {
+export function getCharacterNames(): Resource {
   const $dataViewAlt = get(dataViewAlt);
 
   const characterNamesStartIndex = getRegionArray(characterNamesStartIndexes);
   const count = getRegionArray(characterCount);
 
-  const names: { [value: number]: string } = {};
+  const names: Resource = {};
 
   const shifts = getCharacterShifts();
 
@@ -391,10 +391,10 @@ export function getCharacterNames(): { [value: number]: string } {
   return names;
 }
 
-export function getClassesNames(): { [value: number]: string } {
+export function getClassesNames(): Resource {
   const classNamesStartIndex = getRegionArray(classNamesStartIndexes);
 
-  const names: { [value: number]: string } = {};
+  const names: Resource = {};
 
   for (let i = 0x0; i < 0x46; i += 0x1) {
     names[i] = getText(classNamesStartIndex + i);
@@ -403,11 +403,11 @@ export function getClassesNames(): { [value: number]: string } {
   return names;
 }
 
-export function getEnemyNames(): { [value: number]: string } {
+export function getEnemyNames(): Resource {
   const enemyNamesStartIndex = getRegionArray(enemyNamesStartIndexes);
   const count = getRegionArray(enemyCount);
 
-  const names: { [value: number]: string } = {};
+  const names: Resource = {};
 
   for (let i = 0x0; i < count; i += 0x1) {
     names[i] = getText(enemyNamesStartIndex + i);
@@ -418,13 +418,13 @@ export function getEnemyNames(): { [value: number]: string } {
   return names;
 }
 
-export function getItemDescriptions(): { [value: number]: string } {
+export function getItemDescriptions(): Resource {
   const itemDescriptionStartIndex = getRegionArray(
     itemDescriptionsStartIndexes,
   );
   const count = getRegionArray(itemCount);
 
-  const names: { [value: number]: string } = {};
+  const names: Resource = {};
 
   for (let i = 0x0; i < count; i += 0x1) {
     names[i] = getText(itemDescriptionStartIndex + i);
@@ -435,7 +435,7 @@ export function getItemDescriptions(): { [value: number]: string } {
   return names;
 }
 
-export function getItemEffectSpells(): { [value: number]: string } {
+export function getItemEffectSpells(): Resource {
   const scenario = getScenario();
   const spellNames = getSpellNames();
 
@@ -458,7 +458,7 @@ export function getItemEffectSpells(): { [value: number]: string } {
       break;
   }
 
-  const names: { [value: number]: string } = {};
+  const names: Resource = {};
 
   spells.forEach((spell, index) => {
     if (index === 0 || spell !== 0x0) {
@@ -471,11 +471,11 @@ export function getItemEffectSpells(): { [value: number]: string } {
   return names;
 }
 
-export function getItemNames(): { [value: number]: string } {
+export function getItemNames(): Resource {
   const itemNamesStartIndex = getRegionArray(itemNamesStartIndexes);
   const count = getRegionArray(itemCount);
 
-  const names: { [value: number]: string } = {};
+  const names: Resource = {};
 
   for (let i = 0x0; i < count; i += 0x1) {
     names[i] = getText(itemNamesStartIndex + i);
@@ -486,7 +486,7 @@ export function getItemNames(): { [value: number]: string } {
   return names;
 }
 
-export function getItemTypes(): { [value: number]: string } {
+export function getItemTypes(): Resource {
   const itemTypesStartIndex = getRegionArray(itemTypesStartIndexes);
 
   const scenario = getScenario();
@@ -507,7 +507,7 @@ export function getItemTypes(): { [value: number]: string } {
       break;
   }
 
-  const names: { [value: number]: string } = {};
+  const names: Resource = {};
 
   types.forEach((type) => {
     names[type] = getText(itemTypesStartIndex + type);
@@ -523,13 +523,13 @@ export function getItemTypes(): { [value: number]: string } {
   return names;
 }
 
-export function getSpecialAttackNames(): { [value: number]: string } {
+export function getSpecialAttackNames(): Resource {
   const specialAttackNamesStartIndex = getRegionArray(
     specialAttackNamesStartIndexes,
   );
   const count = getRegionArray(specialAttackCount);
 
-  const names: { [value: number]: string } = {};
+  const names: Resource = {};
 
   for (let i = 0x0; i < count; i += 0x1) {
     names[i] = getText(specialAttackNamesStartIndex + i);
@@ -540,11 +540,11 @@ export function getSpecialAttackNames(): { [value: number]: string } {
   return names;
 }
 
-export function getSpellNames(): { [value: number]: string } {
+export function getSpellNames(): Resource {
   const spellNamesStartIndex = getRegionArray(spellNamesStartIndexes);
   const count = getRegionArray(spellCount);
 
-  const names: { [value: number]: string } = {};
+  const names: Resource = {};
 
   for (let i = 0x0; i < count; i += 0x1) {
     names[i] = getText(spellNamesStartIndex + i);

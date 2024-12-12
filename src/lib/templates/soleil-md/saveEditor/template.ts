@@ -1,4 +1,4 @@
-import type { GameJson } from "$lib/types";
+import type { GameJson, Resource } from "$lib/types";
 
 const template: GameJson = {
   validator: {
@@ -641,7 +641,7 @@ const template: GameJson = {
             0xfd: "っ",
             0xfe: "ッ",
           }),
-        } as { [key: number]: string | number };
+        } as Resource;
       }
 
       return {
@@ -756,7 +756,7 @@ const template: GameJson = {
           0x56: "¡",
           0x57: "ü",
         }),
-      } as { [key: number]: string | number };
+      } as Resource;
     }),
     locations: {
       // 0x0: "World Map", // Unused

@@ -414,10 +414,10 @@ export function getDecompressedGraphic(offset: number): number[][] {
   return graphic;
 }
 
-export function getItemNames(): { [value: number]: string } {
+export function getItemNames(): Resource {
   const offset = getInt(getRegionArray(pointerToItemTexts), "uint24");
 
-  const names: { [value: number]: string } = {};
+  const names: Resource = {};
 
   [...Array(55).keys()].forEach((index) => {
     names[index] = getText(getInt(offset + index * 0x2, "uint16"));
@@ -512,10 +512,10 @@ export function getMapsInfos(): {
   return maps;
 }
 
-export function getMapNames(): { [value: number]: string } {
+export function getMapNames(): Resource {
   const mapInfos = getMapsInfos();
 
-  const names: { [value: number]: string } = {};
+  const names: Resource = {};
 
   mapInfos.forEach((map) => {
     names[map.index] = map.name;
@@ -524,10 +524,10 @@ export function getMapNames(): { [value: number]: string } {
   return names;
 }
 
-export function getMonsterNames(): { [value: number]: string } {
+export function getMonsterNames(): Resource {
   const offset = getInt(getRegionArray(pointerToMonsterTexts), "uint24");
 
-  const names: { [value: number]: string } = {};
+  const names: Resource = {};
 
   [...Array(142).keys()].forEach((index) => {
     names[index] = getText(getInt(offset + index * 0x4, "uint16"));

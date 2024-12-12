@@ -5,7 +5,14 @@ import { getInt, getString, setInt } from "$lib/utils/bytes";
 import { formatChecksum } from "$lib/utils/checksum";
 import { getItem, updateResources } from "$lib/utils/parser";
 
-import { Item, ItemChecksum, ItemInt, ItemString, ItemTab } from "$lib/types";
+import type {
+  Item,
+  ItemChecksum,
+  ItemInt,
+  ItemString,
+  ItemTab,
+  Resource,
+} from "$lib/types";
 
 import { stories } from "./utils/resource";
 
@@ -177,8 +184,8 @@ export function afterSetInt(item: Item): void {
   }
 }
 
-export function getChaoNames(): { [value: number]: string } {
-  const names: { [value: number]: string } = {};
+export function getChaoNames(): Resource {
+  const names: Resource = {};
 
   const item = getItem("chaoName-0") as ItemString;
 

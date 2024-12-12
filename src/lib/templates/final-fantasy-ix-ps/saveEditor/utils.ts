@@ -20,6 +20,7 @@ import type {
   ItemContainer,
   ItemInt,
   ItemString,
+  Resource,
 } from "$lib/types";
 
 import Abilities from "./components/Abilities.svelte";
@@ -430,14 +431,12 @@ export function generateChecksum(item: ItemChecksum): number {
   return formatChecksum(checksum, item.dataType);
 }
 
-export function getCharacterNames(slotIndex: number): {
-  [value: number]: string;
-} {
+export function getCharacterNames(slotIndex: number): Resource {
   if (typeof slotIndex === "string") {
     return {};
   }
 
-  const names: { [value: number]: string } = {};
+  const names: Resource = {};
 
   const itemString = getItem(`slot-${slotIndex}-characterName-0`) as ItemString;
 

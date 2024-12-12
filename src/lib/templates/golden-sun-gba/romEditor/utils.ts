@@ -52,7 +52,7 @@ export function overrideGetInt(
   if ("id" in item && item.id?.match(/getResource-/)) {
     const [index] = item.id.splitInt();
 
-    let resource: { [value: number]: string } = {};
+    let resource: Resource = {};
 
     if (item.id.match(/pName-/)) {
       resource = getCharacterNames();
@@ -145,12 +145,12 @@ export function onReset(): void {
   treesCache = [];
 }
 
-export function getAbilityDescriptions(): { [value: number]: string } {
+export function getAbilityDescriptions(): Resource {
   const abilityDescriptionStartIndex = getRegionArray(
     abilityDescriptionsStartIndexes,
   );
 
-  const descriptions: { [value: number]: string } = {};
+  const descriptions: Resource = {};
 
   [...Array(519).keys()].forEach((index) => {
     descriptions[index] = getText(abilityDescriptionStartIndex + index);
@@ -159,10 +159,10 @@ export function getAbilityDescriptions(): { [value: number]: string } {
   return descriptions;
 }
 
-export function getAbilityNames(): { [value: number]: string } {
+export function getAbilityNames(): Resource {
   const abilityNamesStartIndex = getRegionArray(abilityNamesStartIndexes);
 
-  const names: { [value: number]: string } = {};
+  const names: Resource = {};
 
   [...Array(519).keys()].forEach((index) => {
     names[index] = getText(abilityNamesStartIndex + index);
@@ -171,10 +171,10 @@ export function getAbilityNames(): { [value: number]: string } {
   return names;
 }
 
-export function getCharacterNames(): { [value: number]: string } {
+export function getCharacterNames(): Resource {
   const characterNamesStartIndex = getRegionArray(characterNamesStartIndexes);
 
-  const names: { [value: number]: string } = {};
+  const names: Resource = {};
 
   [...Array(8).keys()].forEach((index) => {
     names[index] = getText(characterNamesStartIndex + index);
@@ -183,10 +183,10 @@ export function getCharacterNames(): { [value: number]: string } {
   return names;
 }
 
-export function getClassNames(): { [value: number]: string } {
+export function getClassNames(): Resource {
   const classNamesStartIndex = getRegionArray(classNamesStartIndexes);
 
-  const names: { [value: number]: string } = {};
+  const names: Resource = {};
 
   [...Array(203).keys()].forEach((index) => {
     names[index] = getText(classNamesStartIndex + index);
@@ -195,12 +195,12 @@ export function getClassNames(): { [value: number]: string } {
   return names;
 }
 
-export function getDjinniDescriptions(): { [value: number]: string } {
+export function getDjinniDescriptions(): Resource {
   const djinniDescriptionsStartIndex = getRegionArray(
     djinniDescriptionsStartIndexes,
   );
 
-  const descriptions: { [value: number]: string } = {};
+  const descriptions: Resource = {};
 
   [...Array(80).keys()].forEach((index) => {
     descriptions[index] = getText(djinniDescriptionsStartIndex + index);
@@ -209,10 +209,10 @@ export function getDjinniDescriptions(): { [value: number]: string } {
   return descriptions;
 }
 
-export function getDjinniNames(): { [value: number]: string } {
+export function getDjinniNames(): Resource {
   const djinniNamesStartIndex = getRegionArray(djinniNamesStartIndexes);
 
-  const names: { [value: number]: string } = {};
+  const names: Resource = {};
 
   [...Array(80).keys()].forEach((index) => {
     names[index] = getText(djinniNamesStartIndex + index);
@@ -221,12 +221,12 @@ export function getDjinniNames(): { [value: number]: string } {
   return names;
 }
 
-export function getEnemyGroupNames(): { [value: number]: string } {
+export function getEnemyGroupNames(): Resource {
   const offset = getInt(getRegionArray(pointerToEnemyGroups), "int24");
 
   const enemyNamesStartIndex = getRegionArray(enemyNamesStartIndexes);
 
-  const names: { [value: number]: string } = {};
+  const names: Resource = {};
 
   [...Array(380).keys()].forEach((index) => {
     names[index] = getText(
@@ -239,10 +239,10 @@ export function getEnemyGroupNames(): { [value: number]: string } {
   return names;
 }
 
-export function getEnemyNames(): { [value: number]: string } {
+export function getEnemyNames(): Resource {
   const enemyNamesStartIndex = getRegionArray(enemyNamesStartIndexes);
 
-  const names: { [value: number]: string } = {};
+  const names: Resource = {};
 
   [...Array(164).keys()].forEach((index) => {
     names[index] = getText(enemyNamesStartIndex + index);
@@ -253,12 +253,12 @@ export function getEnemyNames(): { [value: number]: string } {
   return names;
 }
 
-export function getItemDescriptions(): { [value: number]: string } {
+export function getItemDescriptions(): Resource {
   const itemDescriptionStartIndex = getRegionArray(
     itemDescriptionsStartIndexes,
   );
 
-  const descriptions: { [value: number]: string } = {};
+  const descriptions: Resource = {};
 
   [...Array(269).keys()].forEach((index) => {
     descriptions[index] = getText(itemDescriptionStartIndex + index);
@@ -267,10 +267,10 @@ export function getItemDescriptions(): { [value: number]: string } {
   return descriptions;
 }
 
-export function getItemNames(): { [value: number]: string } {
+export function getItemNames(): Resource {
   const itemNamesStartIndex = getRegionArray(itemNamesStartIndexes);
 
-  const names: { [value: number]: string } = {};
+  const names: Resource = {};
 
   [...Array(269).keys()].forEach((index) => {
     names[index] = getText(itemNamesStartIndex + index);
@@ -281,10 +281,10 @@ export function getItemNames(): { [value: number]: string } {
   return names;
 }
 
-export function getMapNames(): { [value: number]: string } {
+export function getMapNames(): Resource {
   const mapNamesStartIndex = getRegionArray(mapNamesStartIndexes);
 
-  const names: { [value: number]: string } = {};
+  const names: Resource = {};
 
   [...Array(201).keys()].forEach((index) => {
     names[index] = getText(mapNamesStartIndex + index);
@@ -293,12 +293,12 @@ export function getMapNames(): { [value: number]: string } {
   return names;
 }
 
-export function getShopNames(): { [value: number]: string } {
+export function getShopNames(): Resource {
   const offset = getInt(getRegionArray(pointerToShops), "int24");
 
   const shopTypes = getResource("shopTypes") as Resource;
 
-  const names: { [value: number]: string } = {};
+  const names: Resource = {};
 
   [...Array(35).keys()].forEach((index) => {
     names[index] = shopTypes[
@@ -309,14 +309,14 @@ export function getShopNames(): { [value: number]: string } {
   return names;
 }
 
-export function getSummonDescriptions(): { [value: number]: string } {
+export function getSummonDescriptions(): Resource {
   const offset = getInt(getRegionArray(pointerToSummons), "int24");
 
   const abilityDescriptionsStartIndex = getRegionArray(
     abilityDescriptionsStartIndexes,
   );
 
-  const descriptions: { [value: number]: string } = {};
+  const descriptions: Resource = {};
 
   [...Array(16).keys()].forEach((index) => {
     descriptions[index] = getText(
@@ -327,12 +327,12 @@ export function getSummonDescriptions(): { [value: number]: string } {
   return descriptions;
 }
 
-export function getSummonNames(): { [value: number]: string } {
+export function getSummonNames(): Resource {
   const offset = getInt(getRegionArray(pointerToSummons), "int24");
 
   const abilityNamesStartIndex = getRegionArray(abilityNamesStartIndexes);
 
-  const names: { [value: number]: string } = {};
+  const names: Resource = {};
 
   [...Array(16).keys()].forEach((index) => {
     names[index] = getText(

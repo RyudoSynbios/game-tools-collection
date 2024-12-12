@@ -60,11 +60,10 @@ export type Palette = Color[];
 
 export type RegionValidator = Validator | LogicalOperator<Validator>;
 
-export type Resource = {
-  [key: string]:
-    | { [key: number]: number | string }
-    | { [key: number]: number | string }[]
-    | string;
+export type Resource = { [key: number]: string };
+
+export type Resources = {
+  [key: string]: Resource | Resource[] | string;
 };
 
 export type ResourceGroups = { name: string; options: number[] }[];
@@ -129,7 +128,7 @@ export interface GameJson {
   };
   checksums?: ItemChecksum[];
   items: Item[];
-  resources?: Resource;
+  resources?: Resources;
   resourcesGroups?: {
     [key: string]: ResourceGroups | string;
   };

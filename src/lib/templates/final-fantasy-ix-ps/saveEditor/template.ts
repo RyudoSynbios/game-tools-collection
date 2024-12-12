@@ -1,4 +1,4 @@
-import type { GameJson } from "$lib/types";
+import type { GameJson, Resource } from "$lib/types";
 
 import {
   accessories,
@@ -5337,7 +5337,7 @@ const template: GameJson = {
           0xf4: "ヲ",
           0xf5: "ン",
           0xf6: "ヴ",
-        } as { [key: number]: string | number };
+        } as Resource;
       }
 
       return {

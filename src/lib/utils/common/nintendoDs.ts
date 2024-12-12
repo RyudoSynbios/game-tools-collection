@@ -1,4 +1,4 @@
-import { ItemChecksum } from "$lib/types";
+import type { ItemChecksum } from "$lib/types";
 
 import { getInt } from "../bytes";
 import { formatChecksum } from "../checksum";

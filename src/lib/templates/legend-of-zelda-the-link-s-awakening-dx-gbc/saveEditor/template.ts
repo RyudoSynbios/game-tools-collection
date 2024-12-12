@@ -745,8 +745,8 @@ const template: GameJson = {
       0x6: "Slime Key",
     },
     instruments: {
-      0: 0x0,
-      1: 0x3,
+      0x0: "0",
+      0x1: "3",
     },
     items: {
       0x0: "-",

@@ -13,6 +13,7 @@ import type {
   ItemContainer,
   ItemInt,
   ItemString,
+  Resource,
 } from "$lib/types";
 
 export function initHeaderShift(dataView: DataView): number {
@@ -326,14 +327,12 @@ export function updateDjinnPreview(offset: number): void {
   setInt(offset - 0x5dd, "uint8", elements[3].toBitCount());
 }
 
-export function getCharacterNames(slotIndex: number): {
-  [value: number]: string;
-} {
+export function getCharacterNames(slotIndex: number): Resource {
   if (typeof slotIndex === "string") {
     return {};
   }
 
-  const names: { [value: number]: string } = {};
+  const names: Resource = {};
 
   const itemString = getItem(`slot-${slotIndex}-characterName-0`) as ItemString;
 

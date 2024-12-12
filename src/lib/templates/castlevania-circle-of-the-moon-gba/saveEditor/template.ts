@@ -1698,8 +1698,8 @@ const template: GameJson = {
       0x5: "Clock",
     },
     undergroundWaterwayWater: {
-      0: 0x0,
-      1: 0x3,
+      0x0: "0",
+      0x1: "3",
     },
   },
   resourcesLabels: {

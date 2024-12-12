@@ -3,7 +3,7 @@ import { get } from "svelte/store";
 import { dataView, dataViewAlt, fileName } from "$lib/stores";
 import { getInt, getString, setInt } from "$lib/utils/bytes";
 
-import { Item, ItemTab } from "$lib/types";
+import type { Item, ItemTab } from "$lib/types";
 
 export function onReady(): void {
   const $dataView = get(dataView);

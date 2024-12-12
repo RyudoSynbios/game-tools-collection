@@ -209,10 +209,10 @@ export function pointerToOffset(
   return offset - 0x8000 + bank * 0x8000;
 }
 
-export function getCharacterNames(): { [value: number]: string } {
+export function getCharacterNames(): Resource {
   const offset = pointerToOffset(pointerToCharacterNames);
 
-  const names: { [value: number]: string } = {};
+  const names: Resource = {};
 
   [...Array(9).keys()].forEach((index) => {
     names[index] = getText(offset + index * 0x50, 0x10);
@@ -224,11 +224,11 @@ export function getCharacterNames(): { [value: number]: string } {
 }
 
 // TODO: Pointers
-export function getLocationNames(): { [value: number]: string } {
+export function getLocationNames(): Resource {
   const offset = 0x635eb;
   const length = 15;
 
-  const names: { [value: number]: string } = {};
+  const names: Resource = {};
 
   [...Array(37).keys()].forEach((index) => {
     names[index] = getText(offset + index * length, length);
@@ -239,13 +239,13 @@ export function getLocationNames(): { [value: number]: string } {
   return names;
 }
 
-export function getMonsterGroupNames(): { [value: number]: string } {
+export function getMonsterGroupNames(): Resource {
   const monsterGroupsOffset = pointerToOffset(pointerToMonsterGroups);
 
   const offset = pointerToOffset(pointerToMonsterNames);
   const length = getRegionArray(monsterNamesLength);
 
-  const names: { [value: number]: string } = {};
+  const names: Resource = {};
 
   [...Array(234).keys()].forEach((index) => {
     names[index] = getText(
@@ -258,11 +258,11 @@ export function getMonsterGroupNames(): { [value: number]: string } {
   return names;
 }
 
-export function getMonsterNames(): { [value: number]: string } {
+export function getMonsterNames(): Resource {
   const offset = pointerToOffset(pointerToMonsterNames);
   const length = getRegionArray(monsterNamesLength);
 
-  const names: { [value: number]: string } = {};
+  const names: Resource = {};
 
   [...Array(81).keys()].forEach((index) => {
     names[index] = getText(offset + index * length, length);

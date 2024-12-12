@@ -2,6 +2,8 @@
   import Select from "$lib/components/Select.svelte";
   import { getRegionArray } from "$lib/utils/format";
 
+  import type { Resource } from "$lib/types";
+
   import { characterNamesStartIndexes, dialogsStartIndexes } from "../template";
   import {
     decodeTextError,
@@ -61,7 +63,7 @@
       "#404040",
     ];
 
-    const characterNames: { [value: number]: string } = {};
+    const characterNames: Resource = {};
 
     for (let i = 0x0; i < 0x3c; i += 0x1) {
       characterNames[i] = getText(characterNamesStartIndex + i);

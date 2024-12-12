@@ -4,7 +4,7 @@ import { gameRegion } from "$lib/stores";
 import { getInt, getString, setInt } from "$lib/utils/bytes";
 import { getItem } from "$lib/utils/parser";
 
-import { Item, ItemInt, ItemString } from "$lib/types";
+import type { Item, ItemInt, ItemString } from "$lib/types";
 
 import { authorizedEquipment, questPaths } from "./utils/resource";
 

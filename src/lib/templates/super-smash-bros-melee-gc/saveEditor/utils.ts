@@ -12,7 +12,7 @@ import {
 import { round } from "$lib/utils/format";
 import { getItem } from "$lib/utils/parser";
 
-import { Item, ItemBitflags, ItemChecksum, ItemInt } from "$lib/types";
+import type { Item, ItemBitflags, ItemChecksum, ItemInt } from "$lib/types";
 
 import { trophiesEurope, trophiesUsaJapan } from "./utils/resource";
 

@@ -87,12 +87,12 @@ export function afterSetInt(item: Item): void {
   }
 }
 
-export function getInventoryNames(): { [value: number]: string } {
+export function getInventoryNames(): Resource {
   const $dataViewAlt = get(dataViewAlt);
 
   const itemTypes = getResource("itemTypes") as Resource;
 
-  const names: { [value: number]: string } = {};
+  const names: Resource = {};
 
   [...Array(getItemCount()).keys()].forEach((index) => {
     const int = getInt(

@@ -2,7 +2,13 @@ import { getInt, getString, setInt } from "$lib/utils/bytes";
 import { formatChecksum } from "$lib/utils/checksum";
 import { getItem, updateResources } from "$lib/utils/parser";
 
-import type { Item, ItemChecksum, ItemInt, ItemString } from "$lib/types";
+import type {
+  Item,
+  ItemChecksum,
+  ItemInt,
+  ItemString,
+  Resource,
+} from "$lib/types";
 
 export function overrideItem(item: Item): Item {
   if ("id" in item && item.id?.match(/character-/)) {
@@ -125,14 +131,12 @@ export function generateChecksum(item: ItemChecksum): number {
   return formatChecksum(checksum, item.dataType);
 }
 
-export function getCharacterNames(slotIndex: number): {
-  [value: number]: string;
-} {
+export function getCharacterNames(slotIndex: number): Resource {
   if (typeof slotIndex === "string") {
     return {};
   }
 
-  const names: { [value: number]: string } = {};
+  const names: Resource = {};
 
   const itemString = getItem(`slot-${slotIndex}-characterName-0`) as ItemString;
 

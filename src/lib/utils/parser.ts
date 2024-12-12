@@ -565,9 +565,7 @@ export function getResource(key = ""): Resource | undefined {
 
 export function updateResources(
   resource = "",
-  overrideValues?: {
-    [value: number]: string;
-  },
+  overrideValues?: Resource,
 ): void {
   const $gameJson = get(gameJson);
   const $gameTemplate = get(gameTemplate);

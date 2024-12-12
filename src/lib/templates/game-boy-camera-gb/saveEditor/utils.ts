@@ -4,7 +4,7 @@ import { gameRegion } from "$lib/stores";
 import { getInt, setInt } from "$lib/utils/bytes";
 import { formatChecksum } from "$lib/utils/checksum";
 
-import { Item, ItemChecksum, ItemInt, ItemString } from "$lib/types";
+import type { Item, ItemChecksum, ItemInt, ItemString } from "$lib/types";
 
 import PhotoCanvas from "./components/PhotoCanvas.svelte";
 
