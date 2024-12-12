@@ -29,18 +29,15 @@
   let previousSelectedTab = -1;
 
   beforeUpdate(() => {
-    if (previousSelectedTab === selectedTab) {
-      const componentId = item.id || generateIdFromArray(tabs, "name");
+    const componentId = item.id || generateIdFromArray(tabs, "name");
 
-      if (componentId !== previousId) {
-        selectedTab = 0;
+    if (componentId !== previousId) {
+      selectedTab = 0;
 
-        checkTab();
-      }
-
-      previousId = componentId;
+      checkTab();
     }
 
+    previousId = componentId;
     previousSelectedTab = selectedTab;
   });
 
