@@ -128,7 +128,7 @@ export function generateChecksum(item: ItemChecksum): number {
 export function getCharacterNames(slotIndex: number): {
   [value: number]: string;
 } {
-  if (isNaN(slotIndex)) {
+  if (typeof slotIndex === "string") {
     return {};
   }
 

@@ -329,7 +329,7 @@ export function updateDjinnPreview(offset: number): void {
 export function getCharacterNames(slotIndex: number): {
   [value: number]: string;
 } {
-  if (isNaN(slotIndex)) {
+  if (typeof slotIndex === "string") {
     return {};
   }
 
