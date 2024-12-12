@@ -28,7 +28,7 @@ const template: GameJson = {
       },
     },
     text: "Drag 'n' drop here or click to add a save file.",
-    hint: "Currently only works with DCI (.dci files)<br />and 128 KB VMU raw dump (.bin files).",
+    hint: "Currently only works with DCI (.dci files)\nand 128 KB VMU raw dump (.bin files).",
     error: "Not a valid save file.",
   },
   items: [
