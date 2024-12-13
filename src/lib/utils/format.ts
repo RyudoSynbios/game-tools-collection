@@ -90,6 +90,21 @@ export function getIntMax(item: ItemInt): number {
   return 1;
 }
 
+export function getOrdinalSuffix(number: number): string {
+  const base10 = number % 10;
+  const base100 = number % 100;
+
+  if (base10 === 1 && base100 !== 11) {
+    return `${number}st`;
+  } else if (base10 === 2 && base100 !== 12) {
+    return `${number}nd`;
+  } else if (base10 === 3 && base100 !== 13) {
+    return `${number}rd`;
+  }
+
+  return `${number}th`;
+}
+
 export function getRegionArray<T>(array: T[]): T {
   const $gameRegion = get(gameRegion);
 

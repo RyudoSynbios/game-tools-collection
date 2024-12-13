@@ -2130,7 +2130,7 @@ const template: GameJson = {
                               type: "container",
                               instanceType: "section",
                               instances: 10,
-                              resource: "rankings",
+                              enumeration: "%o Place",
                               flex: true,
                               items: [
                                 {
@@ -2214,7 +2214,7 @@ const template: GameJson = {
                               type: "container",
                               instanceType: "section",
                               instances: 10,
-                              resource: "rankings",
+                              enumeration: "%o Place",
                               flex: true,
                               items: [
                                 {
@@ -2298,7 +2298,7 @@ const template: GameJson = {
                               type: "container",
                               instanceType: "section",
                               instances: 14,
-                              resource: "rankings",
+                              enumeration: "%o Place",
                               flex: true,
                               items: [
                                 {
@@ -2393,7 +2393,7 @@ const template: GameJson = {
                               type: "container",
                               instanceType: "section",
                               instances: 10,
-                              resource: "rankings",
+                              enumeration: "%o Place",
                               flex: true,
                               items: [
                                 {
@@ -2440,7 +2440,7 @@ const template: GameJson = {
                               type: "container",
                               instanceType: "section",
                               instances: 10,
-                              resource: "rankings",
+                              enumeration: "%o Place",
                               flex: true,
                               items: [
                                 {
@@ -2487,7 +2487,7 @@ const template: GameJson = {
                               type: "container",
                               instanceType: "section",
                               instances: 14,
-                              resource: "rankings",
+                              enumeration: "%o Place",
                               flex: true,
                               items: [
                                 {
@@ -3728,22 +3728,6 @@ const template: GameJson = {
     optionBooleanReversed: {
       0x0: "On",
       0x1: "Off",
-    },
-    rankings: {
-      0x0: "1st Place",
-      0x1: "2nd Place",
-      0x2: "3rd Place",
-      0x3: "4th Place",
-      0x4: "5th Place",
-      0x5: "6th Place",
-      0x6: "7th Place",
-      0x7: "8th Place",
-      0x8: "9th Place",
-      0x9: "10th Place",
-      0xa: "11th Place",
-      0xb: "12th Place",
-      0xc: "13th Place",
-      0xd: "14th Place",
     },
     roundTimes: {
       0x0: "30",

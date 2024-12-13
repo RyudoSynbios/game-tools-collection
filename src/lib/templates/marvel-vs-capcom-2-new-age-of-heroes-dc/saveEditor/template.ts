@@ -336,7 +336,7 @@ const template: GameJson = {
               type: "container",
               instanceType: "tabs",
               instances: 20,
-              resource: "rankings",
+              enumeration: "%o Place",
               vertical: true,
               items: [
                 {
@@ -572,7 +572,7 @@ const template: GameJson = {
               type: "container",
               instanceType: "tabs",
               instances: 20,
-              resource: "rankings",
+              enumeration: "%o Place",
               vertical: true,
               items: [
                 {
@@ -1014,28 +1014,6 @@ const template: GameJson = {
       0x5: "B",
       0x6: "A",
       0x7: "S",
-    },
-    rankings: {
-      0x0: "1st Place",
-      0x1: "2nd Place",
-      0x2: "3rd Place",
-      0x3: "4th Place",
-      0x4: "5th Place",
-      0x5: "6th Place",
-      0x6: "7th Place",
-      0x7: "8th Place",
-      0x8: "9th Place",
-      0x9: "10th Place",
-      0xa: "11th Place",
-      0xb: "12th Place",
-      0xc: "13th Place",
-      0xd: "14th Place",
-      0xe: "15th Place",
-      0xf: "16th Place",
-      0x10: "17th Place",
-      0x11: "18th Place",
-      0x12: "19th Place",
-      0x13: "20th Place",
     },
     speeds: {
       0x0: "Free",

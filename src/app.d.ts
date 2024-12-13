@@ -33,6 +33,7 @@ declare global {
   }
 
   interface String {
+    format: (value: number) => string;
     reverse: () => string;
     splitInt: () => number[];
   }

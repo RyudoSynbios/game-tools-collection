@@ -1127,7 +1127,7 @@ const template: GameJson = {
                                     type: "container",
                                     instanceType: "section",
                                     instances: 3,
-                                    resource: "rankings",
+                                    enumeration: "%o Place",
                                     flex: true,
                                     items: [
                                       {
@@ -1221,7 +1221,7 @@ const template: GameJson = {
                   type: "container",
                   instanceType: "section",
                   instances: 3,
-                  resource: "rankings",
+                  enumeration: "%o Place",
                   flex: true,
                   items: [
                     {
@@ -1319,7 +1319,7 @@ const template: GameJson = {
                   type: "container",
                   instanceType: "section",
                   instances: 3,
-                  resource: "rankings",
+                  enumeration: "%o Place",
                   flex: true,
                   items: [
                     {
@@ -3443,11 +3443,6 @@ const template: GameJson = {
       0x3: "C",
       0x4: "B",
       0x5: "A",
-    },
-    rankings: {
-      0x0: "1st Place",
-      0x1: "2nd Place",
-      0x2: "3rd Place",
     },
     screenThemes: {
       0x0: "-",

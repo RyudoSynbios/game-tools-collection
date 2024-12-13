@@ -636,7 +636,7 @@ const template: GameJson = {
                       type: "container",
                       instanceType: "tabs",
                       instances: 3,
-                      resource: "places",
+                      enumeration: "%o Place",
                       vertical: true,
                       items: [
                         {
@@ -903,11 +903,6 @@ const template: GameJson = {
       0x25: "?",
       0x26: "!",
       0x2a: " ",
-    },
-    places: {
-      0x0: "1st Place",
-      0x1: "2nd Place",
-      0x2: "3rd Place",
     },
     progressions: {
       0x1: "-",

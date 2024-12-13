@@ -153,7 +153,7 @@ export function parseItem(
   }
 
   if (newItem.name !== undefined) {
-    newItem.name = newItem.name.replace("%d", instanceIndex + 1);
+    newItem.name = newItem.name.format(instanceIndex + 1);
   }
 
   if (utilsExists("overrideShift")) {
@@ -385,7 +385,7 @@ export function parseContainer(
 
     if (item.instanceType === "section") {
       if (item.enumeration) {
-        parsedSubitem.name = item.enumeration.replace("%d", index + 1);
+        parsedSubitem.name = item.enumeration.format(index + 1);
       } else if (
         item.resource &&
         $gameTemplate.resources &&

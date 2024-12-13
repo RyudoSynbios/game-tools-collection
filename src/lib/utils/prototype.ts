@@ -3,6 +3,8 @@ import { decToHex } from "hex2dec";
 import { extractBit } from "$lib/utils/bytes";
 import debug from "$lib/utils/debug";
 
+import { getOrdinalSuffix } from "./format";
+
 // DataView prototype adapted from https://gist.github.com/tjmehta/7e0f0d2aca966c71e70a453d0786f938
 
 const littleEndian24 = [0, 1, 2];
@@ -134,11 +136,15 @@ Number.prototype.toHex = function (length = 0) {
   return hex;
 };
 
+String.prototype.format = function (value: number) {
+  return this.replace("%d", `${value}`).replace("%o", getOrdinalSuffix(value));
+};
+
 String.prototype.reverse = function () {
   return this.split("").reverse().join("");
 };
 
-String.prototype.splitInt = function (): number[] {
+String.prototype.splitInt = function () {
   const split = this.split("-");
 
   return split.reduce((strings: number[], string) => {

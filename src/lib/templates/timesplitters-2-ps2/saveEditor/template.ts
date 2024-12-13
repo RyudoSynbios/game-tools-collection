@@ -655,7 +655,7 @@ const template: GameJson = {
                           type: "container",
                           instanceType: "section",
                           instances: 10,
-                          resource: "rankings",
+                          enumeration: "%o Place",
                           flex: true,
                           items: [
                             {
@@ -686,7 +686,7 @@ const template: GameJson = {
                           type: "container",
                           instanceType: "section",
                           instances: 10,
-                          resource: "rankings",
+                          enumeration: "%o Place",
                           flex: true,
                           items: [
                             {
@@ -777,7 +777,7 @@ const template: GameJson = {
                               type: "container",
                               instanceType: "section",
                               instances: 10,
-                              resource: "rankings",
+                              enumeration: "%o Place",
                               flex: true,
                               items: [
                                 {
@@ -5487,18 +5487,6 @@ const template: GameJson = {
       0x1: "Toggle",
     },
     profiles: "getProfileNames()",
-    rankings: {
-      0x0: "1st Place",
-      0x1: "2nd Place",
-      0x2: "3rd Place",
-      0x3: "4th Place",
-      0x4: "5th Place",
-      0x5: "6th Place",
-      0x6: "7th Place",
-      0x7: "8th Place",
-      0x8: "9th Place",
-      0x9: "10th Place",
-    },
     scoreLimits: {
       0x0: "None",
       0x1: "3 points",

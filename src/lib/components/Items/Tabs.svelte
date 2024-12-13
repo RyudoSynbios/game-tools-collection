@@ -138,8 +138,9 @@
       if (newTab.name === undefined) {
         newTab.name = "";
 
-        const enumeratedName =
-          item.enumeration?.replace("%d", `${enumerationCount + 1}`) || "";
+        const enumeratedName = (item.enumeration || "").format(
+          enumerationCount + 1,
+        );
 
         let resource = getResource(item.resource);
 
@@ -197,7 +198,7 @@
 
   $: {
     if (item.onTabChange && selectedTab !== previousSelectedTab) {
-      getUtils(item.onTabChange.replace("%d", `${selectedTab}`));
+      getUtils(item.onTabChange.format(selectedTab));
     }
   }
 </script>
