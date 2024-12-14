@@ -118,6 +118,12 @@ export function overrideParseContainerItemsShifts(
     ) {
       return [true, [-1]];
     }
+  } else if ("id" in item && item.id?.match(/hpSets-/)) {
+    const [characterIndex] = item.id.splitInt();
+
+    if (index === 1 && characterIndex !== 0x15) {
+      return [true, [-1]];
+    }
   } else if ("id" in item && item.id === "friendCards" && $gameRegion === 1) {
     return [true, [...shifts, index * 0x1060]];
   }
