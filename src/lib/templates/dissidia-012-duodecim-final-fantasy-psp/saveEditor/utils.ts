@@ -106,6 +106,18 @@ export function overrideParseContainerItemsShifts(
     }
 
     return [true, [...shifts, index * 0x778]];
+  } else if ("id" in item && item.id?.match(/braverySets-/)) {
+    const [characterIndex] = item.id.splitInt();
+
+    if (
+      (index === 1 &&
+        characterIndex !== 0x6 &&
+        characterIndex !== 0x15 &&
+        characterIndex !== 0x1d) ||
+      (index === 2 && characterIndex !== 0x1d)
+    ) {
+      return [true, [-1]];
+    }
   } else if ("id" in item && item.id === "friendCards" && $gameRegion === 1) {
     return [true, [...shifts, index * 0x1060]];
   }
