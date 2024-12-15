@@ -458,15 +458,16 @@ const template: GameJson = {
                                           ],
                                         },
                                         {
+                                          name: "Branching Land Abilities",
                                           type: "section",
                                           flex: true,
-                                          hidden: true,
                                           items: [
                                             {
                                               name: "Square",
                                               offset: 0x6c,
                                               type: "variable",
                                               dataType: "uint8",
+                                              resource: "hpAttacks",
                                               autocomplete: true,
                                             },
                                             {
@@ -474,6 +475,7 @@ const template: GameJson = {
                                               offset: 0x6f,
                                               type: "variable",
                                               dataType: "uint8",
+                                              resource: "hpAttacks",
                                               autocomplete: true,
                                             },
                                             {
@@ -481,6 +483,7 @@ const template: GameJson = {
                                               offset: 0x72,
                                               type: "variable",
                                               dataType: "uint8",
+                                              resource: "hpAttacks",
                                               autocomplete: true,
                                             },
                                           ],
@@ -517,15 +520,16 @@ const template: GameJson = {
                                           ],
                                         },
                                         {
+                                          name: "Branching Air Abilities",
                                           type: "section",
                                           flex: true,
-                                          hidden: true,
                                           items: [
                                             {
                                               name: "Square",
                                               offset: 0x75,
                                               type: "variable",
                                               dataType: "uint8",
+                                              resource: "hpAttacks",
                                               autocomplete: true,
                                             },
                                             {
@@ -533,6 +537,7 @@ const template: GameJson = {
                                               offset: 0x78,
                                               type: "variable",
                                               dataType: "uint8",
+                                              resource: "hpAttacks",
                                               autocomplete: true,
                                             },
                                             {
@@ -540,6 +545,7 @@ const template: GameJson = {
                                               offset: 0x7b,
                                               type: "variable",
                                               dataType: "uint8",
+                                              resource: "hpAttacks",
                                               autocomplete: true,
                                             },
                                           ],
