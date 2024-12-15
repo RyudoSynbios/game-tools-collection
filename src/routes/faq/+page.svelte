@@ -44,7 +44,7 @@
       contact@game-tools-collection.com
     </a>.
   </p>
-  <h2>- What files are supported for Save Editors?</h2>
+  <h2>- What files are supported by Save Editors?</h2>
   <ul>
     <li>
       <strong>Game Boy: </strong>.sav, .srm
@@ -96,7 +96,7 @@
       <strong>PC-Engine CD: </strong>.sav, .srm
     </li>
   </ul>
-  <h2>- My .bcr file won't load</h2>
+  <h2>- My .bcr file won't load (Sega Saturn)</h2>
   <p>Your save file may be compressed.</p>
   <p>
     Try changing the extension to <strong>*.gz</strong>, then decompress it.
@@ -122,7 +122,7 @@
     <strong>True</strong>
     by <strong>False</strong> then save and quit.
   </p>
-  <p>Now launch your game on PPSSPP, open you save and save again.</p>
+  <p>Now launch your game on PPSSPP, open your save and save again.</p>
   <p>Now your save should be decrypted.</p>
 </div>
 
