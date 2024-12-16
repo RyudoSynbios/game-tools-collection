@@ -219,8 +219,8 @@ const template: GameJson = {
                                   type: "variable",
                                   dataType: "uint32",
                                   resource: "hero30Levels",
-                                  autocomplete: true,
                                   size: "lg",
+                                  autocomplete: true,
                                 },
                                 {
                                   name: "Completed Quests",

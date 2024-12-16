@@ -430,6 +430,7 @@ const template: GameJson = {
                                           name: "Land Abilities",
                                           type: "section",
                                           flex: true,
+                                          noMargin: true,
                                           items: [
                                             {
                                               name: "Circle",
@@ -458,7 +459,6 @@ const template: GameJson = {
                                           ],
                                         },
                                         {
-                                          name: "Branching Land Abilities",
                                           type: "section",
                                           flex: true,
                                           items: [
@@ -492,6 +492,7 @@ const template: GameJson = {
                                           name: "Air Abilities",
                                           type: "section",
                                           flex: true,
+                                          noMargin: true,
                                           items: [
                                             {
                                               name: "Circle",
@@ -520,7 +521,6 @@ const template: GameJson = {
                                           ],
                                         },
                                         {
-                                          name: "Branching Air Abilities",
                                           type: "section",
                                           flex: true,
                                           items: [
@@ -5229,8 +5229,8 @@ const template: GameJson = {
                                   type: "variable",
                                   dataType: "uint16",
                                   resource: "icons",
-                                  autocomplete: true,
                                   size: "lg",
+                                  autocomplete: true,
                                 },
                               ],
                             },
