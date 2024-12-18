@@ -1,6 +1,6 @@
 import { get } from "svelte/store";
 
-import { dataView, gameRegion, gameTemplate } from "$lib/stores";
+import { gameRegion, gameTemplate } from "$lib/stores";
 import { getInt, setBitflag, setBoolean, setInt } from "$lib/utils/bytes";
 import { formatChecksum } from "$lib/utils/checksum";
 import {
@@ -9,11 +9,14 @@ import {
   getMpkNoteShift,
   getRegionsFromMpk,
   isMpk,
-  isSrm,
-  isSrmSra,
+  isSrmMpk,
+  isUnpackedMpk,
+  repackMpk,
+  resetMpk,
+  unpackMpk,
 } from "$lib/utils/common/nintendo64";
 import { clone } from "$lib/utils/format";
-import { getItem, getShift } from "$lib/utils/parser";
+import { getItem } from "$lib/utils/parser";
 
 import type {
   Item,
@@ -26,13 +29,20 @@ import type {
 } from "$lib/types";
 
 export function initHeaderShift(dataView: DataView): number {
-  const format = isSrmSra(dataView) ? "sra" : "mpk";
+  const format = isSrmMpk(dataView) ? "mpk" : "sra";
 
   return getHeaderShift(dataView, format);
 }
 
-export function beforeInitDataView(dataView: DataView): DataView {
-  return byteswapDataView("sra", dataView);
+export function beforeInitDataView(
+  dataView: DataView,
+  shift: number,
+): DataView {
+  if (isMpk(dataView, shift)) {
+    return unpackMpk(dataView, shift);
+  } else {
+    return byteswapDataView("sra", dataView);
+  }
 }
 
 export function overrideGetRegions(
@@ -41,8 +51,8 @@ export function overrideGetRegions(
 ): string[] {
   const $gameTemplate = get(gameTemplate);
 
-  if (isMpk(dataView, shift) || (isSrm(dataView) && !isSrmSra(dataView))) {
-    return getRegionsFromMpk(dataView, shift);
+  if (isUnpackedMpk()) {
+    return getRegionsFromMpk();
   } else {
     const itemContainer = clone($gameTemplate.items[0] as ItemContainer);
     const itemTab = (itemContainer.appendSubinstance as ItemTab[])[0];
@@ -69,13 +79,13 @@ export function overrideGetRegions(
   }
 }
 
+export function onInitFailed(): void {
+  resetMpk();
+}
+
 export function initShifts(shifts: number[]): number[] {
-  const $dataView = get(dataView);
-
-  const shift = getShift(shifts);
-
-  if (isMpk($dataView, shift)) {
-    return getMpkNoteShift(shifts);
+  if (isUnpackedMpk()) {
+    return getMpkNoteShift();
   }
 
   return shifts;
@@ -252,5 +262,13 @@ export function generateChecksum(
 }
 
 export function beforeSaving(): ArrayBufferLike {
+  if (isUnpackedMpk()) {
+    return repackMpk();
+  }
+
   return byteswapDataView("sra").buffer;
+}
+
+export function onReset(): void {
+  resetMpk();
 }

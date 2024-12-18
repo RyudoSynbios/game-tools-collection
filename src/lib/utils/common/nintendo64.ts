@@ -1,30 +1,38 @@
 import Long from "long";
 import { get } from "svelte/store";
 
+import { dataView, gameRegion, gameTemplate } from "$lib/stores";
+import { byteswap, getDataView, getInt, getString } from "$lib/utils/bytes";
 import {
-  dataView,
-  fileHeaderShift,
-  gameRegion,
-  gameTemplate,
-} from "$lib/stores";
-import { byteswap, getDataView, getInt } from "$lib/utils/bytes";
-import { getObjKey } from "$lib/utils/format";
-import { checkValidator, getRegions } from "$lib/utils/validator";
+  getObjKey,
+  mergeUint8Arrays,
+  numberArrayToString,
+} from "$lib/utils/format";
+import { checkValidator } from "$lib/utils/validator";
 
-import type { ItemChecksum, RegionValidator, Validator } from "$lib/types";
+import type { ItemChecksum, Validator } from "$lib/types";
 
-export function isMpk(dataView: DataView, shift = 0x0): boolean {
-  const validator = [0x81, 0x1, 0x2, 0x3];
+import { decodeNintendo64MpkFont } from "../decode";
 
-  if (
-    isDexDriveHeader(dataView) ||
-    (dataView.byteLength >= 0x20000 &&
-      checkValidator(validator, shift, dataView))
-  ) {
-    return true;
-  }
+interface Mpk {
+  pageLength: number;
+  allocOffset: number;
+  clustersOffset: number;
+  headersOffset: number;
+  notes: Note[];
+}
 
-  return false;
+interface Note {
+  serial: string;
+  publisher: string;
+  name: string;
+  clusters: number[];
+  size: number;
+}
+
+interface Save {
+  note: Note;
+  offset: number;
 }
 
 export function isDexDriveHeader(dataView: DataView): boolean {
@@ -36,16 +44,20 @@ export function isDexDriveHeader(dataView: DataView): boolean {
 }
 
 export function getDexDriveHeaderShift(): number {
-  return 0x1340;
+  return 0x1040;
 }
 
 export function isSrm(dataView: DataView): boolean {
   return dataView.byteLength === 0x48800;
 }
 
-export function isSrmSra(dataView: DataView): boolean {
-  if (isSrm(dataView) && getInt(0xb00, "uint8", {}, dataView) === 0x0) {
-    return true;
+export function isSrmMpk(dataView: DataView): boolean {
+  if (isSrm(dataView)) {
+    for (let i = 0x0; i < 0x10; i += 0x1) {
+      if (getInt(0xb00 + i * 0x20, "uint8", {}, dataView) !== 0x0) {
+        return true;
+      }
+    }
   }
 
   return false;
@@ -112,34 +124,221 @@ export function byteswapDataView(
   return $dataView;
 }
 
-export function getRegionsFromMpk(dataView: DataView, shift: number): string[] {
-  const $gameTemplate = get(gameTemplate);
+// Global objects
 
-  let overridedRegions: { [key: string]: RegionValidator } | undefined;
+let mpk = {} as Mpk;
+let mpkRaw = new DataView(new ArrayBuffer(0));
+let saves: Save[] = [];
 
-  if (!isDexDriveHeader(dataView)) {
-    overridedRegions = Object.entries($gameTemplate.validator.regions).reduce(
-      (regions: { [key: string]: RegionValidator }, [region, condition]) => {
-        const validator = Object.values(condition)[0];
+export function generateMpk(dataView: DataView, shift: number): void {
+  mpkRaw = dataView;
 
-        regions[region] = {
-          $or: [...Array(16).keys()].map((index) => ({
-            [0x300 + index * 0x20]: validator,
-          })),
-        };
+  mpk.pageLength = 0x100;
+  mpk.allocOffset = shift;
+  mpk.clustersOffset = mpk.allocOffset + 0x1 * mpk.pageLength;
+  mpk.headersOffset = mpk.allocOffset + 0x3 * mpk.pageLength;
 
-        return regions;
-      },
-      {},
-    );
-  }
+  mpk.notes = [];
 
-  return getRegions(dataView, shift, overridedRegions);
+  pushNote(dataView, mpk.headersOffset);
 }
 
-export function getMpkNoteShift(shifts: number[]): number[] {
+export function resetMpk(): void {
+  mpk = {} as Mpk;
+  mpkRaw = new DataView(new ArrayBuffer(0));
+  saves = [];
+}
+
+function pushNote(dataView: DataView, offset: number): void {
+  if (offset >= mpk.headersOffset + 0x200) {
+    return;
+  }
+
+  const serial = getString(offset, 0x4, "uint8", {}, dataView);
+  const publisher = getString(offset + 0x4, 0x2, "uint8", {}, dataView);
+
+  let clusterIndex = getInt(offset + 0x6, "uint16", { bigEndian: true }, dataView); // prettier-ignore
+
+  const isUsed = clusterIndex > 0x0;
+
+  if (!isUsed) {
+    return pushNote(dataView, offset + 0x20);
+  }
+
+  const name = [...Array(0x10).keys()].reduce((string, index) => {
+    const char = getInt(offset + 0x10 + index, "uint8", {}, dataView);
+
+    if (char === 0x0) {
+      return string;
+    }
+
+    return (string += decodeNintendo64MpkFont(char));
+  }, "");
+
+  const clusters = [clusterIndex];
+
+  let error = false;
+
+  let indexOffset = mpk.clustersOffset + clusterIndex * 0x2;
+
+  while (indexOffset < mpk.clustersOffset + 0x100) {
+    clusterIndex = getInt(indexOffset, "uint16", { bigEndian: true }, dataView);
+
+    if (clusterIndex === 0x1) {
+      break;
+    } else if (clusterIndex === 0x3 || clusterIndex >= 0x80) {
+      error = true;
+      break;
+    }
+
+    clusters.push(clusterIndex);
+
+    indexOffset = mpk.clustersOffset + clusterIndex * 0x2;
+  }
+
+  if (!error) {
+    mpk.notes.push({
+      serial,
+      publisher,
+      name,
+      clusters,
+      size: clusters.length * mpk.pageLength,
+    });
+  }
+
+  pushNote(dataView, offset + 0x20);
+}
+
+function readNote(dataView: DataView, note: Note): Uint8Array {
+  const uint8Arrays: Uint8Array[] = [];
+
+  note.clusters.forEach((clusterIndex) => {
+    const offset = mpk.allocOffset + clusterIndex * mpk.pageLength;
+
+    const part = new Uint8Array(
+      dataView.buffer.slice(offset, offset + mpk.pageLength),
+    );
+
+    uint8Arrays.push(part);
+  });
+
+  return mergeUint8Arrays(...uint8Arrays);
+}
+
+function writeNote(note: Note, blob: ArrayBuffer): void {
+  const mpkRawTmp = new Uint8Array(mpkRaw.buffer);
+
+  let offset = 0x0;
+
+  note.clusters.forEach((clusterIndex) => {
+    const part = new Uint8Array(blob.slice(offset, offset + mpk.pageLength));
+
+    mpkRawTmp.set(part, mpk.allocOffset + clusterIndex * mpk.pageLength);
+
+    offset += part.byteLength;
+  });
+
+  mpkRaw = new DataView(mpkRawTmp.buffer);
+}
+
+export function isMpk(dataView: DataView, shift = 0x0): boolean {
+  const validator1 = [0x81, 0x1, 0x2, 0x3];
+  const validator2 = [0x1, 0x1, 0xfe, 0xf1];
+
+  if (
+    isDexDriveHeader(dataView) ||
+    (dataView.byteLength >= 0x20000 &&
+      (checkValidator(validator1, shift, dataView) ||
+        checkValidator(validator2, shift + 0x3c, dataView)))
+  ) {
+    return true;
+  }
+
+  return false;
+}
+
+export function isUnpackedMpk(): boolean {
+  return Boolean(mpk.pageLength);
+}
+
+export function unpackMpk(dataView: DataView, shift: number): DataView {
+  const $gameTemplate = get(gameTemplate);
+
+  if (isMpk(dataView, shift)) {
+    generateMpk(dataView, shift);
+
+    const uint8Arrays: Uint8Array[] = [];
+
+    let offset = 0x0;
+
+    Object.values($gameTemplate.validator.regions).forEach((condition) => {
+      const validator: number[] = Object.values(condition)[0];
+
+      if (validator) {
+        const validatorStringified = numberArrayToString(validator);
+
+        mpk.notes.forEach((note) => {
+          if (note.serial.includes(validatorStringified)) {
+            const binary = readNote(dataView, note);
+
+            uint8Arrays.push(binary);
+
+            saves.push({ note, offset });
+
+            offset += binary.byteLength;
+          }
+        });
+      }
+    });
+
+    const uint8Array = mergeUint8Arrays(...uint8Arrays);
+
+    return new DataView(uint8Array.buffer);
+  }
+
+  return dataView;
+}
+
+export function repackMpk(): ArrayBufferLike {
   const $dataView = get(dataView);
-  const $fileHeaderShift = get(fileHeaderShift);
+
+  if (isUnpackedMpk()) {
+    saves.forEach((save) => {
+      const blob = $dataView.buffer.slice(
+        save.offset,
+        save.offset + save.note.size,
+      );
+
+      writeNote(save.note, blob);
+    });
+
+    return mpkRaw.buffer;
+  }
+
+  return $dataView.buffer;
+}
+
+export function getRegionsFromMpk(): string[] {
+  const $gameTemplate = get(gameTemplate);
+
+  const regions: string[] = [];
+
+  Object.entries($gameTemplate.validator.regions).forEach(
+    ([region, condition]) => {
+      const validator = Object.values(condition)[0] as number[];
+
+      const validatorStringified = numberArrayToString(validator);
+
+      if (saves.some((save) => save.note.serial === validatorStringified)) {
+        regions.push(region);
+      }
+    },
+  );
+
+  return regions;
+}
+
+export function getMpkNoteShift(): number[] {
   const $gameRegion = get(gameRegion);
   const $gameTemplate = get(gameTemplate);
 
@@ -149,19 +348,17 @@ export function getMpkNoteShift(shifts: number[]): number[] {
 
   const validator = region[0];
 
-  if (isDexDriveHeader($dataView)) {
-    return [...shifts, 0x200];
+  const validatorStringified = numberArrayToString(validator);
+
+  const save = saves.find((save) =>
+    save.note.serial.includes(validatorStringified),
+  );
+
+  if (save) {
+    return [save.offset];
   }
 
-  for (let i = 0; i < 15; i += 1) {
-    const offset = $fileHeaderShift + 0x300 + i * 0x20;
-
-    if (checkValidator(validator, offset)) {
-      return [...shifts, getInt(offset + 0x7, "uint8") * 0x100];
-    }
-  }
-
-  return shifts;
+  return [0x0];
 }
 
 function getHash(int: number, polynormal: Long, shift: number): Long {

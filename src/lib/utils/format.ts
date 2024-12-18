@@ -226,6 +226,10 @@ export function mergeUint8Arrays(...uint8Arrays: Uint8Array[]): Uint8Array {
 }
 
 export function numberArrayToString(array: number[]): string {
+  if (!Array.isArray(array)) {
+    return "";
+  }
+
   return array.map((char) => String.fromCharCode(char)).join("");
 }
 
