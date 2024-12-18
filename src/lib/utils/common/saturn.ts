@@ -9,10 +9,8 @@ import { getObjKey, mergeUint8Arrays, numberArrayToString } from "../format";
 import { checkValidator } from "../validator";
 
 interface File {
-  isUsed: boolean;
   name: string;
-  offset: number;
-  dataOffset: number;
+  clusters: number[];
   size: number;
 }
 
@@ -20,8 +18,8 @@ interface MemorySystem {
   type: "external" | "internal";
   paddedValue?: number;
   blockSize: number;
-  allocOffset: number;
   headerSize: number;
+  clusters: number;
   files: File[];
 }
 
@@ -91,13 +89,32 @@ export function generateMemorySystem(dataView: DataView): DataView {
     dataView = removePadding(dataView);
   }
 
+  memorySystem.clusters = Math.floor(
+    dataView.byteLength / memorySystem.blockSize,
+  );
+
   memorySystemRaw = dataView;
 
-  memorySystem.allocOffset = (headerCount + blockCount) * 0x10;
+  const clusterIndex = getNextClusterIndex(dataView, 0);
 
-  readFile(dataView, memorySystem.allocOffset);
+  if (clusterIndex !== -1) {
+    pushFile(dataView, clusterIndex);
+  }
 
   return dataView;
+}
+
+function getNextClusterIndex(dataView: DataView, clusterIndex: number): number {
+  for (let i = clusterIndex + 1; i < memorySystem.clusters; i += 1) {
+    const isUsed =
+      getInt(i * memorySystem.blockSize, "uint8", {}, dataView) === 0x80;
+
+    if (isUsed) {
+      return i;
+    }
+  }
+
+  return -1;
 }
 
 export function resetMemorySystem(): void {
@@ -107,13 +124,10 @@ export function resetMemorySystem(): void {
   filteredSaves = [];
 }
 
-function readFile(dataView: DataView, offset: number): void {
-  const isUsed = getInt(offset, "uint8", {}, dataView) === 0x80;
-  const size = getInt(offset + 0x20, "uint16", { bigEndian: true }, dataView);
+function pushFile(dataView: DataView, clusterIndex: number): void {
+  let offset = clusterIndex * memorySystem.blockSize;
 
-  if (size === 0x0) {
-    return;
-  }
+  const size = getInt(offset + 0x20, "uint16", { bigEndian: true }, dataView);
 
   const name = [...Array(0xc).keys()].reduce((string, index) => {
     const char = getInt(offset + 0x4 + index, "uint8", {}, dataView);
@@ -125,45 +139,76 @@ function readFile(dataView: DataView, offset: number): void {
     return (string += String.fromCharCode(char));
   }, "");
 
-  let dataOffset = offset + 0x22;
+  const clusters = [clusterIndex];
+
+  offset += 0x22;
 
   while (true) {
-    const int = getInt(dataOffset, "uint16", { bigEndian: true }, dataView);
+    const clusterIndex = getInt(offset, "uint16", { bigEndian: true }, dataView); // prettier-ignore
 
-    dataOffset += 0x2;
+    offset += 0x2;
 
-    if (dataOffset % memorySystem.blockSize === 0x0) {
-      dataOffset += 0x4;
+    if (offset % memorySystem.blockSize === 0x0) {
+      offset += 0x4;
     }
 
-    if (int === 0x0) {
+    if (clusterIndex === 0x0) {
       break;
     }
-  }
 
-  let endOffset = dataOffset;
-
-  for (let i = 0x0; i < size; i += 0x1) {
-    if (endOffset % memorySystem.blockSize === 0x0) {
-      endOffset += 0x4;
-      i -= 0x1;
-    } else {
-      endOffset += 0x1;
-    }
+    clusters.push(clusterIndex);
   }
 
   memorySystem.files.push({
-    isUsed,
     name,
-    offset,
-    dataOffset,
-    size,
+    clusters,
+    size: memorySystem.headerSize + size,
   });
 
-  offset =
-    Math.ceil(endOffset / memorySystem.blockSize) * memorySystem.blockSize;
+  clusterIndex = getNextClusterIndex(dataView, clusterIndex);
 
-  readFile(dataView, offset);
+  if (clusterIndex !== -1) {
+    pushFile(dataView, clusterIndex);
+  }
+}
+
+function readFile(dataView: DataView, file: File): Uint8Array {
+  const uint8Arrays: Uint8Array[] = [];
+
+  const offset = file.clusters[0] * memorySystem.blockSize;
+
+  uint8Arrays.push(
+    new Uint8Array(
+      dataView.buffer.slice(offset, offset + memorySystem.headerSize),
+    ),
+  );
+
+  let indexesToRemove = (file.clusters.length + 1) * 2;
+
+  file.clusters.forEach((clusterIndex, index) => {
+    const offset = clusterIndex * memorySystem.blockSize;
+    const shift = index === 0 ? memorySystem.headerSize : 0x4;
+
+    const part = new Uint8Array(
+      dataView.buffer.slice(
+        offset + shift + indexesToRemove,
+        offset + memorySystem.blockSize,
+      ),
+    );
+
+    uint8Arrays.push(part);
+
+    indexesToRemove = Math.max(0, indexesToRemove - (memorySystem.blockSize - shift)); // prettier-ignore
+  });
+
+  const padding = 0x10 - ((memorySystem.headerSize + file.size) % 0x10);
+  const dataSize = memorySystem.headerSize + file.size + padding;
+
+  const uint8Array = new Uint8Array(dataSize);
+
+  uint8Array.set(mergeUint8Arrays(...uint8Arrays).slice(0x0, dataSize));
+
+  return uint8Array;
 }
 
 function writeFile(file: File, blob: ArrayBuffer): void {
@@ -171,22 +216,31 @@ function writeFile(file: File, blob: ArrayBuffer): void {
 
   const header = new Uint8Array(blob.slice(0x0, memorySystem.headerSize));
 
-  memorySystemRawTmp.set(header, file.offset);
+  memorySystemRawTmp.set(header, file.clusters[0] * memorySystem.blockSize);
 
-  let offset = file.dataOffset;
+  let indexesToSkip = (file.clusters.length + 1) * 2;
 
-  let size = memorySystem.headerSize;
+  let offset = memorySystem.headerSize;
 
-  while (size < file.size + memorySystem.headerSize) {
-    const end = memorySystem.blockSize - (offset % memorySystem.blockSize);
+  file.clusters.forEach((clusterIndex, index) => {
+    const shift = index === 0 ? memorySystem.headerSize : 0x4;
 
-    const part = new Uint8Array(blob.slice(size, size + end));
+    const part = new Uint8Array(
+      blob.slice(
+        offset,
+        Math.max(0, offset + memorySystem.blockSize - shift - indexesToSkip),
+      ),
+    );
 
-    memorySystemRawTmp.set(part, offset);
+    memorySystemRawTmp.set(
+      part,
+      clusterIndex * memorySystem.blockSize + shift + indexesToSkip,
+    );
 
-    offset += end + 0x4;
-    size += end;
-  }
+    offset += part.byteLength;
+
+    indexesToSkip = Math.max(0, indexesToSkip - (memorySystem.blockSize - shift)); // prettier-ignore
+  });
 
   memorySystemRaw = new DataView(memorySystemRawTmp.buffer);
 }
@@ -217,12 +271,6 @@ export function isUnpackedMemorySystem(): boolean {
   return Boolean(memorySystem.type);
 }
 
-function getHeader(dataView: DataView, file: File): Uint8Array {
-  return new Uint8Array(
-    dataView.buffer.slice(file.offset, file.offset + memorySystem.headerSize),
-  );
-}
-
 export function unpackMemorySystem(dataView: DataView): DataView {
   const $gameTemplate = get(gameTemplate);
 
@@ -239,34 +287,14 @@ export function unpackMemorySystem(dataView: DataView): DataView {
       const validatorStringified = numberArrayToString(validator);
 
       memorySystem.files.forEach((file) => {
-        if (file.isUsed && file.name.includes(validatorStringified)) {
-          const header = getHeader(dataView, file);
+        if (file.name.includes(validatorStringified)) {
+          const binary = readFile(dataView, file);
 
-          uint8Arrays.push(header);
-
-          const padding = 0x10 - ((file.size + memorySystem.headerSize) % 0x10);
-
-          const uint8Array = new Uint8Array(file.size + padding);
-
-          let size = 0x0;
-
-          for (let i = file.dataOffset; size < file.size; i += 0x1) {
-            if (i % memorySystem.blockSize === 0x0) {
-              i += 0x3;
-            } else {
-              uint8Array[size] = getInt(i, "uint8", {}, dataView);
-
-              if (i >= file.dataOffset) {
-                size += 0x1;
-              }
-            }
-          }
-
-          uint8Arrays.push(uint8Array);
+          uint8Arrays.push(binary);
 
           saves.push({ file, offset });
 
-          offset += header.byteLength + uint8Array.byteLength;
+          offset += binary.byteLength;
         }
       });
     });
