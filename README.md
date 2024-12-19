@@ -40,6 +40,7 @@ Link to the website: [https://game-tools-collection.com](https://game-tools-coll
 | Marvel vs. Capcom 2: New Age of Heroes    | DC       | Save       | EUR / USA / JAP                               |
 | Mystic Quest Legend                       | SNES     | Save / Rom | EUR / USA / JAP / FRA / GER                   |
 | Mystical Ninja 2 Starring Goemon          | N64      | Save       | EUR / USA / JAP                               |
+| Mystical Ninja Starring Goemon            | N64      | Save       | EUR / USA / JAP                               |
 | Pokémon Trading Card Game                 | GBC      | Save       | EUR / USA / JAP / AUS                         |
 | Rayman                                    | PS       | Save       | EUR / USA / JAP                               |
 | Resident Evil                             | PS       | Save       | EUR / USA / JAP / FRA / GER                   |

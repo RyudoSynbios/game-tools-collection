@@ -412,6 +412,17 @@
     }
   },
   {
+    "id": "mystical-ninja-starring-goemon-n64",
+    "name": "Mystical Ninja Starring Goemon",
+    "consoleId": "nintendo-64",
+    "tools": {
+      "saveEditor": {
+        "createdAt": "2024-12-19",
+        "regions": ["🇪🇺", "🇺🇸", "🇯🇵"]
+      }
+    }
+  },
+  {
     "id": "pokemon-trading-card-game-gbc",
     "name": "Pokémon Trading Card Game",
     "consoleId": "game-boy-color",
