@@ -170,14 +170,6 @@ export function parseItem(
     }
   }
 
-  if (Array.isArray(newItem.planned)) {
-    newItem.planned = getRegionArray(newItem.planned);
-  }
-
-  if (Array.isArray(newItem.hidden)) {
-    newItem.hidden = getRegionArray(newItem.hidden);
-  }
-
   if (newItem.type === "bitflags") {
     return parseBitflags(newItem, shifts);
   } else if (newItem.type === "checksum") {
@@ -224,10 +216,6 @@ export function parseBitflags(
 ): ItemBitflags {
   const flags = item.flags.reduce((flags: ItemBitflag[], flag) => {
     flag.offset += getShift(shifts);
-
-    if (Array.isArray(flag.hidden)) {
-      flag.hidden = getRegionArray(flag.hidden);
-    }
 
     flags.push(flag);
 

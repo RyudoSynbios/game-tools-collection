@@ -1061,8 +1061,8 @@ const template: GameJson = {
               planned: true,
               items: [
                 {
+                  id: "scenario-1",
                   type: "bitflags",
-                  hidden: [false, true, true],
                   flags: [
                     { offset: 0x291, bit: 0, label: "Talk after Bulsome 4 talk" },
                     { offset: 0x2f5, bit: 3, label: "Balsamo Inn Chest" },

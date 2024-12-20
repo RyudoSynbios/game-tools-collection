@@ -16,6 +16,20 @@ export function getComponent(
   }
 }
 
+export function overrideParseItem(item: Item): Item {
+  const $gameRegion = get(gameRegion);
+
+  if ("id" in item && item.id === "bloodType") {
+    const itemInt = item as ItemInt;
+
+    itemInt.hidden = $gameRegion === 0;
+
+    return itemInt;
+  }
+
+  return item;
+}
+
 export function overrideGetInt(
   item: Item,
 ): [boolean, number | string | undefined] {

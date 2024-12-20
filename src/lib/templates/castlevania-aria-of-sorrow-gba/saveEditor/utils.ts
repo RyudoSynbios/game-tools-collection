@@ -1,3 +1,6 @@
+import { get } from "svelte/store";
+
+import { gameRegion } from "$lib/stores";
 import { getInt, setInt } from "$lib/utils/bytes";
 import { getHeaderShift } from "$lib/utils/common/gameBoyAdvance";
 
@@ -5,6 +8,20 @@ import type { Item, ItemBitflag, ItemBitflags, ItemInt } from "$lib/types";
 
 export function initHeaderShift(dataView: DataView): number {
   return getHeaderShift(dataView);
+}
+
+export function overrideParseItem(item: Item): Item {
+  const $gameRegion = get(gameRegion);
+
+  if ("id" in item && item.id === "language") {
+    const itemInt = item as ItemInt;
+
+    itemInt.hidden = $gameRegion !== 0;
+
+    return itemInt;
+  }
+
+  return item;
 }
 
 export function overrideGetInt(

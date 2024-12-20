@@ -2974,12 +2974,12 @@ const template: GameJson = {
               hidden: true,
             },
             {
+              id: "language",
               name: "Language",
               offset: 0xc,
               type: "variable",
               dataType: "uint8",
               resource: "languages",
-              hidden: [false, true, true],
             },
           ],
         },

@@ -6131,12 +6131,12 @@ const template: GameJson = {
                           resource: "optionBooleanReversed",
                         },
                         {
+                          id: "subtitleLanguage",
                           name: "Subtitle Language",
                           offset: 0x1cf15,
                           type: "variable",
                           dataType: "uint8",
                           resource: "subtitleLanguages",
-                          hidden: [false, true, false],
                         },
                       ],
                     },

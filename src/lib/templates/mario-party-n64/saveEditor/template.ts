@@ -1392,12 +1392,12 @@ const template: GameJson = {
           flex: true,
           items: [
             {
+              id: "language",
               name: "Language",
               offset: 0x9,
               type: "variable",
               dataType: "uint8",
               resource: "languages",
-              hidden: [false, true, true],
               test: true,
             },
             {

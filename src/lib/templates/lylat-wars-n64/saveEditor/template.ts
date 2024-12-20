@@ -451,10 +451,10 @@ const template: GameJson = {
               ],
             },
             {
+              id: "language",
               name: "Language",
               type: "section",
               flex: true,
-              hidden: [false, true],
               items: [
                 {
                   name: "Language",

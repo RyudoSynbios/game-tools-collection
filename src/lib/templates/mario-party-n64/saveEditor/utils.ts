@@ -34,6 +34,12 @@ export function overrideParseItem(item: Item): Item {
     }
 
     return itemInt;
+  } else if ("id" in item && item.id === "language") {
+    const itemInt = item as ItemInt;
+
+    itemInt.hidden = $gameRegion !== 0;
+
+    return itemInt;
   }
 
   return item;

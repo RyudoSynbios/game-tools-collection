@@ -91,6 +91,20 @@ export function initShifts(shifts: number[]): number[] {
   return shifts;
 }
 
+export function overrideParseItem(item: Item): Item {
+  const $gameRegion = get(gameRegion);
+
+  if ("id" in item && item.id === "language") {
+    const itemInt = item as ItemInt;
+
+    itemInt.hidden = $gameRegion !== 0;
+
+    return itemInt;
+  }
+
+  return item;
+}
+
 export function overrideParseContainerItemsShifts(
   item: ItemContainer,
   shifts: number[],

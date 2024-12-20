@@ -241,6 +241,12 @@ export function overrideParseItem(
     itemTab.items = [itemTabs];
 
     return itemTab;
+  } else if ("id" in item && item.id === "scenario-1") {
+    const itemInt = item as ItemInt;
+
+    itemInt.hidden = $gameRegion !== 0;
+
+    return itemInt;
   }
 
   return item;

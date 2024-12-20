@@ -1,6 +1,6 @@
 import { get } from "svelte/store";
 
-import { dataView, fileHeaderShift } from "$lib/stores";
+import { dataView, fileHeaderShift, gameRegion } from "$lib/stores";
 import { getInt, setInt } from "$lib/utils/bytes";
 import {
   generateBiosChecksum,
@@ -22,7 +22,15 @@ export function initHeaderShift(dataView: DataView): number {
 }
 
 export function overrideParseItem(item: Item): Item {
-  if ("id" in item && item.id?.match(/progression-/)) {
+  const $gameRegion = get(gameRegion);
+
+  if ("id" in item && item.id === "language") {
+    const itemInt = item as ItemInt;
+
+    itemInt.hidden = $gameRegion >= 2;
+
+    return itemInt;
+  } else if ("id" in item && item.id?.match(/progression-/)) {
     const itemInt = item as ItemInt;
 
     const [index] = item.id.splitInt();

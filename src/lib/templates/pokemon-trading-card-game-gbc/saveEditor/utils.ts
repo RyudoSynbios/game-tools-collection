@@ -1,3 +1,6 @@
+import { get } from "svelte/store";
+
+import { gameRegion } from "$lib/stores";
 import { getBitflag, getInt, setInt } from "$lib/utils/bytes";
 import { formatChecksum } from "$lib/utils/checksum";
 import { getItem } from "$lib/utils/parser";
@@ -11,6 +14,8 @@ import type {
 } from "$lib/types";
 
 export function overrideParseItem(item: Item): Item {
+  const $gameRegion = get(gameRegion);
+
   if ("id" in item && item.id === "name") {
     const itemString = item as ItemString;
 
@@ -24,6 +29,12 @@ export function overrideParseItem(item: Item): Item {
     }
 
     return itemString;
+  } else if ("id" in item && item.id === "language") {
+    const itemInt = item as ItemInt;
+
+    itemInt.hidden = $gameRegion !== 0;
+
+    return itemInt;
   }
 
   return item;

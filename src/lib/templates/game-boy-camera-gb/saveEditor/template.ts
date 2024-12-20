@@ -80,6 +80,7 @@ const template: GameJson = {
                   letterDataType: "uint8",
                 },
                 {
+                  id: "bloodType",
                   name: "Blood Type",
                   offset: 0x2fc5,
                   type: "variable",
@@ -89,7 +90,6 @@ const template: GameJson = {
                     bitLength: 6,
                   },
                   resource: "bloodTypes",
-                  hidden: [true, false],
                 },
               ],
             },
@@ -270,6 +270,7 @@ const template: GameJson = {
                       letterDataType: "uint8",
                     },
                     {
+                      id: "bloodType",
                       name: "Blood Type",
                       offset: 0x2f0d,
                       type: "variable",
@@ -279,7 +280,6 @@ const template: GameJson = {
                         bitLength: 6,
                       },
                       resource: "bloodTypes",
-                      hidden: [true, false],
                     },
                   ],
                 },
