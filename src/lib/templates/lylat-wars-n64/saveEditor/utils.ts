@@ -1,6 +1,6 @@
 import { get } from "svelte/store";
 
-import { gameTemplate } from "$lib/stores";
+import { gameRegion, gameTemplate } from "$lib/stores";
 import { getInt, setInt } from "$lib/utils/bytes";
 import { formatChecksum } from "$lib/utils/checksum";
 import { byteswapDataView, getHeaderShift } from "$lib/utils/common/nintendo64";
@@ -12,6 +12,7 @@ import type {
   ItemBitflags,
   ItemChecksum,
   ItemInt,
+  ItemSection,
 } from "$lib/types";
 
 export function initHeaderShift(dataView: DataView): number {
@@ -45,6 +46,20 @@ export function overrideGetRegions(
   }
 
   return [];
+}
+
+export function overrideParseItem(item: Item): Item {
+  const $gameRegion = get(gameRegion);
+
+  if ("id" in item && item.id === "language") {
+    const itemSection = item as ItemSection;
+
+    itemSection.hidden = $gameRegion === 1;
+
+    return itemSection;
+  }
+
+  return item;
 }
 
 export function overrideItem(item: Item): Item {

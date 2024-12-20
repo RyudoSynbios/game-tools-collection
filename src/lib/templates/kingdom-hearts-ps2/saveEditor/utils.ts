@@ -59,6 +59,28 @@ export function overrideParseItem(item: Item): Item {
     itemString.length = 0x8;
 
     return itemString;
+  } else if ("id" in item && item.id === "japanExclude") {
+    const itemInt = item as ItemInt;
+
+    itemInt.hidden = $gameRegion === 2;
+
+    return itemInt;
+  } else if ("id" in item && item.id?.match(/japanExclude-/)) {
+    const itemBitflags = item as ItemBitflags;
+
+    const [type] = item.id.splitInt();
+
+    itemBitflags.flags.map((flag, index) => {
+      if (
+        (type === 0 && index === 0 && $gameRegion === 2) ||
+        (type === 1 && [4, 5].includes(index) && $gameRegion === 2) ||
+        (type === 1 && index === 6 && $gameRegion !== 2)
+      ) {
+        flag.hidden = true;
+      }
+    });
+
+    return itemBitflags;
   }
 
   return item;

@@ -88,6 +88,12 @@ export function overrideParseItem(item: Item): Item {
     itemString.length = 0x50;
 
     return itemString;
+  } else if ("id" in item && item.id === "subtitleLanguage") {
+    const itemInt = item as ItemInt;
+
+    itemInt.hidden = $gameRegion === 1;
+
+    return itemInt;
   }
 
   return item;

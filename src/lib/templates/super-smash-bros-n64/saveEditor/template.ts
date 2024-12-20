@@ -451,12 +451,12 @@ const template: GameJson = {
               resource: "sound",
             },
             {
+              id: "language",
               name: "Language",
               offset: 0x5e2,
               type: "variable",
               dataType: "uint8",
               resource: "languages",
-              hidden: [false, true, true, true],
               test: true,
             },
           ],

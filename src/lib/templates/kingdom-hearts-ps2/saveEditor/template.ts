@@ -131,12 +131,12 @@ const template: GameJson = {
                           ],
                         },
                         {
+                          id: "japanExclude",
                           name: "Difficulty",
                           offset: 0x20018,
                           type: "variable",
                           dataType: "uint32",
                           resource: "difficulties",
-                          hidden: [false, false, true, false, false, false, false],
                         },
                         {
                           name: "Leveling Curve",
@@ -1602,10 +1602,11 @@ const template: GameJson = {
                                   ],
                                 },
                                 {
+                                  id: "japanExclude-0",
                                   name: "Page 4",
                                   type: "bitflags",
                                   flags: [
-                                    { offset: 0xb2f7, bit: 2, label: "Sephitoth", hidden: [false, false, true, false, false, false, false] },
+                                    { offset: 0xb2f7, bit: 2, label: "Sephitoth" },
                                     { offset: 0xb2e6, bit: 0, label: "Cid" },
                                     { offset: 0xb2e7, bit: 7, label: "Tidus" },
                                     { offset: 0xb2e7, bit: 6, label: "Selphie" },
@@ -1667,10 +1668,11 @@ const template: GameJson = {
                                   ],
                                 },
                                 {
+                                  id: "japanExclude-0",
                                   name: "Page 3",
                                   type: "bitflags",
                                   flags: [
-                                    { offset: 0xb2f7, bit: 1, label: "Ice Titan", hidden: [false, false, true, false, false, false, false] },
+                                    { offset: 0xb2f7, bit: 1, label: "Ice Titan" },
                                     { offset: 0xb2eb, bit: 6, label: "Tarzan" },
                                     { offset: 0xb2eb, bit: 5, label: "Jane Porter", separator: true },
                                     { offset: 0xb2eb, bit: 4, label: "Clayton (part 1)" },
@@ -1682,6 +1684,7 @@ const template: GameJson = {
                                   ],
                                 },
                                 {
+                                  id: "japanExclude-1",
                                   name: "Page 4",
                                   type: "bitflags",
                                   flags: [
@@ -1689,9 +1692,9 @@ const template: GameJson = {
                                     { offset: 0xb2ec, bit: 5, label: "Aladdin (part 2)", separator: true },
                                     { offset: 0xb2ec, bit: 4, label: "Genie (part 1)" },
                                     { offset: 0xb2ec, bit: 3, label: "Genie (part 2)", separator: true },
-                                    { offset: 0xb2ec, bit: 2, label: "Jasmine (part 1)", hidden: [false, false, true, false, false, false, false] },
-                                    { offset: 0xb2f7, bit: 0, label: "Jasmine (part 2)", separator: true, hidden: [false, false, true, false, false, false, false] },
-                                    { offset: 0xb2ec, bit: 2, label: "Jasmine", hidden: [true, true, false, true, true, true, true] },
+                                    { offset: 0xb2ec, bit: 2, label: "Jasmine (part 1)" },
+                                    { offset: 0xb2f7, bit: 0, label: "Jasmine (part 2)", separator: true },
+                                    { offset: 0xb2ec, bit: 2, label: "Jasmine" },
                                     { offset: 0xb2ec, bit: 1, label: "Jafar (part 1)" },
                                     { offset: 0xb2ec, bit: 0, label: "Jafar (part 2)", separator: true },
                                     { offset: 0xb2ed, bit: 7, label: "Jafar-Genie" },
@@ -2101,12 +2104,12 @@ const template: GameJson = {
                                           bit: 4,
                                         },
                                         {
+                                          id: "japanExclude",
                                           name: "Kurt Zisa",
                                           offset: 0xb2f8,
                                           type: "variable",
                                           dataType: "bit",
                                           bit: 7,
-                                          hidden: [false, false, true, false, false, false, false],
                                         },
                                         {
                                           name: "Phantom",

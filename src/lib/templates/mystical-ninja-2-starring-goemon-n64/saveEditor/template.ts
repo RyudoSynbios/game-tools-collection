@@ -34,7 +34,6 @@ const template: GameJson = {
           name: "Options",
           items: [
             {
-              id: "options",
               name: "Checksum Options",
               offset: 0x4,
               type: "checksum",
@@ -50,17 +49,15 @@ const template: GameJson = {
               flex: true,
               items: [
                 {
-                  id: "options",
+                  id: "language",
                   name: "Language",
                   offset: 0x8,
                   type: "variable",
                   dataType: "uint8",
                   resource: "languages",
-                  hidden: [false, true, true],
                   test: true,
                 },
                 {
-                  id: "options",
                   name: "Sound",
                   offset: 0x9,
                   type: "variable",
