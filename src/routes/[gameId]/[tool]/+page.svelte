@@ -136,9 +136,9 @@
 </script>
 
 <svelte:head>
-  <title>
-    {game.name} - {game.console.name} - {tool} | Game Tools Collection
-  </title>
+  <title>{game.name} - {game.console.name} - {tool} | Game Tools Collection</title>
+  <meta property="og:title" content="{game.name} - {game.console.name} - {tool}" />
+  <meta property="og:image" content="{$page.url.origin}/img/games/{game.id}/logo.png" />
 </svelte:head>
 
 <!-- svelte-ignore a11y-click-events-have-key-events -->

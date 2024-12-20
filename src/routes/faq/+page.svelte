@@ -1,8 +1,11 @@
 <script lang="ts">
+  import { page } from "$app/stores";
 </script>
 
 <svelte:head>
   <title>FAQ | Game Tools Collection</title>
+  <meta property="og:title" content="FAQ" />
+  <meta property="og:image" content="{$page.url.origin}/img/icon.png" />
 </svelte:head>
 
 <div class="gtc-faq">

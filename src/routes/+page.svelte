@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { page } from "$app/stores";
   import GameTile from "$lib/components/GameTile.svelte";
   import { getConsoles, getGames, type Order, type Tool } from "$lib/utils/db";
 
@@ -30,6 +31,8 @@
 
 <svelte:head>
   <title>Game Tools Collection: Customize your games!</title>
+  <meta property="og:title" content="Game Tools Collection: Customize your games!" />
+  <meta property="og:image" content="{$page.url.origin}/img/icon.png" />
 </svelte:head>
 
 <div class="gtc-home">

@@ -22,13 +22,6 @@
   });
 </script>
 
-<svelte:head>
-  <meta
-    name="description"
-    content="Use a collection of tools to rediscover your favorite games by editing your saves or randomizing gameplay elements."
-  />
-</svelte:head>
-
 <svelte:window on:beforeunload={handleBeforeUnload} />
 
 <div class="gtc-app">
