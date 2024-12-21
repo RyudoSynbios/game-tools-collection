@@ -428,13 +428,25 @@ const cp932: { [key: string]: string } = {
 
 // Adapted from https://github.com/kawanet/iconv-cp932/blob/master/mappings/cp932.json
 export function decodeWindows31J(code: number): string {
-  return Object.keys(cp932).reduce((char, key) => {
+  return Object.entries(cp932).reduce((char, [key, value]) => {
     const int = parseInt(key, 16);
 
-    if (code >= int && code < int + cp932[key].length) {
-      char = cp932[key][code - int];
+    if (code >= int && code < int + value.length) {
+      char = value[code - int];
     }
 
     return char;
   }, "�");
+}
+
+export function encodeWindows31J(char: string): number {
+  return Object.entries(cp932).reduce((int, [key, value]) => {
+    if (value.includes(char)) {
+      const index = value.split("").findIndex((value) => value === char);
+
+      int = parseInt(key, 16) + index;
+    }
+
+    return int;
+  }, 0x0);
 }

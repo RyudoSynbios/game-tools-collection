@@ -1,7 +1,7 @@
 import { get } from "svelte/store";
 
 import { gameRegion } from "$lib/stores";
-import { getInt, getString, setInt } from "$lib/utils/bytes";
+import { getInt, setInt } from "$lib/utils/bytes";
 import { getItem } from "$lib/utils/parser";
 
 import type { Item, ItemInt, ItemString } from "$lib/types";
@@ -18,7 +18,6 @@ export function overrideParseItem(item: Item): Item {
     itemString.letterDataType = "uint16";
     itemString.letterBigEndian = true;
     itemString.regex = undefined;
-    itemString.resource = "letters";
 
     return itemString;
   }
@@ -29,30 +28,7 @@ export function overrideParseItem(item: Item): Item {
 export function overrideGetInt(
   item: Item,
 ): [boolean, number | string | undefined] {
-  const $gameRegion = get(gameRegion);
-
-  if ("id" in item && item.id === "name" && $gameRegion === 1) {
-    const itemString = item as ItemString;
-
-    let string = getString(
-      itemString.offset,
-      itemString.length,
-      itemString.letterDataType,
-      {
-        letterBigEndian: itemString.letterBigEndian,
-        resource: itemString.resource,
-      },
-    );
-
-    for (let i = 0x0; i < itemString.length; i += 0x2) {
-      if (getInt(itemString.offset + i, "uint8") === 0x0) {
-        string = string.substring(0, i / 2);
-        break;
-      }
-    }
-
-    return [true, string];
-  } else if ("id" in item && item.id?.match(/hero30Progression-/)) {
+  if ("id" in item && item.id?.match(/hero30Progression-/)) {
     const itemInt = item as ItemInt;
 
     const [, index] = item.id.splitInt();

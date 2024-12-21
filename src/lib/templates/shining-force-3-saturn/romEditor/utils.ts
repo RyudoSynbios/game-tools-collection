@@ -12,7 +12,7 @@ import {
   writeFile,
   type File,
 } from "$lib/utils/common/iso9660";
-import { decodeCamelotFont, decodeWindows31J } from "$lib/utils/decode";
+import { decodeCamelotFont, decodeWindows31J } from "$lib/utils/encoding";
 import { getRegionArray } from "$lib/utils/format";
 import { getItem, updateResources } from "$lib/utils/parser";
 import { checkValidator } from "$lib/utils/validator";
@@ -42,7 +42,7 @@ import {
   spellCount,
   spellNamesStartIndexes,
 } from "./template";
-import { decodeKanji } from "./utils/decode";
+import { decodeKanji } from "./utils/encoding";
 
 export function overrideGetRegions(
   dataView: DataView,

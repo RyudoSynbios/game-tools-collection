@@ -6,6 +6,7 @@ import { getObjKey, isPartial, makeOperations } from "$lib/utils/format";
 
 import type { Binary, DataType, DataTypeInt, IntOperation } from "$lib/types";
 
+import { decodeWindows31J, encodeWindows31J } from "./encoding";
 import { getResource } from "./parser";
 
 export function getDataView(dataViewTmp?: DataView): DataView {
@@ -731,6 +732,8 @@ export function getString(
       string += char !== undefined ? char : " ";
     } else if (int === 0x0) {
       string += " ";
+    } else if (letterDataType === "uint16") {
+      string += decodeWindows31J(int);
     } else {
       string += String.fromCharCode(int);
     }
@@ -793,7 +796,11 @@ export function setString(
             int = parseInt(getObjKey(resource, index));
           }
         } else if (!options.regex || char.match(new RegExp(options.regex))) {
-          int = char.charCodeAt(0);
+          if (letterDataType === "uint16") {
+            int = encodeWindows31J(char);
+          } else {
+            int = char.charCodeAt(0);
+          }
         }
 
         if (int !== fallback) {

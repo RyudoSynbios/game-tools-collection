@@ -2,7 +2,7 @@ import { get } from "svelte/store";
 
 import { gameRegion } from "$lib/stores";
 import { getInt, setInt } from "$lib/utils/bytes";
-import { decodeCamelotFont } from "$lib/utils/decode";
+import { decodeCamelotFont } from "$lib/utils/encoding";
 import { getRegionArray } from "$lib/utils/format";
 import { applyPalette } from "$lib/utils/graphics";
 import { getResource, updateResources } from "$lib/utils/parser";

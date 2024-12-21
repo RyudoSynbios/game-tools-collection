@@ -12,7 +12,7 @@ import { checkValidator } from "$lib/utils/validator";
 
 import type { ItemChecksum, Validator } from "$lib/types";
 
-import { decodeNintendo64MpkFont } from "../decode";
+import { decodeNintendo64MpkFont } from "../encoding";
 
 interface Mpk {
   pageLength: number;
