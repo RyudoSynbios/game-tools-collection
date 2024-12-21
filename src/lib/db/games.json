@@ -482,6 +482,17 @@
     }
   },
   {
+    "id": "skies-of-arcadia-legends-gc",
+    "name": "Skies of Arcadia Legends",
+    "consoleId": "gamecube",
+    "tools": {
+      "saveEditor": {
+        "createdAt": "2024-12-xx",
+        "regions": ["🇪🇺", "🇺🇸", "🇯🇵"]
+      }
+    }
+  },
+  {
     "id": "soleil-md",
     "name": "Soleil",
     "consoleId": "mega-drive",
