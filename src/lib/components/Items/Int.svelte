@@ -75,9 +75,6 @@
   $: {
     $dataView;
 
-    min = getIntMin(item);
-    max = getIntMax(item);
-
     let isOverrided = false;
 
     let int = 0;
@@ -85,6 +82,9 @@
     if (utilsExists("overrideItem")) {
       item = $gameUtils.overrideItem(item);
     }
+
+    min = getIntMin(item);
+    max = getIntMax(item);
 
     if (utilsExists("overrideGetInt")) {
       [isOverrided, value] = $gameUtils.overrideGetInt(item);
