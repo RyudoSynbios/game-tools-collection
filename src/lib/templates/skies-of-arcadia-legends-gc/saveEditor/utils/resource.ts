@@ -1,0 +1,533 @@
+export const weapons = {
+  0x0: "Cutlass",
+  0x1: "Pirate Cutlass",
+  0x2: "Sky Cutlass",
+  0x3: "Admiral Cutlass",
+  0x4: "Assassin Blade",
+  0x5: "Thunder Cutlass",
+  0x6: "Iron-cutter",
+  0x7: "Nasr Cutlass",
+  0x8: "Sword of Daccat",
+  0x9: "Hunter's Sword",
+  0xa: "Stonecutter",
+  0xb: "Dream Cutlass",
+  0xc: "Windslicer",
+  0xd: "Vorlik Blade",
+  0xe: "Suiran Blade",
+  0xf: "Soul Sword",
+  0x10: "Boomerang",
+  0x11: "Skywing",
+  0x12: "Scout Wing",
+  0x13: "Ice Splitter",
+  0x14: "Leather Crescent",
+  0x15: "Throwing Blade",
+  0x16: "Hunting Arc",
+  0x17: "Valuarang",
+  0x18: "Yin Wing",
+  0x19: "Dancing Arc",
+  0x1a: "Wing of Hope",
+  0x1b: "Storm Wing",
+  0x1c: "Moon Wing",
+  0x1d: "Hydra Wing",
+  0x1e: "Grendel Wing",
+  0x1f: "Flutter Blade",
+  0x20: "Cupil",
+  0x21: "Cupil Lance",
+  0x22: "Cupil Star",
+  0x23: "Cupicone",
+  0x24: "Cupil Spear",
+  0x25: "Cupil Blade",
+  0x26: "Cupil Sword",
+  0x27: "Cupil Cutlass",
+  0x28: "Cupil Claymore",
+  0x29: "Cupil Cannon",
+  0x2a: "Cupil Spike",
+  0x2b: "Cupil Weight",
+  0x2c: "Cupil Pan",
+  0x2d: "Cupil Club",
+  0x2e: "Cupil Hammer",
+  0x2f: "Final Cupil",
+  0x30: "Artificial Arm",
+  0x31: "Hook Hand",
+  0x32: "Mace Hand",
+  0x33: "Mining Arm",
+  0x34: "Dragon Arm",
+  0x35: "Beak Hand",
+  0x36: "De Loco Drill",
+  0x37: "Excavation Arm",
+  0x38: "Ruin Arm",
+  0x39: "Silver Arm",
+  0x3a: "Rapier",
+  0x3b: "Stoneblade",
+  0x3c: "Imperial Blade",
+  0x3d: "Serpent Strike",
+  0x3e: "Frostblade",
+  0x3f: "Blade of Slumber",
+  0x40: "Gilder's Own",
+  0x41: "Nasr Pistol",
+  0x42: "Warrior's Pistol",
+  0x43: "Valuan Pistol",
+  0x44: "Marksman Gun",
+  0x45: "Daccat Custom",
+  0x46: "Gilder Special",
+  0x47: "Tuna Cutlass",
+  0x48: "Swirlmerang",
+  0x49: "Sky Fang",
+  // 0x4a: "DUMMYBUKI", // Unused
+  // 0x4b: "DUMMYBUKI", // Unused
+  // 0x4c: "DUMMYBUKI", // Unused
+  // 0x4d: "DUMMYBUKI", // Unused
+  // 0x4e: "DUMMYBUKI", // Unused
+  // 0x4f: "DUMMYBUKI", // Unused
+};
+
+export const armors = {
+  0x50: "Vyse's Uniform",
+  0x51: "Aika's Shorts",
+  0x52: "Fina's Robe",
+  0x53: "Drachma's Shirt",
+  0x54: "Enrique's Coat",
+  0x55: "Gilder's Mail",
+  0x56: "Light Robe",
+  0x57: "Valuan Uniform",
+  0x58: "Sailor Uniform",
+  0x59: "Mystic Dress",
+  0x5a: "Valuan Armor",
+  0x5b: "Elastamor",
+  0x5c: "Raincoat",
+  0x5d: "Nasrean Mail",
+  0x5e: "Ceramic Armor",
+  0x5f: "Agile Robe",
+  0x60: "Miner's Overalls",
+  0x61: "Fiber Robe",
+  0x62: "Golden Armor",
+  0x63: "Ixa'takan Armor",
+  0x64: "Naval Uniform",
+  0x65: "Nasr Uniform",
+  0x66: "Caravan Armor",
+  0x67: "Holy Robe",
+  0x68: "Daccat's Tunic",
+  0x69: "Battleworn Armor",
+  0x6a: "Miracle Robe",
+  0x6b: "Scale Mail",
+  0x6c: "Soranchu Robe",
+  0x6d: "Long Robe",
+  0x6e: "Captain's Cloak",
+  0x6f: "Blessed Robe",
+  0x70: "Insulated Mail",
+  0x71: "Vengeance Armor",
+  0x72: "Swift Dress",
+  0x73: "Gaia Cape",
+  0x74: "Robe of Faith",
+  0x75: "Plated Armor",
+  0x76: "Robe of Truth",
+  0x77: "Berzerker Mail",
+  0x78: "Light Dress",
+  0x79: "Focus Robe",
+  0x7a: "Nasr Combat Mail",
+  0x7b: "De Loco Armor",
+  0x7c: "Maiden's Armor",
+  0x7d: "Heavy Armor",
+  0x7e: "Ancient Robe",
+  0x7f: "De Loco Mail",
+  0x80: "Daccat's Armor",
+  0x81: "Moss Armor",
+  0x82: "Moonlight Robe",
+  0x83: "Silver Armor",
+  0x84: "Victory Mail",
+  0x85: "Flame Mantle",
+  0x86: "Female Armor",
+  0x87: "Ghost Mail",
+  0x88: "Light Coat",
+  0x89: "Fiber Mail",
+  0x8a: "Moon Robe",
+  // 0x8b: "DUMMYBOUGU", // Unused
+  // 0x8c: "DUMMYBOUGU", // Unused
+  // 0x8d: "DUMMYBOUGU", // Unused
+  // 0x8e: "DUMMYBOUGU", // Unused
+  // 0x8f: "DUMMYBOUGU", // Unused
+  // 0x90: "DUMMYBOUGU", // Unused
+  // 0x91: "DUMMYBOUGU", // Unused
+  // 0x92: "DUMMYBOUGU", // Unused
+  // 0x93: "DUMMYBOUGU", // Unused
+  // 0x94: "DUMMYBOUGU", // Unused
+  // 0x95: "DUMMYBOUGU", // Unused
+  // 0x96: "DUMMYBOUGU", // Unused
+  // 0x97: "DUMMYBOUGU", // Unused
+  // 0x98: "DUMMYBOUGU", // Unused
+  // 0x99: "DUMMYBOUGU", // Unused
+  // 0x9a: "DUMMYBOUGU", // Unused
+  // 0x9b: "DUMMYBOUGU", // Unused
+  // 0x9c: "DUMMYBOUGU", // Unused
+  // 0x9d: "DUMMYBOUGU", // Unused
+  // 0x9e: "DUMMYBOUGU", // Unused
+  // 0x9f: "DUMMYBOUGU", // Unused
+};
+
+export const accessories = {
+  0xa0: "Gemstone Ring",
+  0xa1: "Prophet's Sand",
+  0xa2: "Meditation Ring",
+  0xa3: "Moondust Ring",
+  0xa4: "Lover's Ring",
+  0xa5: "Jade Swirl Ring",
+  0xa6: "Cupil Ring",
+  0xa7: "Warrior's Heart",
+  0xa8: "Throkryn's Scale",
+  0xa9: "Thryllak's Scale",
+  0xaa: "Marocca's Shell",
+  0xab: "Burocca's Shell",
+  0xac: "Crylhound's Claw",
+  0xad: "Hunter's Hand",
+  0xae: "Thief's Aura",
+  0xaf: "Quetya Feather",
+  0xb0: "Vigoro's Chain",
+  0xb1: "Sailor's Buckler",
+  0xb2: "Warrior's Rune",
+  0xb3: "Ancient Bracer",
+  0xb4: "Counter Bracer",
+  0xb5: "Defensive Aura",
+  0xb6: "Ivy Band",
+  0xb7: "Silvite Ring",
+  0xb8: "Gem of Fluidity",
+  0xb9: "Wind Gem Ring",
+  0xba: "Eye of Truth",
+  0xbb: "Revered Voice",
+  0xbc: "Everlasting Gem",
+  0xbd: "Behemoth's Ring",
+  0xbe: "Constitution Gem",
+  0xbf: "Nomadic Veil",
+  0xc0: "Radiant Fur",
+  0xc1: "Sand Storm Ring",
+  0xc2: "Skull Cap",
+  0xc3: "Mage's Bane",
+  0xc4: "Blue Rogue Patch",
+  0xc5: "Assassin Ring",
+  0xc6: "Stealth Ring",
+  0xc7: "Dhabu Hide",
+  0xc8: "Ominous Mask",
+  0xc9: "Flash Ribbon",
+  0xca: "The Unseen Hand",
+  0xcb: "Crescent Amulet",
+  0xcc: "Skyseer Goggles",
+  0xcd: "Nocturnal Sight",
+  0xce: "Critical Vision",
+  0xcf: "Gem of Purity",
+  0xd0: "Shard of Purity",
+  0xd1: "Fortune Ring",
+  0xd2: "Black Map",
+  0xd3: "White Map",
+  0xd4: "Captain's Hat",
+  0xd5: "Mesh Tights",
+  0xd6: "Black Eyepatch",
+  0xd7: "Silver Veil",
+  0xd8: "Imperial Crest",
+  0xd9: "Gilder's Amulet",
+  0xda: "Valuan Medallion",
+  0xdb: "Immunity Ring",
+  0xdc: "Thermo Ring",
+  0xdd: "Slayer Ring",
+  0xde: "Chance Ring",
+  // 0xdf: "DUMMYACCESARRY", // Unused
+  // 0xe0: "DUMMYACCESARRY", // Unused
+  // 0xe1: "DUMMYACCESARRY", // Unused
+  // 0xe2: "DUMMYACCESARRY", // Unused
+  // 0xe3: "DUMMYACCESARRY", // Unused
+  // 0xe4: "DUMMYACCESARRY", // Unused
+  // 0xe5: "DUMMYACCESARRY", // Unused
+  // 0xe6: "DUMMYACCESARRY", // Unused
+  // 0xe7: "DUMMYACCESARRY", // Unused
+  // 0xe8: "DUMMYACCESARRY", // Unused
+  // 0xe9: "DUMMYACCESARRY", // Unused
+  // 0xea: "DUMMYACCESARRY", // Unused
+  // 0xeb: "DUMMYACCESARRY", // Unused
+  // 0xec: "DUMMYACCESARRY", // Unused
+  // 0xed: "DUMMYACCESARRY", // Unused
+  // 0xee: "DUMMYACCESARRY", // Unused
+  // 0xef: "DUMMYACCESARRY", // Unused
+};
+
+export const items = {
+  0xf0: "Sacri Crystal",
+  0xf1: "Sacres Crystal",
+  0xf2: "Sacrum Crystal",
+  0xf3: "Sacrulen Crystal",
+  0xf4: "Magic Droplet",
+  0xf5: "Magic Dew",
+  0xf6: "Aura of Valor",
+  0xf7: "Soul Crystal",
+  0xf8: "Unholy Dagger",
+  0xf9: "Curia Crystal",
+  0xfa: "Risan Crystal",
+  0xfb: "Riselem Crystal",
+  0xfc: "Glyph of Might",
+  0xfd: "Glyph of Speed",
+  0xfe: "Healing Salve",
+  0xff: "Chalice of Blood",
+  0x100: "Windsong Orb",
+  0x101: "Winter Orb",
+  0x102: "Moonberry",
+  0x103: "Cham",
+  0x104: "Paranta Seed",
+  0x105: "Icyl Seed",
+  0x106: "Zaal Seed",
+  0x107: "Dexus Seed",
+  0x108: "Sylph Seed",
+  0x109: "Vidal Seed",
+  0x10a: "Magus Seed",
+  0x10b: "Pyri Box",
+  0x10c: "Pyrum Box",
+  0x10d: "Crystales Box",
+  0x10e: "Crystalen Box",
+  0x10f: "Wevles Box",
+  0x110: "Wevlen Box",
+  0x111: "Electri Box",
+  0x112: "Electrum Box",
+  0x113: "Sacri Box",
+  0x114: "Sacrum Box",
+  0x115: "Riselem Box",
+  0x116: "Sylenis Box",
+  0x117: "Panika Box",
+  0x118: "Driln Box",
+  0x119: "Slipara Box",
+  0x11a: "Eternum Box",
+  0x11b: "Rune of Ill Omen",
+  0x11c: "Golden Mask",
+  0x11d: "Sky Sardis",
+  0x11e: "Red Sardis",
+  0x11f: "Flying Fish",
+  0x120: "Spiked Sunfish",
+  0x121: "Abirik Cham",
+  0x122: "Chom",
+  0x123: "Gold Pollen",
+  0x124: "Ilchymix",
+  0x125: "Orb of Serenity",
+  0x126: "Kabal Skewer",
+  0x127: "Mom's Skewer",
+  0x128: "Tropica ",
+  0x129: "Urala's Lunch",
+  0x12a: "Polly Special",
+  0x12b: "Magillex Idol",
+  0x12c: "Pharax Idol",
+  0x12d: "Euconyx Idol",
+  // 0x12e: "DUMMY", // Unused
+  // 0x12f: "DUMMY", // Unused
+  // 0x130: "DUMMY", // Unused
+  0x131: "Drajik Fish",
+  0x132: "Kite Ray",
+  0x133: "Stealth Ray",
+  0x134: "Spear Squid",
+  0x135: "Drill Squid",
+  0x136: "Grule",
+  0x137: "Rainbow Grule",
+  0x138: "Sky Jellyfish",
+  0x139: "Silverfish",
+  0x13a: "Romuhai Fish",
+  0x13b: "Hamahai Fish",
+  0x13c: "Nerath Eel",
+  0x13d: "Great Nerath Eel",
+  0x13e: "Red Dragon",
+  0x13f: "Gold Dragon",
+};
+
+export const keyItems = {
+  0x140: "Green Crystal",
+  0x141: "Red Crystal",
+  0x142: "Purple Crystal",
+  0x143: "Blue Crystal",
+  0x144: "Yellow Crystal",
+  0x145: "GINGESSHO",
+  0x146: "Green Moon Stone",
+  0x147: "Red Moon Stone",
+  0x148: "Purple MoonStone",
+  0x149: "Blue Moon Stone",
+  0x14a: "Yellow MoonStone",
+  0x14b: "Silver MoonStone",
+  0x14c: "Underwater Suit",
+  0x14d: "Note in a Bottle",
+  0x14e: "Cannon Room Key",
+  0x14f: "Ship Schematics",
+  0x150: "Gonzales' Map",
+  0x151: "Pedro's Map",
+  0x152: "ALFONSO'S KEY",
+  0x153: "Golden Man's Eye",
+  0x154: "Great Bird's Eye",
+  0x155: "Raw Moon Stone",
+  0x156: "Daccat's Coin",
+  0x157: "SISIKABAB",
+  0x158: "Kabal",
+  0x159: "Gentum",
+  0x15a: "Khale",
+  0x15b: "CHO SISIKABAB",
+  0x15c: "Valuan Passport",
+  0x15d: "Moon Stone Fuel",
+  0x15e: "Clara's Purse",
+  0x15f: "Book of Polarity",
+  0x160: "Velorium",
+  0x161: "Velorium",
+  0x162: "SAISYUHEIKI3",
+  0x163: "Harbor Key",
+  0x164: "Magic Cannon",
+  0x165: "Wages",
+  0x166: "Grapor Meat",
+  0x167: "Domingo's Title",
+  0x168: "Moonfish",
+  0x169: "Black Spot",
+  0x16a: "Black Spot",
+  0x16b: "Black Spot",
+  0x16c: "Black Spot",
+  // 0x16d: "DUMMYCLEAR", // Unused
+  // 0x16e: "DUMMYCLEAR", // Unused
+  // 0x16f: "DUMMYCLEAR", // Unused
+  // 0x170: "DUMMYCLEAR", // Unused
+  // 0x171: "DUMMYCLEAR", // Unused
+  // 0x172: "DUMMYCLEAR", // Unused
+  // 0x173: "DUMMYCLEAR", // Unused
+  // 0x174: "DUMMYCLEAR", // Unused
+  // 0x175: "DUMMYCLEAR", // Unused
+  // 0x176: "DUMMYCLEAR", // Unused
+  // 0x177: "DUMMYCLEAR", // Unused
+  // 0x178: "DUMMYCLEAR", // Unused
+  // 0x179: "DUMMYCLEAR", // Unused
+  // 0x17a: "DUMMYCLEAR", // Unused
+  // 0x17b: "DUMMYCLEAR", // Unused
+  // 0x17c: "DUMMYCLEAR", // Unused
+  // 0x17d: "DUMMYCLEAR", // Unused
+  // 0x17e: "DUMMYCLEAR", // Unused
+  // 0x17f: "DUMMYCLEAR", // Unused
+  // 0x180: "DUMMYCLEAR", // Unused
+  // 0x181: "DUMMYCLEAR", // Unused
+  // 0x182: "DUMMYCLEAR", // Unused
+  // 0x183: "DUMMYCLEAR", // Unused
+  // 0x184: "DUMMYCLEAR", // Unused
+  // 0x185: "DUMMYCLEAR", // Unused
+  // 0x186: "DUMMYCLEAR", // Unused
+  // 0x187: "DUMMYCLEAR", // Unused
+  // 0x188: "DUMMYCLEAR", // Unused
+  // 0x189: "DUMMYCLEAR", // Unused
+  // 0x18a: "DUMMYCLEAR", // Unused
+  // 0x18b: "DUMMYCLEAR", // Unused
+  // 0x18c: "DUMMYCLEAR", // Unused
+  // 0x18d: "DUMMYCLEAR", // Unused
+  // 0x18e: "DUMMYCLEAR", // Unused
+  // 0x18f: "DUMMYCLEAR", // Unused
+};
+
+export const shipCannons = {
+  0x190: "Main Cannon",
+  0x191: "Standard Cannon",
+  0x192: "Heavy Cannon",
+  0x193: "G-Type Cannon",
+  0x194: "B-Type Cannon",
+  0x195: "Prototype Cannon",
+  0x196: "Advanced Cannon",
+  0x197: "Yamato Spirit",
+  0x198: "Ancient Cannon",
+  0x199: "X Cannon",
+  0x19a: '3" Cannon',
+  0x19b: '3" Blaster',
+  0x19c: '5" Cannon',
+  0x19d: '8" Cannon',
+  0x19e: '12" Cannon',
+  0x19f: '10" Cannon',
+  0x1a0: '10" Cannon Coil',
+  0x1a1: '12" Blaster',
+  0x1a2: "3'Cannon",
+  0x1a3: "5'Cannon",
+  0x1a4: "Light Torpedo",
+  0x1a5: "Guided Torpedo",
+  0x1a6: "Shock Torpedo",
+  0x1a7: "Hunter Torpedo",
+  0x1a8: "Valuan Torpedo",
+  0x1a9: "Heavy Torpedo",
+  0x1aa: "Serpent Torpedo",
+  0x1ab: "Flash Torpedo",
+  0x1ac: "Arcwhale Torpedo",
+  0x1ad: "Dragon Torpedo",
+  0x1ae: "Harpoon Cannon",
+  0x1af: "MoonStone Cannon",
+  0x1b0: "Moon Cannon",
+  0x1b1: "Moon Gun",
+  0x1b2: "Moon Torpedo",
+  0x1b3: "Pyril Cannon",
+  0x1b4: "Wevl Cannon",
+  0x1b5: "Electril Torpedo",
+  0x1b6: "Crystil Cannon",
+  0x1b7: "Kazai Gun",
+};
+
+export const shipAccessories = {
+  0x1b8: "Rogue Figure",
+  0x1b9: "Pryn Figure",
+  0x1ba: "Pyrynn Figure",
+  0x1bb: "Arcwhale Figure",
+  0x1bc: "Quetya Figure",
+  0x1bd: "Giant Figure",
+  0x1be: "Bluheim Figure",
+  0x1bf: "Goddess Figure",
+  0x1c0: "Vyse Figure",
+  0x1c1: "Spherical Figure",
+  0x1c2: "Engine Cover",
+  0x1c3: "Turbo Kit",
+  0x1c4: "Bore-up Kit",
+  0x1c5: "Twin Propellers",
+  0x1c6: "Air Intake",
+  0x1c7: "Twin Turbo",
+  0x1c8: "Timing Valve",
+  0x1c9: "Triple Turbo",
+  0x1ca: "High Torque Kit",
+  0x1cb: "Double Shaft",
+  0x1cc: "Armored Deck",
+  0x1cd: "Steel Deck",
+  0x1ce: "Slanted Deck",
+  0x1cf: "Compound Deck",
+  0x1d0: "Heavy Armor Deck",
+  0x1d1: "Alloy Deck",
+  0x1d2: "Dragon Deck",
+  0x1d3: "Ancient Deck",
+  0x1d4: "Silver Deck",
+  0x1d5: "Sparkling Deck",
+  0x1d6: "Intercom",
+  0x1d7: "Enhanced Kitchen",
+  0x1d8: "Floor Heater",
+  0x1d9: "Air Purifier",
+  0x1da: "Yafutoman Alcove",
+  0x1db: "Soundproofing",
+  0x1dc: "Expensive Wheel",
+  0x1dd: "Chandelier",
+  0x1de: "Wooden Doll",
+  0x1df: "Indoor Plant",
+};
+
+export const shipItems = {
+  0x1e0: "Bomb",
+  0x1e1: "Big Bomb",
+  0x1e2: "Concussion Bomb",
+  0x1e3: "Shredder Bomb",
+  0x1e4: "Pyro Bomb",
+  0x1e5: "Frost Bomb",
+  0x1e6: "Silencer Bomb",
+  0x1e7: "Thunder Bomb",
+  0x1e8: "Electro Bomb",
+  0x1e9: "Wave Bomb",
+  0x1ea: "Repair Kit",
+  0x1eb: "Deluxe Kit",
+  0x1ec: "Magic Kit",
+  0x1ed: "Complete Kit",
+  0x1ee: "Gear Grease",
+  0x1ef: "Thermal Grease",
+  0x1f0: "Captain's Stripe",
+  0x1f1: "Apa Wax",
+  0x1f2: "Apo Wax",
+  0x1f3: "Speed Wax",
+  0x1f4: "Hybrid Wax",
+  0x1f5: "Heat Sensor",
+  0x1f6: "Rudder Grease",
+  0x1f7: "Machine Oil",
+  0x1f8: "Light Alloy",
+  0x1f9: "Hex Shell",
+  0x1fa: "Magic Shell",
+  0x1fb: "Gold Bullion",
+  0x1fc: "Crystal Ball",
+  0x1fd: "Magic Cannon",
+};
