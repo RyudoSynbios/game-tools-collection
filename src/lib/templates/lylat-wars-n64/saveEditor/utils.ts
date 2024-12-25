@@ -41,7 +41,10 @@ export function overrideGetRegions(
 
   const checksum = generateChecksum(itemChecksum, dataView);
 
-  if (checksum === getInt(itemChecksum.offset, "uint16", {}, dataView)) {
+  if (
+    checksum ===
+    getInt(itemChecksum.offset, "uint16", { bigEndian: true }, dataView)
+  ) {
     return ["europe_australia", "usa_japan"];
   }
 
@@ -194,14 +197,12 @@ export function generateChecksum(
   let checksum = 0x0;
 
   for (let i = item.control.offsetStart; i < item.control.offsetEnd; i += 0x1) {
-    const multiplicator = Math.pow(0x2, 0x7 - ((i + 0x1) % 0x8));
-
-    const int = getInt(i, "uint8", {}, dataView) * multiplicator;
-
-    checksum ^= int | (int >> 0x8);
+    checksum ^= getInt(i, "uint8", {}, dataView);
+    checksum <<= 0x1;
+    checksum = (checksum & 0xfe) | ((checksum >> 0x8) & 0x1);
   }
 
-  checksum = (checksum << 0x8) | 0x95;
+  checksum = (checksum & 0xff) | 0x9500;
 
   return formatChecksum(checksum, item.dataType);
 }
