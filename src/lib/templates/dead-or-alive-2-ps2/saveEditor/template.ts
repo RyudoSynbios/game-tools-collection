@@ -35,7 +35,7 @@ const template: GameJson = {
               flex: true,
               items: [
                 {
-                  name: "Play Time",
+                  name: "Playtime",
                   type: "group",
                   mode: "time",
                   items: [
@@ -862,7 +862,7 @@ const template: GameJson = {
                                   dataType: "uint32",
                                 },
                                 {
-                                  name: "Play Time",
+                                  name: "Playtime",
                                   type: "group",
                                   mode: "chrono",
                                   items: [
@@ -1079,7 +1079,7 @@ const template: GameJson = {
                                   dataType: "uint32",
                                 },
                                 {
-                                  name: "Play Time",
+                                  name: "Playtime",
                                   type: "group",
                                   mode: "chrono",
                                   items: [
@@ -1154,7 +1154,7 @@ const template: GameJson = {
                               dataType: "uint32",
                             },
                             {
-                              name: "Play Time",
+                              name: "Playtime",
                               type: "group",
                               mode: "chrono",
                               items: [
@@ -1236,7 +1236,7 @@ const template: GameJson = {
                                   dataType: "uint32",
                                 },
                                 {
-                                  name: "Play Time",
+                                  name: "Playtime",
                                   type: "group",
                                   mode: "chrono",
                                   items: [
@@ -1311,7 +1311,7 @@ const template: GameJson = {
                               dataType: "uint32",
                             },
                             {
-                              name: "Play Time",
+                              name: "Playtime",
                               type: "group",
                               mode: "chrono",
                               items: [
@@ -1384,7 +1384,7 @@ const template: GameJson = {
                               dataType: "uint32",
                             },
                             {
-                              name: "Play Time",
+                              name: "Playtime",
                               type: "group",
                               mode: "chrono",
                               items: [
@@ -1466,7 +1466,7 @@ const template: GameJson = {
                                   dataType: "uint32",
                                 },
                                 {
-                                  name: "Play Time",
+                                  name: "Playtime",
                                   type: "group",
                                   mode: "chrono",
                                   items: [
@@ -2142,7 +2142,7 @@ const template: GameJson = {
                                   autocomplete: true,
                                 },
                                 {
-                                  name: "Play Time",
+                                  name: "Playtime",
                                   type: "group",
                                   mode: "chrono",
                                   items: [
@@ -2226,7 +2226,7 @@ const template: GameJson = {
                                   autocomplete: true,
                                 },
                                 {
-                                  name: "Play Time",
+                                  name: "Playtime",
                                   type: "group",
                                   mode: "chrono",
                                   items: [
@@ -2311,7 +2311,7 @@ const template: GameJson = {
                                   disabled: true,
                                 },
                                 {
-                                  name: "Play Time",
+                                  name: "Playtime",
                                   type: "group",
                                   mode: "chrono",
                                   items: [

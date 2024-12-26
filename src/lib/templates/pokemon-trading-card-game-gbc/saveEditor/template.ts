@@ -59,7 +59,7 @@ const template: GameJson = {
                           test: true,
                         },
                         {
-                          name: "Play Time",
+                          name: "Playtime",
                           type: "group",
                           mode: "time",
                           items: [
@@ -88,7 +88,7 @@ const template: GameJson = {
                           ],
                         },
                         {
-                          name: "Play Time (Milliseconds)",
+                          name: "Playtime (Milliseconds)",
                           offset: 0x580a,
                           type: "variable",
                           dataType: "uint8",

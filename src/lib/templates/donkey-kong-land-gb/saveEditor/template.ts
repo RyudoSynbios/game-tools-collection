@@ -72,7 +72,7 @@ const template: GameJson = {
                       autocomplete: true,
                     },
                     {
-                      name: "Play Time",
+                      name: "Playtime",
                       type: "group",
                       mode: "time",
                       items: [

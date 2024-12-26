@@ -111,7 +111,7 @@ const template: GameJson = {
                           disabled: true,
                         },
                         {
-                          name: "Play Time",
+                          name: "Playtime",
                           type: "group",
                           mode: "time",
                           items: [
@@ -183,7 +183,7 @@ const template: GameJson = {
                           disabled: true,
                         },
                         {
-                          name: "Emblem Results Play Time",
+                          name: "Emblem Results Playtime",
                           type: "group",
                           mode: "time",
                           items: [

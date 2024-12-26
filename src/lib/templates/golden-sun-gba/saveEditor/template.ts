@@ -90,12 +90,12 @@ const template: GameJson = {
                               test: true,
                             },
                             {
-                              name: "Play Time",
+                              name: "Playtime",
                               type: "group",
                               mode: "time",
                               items: [
                                 {
-                                  id: "playTime-%index%",
+                                  id: "playtime-%index%",
                                   offset: 0x254,
                                   type: "variable",
                                   dataType: "uint32",
@@ -108,7 +108,7 @@ const template: GameJson = {
                                   max: 999,
                                 },
                                 {
-                                  id: "playTime-%index%",
+                                  id: "playtime-%index%",
                                   offset: 0x254,
                                   type: "variable",
                                   dataType: "uint32",
@@ -125,7 +125,7 @@ const template: GameJson = {
                                   max: 59,
                                 },
                                 {
-                                  id: "playTime-%index%",
+                                  id: "playtime-%index%",
                                   offset: 0x254,
                                   type: "variable",
                                   dataType: "uint32",
@@ -173,7 +173,7 @@ const template: GameJson = {
                           hidden: true,
                           items: [
                             {
-                              name: "Play Time (Save Preview)",
+                              name: "Playtime (Save Preview)",
                               type: "group",
                               mode: "time",
                               hidden: true,
@@ -225,13 +225,13 @@ const template: GameJson = {
                               ],
                             },
                             {
-                              name: "Play Time (2nd Section)",
+                              name: "Playtime (2nd Section)",
                               type: "group",
                               mode: "time",
                               hidden: true,
                               items: [
                                 {
-                                  id: "playTimeSection2-%index%",
+                                  id: "playtimeSection2-%index%",
                                   offset: 0x110,
                                   type: "variable",
                                   dataType: "uint32",
@@ -244,7 +244,7 @@ const template: GameJson = {
                                   max: 999,
                                 },
                                 {
-                                  id: "playTimeSection2-%index%",
+                                  id: "playtimeSection2-%index%",
                                   offset: 0x110,
                                   type: "variable",
                                   dataType: "uint32",
@@ -261,7 +261,7 @@ const template: GameJson = {
                                   max: 59,
                                 },
                                 {
-                                  id: "playTimeSection2-%index%",
+                                  id: "playtimeSection2-%index%",
                                   offset: 0x110,
                                   type: "variable",
                                   dataType: "uint32",

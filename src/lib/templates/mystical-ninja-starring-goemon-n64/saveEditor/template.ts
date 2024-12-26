@@ -93,7 +93,7 @@ const template: GameJson = {
                   flex: true,
                   items: [
                     {
-                      name: "Play Time",
+                      name: "Playtime",
                       type: "group",
                       mode: "time",
                       items: [

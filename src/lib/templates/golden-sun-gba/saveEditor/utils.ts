@@ -26,7 +26,7 @@ export function overrideShift(item: Item, shifts: number[]): number[] {
   if (
     "id" in item &&
     (item.id === "checksumSection2" ||
-      item.id?.match(/playTimeSection2-/) ||
+      item.id?.match(/playtimeSection2-/) ||
       item.id?.match(/position-/))
   ) {
     const itemInt = item as ItemInt;
@@ -35,7 +35,7 @@ export function overrideShift(item: Item, shifts: number[]): number[] {
 
     if (item.id === "checksumSection2") {
       offset += itemInt.offset - 0x1;
-    } else if (item.id.match(/playTimeSection2-/)) {
+    } else if (item.id.match(/playtimeSection2-/)) {
       offset += itemInt.offset - 0x109;
     } else if (item.id.match(/position-x/)) {
       offset += itemInt.offset - 0x137;
@@ -184,19 +184,19 @@ export function overrideSetInt(item: Item, value: string): boolean {
 }
 
 export function afterSetInt(item: Item, flag: ItemBitflag): void {
-  if ("id" in item && item.id?.match(/playTime-/)) {
+  if ("id" in item && item.id?.match(/playtime-/)) {
     const itemInt = item as ItemInt;
 
     const int = getInt(itemInt.offset, "uint32");
 
     setInt(itemInt.offset - 0x234, "uint32", int);
 
-    const playTimeSection2 = getItem(
-      item.id.replace("playTime-", "playTimeSection2-"),
+    const playtimeSection2 = getItem(
+      item.id.replace("playtime-", "playtimeSection2-"),
     ) as ItemInt;
 
-    if (playTimeSection2) {
-      setInt(playTimeSection2.offset, "uint32", int);
+    if (playtimeSection2) {
+      setInt(playtimeSection2.offset, "uint32", int);
     }
   } else if ("id" in item && item.id === "gold") {
     const itemInt = item as ItemInt;

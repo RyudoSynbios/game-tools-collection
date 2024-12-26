@@ -80,12 +80,12 @@ const template: GameJson = {
                               resource: "difficulties",
                             },
                             {
-                              name: "Play Time",
+                              name: "Playtime",
                               type: "group",
                               mode: "time",
                               items: [
                                 {
-                                  id: "playTime-%index%",
+                                  id: "playtime-%index%",
                                   offset: 0x254,
                                   type: "variable",
                                   dataType: "uint32",
@@ -98,7 +98,7 @@ const template: GameJson = {
                                   max: 999,
                                 },
                                 {
-                                  id: "playTime-%index%",
+                                  id: "playtime-%index%",
                                   offset: 0x254,
                                   type: "variable",
                                   dataType: "uint32",
@@ -115,7 +115,7 @@ const template: GameJson = {
                                   max: 59,
                                 },
                                 {
-                                  id: "playTime-%index%",
+                                  id: "playtime-%index%",
                                   offset: 0x254,
                                   type: "variable",
                                   dataType: "uint32",
@@ -163,7 +163,7 @@ const template: GameJson = {
                           hidden: true,
                           items: [
                             {
-                              name: "Play Time (Save Preview)",
+                              name: "Playtime (Save Preview)",
                               type: "group",
                               mode: "time",
                               hidden: true,
@@ -215,7 +215,7 @@ const template: GameJson = {
                               ],
                             },
                             {
-                              name: "Play Time (2nd Section)",
+                              name: "Playtime (2nd Section)",
                               type: "group",
                               mode: "time",
                               hidden: true,

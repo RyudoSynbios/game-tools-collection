@@ -39,7 +39,7 @@ const template: GameJson = {
                   min: 0,
                 },
                 {
-                  name: "Play Time",
+                  name: "Playtime",
                   type: "group",
                   mode: "time",
                   items: [

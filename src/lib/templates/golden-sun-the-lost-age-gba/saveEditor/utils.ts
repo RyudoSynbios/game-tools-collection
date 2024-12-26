@@ -145,7 +145,7 @@ export function overrideSetInt(item: Item, value: string): boolean {
 }
 
 export function afterSetInt(item: Item, flag: ItemBitflag): void {
-  if ("id" in item && item.id?.match(/playTime-/)) {
+  if ("id" in item && item.id?.match(/playtime-/)) {
     const itemInt = item as ItemInt;
 
     const int = getInt(itemInt.offset, "uint32");

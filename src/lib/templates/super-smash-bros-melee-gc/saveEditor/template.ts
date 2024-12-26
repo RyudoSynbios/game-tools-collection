@@ -1504,7 +1504,7 @@ const template: GameJson = {
                                   flex: true,
                                   items: [
                                     {
-                                      name: "VS. Play Time",
+                                      name: "VS. Playtime",
                                       type: "group",
                                       mode: "time",
                                       items: [
@@ -2085,7 +2085,7 @@ const template: GameJson = {
                           ],
                         },
                         {
-                          name: "VS. Play Time",
+                          name: "VS. Playtime",
                           type: "group",
                           mode: "time",
                           items: [
@@ -2124,7 +2124,7 @@ const template: GameJson = {
                           ],
                         },
                         {
-                          name: "Combined VS. Play Time",
+                          name: "Combined VS. Playtime",
                           type: "group",
                           mode: "time",
                           items: [
@@ -2306,7 +2306,7 @@ const template: GameJson = {
                           bigEndian: true,
                         },
                         {
-                          name: "Combined VS. Play Time",
+                          name: "Combined VS. Playtime",
                           offset: 0x2c,
                           type: "variable",
                           dataType: "uint32",

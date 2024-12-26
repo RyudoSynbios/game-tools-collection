@@ -86,7 +86,7 @@ const template: GameJson = {
                   max: 99,
                 },
                 {
-                  name: "Play Time",
+                  name: "Playtime",
                   type: "group",
                   mode: "time",
                   items: [

@@ -122,12 +122,12 @@ const template: GameJson = {
                       resource: "progressions",
                     },
                     {
-                      name: "Play Time",
+                      name: "Playtime",
                       type: "group",
                       mode: "time",
                       items: [
                         {
-                          id: "playTime",
+                          id: "playtime",
                           offset: 0x2a,
                           type: "variable",
                           dataType: "uint16",
@@ -141,7 +141,7 @@ const template: GameJson = {
                           disabled: true,
                         },
                         {
-                          id: "playTime",
+                          id: "playtime",
                           offset: 0x2a,
                           type: "variable",
                           dataType: "uint16",
@@ -159,7 +159,7 @@ const template: GameJson = {
                           disabled: true,
                         },
                         {
-                          id: "playTime",
+                          id: "playtime",
                           offset: 0x2a,
                           type: "variable",
                           dataType: "uint16",
@@ -322,7 +322,7 @@ const template: GameJson = {
                           flex: true,
                           items: [
                             {
-                              name: "Play Time",
+                              name: "Playtime",
                               type: "group",
                               mode: "time",
                               items: [
@@ -409,7 +409,7 @@ const template: GameJson = {
                                   flex: true,
                                   items: [
                                     {
-                                      name: "Play Time",
+                                      name: "Playtime",
                                       type: "group",
                                       mode: "time",
                                       items: [
@@ -681,7 +681,7 @@ const template: GameJson = {
                                   flex: true,
                                   items: [
                                     {
-                                      name: "Play Time",
+                                      name: "Playtime",
                                       type: "group",
                                       mode: "time",
                                       items: [
@@ -835,7 +835,7 @@ const template: GameJson = {
                                   flex: true,
                                   items: [
                                     {
-                                      name: "Play Time",
+                                      name: "Playtime",
                                       type: "group",
                                       mode: "time",
                                       items: [
@@ -998,7 +998,7 @@ const template: GameJson = {
                                   flex: true,
                                   items: [
                                     {
-                                      name: "Play Time",
+                                      name: "Playtime",
                                       type: "group",
                                       mode: "time",
                                       items: [
@@ -1154,7 +1154,7 @@ const template: GameJson = {
                                   flex: true,
                                   items: [
                                     {
-                                      name: "Play Time",
+                                      name: "Playtime",
                                       type: "group",
                                       mode: "time",
                                       items: [
@@ -1316,7 +1316,7 @@ const template: GameJson = {
                                   flex: true,
                                   items: [
                                     {
-                                      name: "Play Time",
+                                      name: "Playtime",
                                       type: "group",
                                       mode: "time",
                                       items: [
@@ -1480,7 +1480,7 @@ const template: GameJson = {
                                   flex: true,
                                   items: [
                                     {
-                                      name: "Play Time",
+                                      name: "Playtime",
                                       type: "group",
                                       mode: "time",
                                       items: [
@@ -1653,7 +1653,7 @@ const template: GameJson = {
                                   flex: true,
                                   items: [
                                     {
-                                      name: "Play Time",
+                                      name: "Playtime",
                                       type: "group",
                                       mode: "time",
                                       items: [
@@ -1827,7 +1827,7 @@ const template: GameJson = {
                                   flex: true,
                                   items: [
                                     {
-                                      name: "Play Time",
+                                      name: "Playtime",
                                       type: "group",
                                       mode: "time",
                                       items: [
@@ -1996,7 +1996,7 @@ const template: GameJson = {
                                   flex: true,
                                   items: [
                                     {
-                                      name: "Play Time",
+                                      name: "Playtime",
                                       type: "group",
                                       mode: "time",
                                       items: [

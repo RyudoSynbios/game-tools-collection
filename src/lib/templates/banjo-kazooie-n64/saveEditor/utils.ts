@@ -94,7 +94,7 @@ function getNotesBinary(offset: number): string {
 }
 
 export function overrideGetInt(item: Item): [boolean, number | undefined] {
-  if ("id" in item && item.id === "playTime") {
+  if ("id" in item && item.id === "playtime") {
     const itemInt = item as ItemInt;
 
     let int = 0;

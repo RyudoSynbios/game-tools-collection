@@ -81,7 +81,7 @@ const template: GameJson = {
                   test: true,
                 },
                 {
-                  name: "Play Time",
+                  name: "Playtime",
                   type: "group",
                   mode: "time",
                   items: [
