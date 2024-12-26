@@ -295,7 +295,7 @@ export function parseContainer(
     enumeration: item.enumeration,
     resource: item.resource,
     resourceOrder: item.resourceOrder,
-    indexes: item.indexes,
+    indexes: true,
     vertical: item.vertical,
     onTabChange: item.onTabChange,
     hidden: item.hidden,

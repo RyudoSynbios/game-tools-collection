@@ -122,7 +122,6 @@ const template: GameJson = {
               instanceType: "tabs",
               instances: 8,
               resource: "characterNames",
-              indexes: true,
               vertical: true,
               items: [
                 {
@@ -600,7 +599,6 @@ const template: GameJson = {
               instanceType: "tabs",
               instances: 203,
               resource: "classNames",
-              indexes: true,
               vertical: true,
               items: [
                 {
@@ -1083,7 +1081,6 @@ const template: GameJson = {
               instanceType: "tabs",
               instances: 519,
               resource: "abilityNames",
-              indexes: true,
               vertical: true,
               items: [
                 {
@@ -1213,7 +1210,6 @@ const template: GameJson = {
               instanceType: "tabs",
               instances: 269,
               resource: "itemNames",
-              indexes: true,
               vertical: true,
               items: [
                 {
@@ -1476,7 +1472,6 @@ const template: GameJson = {
               instanceType: "tabs",
               instances: 80,
               resource: "djinniNames",
-              indexes: true,
               vertical: true,
               items: [
                 {
@@ -1578,7 +1573,6 @@ const template: GameJson = {
               instanceType: "tabs",
               instances: 16,
               resource: "summonNames",
-              indexes: true,
               vertical: true,
               items: [
                 {
@@ -1667,7 +1661,6 @@ const template: GameJson = {
               instanceType: "tabs",
               instances: 164,
               resource: "enemyNames",
-              indexes: true,
               vertical: true,
               items: [
                 {
@@ -1990,7 +1983,6 @@ const template: GameJson = {
               instanceType: "tabs",
               instances: 380,
               resource: "enemyGroupNames",
-              indexes: true,
               vertical: true,
               items: [
                 {
@@ -2150,7 +2142,6 @@ const template: GameJson = {
               instanceType: "tabs",
               instances: 35,
               resource: "shopNames",
-              indexes: true,
               vertical: true,
               items: [
                 {
@@ -2452,7 +2443,6 @@ const template: GameJson = {
               instanceType: "tabs",
               instances: 512,
               enumeration: "Sprite %d",
-              indexes: true,
               vertical: true,
               flex: true,
               items: [
@@ -2522,7 +2512,6 @@ const template: GameJson = {
               instanceType: "tabs",
               instances: 201,
               resource: "mapNames",
-              indexes: true,
               vertical: true,
               flex: true,
               items: [

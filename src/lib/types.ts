@@ -225,7 +225,6 @@ export interface ItemContainer {
   appendSubinstance?: ItemTab[];
   resource?: string;
   resourceOrder?: boolean;
-  indexes?: boolean;
   vertical?: boolean;
   onTabChange?: string;
   flex?: boolean;
