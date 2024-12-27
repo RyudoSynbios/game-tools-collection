@@ -94,7 +94,13 @@
 
       if (
         $gameTemplate.validator.fileNames &&
-        !$gameTemplate.validator.fileNames.includes(file.name)
+        !$gameTemplate.validator.fileNames.find((fileName) => {
+          if (typeof fileName === "object") {
+            return file.name.match(fileName);
+          } else if (typeof fileName === "string") {
+            return fileName === file.name;
+          }
+        })
       ) {
         regions = [];
       }

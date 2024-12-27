@@ -120,7 +120,7 @@ export interface Game {
 
 export interface GameJson {
   validator: {
-    fileNames?: string[];
+    fileNames?: (RegExp | string)[];
     regions: { [key: string]: RegionValidator | boolean };
     text: string;
     hint?: string;
