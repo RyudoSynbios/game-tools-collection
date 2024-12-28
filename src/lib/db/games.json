@@ -184,6 +184,17 @@
     }
   },
   {
+    "id": "final-fantasy-vii-remake-windows",
+    "name": "Final Fantasy VII Remake",
+    "consoleId": "windows",
+    "tools": {
+      "saveEditor": {
+        "createdAt": "2024-12-xx",
+        "regions": ["🏳️"]
+      }
+    }
+  },
+  {
     "id": "final-fight-one-gba",
     "name": "Final Fight One",
     "consoleId": "game-boy-advance",
