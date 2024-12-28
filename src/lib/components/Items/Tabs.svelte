@@ -228,7 +228,7 @@
           on:click={() => handleTabClick(index)}
         >
           {#if item.indexes && $isDebug && $debugTools.showTabIndexes}
-            <span class="gtc-tab-index">{index.toHex()}</span>
+            <span class="gtc-tab-index">{tab.index.toHex()}</span>
           {/if}
           {tab.name}
           {#if tab.planned}
