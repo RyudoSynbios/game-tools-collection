@@ -2795,7 +2795,7 @@ const template: GameJson = {
         options: [0x8622d, 0x8610b],
       },
       {
-        name: "Pyrynn",
+        name: "Temple of Pyrynn",
         options: [0x6d670c, 0x6d640d],
       },
       {
