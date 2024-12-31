@@ -2017,6 +2017,396 @@ const template: GameJson = {
                   ],
                 },
                 {
+                  name: "Treasures",
+                  items: [
+                    {
+                      type: "tabs",
+                      vertical: true,
+                      items: [
+                        {
+                          name: "Valuan Battleship Room",
+                          items: [
+                            {
+                              type: "bitflags",
+                              flags: [
+                                { offset: 0x38f7, bit: 2, label: "Sacri Crystal x1" },
+                                { offset: 0x38f7, bit: 3, label: "Sacri Crystal x2" },
+                                { offset: 0x38f7, bit: 4, label: "50 gold" },
+                                { offset: 0x38f7, bit: 5, label: "Magic Droplet x2" },
+                              ],
+                            },
+                          ],
+                        },
+                        {
+                          name: "Pirate Isle",
+                          items: [
+                            {
+                              type: "bitflags",
+                              flags: [
+                                { offset: 0x38f3, bit: 0, label: "Sacri Crystal x3" },
+                                { offset: 0x38f3, bit: 1, label: "Sacri Crystal x3" },
+                                { offset: 0x38f3, bit: 2, label: "Magic Droplet x2" },
+                                { offset: 0x38f3, bit: 3, label: "150 gold" },
+                                { offset: 0x38f3, bit: 4, label: "Moonberry x1" },
+                                { offset: 0x38f3, bit: 5, label: "200 gold" },
+                              ],
+                            },
+                          ],
+                        },
+                        {
+                          name: "Shrine Island",
+                          items: [
+                            {
+                              type: "bitflags",
+                              flags: [
+                                { offset: 0x38f7, bit: 6, label: "Sacri Crystal x2" },
+                                { offset: 0x38f7, bit: 7, label: "Moonberry x1" },
+                                { offset: 0x38f6, bit: 0, label: "Sacres Crystal x2" },
+                              ],
+                            },
+                          ],
+                        },
+                        {
+                          name: "Sailors' Island",
+                          items: [
+                            {
+                              type: "bitflags",
+                              flags: [
+                                { offset: 0x38f3, bit: 6, label: "Repair Kit x3" },
+                              ],
+                            },
+                          ],
+                        },
+                        {
+                          name: "Lower City Valua",
+                          items: [
+                            {
+                              type: "bitflags",
+                              flags: [
+                                { offset: 0x38f3, bit: 7, label: "Sacres Crystal x2" },
+                                { offset: 0x38f2, bit: 0, label: "Moonberry x1" },
+                              ],
+                            },
+                          ],
+                        },
+                        {
+                          name: "Catacombs",
+                          items: [
+                            {
+                              type: "bitflags",
+                              flags: [
+                                { offset: 0x38f6, bit: 1, label: "Pyri Box x1" },
+                                { offset: 0x38f6, bit: 2, label: "Heavy Armor x1" },
+                                { offset: 0x38f6, bit: 3, label: "Curia Crystal x3" },
+                                { offset: 0x38f6, bit: 4, label: "Assassin Blade x1" },
+                                { offset: 0x38fd, bit: 3, label: "Sacri Crystal x4" },
+                                { offset: 0x38fd, bit: 4, label: "Magic Droplet x4" },
+                              ],
+                            },
+                          ],
+                        },
+                        {
+                          name: "Maramba",
+                          items: [
+                            {
+                              type: "bitflags",
+                              flags: [
+                                { offset: 0x38f2, bit: 1, label: "Magic Droplet x3" },
+                                { offset: 0x38f2, bit: 2, label: "Slipara Box x1" },
+                                { offset: 0x38f2, bit: 3, label: "300 gold" },
+                                { offset: 0x38f2, bit: 4, label: "Moonberry x1" },
+                                { offset: 0x38f2, bit: 5, label: "Nasr Combat Mail x1" },
+                                { offset: 0x38f2, bit: 6, label: "Gem of Fluidity x1" },
+                                { offset: 0x38f2, bit: 7, label: "Excavation Arm x1" },
+                              ],
+                            },
+                          ],
+                        },
+                        {
+                          name: "Temple of Pyrynn",
+                          items: [
+                            {
+                              type: "bitflags",
+                              flags: [
+                                { offset: 0x38f6, bit: 5, label: "527 gold" },
+                                { offset: 0x38f6, bit: 6, label: "Ancient Robe x1" },
+                                { offset: 0x38f6, bit: 7, label: "Sacres Crystal x3" },
+                                { offset: 0x38f5, bit: 0, label: "Dancing Arc x1" },
+                                { offset: 0x38f5, bit: 1, label: "774 gold" },
+                                { offset: 0x38f5, bit: 2, label: "Moonberry x1" },
+                                { offset: 0x38f5, bit: 3, label: "Magic Droplet x5" },
+                                { offset: 0x38f5, bit: 4, label: "Rune of Ill Omen x1" },
+                              ],
+                            },
+                          ],
+                        },
+                        {
+                          name: "Horteka",
+                          items: [
+                            {
+                              type: "bitflags",
+                              flags: [
+                                { offset: 0x38f1, bit: 0, label: "Moonberry x1" },
+                                { offset: 0x38f1, bit: 1, label: "Sacri Box x1" },
+                                { offset: 0x38f1, bit: 2, label: "Paranta Seed x1" },
+                                { offset: 0x38f1, bit: 3, label: "Sacri Crystal x25" },
+                              ],
+                            },
+                          ],
+                        },
+                        {
+                          name: "Moon Stone Mtn.",
+                          items: [
+                            {
+                              type: "bitflags",
+                              flags: [
+                                { offset: 0x38f5, bit: 5, label: "800 gold" },
+                                { offset: 0x38f5, bit: 6, label: "De Loco Mail x1" },
+                                { offset: 0x38f5, bit: 7, label: "Moonberry x1" },
+                                { offset: 0x38f4, bit: 0, label: "Zaal Seed x1" },
+                                { offset: 0x38f4, bit: 1, label: '3" Blaster x1' },
+                                { offset: 0x38f4, bit: 2, label: "De Loco Drill x1" },
+                                { offset: 0x38f4, bit: 3, label: "Curia Crystal x4" },
+                                { offset: 0x38f4, bit: 4, label: "Glyph of Might x4" },
+                                { offset: 0x38f4, bit: 5, label: "Healing Salve x2" },
+                                { offset: 0x38f4, bit: 6, label: "Glyph of Speed x4" },
+                              ],
+                            },
+                          ],
+                        },
+                        {
+                          name: "Rixis",
+                          items: [
+                            {
+                              type: "bitflags",
+                              flags: [
+                                { offset: 0x38f4, bit: 7, label: "Ruin Arm x1" },
+                                { offset: 0x38fb, bit: 0, label: "Golden Mask x1" },
+                                { offset: 0x38fb, bit: 1, label: "Light Coat x1" },
+                                { offset: 0x38fb, bit: 2, label: "Moonberry x1" },
+                                { offset: 0x38fb, bit: 3, label: "Icyl Seed x1" },
+                                { offset: 0x38fb, bit: 4, label: "1186 gold" },
+                                { offset: 0x38fb, bit: 5, label: "Sacrulen Crystal x2" },
+                                { offset: 0x38fb, bit: 6, label: "Stonecutter x1" },
+                                { offset: 0x38fb, bit: 7, label: "Risan Crystal x3" },
+                              ],
+                            },
+                          ],
+                        },
+                        {
+                          name: "Deserted Island",
+                          items: [
+                            {
+                              type: "bitflags",
+                              flags: [
+                                { offset: 0x38f1, bit: 6, label: "1827 gold" },
+                                { offset: 0x38f1, bit: 7, label: "Moonberry x1" },
+                              ],
+                            },
+                          ],
+                        },
+                        {
+                          name: "Nasrad",
+                          items: [
+                            {
+                              type: "bitflags",
+                              flags: [
+                                { offset: 0x38f1, bit: 4, label: "Sylph Seed x1" },
+                                { offset: 0x38f1, bit: 5, label: "Moonberry x1" },
+                              ],
+                            },
+                          ],
+                        },
+                        {
+                          name: "Daccat's Island",
+                          items: [
+                            {
+                              type: "bitflags",
+                              flags: [
+                                { offset: 0x38fa, bit: 0, label: "Sacrulen Crystal x2" },
+                                { offset: 0x38fa, bit: 1, label: "Skywing x1" },
+                                { offset: 0x38fa, bit: 2, label: "2001 gold" },
+                                { offset: 0x38fa, bit: 3, label: "Soul Crystal x1" },
+                                { offset: 0x38fa, bit: 4, label: "Daccat's Armor x1" },
+                                { offset: 0x38fa, bit: 5, label: "Magic Droplet x4" },
+                                { offset: 0x38fa, bit: 6, label: "Maiden's Armor x2" },
+                                { offset: 0x38fa, bit: 7, label: "Magic Dew x1" },
+                                { offset: 0x38f9, bit: 0, label: "Moonberry x1" },
+                                { offset: 0x38f9, bit: 1, label: "Moonberry x1" },
+                                { offset: 0x38f9, bit: 2, label: "Risan Crystal x2" },
+                                { offset: 0x38f9, bit: 3, label: "Electrum Box x1" },
+                                { offset: 0x38f9, bit: 4, label: "Vidal Seed x1" },
+                              ],
+                            },
+                          ],
+                        },
+                        {
+                          name: "Grand Fortress",
+                          items: [
+                            {
+                              type: "bitflags",
+                              flags: [
+                                { offset: 0x38f9, bit: 5, label: "Unholy Dagger x1" },
+                                { offset: 0x38f9, bit: 6, label: "Moonberry x1" },
+                              ],
+                            },
+                          ],
+                        },
+                        {
+                          name: "Esparanza",
+                          items: [
+                            {
+                              type: "bitflags",
+                              flags: [
+                                { offset: 0x38f0, bit: 0, label: "Moonberry x1" },
+                                { offset: 0x38f0, bit: 1, label: "Valuan Uniform x3" },
+                                { offset: 0x38f0, bit: 2, label: "2248 gold" },
+                              ],
+                            },
+                          ],
+                        },
+                        {
+                          name: "Dark Rift",
+                          items: [
+                            {
+                              type: "bitflags",
+                              flags: [
+                                { offset: 0x38f8, bit: 1, label: "Dream Cutlass x1" },
+                                { offset: 0x38f8, bit: 2, label: "Magus Seed x1" },
+                                { offset: 0x38f8, bit: 3, label: "Moss Armor x1" },
+                                { offset: 0x38f8, bit: 4, label: "Moonberry x1" },
+                                { offset: 0x38f8, bit: 5, label: "Chalice of Blood x1" },
+                                { offset: 0x38f8, bit: 6, label: "Aura of Valor x1" },
+                                { offset: 0x38f8, bit: 7, label: "2731 gold" },
+                                { offset: 0x38ff, bit: 0, label: "Moonberry x1" },
+                                { offset: 0x38fd, bit: 6, label: "Sacrum Crystal x3" },
+                              ],
+                            },
+                          ],
+                        },
+                        {
+                          name: "Yafutoma",
+                          items: [
+                            {
+                              type: "bitflags",
+                              flags: [
+                                { offset: 0x38f0, bit: 3, label: "Moonberry x1" },
+                                { offset: 0x38f0, bit: 4, label: "3000 gold" },
+                                { offset: 0x38fd, bit: 5, label: "Sacrulen Crystal x4" },
+                              ],
+                            },
+                          ],
+                        },
+                        {
+                          name: "Mount Kazai",
+                          items: [
+                            {
+                              type: "bitflags",
+                              flags: [
+                                { offset: 0x38f9, bit: 7, label: "Windsong Orb x1" },
+                                { offset: 0x38f8, bit: 0, label: "Moonberry x1" },
+                              ],
+                            },
+                          ],
+                        },
+                        {
+                          name: "Ruins of Ice",
+                          items: [
+                            {
+                              type: "bitflags",
+                              flags: [
+                                { offset: 0x38ff, bit: 1, label: "Ice Splitter x1" },
+                                { offset: 0x38ff, bit: 2, label: "Winter Orb x1" },
+                                { offset: 0x38ff, bit: 3, label: "Frostblade x1" },
+                                { offset: 0x38ff, bit: 4, label: "Moonberry x1" },
+                                { offset: 0x38ff, bit: 5, label: "Moonberry x1" },
+                              ],
+                            },
+                          ],
+                        },
+                        {
+                          name: "Maw of Tartas",
+                          items: [
+                            {
+                              type: "bitflags",
+                              flags: [
+                                { offset: 0x38fd, bit: 1, label: "Dexus Seed x1" },
+                                { offset: 0x38fd, bit: 2, label: "Moonberry x1" },
+                              ],
+                            },
+                          ],
+                        },
+                        {
+                          name: "Dangral Island",
+                          items: [
+                            {
+                              type: "bitflags",
+                              flags: [
+                                { offset: 0x38ff, bit: 7, label: "4000 gold" },
+                                { offset: 0x38fe, bit: 0, label: "Moonberry x1" },
+                                { offset: 0x38fe, bit: 1, label: "Sacrum Crystal x2" },
+                                { offset: 0x38fe, bit: 3, label: "Imperial Blade x1" },
+                              ],
+                            },
+                          ],
+                        },
+                        {
+                          name: "Great Silver Shrine",
+                          items: [
+                            {
+                              type: "bitflags",
+                              flags: [
+                                { offset: 0x38f0, bit: 5, label: "Silver Armor x1" },
+                                { offset: 0x38f0, bit: 6, label: "Moonberry x1" },
+                                { offset: 0x38f0, bit: 7, label: "Moonberry x1" },
+                                { offset: 0x38f7, bit: 0, label: "Silver Armor x1" },
+                              ],
+                            },
+                          ],
+                        },
+                        {
+                          name: "Galcian's Ship",
+                          items: [
+                            {
+                              type: "bitflags",
+                              flags: [
+                                { offset: 0x38ff, bit: 6, label: "Magic Dew x2" },
+                                { offset: 0x38fe, bit: 2, label: "X Cannon x1" },
+                                { offset: 0x38fe, bit: 4, label: "Sacrulen Crystal x3" },
+                                { offset: 0x38fe, bit: 5, label: "Moonberry x1" },
+                              ],
+                            },
+                          ],
+                        },
+                        {
+                          name: "Soltis",
+                          items: [
+                            {
+                              type: "bitflags",
+                              flags: [
+                                { offset: 0x38fe, bit: 6, label: "Orb of Serenity x1" },
+                                { offset: 0x38fe, bit: 7, label: "Moonberry x1" },
+                                { offset: 0x38fd, bit: 0, label: "Moonberry x1" },
+                              ],
+                            },
+                          ],
+                        },
+                        {
+                          name: "Delphinus",
+                          items: [
+                            {
+                              type: "bitflags",
+                              flags: [
+                                { offset: 0x38f7, bit: 1, label: "Moonberry x1" },
+                              ],
+                            },
+                          ],
+                        },
+                      ],
+                    },
+                  ],
+                },
+                {
                   name: "Cupil",
                   items: [
                     {
@@ -2452,10 +2842,6 @@ const template: GameJson = {
                       type: "bitflags",
                       flags: [
                         { offset: 0x37f3, bit: 5, label: "Valuan Battleship Room: Antonio defeated" },
-                        { offset: 0x38f7, bit: 2, label: "Valuan Battleship Room: Chest (Sacri Crystal x1)" },
-                        { offset: 0x38f7, bit: 3, label: "Valuan Battleship Room: Chest (Sacri Crystal x2)" },
-                        { offset: 0x38f7, bit: 4, label: "Valuan Battleship Room: Chest (50 gold)" },
-                        { offset: 0x38f7, bit: 5, label: "Valuan Battleship Room: Chest (Magic Droplet x2)" },
                       ],
                     },
                     {
