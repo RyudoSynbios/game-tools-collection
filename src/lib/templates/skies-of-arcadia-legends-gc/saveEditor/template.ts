@@ -1705,7 +1705,7 @@ const template: GameJson = {
                         { offset: 0x397b, bit: 7, label: "Iron Star" },
                         { offset: 0x3972, bit: 4, label: "Alupas" },
                         { offset: 0x3972, bit: 3, label: "Observatory" },
-                        { offset: 0x3972, bit: 0, label: "ncing Lights" },
+                        { offset: 0x3972, bit: 0, label: "Dancing Lights" },
                         { offset: 0x397b, bit: 3, label: "The Mother Tree" },
                         { offset: 0x3974, bit: 7, label: "The Ghost Ship" },
                         { offset: 0x3975, bit: 1, label: "Flutterflies" },
