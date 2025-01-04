@@ -211,41 +211,46 @@
 
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
-<div
-  class="gtc-tabs"
-  class:gtc-tabs-vertical={item.vertical}
-  bind:this={rootEl}
->
-  <ul bind:this={ulEl} on:click={handleFocusOn}>
-    {#each tabs as tab, index}
-      {#if !tab.hidden || $isDebug}
-        <li
-          class="gtc-tab"
-          class:gtc-tab-debug={tab.hidden}
-          class:gtc-tab-disabled={tab.disabled}
-          class:gtc-tab-highlight={index === selectedTab}
-          title={tab.planned ? "This feature is not yet available" : ""}
-          on:click={() => handleTabClick(index)}
-        >
-          {#if item.indexes && $isDebug && $debugTools.showTabIndexes}
-            <span class="gtc-tab-index">{tab.index.toHex()}</span>
-          {/if}
-          {tab.name}
-          {#if tab.planned}
-            <AccessTimeIcon />
-          {/if}
-        </li>
+{#if !item.hidden || $isDebug}
+  <div
+    class="gtc-tabs"
+    class:gtc-tabs-vertical={item.vertical}
+    bind:this={rootEl}
+  >
+    <ul bind:this={ulEl} on:click={handleFocusOn}>
+      {#each tabs as tab, index}
+        {#if !tab.hidden || $isDebug}
+          <li
+            class="gtc-tab"
+            class:gtc-tab-debug={item.hidden || tab.hidden}
+            class:gtc-tab-disabled={tab.disabled}
+            class:gtc-tab-highlight={index === selectedTab}
+            title={tab.planned ? "This feature is not yet available" : ""}
+            on:click={() => handleTabClick(index)}
+          >
+            {#if item.indexes && $isDebug && $debugTools.showTabIndexes}
+              <span class="gtc-tab-index">{tab.index.toHex()}</span>
+            {/if}
+            {tab.name}
+            {#if tab.planned}
+              <AccessTimeIcon />
+            {/if}
+          </li>
+        {/if}
+      {/each}
+    </ul>
+    <div class="gtc-tabs-content">
+      {#if !tabs[selectedTab].disabled}
+        <Content
+          items={tabs[selectedTab].items}
+          flex={tabs[selectedTab].flex}
+        />
+      {:else}
+        <p>Content is disabled</p>
       {/if}
-    {/each}
-  </ul>
-  <div class="gtc-tabs-content">
-    {#if !tabs[selectedTab].disabled}
-      <Content items={tabs[selectedTab].items} flex={tabs[selectedTab].flex} />
-    {:else}
-      <p>Content is disabled</p>
-    {/if}
+    </div>
   </div>
-</div>
+{/if}
 
 <style lang="postcss">
   .gtc-tabs {
