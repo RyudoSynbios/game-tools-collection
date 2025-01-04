@@ -164,11 +164,9 @@ export function afterSetInt(item: Item, flag: ItemBitflag): void {
 
     setInt(offset, "uint8", int);
   } else if ("id" in item && item.id?.match(/costumes-/)) {
-    const ItemBitflags = item as ItemBitflags;
+    const itemBitflags = item as ItemBitflags;
 
-    const index = ItemBitflags.flags.findIndex(
-      (item) => item.offset === flag.offset,
-    );
+    const index = itemBitflags.flags.findIndex((f) => f.offset === flag.offset);
 
     if (index > 0) {
       const isChecked = Boolean(getInt(flag.offset, "bit", { bit: flag.bit }));
