@@ -50,11 +50,17 @@ export function parseItem(
   item: Item,
   name = "",
 ): void {
+  let dataView = "main";
+
+  if ("dataViewAltKey" in item && item.dataViewAltKey) {
+    dataView = item.dataViewAltKey;
+  }
+
   if (item.type === "bitflags") {
     item.flags.forEach((flag) => {
       if ("offset" in flag) {
         addItem(
-          "main",
+          dataView,
           highlightedOffsets,
           flag.offset,
           `${item.name || ""} [${flag.bit}]: ${flag.label || name}`,
@@ -76,12 +82,6 @@ export function parseItem(
       }
 
       for (let i = 0; i < dataTypeLength; i += 1) {
-        let dataView = "main";
-
-        if ("dataViewAltKey" in item && item.dataViewAltKey) {
-          dataView = item.dataViewAltKey;
-        }
-
         const isPartial =
           item.dataType === "lower4" || item.dataType === "upper4";
 
