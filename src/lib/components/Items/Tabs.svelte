@@ -32,7 +32,7 @@
     const componentId = item.id || generateIdFromArray(tabs, "name");
 
     if (componentId !== previousId) {
-      selectedTab = 0;
+      selectedTab = item.defaultIndex || 0;
 
       checkTab();
     }

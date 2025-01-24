@@ -296,6 +296,7 @@ export function parseContainer(
     resource: item.resource,
     resourceOrder: item.resourceOrder,
     indexes: true,
+    defaultIndex: item.defaultIndex,
     vertical: item.vertical,
     onTabChange: item.onTabChange,
     hidden: item.hidden,
