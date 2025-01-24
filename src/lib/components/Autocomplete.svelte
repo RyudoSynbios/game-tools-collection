@@ -322,7 +322,12 @@
         {#each filteredGroupOptions as group}
           <li class="gtc-autocomplete-dropdown-group">
             {#if group.name}
-              <div class="gtc-autocomplete-dropdownlabel">{group.name}</div>
+              <div
+                class="gtc-autocomplete-dropdownlabel"
+                on:click|stopPropagation
+              >
+                {group.name}
+              </div>
             {/if}
             <ul>
               {#each group.options as option}
