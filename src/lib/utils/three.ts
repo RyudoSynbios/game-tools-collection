@@ -1,11 +1,13 @@
 import {
   AmbientLight,
+  BackSide,
   Box3,
   BufferAttribute,
   BufferGeometry,
   Color,
   DirectionalLight,
   DoubleSide,
+  FrontSide,
   GridHelper,
   Group,
   Mesh,
@@ -15,6 +17,9 @@ import {
   NearestFilter,
   Object3D,
   PerspectiveCamera,
+  Points,
+  PointsMaterial,
+  Quaternion,
   Raycaster,
   RepeatWrapping,
   Scene,
@@ -35,6 +40,8 @@ import { isDebug } from "$lib/stores";
 import debug from "./debug";
 import { getLocalStorage, setLocalStorage } from "./format";
 
+export type Side = "front" | "back" | "double";
+
 export interface GeometryOptions {
   nonIndexed?: boolean;
   smoothAngle?: number;
@@ -43,9 +50,9 @@ export interface GeometryOptions {
 export interface MaterialOptions {
   color?: number;
   depthTest?: boolean;
-  doubleSide?: boolean;
   model?: "basic" | "lambert";
   opacity?: number;
+  side?: Side;
   texture?: {
     base64?: string;
     flipY?: boolean;
@@ -59,6 +66,13 @@ export default class Three {
   private scene: Scene;
   private renderer: WebGLRenderer;
   private camera: PerspectiveCamera;
+  private cameraSettings: {
+    fov: number;
+    near: number;
+    far: number;
+    position: [number, number, number];
+    target: [number, number, number];
+  };
   private controls: OrbitControls;
   private raycaster: Raycaster;
   private cache: { [id: string]: string };
@@ -67,17 +81,21 @@ export default class Three {
   private message: HTMLParagraphElement;
   private group: Group;
   private groupLocked: Group;
+  private fullscreen: boolean;
   private width: number;
   private height: number;
   private gridHelper: GridHelper;
+  private gridSize: number;
   private wireframe: boolean;
   private gui: GUI;
   private guiController: {
     grid: boolean;
     wireframe: boolean;
+    custom: { [key: string]: number };
     cameraFit: () => void;
     cameraReset: () => void;
-    custom: { [key: string]: number };
+    fullscreenToggle: () => void;
+    textureListCallback: () => void;
   };
   private guiCustomFolder: GUI;
   private hoveredObject: {
@@ -98,6 +116,11 @@ export default class Three {
     options?: {
       width?: number;
       height?: number;
+      camera?: {
+        position: [number, number, number];
+        target: [number, number, number];
+      };
+      gridSize?: number;
     },
   ) {
     const width = options?.width || 0;
@@ -105,14 +128,31 @@ export default class Three {
 
     this.threeEl = threeEl;
 
+    this.fullscreen = false;
+
     this.width = width;
     this.height = height;
 
     this.scene = new Scene();
     this.scene.background = new Color(0x2a3441);
 
-    this.camera = new PerspectiveCamera(40, width / height, 1, 40000);
+    this.cameraSettings = {
+      fov: 40,
+      near: 1,
+      far: 40000,
+      position: options?.camera?.position || [0, 1000, 1500],
+      target: options?.camera?.target || [0, 250, 0],
+    };
+
+    this.camera = new PerspectiveCamera(
+      this.cameraSettings.fov,
+      width / height,
+      this.cameraSettings.near,
+      this.cameraSettings.far,
+    );
     this.scene.add(this.camera);
+
+    this.gridSize = options?.gridSize || 1000;
 
     this.renderer = new WebGLRenderer({ antialias: true });
     this.renderer.setAnimationLoop(this.animate.bind(this));
@@ -162,7 +202,7 @@ export default class Three {
 
     // Grid Helper
 
-    this.gridHelper = new GridHelper(1000, 8);
+    this.gridHelper = new GridHelper(this.gridSize, 8);
 
     const lsGrid = getLocalStorage("threeGrid");
 
@@ -179,9 +219,11 @@ export default class Three {
     this.guiController = {
       grid: this.gridHelper.visible,
       wireframe: this.wireframe,
+      custom: {},
       cameraFit: this.fitCameraToScene.bind(this),
       cameraReset: this.resetCamera.bind(this),
-      custom: {},
+      fullscreenToggle: this.fullscreenToggle.bind(this),
+      textureListCallback: () => {},
     };
 
     this.gui = new GUI({
@@ -216,6 +258,15 @@ export default class Three {
     const cameraFolder = this.gui.addFolder("Camera");
     cameraFolder.add(this.guiController, "cameraFit").name("Fit to scene (F)");
     cameraFolder.add(this.guiController, "cameraReset").name("Reset (R)");
+
+    const miscellaneousFolder = this.gui.addFolder("Miscellaneous");
+    miscellaneousFolder
+      .add(this.guiController, "fullscreenToggle")
+      .name("Toggle Fullscreen");
+    miscellaneousFolder
+      .add(this.guiController, "textureListCallback")
+      .name("Texture List")
+      .hide();
 
     // Dummies
 
@@ -284,10 +335,18 @@ export default class Three {
     if (reference) {
       object.reference = reference;
 
+      const position = new Vector3();
+      const quaternion = new Quaternion();
+      const scale = new Vector3();
+
+      object.reference.getWorldPosition(position);
+      object.reference.getWorldQuaternion(quaternion);
+      object.reference.getWorldScale(scale);
+
       object.dummy.geometry = object.reference.geometry;
-      object.dummy.position.copy(object.reference.position);
-      object.dummy.rotation.copy(object.reference.rotation);
-      object.dummy.scale.copy(object.reference.scale);
+      object.dummy.position.copy(position);
+      object.dummy.quaternion.copy(quaternion);
+      object.dummy.scale.copy(scale);
       object.dummy.visible = true;
     } else {
       object.reference = null;
@@ -514,6 +573,43 @@ export default class Three {
     return mesh;
   }
 
+  public addPoints(
+    vertices: number[],
+    instanceId: string,
+    options?: {
+      id?: string;
+      group?: Group;
+    },
+  ): Points | null {
+    if (instanceId !== this.instanceId) {
+      return null;
+    }
+
+    const group = options?.group;
+
+    const geometry = new BufferGeometry();
+
+    geometry.setAttribute(
+      "position",
+      new BufferAttribute(new Float32Array(vertices), 3),
+    );
+
+    const material = new PointsMaterial({
+      size: 1,
+      sizeAttenuation: false,
+    });
+
+    const points = new Points(geometry, material);
+
+    if (group) {
+      group.add(points);
+    } else {
+      this.group.add(points);
+    }
+
+    return points;
+  }
+
   public generateGeometry(
     vertices: number[],
     indices: number[],
@@ -553,9 +649,9 @@ export default class Three {
     const color = options?.color !== undefined ? options?.color : 0xffffff;
     const depthTest =
       options?.depthTest !== undefined ? options?.depthTest : true;
-    const doubleSide = options?.doubleSide || false;
     const model = options?.model || "basic";
     const opacity = options?.opacity !== undefined ? options?.opacity : 1;
+    const side = options?.side || "front";
     const texture = {
       base64: options?.texture?.base64 || "",
       flipY:
@@ -572,8 +668,16 @@ export default class Three {
       wireframe: this.wireframe,
     };
 
-    if (doubleSide) {
-      materialParams.side = DoubleSide;
+    switch (side) {
+      case "front":
+        materialParams.side = FrontSide;
+        break;
+      case "back":
+        materialParams.side = BackSide;
+        break;
+      case "double":
+        materialParams.side = DoubleSide;
+        break;
     }
 
     if (texture.base64) {
@@ -698,23 +802,65 @@ export default class Three {
   }
 
   public resetCamera(): void {
-    this.camera.near = 1;
-    this.camera.far = 40000;
-    this.camera.position.set(0, 1000, 1500);
+    this.camera.near = this.cameraSettings.near;
+    this.camera.far = this.cameraSettings.far;
+    this.camera.position.set(...this.cameraSettings.position);
     this.camera.updateProjectionMatrix();
 
-    this.controls.target = new Vector3(0, 250, 0);
+    this.controls.target = new Vector3(...this.cameraSettings.target);
     this.controls.update();
   }
 
-  public resize(width: number, height: number): void {
-    this.width = width;
-    this.height = height;
+  public updateCameraSettings(
+    position: [number, number, number],
+    target: [number, number, number],
+  ): void {
+    this.cameraSettings.position = position;
+    this.cameraSettings.target = target;
+  }
 
-    this.camera.aspect = this.width / this.height;
-    this.camera.updateProjectionMatrix();
+  public fullscreenToggle(): void {
+    this.fullscreen = !this.fullscreen;
 
-    this.renderer.setSize(this.width, this.height);
+    if (this.fullscreen) {
+      this.threeEl.parentElement!.style.setProperty("position", "absolute");
+      this.threeEl.parentElement!.style.setProperty("top", "0");
+      this.threeEl.parentElement!.style.setProperty("right", "0");
+      this.threeEl.parentElement!.style.setProperty("bottom", "0");
+      this.threeEl.parentElement!.style.setProperty("left", "0");
+    } else {
+      this.threeEl.parentElement!.style.setProperty("position", "relative");
+      this.threeEl.parentElement!.style.setProperty("top", "inherit");
+      this.threeEl.parentElement!.style.setProperty("right", "inherit");
+      this.threeEl.parentElement!.style.setProperty("bottom", "inherit");
+      this.threeEl.parentElement!.style.setProperty("left", "inherit");
+    }
+
+    this.resize();
+  }
+
+  public resize(): void {
+    if (this.threeEl.parentElement) {
+      const bounding = this.threeEl.parentElement.getBoundingClientRect();
+
+      this.width = this.threeEl.clientWidth;
+      this.height = innerHeight - bounding.top - 32;
+
+      this.camera.aspect = this.width / this.height;
+      this.camera.updateProjectionMatrix();
+
+      this.renderer.setSize(this.width, this.height);
+    }
+  }
+
+  public setTextureListCallback(callback: (() => void) | undefined): void {
+    if (callback === undefined) {
+      this.gui.folders[2].children[1].hide();
+      this.guiController.textureListCallback = () => {};
+    } else {
+      this.gui.folders[2].children[1].show();
+      this.guiController.textureListCallback = callback;
+    }
   }
 
   private dispose(object: Object3D): void {
@@ -739,7 +885,12 @@ export default class Three {
 
   public resetGui(): void {
     this.guiController.custom = {};
-    this.guiCustomFolder.children.forEach((children) => children.destroy());
+    this.guiController.textureListCallback = () => {};
+
+    Object.values(this.guiCustomFolder.children).forEach((children) => {
+      children.destroy();
+    });
+
     this.guiCustomFolder.show(false);
   }
 

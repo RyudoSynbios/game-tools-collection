@@ -1,6 +1,14 @@
 export type Color = [number, number, number, number];
 
-export type ColorType = "ABGR555" | "BGR333" | "BGR555" | "RGBA555";
+export type ColorType =
+  | "ABGR555"
+  | "ARGB555"
+  | "BGR333"
+  | "BGR555"
+  | "RGB555"
+  | "RGB565"
+  | "RGB5A3"
+  | "RGBA555";
 
 export type ContentType =
   | "bitflags"
