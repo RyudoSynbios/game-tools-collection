@@ -1,5 +1,6 @@
 <script lang="ts">
-  import { onDestroy, onMount } from "svelte";
+  import FileSaver from "file-saver";
+  import { onMount } from "svelte";
 
   import Checkbox from "$lib/components/Checkbox.svelte";
   import Input from "$lib/components/Input.svelte";
@@ -21,7 +22,7 @@
 
   import type { DataTypeInt } from "$lib/types";
 
-  const bodyEl = document.querySelector("body") as HTMLBodyElement;
+  import Modal from "./Modal.svelte";
 
   let contentEl: HTMLDivElement;
   let tooltipEl: HTMLDivElement;
@@ -41,6 +42,7 @@
   let end = 0;
 
   let selectedDataView = $dataView;
+  let previousDataViewKey = "";
 
   if ($fileVisualizerDataViewKey !== "main") {
     selectedDataView = $dataViewAlt[$fileVisualizerDataViewKey];
@@ -142,6 +144,14 @@
     $fileVisualizerDataViewKey = value;
 
     handleGoto(0x0);
+  }
+
+  function handleExport(): void {
+    const blob = new Blob([selectedDataView], {
+      type: "application/octet-stream",
+    });
+
+    FileSaver.saveAs(blob, $fileVisualizerDataViewKey);
   }
 
   function handleGoto(value: number | undefined = undefined): void {
@@ -272,8 +282,6 @@
   }
 
   onMount(() => {
-    bodyEl.style.overflow = "hidden";
-
     if ($fileVisualizerAddress) {
       setTimeout(() => {
         handleGoto($fileVisualizerAddress);
@@ -285,14 +293,16 @@
     });
   });
 
-  onDestroy(() => {
-    bodyEl.style.overflow = "auto";
-  });
+  $: {
+    if ($fileVisualizerDataViewKey !== previousDataViewKey) {
+      rows = [...Array(Math.ceil(selectedDataView.byteLength / 0x10)).keys()];
+    }
+
+    previousDataViewKey = $fileVisualizerDataViewKey;
+  }
 
   $: {
     contentHeight, search;
-
-    rows = [...Array(Math.ceil(selectedDataView.byteLength / 0x10)).keys()];
 
     if (contentEl) {
       handleScroll();
@@ -304,8 +314,8 @@
 
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <!-- svelte-ignore a11y-no-static-element-interactions -->
-<div class="gtc-filevisualizer-backdrop" on:click={handleClose}>
-  <div class="gtc-filevisualizer" on:click|stopPropagation>
+<Modal onClose={handleClose}>
+  <div class="gtc-filevisualizer">
     <div class="gtc-filevisualizer-toolbar">
       <div class="gtc-filevisualizer-dataview">
         <Select
@@ -320,6 +330,7 @@
           ]}
           onChange={handleDataViewChange}
         />
+        <button type="button" on:click={() => handleExport()}>Export</button>
       </div>
       <div class="gtc-filevisualizer-goto">
         <Input
@@ -441,177 +452,171 @@
       {tooltip}
     </div>
   </div>
-</div>
+</Modal>
 
 <style lang="postcss">
-  .gtc-filevisualizer-backdrop {
-    @apply fixed inset-0 flex items-center justify-center bg-black/50 py-8;
+  .gtc-filevisualizer {
+    @apply flex h-full;
 
-    z-index: 10000;
+    & .gtc-filevisualizer-toolbar {
+      @apply pr-4;
 
-    & .gtc-filevisualizer {
-      @apply flex h-full rounded-xl bg-primary-900 p-4;
+      & .gtc-filevisualizer-dataview,
+      & .gtc-filevisualizer-goto,
+      & .gtc-filevisualizer-search {
+        @apply mb-4 flex items-end justify-between rounded bg-primary-700 p-2;
 
-      & .gtc-filevisualizer-toolbar {
-        @apply pr-4;
-
-        & .gtc-filevisualizer-dataview,
-        & .gtc-filevisualizer-goto,
-        & .gtc-filevisualizer-search {
-          @apply mb-4 flex items-end justify-between rounded bg-primary-700 p-2;
-
-          & :global(.gtc-input),
-          & :global(.gtc-select) {
-            @apply m-0 p-0;
-          }
-
-          & button {
-            @apply bg-primary-400 leading-4 text-red-100;
-
-            &:hover {
-              @apply bg-primary-300;
-            }
-          }
+        & :global(.gtc-input),
+        & :global(.gtc-select) {
+          @apply m-0 p-0;
         }
 
-        & .gtc-filevisualizer-dataview {
-          @apply mb-8;
+        & button {
+          @apply bg-primary-400 leading-4 text-red-100;
 
-          & :global(.gtc-select) {
-            @apply flex-1;
-
-            & :global(select) {
-              @apply w-full;
-            }
-          }
-        }
-
-        & .gtc-filevisualizer-goto {
-          & :global(.gtc-input) {
-            @apply flex-1;
-
-            & :global(input) {
-              @apply w-full;
-            }
-          }
-        }
-
-        & .gtc-filevisualizer-search {
-          @apply relative;
-
-          & :global(.gtc-input input) {
-            @apply w-28;
-          }
-
-          & :global(.gtc-select select) {
-            @apply w-20 border-l;
-          }
-
-          & :global(.gtc-checkbox) {
-            @apply absolute right-2 top-2;
+          &:hover {
+            @apply bg-primary-300;
           }
         }
       }
 
-      & .gtc-filevisualizer-content {
-        @apply overflow-y-auto text-white;
+      & .gtc-filevisualizer-dataview {
+        @apply mb-8;
 
-        width: 758px;
+        & :global(.gtc-select) {
+          @apply flex-1;
 
-        & .gtc-filevisualizer-row {
-          @apply flex;
-
-          & .gtc-filevisualizer-offsets {
-            @apply h-6 bg-primary-800 px-4 text-center font-source uppercase;
-          }
-
-          & .gtc-filevisualizer-bytes {
-            width: 464px;
-          }
-
-          & .gtc-filevisualizer-ascii {
-            width: 176px;
-          }
-
-          & .gtc-filevisualizer-ascii,
-          & .gtc-filevisualizer-bytes {
-            @apply flex flex-wrap content-start px-2;
-
-            & .gtc-filevisualizer-hex {
-              @apply h-6 w-7 px-1 text-center font-source uppercase;
-            }
-
-            & .gtc-filevisualizer-char {
-              @apply h-6 text-center font-source;
-
-              width: 0.625rem;
-            }
-
-            & .gtc-filevisualizer-hex,
-            & .gtc-filevisualizer-char {
-              &.gtc-filevisualizer-hex-bitflags {
-                @apply bg-green-700;
-              }
-
-              &.gtc-filevisualizer-hex-bit {
-                @apply bg-emerald-700;
-              }
-
-              &.gtc-filevisualizer-hex-boolean {
-                @apply bg-lime-700;
-              }
-
-              &.gtc-filevisualizer-hex-lower4,
-              &.gtc-filevisualizer-hex-upper4,
-              &.gtc-filevisualizer-hex-int8,
-              &.gtc-filevisualizer-hex-uint8 {
-                @apply bg-cyan-700;
-              }
-
-              &.gtc-filevisualizer-hex-int16,
-              &.gtc-filevisualizer-hex-uint16 {
-                @apply bg-yellow-700;
-              }
-
-              &.gtc-filevisualizer-hex-int24,
-              &.gtc-filevisualizer-hex-uint24 {
-                @apply bg-orange-700;
-              }
-
-              &.gtc-filevisualizer-hex-int32,
-              &.gtc-filevisualizer-hex-uint32 {
-                @apply bg-red-700;
-              }
-
-              &.gtc-filevisualizer-hex-int64,
-              &.gtc-filevisualizer-hex-uint64 {
-                @apply bg-amber-700;
-              }
-
-              &.gtc-filevisualizer-hex-float32 {
-                @apply bg-slate-700;
-              }
-
-              &.gtc-filevisualizer-hex-string {
-                @apply bg-indigo-700;
-              }
-
-              &.gtc-filevisualizer-hex-search {
-                @apply bg-fuchsia-700;
-              }
-            }
+          & :global(select) {
+            @apply w-full;
           }
         }
       }
 
-      & .gtc-filevisualizer-tooltip {
-        @apply fixed right-0 top-0 hidden whitespace-pre-wrap rounded bg-primary-900 px-4 py-2 text-sm text-white opacity-90;
+      & .gtc-filevisualizer-goto {
+        & :global(.gtc-input) {
+          @apply flex-1;
 
-        width: fit-content;
-
-        &.gtc-filevisualizer-tooltip-enabled {
-          @apply block;
+          & :global(input) {
+            @apply w-full;
+          }
         }
+      }
+
+      & .gtc-filevisualizer-search {
+        @apply relative;
+
+        & :global(.gtc-input input) {
+          @apply w-28;
+        }
+
+        & :global(.gtc-select select) {
+          @apply w-20 border-l;
+        }
+
+        & :global(.gtc-checkbox) {
+          @apply absolute right-2 top-2;
+        }
+      }
+    }
+
+    & .gtc-filevisualizer-content {
+      @apply overflow-y-auto text-white;
+
+      width: 758px;
+
+      & .gtc-filevisualizer-row {
+        @apply flex;
+
+        & .gtc-filevisualizer-offsets {
+          @apply h-6 bg-primary-500 px-4 text-center font-source uppercase;
+        }
+
+        & .gtc-filevisualizer-bytes {
+          width: 464px;
+        }
+
+        & .gtc-filevisualizer-ascii {
+          width: 176px;
+        }
+
+        & .gtc-filevisualizer-ascii,
+        & .gtc-filevisualizer-bytes {
+          @apply flex flex-wrap content-start px-2;
+
+          & .gtc-filevisualizer-hex {
+            @apply h-6 w-7 px-1 text-center font-source uppercase;
+          }
+
+          & .gtc-filevisualizer-char {
+            @apply h-6 text-center font-source;
+
+            width: 0.625rem;
+          }
+
+          & .gtc-filevisualizer-hex,
+          & .gtc-filevisualizer-char {
+            &.gtc-filevisualizer-hex-bitflags {
+              @apply bg-green-700;
+            }
+
+            &.gtc-filevisualizer-hex-bit {
+              @apply bg-emerald-700;
+            }
+
+            &.gtc-filevisualizer-hex-boolean {
+              @apply bg-lime-700;
+            }
+
+            &.gtc-filevisualizer-hex-lower4,
+            &.gtc-filevisualizer-hex-upper4,
+            &.gtc-filevisualizer-hex-int8,
+            &.gtc-filevisualizer-hex-uint8 {
+              @apply bg-cyan-700;
+            }
+
+            &.gtc-filevisualizer-hex-int16,
+            &.gtc-filevisualizer-hex-uint16 {
+              @apply bg-yellow-700;
+            }
+
+            &.gtc-filevisualizer-hex-int24,
+            &.gtc-filevisualizer-hex-uint24 {
+              @apply bg-orange-700;
+            }
+
+            &.gtc-filevisualizer-hex-int32,
+            &.gtc-filevisualizer-hex-uint32 {
+              @apply bg-red-700;
+            }
+
+            &.gtc-filevisualizer-hex-int64,
+            &.gtc-filevisualizer-hex-uint64 {
+              @apply bg-amber-700;
+            }
+
+            &.gtc-filevisualizer-hex-float32 {
+              @apply bg-slate-700;
+            }
+
+            &.gtc-filevisualizer-hex-string {
+              @apply bg-indigo-700;
+            }
+
+            &.gtc-filevisualizer-hex-search {
+              @apply bg-fuchsia-700;
+            }
+          }
+        }
+      }
+    }
+
+    & .gtc-filevisualizer-tooltip {
+      @apply fixed right-0 top-0 hidden whitespace-pre-wrap rounded bg-primary-900 px-4 py-2 text-sm text-white opacity-90;
+
+      width: fit-content;
+
+      &.gtc-filevisualizer-tooltip-enabled {
+        @apply block;
       }
     }
   }
