@@ -8,6 +8,8 @@ import {
   DoubleSide,
   GridHelper,
   Group,
+  LineBasicMaterial,
+  LineSegments,
   Mesh,
   MeshBasicMaterial,
   MeshLambertMaterial,
@@ -23,6 +25,7 @@ import {
   Vector2,
   Vector3,
   WebGLRenderer,
+  WireframeGeometry,
   type MeshBasicMaterialParameters,
 } from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
@@ -200,13 +203,8 @@ export default class Three {
       .add(this.guiController, "wireframe")
       .name("Wireframe")
       .onChange(() => {
-        [this.group, this.groupLocked].forEach((group) =>
-          group.traverse((object) => {
-            this.setWireframe(object, this.guiController.wireframe);
-          }),
-        );
-
         this.wireframe = this.guiController.wireframe;
+        this.setWireframe(this.guiController.wireframe);
         setLocalStorage("threeWireframe", `${this.guiController.wireframe}`);
       });
 
@@ -318,6 +316,9 @@ export default class Three {
       this.group.visible = true;
       this.groupLocked.visible = true;
       this.gridHelper.visible = this.guiController.grid;
+      if (this.wireframe) {
+        this.setWireframe(true);
+      }
       this.setMessage("");
     }
   }
@@ -569,7 +570,6 @@ export default class Three {
       depthTest,
       opacity,
       transparent: true,
-      wireframe: this.wireframe,
     };
 
     if (doubleSide) {
@@ -766,18 +766,30 @@ export default class Three {
     );
   }
 
-  private setWireframe(object: Object3D, wireframe: boolean): void {
-    if ("isMesh" in object) {
-      const mesh = object as Mesh;
+  private setWireframe(wireframe: boolean): void {
+    [this.group, this.groupLocked].forEach((group) =>
+      group.traverse((object) => {
+        if ("isMesh" in object) {
+          const mesh = object as Mesh;
+          const wireframeObj = mesh.getObjectByName("wireframe");
 
-      const materials = (
-        !Array.isArray(mesh.material) ? [mesh.material] : mesh.material
-      ) as MeshBasicMaterial[];
+          if (wireframe && !wireframeObj) {
+            const geometry = new WireframeGeometry(mesh.geometry);
+            const material = new LineBasicMaterial({
+              color: 0xffffff,
+            });
 
-      materials.forEach((material) => {
-        material.wireframe = wireframe;
-      });
-    }
+            const wireframe = new LineSegments(geometry, material);
+
+            wireframe.name = "wireframe";
+
+            mesh.add(wireframe);
+          } else if (!wireframe && wireframeObj) {
+            mesh.remove(wireframeObj);
+          }
+        }
+      }),
+    );
   }
 
   public reset(): void {
