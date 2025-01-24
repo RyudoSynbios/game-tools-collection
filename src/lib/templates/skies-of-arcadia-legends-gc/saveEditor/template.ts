@@ -6,8 +6,8 @@ import {
   items,
   keyItems,
   shipAccessories,
-  shipCannons,
   shipItems,
+  shipWeapons,
   weapons,
 } from "./utils/resource";
 
@@ -15,13 +15,13 @@ const template: GameJson = {
   validator: {
     regions: {
       europe: {
-        0x0: [0x47, 0x45, 0x41, 0x50, 0x38], // "GEAP8"
+        0x0: [0x47, 0x45, 0x41, 0x50, 0x38, 0x50, 0xff], // "GEAP8P"
       },
       usa: {
-        0x0: [0x47, 0x45, 0x41, 0x45, 0x38], // "GEAE8"
+        0x0: [0x47, 0x45, 0x41, 0x45, 0x38, 0x50, 0xff], // "GEAE8P"
       },
       japan: {
-        0x0: [0x47, 0x45, 0x41, 0x4a, 0x38], // "GEAJ8"
+        0x0: [0x47, 0x45, 0x41, 0x4a, 0x38, 0x50, 0xff], // "GEAJ8P"
       },
     },
     text: "Drag 'n' drop here or click to add a save file.",
@@ -484,7 +484,7 @@ const template: GameJson = {
                               max: 999,
                             },
                             {
-                              name: "Agility",
+                              name: "Agile",
                               offset: 0x14d0,
                               type: "variable",
                               dataType: "uint16",
@@ -953,7 +953,7 @@ const template: GameJson = {
                           type: "variable",
                           dataType: "uint16",
                           bigEndian: true,
-                          resource: "shipCannons",
+                          resource: "shipWeapons",
                           autocomplete: true,
                         },
                         {
@@ -962,7 +962,7 @@ const template: GameJson = {
                           type: "variable",
                           dataType: "uint16",
                           bigEndian: true,
-                          resource: "shipCannons",
+                          resource: "shipWeapons",
                           autocomplete: true,
                         },
                         {
@@ -971,7 +971,7 @@ const template: GameJson = {
                           type: "variable",
                           dataType: "uint16",
                           bigEndian: true,
-                          resource: "shipCannons",
+                          resource: "shipWeapons",
                           autocomplete: true,
                         },
                         {
@@ -980,7 +980,7 @@ const template: GameJson = {
                           type: "variable",
                           dataType: "uint16",
                           bigEndian: true,
-                          resource: "shipCannons",
+                          resource: "shipWeapons",
                           autocomplete: true,
                         },
                         {
@@ -989,7 +989,7 @@ const template: GameJson = {
                           type: "variable",
                           dataType: "uint16",
                           bigEndian: true,
-                          resource: "shipCannons",
+                          resource: "shipWeapons",
                           autocomplete: true,
                         },
                       ],
@@ -1490,41 +1490,7 @@ const template: GameJson = {
                   })),
                 },
                 {
-                  name: "Ship Items",
-                  items: [...Array(30).keys()].map((index) => ({
-                    type: "section",
-                    flex: true,
-                    items: [
-                      {
-                        id: "item",
-                        name: `Item ${index + 1}`,
-                        offset: 0x1e24 + index * 0x4,
-                        type: "variable",
-                        dataType: "uint16",
-                        bigEndian: true,
-                        resource: "shipItems",
-                        autocomplete: true,
-                      },
-                      {
-                        id: "quantity",
-                        name: "Quantity",
-                        offset: 0x1e26 + index * 0x4,
-                        type: "variable",
-                        dataType: "uint8",
-                        max: 99,
-                      },
-                      {
-                        name: "???",
-                        offset: 0x1e27 + index * 0x4,
-                        type: "variable",
-                        dataType: "uint8",
-                        hidden: true,
-                      },
-                    ],
-                  })),
-                },
-                {
-                  name: "Ship Cannons",
+                  name: "Ship Weapons",
                   items: [...Array(40).keys()].map((index) => ({
                     type: "section",
                     flex: true,
@@ -1536,7 +1502,7 @@ const template: GameJson = {
                         type: "variable",
                         dataType: "uint16",
                         bigEndian: true,
-                        resource: "shipCannons",
+                        resource: "shipWeapons",
                         autocomplete: true,
                       },
                       {
@@ -1584,6 +1550,40 @@ const template: GameJson = {
                       {
                         name: "???",
                         offset: 0x1f3f + index * 0x4,
+                        type: "variable",
+                        dataType: "uint8",
+                        hidden: true,
+                      },
+                    ],
+                  })),
+                },
+                {
+                  name: "Ship Items",
+                  items: [...Array(30).keys()].map((index) => ({
+                    type: "section",
+                    flex: true,
+                    items: [
+                      {
+                        id: "item",
+                        name: `Item ${index + 1}`,
+                        offset: 0x1e24 + index * 0x4,
+                        type: "variable",
+                        dataType: "uint16",
+                        bigEndian: true,
+                        resource: "shipItems",
+                        autocomplete: true,
+                      },
+                      {
+                        id: "quantity",
+                        name: "Quantity",
+                        offset: 0x1e26 + index * 0x4,
+                        type: "variable",
+                        dataType: "uint8",
+                        max: 99,
+                      },
+                      {
+                        name: "???",
+                        offset: 0x1e27 + index * 0x4,
                         type: "variable",
                         dataType: "uint8",
                         hidden: true,
@@ -3102,8 +3102,8 @@ const template: GameJson = {
       ...shipAccessories,
       0xffff: "-",
     },
-    shipCannons: {
-      ...shipCannons,
+    shipWeapons: {
+      ...shipWeapons,
       0xffff: "-",
     },
     shipItems: {
@@ -3279,7 +3279,7 @@ const template: GameJson = {
       0x82612b, 0x826227, 0x836103, 0x836828,
     ],
     shipAccessories: [0xffff],
-    shipCannons: [0xffff],
+    shipWeapons: [0xffff],
     shipItems: [0xffff],
     ships: [
       0x4, 0x0, 0x5, 0x7, 0x1, 0xc, 0x2, 0x3, 0x6, 0x8, 0x9, 0xa, 0xb, 0xe, 0xf,

@@ -341,7 +341,7 @@
 
       palettes.forEach((palette, paletteIndex) => {
         palette.forEach((color, index) => {
-          let tileData = new Uint8Array(0x10 * 8 * 0x10 * 8 * 4);
+          const tileData = new Uint8Array(0x10 * 8 * 0x10 * 8 * 4);
 
           for (let j = 0; j < tileData.length; j += 0x4) {
             tileData[j] = color[0];

@@ -18,6 +18,6 @@
 
 <style lang="postcss">
   .gtc-txtviewer {
-    @apply whitespace-pre-line rounded bg-primary-700 p-2;
+    @apply h-fit whitespace-pre-line rounded bg-primary-700 p-2;
   }
 </style>

@@ -95,7 +95,7 @@
     $isDirty = false;
   }
 
-  function handleFileVisualizer(): void {
+  function handleFileVisualizerOpen(): void {
     $isFileVisualizerOpen = true;
   }
 
@@ -188,7 +188,7 @@
           <button
             type="button"
             class="gtc-tool-filevisualizer"
-            on:click={handleFileVisualizer}
+            on:click={handleFileVisualizerOpen}
           >
             <ManageSearchIcon /> File Visualizer
           </button>

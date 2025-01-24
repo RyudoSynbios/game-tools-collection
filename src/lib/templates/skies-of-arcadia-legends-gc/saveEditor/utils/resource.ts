@@ -413,7 +413,7 @@ export const keyItems = {
   // 0x18f: "DUMMYCLEAR", // Unused
 };
 
-export const shipCannons = {
+export const shipWeapons = {
   0x190: "Main Cannon",
   0x191: "Standard Cannon",
   0x192: "Heavy Cannon",

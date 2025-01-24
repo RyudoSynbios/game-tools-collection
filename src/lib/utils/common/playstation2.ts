@@ -1,7 +1,7 @@
 import { get } from "svelte/store";
 
 import { dataView, gameRegion, gameTemplate } from "$lib/stores";
-import { getInt } from "$lib/utils/bytes";
+import { getInt, getString } from "$lib/utils/bytes";
 import {
   getObjKey,
   mergeUint8Arrays,
@@ -128,19 +128,7 @@ export function generateMemoryCard(dataView: DataView): void {
 
   memoryCard.superblock = {} as Superblock;
 
-  memoryCard.superblock.magic = [...Array(0x28).keys()].reduce(
-    (string, index) => {
-      const char = getInt(index, "uint8", {}, dataView);
-
-      if (char === 0x0) {
-        return string;
-      }
-
-      return (string += String.fromCharCode(char));
-    },
-    "",
-  );
-
+  memoryCard.superblock.magic = getString(0x0, 0x28, "uint8", { zeroTerminated: true }, dataView);
   memoryCard.superblock.pageLength = getInt(0x28, "uint16", {}, dataView);
   memoryCard.superblock.pagesPerCluster = getInt(0x2a, "uint16", {}, dataView);
   memoryCard.superblock.pagesPerBlock = getInt(0x2c, "uint16", {}, dataView);

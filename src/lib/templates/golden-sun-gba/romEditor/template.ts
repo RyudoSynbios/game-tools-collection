@@ -682,6 +682,12 @@ const template: GameJson = {
                               step: 10,
                               suffix: "%",
                             },
+                          ],
+                        },
+                        {
+                          type: "section",
+                          flex: true,
+                          items: [
                             {
                               name: "Attack",
                               offset: 0xa,
@@ -1331,7 +1337,7 @@ const template: GameJson = {
                               flex: true,
                               items: [
                                 {
-                                  name: "Equippable by",
+                                  name: "Equipable by",
                                   type: "bitflags",
                                   flags: [
                                     { offset: 0x4, bit: 0, label: "Isaac" },
@@ -1712,6 +1718,12 @@ const template: GameJson = {
                                   type: "variable",
                                   dataType: "int16",
                                 },
+                              ],
+                            },
+                            {
+                              type: "section",
+                              flex: true,
+                              items: [
                                 {
                                   name: "Attack",
                                   offset: 0x14,

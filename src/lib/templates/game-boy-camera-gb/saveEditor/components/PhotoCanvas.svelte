@@ -27,7 +27,7 @@
 
     for (let row = 0x0; row < 0xe; row += 0x1) {
       for (let column = 0x0; column < 0x10; column += 0x1) {
-        let tileData = [];
+        const tileData = [];
 
         for (let tile = 0x0; tile < 0x8; tile += 0x1) {
           const offset =
@@ -49,11 +49,11 @@
 
             mask >>= 0x1;
           }
-
-          const data = applyPalette(tileData, palette);
-
-          canvas.addGraphic("background", data, 8, 8, column * 8, row * 8);
         }
+
+        const data = applyPalette(tileData, palette);
+
+        canvas.addGraphic("background", data, 8, 8, column * 8, row * 8);
       }
     }
 

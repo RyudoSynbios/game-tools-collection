@@ -9,6 +9,7 @@ import {
   getSlotShifts,
   isPsvHeader,
 } from "$lib/utils/common/playstation";
+import { getObjKey } from "$lib/utils/format";
 import { getResource } from "$lib/utils/parser";
 
 import type { Item, ItemContainer, ItemInt, Resource } from "$lib/types";
@@ -211,7 +212,7 @@ function updateLocation(offset: number, value = 0x0): void {
   const locations = getResource(`disc${disc}Locations`) as Resource;
 
   if (value === 0x0) {
-    value = parseInt(Object.keys(locations)[0]);
+    value = parseInt(getObjKey(locations, 0));
 
     setInt(offset, "uint16", value);
   }

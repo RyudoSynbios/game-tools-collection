@@ -591,7 +591,7 @@ const template: GameJson = {
                           ],
                         },
                         {
-                          name: "Magics",
+                          name: "Magic",
                           items: [
                             {
                               name: "Fire",

@@ -304,13 +304,13 @@
       @apply md:flex;
 
       & > ul {
-        @apply mb-4 mr-4 block overflow-scroll no-scrollbar md:mb-0;
+        @apply mb-4 mr-4 block overflow-y-scroll no-scrollbar md:mb-0;
 
         min-width: 200px;
       }
 
       & > .gtc-tabs-content {
-        @apply flex-1 overflow-scroll pt-0;
+        @apply flex-1 overflow-y-scroll pt-0;
       }
     }
   }
