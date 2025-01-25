@@ -44,6 +44,6 @@
 
 <style lang="postcss">
   .gtc-content.gtc-content-flex {
-    @apply flex min-h-full flex-wrap;
+    @apply flex min-h-full flex-wrap content-start;
   }
 </style>
