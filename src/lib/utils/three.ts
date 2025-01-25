@@ -79,15 +79,17 @@ export default class Three {
   private groupLocked: Group;
   private width: number;
   private height: number;
+  private fullscreen: boolean;
   private gridHelper: GridHelper;
   private wireframe: boolean;
   private gui: GUI;
   private guiController: {
     grid: boolean;
     wireframe: boolean;
+    custom: { [key: string]: number };
     cameraFit: () => void;
     cameraReset: () => void;
-    custom: { [key: string]: number };
+    fullscreenToggle: () => void;
   };
   private guiCustomFolder: GUI;
   private hoveredObject: {
@@ -117,6 +119,8 @@ export default class Three {
 
     this.width = width;
     this.height = height;
+
+    this.fullscreen = false;
 
     this.scene = new Scene();
     this.scene.background = new Color(0x2a3441);
@@ -189,9 +193,10 @@ export default class Three {
     this.guiController = {
       grid: this.gridHelper.visible,
       wireframe: this.wireframe,
+      custom: {},
       cameraFit: this.fitCameraToScene.bind(this),
       cameraReset: this.resetCamera.bind(this),
-      custom: {},
+      fullscreenToggle: this.fullscreenToggle.bind(this),
     };
 
     this.gui = new GUI({
@@ -222,6 +227,10 @@ export default class Three {
     cameraFolder.add(this.guiController, "cameraFit").name("Fit to scene (F)");
     cameraFolder.add(this.guiController, "cameraReset").name("Reset (R)");
 
+    const miscellaneousFolder = this.gui.addFolder("Miscellaneous");
+    miscellaneousFolder
+      .add(this.guiController, "fullscreenToggle")
+      .name("Toggle Fullscreen");
     // Dummies
 
     const hoveredDummy = new Mesh(
@@ -765,6 +774,26 @@ export default class Three {
 
     this.controls.target = new Vector3(0, 250, 0);
     this.controls.update();
+  }
+
+  public fullscreenToggle(): void {
+    this.fullscreen = !this.fullscreen;
+
+    if (this.fullscreen) {
+      this.threeEl.parentElement!.style.setProperty("position", "absolute");
+      this.threeEl.parentElement!.style.setProperty("top", "0");
+      this.threeEl.parentElement!.style.setProperty("right", "0");
+      this.threeEl.parentElement!.style.setProperty("bottom", "0");
+      this.threeEl.parentElement!.style.setProperty("left", "0");
+    } else {
+      this.threeEl.parentElement!.style.setProperty("position", "relative");
+      this.threeEl.parentElement!.style.setProperty("top", "inherit");
+      this.threeEl.parentElement!.style.setProperty("right", "inherit");
+      this.threeEl.parentElement!.style.setProperty("bottom", "inherit");
+      this.threeEl.parentElement!.style.setProperty("left", "inherit");
+    }
+
+    this.resize();
   }
 
   public resize(): void {
