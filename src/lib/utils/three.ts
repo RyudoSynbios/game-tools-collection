@@ -98,6 +98,7 @@ export default class Three {
     cameraFit: () => void;
     cameraReset: () => void;
     fullscreenToggle: () => void;
+    textureListCallback: () => void;
   };
   private guiCustomFolder: GUI;
   private hoveredObject: {
@@ -225,6 +226,7 @@ export default class Three {
       cameraFit: this.fitCameraToScene.bind(this),
       cameraReset: this.resetCamera.bind(this),
       fullscreenToggle: this.fullscreenToggle.bind(this),
+      textureListCallback: () => {},
     };
 
     this.gui = new GUI({
@@ -259,6 +261,11 @@ export default class Three {
     miscellaneousFolder
       .add(this.guiController, "fullscreenToggle")
       .name("Toggle Fullscreen");
+    miscellaneousFolder
+      .add(this.guiController, "textureListCallback")
+      .name("Texture List")
+      .hide();
+
     // Dummies
 
     const hoveredDummy = new Mesh(
@@ -846,6 +853,16 @@ export default class Three {
     }
   }
 
+  public setTextureListCallback(callback: (() => void) | undefined): void {
+    if (callback === undefined) {
+      this.gui.folders[2].children[1].hide();
+      this.guiController.textureListCallback = () => {};
+    } else {
+      this.gui.folders[2].children[1].show();
+      this.guiController.textureListCallback = callback;
+    }
+  }
+
   private dispose(object: Object3D): void {
     if ("isMesh" in object) {
       const mesh = object as Mesh;
@@ -868,6 +885,7 @@ export default class Three {
 
   public resetGui(): void {
     this.guiController.custom = {};
+    this.guiController.textureListCallback = () => {};
 
     Object.values(this.guiCustomFolder.children).forEach((children) => {
       children.destroy();
