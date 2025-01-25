@@ -88,6 +88,7 @@ export default class Three {
   private height: number;
   private fullscreen: boolean;
   private gridHelper: GridHelper;
+  private gridSize: number;
   private wireframe: boolean;
   private gui: GUI;
   private guiController: {
@@ -121,6 +122,7 @@ export default class Three {
         position: [number, number, number];
         target: [number, number, number];
       };
+      gridSize?: number;
     },
   ) {
     const width = options?.width || 0;
@@ -151,6 +153,8 @@ export default class Three {
       this.cameraSettings.far,
     );
     this.scene.add(this.camera);
+
+    this.gridSize = options?.gridSize || 1000;
 
     this.renderer = new WebGLRenderer({ antialias: true });
     this.renderer.setAnimationLoop(this.animate.bind(this));
@@ -200,7 +204,7 @@ export default class Three {
 
     // Grid Helper
 
-    this.gridHelper = new GridHelper(1000, 8);
+    this.gridHelper = new GridHelper(this.gridSize, 8);
 
     const lsGrid = getLocalStorage("threeGrid");
 
