@@ -125,7 +125,7 @@ export async function getMaterials(
     options.push({
       color:
         overrideOptions.color !== undefined ? overrideOptions.color : meshColor,
-      doubleSide: (textureType & 0x100) !== 0x0,
+      side: (textureType & 0x100) !== 0x0 ? "double" : "front",
       opacity: overrideOptions.opacity || 1,
       texture: {
         base64:

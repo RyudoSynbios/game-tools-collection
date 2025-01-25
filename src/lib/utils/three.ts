@@ -1,11 +1,13 @@
 import {
   AmbientLight,
+  BackSide,
   Box3,
   BufferAttribute,
   BufferGeometry,
   Color,
   DirectionalLight,
   DoubleSide,
+  FrontSide,
   GridHelper,
   Group,
   LineBasicMaterial,
@@ -41,6 +43,8 @@ import { isDebug } from "$lib/stores";
 import debug from "./debug";
 import { getLocalStorage, setLocalStorage } from "./format";
 
+export type Side = "front" | "back" | "double";
+
 export interface GeometryOptions {
   nonIndexed?: boolean;
   smoothAngle?: number;
@@ -49,9 +53,9 @@ export interface GeometryOptions {
 export interface MaterialOptions {
   color?: number;
   depthTest?: boolean;
-  doubleSide?: boolean;
   model?: "basic" | "lambert";
   opacity?: number;
+  side?: Side;
   texture?: {
     base64?: string;
     flipY?: boolean;
@@ -602,9 +606,9 @@ export default class Three {
     const color = options?.color !== undefined ? options?.color : 0xffffff;
     const depthTest =
       options?.depthTest !== undefined ? options?.depthTest : true;
-    const doubleSide = options?.doubleSide || false;
     const model = options?.model || "basic";
     const opacity = options?.opacity !== undefined ? options?.opacity : 1;
+    const side = options?.side || "front";
     const texture = {
       base64: options?.texture?.base64 || "",
       flipY:
@@ -620,8 +624,16 @@ export default class Three {
       transparent: true,
     };
 
-    if (doubleSide) {
-      materialParams.side = DoubleSide;
+    switch (side) {
+      case "front":
+        materialParams.side = FrontSide;
+        break;
+      case "back":
+        materialParams.side = BackSide;
+        break;
+      case "double":
+        materialParams.side = DoubleSide;
+        break;
     }
 
     if (texture.base64) {
