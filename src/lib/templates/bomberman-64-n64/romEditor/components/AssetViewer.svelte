@@ -28,6 +28,7 @@
   let threeEl: HTMLDivElement;
 
   let innerWidth = 0;
+  let innerHeight = 0;
 
   let canvas: Canvas;
   let three: Three;
@@ -434,20 +435,15 @@
   }
 
   $: {
-    innerWidth;
+    innerWidth, innerHeight;
 
-    if (three && canvasTexture) {
-      const width = threeEl.clientWidth;
-      const height = width / 1.78;
-
-      (threeEl.children[0] as HTMLCanvasElement).style.width = "0";
-
-      three.resize(width, height);
+    if (three) {
+      three.resize();
     }
   }
 </script>
 
-<svelte:window bind:innerWidth on:keydown={handleKeyDown} />
+<svelte:window bind:innerWidth bind:innerHeight on:keydown={handleKeyDown} />
 
 <div class="gtc-assetviewer">
   <div class="gtc-assetviewer-content">

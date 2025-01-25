@@ -767,14 +767,18 @@ export default class Three {
     this.controls.update();
   }
 
-  public resize(width: number, height: number): void {
-    this.width = width;
-    this.height = height;
+  public resize(): void {
+    if (this.threeEl.parentElement) {
+      const bounding = this.threeEl.parentElement.getBoundingClientRect();
 
-    this.camera.aspect = this.width / this.height;
-    this.camera.updateProjectionMatrix();
+      this.width = this.threeEl.clientWidth;
+      this.height = innerHeight - bounding.top - 32;
 
-    this.renderer.setSize(this.width, this.height);
+      this.camera.aspect = this.width / this.height;
+      this.camera.updateProjectionMatrix();
+
+      this.renderer.setSize(this.width, this.height);
+    }
   }
 
   private dispose(object: Object3D): void {
