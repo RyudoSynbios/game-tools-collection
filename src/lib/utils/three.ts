@@ -17,6 +17,7 @@ import {
   NearestFilter,
   Object3D,
   PerspectiveCamera,
+  Quaternion,
   Raycaster,
   RepeatWrapping,
   Scene,
@@ -282,10 +283,18 @@ export default class Three {
     if (reference) {
       object.reference = reference;
 
+      const position = new Vector3();
+      const quaternion = new Quaternion();
+      const scale = new Vector3();
+
+      object.reference.getWorldPosition(position);
+      object.reference.getWorldQuaternion(quaternion);
+      object.reference.getWorldScale(scale);
+
       object.dummy.geometry = object.reference.geometry;
-      object.dummy.position.copy(object.reference.position);
-      object.dummy.rotation.copy(object.reference.rotation);
-      object.dummy.scale.copy(object.reference.scale);
+      object.dummy.position.copy(position);
+      object.dummy.quaternion.copy(quaternion);
+      object.dummy.scale.copy(scale);
       object.dummy.visible = true;
     } else {
       object.reference = null;
