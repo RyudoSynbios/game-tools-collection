@@ -832,7 +832,11 @@ export default class Three {
 
   public resetGui(): void {
     this.guiController.custom = {};
-    this.guiCustomFolder.children.forEach((children) => children.destroy());
+
+    Object.values(this.guiCustomFolder.children).forEach((children) => {
+      children.destroy();
+    });
+
     this.guiCustomFolder.show(false);
   }
 
