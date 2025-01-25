@@ -17,6 +17,8 @@ import {
   NearestFilter,
   Object3D,
   PerspectiveCamera,
+  Points,
+  PointsMaterial,
   Quaternion,
   Raycaster,
   RepeatWrapping,
@@ -522,6 +524,43 @@ export default class Three {
     }
 
     return mesh;
+  }
+
+  public addPoints(
+    vertices: number[],
+    instanceId: string,
+    options?: {
+      id?: string;
+      group?: Group;
+    },
+  ): Points | null {
+    if (instanceId !== this.instanceId) {
+      return null;
+    }
+
+    const group = options?.group;
+
+    const geometry = new BufferGeometry();
+
+    geometry.setAttribute(
+      "position",
+      new BufferAttribute(new Float32Array(vertices), 3),
+    );
+
+    const material = new PointsMaterial({
+      size: 1,
+      sizeAttenuation: false,
+    });
+
+    const points = new Points(geometry, material);
+
+    if (group) {
+      group.add(points);
+    } else {
+      this.group.add(points);
+    }
+
+    return points;
   }
 
   public generateGeometry(
