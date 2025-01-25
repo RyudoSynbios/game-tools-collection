@@ -819,6 +819,10 @@ export default class Three {
     this.cameraSettings.target = target;
   }
 
+  public isFullscreen(): boolean {
+    return this.fullscreen;
+  }
+
   public fullscreenToggle(): void {
     this.fullscreen = !this.fullscreen;
 
@@ -844,7 +848,7 @@ export default class Three {
       const bounding = this.threeEl.parentElement.getBoundingClientRect();
 
       this.width = this.threeEl.clientWidth;
-      this.height = innerHeight - bounding.top - 32;
+      this.height = innerHeight - bounding.top - (this.fullscreen ? 16 : 32);
 
       this.camera.aspect = this.width / this.height;
       this.camera.updateProjectionMatrix();

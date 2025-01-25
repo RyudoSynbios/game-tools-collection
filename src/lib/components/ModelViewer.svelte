@@ -7,23 +7,19 @@
   let innerWidth = 0;
   let innerHeight = 0;
 
-  function handleCameraFit(): void {
-    three.fitCameraToScene();
-  }
-
-  function handleCameraReset(): void {
-    three.resetCamera();
-  }
-
   function handleKeyDown(event: KeyboardEvent): void {
     if (!event.ctrlKey && !event.metaKey && event.key === "f") {
       event.preventDefault();
 
-      handleCameraFit();
+      three.fitCameraToScene();
     } else if (!event.ctrlKey && !event.metaKey && event.key === "r") {
       event.preventDefault();
 
-      handleCameraReset();
+      three.resetCamera();
+    } else if (three.isFullscreen() && event.key === "Escape") {
+      event.preventDefault();
+
+      three.fullscreenToggle();
     }
   }
 
