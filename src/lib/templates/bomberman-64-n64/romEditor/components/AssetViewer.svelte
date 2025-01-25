@@ -1,6 +1,8 @@
 <script lang="ts">
   import { onDestroy, onMount } from "svelte";
 
+  import Modal from "$lib/components/Modal.svelte";
+  import ModelViewer from "$lib/components/ModelViewer.svelte";
   import { getInt, getIntFromArray } from "$lib/utils/bytes";
   import Canvas from "$lib/utils/canvas";
   import debug from "$lib/utils/debug";
@@ -21,20 +23,24 @@
     type Mesh,
     type Texture,
   } from "../utils";
+  import TextureViewer from "./TextureViewer.svelte";
 
   export let assetIndex: number;
+
+  let canvas: Canvas;
+  let canvasTexture: Canvas;
+  let three: Three;
 
   let canvasEl: HTMLDivElement;
   let threeEl: HTMLDivElement;
 
-  let innerWidth = 0;
-  let innerHeight = 0;
-
-  let canvas: Canvas;
-  let three: Three;
-  let canvasTexture: Canvas;
-
-  let hideTree = false;
+  let textures: {
+    width: number;
+    height: number;
+    texture: Uint8Array;
+  }[] = [];
+  let isModalOpen = false;
+  let view: "canvas" | "three" = "three";
 
   let tableOffset = 0x300000;
 
@@ -62,24 +68,12 @@
     tableOffset += 0x8;
   }
 
-  function handleCameraFit(): void {
-    three.fitCameraToScene();
+  function handleModalClose(): void {
+    isModalOpen = false;
   }
 
-  function handleCameraReset(): void {
-    three.resetCamera();
-  }
-
-  function handleKeyDown(event: KeyboardEvent): void {
-    if (!event.ctrlKey && !event.metaKey && event.key === "f") {
-      event.preventDefault();
-
-      handleCameraFit();
-    } else if (!event.ctrlKey && !event.metaKey && event.key === "r") {
-      event.preventDefault();
-
-      handleCameraReset();
-    }
+  function handleModalOpen(): void {
+    isModalOpen = true;
   }
 
   async function updateCanvas(): Promise<void> {
@@ -95,7 +89,7 @@
     const decompressedData = getDecompressedData(assets[assetIndex]);
 
     if (decompressedData.length === 0) {
-      hideTree = true;
+      view = "canvas";
     }
 
     const folderHeader = decompressedData.slice(0x0, 0xc);
@@ -159,11 +153,7 @@
       };
     });
 
-    const textures: {
-      width: number;
-      height: number;
-      texture: Uint8Array;
-    }[] = [];
+    textures = [];
 
     let mesh: Mesh = {
       vertices: [],
@@ -202,7 +192,7 @@
       if ([0x0, 0x5, 0x6, 0x8].includes(header.type)) {
         // 3D Object
 
-        hideTree = false;
+        view = "three";
 
         mesh = {
           vertices: [],
@@ -304,7 +294,7 @@
       } else if (header.type === 0x19) {
         // 32-bit Texture
 
-        hideTree = true;
+        view = "canvas";
 
         texture.width = header.value >> 0x10;
         texture.height = header.value & 0xfff;
@@ -334,7 +324,7 @@
       } else if (header.type === 0x1a) {
         // Colour Index Palette
 
-        hideTree = true;
+        view = "canvas";
 
         texture.paletteLength = header.value <= 0x10 ? 0x10 : 0x100;
         texture.paletteOffset = header.offset;
@@ -379,36 +369,40 @@
       }
     }, Promise.resolve());
 
+    three.setTextureListCallback(
+      textures.length > 0 ? handleModalOpen : undefined,
+    );
+
     if (instanceId !== three.getInstanceId()) {
       return;
     }
 
     three.setLoading(false);
 
-    const sheet = generateGraphicsSheet(hideTree ? 0 : 128, textures);
+    if (view === "canvas") {
+      const sheet = generateGraphicsSheet(0, textures);
 
-    canvas.resize(sheet.width, sheet.height);
+      canvas.resize(sheet.width, sheet.height);
 
-    textures.forEach((texture, index) => {
-      canvas.addGraphic(
-        "textures",
-        texture.texture,
-        texture.width,
-        texture.height,
-        sheet.coordinates[index].x,
-        sheet.coordinates[index].y,
-      );
-    });
+      textures.forEach((texture, index) => {
+        canvas.addGraphic(
+          "textures",
+          texture.texture,
+          texture.width,
+          texture.height,
+          sheet.coordinates[index].x,
+          sheet.coordinates[index].y,
+        );
+      });
 
-    canvas.render();
+      canvas.render();
+    }
   }
 
   onMount(async () => {
     canvas = new Canvas({ canvasEl });
 
     canvas.addLayer("textures", "image");
-
-    three = new Three(threeEl);
 
     canvasTexture = new Canvas({
       width: 32,
@@ -417,78 +411,53 @@
 
     canvasTexture.addLayer("texture", "image");
 
+    three = new Three(threeEl);
+
     updateCanvas();
   });
 
   onDestroy(() => {
     canvas.destroy();
-    three.destroy();
     canvasTexture.destroy();
+    three.destroy();
   });
 
   $: {
     assetIndex;
 
-    if (three && canvasTexture) {
+    if (canvasTexture && three) {
       updateCanvas();
-    }
-  }
-
-  $: {
-    innerWidth, innerHeight;
-
-    if (three) {
-      three.resize();
     }
   }
 </script>
 
-<svelte:window bind:innerWidth bind:innerHeight on:keydown={handleKeyDown} />
-
 <div class="gtc-assetviewer">
-  <div class="gtc-assetviewer-content">
-    <div
-      class="gtc-assetviewer-canvas"
-      class:gtc-assetviewer-canvas-sprite={hideTree}
-    >
-      <div bind:this={canvasEl} />
-    </div>
-    <div
-      class="gtc-assetviewer-three"
-      class:gtc-assetviewer-three-hidden={hideTree}
-    >
-      <div bind:this={threeEl} />
-    </div>
+  <div
+    class="gtc-assetviewer-canvas"
+    class:gtc-assetviewer-hidden={view !== "canvas"}
+  >
+    <div bind:this={canvasEl} />
   </div>
+  <div class:gtc-assetviewer-hidden={view !== "three"}>
+    <ModelViewer {three} bind:threeEl />
+  </div>
+  {#if isModalOpen}
+    <Modal onClose={handleModalClose}>
+      <TextureViewer {textures} />
+    </Modal>
+  {/if}
 </div>
 
 <style lang="postcss">
   .gtc-assetviewer {
-    @apply flex-1;
+    @apply z-10 w-full flex-1;
 
-    & .gtc-assetviewer-content {
-      @apply flex;
+    & .gtc-assetviewer-canvas {
+      @apply w-fit rounded bg-primary-700 p-2;
+    }
 
-      & .gtc-assetviewer-canvas,
-      & .gtc-assetviewer-three {
-        @apply w-fit self-start rounded bg-primary-700 p-2;
-      }
-
-      & .gtc-assetviewer-canvas {
-        @apply mr-4 min-w-36 shrink-0;
-
-        &.gtc-assetviewer-canvas-sprite {
-          @apply min-w-0;
-        }
-      }
-
-      & .gtc-assetviewer-three {
-        @apply relative w-full;
-
-        &.gtc-assetviewer-three-hidden {
-          @apply hidden;
-        }
-      }
+    & .gtc-assetviewer-hidden {
+      @apply hidden;
     }
   }
 </style>
