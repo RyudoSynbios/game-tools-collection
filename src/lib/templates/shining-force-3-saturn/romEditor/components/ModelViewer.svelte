@@ -2,9 +2,10 @@
   import { onDestroy, onMount } from "svelte";
   import { Matrix4, Mesh } from "three";
 
+  import Modal from "$lib/components/Modal.svelte";
+  import ModelViewer from "$lib/components/ModelViewer.svelte";
   import Canvas from "$lib/utils/canvas";
   import debug from "$lib/utils/debug";
-  import { generateGraphicsSheet } from "$lib/utils/graphics";
   import Three from "$lib/utils/three";
 
   import { getFileData, getScenario, isDummy } from "../utils";
@@ -18,13 +19,14 @@
     addObject as addBattleStageObject,
     unpackBattleStage,
   } from "../utils/battleStage";
-  import { getTextureData, type Texture } from "../utils/model";
+  import { type Texture } from "../utils/model";
   import {
     addBattlefieldFloor,
     addFloor as addMpdFloor,
     addObject as addMpdObject,
     unpackMpd,
   } from "../utils/mpd";
+  import TextureViewer from "./TextureViewer.svelte";
 
   export let assetIndex: number;
   export let type: string;
@@ -33,47 +35,35 @@
 
   let modelIndex = 0;
 
-  let canvasEl: HTMLDivElement;
-  let threeEl: HTMLDivElement;
-
-  let innerWidth = 0;
-  let innerHeight = 0;
-
   let canvas: Canvas;
   let three: Three;
-  let canvasTexture: Canvas;
 
-  let hideCanvas = false;
-  let hideTree = false;
+  let threeEl: HTMLDivElement;
+
+  let textures: Texture[] = [];
+  let isModalOpen = false;
 
   function getAssetId() {
     return `${type}_${assetIndex}`;
   }
 
-  function handleCameraFit(): void {
-    three.fitCameraToScene();
+  function handleModalClose(): void {
+    isModalOpen = false;
   }
 
-  function handleCameraReset(): void {
-    three.resetCamera();
-  }
-
-  function handleKeyDown(event: KeyboardEvent): void {
-    if (!event.ctrlKey && !event.metaKey && event.key === "f") {
-      event.preventDefault();
-
-      handleCameraFit();
-    } else if (!event.ctrlKey && !event.metaKey && event.key === "r") {
-      event.preventDefault();
-
-      handleCameraReset();
-    }
+  function handleModalOpen(): void {
+    isModalOpen = true;
   }
 
   async function updateCanvas(): Promise<void> {
     debug.clear();
 
-    canvas.reset();
+    if (type === "battleCharacter") {
+      three.updateCameraSettings([0, 1000, -1500], [0, 250, 0]);
+    } else {
+      three.updateCameraSettings([0, 1000, 1500], [0, 250, 0]);
+    }
+
     three.reset();
 
     if (getAssetId() !== previousAssetId) {
@@ -89,15 +79,12 @@
     if (isDummy(0x0, dataView)) {
       three.setLoading(false);
 
-      canvas.resize(1, 1);
-      canvas.render();
-
       return;
     }
 
     const scenario = getScenario();
 
-    let textures: Texture[] = [];
+    textures = [];
 
     if (type === "battleCharacter") {
       const models = getModels(assetIndex);
@@ -142,7 +129,7 @@
             battleCharacter.textures,
             three,
             instanceId,
-            canvasTexture,
+            canvas,
             dataView,
           );
 
@@ -156,7 +143,7 @@
         textures = battleCharacter.textures;
       }
     } else if (type === "battleStage") {
-      const battleStage = await unpackBattleStage(canvasTexture, dataView);
+      const battleStage = await unpackBattleStage(canvas, dataView);
 
       debug.log(battleStage);
 
@@ -183,7 +170,7 @@
               battleStage.textures,
               three,
               instanceId,
-              canvasTexture,
+              canvas,
               dataView,
             );
           }
@@ -218,7 +205,7 @@
         textures = battleStage.textures;
       }
     } else if (type === "location") {
-      const mpd = await unpackMpd(canvasTexture, dataView);
+      const mpd = await unpackMpd(canvas, dataView);
 
       debug.log(mpd);
 
@@ -246,7 +233,7 @@
               object.overrideOptions,
               three,
               instanceId,
-              canvasTexture,
+              canvas,
               dataView,
             );
           }
@@ -275,7 +262,7 @@
             mpd.textures,
             three,
             instanceId,
-            canvasTexture,
+            canvas,
             dataView,
           );
         }
@@ -292,47 +279,26 @@
       }
     }
 
+    three.setTextureListCallback(
+      textures.length > 0 ? handleModalOpen : undefined,
+    );
+
     if (instanceId !== three.getInstanceId()) {
       return;
     }
 
     three.setLoading(false);
-
-    const sheet = generateGraphicsSheet(128, textures);
-
-    canvas.resize(sheet.width, sheet.height);
-
-    textures.forEach((texture, index) => {
-      if (texture.data.length === 0) {
-        texture.data = getTextureData(texture);
-      }
-
-      canvas.addGraphic(
-        "sprite",
-        texture.data,
-        texture.width,
-        texture.height,
-        sheet.coordinates[index].x,
-        sheet.coordinates[index].y,
-      );
-    });
-
-    canvas.render();
   }
 
   onMount(async () => {
-    canvas = new Canvas({ canvasEl });
-
-    canvas.addLayer("sprite", "image");
-
-    three = new Three(threeEl);
-
-    canvasTexture = new Canvas({
+    canvas = new Canvas({
       width: 32,
       height: 32,
     });
 
-    canvasTexture.addLayer("texture", "image");
+    canvas.addLayer("texture", "image");
+
+    three = new Three(threeEl);
 
     updateCanvas();
   });
@@ -340,7 +306,6 @@
   onDestroy(() => {
     canvas.destroy();
     three.destroy();
-    canvasTexture.destroy();
   });
 
   $: {
@@ -352,62 +317,15 @@
 
     previousAssetId = getAssetId();
   }
-
-  $: {
-    innerWidth, innerHeight;
-
-    if (three) {
-      three.resize();
-    }
-  }
 </script>
 
-<svelte:window bind:innerWidth bind:innerHeight on:keydown={handleKeyDown} />
+<ModelViewer {three} bind:threeEl />
 
-<div class="gtc-modelviewer">
-  <div class="gtc-modelviewer-content">
-    <div
-      class="gtc-modelviewer-canvas"
-      class:gtc-modelviewer-canvas-hidden={hideCanvas}
-    >
-      <div bind:this={canvasEl} />
-    </div>
-    <div
-      class="gtc-modelviewer-three"
-      class:gtc-modelviewer-three-hidden={hideTree}
-    >
-      <div bind:this={threeEl} />
-    </div>
-  </div>
-</div>
+{#if isModalOpen}
+  <Modal onClose={handleModalClose}>
+    <TextureViewer {textures} />
+  </Modal>
+{/if}
 
 <style lang="postcss">
-  .gtc-modelviewer {
-    @apply flex-1;
-
-    & .gtc-modelviewer-content {
-      @apply flex;
-
-      & .gtc-modelviewer-canvas,
-      & .gtc-modelviewer-three {
-        @apply w-fit self-start rounded bg-primary-700 p-2;
-      }
-
-      & .gtc-modelviewer-canvas {
-        @apply mr-4 min-w-36 shrink-0;
-
-        &.gtc-modelviewer-canvas-hidden {
-          @apply hidden;
-        }
-      }
-
-      & .gtc-modelviewer-three {
-        @apply relative w-full;
-
-        &.gtc-modelviewer-three-hidden {
-          @apply hidden;
-        }
-      }
-    }
-  }
 </style>
