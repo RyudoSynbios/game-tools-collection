@@ -69,6 +69,13 @@ export default class Three {
   private scene: Scene;
   private renderer: WebGLRenderer;
   private camera: PerspectiveCamera;
+  private cameraSettings: {
+    fov: number;
+    near: number;
+    far: number;
+    position: [number, number, number];
+    target: [number, number, number];
+  };
   private controls: OrbitControls;
   private raycaster: Raycaster;
   private cache: { [id: string]: string };
@@ -110,6 +117,10 @@ export default class Three {
     options?: {
       width?: number;
       height?: number;
+      camera?: {
+        position: [number, number, number];
+        target: [number, number, number];
+      };
     },
   ) {
     const width = options?.width || 0;
@@ -125,7 +136,20 @@ export default class Three {
     this.scene = new Scene();
     this.scene.background = new Color(0x2a3441);
 
-    this.camera = new PerspectiveCamera(40, width / height, 1, 40000);
+    this.cameraSettings = {
+      fov: 40,
+      near: 1,
+      far: 40000,
+      position: options?.camera?.position || [0, 1000, 1500],
+      target: options?.camera?.target || [0, 250, 0],
+    };
+
+    this.camera = new PerspectiveCamera(
+      this.cameraSettings.fov,
+      width / height,
+      this.cameraSettings.near,
+      this.cameraSettings.far,
+    );
     this.scene.add(this.camera);
 
     this.renderer = new WebGLRenderer({ antialias: true });
@@ -767,13 +791,21 @@ export default class Three {
   }
 
   public resetCamera(): void {
-    this.camera.near = 1;
-    this.camera.far = 40000;
-    this.camera.position.set(0, 1000, 1500);
+    this.camera.near = this.cameraSettings.near;
+    this.camera.far = this.cameraSettings.far;
+    this.camera.position.set(...this.cameraSettings.position);
     this.camera.updateProjectionMatrix();
 
-    this.controls.target = new Vector3(0, 250, 0);
+    this.controls.target = new Vector3(...this.cameraSettings.target);
     this.controls.update();
+  }
+
+  public updateCameraSettings(
+    position: [number, number, number],
+    target: [number, number, number],
+  ): void {
+    this.cameraSettings.position = position;
+    this.cameraSettings.target = target;
   }
 
   public fullscreenToggle(): void {
