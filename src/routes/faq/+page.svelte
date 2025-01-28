@@ -37,8 +37,8 @@
   </p>
   <p>
     If you are in possession of a save file that is not recognized by the tools,
-    you can contact me on <a
-      href="https://discordapp.com/users/433693716587216896"
+    you can reach me on <a
+      href="https://discord.gg/bKrZcfWxXD"
     >
       Discord
     </a>

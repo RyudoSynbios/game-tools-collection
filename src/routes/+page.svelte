@@ -118,8 +118,8 @@
     </p>
     <p>
       If a tool doesn't work as it should, if a game you love is missing or if
-      you any questions, you can contact me on <a
-        href="https://discordapp.com/users/433693716587216896"
+      you any questions, you can reach me on <a
+        href="https://discord.gg/bKrZcfWxXD"
       >
         Discord
       </a>

@@ -29,12 +29,14 @@
     <div class="gtc-header-inner">
       <a class="gtc-header-logo" href="/">Game Tools Collection</a>
       <div>
+        <a href="https://discord.gg/bKrZcfWxXD" target="_blank">
+          <img src="/img/discord-mark-white.svg" alt="Discord Logo" />
+        </a>
         <a
           href="https://github.com/RyudoSynbios/game-tools-collection"
           target="_blank"
         >
           <img src="/img/github-mark-white.svg" alt="GitHub Logo" />
-          GitHub
         </a>
         <a href="/faq">FAQ</a>
         <a href="/about">About</a>
@@ -73,7 +75,7 @@
             }
 
             & img {
-              @apply mr-2 h-4;
+              @apply mr-1 h-5;
             }
           }
         }
