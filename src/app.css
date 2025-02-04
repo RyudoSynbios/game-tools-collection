@@ -91,7 +91,7 @@ select {
 }
 
 [data-title]:after {
-  @apply invisible absolute top-8 z-50 w-64 -translate-x-1/2 whitespace-pre-line rounded bg-primary-500 p-1 text-xs opacity-0 shadow-md;
+  @apply invisible absolute top-8 z-50 w-64 -translate-x-1/2 whitespace-pre-line rounded bg-primary-500 px-2 py-1 text-left text-xs opacity-0 shadow-md;
 
   content: attr(data-title);
 }
