@@ -37,11 +37,7 @@
   </p>
   <p>
     If you are in possession of a save file that is not recognized by the tools,
-    you can reach me on <a
-      href="https://discord.gg/bKrZcfWxXD"
-    >
-      Discord
-    </a>
+    you can reach me on <a href="https://discord.gg/bKrZcfWxXD"> Discord </a>
     or at
     <a href="mailto:contact@game-tools-collection.com">
       contact@game-tools-collection.com
@@ -99,6 +95,16 @@
       <strong>PC-Engine CD: </strong>.sav, .srm
     </li>
   </ul>
+  <h2>- My save file from an Everdrive won't load (Nintendo 64)</h2>
+  <p>Everdrive save files can be byteswapped. You can follow those steps:</p>
+  <p>
+    Open this <a href="/tools/byteswap" target="_blank">page</a> and upload you're
+    save file. Your file will be converted and downloaded automatically.
+  </p>
+  <p>
+    Your save file should now work with the save editor. Once you're done
+    editing, use the same tool to convert your file back.
+  </p>
   <h2>- My .bcr file won't load (Sega Saturn)</h2>
   <p>Your save file may be compressed.</p>
   <p>
