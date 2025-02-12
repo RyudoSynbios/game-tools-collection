@@ -3,7 +3,6 @@
   import {
     dataView,
     fileHeaderShift,
-    fileIsLoading,
     fileName,
     gameRegion,
     gameTemplate,
@@ -20,6 +19,7 @@
   let isDragging = false;
   let dataViewTmp: DataView | undefined;
   let fileHeaderShiftTmp = 0x0;
+  let fileIsLoading = false;
   let fileNameTmp = "";
   let regions: string[] = [];
   let error = "";
@@ -43,7 +43,7 @@
   }
 
   function handleDropzoneClick(): void {
-    if (!$fileIsLoading) {
+    if (!fileIsLoading) {
       inputEl.click();
     }
   }
@@ -56,14 +56,13 @@
   }
 
   function handleUploadedFile(file: File): void {
-    if (file.size === 0) {
+    if (!file || file.size === 0) {
       error = $gameTemplate.validator.error;
-
       return;
     }
 
     isDragging = false;
-    $fileIsLoading = true;
+    fileIsLoading = true;
 
     const fileReader = new FileReader();
 
@@ -115,7 +114,7 @@
         error = $gameTemplate.validator.error;
       }
 
-      $fileIsLoading = false;
+      fileIsLoading = false;
     };
 
     fileReader.readAsArrayBuffer(file);
@@ -148,7 +147,6 @@
 <div class="gtc-dropzone">
   <div
     class="gtc-dropzone-inner"
-    class:gtc-dropzone-dragging={isDragging}
     on:click={handleDropzoneClick}
     on:dragleave|preventDefault={handleDragLeave}
     on:dragover|preventDefault={handleDragOver}
@@ -157,7 +155,7 @@
     <img src={logo} alt={name} />
     {#if isDragging}
       <p>Drop the file here.</p>
-    {:else if !$fileIsLoading}
+    {:else if !fileIsLoading}
       <p>{$gameTemplate.validator?.text || ""}</p>
     {:else}
       <p>Loading...</p>
@@ -184,9 +182,6 @@
 
     & .gtc-dropzone-inner {
       @apply flex h-full w-full cursor-pointer flex-col items-center justify-center border-2 border-dashed border-primary-500 p-4 text-white;
-
-      &.gtc-dropzone-dragging {
-      }
 
       & .gtc-dropzone-hint {
         @apply whitespace-pre-line text-center text-primary-400;

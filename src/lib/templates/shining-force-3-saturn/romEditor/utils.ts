@@ -1,6 +1,11 @@
 import { get } from "svelte/store";
 
-import { dataView, dataViewAlt, gameRegion } from "$lib/stores";
+import {
+  dataView,
+  dataViewAlt,
+  dataViewAltMetas,
+  gameRegion,
+} from "$lib/stores";
 import { getInt, setInt } from "$lib/utils/bytes";
 import {
   customGetRegions,
@@ -326,9 +331,12 @@ export function getComponent(
 export function beforeSaving(): ArrayBufferLike {
   const $dataView = get(dataView);
   const $dataViewAlt = get(dataViewAlt);
+  const $dataViewAltMetas = get(dataViewAltMetas);
 
   dataViews.forEach((dataView) => {
-    writeFile(dataView.fileName, $dataViewAlt[dataView.name]);
+    if ($dataViewAltMetas[dataView.name]?.isDirty) {
+      writeFile(dataView.fileName, $dataViewAlt[dataView.name]);
+    }
   });
 
   return $dataView.buffer;

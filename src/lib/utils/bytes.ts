@@ -1,8 +1,19 @@
 import { get } from "svelte/store";
 
-import { dataView, dataViewAlt, isDebug, isDirty } from "$lib/stores";
+import {
+  dataView,
+  dataViewAlt,
+  dataViewAltMetas,
+  isDebug,
+  isDirty,
+} from "$lib/stores";
 import debug from "$lib/utils/debug";
-import { getObjKey, isPartial, makeOperations } from "$lib/utils/format";
+import {
+  getObjKey,
+  isPartial,
+  makeOperations,
+  utilsExists,
+} from "$lib/utils/format";
 
 import type { Binary, DataType, DataTypeInt, IntOperation } from "$lib/types";
 
@@ -464,6 +475,7 @@ export function setInt(
 ): void {
   let $dataView = get(dataView);
   const $dataViewAlt = get(dataViewAlt);
+  const $dataViewAltMetas = get(dataViewAltMetas);
   const $isDebug = get(isDebug);
 
   if (isDataViewAltExists(dataViewAltKey)) {
@@ -584,6 +596,29 @@ export function setInt(
       ...$dataViewAlt,
       [dataViewAltKey]: $dataView,
     });
+
+    if (!$dataViewAltMetas[dataViewAltKey]) {
+      $dataViewAltMetas[dataViewAltKey] = {};
+    }
+
+    if (utilsExists("generatePatch")) {
+      if (!$dataViewAltMetas[dataViewAltKey].patch) {
+        $dataViewAltMetas[dataViewAltKey].patch = {};
+      }
+
+      const dataTypeLength = dataTypeToLength(dataType);
+
+      [...Array(dataTypeLength).keys()].forEach((index) => {
+        const mutliplier = options.bigEndian
+          ? dataTypeLength - 1 - index
+          : index;
+        const int = (value >>> (mutliplier * 0x8)) & 0xff;
+
+        $dataViewAltMetas[dataViewAltKey]!.patch![offset + index] = int;
+      });
+    }
+
+    $dataViewAltMetas[dataViewAltKey].isDirty = true;
   } else {
     dataView.set($dataView);
   }
@@ -643,6 +678,7 @@ export function setBigInt(
 ): void {
   let $dataView = get(dataView);
   const $dataViewAlt = get(dataViewAlt);
+  const $dataViewAltMetas = get(dataViewAltMetas);
   const $isDebug = get(isDebug);
 
   if (isDataViewAltExists(dataViewAltKey)) {
@@ -682,6 +718,12 @@ export function setBigInt(
       ...$dataViewAlt,
       [dataViewAltKey]: $dataView,
     });
+
+    if (!$dataViewAltMetas[dataViewAltKey]) {
+      $dataViewAltMetas[dataViewAltKey] = {};
+    }
+
+    $dataViewAltMetas[dataViewAltKey].isDirty = true;
   } else {
     dataView.set($dataView);
   }

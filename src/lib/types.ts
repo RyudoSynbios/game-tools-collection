@@ -1,6 +1,14 @@
 export type Color = [number, number, number, number];
 
-export type ColorType = "ABGR555" | "BGR333" | "BGR555" | "RGBA555";
+export type ColorType =
+  | "ABGR555"
+  | "ARGB555"
+  | "BGR333"
+  | "BGR555"
+  | "RGB555"
+  | "RGB565"
+  | "RGB5A3"
+  | "RGBA555";
 
 export type ContentType =
   | "bitflags"
@@ -95,6 +103,11 @@ export interface Console {
   id: string;
   name: string;
   manufacturer: Manufacturer;
+}
+
+export interface DataViewAltMetas {
+  isDirty?: boolean;
+  patch?: { [offset: number]: bigint | number };
 }
 
 export interface Game {
@@ -272,6 +285,11 @@ export interface ItemInt {
   };
   size?: "md" | "lg";
   autocomplete?: boolean;
+  button?: {
+    label: string;
+    action: string;
+  };
+  uncontrolled?: boolean;
   hint?: string;
   suffix?: string;
   disableIfNegative?: boolean;
@@ -357,4 +375,10 @@ export interface ItemTabs {
 export interface LogicalOperator<T> {
   $and?: (LogicalOperator<T> | T)[];
   $or?: (LogicalOperator<T> | T)[];
+}
+
+export interface Patch<T> {
+  identifier: string;
+  version: string;
+  data: T;
 }

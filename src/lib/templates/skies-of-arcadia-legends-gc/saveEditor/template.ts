@@ -909,7 +909,7 @@ const template: GameJson = {
                       hint: "The ship used influences the World Map.",
                     },
                     {
-                      name: "Unknown",
+                      name: "Ship ID",
                       offset: 0x29f8,
                       type: "variable",
                       dataType: "uint8",

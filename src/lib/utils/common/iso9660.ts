@@ -5,6 +5,7 @@ import { dataView, gameTemplate } from "$lib/stores";
 import type { RegionValidator } from "$lib/types";
 
 import { extractBit, getInt, getString, setInt } from "../bytes";
+import debug from "../debug";
 import { getObjKey } from "../format";
 import { checkValidator, getRegions, reduceConditions } from "../validator";
 
@@ -333,6 +334,8 @@ export function getFile(
       ...file,
       dataView: new DataView(new Uint8Array(data).buffer),
     };
+  } else {
+    debug.error(`File ${name} not found.`);
   }
 }
 
@@ -476,5 +479,7 @@ export function writeFile(name: string, dataView: DataView): void {
         offset += iso.sectorHeaderSize;
       }
     }
+  } else {
+    debug.error(`File ${name} not found.`);
   }
 }

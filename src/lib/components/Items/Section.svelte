@@ -1,10 +1,19 @@
 <script lang="ts">
   import Content from "$lib/components/Items/Content.svelte";
-  import { isDebug } from "$lib/stores";
+  import { dataView, gameUtils, isDebug } from "$lib/stores";
+  import { utilsExists } from "$lib/utils/format";
 
   import type { ItemSection } from "$lib/types";
 
   export let item: ItemSection;
+
+  $: {
+    $dataView;
+
+    if (utilsExists("overrideItem")) {
+      item = $gameUtils.overrideItem(item);
+    }
+  }
 </script>
 
 {#if !item.hidden || $isDebug}

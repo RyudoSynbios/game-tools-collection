@@ -363,6 +363,15 @@ export default class Canvas {
     });
   }
 
+  public exportGraphicData(layer: string): Uint8Array {
+    if (!this.layers[layer]) {
+      debug.error("This layer doesn't exists");
+      return new Uint8Array();
+    }
+
+    return this.layers[layer].datas[0];
+  }
+
   public resize(width: number, height: number) {
     this.width = width || 1;
     this.height = height || 1;

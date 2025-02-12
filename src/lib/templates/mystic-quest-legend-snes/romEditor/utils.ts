@@ -248,11 +248,13 @@ export function getMonsterGroupNames(): Resource {
   const names: Resource = {};
 
   [...Array(234).keys()].forEach((index) => {
-    names[index] = getText(
-      offset +
-        (getInt(monsterGroupsOffset + index * 0x4, "uint8") & 0x7f) * length,
-      length,
-    );
+    const monsterIndex = getInt(monsterGroupsOffset + index * 0x4, "uint8");
+
+    if (monsterIndex !== 0xff) {
+      names[index] = getText(offset + (monsterIndex & 0x7f) * length, length);
+    } else {
+      names[index] = "???";
+    }
   });
 
   return names;

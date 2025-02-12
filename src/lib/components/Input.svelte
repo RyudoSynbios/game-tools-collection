@@ -104,7 +104,7 @@
       {max}
       {maxlength}
       {step}
-      {disabled}
+      disabled={disabled && !$isDebug}
       data-checksum={checksum}
       data-test={$isDebug && test ? true : null}
       bind:this={inputEl}

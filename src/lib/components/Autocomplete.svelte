@@ -104,7 +104,7 @@
   }
 
   function handleDropdownOpen(): void {
-    if (!disabled && !isDropdownOpen) {
+    if ((!disabled || $isDebug) && !isDropdownOpen) {
       filteredGroupOptions = filterGroupOptions();
       inputEl.select();
 
@@ -302,7 +302,7 @@
   >
     <input
       value={valueDisplayed}
-      {disabled}
+      disabled={disabled && !$isDebug}
       bind:this={inputEl}
       on:input={handleFilter}
       on:focus={handleFocusOn}

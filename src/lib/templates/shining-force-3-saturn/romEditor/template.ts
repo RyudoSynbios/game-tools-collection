@@ -3105,7 +3105,7 @@ const template: GameJson = {
     characterNames: "getCharacterNames()",
     classNames: "getClassesNames()",
     enemyDropRates: {
-      0x0: "Never",
+      0x0: "-",
       0x1: "100.00%",
       0x2: "50.00%",
       0x3: "33.33%",

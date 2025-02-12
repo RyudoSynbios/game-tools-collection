@@ -3,6 +3,7 @@ import { get } from "svelte/store";
 import {
   dataView,
   dataViewAlt,
+  dataViewAltMetas,
   fileHeaderShift,
   fileName,
   fileVisualizerAddress,
@@ -25,6 +26,7 @@ export function reset(): void {
 
   dataView.set(new DataView(new ArrayBuffer(0)));
   dataViewAlt.set({});
+  dataViewAltMetas.set({});
   fileHeaderShift.set(0x0);
   fileName.set("");
   fileVisualizerAddress.set(0x0);

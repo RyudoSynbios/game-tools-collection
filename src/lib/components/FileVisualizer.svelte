@@ -472,7 +472,7 @@
         }
 
         & button {
-          @apply bg-primary-400 leading-4 text-red-100;
+          @apply rounded-l-none bg-primary-400 leading-4 text-white;
 
           &:hover {
             @apply bg-primary-300;

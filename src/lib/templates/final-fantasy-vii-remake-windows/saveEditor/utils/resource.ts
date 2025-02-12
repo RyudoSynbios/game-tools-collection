@@ -1,4 +1,4 @@
-import { Resource } from "$lib/types";
+import type { Resource } from "$lib/types";
 
 export const characters: Resource = {
   0x0: "Cloud Strife",
