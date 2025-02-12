@@ -48,7 +48,7 @@
   {/if}
   <select
     {value}
-    {disabled}
+    disabled={disabled && !$isDebug}
     data-test={$isDebug && test ? true : null}
     bind:this={selectEl}
     on:change={onChange}
