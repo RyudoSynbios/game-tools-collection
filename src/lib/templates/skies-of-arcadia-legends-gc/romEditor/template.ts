@@ -31,6 +31,7 @@ const template: GameJson = {
   items: [
     {
       type: "tabs",
+      defaultIndex: 11,
       items: [
         {
           name: "Party",
@@ -4089,6 +4090,7 @@ const template: GameJson = {
           items: [
             {
               type: "tabs",
+              defaultIndex: 1,
               items: [
                 {
                   name: "Images",
@@ -4125,6 +4127,7 @@ const template: GameJson = {
                       instanceType: "tabs",
                       instances: 0,
                       resource: "assetScriptNames",
+                      defaultIndex: 4,
                       vertical: true,
                       flex: true,
                       items: [
