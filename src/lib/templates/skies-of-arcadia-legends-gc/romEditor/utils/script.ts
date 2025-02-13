@@ -4,19 +4,31 @@ import { gameRegion } from "$lib/stores";
 import { getInt } from "$lib/utils/bytes";
 import { decodeWindows31J } from "$lib/utils/encoding";
 
-export function parseVariable(
+export function isEnd(
+  action: Action,
   dataView: DataView,
-  offset: number,
-): [number, number] {
-  const instruction = getInt(offset, "uint32", { bigEndian: true }, dataView);
+  increment = true,
+): boolean {
+  const int = getInt(action.offset, "uint32", { bigEndian: true }, dataView);
+
+  if (increment) {
+    action.offset += 0x4;
+    action.length += 1;
+  }
+
+  return int === 0x1d;
+}
+
+export function parseVariable(action: Action, dataView: DataView): number {
+  const instruction = getInt(action.offset, "uint32", { bigEndian: true }, dataView); // prettier-ignore
 
   let value = 0;
-  let length = 1;
 
   switch (instruction & 0xff000000) {
     case 0x4000000: // Float
-      value = getInt(offset + 0x4, "float32", { bigEndian: true }, dataView);
-      length = 2;
+      value = getInt(action.offset + 0x4, "float32", { bigEndian: true }, dataView); // prettier-ignore
+      action.offset += 0x4;
+      action.length += 1;
       break;
     case 0x10000000: // ???
       value = instruction & 0xffffff;
@@ -29,406 +41,443 @@ export function parseVariable(
       break;
   }
 
-  return [value, length];
+  action.offset += 0x4;
+  action.length += 1;
+
+  return value;
 }
 
-export function isEnd(dataView: DataView, offset: number): boolean {
-  const int = getInt(offset, "uint32", { bigEndian: true }, dataView);
-
-  return int === 0x1d;
+export interface Action {
+  color: string;
+  offset: number;
+  text: string;
+  length: number;
+  expanded?: boolean;
 }
 
-type Parse = [string, number, number, string];
+export function parseIf(action: Action, dataView: DataView): void {
+  action.text = "should if";
 
-export function parseIf(dataView: DataView, offset: number): Parse {
-  let color = "orange";
-  let length = 1;
-  let text = "should if";
+  const value1 = parseVariable(action, dataView);
+  const value2 = parseVariable(action, dataView);
 
-  const [value1, varLength1] = parseVariable(dataView, offset);
+  const unknown = getInt(action.offset, "uint32", { bigEndian: true }, dataView); // prettier-ignore
 
-  offset += varLength1 * 0x4;
-  length += varLength1;
+  action.offset += 0x4;
+  action.length += 1;
 
-  const [value2, varLength2] = parseVariable(dataView, offset);
+  const end = isEnd(action, dataView);
 
-  offset += varLength2 * 0x4;
-  length += varLength2;
+  const jumpOffset = action.offset + getInt(action.offset, "uint32", { bigEndian: true }, dataView); // prettier-ignore
 
-  const unknown = getInt(offset, "uint32", { bigEndian: true }, dataView); // prettier-ignore
-
-  offset += 0x4;
-  length += 1;
-
-  const end = isEnd(dataView, offset);
-
-  offset += 0x4;
-  length += 1;
-
-  const jumpOffset = offset + getInt(offset, "uint32", { bigEndian: true }, dataView); // prettier-ignore
-
-  offset += 0x4;
-  length += 1;
+  action.offset += 0x4;
+  action.length += 1;
 
   if (unknown === 0x4 && end) {
-    color = "lightblue";
-    text = `if "${value1}", "${value2}", "${unknown}", jump to "${jumpOffset.toHex(8)}"`;
+    action.color = "lightblue";
+    action.text = `if "${value1}", "${value2}", "${unknown}", jump to "${jumpOffset.toHex(8)}"`;
   }
-
-  return [color, offset, length, text];
 }
 
-export function parseInit(dataView: DataView, offset: number): Parse {
-  let color = "orange";
-  let length = 1;
-  let text = "should init script";
+export function parseInit(action: Action, dataView: DataView): void {
+  action.text = "should init script";
 
-  if (isEnd(dataView, offset)) {
-    color = "limegreen";
-    text = "init";
+  if (isEnd(action, dataView, false)) {
+    action.color = "limegreen";
+    action.length += 1;
+    action.text = "init";
   } else {
-    const unknown1 = getInt(offset, "uint32", { bigEndian: true }, dataView);
+    const unknown1 = getInt(action.offset, "uint32", { bigEndian: true }, dataView); // prettier-ignore
 
     if (unknown1 === 0x20000400) {
-      offset += 0x4;
-      length += 1;
+      action.offset += 0x4;
+      action.length += 1;
     }
 
-    const [value, varLength] = parseVariable(dataView, offset);
+    const value = parseVariable(action, dataView);
 
-    offset += varLength * 0x4;
-    length += varLength;
-
-    const unknown2 = getInt(offset, "uint32", { bigEndian: true }, dataView);
+    const unknown2 = getInt(action.offset, "uint32", { bigEndian: true }, dataView); // prettier-ignore
 
     if (unknown1 === 0x20000400 && unknown2 === 0x4) {
-      offset += 0x4;
-      length += 1;
+      action.offset += 0x4;
+      action.length += 1;
     }
 
-    if (isEnd(dataView, offset)) {
-      color = "limegreen";
-      text = `init if "${value}"`;
+    if (isEnd(action, dataView)) {
+      action.color = "limegreen";
+      action.text = `init if "${value}"`;
     }
   }
-
-  offset += 0x4;
-  length += 1;
-
-  return [color, offset, length, text];
 }
 
-export function parseJump(dataView: DataView, offset: number): Parse {
-  let length = 1;
+export function parseJump(action: Action, dataView: DataView): void {
+  const jumpOffset = action.offset + getInt(action.offset, "uint32", { bigEndian: true }, dataView); // prettier-ignore
 
-  const jumpOffset = offset + getInt(offset, "uint32", { bigEndian: true }, dataView); // prettier-ignore
+  action.offset += 0x4;
+  action.length += 1;
 
-  offset += 0x4;
-  length += 1;
-
-  const color = "limegreen";
-  const text = `jump to "${jumpOffset.toHex(8)}"`;
-
-  return [color, offset, length, text];
+  action.color = "limegreen";
+  action.text = `jump to "${jumpOffset.toHex(8)}"`;
 }
 
-export function parseUnknown0b(dataView: DataView, offset: number): Parse {
-  let color = "orange";
-  let length = 1;
-  let text = "unknown instruction 0xb";
+export function parseUnknown0b(action: Action, dataView: DataView): void {
+  const unknown = getInt(action.offset, "uint32", { bigEndian: true }, dataView); // prettier-ignore
 
-  const unknown = getInt(offset, "uint32", { bigEndian: true }, dataView);
+  action.offset += 0x4;
+  action.length += 1;
 
-  offset += 0x4;
-  length += 1;
-
-  color = "mediumorchid";
-  text = `unknown instruction 0xb with value "${unknown}"`;
-
-  return [color, offset, length, text];
+  action.color = "mediumorchid";
+  action.text = `unknown instruction 0xb with value "${unknown}"`;
 }
 
-export function parseWait(dataView: DataView, offset: number): Parse {
-  let color = "orange";
-  let length = 1;
-  let text = "should wait frames";
+export function parseEnd(action: Action): void {
+  action.color = "limegreen";
+  action.text = "return";
+}
 
-  const [value, varLength] = parseVariable(dataView, offset);
+export function parseWait(action: Action, dataView: DataView): void {
+  action.text = "should wait frames";
 
-  length += varLength;
-  offset += varLength * 0x4;
+  const value = parseVariable(action, dataView);
 
-  if (isEnd(dataView, offset)) {
-    color = "limegreen";
-    text = `wait "${value}" frames`;
+  if (isEnd(action, dataView)) {
+    action.color = "limegreen";
+    action.text = `wait "${value}" frames`;
   }
-
-  length += 1;
-  offset += 0x4;
-
-  return [color, offset, length, text];
 }
 
-export function parseSetFlag(dataView: DataView, offset: number): Parse {
-  let color = "orange";
-  let length = 1;
-  let text = "should set flag";
+export function parseSetFlag(action: Action, dataView: DataView): void {
+  action.text = "should set flag";
 
-  const [value, varLength] = parseVariable(dataView, offset);
+  const value = parseVariable(action, dataView);
 
-  length += varLength;
-  offset += varLength * 0x4;
-
-  if (isEnd(dataView, offset)) {
-    color = "limegreen";
-    text = `set flag at position "${value}"`;
+  if (isEnd(action, dataView)) {
+    action.color = "limegreen";
+    action.text = `set flag at position "${value}"`;
   }
-
-  length += 1;
-  offset += 0x4;
-
-  return [color, offset, length, text];
 }
 
-export function parseUnsetFlag(dataView: DataView, offset: number): Parse {
-  let color = "orange";
-  let length = 1;
-  let text = "should unset flag";
+export function parseUnsetFlag(action: Action, dataView: DataView): void {
+  action.text = "should unset flag";
 
-  const [value, varLength] = parseVariable(dataView, offset);
+  const value = parseVariable(action, dataView);
 
-  length += varLength;
-  offset += varLength * 0x4;
-
-  if (isEnd(dataView, offset)) {
-    color = "limegreen";
-    text = `unset flag at position "${value}"`;
+  if (isEnd(action, dataView)) {
+    action.color = "limegreen";
+    action.text = `unset flag at position "${value}"`;
   }
-
-  length += 1;
-  offset += 0x4;
-
-  return [color, offset, length, text];
 }
 
-export function parseUnknown1a(dataView: DataView, offset: number): Parse {
-  let color = "orange";
-  let length = 1;
-  let text = "unknown instruction 0x1a";
+export function parseUnknown1a(action: Action, dataView: DataView): void {
+  action.text = "unknown instruction 0x1a";
 
-  const [value, varLength] = parseVariable(dataView, offset);
+  const value = parseVariable(action, dataView);
 
-  length += varLength;
-  offset += varLength * 0x4;
-
-  if (isEnd(dataView, offset)) {
-    color = "mediumorchid";
-    text = `unknown instruction 0x1a with value "${value}"`;
+  if (isEnd(action, dataView)) {
+    action.color = "mediumorchid";
+    action.text = `unknown instruction 0x1a with value "${value}"`;
   }
-
-  length += 1;
-  offset += 0x4;
-
-  return [color, offset, length, text];
 }
 
-export function parseUnknown1b(dataView: DataView, offset: number): Parse {
-  let color = "orange";
-  let length = 1;
-  let text = "unknown instruction 0x1b";
+export function parseUnknown1b(action: Action, dataView: DataView): void {
+  action.text = "unknown instruction 0x1b";
 
-  const [value, varLength] = parseVariable(dataView, offset);
+  const value = parseVariable(action, dataView);
 
-  length += varLength;
-  offset += varLength * 0x4;
-
-  if (isEnd(dataView, offset)) {
-    color = "mediumorchid";
-    text = `unknown instruction 0x1b with value "${value}"`;
+  if (isEnd(action, dataView)) {
+    action.color = "mediumorchid";
+    action.text = `unknown instruction 0x1b with value "${value}"`;
   }
-
-  length += 1;
-  offset += 0x4;
-
-  return [color, offset, length, text];
 }
 
-export function parseUnknown1c(dataView: DataView, offset: number): Parse {
-  let color = "orange";
-  let length = 1;
-  let text = "unknown instruction 0x1c";
+export function parseUnknown1c(action: Action, dataView: DataView): void {
+  action.text = "unknown instruction 0x1c";
 
-  const [value1, varLength1] = parseVariable(dataView, offset);
+  const value1 = parseVariable(action, dataView);
 
-  length += varLength1;
-  offset += varLength1 * 0x4;
+  const end1 = isEnd(action, dataView);
 
-  const end1 = isEnd(dataView, offset);
+  const value2 = parseVariable(action, dataView);
 
-  length += 1;
-  offset += 0x4;
+  const end2 = isEnd(action, dataView);
 
-  const [value2, varLength2] = parseVariable(dataView, offset);
+  const unknown = getInt(action.offset, "uint32", { bigEndian: true }, dataView); // prettier-ignore
 
-  length += varLength2;
-  offset += varLength2 * 0x4;
+  action.length += 1;
+  action.offset += 0x4;
 
-  const end2 = isEnd(dataView, offset);
+  const value3 = parseVariable(action, dataView);
 
-  length += 1;
-  offset += 0x4;
-
-  const unknown = getInt(offset, "uint32", { bigEndian: true }, dataView); // prettier-ignore
-
-  length += 1;
-  offset += 0x4;
-
-  const [value3, varLength3] = parseVariable(dataView, offset);
-
-  length += varLength3;
-  offset += varLength3 * 0x4;
-
-  const end3 = isEnd(dataView, offset);
-
-  length += 1;
-  offset += 0x4;
+  const end3 = isEnd(action, dataView);
 
   if (end1 && end2 && end3) {
-    color = "mediumorchid";
-    text = `unknown instruction 0x1c with value "${value1}",  "${value2}",  "${unknown.toHex(8)}",  "${value3}"`;
+    action.color = "mediumorchid";
+    action.text = `unknown instruction 0x1c with value "${value1}",  "${value2}",  "${unknown.toHex(8)}",  "${value3}"`;
   }
-
-  return [color, offset, length, text];
 }
 
-export function parseUnknown28(dataView: DataView, offset: number): Parse {
-  let color = "orange";
-  let length = 1;
-  let text = "unknown instruction 0x28";
+export function parseUnknown28(action: Action, dataView: DataView): void {
+  action.text = "unknown instruction 0x28";
 
-  const [value1, varLength1] = parseVariable(dataView, offset);
+  const value1 = parseVariable(action, dataView);
 
-  length += varLength1;
-  offset += varLength1 * 0x4;
+  const end1 = isEnd(action, dataView);
 
-  const end1 = isEnd(dataView, offset);
+  const value2 = parseVariable(action, dataView);
 
-  length += 1;
-  offset += 0x4;
+  const end2 = isEnd(action, dataView);
 
-  const [value2, varLength2] = parseVariable(dataView, offset);
+  const value3 = parseVariable(action, dataView);
 
-  length += varLength2;
-  offset += varLength2 * 0x4;
-
-  const end2 = isEnd(dataView, offset);
-
-  length += 1;
-  offset += 0x4;
-
-  const [value3, varLength3] = parseVariable(dataView, offset);
-
-  length += varLength3;
-  offset += varLength3 * 0x4;
-
-  const end3 = isEnd(dataView, offset);
-
-  length += 1;
-  offset += 0x4;
+  const end3 = isEnd(action, dataView);
 
   if (end1 && end2 && end3) {
-    color = "mediumorchid";
-    text = `unknown instruction 0x28 with value "${value1}",  "${value2}", "${value3}"`;
+    action.color = "mediumorchid";
+    action.text = `unknown instruction 0x28 with value "${value1}",  "${value2}", "${value3}"`;
   }
-
-  return [color, offset, length, text];
 }
 
-export function parseUnknown41(dataView: DataView, offset: number): Parse {
-  let color = "orange";
-  let length = 1;
-  let text = "unknown instruction 0x41";
+export function parseUnknown41(action: Action, dataView: DataView): void {
+  action.text = "unknown instruction 0x41";
 
-  const [value, varLength] = parseVariable(dataView, offset);
+  const value = parseVariable(action, dataView);
 
-  length += varLength;
-  offset += varLength * 0x4;
-
-  if (isEnd(dataView, offset)) {
-    color = "mediumorchid";
-    text = `unknown instruction 0x41 with value "${value}"`;
+  if (isEnd(action, dataView)) {
+    action.color = "mediumorchid";
+    action.text = `unknown instruction 0x41 with value "${value}"`;
   }
-
-  length += 1;
-  offset += 0x4;
-
-  return [color, offset, length, text];
 }
 
-export function parseUnknown5c(dataView: DataView, offset: number): Parse {
-  let color = "orange";
-  let length = 1;
-  let text = "unknown instruction 0x5c";
+export function parseUnknown5c(action: Action, dataView: DataView): void {
+  action.text = "unknown instruction 0x5c";
 
-  const [value, varLength] = parseVariable(dataView, offset);
+  const value = parseVariable(action, dataView);
 
-  length += varLength;
-  offset += varLength * 0x4;
-
-  if (isEnd(dataView, offset)) {
-    color = "mediumorchid";
-    text = `unknown instruction 0x5c with value "${value}"`;
+  if (isEnd(action, dataView)) {
+    action.color = "mediumorchid";
+    action.text = `unknown instruction 0x5c with value "${value}"`;
   }
-
-  length += 1;
-  offset += 0x4;
-
-  return [color, offset, length, text];
 }
 
-export function parseUnknown5d(dataView: DataView, offset: number): Parse {
-  let color = "orange";
-  let length = 1;
-  let text = "unknown instruction 0x5d";
+export function parseUnknown5d(action: Action, dataView: DataView): void {
+  action.text = "unknown instruction 0x5d";
 
-  const [value, varLength] = parseVariable(dataView, offset);
+  const value = parseVariable(action, dataView);
 
-  length += varLength;
-  offset += varLength * 0x4;
-
-  if (isEnd(dataView, offset)) {
-    color = "mediumorchid";
-    text = `unknown instruction 0x5d with value "${value}"`;
+  if (isEnd(action, dataView)) {
+    action.color = "mediumorchid";
+    action.text = `unknown instruction 0x5d with value "${value}"`;
   }
-
-  length += 1;
-  offset += 0x4;
-
-  return [color, offset, length, text];
 }
 
-export function parseUnknown90(dataView: DataView, offset: number): Parse {
-  let color = "orange";
-  let length = 1;
-  let text = "should open dialog box";
+export function parseUnknown90(action: Action, dataView: DataView): void {
+  action.text = "should open dialog box";
 
-  const rOffset = offset + getInt(offset, "int32", { bigEndian: true }, dataView); // prettier-ignore
+  const rOffset = action.offset + getInt(action.offset, "int32", { bigEndian: true }, dataView); // prettier-ignore
 
-  length += 1;
-  offset += 0x4;
+  action.length += 1;
+  action.offset += 0x4;
 
-  const unknown = getInt(offset, "uint32", { bigEndian: true }, dataView); // prettier-ignore
+  const unknown = getInt(action.offset, "uint32", { bigEndian: true }, dataView); // prettier-ignore
 
-  length += 1;
-  offset += 0x4;
+  action.length += 1;
+  action.offset += 0x4;
 
   if (unknown === 0x7fffffff) {
-    color = "limegreen";
-    text = `open dialog box and read ${rOffset.toHex(8)}`;
+    action.color = "limegreen";
+    action.text = `open dialog box and read ${rOffset.toHex(8)}`;
   }
-
-  return [color, offset, length, text];
 }
+
+// if (instruction === 0xd) {
+//   const int2 = getInt(offset + 0x4, "uint32", { bigEndian: true }, dataView); // prettier-ignore
+//   const int3 = getInt(offset + 0x8, "uint32", { bigEndian: true }, dataView); // prettier-ignore
+//   const int5 = getInt(offset + 0x10, "uint32", { bigEndian: true }, dataView); // prettier-ignore
+
+//   let text = "should set light";
+//   let shift = 0x4;
+
+//   if (int2 === 0x00000052 && int3 === 0x04000000 && int5 === 0x1d) {
+//     const float1 = getInt(offset + 0xc, "float32", { bigEndian: true }, dataView); // prettier-ignore
+//     const float2 = getInt(offset + 0x18, "float32", { bigEndian: true }, dataView); // prettier-ignore
+//     const float3 = getInt(offset + 0x24, "float32", { bigEndian: true }, dataView); // prettier-ignore
+//     const float4 = getInt(offset + 0x30, "float32", { bigEndian: true }, dataView); // prettier-ignore
+
+//     const enabled = float1 === 1 ? "enabled" : "disabled";
+
+//     color = "limegreen";
+//     action.length = 14;
+//     text = `set light color: "${enabled}", R = "${float2}", G = "${float3}", B = "${float4}"`;
+//     shift = 0x38;
+//   } else if (
+//     int2 === 0x00000053 &&
+//     int3 === 0x04000000 &&
+//     int5 === 0x1d
+//   ) {
+//     const float1 = getInt(offset + 0xc, "float32", { bigEndian: true }, dataView); // prettier-ignore
+//     const float2 = getInt(offset + 0x18, "float32", { bigEndian: true }, dataView); // prettier-ignore
+//     const float3 = getInt(offset + 0x24, "float32", { bigEndian: true }, dataView); // prettier-ignore
+//     const float4 = getInt(offset + 0x30, "float32", { bigEndian: true }, dataView); // prettier-ignore
+//     const float5 = getInt(offset + 0x3c, "float32", { bigEndian: true }, dataView); // prettier-ignore
+//     const float6 = getInt(offset + 0x48, "float32", { bigEndian: true }, dataView); // prettier-ignore
+//     const float7 = getInt(offset + 0x54, "float32", { bigEndian: true }, dataView); // prettier-ignore
+
+//     const enabled = float1 === 1 ? "enabled" : "disabled";
+
+//     color = "limegreen";
+//     action.length = 23;
+//     text = `set light parameters: "${enabled}", P1 = "${float2}", P2 = "${float3}", P3 = "${float4}", P4 = "${float5}", P5 = "${float6}", P6 = "${float7}"`;
+//     shift = 0x5c;
+//   }
+
+//   actions.push({ color, offset, action.length, text });
+
+//   offset += shift;
+// } else if (int1 === 0x0000009a) {
+//   const int2 = getInt(offset + 0x4, "uint32", { bigEndian: true }, dataView); // prettier-ignore
+//   const int4 = getInt(offset + 0xc, "uint32", { bigEndian: true }, dataView); // prettier-ignore
+
+//   let text = "should open choice box";
+
+//   if (int2 === 0x04000000 && int4 === 0x1d) {
+//     const float = getInt(offset + 0x8, "float32", { bigEndian: true }, dataView); // prettier-ignore
+
+//     text = `open item box with item "${float}" (related to main.dol)`;
+//   }
+
+//   actions.push({
+//     color,
+//     offset,
+//     action.length: 4,
+//     text,
+//   });
+
+//   offset += 0x10;
+// } else if (int1 === 0x0000009b) {
+//   const int2 = getInt(offset + 0x4, "uint32", { bigEndian: true }, dataView); // prettier-ignore
+//   const int4 = getInt(offset + 0xc, "uint32", { bigEndian: true }, dataView); // prettier-ignore
+
+//   let text = "should open choice box";
+
+//   if (int2 === 0x04000000 && int4 === 0x1d) {
+//     const float = getInt(offset + 0x8, "float32", { bigEndian: true }, dataView); // prettier-ignore
+//     const rOffset = getInt(offset + 0x10, "uint32", { bigEndian: true }, dataView); // prettier-ignore
+
+//     color = "limegreen";
+//     text = `open choice box with "${float}" choices and read "${(offset + 0x10 + rOffset).toHex(8)}"`;
+//   }
+
+//   actions.push({
+//     color,
+//     offset,
+//     action.length: 5,
+//     text,
+//   });
+
+//   offset += 0x14;
+// } else if (int1 === 0x08000100) {
+//   actions.push({
+//     color: "limegreen",
+//     offset,
+//     action.length: 2,
+//     text: "close dialog box",
+//   });
+
+//   offset += 0x8;
+// } else if (int1 === 0x10000057) {
+//   const int2 = getInt(offset + 0x4, "uint32", { bigEndian: true }, dataView); // prettier-ignore
+//   const int4 = getInt(offset + 0xc, "uint32", { bigEndian: true }, dataView); // prettier-ignore
+//   const int5 = getInt(offset + 0x10, "uint32", { bigEndian: true }, dataView); // prettier-ignore
+
+//   let text = "should be language condition";
+
+//   if (int2 === 0x04000000 && int4 === 0x4 && int5 === 0x1d) {
+//     const float = getInt(offset + 0x8, "float32", { bigEndian: true }, dataView); // prettier-ignore
+//     const rOffset = getInt(offset + 0x14, "int32", { bigEndian: true }, dataView); // prettier-ignore
+
+//     let language = "";
+
+//     switch (float) {
+//       case 0:
+//         language = "english";
+//         break;
+//       case 1:
+//         language = "french";
+//         break;
+//       case 2:
+//         language = "german";
+//         break;
+//       case 3:
+//         language = "spanish";
+//         break;
+//     }
+
+//     color = "limegreen";
+//     text = `if language !== "${language}", then jump to "${(offset + 0x14 + rOffset).toHex(8)}"`;
+//   }
+
+//   actions.push({ color, offset, action.length: 6, text });
+
+//   offset += 0x18;
+// } else if ((int1 & 0xff000000) === 0x20000000) {
+//   const int2 = getInt(offset + 0x4, "uint32", { bigEndian: true }, dataView); // prettier-ignore
+//   const int4 = getInt(offset + 0xc, "uint32", { bigEndian: true }, dataView); // prettier-ignore
+//   const int5 = getInt(offset + 0x10, "uint32", { bigEndian: true }, dataView); // prettier-ignore
+
+//   let text = "should be flag condition";
+
+//   if (int2 === 0x04000000 && int4 === 0x4 && int5 === 0x1d) {
+//     const value = int1 & 0xffff;
+//     const float = getInt(offset + 0x8, "float32", { bigEndian: true }, dataView); // prettier-ignore
+//     const rOffset = getInt(offset + 0x14, "int32", { bigEndian: true }, dataView); // prettier-ignore
+
+//     color = "orange";
+//     text = `if flag at position "${value}" !== "${float}", then jump to "${(offset + 0x14 + rOffset).toHex(8)}" << not all the time`;
+//   }
+
+//   actions.push({ color: color, offset, action.length: 6, text });
+
+//   offset += 0x18;
+// } else if (int1 === 0x50000000) {
+//   const int2 = getInt(offset + 0x4, "uint32", { bigEndian: true }, dataView); // prettier-ignore
+
+//   let text = "should check Gold";
+
+//   if (int2 === 0x04000000) {
+//     const float = getInt(offset + 0x8, "float32", { bigEndian: true }, dataView); // prettier-ignore
+
+//     color = "orange";
+//     text = `check or increment/decrement "${float}" Gold`;
+//   }
+
+//   actions.push({
+//     color,
+//     offset,
+//     action.length: 3,
+//     text,
+//   });
+
+//   offset += 0xc;
+// } else if (int1 === 0x50000001) {
+//   const int2 = getInt(offset + 0x4, "uint32", { bigEndian: true }, dataView); // prettier-ignore
+
+//   let text = "should check Swashblucker Rating";
+
+//   if (int2 === 0x04000000) {
+//     const float = getInt(offset + 0x8, "float32", { bigEndian: true }, dataView); // prettier-ignore
+
+//     color = "orange";
+//     text = `check or increment/decrement "${float}" Swashblucker Rating`;
+//   }
+
+//   actions.push({
+//     color,
+//     offset,
+//     action.length: 3,
+//     text,
+//   });
+
+//   offset += 0xc;
 
 export function parseText(
   dataView: DataView,

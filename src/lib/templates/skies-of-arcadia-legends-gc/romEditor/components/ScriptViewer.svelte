@@ -1,11 +1,10 @@
 <script lang="ts">
-  import { dataViewAlt, gameRegion } from "$lib/stores";
+  import { dataViewAlt } from "$lib/stores";
   import { getInt, getString } from "$lib/utils/bytes";
-  import { decodeWindows31J } from "$lib/utils/encoding";
 
   import { getFileData } from "../utils";
   import {
-    isEnd,
+    parseEnd,
     parseIf,
     parseInit,
     parseJump,
@@ -21,8 +20,8 @@
     parseUnknown41,
     parseUnknown90,
     parseUnsetFlag,
-    parseVariable,
     parseWait,
+    type Action,
   } from "../utils/script";
 
   export let assetIndex: number;
@@ -34,13 +33,7 @@
     offset: number;
     name: string;
     expanded?: boolean;
-    actions: {
-      color: string;
-      offset: number;
-      length: number;
-      text: string;
-      expanded?: boolean;
-    }[];
+    actions: Action[];
   }[] = [];
 
   function handleActionToggle(scriptIndex: number, actionIndex: number): void {
@@ -81,7 +74,6 @@
 
         while (offset < dataView.byteLength) {
           const instruction = getInt(offset, "uint32", { bigEndian: true }, dataView); // prettier-ignore
-          const initialOffset = offset;
 
           if ((instruction & 0xff000000) === 0x5c000000) {
             const [length, text] = parseText(dataView, offset);
@@ -91,273 +83,78 @@
             break;
           }
 
-          offset += 0x4;
-
-          let color = "red";
-          let text = instruction.toHex(8);
-          let length = 1;
+          const action = {
+            color: "orange",
+            offset,
+            length: 1,
+            text: instruction.toHex(8),
+          };
 
           switch (instruction) {
-            case 0x0:
-              [color, offset, length, text] = parseIf(dataView, offset);
-              break;
+            // case 0x0:
+            //   parseIf(action, dataView);
+            //   break;
             case 0x9:
-              [color, offset, length, text] = parseInit(dataView, offset);
+              parseInit(action, dataView);
               break;
-            case 0xa:
-              [color, offset, length, text] = parseJump(dataView, offset);
-              break;
-            case 0xb:
-              [color, offset, length, text] = parseUnknown0b(dataView, offset);
-              break;
-            case 0xc:
-              color = "limegreen";
-              text = "return";
-              end = true;
-              break;
-            case 0x10:
-              [color, offset, length, text] = parseWait(dataView, offset);
-              break;
-            case 0x11:
-              [color, offset, length, text] = parseSetFlag(dataView, offset);
-              break;
-            case 0x12:
-              [color, offset, length, text] = parseUnsetFlag(dataView, offset);
-              break;
-            case 0x1a:
-              [color, offset, length, text] = parseUnknown1a(dataView, offset);
-              break;
-            case 0x1b:
-              [color, offset, length, text] = parseUnknown1b(dataView, offset);
-              break;
-            case 0x1c:
-              [color, offset, length, text] = parseUnknown1c(dataView, offset);
-              break;
-            case 0x28:
-              [color, offset, length, text] = parseUnknown28(dataView, offset);
-              break;
-            case 0x41:
-              [color, offset, length, text] = parseUnknown41(dataView, offset);
-              break;
-            case 0x5c:
-              [color, offset, length, text] = parseUnknown5c(dataView, offset);
-              break;
-            case 0x5d:
-              [color, offset, length, text] = parseUnknown5d(dataView, offset);
-              break;
-            case 0x90:
-              [color, offset, length, text] = parseUnknown90(dataView, offset);
-              break;
+            // case 0xa:
+            //   parseJump(action, dataView);
+            //   break;
+            // case 0xb:
+            //   parseUnknown0b(action, dataView);
+            //   break;
+            // case 0xc:
+            //   parseEnd(action);
+            //   end = true;
+            //   break;
+            // case 0x10:
+            //   parseWait(action, dataView);
+            //   break;
+            // case 0x11:
+            //   parseSetFlag(action, dataView);
+            //   break;
+            // case 0x12:
+            //   parseUnsetFlag(action, dataView);
+            //   break;
+            // case 0x1a:
+            //   parseUnknown1a(action, dataView);
+            //   break;
+            // case 0x1b:
+            //   parseUnknown1b(action, dataView);
+            //   break;
+            // case 0x1c:
+            //   parseUnknown1c(action, dataView);
+            //   break;
+            // case 0x28:
+            //   parseUnknown28(action, dataView);
+            //   break;
+            // case 0x41:
+            //   parseUnknown41(action, dataView);
+            //   break;
+            // case 0x5c:
+            //   parseUnknown5c(action, dataView);
+            //   break;
+            // case 0x5d:
+            //   parseUnknown5d(action, dataView);
+            //   break;
+            // case 0x90:
+            //   parseUnknown90(action, dataView);
+            //   break;
+            default:
+              action.color = "red";
           }
 
-          // !
-
-          // if (instruction === 0xd) {
-          //   const int2 = getInt(offset + 0x4, "uint32", { bigEndian: true }, dataView); // prettier-ignore
-          //   const int3 = getInt(offset + 0x8, "uint32", { bigEndian: true }, dataView); // prettier-ignore
-          //   const int5 = getInt(offset + 0x10, "uint32", { bigEndian: true }, dataView); // prettier-ignore
-
-          //   let color = "orange";
-          //   let length = 1;
-          //   let text = "should set light";
-          //   let shift = 0x4;
-
-          //   if (int2 === 0x00000052 && int3 === 0x04000000 && int5 === 0x1d) {
-          //     const float1 = getInt(offset + 0xc, "float32", { bigEndian: true }, dataView); // prettier-ignore
-          //     const float2 = getInt(offset + 0x18, "float32", { bigEndian: true }, dataView); // prettier-ignore
-          //     const float3 = getInt(offset + 0x24, "float32", { bigEndian: true }, dataView); // prettier-ignore
-          //     const float4 = getInt(offset + 0x30, "float32", { bigEndian: true }, dataView); // prettier-ignore
-
-          //     const enabled = float1 === 1 ? "enabled" : "disabled";
-
-          //     color = "limegreen";
-          //     length = 14;
-          //     text = `set light color: "${enabled}", R = "${float2}", G = "${float3}", B = "${float4}"`;
-          //     shift = 0x38;
-          //   } else if (
-          //     int2 === 0x00000053 &&
-          //     int3 === 0x04000000 &&
-          //     int5 === 0x1d
-          //   ) {
-          //     const float1 = getInt(offset + 0xc, "float32", { bigEndian: true }, dataView); // prettier-ignore
-          //     const float2 = getInt(offset + 0x18, "float32", { bigEndian: true }, dataView); // prettier-ignore
-          //     const float3 = getInt(offset + 0x24, "float32", { bigEndian: true }, dataView); // prettier-ignore
-          //     const float4 = getInt(offset + 0x30, "float32", { bigEndian: true }, dataView); // prettier-ignore
-          //     const float5 = getInt(offset + 0x3c, "float32", { bigEndian: true }, dataView); // prettier-ignore
-          //     const float6 = getInt(offset + 0x48, "float32", { bigEndian: true }, dataView); // prettier-ignore
-          //     const float7 = getInt(offset + 0x54, "float32", { bigEndian: true }, dataView); // prettier-ignore
-
-          //     const enabled = float1 === 1 ? "enabled" : "disabled";
-
-          //     color = "limegreen";
-          //     length = 23;
-          //     text = `set light parameters: "${enabled}", P1 = "${float2}", P2 = "${float3}", P3 = "${float4}", P4 = "${float5}", P5 = "${float6}", P6 = "${float7}"`;
-          //     shift = 0x5c;
-          //   }
-
-          //   actions.push({ color, offset, length, text });
-
-          //   offset += shift;
-          // } else if (int1 === 0x0000009a) {
-          //   const int2 = getInt(offset + 0x4, "uint32", { bigEndian: true }, dataView); // prettier-ignore
-          //   const int4 = getInt(offset + 0xc, "uint32", { bigEndian: true }, dataView); // prettier-ignore
-
-          //   let color = "orange";
-          //   let text = "should open choice box";
-
-          //   if (int2 === 0x04000000 && int4 === 0x1d) {
-          //     const float = getInt(offset + 0x8, "float32", { bigEndian: true }, dataView); // prettier-ignore
-
-          //     text = `open item box with item "${float}" (related to main.dol)`;
-          //   }
-
-          //   actions.push({
-          //     color,
-          //     offset,
-          //     length: 4,
-          //     text,
-          //   });
-
-          //   offset += 0x10;
-          // } else if (int1 === 0x0000009b) {
-          //   const int2 = getInt(offset + 0x4, "uint32", { bigEndian: true }, dataView); // prettier-ignore
-          //   const int4 = getInt(offset + 0xc, "uint32", { bigEndian: true }, dataView); // prettier-ignore
-
-          //   let color = "orange";
-          //   let text = "should open choice box";
-
-          //   if (int2 === 0x04000000 && int4 === 0x1d) {
-          //     const float = getInt(offset + 0x8, "float32", { bigEndian: true }, dataView); // prettier-ignore
-          //     const rOffset = getInt(offset + 0x10, "uint32", { bigEndian: true }, dataView); // prettier-ignore
-
-          //     color = "limegreen";
-          //     text = `open choice box with "${float}" choices and read "${(offset + 0x10 + rOffset).toHex(8)}"`;
-          //   }
-
-          //   actions.push({
-          //     color,
-          //     offset,
-          //     length: 5,
-          //     text,
-          //   });
-
-          //   offset += 0x14;
-          // } else if (int1 === 0x08000100) {
-          //   actions.push({
-          //     color: "limegreen",
-          //     offset,
-          //     length: 2,
-          //     text: "close dialog box",
-          //   });
-
-          //   offset += 0x8;
-          // } else if (int1 === 0x10000057) {
-          //   const int2 = getInt(offset + 0x4, "uint32", { bigEndian: true }, dataView); // prettier-ignore
-          //   const int4 = getInt(offset + 0xc, "uint32", { bigEndian: true }, dataView); // prettier-ignore
-          //   const int5 = getInt(offset + 0x10, "uint32", { bigEndian: true }, dataView); // prettier-ignore
-
-          //   let color = "orange";
-          //   let text = "should be language condition";
-
-          //   if (int2 === 0x04000000 && int4 === 0x4 && int5 === 0x1d) {
-          //     const float = getInt(offset + 0x8, "float32", { bigEndian: true }, dataView); // prettier-ignore
-          //     const rOffset = getInt(offset + 0x14, "int32", { bigEndian: true }, dataView); // prettier-ignore
-
-          //     let language = "";
-
-          //     switch (float) {
-          //       case 0:
-          //         language = "english";
-          //         break;
-          //       case 1:
-          //         language = "french";
-          //         break;
-          //       case 2:
-          //         language = "german";
-          //         break;
-          //       case 3:
-          //         language = "spanish";
-          //         break;
-          //     }
-
-          //     color = "limegreen";
-          //     text = `if language !== "${language}", then jump to "${(offset + 0x14 + rOffset).toHex(8)}"`;
-          //   }
-
-          //   actions.push({ color, offset, length: 6, text });
-
-          //   offset += 0x18;
-          // } else if ((int1 & 0xff000000) === 0x20000000) {
-          //   const int2 = getInt(offset + 0x4, "uint32", { bigEndian: true }, dataView); // prettier-ignore
-          //   const int4 = getInt(offset + 0xc, "uint32", { bigEndian: true }, dataView); // prettier-ignore
-          //   const int5 = getInt(offset + 0x10, "uint32", { bigEndian: true }, dataView); // prettier-ignore
-
-          //   let color = "orange";
-          //   let text = "should be flag condition";
-
-          //   if (int2 === 0x04000000 && int4 === 0x4 && int5 === 0x1d) {
-          //     const value = int1 & 0xffff;
-          //     const float = getInt(offset + 0x8, "float32", { bigEndian: true }, dataView); // prettier-ignore
-          //     const rOffset = getInt(offset + 0x14, "int32", { bigEndian: true }, dataView); // prettier-ignore
-
-          //     color = "orange";
-          //     text = `if flag at position "${value}" !== "${float}", then jump to "${(offset + 0x14 + rOffset).toHex(8)}" << not all the time`;
-          //   }
-
-          //   actions.push({ color: color, offset, length: 6, text });
-
-          //   offset += 0x18;
-          // } else if (int1 === 0x50000000) {
-          //   const int2 = getInt(offset + 0x4, "uint32", { bigEndian: true }, dataView); // prettier-ignore
-
-          //   let color = "orange";
-          //   let text = "should check Gold";
-
-          //   if (int2 === 0x04000000) {
-          //     const float = getInt(offset + 0x8, "float32", { bigEndian: true }, dataView); // prettier-ignore
-
-          //     color = "orange";
-          //     text = `check or increment/decrement "${float}" Gold`;
-          //   }
-
-          //   actions.push({
-          //     color,
-          //     offset,
-          //     length: 3,
-          //     text,
-          //   });
-
-          //   offset += 0xc;
-          // } else if (int1 === 0x50000001) {
-          //   const int2 = getInt(offset + 0x4, "uint32", { bigEndian: true }, dataView); // prettier-ignore
-
-          //   let color = "orange";
-          //   let text = "should check Swashblucker Rating";
-
-          //   if (int2 === 0x04000000) {
-          //     const float = getInt(offset + 0x8, "float32", { bigEndian: true }, dataView); // prettier-ignore
-
-          //     color = "orange";
-          //     text = `check or increment/decrement "${float}" Swashblucker Rating`;
-          //   }
-
-          //   actions.push({
-          //     color,
-          //     offset,
-          //     length: 3,
-          //     text,
-          //   });
-
-          //   offset += 0xc;
-
-          actions.push({ color, offset: initialOffset, length, text });
+          actions.push({ ...action, offset });
 
           if (
             end ||
-            getInt(offset, "uint32", { bigEndian: true }, dataView) === 0x9
+            getInt(action.offset, "uint32", { bigEndian: true }, dataView) ===
+              0x9
           ) {
             break;
           }
+
+          offset += action.length * 0x4;
         }
       }
     }
