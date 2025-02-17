@@ -903,7 +903,7 @@ export default class Three {
     this.guiCustomFolder.show(false);
   }
 
-  public addGuiElement(
+  public addGuiListElement(
     name: string,
     label: string,
     value: number,

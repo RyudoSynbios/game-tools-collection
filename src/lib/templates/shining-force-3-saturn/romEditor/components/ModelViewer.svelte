@@ -96,7 +96,7 @@
           list[`Model ${i + 1}`] = i;
         }
 
-        three.addGuiElement(
+        three.addGuiListElement(
           "modelIndex",
           "Model",
           modelIndex,
