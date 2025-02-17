@@ -105,6 +105,10 @@ export function getOrdinalSuffix(number: number): string {
   return `${number}th`;
 }
 
+export function getRandomNumber(min: number, max: number): number {
+  return Math.round(Math.random() * (max - min) + min);
+}
+
 export function getRegionArray<T>(array: T[]): T {
   const $gameRegion = get(gameRegion);
 
