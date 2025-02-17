@@ -56,9 +56,8 @@
   }
 
   function handleUploadedFile(file: File): void {
-    if (file.size === 0) {
+    if (!file || file.size === 0) {
       error = $gameTemplate.validator.error;
-
       return;
     }
 
@@ -148,7 +147,6 @@
 <div class="gtc-dropzone">
   <div
     class="gtc-dropzone-inner"
-    class:gtc-dropzone-dragging={isDragging}
     on:click={handleDropzoneClick}
     on:dragleave|preventDefault={handleDragLeave}
     on:dragover|preventDefault={handleDragOver}
@@ -184,9 +182,6 @@
 
     & .gtc-dropzone-inner {
       @apply flex h-full w-full cursor-pointer flex-col items-center justify-center border-2 border-dashed border-primary-500 p-4 text-white;
-
-      &.gtc-dropzone-dragging {
-      }
 
       & .gtc-dropzone-hint {
         @apply whitespace-pre-line text-center text-primary-400;

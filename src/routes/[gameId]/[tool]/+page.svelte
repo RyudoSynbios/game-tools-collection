@@ -35,7 +35,7 @@
   let tool = $page.params["tool"];
 
   switch (tool) {
-    case "randomize":
+    case "randomizer":
       tool = "Randomizer";
       break;
     case "rom-editor":

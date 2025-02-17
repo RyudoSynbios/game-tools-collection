@@ -11,7 +11,7 @@
 
   import type { ItemString } from "$lib/types";
 
-  export let item: ItemString & { hidden?: boolean };
+  export let item: ItemString;
 
   function handleInputChange(event: Event): void {
     const target = event.target as HTMLInputElement;

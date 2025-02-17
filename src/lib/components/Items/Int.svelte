@@ -33,7 +33,7 @@
     ResourceLabels,
   } from "$lib/types";
 
-  export let item: ItemInt & { hidden?: boolean };
+  export let item: ItemInt;
 
   let previousId: string | undefined;
 

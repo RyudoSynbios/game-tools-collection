@@ -62,7 +62,7 @@ export function getGames(options: GameOptions = {}): Game[] {
       let createdAt = "";
 
       if (options.tool) {
-        createdAt = game.tools[options.tool].createdAt;
+        createdAt = game.tools[options.tool]?.createdAt || "";
       } else {
         Object.values(game.tools).forEach((tool) => {
           if (!createdAt || moment(tool.createdAt) > moment(createdAt)) {
