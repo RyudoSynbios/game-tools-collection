@@ -13,7 +13,6 @@ export const dataViewAltMetas = writable<{
 }>({});
 export const debugTools = writable<DebugTools>(lsDebugTools);
 export const fileHeaderShift = writable(0x0);
-export const fileIsLoading = writable(false);
 export const fileName = writable("");
 export const fileVisualizerAddress = writable(0x0);
 export const fileVisualizerDataViewKey = writable("main");

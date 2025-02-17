@@ -3,7 +3,6 @@
   import {
     dataView,
     fileHeaderShift,
-    fileIsLoading,
     fileName,
     gameRegion,
     gameTemplate,
@@ -20,6 +19,7 @@
   let isDragging = false;
   let dataViewTmp: DataView | undefined;
   let fileHeaderShiftTmp = 0x0;
+  let fileIsLoading = false;
   let fileNameTmp = "";
   let regions: string[] = [];
   let error = "";
@@ -43,7 +43,7 @@
   }
 
   function handleDropzoneClick(): void {
-    if (!$fileIsLoading) {
+    if (!fileIsLoading) {
       inputEl.click();
     }
   }
@@ -63,7 +63,7 @@
     }
 
     isDragging = false;
-    $fileIsLoading = true;
+    fileIsLoading = true;
 
     const fileReader = new FileReader();
 
@@ -115,7 +115,7 @@
         error = $gameTemplate.validator.error;
       }
 
-      $fileIsLoading = false;
+      fileIsLoading = false;
     };
 
     fileReader.readAsArrayBuffer(file);
@@ -157,7 +157,7 @@
     <img src={logo} alt={name} />
     {#if isDragging}
       <p>Drop the file here.</p>
-    {:else if !$fileIsLoading}
+    {:else if !fileIsLoading}
       <p>{$gameTemplate.validator?.text || ""}</p>
     {:else}
       <p>Loading...</p>
