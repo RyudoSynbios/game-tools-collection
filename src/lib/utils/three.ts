@@ -633,7 +633,12 @@ export default class Three {
       geometry = geometry.toNonIndexed();
     }
 
-    geometry.setAttribute("uv", new BufferAttribute(new Float32Array(uvs), 2));
+    if (uvs.length > 0) {
+      geometry.setAttribute(
+        "uv",
+        new BufferAttribute(new Float32Array(uvs), 2),
+      );
+    }
 
     geometry.computeVertexNormals();
 
