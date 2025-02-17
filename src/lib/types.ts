@@ -97,6 +97,11 @@ export interface Console {
   manufacturer: Manufacturer;
 }
 
+export interface DataViewAltMetas {
+  isDirty?: boolean;
+  patch?: { [offset: number]: bigint | number };
+}
+
 export interface Game {
   id: string;
   name: string;

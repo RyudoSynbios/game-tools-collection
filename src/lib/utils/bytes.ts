@@ -1,6 +1,12 @@
 import { get } from "svelte/store";
 
-import { dataView, dataViewAlt, isDebug, isDirty } from "$lib/stores";
+import {
+  dataView,
+  dataViewAlt,
+  dataViewAltMetas,
+  isDebug,
+  isDirty,
+} from "$lib/stores";
 import debug from "$lib/utils/debug";
 import { getObjKey, isPartial, makeOperations } from "$lib/utils/format";
 
@@ -464,6 +470,7 @@ export function setInt(
 ): void {
   let $dataView = get(dataView);
   const $dataViewAlt = get(dataViewAlt);
+  const $dataViewAltMetas = get(dataViewAltMetas);
   const $isDebug = get(isDebug);
 
   if (isDataViewAltExists(dataViewAltKey)) {
@@ -584,6 +591,12 @@ export function setInt(
       ...$dataViewAlt,
       [dataViewAltKey]: $dataView,
     });
+
+    if (!$dataViewAltMetas[dataViewAltKey]) {
+      $dataViewAltMetas[dataViewAltKey] = {};
+    }
+
+    $dataViewAltMetas[dataViewAltKey].isDirty = true;
   } else {
     dataView.set($dataView);
   }
@@ -643,6 +656,7 @@ export function setBigInt(
 ): void {
   let $dataView = get(dataView);
   const $dataViewAlt = get(dataViewAlt);
+  const $dataViewAltMetas = get(dataViewAltMetas);
   const $isDebug = get(isDebug);
 
   if (isDataViewAltExists(dataViewAltKey)) {
@@ -682,6 +696,12 @@ export function setBigInt(
       ...$dataViewAlt,
       [dataViewAltKey]: $dataView,
     });
+
+    if (!$dataViewAltMetas[dataViewAltKey]) {
+      $dataViewAltMetas[dataViewAltKey] = {};
+    }
+
+    $dataViewAltMetas[dataViewAltKey].isDirty = true;
   } else {
     dataView.set($dataView);
   }
