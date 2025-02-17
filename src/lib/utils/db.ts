@@ -79,6 +79,7 @@ export function getGames(options: GameOptions = {}): Game[] {
         tools: {
           saveEditor: game.tools.saveEditor,
           romEditor: game.tools.romEditor,
+          randomizer: game.tools.randomizer,
         },
       });
     }
