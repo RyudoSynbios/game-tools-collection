@@ -8,7 +8,12 @@ import {
   isDirty,
 } from "$lib/stores";
 import debug from "$lib/utils/debug";
-import { getObjKey, isPartial, makeOperations } from "$lib/utils/format";
+import {
+  getObjKey,
+  isPartial,
+  makeOperations,
+  utilsExists,
+} from "$lib/utils/format";
 
 import type { Binary, DataType, DataTypeInt, IntOperation } from "$lib/types";
 
@@ -594,6 +599,23 @@ export function setInt(
 
     if (!$dataViewAltMetas[dataViewAltKey]) {
       $dataViewAltMetas[dataViewAltKey] = {};
+    }
+
+    if (utilsExists("generatePatch")) {
+      if (!$dataViewAltMetas[dataViewAltKey].patch) {
+        $dataViewAltMetas[dataViewAltKey].patch = {};
+      }
+
+      const dataTypeLength = dataTypeToLength(dataType);
+
+      [...Array(dataTypeLength).keys()].forEach((index) => {
+        const mutliplier = options.bigEndian
+          ? dataTypeLength - 1 - index
+          : index;
+        const int = (value >>> (mutliplier * 0x8)) & 0xff;
+
+        $dataViewAltMetas[dataViewAltKey]!.patch![offset + index] = int;
+      });
     }
 
     $dataViewAltMetas[dataViewAltKey].isDirty = true;

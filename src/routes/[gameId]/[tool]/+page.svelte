@@ -6,6 +6,7 @@
   import ChecksumsIcon from "$lib/assets/Checksums.svelte";
   import EjectIcon from "$lib/assets/Eject.svelte";
   import ManageSearchIcon from "$lib/assets/ManageSearch.svelte";
+  import PatchIcon from "$lib/assets/Patch.svelte";
   import SaveIcon from "$lib/assets/Save.svelte";
   import SettingsIcon from "$lib/assets/Settings.svelte";
   import Dropzone from "$lib/components/Dropzone.svelte";
@@ -27,7 +28,7 @@
   import { setLocalStorage, utilsExists } from "$lib/utils/format";
   import { reset } from "$lib/utils/state";
 
-  import type { Game, GameJson } from "$lib/types";
+  import type { Game, GameJson, Patch } from "$lib/types";
 
   const game = getGame($page.params["gameId"]) as Game;
 
@@ -48,6 +49,19 @@
   let logoClickCount = 0;
   let logoClickTimer: NodeJS.Timeout;
   let debugToolbarOpen = false;
+
+  let patchInputEl: HTMLInputElement;
+  let patchToolbarOpen = false;
+  let patchIsLoading = false;
+  let patchError = false;
+  let patchSuccess = false;
+
+  function handleClick(): void {
+    debugToolbarOpen = false;
+    patchToolbarOpen = false;
+
+    resetPatchStatus();
+  }
 
   function handleDebugToolbarToggle(): void {
     debugToolbarOpen = !debugToolbarOpen;
@@ -117,6 +131,73 @@
     }
   }
 
+  function handlePatchImportClick(): void {
+    if (!patchIsLoading) {
+      patchInputEl.click();
+    }
+  }
+
+  function handlePatchInputChange(event: Event): void {
+    const files = (event.target as HTMLInputElement).files || [];
+    const file = files[0];
+
+    handlePatchImport(file);
+  }
+
+  function handlePatchImport(file: File): void {
+    resetPatchStatus();
+
+    if (!file || file.size === 0) {
+      patchError = true;
+      return;
+    }
+
+    patchIsLoading = true;
+
+    const fileReader = new FileReader();
+
+    fileReader.onload = (event: ProgressEvent<FileReader>) => {
+      try {
+        const patch: Patch<unknown> = JSON.parse(`${event.target?.result}`);
+
+        if (patch.identifier !== $page.params["gameId"]) {
+          patchIsLoading = false;
+          patchError = true;
+          return;
+        }
+
+        $gameUtils.importPatch(patch);
+
+        patchError = false;
+        patchSuccess = true;
+      } catch {
+        patchError = true;
+      }
+
+      patchIsLoading = false;
+    };
+
+    fileReader.readAsText(file);
+  }
+
+  function handlePatchGenerate(): void {
+    const patch = $gameUtils.generatePatch();
+
+    const blob = new Blob([JSON.stringify(patch)], {
+      type: "application/json",
+    });
+
+    FileSaver.saveAs(blob, `${patch.identifier}.gtc`);
+
+    $isDirty = false;
+  }
+
+  function handlePatchToolbarToggle(): void {
+    patchToolbarOpen = !patchToolbarOpen;
+
+    resetPatchStatus();
+  }
+
   function handleShowInputValuesToggle(): void {
     $debugTools.showInputValues = !$debugTools.showInputValues;
     setLocalStorage("debugTools", `${JSON.stringify($debugTools)}`);
@@ -127,6 +208,11 @@
     setLocalStorage("debugTools", `${JSON.stringify($debugTools)}`);
   }
 
+  function resetPatchStatus(): void {
+    patchError = false;
+    patchSuccess = false;
+  }
+
   onDestroy(() => {
     reset();
 
@@ -135,14 +221,18 @@
   });
 </script>
 
+<!-- prettier-ignore -->
 <svelte:head>
   <title>{game.name} - {game.console.name} - {tool} | Game Tools Collection</title>
   <meta property="og:title" content="{game.name} - {game.console.name} - {tool}" />
   <meta property="og:image" content="{$page.url.origin}/img/games/{game.id}/logo.png" />
 </svelte:head>
 
+<svelte:window on:click={handleClick} />
+
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
+<!-- svelte-ignore a11y-no-static-element-interactions -->
 <div class="gtc-tool">
   {#if $dataView.byteLength === 0}
     <div class="gtc-tool-dropzone">
@@ -160,7 +250,7 @@
       />
       <div>
         {#if $isDebug}
-          <div class="gtc-tool-debugtoolbar">
+          <div class="gtc-tool-debugtoolbar" on:click|stopPropagation>
             <button
               type="button"
               class:gtc-tool-debugtoolbar-focus={debugToolbarOpen}
@@ -169,7 +259,7 @@
               <SettingsIcon />
             </button>
             {#if debugToolbarOpen}
-              <ul>
+              <ul class="gtc-tool-toolbar">
                 <li on:click={handleShowTabIndexesToggle}>
                   Show tab indexes
                   <input type="checkbox" checked={$debugTools.showTabIndexes} />
@@ -202,11 +292,52 @@
             </button>
           {/if}
         {/if}
+        {#if utilsExists("importPatch") || utilsExists("generatePatch")}
+          <div class="gtc-tool-patchtoolbar" on:click|stopPropagation>
+            <button
+              type="button"
+              class:gtc-tool-patchtoolbar-focus={patchToolbarOpen}
+              on:click={handlePatchToolbarToggle}
+            >
+              <PatchIcon /> Patch
+            </button>
+            {#if patchToolbarOpen}
+              <ul class="gtc-tool-toolbar">
+                {#if utilsExists("importPatch")}
+                  <li
+                    class:gtc-tool-patchtoolbar-loading={patchIsLoading}
+                    class:gtc-tool-patchtoolbar-error={patchError}
+                    class:gtc-tool-patchtoolbar-success={patchSuccess}
+                    on:click={handlePatchImportClick}
+                  >
+                    Import Patch
+                    {#if patchIsLoading}
+                      <span>(loading...)</span>
+                    {:else if patchError}
+                      <span>(file is invalid)</span>
+                    {:else if patchSuccess}
+                      <span>(patch applied)</span>
+                    {/if}
+                    <input
+                      type="file"
+                      bind:this={patchInputEl}
+                      on:change={handlePatchInputChange}
+                    />
+                  </li>
+                {/if}
+                {#if utilsExists("generatePatch")}
+                  <li on:click={handlePatchGenerate}>Generate Patch</li>
+                {/if}
+              </ul>
+            {/if}
+          </div>
+        {/if}
         <button type="button" class="gtc-tool-eject" on:click={handleFileEject}>
           <EjectIcon /> Eject
         </button>
         <button type="button" class="gtc-tool-save" on:click={handleFileSave}>
-          <SaveIcon /> Save
+          <SaveIcon />
+          {tool === "Randomizer" ? "Generate" : "Save"}
         </button>
       </div>
     </div>
@@ -278,23 +409,63 @@
             @apply bg-primary-300 text-white;
           }
 
+          & button {
+            @apply px-2;
+          }
+
           & :global(svg) {
             @apply mx-0;
           }
+        }
 
-          & ul {
-            @apply absolute left-2 top-10 w-40 rounded bg-primary-500 py-1 text-xs;
+        &.gtc-tool-patchtoolbar {
+          @apply relative mr-2;
 
-            & li {
-              @apply flex cursor-pointer px-2 py-1;
+          & .gtc-tool-patchtoolbar-error {
+            @apply text-red-700;
+          }
 
-              &:hover {
-                @apply bg-primary-400;
-              }
+          & .gtc-tool-patchtoolbar-loading {
+            @apply text-yellow-700;
+          }
 
-              & input[type="checkbox"] {
-                @apply ml-2 w-2.5 cursor-pointer accent-primary-400;
-              }
+          & .gtc-tool-patchtoolbar-success {
+            @apply text-green-700;
+          }
+
+          & button {
+            @apply bg-blue-900 text-blue-100;
+
+            &:hover {
+              @apply bg-blue-700;
+            }
+
+            &.gtc-tool-patchtoolbar-focus {
+              @apply bg-blue-700;
+            }
+          }
+
+          & input {
+            @apply hidden;
+          }
+
+          & span {
+            @apply ml-1;
+          }
+        }
+
+        .gtc-tool-toolbar {
+          @apply absolute left-2 top-10 z-20 w-44 rounded bg-primary-500 py-1 text-xs;
+
+          & li {
+            @apply flex cursor-pointer px-2 py-1;
+
+            &:hover {
+              @apply bg-primary-400;
+            }
+
+            & input[type="checkbox"] {
+              @apply ml-2 w-2.5 cursor-pointer accent-primary-400;
             }
           }
         }

@@ -363,3 +363,9 @@ export interface LogicalOperator<T> {
   $and?: (LogicalOperator<T> | T)[];
   $or?: (LogicalOperator<T> | T)[];
 }
+
+export interface Patch<T> {
+  identifier: string;
+  version: string;
+  data: T;
+}
