@@ -909,7 +909,7 @@ const template: GameJson = {
                       hint: "The ship used influences the World Map.",
                     },
                     {
-                      name: "Unknown",
+                      name: "Ship ID",
                       offset: 0x29f8,
                       type: "variable",
                       dataType: "uint8",
@@ -1068,8 +1068,6 @@ const template: GameJson = {
                             { offset: 0x3871, bit: 2, label: "Hans" },
                           ],
                         },
-                        // 0x3877 | 7 > 1 | Engineer (splitted 1)
-                        // 0x3876 | 0 > 1 | Engineer (splitted 2)
                         {
                           name: "Active",
                           offset: 0x3876,
@@ -1167,8 +1165,6 @@ const template: GameJson = {
                             { offset: 0x3870, bit: 2, label: "Kirala" },
                           ],
                         },
-                        // 0x3876 | 7 > 1 | Builder (splitted 1)
-                        // 0x3875 | 0 > 1 | Builder (splitted 2)
                         {
                           name: "Active",
                           offset: 0x3875,
@@ -1266,8 +1262,6 @@ const template: GameJson = {
                             { offset: 0x3877, bit: 2, label: "Merida" },
                           ],
                         },
-                        // 0x3875 | 7 > 1 | Jester (splitted 1)
-                        // 0x3874 | 0 > 1 | Jester (splitted 2)
                         {
                           name: "Active",
                           offset: 0x3874,
