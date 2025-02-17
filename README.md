@@ -47,7 +47,7 @@ Link to the website: [https://game-tools-collection.com](https://game-tools-coll
 | Resident Evil                             | PS       | Save       | EUR / USA / JAP / FRA / GER                   |
 | Rogue Legacy                              | WIN      | Save       | WORLD                                         |
 | Shining Force 3                           | SATURN   | Save / Rom | EUR / USA / JAP                               |
-| Skies of Arcadia Legends                  | GC       | Save       | EUR / USA / JAP                               |
+| Skies of Arcadia Legends                  | GC       | Save / Rom | EUR / USA / JAP                               |
 | Soleil                                    | MD       | Save / Rom | EUR / USA / JAP / FRA / GER / SPA / KOR       |
 | Sonic 3                                   | MD       | Save       | EUR / USA / JAP                               |
 | Sonic Adventure 2: Battle                 | GC       | Save       | EUR / USA / JAP                               |

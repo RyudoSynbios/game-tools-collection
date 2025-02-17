@@ -1,4 +1,4 @@
-import { getInt, getIntFromArray } from "$lib/utils/bytes";
+import { extractBit, getInt, getIntFromArray } from "$lib/utils/bytes";
 
 import type { Color, ColorType, Palette } from "$lib/types";
 
@@ -20,6 +20,39 @@ export function getColor(raw: number, type: ColorType): Color {
       green = ((raw >> 0x5) & 0x1f) << 0x3;
       red = (raw & 0x1f) << 0x3;
       alpha = 255;
+      break;
+    case "RGB565": // RRRR RGGG GGGB BBBB
+      red = ((raw >> 0xb) & 0x1f) << 0x3;
+      green = ((raw >> 0x5) & 0x3f) << 0x2;
+      blue = (raw & 0x1f) << 0x3;
+      alpha = 255;
+      break;
+    case "ARGB555": // ABBB BBGG GGGR RRRR
+      alpha = ((raw >> 0xf) & 0x1) * 255;
+      red = ((raw >> 0xa) & 0x1f) << 0x3;
+      green = ((raw >> 0x5) & 0x1f) << 0x3;
+      blue = (raw & 0x1f) << 0x3;
+      break;
+    case "RGB555": // -RRR RRGG GGGB BBBB
+      red = ((raw >> 0xa) & 0x1f) << 0x3;
+      green = ((raw >> 0x5) & 0x1f) << 0x3;
+      blue = (raw & 0x1f) << 0x3;
+      alpha = 255;
+      break;
+    case "RGB5A3":
+      if (extractBit(raw, 15)) {
+        // -RRR RRGG GGGB BBBB
+        red = ((raw >> 0xa) & 0x1f) << 0x3;
+        green = ((raw >> 0x5) & 0x1f) << 0x3;
+        blue = (raw & 0x1f) << 0x3;
+        alpha = 255;
+      } else {
+        // -AAA RRRR GGGG BBBB
+        alpha = Math.min(((raw >> 0xc) & 0x7) * 36.5, 255);
+        red = ((raw >> 0x8) & 0xf) << 0x4;
+        green = ((raw >> 0x4) & 0xf) << 0x4;
+        blue = (raw & 0xf) << 0x4;
+      }
       break;
     case "ABGR555": // ABBB BBGG GGGR RRRR
       alpha = ((raw >> 0xf) & 0x1) * 255;
