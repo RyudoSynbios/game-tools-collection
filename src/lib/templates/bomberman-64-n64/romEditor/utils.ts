@@ -1,7 +1,11 @@
-import { extractBit, getInt, getIntFromArray } from "$lib/utils/bytes";
+import { get } from "svelte/store";
+
+import { dataView } from "$lib/stores";
+import { getInt, getIntFromArray } from "$lib/utils/bytes";
 import type Canvas from "$lib/utils/canvas";
 import debug from "$lib/utils/debug";
 import { applyPalette, getPalette } from "$lib/utils/graphics";
+import Lzss from "$lib/utils/lzss";
 import type Three from "$lib/utils/three";
 
 import AssetViewer from "./components/AssetViewer.svelte";
@@ -34,57 +38,22 @@ export function getComponent(
 }
 
 export function getDecompressedData(offset: number): Uint8Array {
-  const decompressedData: number[] = [];
+  const $dataView = get(dataView);
 
   const size = getInt(offset, "uint32", { bigEndian: true });
 
-  offset += 0x4;
+  if (getInt(offset + 0x5, "uint8") !== 0x36) {
+    debug.warn("Not an asset file");
 
-  const buffer = [...Array(0x400).keys()].fill(0x0);
-
-  let bufferIndex = 0x3be;
-
-  while (decompressedData.length < size) {
-    const mask = getInt(offset, "uint8");
-
-    offset += 0x1;
-
-    if (decompressedData.length === 0 && getInt(offset, "uint8") !== 0x36) {
-      debug.warn("Not an asset file");
-
-      return new Uint8Array();
-    }
-
-    for (let i = 0x0; i < 0x8; i += 0x1) {
-      if (extractBit(mask, i)) {
-        const value = getInt(offset, "uint8");
-
-        buffer[bufferIndex] = value;
-        decompressedData.push(value);
-
-        bufferIndex = (bufferIndex + 0x1) & 0x3ff;
-      } else {
-        const special = getInt(offset, "uint16", { bigEndian: true });
-        const wordPosition = ((special & 0xc0) << 0x2) | (special >> 0x8);
-        const count = 3 + (special & 0x3f);
-
-        for (let j = 0; j < count; j += 1) {
-          const value = buffer[(wordPosition + j) & 0x3ff];
-
-          buffer[bufferIndex] = value;
-          decompressedData.push(value);
-
-          bufferIndex = (bufferIndex + 0x1) & 0x3ff;
-        }
-
-        offset += 0x1;
-      }
-
-      offset += 0x1;
-    }
+    return new Uint8Array();
   }
 
-  return new Uint8Array(decompressedData);
+  const compressedData = new Uint8Array($dataView.buffer.slice(offset + 0x4));
+
+  return new Lzss({
+    bufferSize: 0x400,
+    maxLength: 0x42,
+  }).decompress(compressedData, size);
 }
 
 export function getImage(
