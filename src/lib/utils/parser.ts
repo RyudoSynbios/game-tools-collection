@@ -149,6 +149,13 @@ export function parseItem(
       .replace("%index%", instanceIndex);
   }
 
+  if (newItem.button?.action !== undefined) {
+    newItem.button.action = newItem.button.action.replace(
+      "%index%",
+      instanceIndex,
+    );
+  }
+
   if ("uncontrolled" in item && item.id === undefined) {
     newItem.id = generateUUID();
   }

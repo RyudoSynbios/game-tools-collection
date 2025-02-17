@@ -272,34 +272,6 @@ export function overrideParseContainerItemsShifts(
   return [false, undefined];
 }
 
-export function overrideGetInt(item: Item): [boolean, number | undefined] {
-  if ("id" in item && item.id?.match(/setFriendship-/)) {
-    return [true, 0xff];
-  }
-
-  return [false, undefined];
-}
-
-export function overrideSetInt(item: Item, value: string): boolean {
-  if ("id" in item && item.id?.match(/setFriendship-/)) {
-    const friendshipSection = getItem(
-      item.id.replace("setFriendship", "friendship"),
-    ) as ItemSection;
-
-    if (parseInt(value) === 0xff) {
-      return true;
-    }
-
-    (friendshipSection.items as ItemInt[]).forEach((item) => {
-      setInt(item.offset, "uint8", value);
-    });
-
-    return true;
-  }
-
-  return false;
-}
-
 export function afterSetInt(item: Item): void {
   if ("id" in item && item.id === "location") {
     const itemInt = item as ItemInt;
@@ -385,4 +357,12 @@ export function getItemResourceGroups(): ResourceGroups {
 
     return groups;
   }, []);
+}
+
+export function setFriendship(index: number, value: number): void {
+  const friendshipSection = getItem(`friendship-${index}`) as ItemSection;
+
+  (friendshipSection.items as ItemInt[]).forEach((item) => {
+    setInt(item.offset, "uint8", value);
+  });
 }

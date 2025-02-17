@@ -970,13 +970,16 @@ const template: GameJson = {
                           flex: true,
                           items: [
                             {
-                              id: "setFriendship-%index%",
                               name: "Set all characters",
-                              offset: 0x5cc,
+                              offset: 0x0,
                               type: "variable",
                               dataType: "uint8",
                               resource: "friendships",
-                              hint: "Ally: 0\nPartner: 10\nFriend: 20\nTrusted: 30\nSoul Mate: 45",
+                              button: {
+                                label: "Apply",
+                                action: "setFriendship(%index%, %value%)",
+                              },
+                              uncontrolled: true,
                             },
                             {
                               id: "friendship-%index%",
@@ -993,6 +996,7 @@ const template: GameJson = {
                                     parent: 1,
                                     shift: 0x0,
                                   },
+                                  hint: "Ally: 0\nPartner: 10\nFriend: 20\nTrusted: 30\nSoul Mate: 45",
                                 },
                               ],
                             },
@@ -1228,7 +1232,6 @@ const template: GameJson = {
       0x14: "Friend",
       0x1e: "Trusted",
       0x2d: "Soul Mate",
-      0xff: "-",
     },
     genders: {
       0x1: "Male",
@@ -1473,9 +1476,6 @@ const template: GameJson = {
   },
   resourcesGroups: {
     items: "getItemResourceGroups()",
-  },
-  resourcesOrder: {
-    friendships: [0xff],
   },
 };
 

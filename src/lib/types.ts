@@ -277,6 +277,10 @@ export interface ItemInt {
   };
   size?: "md" | "lg";
   autocomplete?: boolean;
+  button?: {
+    label: string;
+    action: string;
+  };
   uncontrolled?: boolean;
   hint?: string;
   suffix?: string;

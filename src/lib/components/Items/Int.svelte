@@ -37,6 +37,12 @@
 
   let previousId: string | undefined;
 
+  function handleButtonClick(): void {
+    const action = item.button!.action.replace("%value%", `${value}`);
+
+    getUtils(action);
+  }
+
   function handleInputChange(event: Event): void {
     const newValue = (event.target as HTMLInputElement).value;
 
@@ -165,7 +171,7 @@
 </script>
 
 {#if !item.hidden || $isDebug}
-  <div class="gtc-int">
+  <div class="gtc-int" class:gtc-int-button={item.button}>
     {#if options.length === 0}
       <Input
         label={item.name}
@@ -211,8 +217,32 @@
         onChange={handleInputChange}
       />
     {/if}
+    {#if item.button}
+      <button type="button" on:click={handleButtonClick}>
+        {item.button.label}
+      </button>
+    {/if}
   </div>
 {/if}
 
 <style lang="postcss">
+  .gtc-int {
+    &.gtc-int-button {
+      @apply mb-4 mr-4 flex w-fit items-end justify-between rounded bg-primary-700 p-2;
+
+      & :global(.gtc-autocomplete),
+      & :global(.gtc-input),
+      & :global(.gtc-select) {
+        @apply m-0 p-0;
+      }
+
+      & button {
+        @apply rounded-l-none bg-primary-400 leading-4 text-white;
+
+        &:hover {
+          @apply bg-primary-300;
+        }
+      }
+    }
+  }
 </style>
