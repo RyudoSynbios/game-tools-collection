@@ -10,6 +10,7 @@ import {
 import { getInt } from "$lib/utils/bytes";
 import {
   clone,
+  generateUUID,
   getObjKey,
   getRegionArray,
   getUtils,
@@ -146,6 +147,10 @@ export function parseItem(
     newItem.id = newItem.id
       .replace("%parent%", parentIndex)
       .replace("%index%", instanceIndex);
+  }
+
+  if ("uncontrolled" in item && item.id === undefined) {
+    newItem.id = generateUUID();
   }
 
   if (utilsExists("overrideParseItem")) {

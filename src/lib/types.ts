@@ -277,6 +277,7 @@ export interface ItemInt {
   };
   size?: "md" | "lg";
   autocomplete?: boolean;
+  uncontrolled?: boolean;
   hint?: string;
   suffix?: string;
   disableIfNegative?: boolean;

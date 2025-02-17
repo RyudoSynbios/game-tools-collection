@@ -19,6 +19,7 @@
   import {
     getIntMax,
     getIntMin,
+    getUtils,
     objToArrayKeyValue,
     round,
     utilsExists,
@@ -34,19 +35,26 @@
 
   export let item: ItemInt & { hidden?: boolean };
 
+  let previousId: string | undefined;
+
   function handleInputChange(event: Event): void {
+    const newValue = (event.target as HTMLInputElement).value;
+
+    if (item.uncontrolled) {
+      value = parseInt(newValue);
+      return;
+    }
+
     let isOverrided = false;
 
-    const value = (event.target as HTMLInputElement).value;
-
     if (utilsExists("overrideSetInt")) {
-      isOverrided = $gameUtils.overrideSetInt(item, value);
+      isOverrided = $gameUtils.overrideSetInt(item, newValue);
     }
 
     // prettier-ignore
     if (!isOverrided) {
       if (item.dataType !== "int64" && item.dataType !== "uint64") {
-        setInt(item.offset, item.dataType, value, {
+        setInt(item.offset, item.dataType, newValue, {
           bigEndian: item.bigEndian,
           binaryCodedDecimal: item.binaryCodedDecimal,
           binary: item.binary,
@@ -54,7 +62,7 @@
           operations: item.operations,
         }, item.dataViewAltKey);
       } else {
-        setBigInt(item.offset, item.dataType, value, {
+        setBigInt(item.offset, item.dataType, newValue, {
           bigEndian: item.bigEndian
         }, item.dataViewAltKey);
       }
@@ -67,7 +75,7 @@
 
   let min: number;
   let max: number;
-  let value: bigint | number | string;
+  let value: bigint | number | string = 0;
   let options: ObjectKeyValue<string>[];
   let groups: ResourceGroups;
   let labels: ResourceLabels;
@@ -79,6 +87,10 @@
 
     let int = 0;
 
+    if (item.uncontrolled && item.id !== previousId) {
+      value = 0;
+    }
+
     if (utilsExists("overrideItem")) {
       item = $gameUtils.overrideItem(item);
     }
@@ -86,18 +98,19 @@
     min = getIntMin(item);
     max = getIntMax(item);
 
-    if (utilsExists("overrideGetInt")) {
-      [isOverrided, value] = $gameUtils.overrideGetInt(item);
-    }
+    if (!item.uncontrolled) {
+      if (utilsExists("overrideGetInt")) {
+        [isOverrided, value] = $gameUtils.overrideGetInt(item);
+      }
 
-    let dataViewAlt;
+      let dataViewAlt;
 
-    if (isDataViewAltExists(item.dataViewAltKey || "")) {
-      dataViewAlt = $dataViewAlt[item.dataViewAltKey as string];
-    }
+      if (isDataViewAltExists(item.dataViewAltKey || "")) {
+        dataViewAlt = $dataViewAlt[item.dataViewAltKey as string];
+      }
 
-    // prettier-ignore
-    if (!isOverrided) {
+      // prettier-ignore
+      if (!isOverrided) {
       if (item.dataType !== "int64" && item.dataType !== "uint64") {
         int = getInt(item.offset, item.dataType, {
           bigEndian: item.bigEndian,
@@ -117,19 +130,20 @@
       }
     }
 
-    const isNegative = (int || value) === -1;
+      const isNegative = (int || value) === -1;
 
-    if (item.disableIfNegative && isNegative) {
-      item.disabled = true;
-      value = 0;
-    }
+      if (item.disableIfNegative && isNegative) {
+        item.disabled = true;
+        value = 0;
+      }
 
-    if (item.dataType === "float32") {
-      value = round(value as number, 3);
-    }
+      if (item.dataType === "float32") {
+        value = round(value as number, 3);
+      }
 
-    if (item.leadingZeros) {
-      value = value.toString().padStart(item.leadingZeros + 1, "0");
+      if (item.leadingZeros) {
+        value = value.toString().padStart(item.leadingZeros + 1, "0");
+      }
     }
 
     options = [];
@@ -145,6 +159,8 @@
       groups = ($gameJson.resourcesGroups?.[item.resource] as ResourceGroups) || [];
       labels = $gameJson.resourcesLabels?.[item.resource] || {};
     }
+
+    previousId = item.id;
   }
 </script>
 

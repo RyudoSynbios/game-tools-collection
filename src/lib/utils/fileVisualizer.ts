@@ -52,6 +52,10 @@ export function parseItem(
 ): void {
   let dataView = "main";
 
+  if ("uncontrolled" in item && item.uncontrolled) {
+    return;
+  }
+
   if ("dataViewAltKey" in item && item.dataViewAltKey) {
     dataView = item.dataViewAltKey;
   }
