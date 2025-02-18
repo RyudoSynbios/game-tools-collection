@@ -73,7 +73,7 @@ const template: GameJson = {
               resource: "randomizes",
             },
             {
-              name: "Initial Magic Ranks",
+              name: "Initial Equipment",
               dataViewAltKey: "randomizer",
               offset: 0x11,
               type: "variable",
@@ -81,17 +81,9 @@ const template: GameJson = {
               resource: "vanillaRandomize",
             },
             {
-              name: "Initial Equipment",
-              dataViewAltKey: "randomizer",
-              offset: 0x12,
-              type: "variable",
-              dataType: "uint8",
-              resource: "vanillaRandomize",
-            },
-            {
               name: "Initial Moon Stone",
               dataViewAltKey: "randomizer",
-              offset: 0x13,
+              offset: 0x12,
               type: "variable",
               dataType: "uint8",
               resource: "modes",

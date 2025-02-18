@@ -16,6 +16,7 @@ import { randomizeAbilities } from "./utils/ability";
 import { randomizeEnemies } from "./utils/enemies";
 import { generateInventory, randomizeItems } from "./utils/item";
 import { randomizeParty } from "./utils/party";
+import { applyQualityOfLife } from "./utils/qualityOfLife";
 import { randomizeShips } from "./utils/ship";
 import { randomizeShops } from "./utils/shop";
 import { randomizeTreasures } from "./utils/treasures";
@@ -170,7 +171,6 @@ export interface Options {
   };
   party: {
     stats: number;
-    magic: number;
     equipment: number;
     moonStone: number;
   };
@@ -228,9 +228,8 @@ function randomize(): void {
     },
     party: {
       stats: getInt(0x10, "uint8", {}, randomizer),
-      magic: getInt(0x11, "uint8", {}, randomizer),
-      equipment: getInt(0x12, "uint8", {}, randomizer),
-      moonStone: getInt(0x13, "uint8", {}, randomizer),
+      equipment: getInt(0x11, "uint8", {}, randomizer),
+      moonStone: getInt(0x12, "uint8", {}, randomizer),
     },
     abilities: {
       magicEffectsValue: getInt(0x20, "uint8", {}, randomizer),
@@ -287,4 +286,5 @@ function randomize(): void {
   randomizeShops(prng, options, inventory);
   // randomizeRanks(prng, options);
   randomizeTreasures(prng, options, inventory);
+  applyQualityOfLife(options);
 }

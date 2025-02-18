@@ -17,10 +17,8 @@ export function randomizeParty(
 
   if (
     options.party.stats === 0x0 &&
-    options.party.magic === 0x0 &&
     options.party.equipment === 0x0 &&
-    options.party.moonStone === 0x0 &&
-    options.qualityOfLife.magicUnlocked === 0x0
+    options.party.moonStone === 0x0
   ) {
     return;
   }
@@ -94,62 +92,6 @@ export function randomizeParty(
       setInt(offset + 0x74, "float32", growthVigor, { bigEndian: true }, "party");
       setInt(offset + 0x78, "float32", growthAgile, { bigEndian: true }, "party");
       setInt(offset + 0x7c, "float32", growthQuick, { bigEndian: true }, "party");
-    }
-
-    // Initial Magic Ranks
-
-    if (options.party.magic === 0x1 || options.qualityOfLife.magicUnlocked) {
-      const experiences = [];
-
-      for (let j = 0x0; j < 0x24; j += 0x1) {
-        const offset = 0x948 + i * 0x48 + j * 0x2;
-
-        if (j % 0x6 === 0x0) {
-          experiences.push(0);
-        }
-
-        // prettier-ignore
-        experiences.push(
-          getInt(offset, "uint16", { bigEndian: true }, $dataViewAlt.experienceCurves),
-        );
-      }
-
-      let greenRank = 0;
-      let redRank = 0;
-      let purpleRank = 0;
-      let blueRank = 0;
-      let yellowRank = 0;
-      let silverRank = 0;
-
-      if (options.qualityOfLife.magicUnlocked) {
-        greenRank = 6;
-        redRank = 6;
-        purpleRank = 6;
-        blueRank = 6;
-        yellowRank = 6;
-        silverRank = 6;
-      } else if (options.party.magic === 0x1) {
-        greenRank = prng.getInt(0, 6, `party_magic_green_${i}`);
-        redRank = prng.getInt(0, 6, `party_magic_red_${i}`);
-        purpleRank = prng.getInt(0, 6, `party_magic_purple_${i}`);
-        blueRank = prng.getInt(0, 6, `party_magic_blue_${i}`);
-        yellowRank = prng.getInt(0, 6, `party_magic_yellow_${i}`);
-        silverRank = prng.getInt(0, 6, `party_magic_silver_${i}`);
-      }
-
-      const green = experiences[greenRank];
-      const red = experiences[redRank + 7];
-      const purple = experiences[purpleRank + 14];
-      const blue = experiences[blueRank + 21];
-      const yellow = experiences[yellowRank + 28];
-      const silver = experiences[silverRank + 35];
-
-      setInt(offset + 0x80, "uint32", green, { bigEndian: true }, "party");
-      setInt(offset + 0x84, "uint32", red, { bigEndian: true }, "party");
-      setInt(offset + 0x88, "uint32", purple, { bigEndian: true }, "party");
-      setInt(offset + 0x8c, "uint32", blue, { bigEndian: true }, "party");
-      setInt(offset + 0x90, "uint32", yellow, { bigEndian: true }, "party");
-      setInt(offset + 0x94, "uint32", silver, { bigEndian: true }, "party");
     }
 
     // Initial Equipment
