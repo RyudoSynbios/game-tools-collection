@@ -4,7 +4,7 @@ import { get } from "svelte/store";
 import { dataViewAlt, dataViewAltMetas, gameRegion } from "$lib/stores";
 import { getInt, getString, setInt } from "$lib/utils/bytes";
 import { File, getFile, getFiles, resetGcm } from "$lib/utils/common/gamecube";
-import { mergeUint8Arrays } from "$lib/utils/format";
+import { getRegionArray, mergeUint8Arrays } from "$lib/utils/format";
 import Lzss from "$lib/utils/lzss";
 import { getItem, getResource, updateResources } from "$lib/utils/parser";
 
@@ -21,6 +21,7 @@ import ImageViewer from "./components/ImageViewer.svelte";
 import ModelViewer from "./components/ModelViewer.svelte";
 import ScriptViewer from "./components/ScriptViewer.svelte";
 import Texture from "./components/Texture.svelte";
+import { offsetToRandomEncounterRate } from "./template";
 import { exportDataViewAlt, initDataViewAlt } from "./utils/dataView";
 import { abilityTypes, mainDolModels } from "./utils/resource";
 
@@ -50,6 +51,14 @@ export function overrideParseItem(item: Item): Item {
     const itemContainer = item as ItemContainer;
 
     itemContainer.instances = files.length;
+  } else if ("id" in item && item.id === "randomEncounterRate") {
+    const itemInt = item as ItemInt;
+
+    const offset = getRegionArray(offsetToRandomEncounterRate);
+
+    itemInt.offset = offset;
+
+    return itemInt;
   }
 
   return item;

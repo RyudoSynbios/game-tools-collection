@@ -10,6 +10,7 @@ import {
 } from "./utils/resource";
 
 export const offsetToParty = [0x2c2ff0, 0x2c1860, 0x2c0d58];
+export const offsetToRandomEncounterRate = [0x304588, 0x300d68, 0x300810];
 
 const template: GameJson = {
   validator: {
@@ -4082,6 +4083,21 @@ const template: GameJson = {
                           ],
                         },
                       ],
+                    },
+                  ],
+                },
+                {
+                  name: "Debug",
+                  hidden: true,
+                  items: [
+                    {
+                      id: "randomEncounterRate",
+                      name: "Random Encounter Rate Multiplier",
+                      dataViewAltKey: "main.dol",
+                      offset: 0x0,
+                      type: "variable",
+                      dataType: "float32",
+                      bigEndian: true,
                     },
                   ],
                 },
