@@ -213,6 +213,7 @@ export interface Options {
     superMovesUnlocked: number;
     magicNoCost: number;
     superMovesNoCost: number;
+    reduceRandomEncouterRate: number;
   };
 }
 
@@ -270,6 +271,7 @@ function randomize(): void {
       superMovesUnlocked: getInt(0xa4, "bit", { bit: 1 }, randomizer),
       magicNoCost: getInt(0xa4, "bit", { bit: 2 }, randomizer),
       superMovesNoCost: getInt(0xa4, "bit", { bit: 3 }, randomizer),
+      reduceRandomEncouterRate: getInt(0xa4, "bit", { bit: 4 }, randomizer),
     },
   };
 

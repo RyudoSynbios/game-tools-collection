@@ -2,7 +2,9 @@ import { get } from "svelte/store";
 
 import { dataViewAlt } from "$lib/stores";
 import { getInt, setInt } from "$lib/utils/bytes";
+import { getRegionArray } from "$lib/utils/format";
 
+import { offsetToRandomEncounterRate } from "../../romEditor/template";
 import { mainDolModels } from "../../romEditor/utils/resource";
 import { Options } from "../utils";
 
@@ -51,5 +53,15 @@ export function applyQualityOfLife(options: Options): void {
       setInt(offset + 0x90, "uint32", yellow, { bigEndian: true }, "party");
       setInt(offset + 0x94, "uint32", silver, { bigEndian: true }, "party");
     }
+  }
+
+  // Random Encounter Rate
+
+  if (options.qualityOfLife.reduceRandomEncouterRate === 0x1) {
+    const randomEncounterRateOffset = getRegionArray(
+      offsetToRandomEncounterRate,
+    );
+
+    setInt(randomEncounterRateOffset, "float32", 0.01, { bigEndian: true }, "main.dol"); // prettier-ignore
   }
 }
