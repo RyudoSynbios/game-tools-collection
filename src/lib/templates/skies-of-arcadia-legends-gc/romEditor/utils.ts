@@ -243,7 +243,7 @@ export function afterSetInt(item: Item): void {
 
     const int = getInt(itemInt.offset, "uint8", {}, $dataViewAlt.enemyEventGroups); // prettier-ignore
 
-    let value = 0x0;
+    let value = 0x1;
 
     if (int === 0xff) {
       value = 0xff;
