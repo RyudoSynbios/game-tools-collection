@@ -9,14 +9,15 @@
   import debug from "$lib/utils/debug";
   import Three from "$lib/utils/three";
 
-  import { getFileData } from "../utils";
+  import { getFileData, type Model } from "../utils";
   import {
     addMeshs,
     getTextures,
     getVertices,
     type Texture,
   } from "../utils/model";
-  import { unpackNmld, type NmldFile } from "../utils/nmld";
+  import { unpackNmld } from "../utils/nmld";
+  import { unpackSml } from "../utils/sml";
   import TextureViewer from "./TextureViewer.svelte";
 
   export let assetIndex: number;
@@ -32,7 +33,7 @@
 
   let threeEl: HTMLDivElement;
 
-  let nmld = {} as NmldFile;
+  let textures: { [key: string]: DataView } = {};
   let isModalOpen = false;
 
   function getAssetId() {
@@ -79,16 +80,28 @@
 
     $dataViewAlt.debug = dataView;
 
-    nmld = unpackNmld(dataView);
+    let model: Model;
 
-    debug.log(nmld);
+    let loadAllEntities = false;
 
-    const filteredEntity = nmld.entities.filter(
+    if (type === "battleStage") {
+      model = unpackSml(dataView);
+      loadAllEntities = true;
+    } else {
+      model = unpackNmld(dataView);
+    }
+
+    debug.log(model);
+
+    const filteredEntity = model.entities.filter(
       (entity) => entity.linkedNjcmFiles.length,
     );
 
-    const entities = [];
-    // const entities = filteredEntity.map((entity) => entity.index);
+    const entities: number[] = [];
+
+    if (loadAllEntities) {
+      filteredEntity.forEach((entity) => entities.push(entity.index));
+    }
 
     if (entities.length === 0) {
       if (!filteredEntity.find((entity) => entity.index === entityIndex)) {
@@ -117,10 +130,16 @@
     await entities.reduce(async (previousEntity, entityIndex) => {
       await previousEntity;
 
-      const entity = nmld.entities[entityIndex];
+      const entity = model.entities[entityIndex];
+      const njtl = model.njtlFiles[entity.linkedNjtlFiles[0]];
 
-      if (!entity.linkedNjcmFiles.includes(njcmIndex)) {
+      let njcm = model.njcmFiles[njcmIndex];
+
+      if (loadAllEntities) {
+        njcm = model.njcmFiles[entity.linkedNjcmFiles[0]];
+      } else if (!entity.linkedNjcmFiles.includes(njcmIndex)) {
         njcmIndex = entity.linkedNjcmFiles[0];
+        njcm = model.njcmFiles[njcmIndex];
       }
 
       if (entity.linkedNjcmFiles.length > 1) {
@@ -141,12 +160,9 @@
         );
       }
 
-      const njtl = nmld.njtlFiles[entity.linkedNjtlFiles[0]];
-      const njcm = nmld.njcmFiles[njcmIndex];
-
       debug.log(njcm);
 
-      const textures: Texture[] = await getTextures(njtl, nmld, canvas);
+      const textures: Texture[] = await getTextures(njtl, model, canvas);
 
       const vertexBuffer: number[] = [];
 
@@ -241,8 +257,10 @@
       }
     }, Promise.resolve());
 
+    textures = model.textures;
+
     three.setTextureListCallback(
-      Object.keys(nmld.textures).length > 0 ? handleModalOpen : undefined,
+      Object.keys(textures).length > 0 ? handleModalOpen : undefined,
     );
 
     if (instanceId !== three.getInstanceId()) {
@@ -285,9 +303,9 @@
 
 <ModelViewer {three} bind:threeEl />
 
-{#if isModalOpen && nmld}
+{#if isModalOpen}
   <Modal onClose={handleModalClose}>
-    <TextureViewer textures={nmld.textures} />
+    <TextureViewer {textures} />
   </Modal>
 {/if}
 

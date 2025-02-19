@@ -4366,6 +4366,32 @@ const template: GameJson = {
                   ],
                 },
                 {
+                  name: "Battle Stages",
+                  items: [
+                    {
+                      id: "assetViewer-battleStage",
+                      instanceId: "battleStageViewer",
+                      length: 0x2,
+                      type: "container",
+                      instanceType: "tabs",
+                      instances: 0,
+                      resource: "assetBattleStageNames",
+                      vertical: true,
+                      flex: true,
+                      items: [
+                        {
+                          type: "component",
+                          component: "ModelViewer",
+                          props: {
+                            assetIndex: "battleStageViewer",
+                            type: "battleStage",
+                          },
+                        },
+                      ],
+                    },
+                  ],
+                },
+                {
                   name: "Weapons",
                   items: [
                     {
@@ -4405,6 +4431,7 @@ const template: GameJson = {
     armorNames: "getNames('armors')",
     armors: "getNames('armors', 'true')",
     assetBattleCharacterNames: "getAssetNames('battleCharacter')",
+    assetBattleStageNames: "getAssetNames('battleStage')",
     assetEnemyGroupNames: "getAssetNames('enemyGroup')",
     assetImageNames: "getAssetNames('image')",
     assetModelNames: "getAssetNames('model')",

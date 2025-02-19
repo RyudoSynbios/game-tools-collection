@@ -23,6 +23,7 @@ import ScriptViewer from "./components/ScriptViewer.svelte";
 import Texture from "./components/Texture.svelte";
 import { offsetToRandomEncounterRate } from "./template";
 import { exportDataViewAlt, initDataViewAlt } from "./utils/dataView";
+import { NjcmFile } from "./utils/njcm";
 import { abilityTypes, mainDolModels } from "./utils/resource";
 
 export function beforeItemsParsing(): void {
@@ -409,6 +410,8 @@ export function getFilteredFiles(type: string): File[] {
       file.path.match(/.enp$/i)
     ) {
       return type === "enemyGroup";
+    } else if (file.path.match(/^battle\/(.*?).sml$/i)) {
+      return type === "battleStage";
     } else if (file.path.match(/^bchara\/(cr|ma|mb|mg)(.*?).mld$/i)) {
       return type === "battleCharacter";
     } else if (file.path.match(/^bchara\/(.*?).mld$/)) {
@@ -570,6 +573,34 @@ export function getWeaponConditionNames(): Resource {
   names[0xff] = "-";
 
   return names;
+}
+
+export interface Model {
+  entities: Entity[];
+  grndFiles: { [key: number]: GrndFile };
+  njcmFiles: { [key: number]: NjcmFile };
+  njtlFiles: { [key: number]: NjtlFile };
+  nmdmFiles: { [key: number]: NmdmFile };
+  textures: { [key: string]: DataView };
+}
+
+export interface Entity {
+  index: number;
+  unknown: number;
+  name: string;
+  linkedGrndFiles: number[];
+  linkedNjcmFiles: number[];
+  linkedNjtlFiles: number[];
+  linkedNmdmFiles: number[];
+  positionX: number;
+  positionY: number;
+  positionZ: number;
+  rotationX: number;
+  rotationY: number;
+  rotationZ: number;
+  scaleX: number;
+  scaleY: number;
+  scaleZ: number;
 }
 
 export interface GrndFile {

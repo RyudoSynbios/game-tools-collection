@@ -5,7 +5,7 @@ import { Entity, Model, unpackGrnd, unpackNjtl, unpackNmdm } from "../utils";
 import { unpackNjcm } from "./njcm";
 
 // prettier-ignore
-export function unpackNmld(dataView: DataView): Model {
+export function unpackSml(dataView: DataView): Model {
   const model: Model = {
     entities: [],
     grndFiles: {},
@@ -15,17 +15,18 @@ export function unpackNmld(dataView: DataView): Model {
     textures: {},
   };
 
-  const count = getInt(0x0, "uint32", { bigEndian: true }, dataView);
-  const nmldOffset = getInt(0x4, "uint32", { bigEndian: true }, dataView);
-  // const tableSize = getInt(0x8, "uint32", { bigEndian: true }, dataView);
-  // const headerSize = getInt(0xc, "uint32", { bigEndian: true }, dataView);
-  const size = getInt(0x10, "uint32", { bigEndian: true }, dataView);
+  const count = getInt(0x4, "uint16", { bigEndian: true }, dataView);
 
   for (let i = 0x0; i < count; i += 0x1) {
-    const offset = nmldOffset + i * 0x68;
+    const baseOffset = getInt(i * 0x10 + 0xc, "uint32", { bigEndian: true }, dataView);
+
+    const offset = baseOffset + getInt(baseOffset + 0x4, "uint32", { bigEndian: true }, dataView);
+    // const tableSize = getInt(baseOffset + 0x8, "uint32", { bigEndian: true }, dataView);
+    // const headerSize = getInt(baseOffset + 0xc, "uint32", { bigEndian: true }, dataView);
+    const size = getInt(baseOffset + 0x10, "uint32", { bigEndian: true }, dataView);
 
     const entity: Entity = {
-      index: getInt(offset, "uint32", { bigEndian: true }, dataView),
+      index: getInt(i * 0x10 + 0x8, "uint32", { bigEndian: true }, dataView),
       unknown: getInt(offset + 0x4, "uint32", { bigEndian: true }, dataView),
       name: getString(offset + 0x24, 0x10, "uint8", { zeroTerminated: true }, dataView),
       linkedGrndFiles: [],
@@ -46,7 +47,7 @@ export function unpackNmld(dataView: DataView): Model {
     // const offset1 = getInt(offset + 0x8, "uint32", { bigEndian: true }, dataView);
     // const offset2 = getInt(offset + 0xc, "uint32", { bigEndian: true }, dataView);
     // const offset3 = getInt(offset + 0x10, "uint32", { bigEndian: true }, dataView);
-    const objectOffset = getInt(offset + 0x14, "uint32", { bigEndian: true }, dataView);
+    const objectOffset = baseOffset + getInt(offset + 0x14, "uint32", { bigEndian: true }, dataView);
     // const offset5 = getInt(offset + 0x18, "uint32", { bigEndian: true }, dataView);
     // const offset6 = getInt(offset + 0x1c, "uint32", { bigEndian: true }, dataView);
     // const offset7 = getInt(offset + 0x20, "uint32", { bigEndian: true }, dataView);
@@ -58,7 +59,7 @@ export function unpackNmld(dataView: DataView): Model {
     const objectCount = getInt(objectOffset, "uint32", { bigEndian: true }, dataView);
 
     for (let j = 0x0; j < objectCount; j += 0x1) {
-      const headerOffset = getInt(objectOffset + 0x4 + j * 0x4, "uint32", { bigEndian: true }, dataView);
+      const headerOffset = baseOffset + getInt(objectOffset + 0x4 + j * 0x4, "uint32", { bigEndian: true }, dataView);
 
       if (headerOffset) {
         for (let k = 0x0; k < 0x4; k += 0x1) {
@@ -110,45 +111,45 @@ export function unpackNmld(dataView: DataView): Model {
     }
 
     model.entities.push(entity);
-  }
 
-  const assetsHeaderOffset = size;
+    const assetsHeaderOffset = baseOffset + size;
 
-  const assetCount = getInt(assetsHeaderOffset, "uint32", { bigEndian: true }, dataView);
+    const assetCount = getInt(assetsHeaderOffset, "uint32", { bigEndian: true }, dataView);
 
-  if (assetCount === 0) {
-    return model;
-  }
-
-  let assetsOffset = assetsHeaderOffset + 0x4 + assetCount * 0x2c;
-
-  while (true) {
-    if (getInt(assetsOffset, "uint8", {}, dataView) !== 0x0) {
-      break;
+    if (assetCount === 0) {
+      return model;
     }
 
-    assetsOffset += 0x1;
-  }
+    let assetsOffset = assetsHeaderOffset + 0x4 + assetCount * 0x2c;
 
-  for (let i = 0x0; i < assetCount; i += 0x1) {
-    const offset = assetsHeaderOffset + 0x4 + i * 0x2c;
+    while (true) {
+      if (getInt(assetsOffset, "uint8", {}, dataView) !== 0x0) {
+        break;
+      }
 
-    const name = getString(offset, 0x10, "uint8", { zeroTerminated: true }, dataView);
-    const size = getInt(offset + 0x28, "uint32", { bigEndian: true }, dataView);
-
-    const assetType = getString(assetsOffset, 0x4, "uint8", { zeroTerminated: true }, dataView);
-
-    const gvrDataView = new DataView(
-      dataView.buffer.slice(assetsOffset, assetsOffset + size),
-    );
-
-    if (assetType === "GCIX") {
-      model.textures[name] = gvrDataView;
-    } else {
-      debug.warn("Asset type has not a GCIX header.");
+      assetsOffset += 0x1;
     }
 
-    assetsOffset += size;
+    for (let i = 0x0; i < assetCount; i += 0x1) {
+      const offset = assetsHeaderOffset + 0x4 + i * 0x2c;
+
+      const name = getString(offset, 0x10, "uint8", { zeroTerminated: true }, dataView);
+      const size = getInt(offset + 0x28, "uint32", { bigEndian: true }, dataView);
+
+      const assetType = getString(assetsOffset, 0x4, "uint8", { zeroTerminated: true }, dataView);
+
+      const gvrDataView = new DataView(
+        dataView.buffer.slice(assetsOffset, assetsOffset + size),
+      );
+
+      if (assetType === "GCIX") {
+        model.textures[name] = gvrDataView;
+      } else {
+        debug.warn("Asset type has not a GCIX header.");
+      }
+
+      assetsOffset += size;
+    }
   }
 
   return model;
