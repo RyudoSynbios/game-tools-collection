@@ -272,6 +272,7 @@ export interface ItemInt {
   bigEndian?: boolean;
   binary?: Binary;
   binaryCodedDecimal?: boolean;
+  hex?: boolean;
   bit?: number;
   leadingZeros?: number;
   operations?: IntOperation[];

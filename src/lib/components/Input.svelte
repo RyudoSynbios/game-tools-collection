@@ -11,6 +11,7 @@
   export let maxlength: number | undefined = undefined;
   export let step = 1;
   export let leadingZeros = 0;
+  export let hex = false;
   export let value: bigint | number | string;
   export let size: "md" | "lg" = "md";
   export let hint = "";
@@ -58,11 +59,15 @@
       value = int.toString();
     }
 
+    if (hex && value.match(/[^0-9a-f]/gi)) {
+      target.value = value.replace(/[^0-9a-f]/gi, "");
+    }
+
     if (leadingZeros) {
       value = value.padStart(leadingZeros + 1, "0");
     }
 
-    if (numberType !== "float" || !isDecimalPressed) {
+    if (!hex && (numberType !== "float" || !isDecimalPressed)) {
       target.value = value;
     }
   }

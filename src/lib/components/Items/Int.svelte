@@ -44,11 +44,15 @@
   }
 
   function handleInputChange(event: Event): void {
-    const newValue = (event.target as HTMLInputElement).value;
+    let newValue = (event.target as HTMLInputElement).value;
 
     if (item.uncontrolled) {
       value = parseInt(newValue);
       return;
+    }
+
+    if (item.hex) {
+      newValue = parseInt(newValue, 16).toString();
     }
 
     let isOverrided = false;
@@ -81,6 +85,7 @@
 
   let min: number;
   let max: number;
+  let maxlength: number;
   let value: bigint | number | string = 0;
   let options: ObjectKeyValue<string>[];
   let groups: ResourceGroups;
@@ -147,6 +152,11 @@
         value = round(value as number, 3);
       }
 
+      if (item.hex) {
+        value = (value as number).toHex();
+        maxlength = (item.leadingZeros || 0) + 1;
+      }
+
       if (item.leadingZeros) {
         value = value.toString().padStart(item.leadingZeros + 1, "0");
       }
@@ -175,11 +185,13 @@
     {#if options.length === 0}
       <Input
         label={item.name}
-        type="number"
+        type={item.hex ? "text" : "number"}
         {min}
         {max}
+        {maxlength}
         step={item.step || 1}
         leadingZeros={item.leadingZeros}
+        hex={item.hex}
         {value}
         size={item.size}
         hint={item.hint}
