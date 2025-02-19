@@ -122,24 +122,24 @@
 
       // prettier-ignore
       if (!isOverrided) {
-      if (item.dataType !== "int64" && item.dataType !== "uint64") {
-        int = getInt(item.offset, item.dataType, {
-          bigEndian: item.bigEndian,
-        }, dataViewAlt);
+        if (item.dataType !== "int64" && item.dataType !== "uint64") {
+          int = getInt(item.offset, item.dataType, {
+            bigEndian: item.bigEndian,
+          }, dataViewAlt);
 
-        value = getInt(item.offset, item.dataType, {
-          bigEndian: item.bigEndian,
-          binaryCodedDecimal: item.binaryCodedDecimal,
-          binary: item.binary,
-          bit: item.bit,
-          operations: item.operations,
-        }, dataViewAlt);
-      } else {
-        value = getBigInt(item.offset, item.dataType, {
-          bigEndian: item.bigEndian,
-        }, dataViewAlt);
+          value = getInt(item.offset, item.dataType, {
+            bigEndian: item.bigEndian,
+            binaryCodedDecimal: item.binaryCodedDecimal,
+            binary: item.binary,
+            bit: item.bit,
+            operations: item.operations,
+          }, dataViewAlt);
+        } else {
+          value = getBigInt(item.offset, item.dataType, {
+            bigEndian: item.bigEndian,
+          }, dataViewAlt);
+        }
       }
-    }
 
       const isNegative = (int || value) === -1;
 
