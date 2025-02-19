@@ -147,6 +147,18 @@ export function overrideGetInt(
     if (int === 0xff) {
       return [true, 0];
     }
+  } else if ("id" in item && item.id === "weaponColor") {
+    const itemInt = item as ItemInt;
+
+    const redRaw = getInt(itemInt.offset, "float32", { bigEndian: true }, $dataViewAlt.weaponColors); // prettier-ignore
+    const greenRaw = getInt(itemInt.offset + 0x4, "float32", { bigEndian: true }, $dataViewAlt.weaponColors); // prettier-ignore
+    const blueRaw = getInt(itemInt.offset + 0x8, "float32", { bigEndian: true }, $dataViewAlt.weaponColors); // prettier-ignore
+
+    const red = Math.floor(redRaw * 0xff);
+    const green = Math.floor(greenRaw * 0xff);
+    const blue = Math.floor(blueRaw * 0xff);
+
+    return [true, (red << 0x10) | (green << 0x8) | blue];
   }
 
   return [false, undefined];
@@ -163,6 +175,20 @@ export function overrideSetInt(item: Item, value: string): boolean {
     int = (int - 100) * -1;
 
     setInt(itemInt.offset, "uint8", int, {}, dataViewAltKey);
+
+    return true;
+  } else if ("id" in item && item.id === "weaponColor") {
+    const itemInt = item as ItemInt;
+
+    const int = parseInt(value);
+
+    const red = ((int >> 0x10) & 0xff) / 0xff;
+    const green = ((int >> 0x8) & 0xff) / 0xff;
+    const blue = (int & 0xff) / 0xff;
+
+    setInt(itemInt.offset, "float32", red, { bigEndian: true }, "weaponColors"); // prettier-ignore
+    setInt(itemInt.offset + 0x4, "float32", green, { bigEndian: true }, "weaponColors"); // prettier-ignore
+    setInt(itemInt.offset + 0x8, "float32", blue, { bigEndian: true }, "weaponColors"); // prettier-ignore
 
     return true;
   }

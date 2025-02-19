@@ -154,6 +154,17 @@ export const shipItemEffects: Resource = {
 };
 
 export const mainDolModels = {
+  weaponColors: {
+    count: 6,
+    length: 0xc,
+    shifts: [0x159c8, 0x17b48, 0x17598],
+    isInventory: false,
+    europe: {
+      length: 0xc,
+      textPointer: 0x0,
+      operations: [{ start: 0x0, end: 0xc, offset: 0x0 }],
+    },
+  },
   party: {
     count: 6,
     length: 0x98,

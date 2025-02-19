@@ -17,7 +17,7 @@ import {
 } from "$lib/utils/common/gamecube";
 import { getRegionArray, mergeUint8Arrays } from "$lib/utils/format";
 
-import { offsetToParty } from "../template";
+import { offsetToMainDolStart } from "../template";
 import { getCompressedData, getDecompressedData } from "../utils";
 import { mainDolModels } from "./resource";
 
@@ -36,7 +36,7 @@ export function initDataViewAlt(): void {
 
   // Main
 
-  let partyOffset = getRegionArray(offsetToParty);
+  let partyOffset = getRegionArray(offsetToMainDolStart);
 
   const mainDol = getFile("system/main.dol")!;
   const firstLmt = getFile("battle/first.lmt")!;
@@ -196,7 +196,7 @@ export function exportDataViewAlt(): ArrayBufferLike {
 
   // Main
 
-  let partyOffset = getRegionArray(offsetToParty);
+  let partyOffset = getRegionArray(offsetToMainDolStart);
 
   const data = new Uint8Array($dataViewAlt["main.dol"].buffer);
 
