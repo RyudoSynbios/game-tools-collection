@@ -14,6 +14,7 @@ import {
 } from "../romEditor/utils/dataView";
 import { randomizeAbilities } from "./utils/ability";
 import { randomizeEnemies } from "./utils/enemies";
+import { randomizeGeneral } from "./utils/general";
 import { generateInventory, randomizeItems } from "./utils/item";
 import { randomizeParty } from "./utils/party";
 import { applyQualityOfLife } from "./utils/qualityOfLife";
@@ -167,6 +168,7 @@ export function applyPreset(value: number): void {
 export interface Options {
   seed: number;
   general: {
+    weaponMoonStonesColor: number;
     moonStones: number;
   };
   party: {
@@ -225,7 +227,8 @@ function randomize(): void {
   const options: Options = {
     seed: getInt(0x0, "uint32", {}, randomizer),
     general: {
-      moonStones: getInt(0x14, "uint8", {}, randomizer),
+      weaponMoonStonesColor: getInt(0x4, "uint8", {}, randomizer),
+      moonStones: getInt(0x5, "uint8", {}, randomizer),
     },
     party: {
       stats: getInt(0x10, "uint8", {}, randomizer),
@@ -279,6 +282,7 @@ function randomize(): void {
 
   const inventory = generateInventory();
 
+  randomizeGeneral(prng, options);
   randomizeParty(prng, options, inventory);
   randomizeAbilities(prng, options);
   randomizeItems(prng, options);

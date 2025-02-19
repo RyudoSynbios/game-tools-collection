@@ -50,7 +50,7 @@ const template: GameJson = {
                 {
                   name: "Moon Stones Obtention",
                   dataViewAltKey: "randomizer",
-                  offset: 0x4,
+                  offset: 0x5,
                   type: "variable",
                   dataType: "uint8",
                   resource: "modes",
@@ -287,6 +287,19 @@ const template: GameJson = {
               type: "variable",
               dataType: "uint8",
               resource: "vanillaShuffleRandomize",
+            },
+          ],
+        },
+        {
+          name: "Cosmetics",
+          items: [
+            {
+              name: "Weapon Moon Stones Color",
+              dataViewAltKey: "randomizer",
+              offset: 0x4,
+              type: "variable",
+              dataType: "uint8",
+              resource: "vanillaRandomize",
             },
           ],
         },
