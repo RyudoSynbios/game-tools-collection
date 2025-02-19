@@ -183,6 +183,7 @@
         {value}
         size={item.size}
         hint={item.hint}
+        prefix={item.prefix}
         suffix={item.suffix}
         debug={item.hidden}
         disabled={item.disabled}

@@ -291,6 +291,7 @@ export interface ItemInt {
   };
   uncontrolled?: boolean;
   hint?: string;
+  prefix?: string;
   suffix?: string;
   disableIfNegative?: boolean;
   disabled?: boolean;

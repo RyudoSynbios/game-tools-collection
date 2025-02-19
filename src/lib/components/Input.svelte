@@ -14,6 +14,7 @@
   export let value: bigint | number | string;
   export let size: "md" | "lg" = "md";
   export let hint = "";
+  export let prefix = "";
   export let suffix = "";
   export let debug = false;
   export let disabled = false;
@@ -86,6 +87,7 @@
   class:gtc-input-debug={debug}
   class:gtc-input-disabled={disabled}
   class:gtc-input-lg={size === "lg"}
+  class:gtc-input-prefix={prefix}
   class:gtc-input-suffix={suffix}
 >
   {#if label}
@@ -97,6 +99,9 @@
     </div>
   {/if}
   <div class="gtc-input-content">
+    {#if prefix}
+      <span>{prefix}</span>
+    {/if}
     <input
       {type}
       {placeholder}
@@ -143,8 +148,17 @@
       width: 260px;
     }
 
+    &.gtc-input-prefix input,
     &.gtc-input-suffix input {
       width: 160px;
+    }
+
+    &.gtc-input-prefix span {
+      @apply pl-1.5;
+    }
+
+    &.gtc-input-suffix span {
+      @apply pr-1.5;
     }
 
     & .gtc-input-label {
@@ -163,7 +177,7 @@
       @apply flex;
 
       & span {
-        @apply w-5 bg-white py-1.5 pr-1.5 text-sm;
+        @apply w-5 bg-white py-1.5 text-sm;
       }
     }
   }
