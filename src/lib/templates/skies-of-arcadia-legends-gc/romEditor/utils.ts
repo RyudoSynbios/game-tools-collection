@@ -592,15 +592,17 @@ export interface Entity {
   linkedNjcmFiles: number[];
   linkedNjtlFiles: number[];
   linkedNmdmFiles: number[];
-  positionX: number;
-  positionY: number;
-  positionZ: number;
-  rotationX: number;
-  rotationY: number;
-  rotationZ: number;
-  scaleX: number;
-  scaleY: number;
-  scaleZ: number;
+  transform: {
+    positionX: number;
+    positionY: number;
+    positionZ: number;
+    rotationX: number;
+    rotationY: number;
+    rotationZ: number;
+    scaleX: number;
+    scaleY: number;
+    scaleZ: number;
+  };
 }
 
 export interface GrndFile {

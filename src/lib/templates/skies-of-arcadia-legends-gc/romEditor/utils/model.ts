@@ -6,9 +6,8 @@ import { getGvrTexture, GvrTexture } from "$lib/utils/common/gamecube";
 import debug from "$lib/utils/debug";
 import Three from "$lib/utils/three";
 
-import { NjtlFile } from "../utils";
+import { Model, NjtlFile } from "../utils";
 import { NjcmObject } from "./njcm";
-import { NmldFile } from "./nmld";
 
 // TODO
 export interface Texture extends GvrTexture {
@@ -17,7 +16,7 @@ export interface Texture extends GvrTexture {
 
 export async function getTextures(
   njtl: NjtlFile,
-  nmld: NmldFile,
+  model: Model,
   canvas: Canvas,
 ): Promise<Texture[]> {
   const textures: Texture[] = [];
@@ -26,7 +25,7 @@ export async function getTextures(
     await njtl.textures.reduce(async (previousTexture, name) => {
       await previousTexture;
 
-      const gvrTexture = getGvrTexture(canvas, nmld.textures[name]);
+      const gvrTexture = getGvrTexture(canvas, model.textures[name]);
 
       canvas.resize(gvrTexture.width, gvrTexture.height);
 

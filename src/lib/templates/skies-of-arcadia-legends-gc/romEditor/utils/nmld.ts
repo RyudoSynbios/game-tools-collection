@@ -32,15 +32,17 @@ export function unpackNmld(dataView: DataView): Model {
       linkedNjcmFiles: [],
       linkedNjtlFiles: [],
       linkedNmdmFiles: [],
-      positionX: getInt(offset + 0x44, "float32", { bigEndian: true }, dataView),
-      positionY: getInt(offset + 0x48, "float32", { bigEndian: true }, dataView),
-      positionZ: getInt(offset + 0x4c, "float32", { bigEndian: true }, dataView),
-      rotationX: getInt(offset + 0x50, "float32", { bigEndian: true }, dataView),
-      rotationY: getInt(offset + 0x54, "float32", { bigEndian: true }, dataView),
-      rotationZ: getInt(offset + 0x58, "float32", { bigEndian: true }, dataView),
-      scaleX: getInt(offset + 0x5c, "float32", { bigEndian: true }, dataView),
-      scaleY: getInt(offset + 0x60, "float32", { bigEndian: true }, dataView),
-      scaleZ: getInt(offset + 0x64, "float32", { bigEndian: true }, dataView),
+      transform: {
+        positionX: getInt(offset + 0x44, "float32", { bigEndian: true }, dataView),
+        positionY: getInt(offset + 0x48, "float32", { bigEndian: true }, dataView),
+        positionZ: getInt(offset + 0x4c, "float32", { bigEndian: true }, dataView),
+        rotationX: getInt(offset + 0x50, "float32", { bigEndian: true }, dataView),
+        rotationY: getInt(offset + 0x54, "float32", { bigEndian: true }, dataView),
+        rotationZ: getInt(offset + 0x58, "float32", { bigEndian: true }, dataView),
+        scaleX: getInt(offset + 0x5c, "float32", { bigEndian: true }, dataView),
+        scaleY: getInt(offset + 0x60, "float32", { bigEndian: true }, dataView),
+        scaleZ: getInt(offset + 0x64, "float32", { bigEndian: true }, dataView),
+      },
     };
 
     // const offset1 = getInt(offset + 0x8, "uint32", { bigEndian: true }, dataView);
