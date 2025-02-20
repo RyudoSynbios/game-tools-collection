@@ -130,6 +130,10 @@
     await entities.reduce(async (previousEntity, entityIndex) => {
       await previousEntity;
 
+      if (instanceId !== three.getInstanceId()) {
+        return previousEntity;
+      }
+
       const entity = model.entities[entityIndex];
       const njtl = model.njtlFiles[entity.linkedNjtlFiles[0]];
 
@@ -254,6 +258,13 @@
         debug.error("Something went wrong");
       } else {
         debug.color("Successfully completed", "green");
+      }
+
+      if (instanceId === three.getInstanceId()) {
+        three.updateLoadingProgression(
+          (index + 1) / entities.length,
+          instanceId,
+        );
       }
     }, Promise.resolve());
 

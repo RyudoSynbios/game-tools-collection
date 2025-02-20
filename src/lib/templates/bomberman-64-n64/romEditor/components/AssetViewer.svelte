@@ -367,6 +367,8 @@
       } else {
         debug.warn("Not a handled asset header");
       }
+
+      three.updateLoadingProgression((index + 1) / headers.length, instanceId);
     }, Promise.resolve());
 
     three.setTextureListCallback(

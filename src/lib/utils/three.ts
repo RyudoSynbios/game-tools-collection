@@ -81,7 +81,8 @@ export default class Three {
   private cache: { [id: string]: string };
   private instanceId: string;
   private isLoading: boolean;
-  private message: HTMLParagraphElement;
+  private messageEl: HTMLParagraphElement;
+  private progressionEl: HTMLDivElement;
   private group: Group;
   private groupLocked: Group;
   private width: number;
@@ -182,9 +183,19 @@ export default class Three {
 
     this.isLoading = false;
 
-    this.message = document.createElement("p");
-    this.message.classList.add("gtc-three-message");
-    this.threeEl.appendChild(this.message);
+    this.messageEl = document.createElement("p");
+    this.messageEl.classList.add("gtc-three-message");
+    this.threeEl.appendChild(this.messageEl);
+
+    this.progressionEl = document.createElement("div");
+    this.progressionEl.classList.add("gtc-three-progression");
+    this.threeEl.appendChild(this.progressionEl);
+
+    const progressionInnerEl = document.createElement("div");
+    this.progressionEl.appendChild(progressionInnerEl);
+
+    const progressionNumberEl = document.createElement("p");
+    this.progressionEl.appendChild(progressionNumberEl);
 
     // Groups
 
@@ -362,8 +373,8 @@ export default class Three {
       this.group.visible = false;
       this.groupLocked.visible = false;
       this.gridHelper.visible = false;
-
       this.setMessage("Loading...");
+      this.updateLoadingProgression(0);
     } else if (
       this.isGroupEmpty(this.group) &&
       this.isGroupEmpty(this.groupLocked)
@@ -382,8 +393,22 @@ export default class Three {
     }
   }
 
+  public updateLoadingProgression(ratio: number, instanceId?: string): void {
+    if (instanceId && instanceId !== this.getInstanceId()) {
+      return;
+    }
+
+    const progressionInnerEl = this.progressionEl.children[0] as HTMLDivElement;
+    const progressionNumberEl = this.progressionEl
+      .children[1] as HTMLParagraphElement;
+
+    progressionInnerEl.style.width = `${Math.floor(ratio * 100)}%`;
+    progressionNumberEl.innerHTML = `${Math.floor(ratio * 100)}%`;
+  }
+
   public setMessage(text: string): void {
-    this.message.innerText = text;
+    this.messageEl.innerText = text;
+    this.progressionEl.style.display = text === "" ? "none" : "block";
   }
 
   private onMouseDown(event: MouseEvent): void {

@@ -116,29 +116,39 @@
       debug.log(battleCharacter);
 
       if (battleCharacter) {
-        await battleCharacter.objects.reduce(async (previousObject, offset) => {
-          await previousObject;
+        await battleCharacter.objects.reduce(
+          async (previousObject, offset, index) => {
+            await previousObject;
 
-          if (instanceId !== three.getInstanceId()) {
-            return;
-          }
+            if (instanceId !== three.getInstanceId()) {
+              return;
+            }
 
-          const mesh = await addBattleCharacterObject(
-            battleCharacter.objectsBaseOffset,
-            offset,
-            battleCharacter.textures,
-            three,
-            instanceId,
-            canvas,
-            dataView,
-          );
+            const mesh = await addBattleCharacterObject(
+              battleCharacter.objectsBaseOffset,
+              offset,
+              battleCharacter.textures,
+              three,
+              instanceId,
+              canvas,
+              dataView,
+            );
 
-          if (mesh) {
-            mesh.scale.x = 10;
-            mesh.scale.y = 10;
-            mesh.scale.z = 10;
-          }
-        }, Promise.resolve());
+            if (mesh) {
+              mesh.scale.x = 10;
+              mesh.scale.y = 10;
+              mesh.scale.z = 10;
+            }
+
+            if (instanceId === three.getInstanceId()) {
+              three.updateLoadingProgression(
+                (index + 1) / battleCharacter.objects.length,
+                instanceId,
+              );
+            }
+          },
+          Promise.resolve(),
+        );
 
         textures = battleCharacter.textures;
       }
@@ -148,57 +158,65 @@
       debug.log(battleStage);
 
       if (battleStage) {
-        await battleStage.objects.reduce(async (previousObject, object) => {
-          await previousObject;
+        await battleStage.objects.reduce(
+          async (previousObject, object, index) => {
+            await previousObject;
 
-          if (instanceId !== three.getInstanceId()) {
-            return;
-          }
+            if (instanceId !== three.getInstanceId()) {
+              return;
+            }
 
-          const { offset, position, rotation, scale } = object;
+            const { offset, position, rotation, scale } = object;
 
-          const meshId = offset.toHex();
+            const meshId = offset.toHex();
 
-          let mesh: Mesh | null;
+            let mesh: Mesh | null;
 
-          if (three.isMeshCached(meshId)) {
-            mesh = three.cloneCachedMesh(meshId, instanceId);
-          } else {
-            mesh = await addBattleStageObject(
-              battleStage.objectsBaseOffset,
-              offset,
-              battleStage.textures,
-              three,
+            if (three.isMeshCached(meshId)) {
+              mesh = three.cloneCachedMesh(meshId, instanceId);
+            } else {
+              mesh = await addBattleStageObject(
+                battleStage.objectsBaseOffset,
+                offset,
+                battleStage.textures,
+                three,
+                instanceId,
+                canvas,
+                dataView,
+              );
+            }
+
+            if (mesh) {
+              mesh.position.x = position.x;
+              mesh.position.y = position.y;
+              mesh.position.z = position.z;
+
+              mesh.rotation.order = "ZYX";
+
+              mesh.rotation.x = rotation.x;
+              mesh.rotation.y = rotation.y;
+              mesh.rotation.z = rotation.z;
+
+              mesh.scale.x = scale.x;
+              mesh.scale.y = scale.y;
+              mesh.scale.z = scale.z;
+
+              const clone = three.clone(mesh);
+
+              const scaleX = scenario === "1" ? -1 : 1;
+
+              clone.applyMatrix4(new Matrix4().makeScale(scaleX, 1, -1));
+
+              clone.position.z -= 256;
+            }
+
+            three.updateLoadingProgression(
+              (index + 1) / battleStage.objects.length,
               instanceId,
-              canvas,
-              dataView,
             );
-          }
-
-          if (mesh) {
-            mesh.position.x = position.x;
-            mesh.position.y = position.y;
-            mesh.position.z = position.z;
-
-            mesh.rotation.order = "ZYX";
-
-            mesh.rotation.x = rotation.x;
-            mesh.rotation.y = rotation.y;
-            mesh.rotation.z = rotation.z;
-
-            mesh.scale.x = scale.x;
-            mesh.scale.y = scale.y;
-            mesh.scale.z = scale.z;
-
-            const clone = three.clone(mesh);
-
-            const scaleX = scenario === "1" ? -1 : 1;
-
-            clone.applyMatrix4(new Matrix4().makeScale(scaleX, 1, -1));
-
-            clone.position.z -= 256;
-          }
-        }, Promise.resolve());
+          },
+          Promise.resolve(),
+        );
 
         addBattleStageFloor(battleStage.floor.texture, three, instanceId);
 
@@ -210,7 +228,7 @@
       debug.log(mpd);
 
       if (mpd) {
-        await mpd.objects.reduce(async (previousObject, object) => {
+        await mpd.objects.reduce(async (previousObject, object, index) => {
           await previousObject;
 
           if (instanceId !== three.getInstanceId()) {
@@ -253,6 +271,11 @@
             mesh.scale.y = scale.y;
             mesh.scale.z = scale.z;
           }
+
+          three.updateLoadingProgression(
+            (index + 1) / mpd.objects.length,
+            instanceId,
+          );
         }, Promise.resolve());
 
         if (mpd.floor.battlefield) {
