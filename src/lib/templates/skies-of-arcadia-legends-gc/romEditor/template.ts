@@ -4340,6 +4340,32 @@ const template: GameJson = {
                   ],
                 },
                 {
+                  name: "Ship Battles",
+                  items: [
+                    {
+                      id: "assetViewer-shipBattle",
+                      instanceId: "shipBattleViewer",
+                      length: 0x2,
+                      type: "container",
+                      instanceType: "tabs",
+                      instances: 0,
+                      resource: "assetShipBattleNames",
+                      vertical: true,
+                      flex: true,
+                      items: [
+                        {
+                          type: "component",
+                          component: "ModelViewer",
+                          props: {
+                            assetIndex: "shipBattleViewer",
+                            type: "shipBattle",
+                          },
+                        },
+                      ],
+                    },
+                  ],
+                },
+                {
                   name: "Battle Characters",
                   items: [
                     {
@@ -4436,6 +4462,7 @@ const template: GameJson = {
     assetImageNames: "getAssetNames('image')",
     assetModelNames: "getAssetNames('model')",
     assetScriptNames: "getAssetNames('script')",
+    assetShipBattleNames: "getAssetNames('shipBattle')",
     assetWeaponNames: "getAssetNames('weapon')",
     assetWorldMapNames: "getAssetNames('worldMap')",
     characterNames: "getNames('party')",

@@ -416,6 +416,8 @@ export function getFilteredFiles(type: string): File[] {
       return type === "battleCharacter";
     } else if (file.path.match(/^bchara\/(.*?).mld$/)) {
       return type === "weapon";
+    } else if (file.path.match(/^field\/a5(.*?).mld$/)) {
+      return type === "shipBattle";
     } else if (file.path.match(/^field\/fiel(.*?).mld$/)) {
       return type === "worldMap";
     } else if (file.path.match(/^field\/(.*?).mld$/)) {

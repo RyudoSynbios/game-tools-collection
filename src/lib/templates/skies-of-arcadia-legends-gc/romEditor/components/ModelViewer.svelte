@@ -82,11 +82,10 @@
 
     let model: Model;
 
-    let loadAllEntities = false;
+    let loadAllEntities = type === "battleStage" || type === "shipBattle";
 
     if (type === "battleStage") {
       model = unpackSml(dataView);
-      loadAllEntities = true;
     } else {
       model = unpackNmld(dataView);
     }
@@ -103,7 +102,7 @@
       filteredEntity.forEach((entity) => entities.push(entity.index));
     }
 
-    if (entities.length === 0) {
+    if (entities.length === 0 && filteredEntity.length > 0) {
       if (!filteredEntity.find((entity) => entity.index === entityIndex)) {
         entityIndex = filteredEntity[0].index;
       }
@@ -127,7 +126,11 @@
       entities.push(entityIndex);
     }
 
-    await entities.reduce(async (previousEntity, entityIndex) => {
+    const excludeFirstShip = model.entities[0].name === "sb_ship00";
+
+    let movePartyShip = type !== "shipBattle";
+
+    await entities.reduce(async (previousEntity, entityIndex, index) => {
       await previousEntity;
 
       if (instanceId !== three.getInstanceId()) {
@@ -172,6 +175,37 @@
 
       const mainGroup = three.addGroup();
       const groupIds: number[] = [];
+
+      if (loadAllEntities) {
+        mainGroup.position.x = entity.transform.positionX;
+        mainGroup.position.y = entity.transform.positionY;
+        mainGroup.position.z = entity.transform.positionZ;
+
+        mainGroup.rotation.order = "ZYX";
+
+        mainGroup.rotation.x = entity.transform.rotationX;
+        mainGroup.rotation.y = entity.transform.rotationY;
+        mainGroup.rotation.z = entity.transform.rotationZ;
+
+        mainGroup.scale.x = entity.transform.scaleX;
+        mainGroup.scale.y = entity.transform.scaleY;
+        mainGroup.scale.z = entity.transform.scaleZ;
+      }
+
+      // TODO: Temporary
+
+      if (excludeFirstShip && entityIndex > 0 && entity.name === "sb_ship00") {
+        movePartyShip = true;
+      }
+
+      if (!movePartyShip) {
+        mainGroup.position.x += 100;
+        mainGroup.position.y += 100;
+      }
+
+      if (!excludeFirstShip && entity.name === "sb_ship00") {
+        movePartyShip = true;
+      }
 
       let error = false;
 
@@ -237,7 +271,7 @@
           }
         }
 
-        if (entities.length > 1 || index > 0) {
+        if (loadAllEntities || index > 0) {
           group.position.x = object.transform.positionX;
           group.position.y = object.transform.positionY;
           group.position.z = object.transform.positionZ;
