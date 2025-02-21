@@ -25,7 +25,7 @@ const template: GameJson = {
         0x0: [0x47, 0x45, 0x41, 0x4a, 0x38, 0x50, 0x0], // "GEAJ8P"
       },
     },
-    text: "Drag 'n' drop here or click to add a save file.",
+    text: "Drag 'n' drop here or click to add a rom file.",
     hint: "Only works with .gcm and .iso files.\n.rvz files are not supported but can easily be converted.",
     error: "Not a valid rom file.",
   },

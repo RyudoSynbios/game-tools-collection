@@ -380,6 +380,7 @@ export default class Three {
       this.isGroupEmpty(this.groupLocked)
     ) {
       this.setMessage("The scene is empty");
+      this.updateLoadingProgression(-1);
     } else {
       this.controls.enabled = true;
       this.gui.show();
@@ -394,6 +395,10 @@ export default class Three {
   }
 
   public updateLoadingProgression(ratio: number, instanceId?: string): void {
+    if (ratio === -1) {
+      this.progressionEl.style.display = "none";
+    }
+
     if (instanceId && instanceId !== this.getInstanceId()) {
       return;
     }
