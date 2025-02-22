@@ -122,6 +122,10 @@ Number.prototype.toBitCount = function () {
   return this.toBinary().match(/1/g)!.length;
 };
 
+Number.prototype.toEuler = function () {
+  return this.valueOf() / (0x8000 / Math.PI);
+};
+
 Number.prototype.toHex = function (length = 0) {
   let hex = this.toString(16);
 

@@ -335,7 +335,7 @@ export function getFile(
       dataView: new DataView(new Uint8Array(data).buffer),
     };
   } else {
-    debug.error(`File ${name} not found.`);
+    debug.error(`File "${name}" not found.`);
   }
 }
 
@@ -480,6 +480,6 @@ export function writeFile(name: string, dataView: DataView): void {
       }
     }
   } else {
-    debug.error(`File ${name} not found.`);
+    debug.error(`File "${name}" not found.`);
   }
 }

@@ -25,7 +25,7 @@
 
   let previousAssetId = "";
 
-  let entityIndex = 113;
+  let entityIndex = 0;
   let njcmIndex = 0;
 
   let canvas: Canvas;
@@ -230,7 +230,7 @@
         }
 
         debug.color(
-          `{${object.parentIndex}} [${index}] (0x${(0).toHex(8)}) Object > unk: 0x${(object.unknown1 || 0).toHex(8)}, vertices: 0x${(object.verticesOffset || 0).toHex(8)}, meshs: 0x${(object.meshsOffset || 0).toHex(8)}`,
+          `{${object.parentIndex}} [${index}] (0x${(0).toHex(8)}) Object > flags: ${object.flags.debug}, vertices: 0x${(object.verticesOffset || 0).toHex(8)}, meshs: 0x${(object.meshsOffset || 0).toHex(8)}`,
           "darkblue",
         );
 
@@ -241,6 +241,8 @@
             dataView,
             object,
             index,
+            njcm.objects,
+            loadAllEntities,
           );
 
           if (verticesError) {
@@ -269,22 +271,6 @@
           if (meshsError) {
             error = true;
           }
-        }
-
-        if (loadAllEntities || index > 0) {
-          group.position.x = object.transform.positionX;
-          group.position.y = object.transform.positionY;
-          group.position.z = object.transform.positionZ;
-
-          group.rotation.order = "ZYX";
-
-          group.rotation.x = object.transform.rotationX;
-          group.rotation.y = object.transform.rotationY;
-          group.rotation.z = object.transform.rotationZ;
-
-          group.scale.x = object.transform.scaleX;
-          group.scale.y = object.transform.scaleY;
-          group.scale.z = object.transform.scaleZ;
         }
       });
 

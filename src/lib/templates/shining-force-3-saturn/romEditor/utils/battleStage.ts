@@ -261,9 +261,9 @@ export async function unpackBattleStage(
 
     const objectOffset = objectsMeshOffset + objectIndex * 0x14;
 
-    const rotationX = -getInt(objectsOffset + 0x2, "int16", { bigEndian: true }, dataView) / 10430; // prettier-ignore
-    const rotationY = -getInt(objectsOffset + 0x4, "int16", { bigEndian: true }, dataView) / 10430; // prettier-ignore
-    const rotationZ = getInt(objectsOffset + 0x6, "int16", { bigEndian: true }, dataView) / 10430; // prettier-ignore
+    const rotationX = -getInt(objectsOffset + 0x2, "int16", { bigEndian: true }, dataView).toEuler(); // prettier-ignore
+    const rotationY = -getInt(objectsOffset + 0x4, "int16", { bigEndian: true }, dataView).toEuler(); // prettier-ignore
+    const rotationZ = getInt(objectsOffset + 0x6, "int16", { bigEndian: true }, dataView).toEuler(); // prettier-ignore
 
     let positionX = -getInt(objectsOffset + 0x8, "int16", { bigEndian: true }, dataView); // prettier-ignore
     let positionY = -getInt(objectsOffset + 0xc, "int16", { bigEndian: true }, dataView); // prettier-ignore
