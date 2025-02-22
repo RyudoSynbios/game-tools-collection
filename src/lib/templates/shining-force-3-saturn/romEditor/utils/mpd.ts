@@ -568,9 +568,9 @@ export async function unpackMpd(
       const positionY = -getInt(objectsOffset + i * 0x3c + 0x2e, "int16", { bigEndian: true }, dataView); // prettier-ignore
       const positionZ = getInt(objectsOffset + i * 0x3c + 0x30, "int16", { bigEndian: true }, dataView); // prettier-ignore
 
-      const rotationX = -getInt(objectsOffset + i * 0x3c + 0x32, "int16", { bigEndian: true }, dataView) / 10430; // prettier-ignore
-      const rotationY = -getInt(objectsOffset + i * 0x3c + 0x34, "int16", { bigEndian: true }, dataView) / 10430; // prettier-ignore
-      const rotationZ = getInt(objectsOffset + i * 0x3c + 0x36, "int16", { bigEndian: true }, dataView) / 10430; // prettier-ignore
+      const rotationX = -getInt(objectsOffset + i * 0x3c + 0x32, "int16", { bigEndian: true }, dataView).toEuler(); // prettier-ignore
+      const rotationY = -getInt(objectsOffset + i * 0x3c + 0x34, "int16", { bigEndian: true }, dataView).toEuler(); // prettier-ignore
+      const rotationZ = getInt(objectsOffset + i * 0x3c + 0x36, "int16", { bigEndian: true }, dataView).toEuler(); // prettier-ignore
 
       let scaleX = getInt(objectsOffset + i * 0x3c + 0x38, "int16", { bigEndian: true }, dataView); // prettier-ignore
       let scaleY = getInt(objectsOffset + i * 0x3c + 0x3c, "int16", { bigEndian: true }, dataView); // prettier-ignore
