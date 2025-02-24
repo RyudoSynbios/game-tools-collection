@@ -4,9 +4,10 @@ import { dataView, dataViewAlt } from "$lib/stores";
 
 import type { ColorType } from "$lib/types";
 
-import { getInt, getString, setInt } from "../bytes";
+import { getInt, getString, intToArray, setInt } from "../bytes";
 import Canvas from "../canvas";
 import debug from "../debug";
+import { mergeUint8Arrays } from "../format";
 import { getColor, getPalette } from "../graphics";
 
 type Entry = Directory | File;
@@ -112,8 +113,9 @@ export function readGcm(): void {
 
   const nameBlockOffset = fstOffset + entryCount * 0xc;
 
-  let currentDirectoryIndex = 0x0;
-  let nextEntryIndex = 0x0;
+  const directories: Directory[] = [];
+  const directoryIndexes: number[] = [];
+  const nextEntryIndexes: number[] = [];
 
   for (let i = 0x1; i < entryCount; i += 0x1) {
     const offset = fstOffset + i * 0xc;
@@ -127,21 +129,23 @@ export function readGcm(): void {
 
     let path = entryName;
 
-    if (i === nextEntryIndex) {
-      currentDirectoryIndex = 0x0;
+    while (i === nextEntryIndexes.at(-1)) {
+      directoryIndexes.pop();
+      nextEntryIndexes.pop();
     }
 
     if (isDirectory) {
       const parentIndex = getInt(offset + 0x4, "uint32", { bigEndian: true });
-
-      nextEntryIndex = getInt(offset + 0x8, "uint32", {
+      const nextEntryIndex = getInt(offset + 0x8, "uint32", {
         bigEndian: true,
       });
+
+      nextEntryIndexes.push(nextEntryIndex);
 
       let directory: Entry[] = gcm.root;
 
       if (parentIndex !== 0) {
-        const entry = gcm.root.find((entry) => entry.index === parentIndex);
+        const entry = directories.find((entry) => entry.index === parentIndex);
 
         if (entry?.type === "directory") {
           directory = entry.content;
@@ -158,16 +162,17 @@ export function readGcm(): void {
         content: [],
       });
 
-      currentDirectoryIndex = i;
+      directories.push(directory.at(-1) as Directory);
+      directoryIndexes.push(i);
     } else {
       const fileOffset = getInt(offset + 0x4, "uint32", { bigEndian: true });
       const fileSize = getInt(offset + 0x8, "uint32", { bigEndian: true });
 
       let directory: Entry[] = gcm.root;
 
-      if (currentDirectoryIndex !== 0) {
-        const entry = gcm.root.find(
-          (entry) => entry.index === currentDirectoryIndex,
+      if (directoryIndexes.length > 0) {
+        const entry = directories.find(
+          (entry) => entry.index === directoryIndexes.at(-1),
         );
 
         if (entry?.type === "directory") {
@@ -197,49 +202,95 @@ export function rebuildGcm(): void {
 
   const files = getFiles();
 
-  // Update entries
+  // Rebuild fst.bin
 
-  const fst = getFile("system/fst.bin") as File;
-  $dataViewAlt.fst = fst.dataView;
+  // Set new fst file size
+  ((gcm.root[0] as Directory).content[3] as File).size = getFstSize();
 
+  const datas: number[] = [];
+  const names: number[] = [];
   const fileOffsets: { previous: number; new: number }[] = [];
 
-  let entryCount = 0;
-  let fileCount = 4;
-  let fileOffset = files[4].offset;
+  let entryIndex = 0;
 
-  files.slice(0, 4).forEach((file) => {
-    fileOffsets.push({ previous: file.offset, new: file.offset });
-  });
+  let fileOffset = 0;
 
-  while (fileCount < files.length) {
-    const offset = entryCount * 0xc;
+  function buildFst(directory = gcm.root, parentIndex = 0): void {
+    directory.forEach((entry) => {
+      const isDirectory = entry.type === "directory";
 
-    const isDirectory = getInt(offset, "uint8", {}, fst?.dataView) === 0x1;
+      datas.push(isDirectory ? 0x1 : 0x0);
+      datas.push(...intToArray(names.length, "uint24", true));
 
-    if (!isDirectory) {
-      const file = files[fileCount];
+      if (entry.index !== 0) {
+        entry.name.split("").forEach((char) => {
+          names.push(char.charCodeAt(0));
+        });
 
-      setInt(offset + 0x4, "uint32", fileOffset, { bigEndian: true }, "fst");
-      setInt(offset + 0x8, "uint32", file.size, { bigEndian: true }, "fst");
+        names.push(0x0);
+      }
 
-      fileOffsets.push({ previous: file.offset, new: fileOffset });
+      entryIndex += 1;
 
-      file.offset = fileOffset;
+      if (isDirectory) {
+        if (entry.index === 0) {
+          datas.push(...intToArray(parentIndex, "uint32", true));
+          datas.push(...intToArray(0x0, "uint32", true)); // Entry count updated later
 
-      fileOffset = Math.ceil((fileOffset + file.size) / 0x4) * 0x4;
+          (entry.content as File[]).forEach((file) => {
+            fileOffsets.push({ previous: file.offset, new: fileOffset });
 
-      fileCount += 1;
-    }
+            file.offset = fileOffset;
 
-    entryCount += 1;
+            fileOffset = Math.ceil((fileOffset + file.size) / 0x10) * 0x10;
+          });
+
+          return;
+        }
+
+        const nextEntryIndex = entryIndex + getEntryCount(entry.content);
+
+        datas.push(...intToArray(parentIndex, "uint32", true));
+        datas.push(...intToArray(nextEntryIndex, "uint32", true));
+
+        buildFst(entry.content, entryIndex - 1);
+      } else {
+        datas.push(...intToArray(fileOffset, "uint32", true));
+        datas.push(...intToArray(entry.size, "uint32", true));
+
+        fileOffsets.push({ previous: entry.offset, new: fileOffset });
+
+        entry.offset = fileOffset;
+
+        fileOffset = Math.ceil((fileOffset + entry.size) / 0x4) * 0x4;
+      }
+    });
   }
+
+  buildFst();
+
+  const fst = mergeUint8Arrays(new Uint8Array(datas), new Uint8Array(names));
+
+  $dataViewAlt.boot = getFile("system/boot.bin")!.dataView;
+  $dataViewAlt.fst = new DataView(fst.buffer);
+
+  setInt(0x8, "uint32", entryIndex, { bigEndian: true }, "fst");
 
   writeFile("system/fst.bin", $dataViewAlt.fst);
 
+  // Update boot.bin
+
+  setInt(0x400, "uint32", files[1].size, { bigEndian: true }, "boot"); // apploader.img size
+  setInt(0x420, "uint32", fileOffsets[2].new, { bigEndian: true }, "boot"); // main.dol offset
+  setInt(0x424, "uint32", fileOffsets[3].new, { bigEndian: true }, "boot"); // fst.bin offset
+  setInt(0x428, "uint32", files[3].size, { bigEndian: true }, "boot"); // fst.bin size
+  setInt(0x42c, "uint32", files[3].size, { bigEndian: true }, "boot"); // fst.bin size
+
+  writeFile("system/boot.bin", $dataViewAlt.boot);
+
   // Rebuild DataView
 
-  const lastFile = files[files.length - 1];
+  const lastFile = files.at(-1)!;
 
   const size = lastFile.offset + lastFile.size;
 
@@ -278,12 +329,28 @@ export function getFile(path: string): File | undefined {
 
     return file;
   } else {
-    debug.error(`File ${path} not found.`);
+    debug.error(`File "${path}" not found.`);
   }
 }
 
 export function getEntries(): Entry[] {
   return gcm.root;
+}
+
+function getEntryCount(directory = gcm.root): number {
+  return directory.reduce((count, entry) => {
+    if (entry.type === "directory") {
+      if (entry.index === 0) {
+        return count + 0x1;
+      }
+
+      count += 0x1 + getEntryCount(entry.content);
+    } else {
+      count += 0x1;
+    }
+
+    return count;
+  }, 0);
 }
 
 export function getFiles(directory = gcm.root): File[] {
@@ -298,6 +365,22 @@ export function getFiles(directory = gcm.root): File[] {
   }, []);
 }
 
+function getFstSize(directory = gcm.root): number {
+  return directory.reduce((size, entry) => {
+    if (entry.type === "directory") {
+      if (entry.index === 0) {
+        return size + 0xc;
+      }
+
+      size += 0xc + entry.name.length + 1 + getFstSize(entry.content);
+    } else {
+      size += 0xc + entry.name.length + 1;
+    }
+
+    return size;
+  }, 0);
+}
+
 export function writeFile(path: string, dataView: DataView): void {
   const file = getFile(path);
 
@@ -306,7 +389,37 @@ export function writeFile(path: string, dataView: DataView): void {
     file.dataView = dataView;
     file.isDirty = true;
   } else {
-    debug.error(`File ${path} not found.`);
+    const directories = path.split("/");
+    const entryName = directories.pop();
+
+    let currentDirectory = gcm.root;
+
+    while (directories.length > 0) {
+      const directory = currentDirectory.find(
+        (item) => item.name === directories.at(-1),
+      );
+
+      if (directory) {
+        currentDirectory = (directory as Directory).content;
+      } else {
+        // TODO: Create directory
+      }
+
+      directories.pop();
+    }
+
+    currentDirectory.push({
+      index: getEntryCount(),
+      type: "file",
+      path,
+      name: entryName,
+      offset: 0x0,
+      size: dataView.byteLength,
+      dataView: dataView,
+      isDirty: true,
+    } as File);
+
+    debug.warn(`File "${path}" created.`);
   }
 }
 
