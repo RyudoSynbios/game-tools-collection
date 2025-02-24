@@ -112,7 +112,7 @@ export function applyPreset(value: number): void {
       modes = 2;
       randomizes = 1;
       vanillaRandomize = 1;
-      vanillaShuffleRandomize = 1;
+      vanillaShuffleRandomize = 2;
       break;
     case 3:
       items = 4;
@@ -123,14 +123,13 @@ export function applyPreset(value: number): void {
       break;
   }
 
-  // General
-  setInt(0x4, "uint8", modes, {}, "randomizer");
+  // Cosmetics
+  setInt(0x4, "uint8", vanillaRandomize, {}, "randomizer");
 
   // Party
   setInt(0x10, "uint8", randomizes, {}, "randomizer");
   setInt(0x11, "uint8", vanillaRandomize, {}, "randomizer");
-  setInt(0x12, "uint8", vanillaRandomize, {}, "randomizer");
-  setInt(0x13, "uint8", modes, {}, "randomizer");
+  setInt(0x12, "uint8", modes, {}, "randomizer");
 
   // Abilities
   setInt(0x20, "uint8", randomizes, {}, "randomizer");
@@ -156,7 +155,12 @@ export function applyPreset(value: number): void {
 
   // Shops
   setInt(0x70, "uint8", items, {}, "randomizer");
-  setInt(0x71, "uint8", modes, {}, "randomizer");
+
+  if (items >= 3) {
+    setInt(0x71, "uint8", modes, {}, "randomizer");
+  } else {
+    setInt(0x71, "uint8", 0, {}, "randomizer");
+  }
 
   // Ranks
   setInt(0x80, "uint8", modes, {}, "randomizer");
