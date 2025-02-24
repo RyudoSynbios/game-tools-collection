@@ -1,4 +1,4 @@
-import { Group } from "three";
+import { BufferAttribute, Euler, Group, Matrix4, Vector3 } from "three";
 
 import { extractBit, getInt } from "$lib/utils/bytes";
 import Canvas from "$lib/utils/canvas";
@@ -45,15 +45,53 @@ export async function getTextures(
   return textures;
 }
 
+function applyTransform(
+  bufferAttribute: BufferAttribute,
+  object: NjcmObject,
+): void {
+  const translationMatrix = new Matrix4().makeTranslation(
+    object.transform.positionX,
+    object.transform.positionY,
+    object.transform.positionZ,
+  );
+  const rotationMatrix = new Matrix4().makeRotationFromEuler(
+    new Euler(
+      object.transform.rotationX,
+      object.transform.rotationY,
+      object.transform.rotationZ,
+      "ZYX",
+    ),
+  );
+  const scaleMatrix = new Matrix4().makeScale(
+    object.transform.scaleX,
+    object.transform.scaleY,
+    object.transform.scaleZ,
+  );
+
+  const matrix = new Matrix4();
+  matrix.multiplyMatrices(translationMatrix, rotationMatrix);
+  matrix.multiply(scaleMatrix);
+
+  for (let i = 0; i < bufferAttribute.count; i++) {
+    const vertex = new Vector3().fromBufferAttribute(bufferAttribute, i);
+    vertex.applyMatrix4(matrix);
+
+    bufferAttribute.setXYZ(i, vertex.x, vertex.y, vertex.z);
+  }
+}
+
 export function getVertices(
-  offset: number,
+  object: NjcmObject,
   vertexBuffer: number[],
   dataView: DataView,
   // TODO: Remove
-  object: NjcmObject,
-  index: number,
-): { error: boolean; vertices: number[] } {
+  objects: NjcmObject[],
+  loadAllEntities: boolean,
+): { error: boolean } {
+  const index = object.index;
   const vertices = [];
+
+  let offset = object.verticesOffset;
 
   let error = false;
   let iteration = 0;
@@ -100,7 +138,7 @@ export function getVertices(
 
     if (end) {
       debug.color(
-        `{${object.parentIndex}} [${index}] (0x${offset.toHex(8)}) Vertices ${iteration} > type: 0x${type.toHex(2)}, size: 0x${size.toHex(4)}, unk2: 0x${unknown2.toHex(2)}${color === "red" ? " > TYPE NOT HANDLED" : ""}`,
+        `{${object.parentIndex}} [${index}] (0x${offset.toHex(8)}) Vertices ${iteration} > flags: ${object.flags.debug}, type: 0x${type.toHex(2)}, size: 0x${size.toHex(4)}, unk2: 0x${unknown2.toHex(2)}${color === "red" ? " > TYPE NOT HANDLED" : ""}`,
         color,
       );
 
@@ -113,7 +151,7 @@ export function getVertices(
     // TODO: unknown3 shift in vertice table, so related indexes takes account of this shift > Find a way to link indices to vertice table
 
     debug.color(
-      `{${object.parentIndex}} [${index}] (0x${offset.toHex(8)}) Vertices ${iteration} > type: 0x${type.toHex(2)}, size: 0x${size.toHex(4)}, unk2: 0x${unknown2.toHex(2)}, count: ${count}, position: ${basePosition}`,
+      `{${object.parentIndex}} [${index}] (0x${offset.toHex(8)}) Vertices ${iteration} > flags: ${object.flags.debug}, type: 0x${type.toHex(2)}, size: 0x${size.toHex(4)}, unk2: 0x${unknown2.toHex(2)}, count: ${count}, position: ${basePosition}`,
       color,
     );
 
@@ -158,8 +196,6 @@ export function getVertices(
         offset += 0x4;
       }
 
-      vertices.push(vX, vY, vZ);
-
       position *= 3;
 
       // TODO
@@ -169,32 +205,69 @@ export function getVertices(
         // vZ += vertexBuffer[position + 2];
       }
 
-      vertexBuffer[position] = vX;
-      vertexBuffer[position + 1] = vY;
-      vertexBuffer[position + 2] = vZ;
+      vertices[position] = vX;
+      vertices[position + 1] = vY;
+      vertices[position + 2] = vZ;
 
       offset += length;
+    }
+
+    const bufferAttribute = new BufferAttribute(new Float32Array(vertices), 3);
+
+    let parent = object;
+
+    while (parent) {
+      if (!loadAllEntities && parent.index === 0) {
+        break;
+      }
+
+      applyTransform(bufferAttribute, parent);
+
+      if (parent.index === 0) {
+        break;
+      }
+
+      parent = objects[parent.parentIndex];
+    }
+
+    for (let i = 0; i < bufferAttribute.count; i++) {
+      const vertex = new Vector3().fromBufferAttribute(bufferAttribute, i);
+
+      if (!isNaN(vertex.x)) {
+        vertexBuffer[i * 3] = vertex.x;
+        vertexBuffer[i * 3 + 1] = vertex.y;
+        vertexBuffer[i * 3 + 2] = vertex.z;
+      }
     }
 
     iteration += 1;
   }
 
-  return { error, vertices };
+  return { error };
+}
+
+export interface VerticesCache {
+  [key: number]: {
+    status: "applying" | "caching" | "complete";
+    index: number;
+    rewind: boolean;
+  };
 }
 
 export function addMeshs(
-  offset: number,
+  object: NjcmObject,
   vertexBuffer: number[],
   dataView: DataView,
   three: Three,
   instanceId: string,
   group: Group,
   textures: Texture[],
-  // TODO: Remove
-  object: NjcmObject,
-  index: number,
-  objects: NjcmObject[],
+  verticesCache: VerticesCache,
 ): { error: boolean } {
+  const index = object.index;
+
+  let offset = object.meshsOffset;
+
   let error = false;
   let iteration = 0;
 
@@ -210,8 +283,8 @@ export function addMeshs(
 
     let color = "purple";
 
-    let isSpecial1 = false;
-    let isSpecial2 = false;
+    let isCache = false;
+    let isRewind = false;
     let isTexture = false;
     let isMaterial = false;
     let hasDiffuse = false;
@@ -224,13 +297,13 @@ export function addMeshs(
     let end = false;
 
     switch (type) {
-      // case 0x4:
-      //   color = "orange";
-      //   isSpecial1 = true;
-      //   break;
+      case 0x4:
+        color = "orange";
+        isCache = true;
+        break;
       case 0x5:
         color = "orange";
-        isSpecial2 = true;
+        isRewind = true;
         break;
       case 0x8:
         color = "gold";
@@ -283,7 +356,7 @@ export function addMeshs(
 
     if (end) {
       debug.color(
-        `{${object.parentIndex}} [${index}] (0x${offset.toHex(8)}) Mesh ${iteration} > type: 0x${type.toHex(2)}${color === "red" ? " > TYPE NOT HANDLED" : ""}`,
+        `{${object.parentIndex}} [${index}] (0x${offset.toHex(8)}) Mesh ${iteration} > flags: ${object.flags.debug}, type: 0x${type.toHex(2)}${color === "red" ? " > TYPE NOT HANDLED" : ""}`,
         color,
       );
 
@@ -294,46 +367,43 @@ export function addMeshs(
 
     // Special
 
-    if (isSpecial1) {
+    if (isCache) {
       const unknown2 = getInt(offset, "uint16", { bigEndian: true }, dataView);
 
-      // TODO
-
       debug.color(
-        `{${object.parentIndex}} [${index}] (0x${(offset - 0x2).toHex(8)}) Special ${iteration} > type: 0x${type.toHex(2)}, unk2: 0x${unknown2.toHex(4)}`,
+        `{${object.parentIndex}} [${index}] (0x${(offset - 0x2).toHex(8)}) Special ${iteration} > flags: ${object.flags.debug}, type: 0x${type.toHex(2)}, unk2: 0x${unknown2.toHex(4)} > ${flags}`,
         color,
       );
 
-      // for (let i = index + 1; i < objects.length - 1; i += 1) {
-      //   if (objects[i].verticesOffset) {
-      //     getVertices(
-      //       objects[i].verticesOffset,
-      //       vertexBuffer,
-      //       dataView,
-      //       object,
-      //       index,
-      //     );
-      //   }
+      if (!verticesCache[flags] || verticesCache[flags].status === "complete") {
+        verticesCache[flags] = {
+          status: "caching",
+          index: object.index - 1,
+          rewind: false,
+        };
 
-      //   if (objects[i].meshsOffset) {
-      //     const type = getInt(objects[i].meshsOffset + 0x1, "uint8", {}, dataView);
-
-      //     if (type === 0x5) {
-      //       break;
-      //     }
-      //   }
-      // }
+        return { error };
+      }
 
       offset += 0x2;
     }
 
-    if (isSpecial2) {
-      // TODO
-
+    if (isRewind) {
       debug.color(
-        `{${object.parentIndex}} [${index}] (0x${(offset - 0x2).toHex(8)}) Special ${iteration} > type: 0x${type.toHex(2)}`,
+        `{${object.parentIndex}} [${index}] (0x${(offset - 0x2).toHex(8)}) Special ${iteration} > flags: ${object.flags.debug}, type: 0x${type.toHex(2)} > ${flags}`,
         color,
       );
+
+      if (verticesCache[flags]) {
+        if (verticesCache[flags].status === "caching") {
+          verticesCache[flags].status = "applying";
+          verticesCache[flags].rewind = true;
+
+          return { error };
+        } else if (verticesCache[flags].status === "applying") {
+          verticesCache[flags].status = "complete";
+        }
+      }
     }
 
     // Texture
@@ -355,7 +425,7 @@ export function addMeshs(
       };
 
       debug.color(
-        `{${object.parentIndex}} [${index}] (0x${(offset - 0x2).toHex(8)}) Texture ${iteration} > type: 0x${type.toHex(2)}, textureIndex: ${textureIndex}`,
+        `{${object.parentIndex}} [${index}] (0x${(offset - 0x2).toHex(8)}) Texture ${iteration} > flags: ${object.flags.debug}, type: 0x${type.toHex(2)}, textureIndex: ${textureIndex}`,
         color,
       );
 
@@ -368,7 +438,7 @@ export function addMeshs(
       const unknown2 = getInt(offset, "uint16", { bigEndian: true }, dataView);
 
       debug.color(
-        `{${object.parentIndex}} [${index}] (0x${(offset - 0x2).toHex(8)}) Material ${iteration} > type: 0x${type.toHex(2)}, unknown2: ${unknown2.toHex(4)}`,
+        `{${object.parentIndex}} [${index}] (0x${(offset - 0x2).toHex(8)}) Material ${iteration} > flags: ${object.flags.debug}, type: 0x${type.toHex(2)}, unknown2: ${unknown2.toHex(4)}`,
         color,
       );
 
@@ -381,7 +451,7 @@ export function addMeshs(
         material.opacity = alpha;
 
         debug.color(
-          `{${object.parentIndex}} [${index}] (0x${(offset - 0x2).toHex(8)}) Material ${iteration} > type: 0x${type.toHex(2)}, diffuse: 0x${diffuse.toHex(6)}, alpha: ${material.opacity}`,
+          `{${object.parentIndex}} [${index}] (0x${(offset - 0x2).toHex(8)}) Material ${iteration} > flags: ${object.flags.debug}, type: 0x${type.toHex(2)}, diffuse: 0x${diffuse.toHex(6)}, alpha: ${material.opacity}`,
           color,
         );
 
@@ -394,7 +464,7 @@ export function addMeshs(
         // TODO
 
         debug.color(
-          `{${object.parentIndex}} [${index}] (0x${(offset - 0x2).toHex(8)}) Material ${iteration} > type: 0x${type.toHex(2)}, ambient: 0x${ambient.toHex(6)}, alpha: ${alpha}`,
+          `{${object.parentIndex}} [${index}] (0x${(offset - 0x2).toHex(8)}) Material ${iteration} > flags: ${object.flags.debug}, type: 0x${type.toHex(2)}, ambient: 0x${ambient.toHex(6)}, alpha: ${alpha}`,
           color,
         );
 
@@ -407,7 +477,7 @@ export function addMeshs(
         // TODO
 
         debug.color(
-          `{${object.parentIndex}} [${index}] (0x${(offset - 0x2).toHex(8)}) Material ${iteration} > type: 0x${type.toHex(2)}, specular: 0x${specular.toHex(6)}, alpha: ${alpha}`,
+          `{${object.parentIndex}} [${index}] (0x${(offset - 0x2).toHex(8)}) Material ${iteration} > flags: ${object.flags.debug}, type: 0x${type.toHex(2)}, specular: 0x${specular.toHex(6)}, alpha: ${alpha}`,
           color,
         );
 
@@ -424,12 +494,12 @@ export function addMeshs(
 
       if (vertexBuffer.length > 0) {
         debug.color(
-          `{${object.parentIndex}} [${index}] (0x${(offset - 0x2).toHex(8)}) Mesh ${iteration} > type: 0x${type.toHex(2)}, unk2: 0x${unknown2.toHex(4)}, count: ${meshCount}`,
+          `{${object.parentIndex}} [${index}] (0x${(offset - 0x2).toHex(8)}) Mesh ${iteration} > flags: ${object.flags.debug}, type: 0x${type.toHex(2)}, unk2: 0x${unknown2.toHex(4)}, count: ${meshCount}`,
           color,
         );
       } else {
         debug.color(
-          `{${object.parentIndex}} [${index}] (0x${(offset - 0x2).toHex(8)}) Mesh ${iteration} > type: 0x${type.toHex(2)}, unk2: 0x${unknown2.toHex(4)}, count: ${meshCount} > NO VERTICES`,
+          `{${object.parentIndex}} [${index}] (0x${(offset - 0x2).toHex(8)}) Mesh ${iteration} > flags: ${object.flags.debug}, type: 0x${type.toHex(2)}, unk2: 0x${unknown2.toHex(4)}, count: ${meshCount} > NO VERTICES`,
           "red",
         );
       }
@@ -502,7 +572,18 @@ export function addMeshs(
           material.opacity = 0.25;
         }
 
-        if (vertexBuffer.length > 0) {
+        let isCaching = false;
+
+        Object.values(verticesCache).forEach((cache) => {
+          if (cache.status === "caching") {
+            isCaching = true;
+          } else if (cache.status === "applying") {
+            isCaching = false;
+          }
+        });
+
+        // TODO
+        if (vertexBuffer.length > 0 && !isCaching) {
           three.addMesh(vertexBuffer, indices, uvs, instanceId, {
             group,
             renderOrder: material.opacity === 1 ? 0 : 1,

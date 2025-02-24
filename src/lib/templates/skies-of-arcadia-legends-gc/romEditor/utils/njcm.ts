@@ -19,7 +19,17 @@ export function unpackNjcm(offset: number, dataView: DataView): NjcmFile {
 export interface NjcmObject {
   index: number;
   parentIndex: number;
-  unknown1?: number;
+  flags: {
+    position: boolean;
+    rotation: boolean;
+    scale: boolean;
+    unknown3: boolean;
+    hasChildren: boolean;
+    unknown5: boolean;
+    unknown6: boolean;
+    unknown7: boolean;
+    debug: string;
+  };
   transform: {
     positionX: number;
     positionY: number;
@@ -52,7 +62,27 @@ function parseNjcmObject(
     parentIndex,
   } as NjcmObject;
 
-  object.unknown1 = getInt(offset, "uint32", { bigEndian: true }, dataView);
+  object.flags = {
+    position: !getInt(offset + 0x3, "bit", { bit: 0 }, dataView),
+    rotation: !getInt(offset + 0x3, "bit", { bit: 1 }, dataView),
+    scale: !getInt(offset + 0x3, "bit", { bit: 2 }, dataView),
+    unknown3: Boolean(getInt(offset + 0x3, "bit", { bit: 3 }, dataView)),
+    hasChildren: !getInt(offset + 0x3, "bit", { bit: 4 }, dataView),
+    unknown5: Boolean(getInt(offset + 0x3, "bit", { bit: 5 }, dataView)),
+    unknown6: Boolean(getInt(offset + 0x3, "bit", { bit: 6 }, dataView)),
+    unknown7: Boolean(getInt(offset + 0x3, "bit", { bit: 7 }, dataView)),
+    debug: "",
+  };
+
+  // TODO: Remove
+  object.flags.debug += object.flags.position ? 'p' : '-';
+  object.flags.debug += object.flags.rotation ? 'r' : '-';
+  object.flags.debug += object.flags.scale ? 's' : '-';
+  object.flags.debug += object.flags.unknown3 ? '3' : '-';
+  object.flags.debug += object.flags.hasChildren ? 'c' : '-';
+  object.flags.debug += object.flags.unknown5 ? '5' : '-';
+  object.flags.debug += object.flags.unknown6 ? '6' : '-';
+  object.flags.debug += object.flags.unknown7 ? '7' : '-';
 
   const dataPointer = getInt(offset + 0x4, "uint32", { bigEndian: true }, dataView);
 

@@ -4,7 +4,7 @@
 
   import Modal from "$lib/components/Modal.svelte";
   import ModelViewer from "$lib/components/ModelViewer.svelte";
-  import { dataViewAlt, isDebug } from "$lib/stores";
+  import { dataViewAlt } from "$lib/stores";
   import Canvas from "$lib/utils/canvas";
   import debug from "$lib/utils/debug";
   import Three from "$lib/utils/three";
@@ -15,6 +15,7 @@
     getTextures,
     getVertices,
     type Texture,
+    type VerticesCache,
   } from "../utils/model";
   import { unpackNmld } from "../utils/nmld";
   import { unpackSml } from "../utils/sml";
@@ -25,7 +26,7 @@
 
   let previousAssetId = "";
 
-  let entityIndex = 113;
+  let entityIndex = 0;
   let njcmIndex = 0;
 
   let canvas: Canvas;
@@ -209,12 +210,16 @@
 
       let error = false;
 
-      njcm.objects.forEach((object, index) => {
+      const verticesCache: VerticesCache = {};
+
+      for (let i = 0; i < njcm.objects.length; i += 1) {
+        const object = njcm.objects[i];
+
         const group = new Group();
 
         groupIds.push(group.id);
 
-        if (index === 0) {
+        if (object.index === 0) {
           mainGroup.add(group);
         } else {
           const parentId = groupIds[object.parentIndex];
@@ -230,40 +235,34 @@
         }
 
         debug.color(
-          `{${object.parentIndex}} [${index}] (0x${(0).toHex(8)}) Object > unk: 0x${(object.unknown1 || 0).toHex(8)}, vertices: 0x${(object.verticesOffset || 0).toHex(8)}, meshs: 0x${(object.meshsOffset || 0).toHex(8)}`,
+          `{${object.parentIndex}} [${object.index}] (0x${(0).toHex(8)}) Object > flags: ${object.flags.debug}, vertices: 0x${(object.verticesOffset || 0).toHex(8)}, meshs: 0x${(object.meshsOffset || 0).toHex(8)}`,
           "darkblue",
         );
 
         if (object.verticesOffset) {
-          const { error: verticesError, vertices } = getVertices(
-            object.verticesOffset,
+          const { error: verticesError } = getVertices(
+            object,
             vertexBuffer,
             dataView,
-            object,
-            index,
+            njcm.objects,
+            loadAllEntities,
           );
 
           if (verticesError) {
             error = true;
           }
-
-          if ($isDebug && vertices.length > 0) {
-            three.addPoints(vertices, instanceId, { group });
-          }
         }
 
         if (object.meshsOffset) {
           const { error: meshsError } = addMeshs(
-            object.meshsOffset,
+            object,
             vertexBuffer,
             dataView,
             three,
             instanceId,
             group,
             textures,
-            object,
-            index,
-            njcm.objects,
+            verticesCache,
           );
 
           if (meshsError) {
@@ -271,22 +270,13 @@
           }
         }
 
-        if (loadAllEntities || index > 0) {
-          group.position.x = object.transform.positionX;
-          group.position.y = object.transform.positionY;
-          group.position.z = object.transform.positionZ;
-
-          group.rotation.order = "ZYX";
-
-          group.rotation.x = object.transform.rotationX;
-          group.rotation.y = object.transform.rotationY;
-          group.rotation.z = object.transform.rotationZ;
-
-          group.scale.x = object.transform.scaleX;
-          group.scale.y = object.transform.scaleY;
-          group.scale.z = object.transform.scaleZ;
-        }
-      });
+        Object.values(verticesCache).forEach((cache) => {
+          if (cache.rewind) {
+            i = cache.index;
+            cache.rewind = false;
+          }
+        });
+      }
 
       if (error) {
         debug.error("Something went wrong");
