@@ -247,11 +247,10 @@ export function getVertices(
 }
 
 export interface VerticesCache {
-  [key: number]: {
-    status: "applying" | "caching" | "complete";
-    index: number;
-    rewind: boolean;
-  };
+  instance: number;
+  status: "applying" | "caching" | "complete";
+  index: number;
+  rewind: boolean;
 }
 
 export function addMeshs(
@@ -371,16 +370,17 @@ export function addMeshs(
       const unknown2 = getInt(offset, "uint16", { bigEndian: true }, dataView);
 
       debug.color(
-        `{${object.parentIndex}} [${index}] (0x${(offset - 0x2).toHex(8)}) Special ${iteration} > flags: ${object.flags.debug}, type: 0x${type.toHex(2)}, unk2: 0x${unknown2.toHex(4)} > ${flags}`,
+        `{${object.parentIndex}} [${index}] (0x${(offset - 0x2).toHex(8)}) Cache ${iteration} > flags: ${object.flags.debug}, type: 0x${type.toHex(2)}, unk2: 0x${unknown2.toHex(4)} > ${flags}`,
         color,
       );
 
-      if (!verticesCache[flags] || verticesCache[flags].status === "complete") {
-        verticesCache[flags] = {
-          status: "caching",
-          index: object.index - 1,
-          rewind: false,
-        };
+      if (
+        verticesCache.instance === -1 ||
+        (flags !== verticesCache.instance && verticesCache.status !== "caching")
+      ) {
+        verticesCache.instance = flags;
+        verticesCache.status = "caching";
+        verticesCache.index = object.index - 1;
 
         return { error };
       }
@@ -390,18 +390,19 @@ export function addMeshs(
 
     if (isRewind) {
       debug.color(
-        `{${object.parentIndex}} [${index}] (0x${(offset - 0x2).toHex(8)}) Special ${iteration} > flags: ${object.flags.debug}, type: 0x${type.toHex(2)} > ${flags}`,
+        `{${object.parentIndex}} [${index}] (0x${(offset - 0x2).toHex(8)}) Rewind ${iteration} > flags: ${object.flags.debug}, type: 0x${type.toHex(2)} > ${flags}`,
         color,
       );
 
-      if (verticesCache[flags]) {
-        if (verticesCache[flags].status === "caching") {
-          verticesCache[flags].status = "applying";
-          verticesCache[flags].rewind = true;
-
+      if (verticesCache.instance === flags) {
+        if (verticesCache.status === "caching") {
+          verticesCache.status = "applying";
+          verticesCache.rewind = true;
           return { error };
-        } else if (verticesCache[flags].status === "applying") {
-          verticesCache[flags].status = "complete";
+        } else if (verticesCache.status === "applying") {
+          verticesCache.instance = -1;
+          verticesCache.status = "complete";
+          verticesCache.index = -1;
         }
       }
     }
@@ -572,18 +573,8 @@ export function addMeshs(
           material.opacity = 0.25;
         }
 
-        let isCaching = false;
-
-        Object.values(verticesCache).forEach((cache) => {
-          if (cache.status === "caching") {
-            isCaching = true;
-          } else if (cache.status === "applying") {
-            isCaching = false;
-          }
-        });
-
         // TODO
-        if (vertexBuffer.length > 0 && !isCaching) {
+        if (vertexBuffer.length > 0 && verticesCache.status !== "caching") {
           three.addMesh(vertexBuffer, indices, uvs, instanceId, {
             group,
             renderOrder: material.opacity === 1 ? 0 : 1,

@@ -131,6 +131,8 @@
 
     let movePartyShip = type !== "shipBattle";
 
+    let error = false;
+
     await entities.reduce(async (previousEntity, entityIndex, index) => {
       await previousEntity;
 
@@ -208,9 +210,12 @@
         movePartyShip = true;
       }
 
-      let error = false;
-
-      const verticesCache: VerticesCache = {};
+      const verticesCache: VerticesCache = {
+        instance: -1,
+        status: "complete",
+        index: -1,
+        rewind: false,
+      };
 
       for (let i = 0; i < njcm.objects.length; i += 1) {
         const object = njcm.objects[i];
@@ -270,18 +275,10 @@
           }
         }
 
-        Object.values(verticesCache).forEach((cache) => {
-          if (cache.rewind) {
-            i = cache.index;
-            cache.rewind = false;
-          }
-        });
-      }
-
-      if (error) {
-        debug.error("Something went wrong");
-      } else {
-        debug.color("Successfully completed", "green");
+        if (verticesCache.rewind) {
+          i = verticesCache.index;
+          verticesCache.rewind = false;
+        }
       }
 
       if (instanceId === three.getInstanceId()) {
@@ -291,6 +288,12 @@
         );
       }
     }, Promise.resolve());
+
+    if (error) {
+      debug.error("Something went wrong");
+    } else {
+      debug.color("Successfully completed", "green");
+    }
 
     textures = model.textures;
 
