@@ -109,11 +109,11 @@
     min = getIntMin(item);
     max = getIntMax(item);
 
-    if (!item.uncontrolled) {
-      if (utilsExists("overrideGetInt")) {
-        [isOverrided, value] = $gameUtils.overrideGetInt(item);
-      }
+    if (utilsExists("overrideGetInt")) {
+      [isOverrided, value] = $gameUtils.overrideGetInt(item);
+    }
 
+    if (!item.uncontrolled) {
       let dataViewAlt;
 
       if (isDataViewAltExists(item.dataViewAltKey || "")) {
