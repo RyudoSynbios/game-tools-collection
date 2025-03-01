@@ -48,6 +48,7 @@ export default class Script {
     type: FileType;
     name: string;
   }[];
+  private subroutineStatus: string;
 
   constructor(dataView: DataView) {
     this.dataView = dataView;
@@ -59,6 +60,8 @@ export default class Script {
 
     this.subroutines = [];
     this.files = [];
+
+    this.subroutineStatus = "";
 
     for (let i = 0x0; i < this.count; i += 1) {
       const offset =
@@ -75,7 +78,20 @@ export default class Script {
     }
 
     for (let i = 0x0; i < this.count; i += 1) {
+      this.subroutineStatus = "";
+
       this.loadSubroutine(i);
+
+      if (
+        this.subroutines[i].actions.length === 2 &&
+        this.subroutines[i].actions[1].text.match(/^\\h/)
+      ) {
+        this.subroutineStatus = "text";
+      } else if (this.subroutineStatus === "") {
+        this.subroutineStatus = "complete";
+      }
+
+      this.subroutines[i].name += ` (${this.subroutineStatus})`;
     }
 
     debug.log(this.files);
@@ -104,282 +120,387 @@ export default class Script {
         text: instruction.toHex(8),
       };
 
-      switch (instruction) {
-        case 0x0:
-          this.parseIf(action);
-          break;
-        case 0x3:
-          this.parseSwitch(action);
-          break;
-        case 0x5:
-          this.parseUpdateEventValue(action);
-          break;
-        case 0x6:
-          this.parseUpdateSpecialValue(action);
-          break;
-        case 0x9:
-          this.parseInit(action);
-          break;
-        case 0xa:
-          this.parseJump(action);
-          break;
-        case 0xb:
-          this.parseCallSubroutine(action);
-          break;
-        case 0xc:
-          this.parseReturn(action);
-          break;
-        case 0xd:
-          this.parseUnknown0d(action);
-          break;
-        case 0x10:
-          this.parseWait(action);
-          break;
-        case 0x11:
-          this.parseSetFlag(action);
-          break;
-        case 0x12:
-          this.parseUnsetFlag(action);
-          break;
-        case 0x14:
-          this.parseGetItem(action);
-          break;
-        case 0x17:
-          this.parseLoadFile(action, "mld (0x17)");
-          break;
-        case 0x18:
-          this.parseDebugText(action);
-          break;
-        case 0x1a:
-          this.parseUnknown1a(action);
-          break;
-        case 0x1b:
-          this.parseUnknown1b(action);
-          break;
-        case 0x1c:
-          this.parseUnknown1c(action);
-          break;
-        case 0x1e:
-          this.parseUnknown1e(action);
-          break;
-        // case 0x22:
-        //   this.parseUnknown22(action);
-        //   break;
-        case 0x28:
-          this.parseUnknown28(action);
-          break;
-        case 0x29:
-          this.parseUnknown29(action);
-          break;
-        case 0x2b:
-          this.parseLoadFile(action, "script (0x2b)");
-          break;
-        case 0x2d:
-          this.parseUnknown2d(action);
-          break;
-        case 0x33:
-          this.parseUnknown33(action);
-          break;
-        case 0x37:
-          this.parseUnknown37(action);
-          break;
-        case 0x38:
-          this.parseUnknown38(action);
-          break;
-        case 0x3b:
-          this.parseFadeOut(action);
-          break;
-        case 0x3c:
-          this.parseFadeIn(action);
-          break;
-        case 0x3e:
-          this.parseUnknown3e(action);
-          break;
-        case 0x3f:
-          this.parseUnknown3f(action);
-          break;
-        case 0x41:
-          this.parseUnknown41(action);
-          break;
-        case 0x45:
-          this.parseLoadFile(action, "sound");
-          break;
-        case 0x47:
-          this.parseSetCameraPosition(action);
-          break;
-        case 0x4a:
-          this.parseMoveCamera(action);
-          break;
-        case 0x4c:
-          this.parseUnknown4c(action);
-          break;
-        case 0x4d:
-          this.parseSetCharacterPosition(action);
-          break;
-        case 0x4f:
-          this.parseFog(action);
-          break;
-        case 0x52:
-          this.parseLightColor(action);
-          break;
-        case 0x53:
-          this.parseLightParameters(action);
-          break;
-        case 0x54:
-          this.parseUnknown54(action);
-          break;
-        case 0x57:
-          this.parseUnknown57(action);
-          break;
-        case 0x5b:
-          this.parseUnknown5b(action);
-          break;
-        case 0x5c:
-          this.parseUnknown5c(action);
-          break;
-        case 0x5d:
-          this.parseUnknown5d(action);
-          break;
-        case 0x5e:
-          this.parseUnknown5e(action);
-          break;
-        case 0x62:
-          this.parseUnknown62(action);
-          break;
-        case 0x63:
-          this.parseUnknown63(action);
-          break;
-        case 0x67:
-          this.parseUnknown67(action);
-          break;
-        case 0x6d:
-          this.parseUnknown6d(action);
-          break;
-        case 0x6e:
-          this.parseLoadFile(action, "mld (0x6e)");
-          break;
-        case 0x70:
-          this.parseInitEventBattle(action);
-          break;
-        case 0x71:
-          this.parseLoadFile(action, "mld (0x71)");
-          break;
-        case 0x72:
-          this.parseUnknown72(action);
-          break;
-        case 0x73:
-          this.parseUnknown73(action);
-          break;
-        case 0x75:
-          this.parseUnknown75(action);
-          break;
-        case 0x76:
-          this.parseUnknown76(action);
-          break;
-        case 0x77:
-          this.parseUnknown77(action);
-          break;
-        case 0x7c:
-          this.parseUnknown7c(action);
-          break;
-        case 0x8a:
-          this.parseInitSave(action);
-          break;
-        case 0x90:
-          this.parseDialogBox(action);
-          break;
-        case 0x92:
-          this.parseUnknown92(action);
-          break;
-        case 0x95:
-          this.parseUnknown95(action);
-          break;
-        case 0x9a:
-          this.parseOpenTreasure(action);
-          break;
-        case 0x9b:
-          this.parseChoiceBox(action);
-          break;
-        case 0x9c:
-          this.parseUnknown9c(action);
-          break;
-        case 0xa7:
-          this.parseUnknownA7(action);
-          break;
-        case 0xab:
-          this.parseUnknownAb(action);
-          break;
-        case 0xae:
-          this.parseUnknownAe(action);
-          break;
-        case 0xb4:
-          this.parseUnknownB4(action);
-          break;
-        case 0xb5:
-          this.parseInitShop(action);
-          break;
-        case 0xb7:
-          this.parseUnknownB7(action);
-          break;
-        case 0xb8:
-          this.parseUnknownB8(action);
-          break;
-        case 0xb9:
-          this.parseUnknownB9(action);
-          break;
-        case 0xba:
-          this.parseUnknownBa(action);
-          break;
-        case 0xc3:
-          this.parseUnknownC3(action);
-          break;
-        case 0xc4:
-          this.parseUnknownC4(action);
-          break;
-        case 0xc9:
-          this.parseRestorePartyHp(action);
-          break;
-        case 0xca:
-          this.parseRestorePartyMp(action);
-          break;
-        case 0xd0:
-          this.parseUnknownD0(action);
-          break;
-        case 0xd1:
-          this.parseUnknownD1(action);
-          break;
-        case 0xd2:
-          this.parseLoadFile(action, "script (0xd2)");
-          break;
-        case 0xd5:
-          this.parseUnknownD5(action);
-          break;
-        case 0xe2:
-          this.parseUnknownE2(action);
-          break;
-        case 0xe9:
-          this.parseUnknownE9(action);
-          break;
-        case 0xeb:
-          this.parseUnknownEb(action);
-          break;
-        case 0xf3:
-          this.parseUnknownF3(action);
-          break;
-        case 0xf7:
-          this.parseUnknownF7(action);
-          break;
-        case 0xf9:
-          this.parseUnknownF9(action);
-          break;
-        case 0x104:
-          this.parseRestoreShipHp(action);
-          break;
-        default:
-          action.color = "red";
+      // if (instruction === 0x22 || instruction === 0x23) {
+      //   console.log(
+      //     instruction.toHex(),
+      //     offset.toHex(),
+      //     getInt(offset + 0xc, "uint32", { bigEndian: true }, this.dataView),
+      //   );
+      // }
+
+      if (
+        !["hasError", "hasUnparsedInstruction"].includes(this.subroutineStatus)
+      ) {
+        switch (instruction) {
+          case 0x0:
+            this.parseIf(action);
+            break;
+          case 0x3:
+            this.parseSwitch(action);
+            break;
+          case 0x5:
+            this.parseUpdateEventValue(action);
+            break;
+          case 0x6:
+            this.parseUpdateSpecialValue(action);
+            break;
+          case 0x9:
+            this.parseInit(action);
+            break;
+          case 0xa:
+            this.parseJump(action);
+            break;
+          case 0xb:
+            this.parseCallSubroutine(action);
+            break;
+          case 0xc:
+            this.parseReturn(action);
+            break;
+          case 0xd:
+            this.parseUnknown0d(action);
+            break;
+          case 0x10:
+            this.parseWait(action);
+            break;
+          case 0x11:
+            this.parseSetFlag(action);
+            break;
+          case 0x12:
+            this.parseUnsetFlag(action);
+            break;
+          case 0x14:
+            this.parseGetItem(action);
+            break;
+          case 0x17:
+            this.parseLoadFile(action, "mld (0x17)");
+            break;
+          case 0x18:
+            this.parseDebugText(action);
+            break;
+          case 0x1a:
+            this.parseUnknown1a(action);
+            break;
+          case 0x1b:
+            this.parseUnknown1b(action);
+            break;
+          case 0x1c:
+            this.parseUnknown1c(action);
+            break;
+          case 0x1d:
+            this.parseUnknown1d(action);
+            break;
+          case 0x1e:
+            this.parseUnknown1e(action);
+            break;
+          case 0x1f:
+            this.parseUnknown1f(action);
+            break;
+          case 0x20:
+            this.parseUnknown20(action);
+            break;
+          case 0x21:
+            this.parseUnknown21(action);
+            break;
+          case 0x22:
+            this.parseUnknown22(action);
+            break;
+          case 0x23:
+            this.parseUnknown23(action);
+            break;
+          case 0x24:
+            this.parseUnknown24(action);
+            break;
+          case 0x28:
+            this.parseUnknown28(action);
+            break;
+          case 0x29:
+            this.parseUnknown29(action);
+            break;
+          case 0x2b:
+            this.parseLoadFile(action, "script (0x2b)");
+            break;
+          case 0x2d:
+            this.parseUnknown2d(action);
+            break;
+          case 0x2e:
+            this.parseUnknown2e(action);
+            break;
+          case 0x31:
+            this.parseUnknown31(action);
+            break;
+          case 0x32:
+            this.parseUnknown32(action);
+            break;
+          case 0x33:
+            this.parseUnknown33(action);
+            break;
+          case 0x37:
+            this.parseUnknown37(action);
+            break;
+          case 0x38:
+            this.parseUnknown38(action);
+            break;
+          case 0x3d:
+            this.parseUnknown3d(action);
+            break;
+          case 0x3b:
+            this.parseFadeOut(action);
+            break;
+          case 0x3c:
+            this.parseFadeIn(action);
+            break;
+          case 0x3e:
+            this.parseUnknown3e(action);
+            break;
+          case 0x3f:
+            this.parseUnknown3f(action);
+            break;
+          case 0x41:
+            this.parseUnknown41(action);
+            break;
+          case 0x45:
+            this.parseLoadFile(action, "sound");
+            break;
+          case 0x46:
+            this.parseUnknown46(action);
+            break;
+          case 0x47:
+            this.parseSetCameraPosition(action);
+            break;
+          case 0x48:
+            this.parseUnknown48(action);
+            break;
+          case 0x4a:
+            this.parseMoveCamera(action);
+            break;
+          case 0x4c:
+            this.parseUnknown4c(action);
+            break;
+          case 0x4d:
+            this.parseSetCharacterPosition(action);
+            break;
+          case 0x4e:
+            this.parseUnknown4e(action);
+            break;
+          case 0x4f:
+            this.parseFog(action);
+            break;
+          case 0x50:
+            this.parseUnknown50(action);
+            break;
+          case 0x52:
+            this.parseLightColor(action);
+            break;
+          case 0x53:
+            this.parseLightParameters(action);
+            break;
+          case 0x54:
+            this.parseUnknown54(action);
+            break;
+          case 0x57:
+            this.parseUnknown57(action);
+            break;
+          case 0x5a:
+            this.parseUnknown5a(action);
+            break;
+          case 0x5b:
+            this.parseUnknown5b(action);
+            break;
+          case 0x5c:
+            this.parseUnknown5c(action);
+            break;
+          case 0x5d:
+            this.parseUnknown5d(action);
+            break;
+          case 0x5e:
+            this.parseUnknown5e(action);
+            break;
+          case 0x62:
+            this.parseUnknown62(action);
+            break;
+          case 0x63:
+            this.parseUnknown63(action);
+            break;
+          case 0x65:
+            this.parseUnknown65(action);
+            break;
+          case 0x67:
+            this.parseUnknown67(action);
+            break;
+          case 0x6d:
+            this.parseUnknown6d(action);
+            break;
+          case 0x6e:
+            this.parseLoadFile(action, "mld (0x6e)");
+            break;
+          case 0x70:
+            this.parseInitEventBattle(action);
+            break;
+          case 0x71:
+            this.parseLoadFile(action, "mld (0x71)");
+            break;
+          case 0x72:
+            this.parseUnknown72(action);
+            break;
+          case 0x73:
+            this.parseUnknown73(action);
+            break;
+          case 0x75:
+            this.parseUnknown75(action);
+            break;
+          case 0x76:
+            this.parseUnknown76(action);
+            break;
+          case 0x77:
+            this.parseUnknown77(action);
+            break;
+          case 0x7c:
+            this.parseUnknown7c(action);
+            break;
+          case 0x7e:
+            this.parseUnknown7e(action);
+            break;
+          case 0x80:
+            this.parseUnknown80(action);
+            break;
+          case 0x81:
+            this.parseUnknown81(action);
+            break;
+          case 0x82:
+            this.parseUnknown82(action);
+            break;
+          case 0x86:
+            this.parseUnknown86(action);
+            break;
+          case 0x88:
+            this.parseUnknown88(action);
+            break;
+          case 0x8a:
+            this.parseInitSave(action);
+            break;
+          case 0x90:
+            this.parseDialogBox(action);
+            break;
+          case 0x92:
+            this.parseUnknown92(action);
+            break;
+          case 0x95:
+            this.parseUnknown95(action);
+            break;
+          case 0x9a:
+            this.parseOpenTreasure(action);
+            break;
+          case 0x9b:
+            this.parseChoiceBox(action);
+            break;
+          case 0x9c:
+            this.parseUnknown9c(action);
+            break;
+          case 0x9f:
+            this.parseUnknown9f(action);
+            break;
+          case 0xa4:
+            this.parseUnknownA4(action);
+            break;
+          case 0xa7:
+            this.parseUnknownA7(action);
+            break;
+          case 0xab:
+            this.parseUnknownAb(action);
+            break;
+          case 0xae:
+            this.parseUnknownAe(action);
+            break;
+          case 0xb4:
+            this.parseUnknownB4(action);
+            break;
+          case 0xb5:
+            this.parseInitShop(action);
+            break;
+          case 0xb7:
+            this.parseUnknownB7(action);
+            break;
+          case 0xb8:
+            this.parseUnknownB8(action);
+            break;
+          case 0xb9:
+            this.parseUnknownB9(action);
+            break;
+          case 0xba:
+            this.parseUnknownBa(action);
+            break;
+          case 0xbe:
+            this.parseUnknownBe(action);
+            break;
+          case 0xc3:
+            this.parseUnknownC3(action);
+            break;
+          case 0xc4:
+            this.parseUnknownC4(action);
+            break;
+          case 0xc9:
+            this.parseRestorePartyHp(action);
+            break;
+          case 0xca:
+            this.parseRestorePartyMp(action);
+            break;
+          case 0xcb:
+            this.parseUnknownCb(action);
+            break;
+          case 0xd0:
+            this.parseUnknownD0(action);
+            break;
+          case 0xd1:
+            this.parseUnknownD1(action);
+            break;
+          case 0xd2:
+            this.parseLoadFile(action, "script (0xd2)");
+            break;
+          case 0xd5:
+            this.parseUnknownD5(action);
+            break;
+          case 0xe2:
+            this.parseUnknownE2(action);
+            break;
+          case 0xe9:
+            this.parseUnknownE9(action);
+            break;
+          case 0xeb:
+            this.parseUnknownEb(action);
+            break;
+          case 0xee:
+            this.parseUnknownEe(action);
+            break;
+          case 0xf3:
+            this.parseUnknownF3(action);
+            break;
+          case 0xf7:
+            this.parseUnknownF7(action);
+            break;
+          case 0xf9:
+            this.parseUnknownF9(action);
+            break;
+          case 0x104:
+            this.parseRestoreShipHp(action);
+            break;
+          default:
+            action.color = "red";
+            this.subroutineStatus = "hasUnparsedInstruction";
+        }
+      } else {
+        action.color = "red";
       }
 
       subroutine.actions.push({ ...action, offset });
+
+      if (action.color === "orange") {
+        this.subroutineStatus = "hasError";
+      } else if (
+        this.subroutineStatus !== "hasError" &&
+        action.color === "mediumorchid"
+      ) {
+        this.subroutineStatus = "hasUnknownInstruction";
+      }
 
       offset += action.length * 0x4;
 
@@ -505,7 +626,7 @@ export default class Script {
             subtype = "-";
             break;
         }
-      } else if ([0x7f7fffff, 0x7fffffff].includes(instruction)) {
+      } else if ([0x800000, 0x7f7fffff, 0x7fffffff].includes(instruction)) {
         type = "unknown";
         value = instruction;
         variables.push({ type, subtype, value });
@@ -603,61 +724,64 @@ export default class Script {
     let text = "";
     let error = false;
 
-    if (Array.isArray(variables) && variables.length >= 3) {
-      for (let i = 0; i < variables.length; i += 3) {
-        if (i >= 3) {
-          if (i + 3 > variables.length) {
-            error = true;
-            break;
-          }
+    // if (Array.isArray(variables) && variables.length >= 3) {
+    //   for (let i = 0; i < variables.length; i += 3) {
+    //     if (i >= 3) {
+    //       if (i + 3 > variables.length) {
+    //         error = true;
+    //         break;
+    //       }
 
-          const operator = variables[i + 3];
+    //       const operator = variables[i + 3];
 
-          if (operator.type !== "operator") {
-            error = true;
-            break;
-          }
+    //       if (operator.type !== "operator") {
+    //         error = true;
+    //         break;
+    //       }
 
-          text = `${text} ${operator.subtype} `;
+    //       text = `${text} ${operator.subtype} `;
 
-          if (i + 3 === variables.length) {
-            error = true;
-            break;
-          }
-        }
+    //       if (i + 3 === variables.length) {
+    //         error = true;
+    //         break;
+    //       }
+    //     }
 
-        const variable = variables[i];
-        const value = variables[i + 1].value;
-        const operator = variables[i + 2];
+    //     const variable = variables[i];
+    //     const value = variables[i + 1].value;
+    //     const operator = variables[i + 2];
 
-        if (operator.type !== "operator") {
-          error = true;
-          break;
-        }
+    //     if (operator.type !== "operator") {
+    //       error = true;
+    //       break;
+    //     }
 
-        const variableValue =
-          variable.type === "flag"
-            ? this.parseFlagOffset(variable.value)
-            : variable.value;
+    //     const variableValue =
+    //       variable.type === "flag"
+    //         ? this.parseFlagOffset(variable.value)
+    //         : variable.value;
 
-        text += `(${variable.type} ${variableValue} ${operator.subtype} ${value})`;
+    //     text += `(${variable.type} ${variableValue} ${operator.subtype} ${value})`;
 
-        if (i >= 3) {
-          i += 1;
-        }
-      }
-    } else {
-      error = true;
-    }
+    //     if (i >= 3) {
+    //       i += 1;
+    //     }
+    //   }
+    // } else {
+    //   error = true;
+    // }
 
-    if (!error) {
-      action.color = "limegreen";
-      action.text = `if ${text} then continue else jump to "${jumpOffset.toHex(8)}"`;
-    } else {
-      debug.warn(
-        `Error while parsing if (${JSON.stringify(action)}) (${JSON.stringify(variables)}).`,
-      );
-    }
+    action.color = "mediumorchid";
+    action.text = "if";
+
+    // if (!error) {
+    //   action.color = "limegreen";
+    //   action.text = `if ${text} then continue else jump to "${jumpOffset.toHex(8)}"`;
+    // } else {
+    //   debug.warn(
+    //     `Error while parsing if (${JSON.stringify(action)}) (${JSON.stringify(variables)}).`,
+    //   );
+    // }
   }
 
   private parseSwitch(action: Action): void {
@@ -906,6 +1030,29 @@ export default class Script {
     }
   }
 
+  private parseUnknown1d(action: Action): void {
+    action.text = "unknown instruction 0x1d";
+
+    const unknown1 = this.parseVariables(action);
+    const unknown2 = this.parseVariables(action);
+    const unknown3 = this.parseVariables(action);
+    const unknown4 = this.parseVariables(action);
+
+    if (
+      !Array.isArray(unknown1) &&
+      !Array.isArray(unknown2) &&
+      !Array.isArray(unknown3) &&
+      !Array.isArray(unknown4)
+    ) {
+      action.color = "mediumorchid";
+      action.text = `unknown instruction 0x1d with values "${unknown1.value}", "${unknown2.value}", "${unknown3.value.toHex(8)}", "${unknown4.value}"`;
+    } else {
+      debug.warn(
+        `Error while parsing instruction 0x1d (${JSON.stringify(action)}).`,
+      );
+    }
+  }
+
   private parseUnknown1e(action: Action): void {
     action.text = "unknown instruction 0x1e";
 
@@ -922,25 +1069,239 @@ export default class Script {
     }
   }
 
-  // private parseUnknown22(action: Action): void {
-  //   action.text = "unknown instruction 0x22";
+  private parseUnknown1f(action: Action): void {
+    action.text = "unknown instruction 0x1f";
 
-  //   const unknown1 = this.parseVariables(action);
-  //   const unknown2 = this.parseVariables(action);
-  //   const unknown3 = this.parseVariables(action);
-  //   const unknown4 = this.parseVariables(action);
-  //   const unknown5 = this.parseVariables(action);
-  //   const unknown6 = this.parseVariables(action);
-  //   const unknown7 = this.parseVariables(action);
-  //   const unknown8 = this.parseVariables(action);
-  //   const unknown9 = this.parseVariables(action);
-  //   const unknown10 = this.parseVariables(action);
+    const unknown1 = this.parseVariables(action);
+    const unknown2 = this.parseVariables(action);
+    const unknown3 = this.parseVariables(action);
+    const unknown4 = this.parseVariables(action);
+    const unknown5 = this.parseVariables(action);
+    const unknown6 = this.parseVariables(action);
+    const unknown7 = this.parseVariables(action);
+    const unknown8 = this.parseVariables(action);
 
-  //   if (end1 && end2 && end3 && end4 && end5 && end6 && end7 && end8) {
-  //     action.color = "mediumorchid";
-  //     action.text = `unknown instruction 0x22 with values P1 = "${unknown1}", P21 = "${unknown21}", P22 = "${unknown22}", P31 = "${unknown31.toHex(8)}", P32 = "${unknown32}", P4 = "${unknown4}", P5 = "${unknown5}", P61 = "${unknown61.toHex(8)}", P62 = "${unknown62}", P7 = "${unknown7}", P8 = "${unknown8}"`;
-  //   }
-  // }
+    if (
+      !Array.isArray(unknown1) &&
+      !Array.isArray(unknown2) &&
+      !Array.isArray(unknown3) &&
+      !Array.isArray(unknown4) &&
+      !Array.isArray(unknown5) &&
+      !Array.isArray(unknown6) &&
+      !Array.isArray(unknown7) &&
+      !Array.isArray(unknown8)
+    ) {
+      action.color = "mediumorchid";
+      action.text = `unknown instruction 0x1f with values "${unknown1.value}", "${unknown2.value}", "${unknown3.value}", "${unknown4.value}", "${unknown5.value}", "${unknown6.value}", "${unknown7.value}", "${unknown8.value}"`;
+    } else {
+      debug.warn(
+        `Error while parsing instruction 0x1f (${JSON.stringify(action)}).`,
+      );
+    }
+  }
+
+  private parseUnknown20(action: Action): void {
+    action.text = "unknown instruction 0x20";
+
+    const unknown1 = this.parseVariables(action);
+    const unknown2 = this.parseVariables(action);
+    const unknown3 = this.parseVariables(action);
+    const unknown4 = this.parseVariables(action);
+    const unknown5 = this.parseVariables(action);
+    const unknown6 = this.parseVariables(action);
+    const unknown7 = this.parseVariables(action);
+    const unknown8 = this.parseVariables(action);
+
+    if (
+      !Array.isArray(unknown1) &&
+      !Array.isArray(unknown2) &&
+      !Array.isArray(unknown3) &&
+      !Array.isArray(unknown4) &&
+      !Array.isArray(unknown5) &&
+      !Array.isArray(unknown6) &&
+      !Array.isArray(unknown7) &&
+      !Array.isArray(unknown8)
+    ) {
+      action.color = "mediumorchid";
+      action.text = `unknown instruction 0x20 with values "${unknown1.value}", "${unknown2.value}", "${unknown3.value}", "${unknown4.value}", "${unknown5.value}", "${unknown6.value}", "${unknown7.value}", "${unknown8.value}"`;
+    } else {
+      debug.warn(
+        `Error while parsing instruction 0x20 (${JSON.stringify(action)}).`,
+      );
+    }
+  }
+
+  private parseUnknown21(action: Action): void {
+    action.text = "unknown instruction 0x21";
+
+    const count = this.getValue(action);
+
+    let text = "";
+    let error = false;
+
+    for (let i = 0; i < count; i += 1) {
+      const unknown1 = this.parseVariables(action);
+      const unknown2 = this.parseVariables(action);
+      const unknown3 = this.parseVariables(action);
+      const unknown4 = this.parseVariables(action);
+      const unknown5 = this.parseVariables(action);
+      const unknown6 = this.parseVariables(action);
+      const unknown7 = this.parseVariables(action);
+
+      // if (
+      //   !Array.isArray(unknown1) ||
+      //   !Array.isArray(unknown2) ||
+      //   !Array.isArray(unknown3) ||
+      //   Array.isArray(unknown4) ||
+      //   !Array.isArray(unknown5) ||
+      //   Array.isArray(unknown6) ||
+      //   Array.isArray(unknown7)
+      // ) {
+      //   error = true;
+      //   break;
+      // }
+
+      text += `| "${unknown1}", "${unknown2}", "${unknown3}", "${unknown4}", "${unknown5}", "${unknown6}", "${unknown7}"`;
+    }
+
+    if (!error) {
+      action.color = "mediumorchid";
+      action.text = `unknown instruction 0x21 with ${count} block(s) ${text.replace("|", "")}`;
+    } else {
+      debug.warn(
+        `Error while parsing instruction 0x21 (${JSON.stringify(action)}).`,
+      );
+    }
+  }
+
+  private parseUnknown22(action: Action): void {
+    action.text = "unknown instruction 0x22";
+
+    const unknown = this.parseVariables(action);
+
+    const count = this.getValue(action);
+
+    let text = "";
+    let error = false;
+
+    for (let i = 0; i < count; i += 1) {
+      const unknown1 = this.parseVariables(action);
+      const unknown2 = this.parseVariables(action);
+      const unknown3 = this.parseVariables(action);
+      const unknown4 = this.parseVariables(action);
+      const unknown5 = this.parseVariables(action);
+      const unknown6 = this.parseVariables(action);
+      const unknown7 = this.parseVariables(action);
+      const unknown8 = this.parseVariables(action);
+      const unknown9 = this.parseVariables(action);
+
+      if (
+        Array.isArray(unknown1) ||
+        Array.isArray(unknown2) ||
+        Array.isArray(unknown3) ||
+        Array.isArray(unknown4) ||
+        Array.isArray(unknown5) ||
+        Array.isArray(unknown6) ||
+        Array.isArray(unknown7) ||
+        Array.isArray(unknown8) ||
+        Array.isArray(unknown9)
+      ) {
+        error = true;
+        break;
+      }
+
+      text += `| "${unknown1.value}", "${unknown2.value}", "${unknown3.value}", "${unknown4.value}", "${unknown5.value}", "${unknown6.value}", "${unknown7.value}", "${unknown8.value}", "${unknown9.value}"`;
+    }
+
+    if (!Array.isArray(unknown) && !error) {
+      action.color = "mediumorchid";
+      action.text = `unknown instruction 0x22 with value "${unknown.value}" then ${count} block(s) ${text.replace("|", "")}`;
+    } else {
+      debug.warn(
+        `Error while parsing instruction 0x22 (${JSON.stringify(action)}).`,
+      );
+    }
+  }
+
+  private parseUnknown23(action: Action): void {
+    action.text = "unknown instruction 0x23";
+
+    const unknown = this.parseVariables(action);
+
+    const count = this.getValue(action);
+
+    let text = "";
+    let error = false;
+
+    for (let i = 0; i < count; i += 1) {
+      const unknown1 = this.parseVariables(action);
+      const unknown2 = this.parseVariables(action);
+      const unknown3 = this.parseVariables(action);
+      const unknown4 = this.parseVariables(action);
+      const unknown5 = this.parseVariables(action);
+      const unknown6 = this.parseVariables(action);
+      const unknown7 = this.parseVariables(action);
+      const unknown8 = this.parseVariables(action);
+      const unknown9 = this.parseVariables(action);
+
+      if (
+        Array.isArray(unknown1) ||
+        Array.isArray(unknown2) ||
+        Array.isArray(unknown3) ||
+        Array.isArray(unknown4) ||
+        Array.isArray(unknown5) ||
+        Array.isArray(unknown6) ||
+        Array.isArray(unknown7) ||
+        Array.isArray(unknown8) ||
+        Array.isArray(unknown9)
+      ) {
+        error = true;
+        break;
+      }
+
+      text += `| "${unknown1.value}", "${unknown2.value}", "${unknown3.value}", "${unknown4.value}", "${unknown5.value}", "${unknown6.value}", "${unknown7.value}", "${unknown8.value}", "${unknown9.value}"`;
+    }
+
+    if (!Array.isArray(unknown) && !error) {
+      action.color = "mediumorchid";
+      action.text = `unknown instruction 0x23 with value "${unknown.value}" then ${count} block(s) ${text.replace("|", "")}`;
+    } else {
+      debug.warn(
+        `Error while parsing instruction 0x23 (${JSON.stringify(action)}).`,
+      );
+    }
+  }
+
+  private parseUnknown24(action: Action): void {
+    action.text = "unknown instruction 0x24";
+
+    const unknown1 = this.parseVariables(action);
+    const unknown2 = this.parseVariables(action);
+    const unknown3 = this.parseVariables(action);
+    const unknown4 = this.parseVariables(action);
+    const unknown5 = this.parseVariables(action);
+    const unknown6 = this.parseVariables(action);
+    const unknown7 = this.parseVariables(action);
+    const unknown8 = this.parseVariables(action);
+
+    if (
+      !Array.isArray(unknown1) &&
+      !Array.isArray(unknown2) &&
+      !Array.isArray(unknown3) &&
+      !Array.isArray(unknown4) &&
+      !Array.isArray(unknown5) &&
+      !Array.isArray(unknown6) &&
+      !Array.isArray(unknown7) &&
+      !Array.isArray(unknown8)
+    ) {
+      action.color = "mediumorchid";
+      action.text = `unknown instruction 0x24 with values "${unknown1.value}", "${unknown2.value}", "${unknown3.value}", "${unknown4.value}", "${unknown5.value}", "${unknown6.value}", "${unknown7.value}", "${unknown8.value}"`;
+    } else {
+      debug.warn(
+        `Error while parsing instruction 0x24 (${JSON.stringify(action)}).`,
+      );
+    }
+  }
 
   private parseUnknown28(action: Action): void {
     action.text = "unknown instruction 0x28";
@@ -983,6 +1344,72 @@ export default class Script {
     action.text = "unknown instruction 0x2d";
   }
 
+  private parseUnknown32(action: Action): void {
+    action.text = "unknown instruction 0x32";
+
+    const unknown1 = this.parseVariables(action);
+    const unknown2 = this.parseVariables(action);
+    const unknown3 = this.parseVariables(action);
+    const unknown4 = this.parseVariables(action);
+    const unknown5 = this.parseVariables(action);
+    const unknown6 = this.parseVariables(action);
+
+    if (
+      !Array.isArray(unknown1) &&
+      !Array.isArray(unknown2) &&
+      !Array.isArray(unknown3) &&
+      !Array.isArray(unknown4) &&
+      !Array.isArray(unknown5) &&
+      !Array.isArray(unknown6)
+    ) {
+      action.color = "mediumorchid";
+      action.text = `unknown instruction 0x32 with values "${unknown1.value}", "${unknown2.value}", "${unknown3.value}", "${unknown4.value}", "${unknown5.value}", "${unknown6.value}"`;
+    } else {
+      debug.warn(
+        `Error while parsing instruction 0x32 (${JSON.stringify(action)}).`,
+      );
+    }
+  }
+
+  private parseUnknown2e(action: Action): void {
+    action.text = "unknown instruction 0x2e";
+
+    const unknown1 = this.parseVariables(action);
+    const unknown2 = this.parseVariables(action);
+    const unknown3 = this.parseVariables(action);
+    const unknown4 = this.parseVariables(action);
+
+    if (
+      !Array.isArray(unknown1) &&
+      !Array.isArray(unknown2) &&
+      !Array.isArray(unknown3)
+      // !Array.isArray(unknown4)
+    ) {
+      action.color = "mediumorchid";
+      action.text = `unknown instruction 0x2e with values "${unknown1.value}", "${unknown2.value}", "${unknown3.value}", "${unknown4}"`;
+    } else {
+      debug.warn(
+        `Error while parsing instruction 0x2e (${JSON.stringify(action)}).`,
+      );
+    }
+  }
+
+  private parseUnknown31(action: Action): void {
+    action.text = "unknown instruction 0x31";
+
+    const unknown = this.parseVariables(action);
+
+    if (!Array.isArray(unknown)) {
+      action.color = "mediumorchid";
+      action.text = `unknown instruction 0x31 with values "${unknown.value}"`;
+    } else {
+      debug.warn(
+        `Error while parsing instruction 0x31 (${JSON.stringify(action)}).`,
+      );
+    }
+  }
+
+  // TODO: Related to sound?
   private parseUnknown33(action: Action): void {
     action.text = "unknown instruction 0x33";
 
@@ -1038,6 +1465,27 @@ export default class Script {
     } else {
       debug.warn(
         `Error while parsing instruction 0x38 (${JSON.stringify(action)}).`,
+      );
+    }
+  }
+
+  private parseUnknown3d(action: Action): void {
+    action.text = "unknown instruction 0x3d";
+
+    const unknown1 = this.parseVariables(action);
+    const unknown2 = this.parseVariables(action);
+    const unknown3 = this.parseVariables(action);
+
+    if (
+      !Array.isArray(unknown1) &&
+      !Array.isArray(unknown2) &&
+      !Array.isArray(unknown3)
+    ) {
+      action.color = "mediumorchid";
+      action.text = `unknown instruction 0x3d with values "${unknown1.value}", "${unknown2.value}", "${unknown3.value}"`;
+    } else {
+      debug.warn(
+        `Error while parsing instruction 0x3d (${JSON.stringify(action)}).`,
       );
     }
   }
@@ -1115,6 +1563,29 @@ export default class Script {
     }
   }
 
+  private parseUnknown46(action: Action): void {
+    action.text = "unknown instruction 0x46";
+
+    const unknown1 = this.parseVariables(action);
+    const unknown2 = this.parseVariables(action);
+    const unknown3 = this.parseVariables(action);
+    const unknown4 = this.parseVariables(action);
+
+    // if (
+    //   Array.isArray(unknown1) &&
+    //   Array.isArray(unknown2) &&
+    //   !Array.isArray(unknown3) &&
+    //   !Array.isArray(unknown4)
+    // ) {
+    action.color = "mediumorchid";
+    action.text = `unknown instruction 0x46 with values "${unknown1}", "${unknown2}", "${unknown3}", "${unknown4}"`;
+    // } else {
+    //   debug.warn(
+    //     `Error while parsing instruction 0x46 (${JSON.stringify(action)}).`,
+    //   );
+    // }
+  }
+
   private parseSetCameraPosition(action: Action): void {
     action.text = "should set camera position";
 
@@ -1138,6 +1609,39 @@ export default class Script {
     }
   }
 
+  private parseUnknown48(action: Action): void {
+    action.text = "unknown instruction 0x48";
+
+    const unknown1 = this.parseVariables(action);
+    const unknown2 = this.parseVariables(action);
+    const unknown3 = this.parseVariables(action);
+    const unknown4 = this.parseVariables(action);
+    const unknown5 = this.parseVariables(action);
+    const unknown6 = this.parseVariables(action);
+    const unknown7 = this.parseVariables(action);
+    const unknown8 = this.parseVariables(action);
+    const unknown9 = this.parseVariables(action);
+
+    if (
+      !Array.isArray(unknown1) &&
+      !Array.isArray(unknown2) &&
+      !Array.isArray(unknown3) &&
+      !Array.isArray(unknown4) &&
+      !Array.isArray(unknown5) &&
+      !Array.isArray(unknown6) &&
+      !Array.isArray(unknown7) &&
+      !Array.isArray(unknown8) &&
+      !Array.isArray(unknown9)
+    ) {
+      action.color = "mediumorchid";
+      action.text = `unknown instruction 0x48 with values "${unknown1.value}", "${unknown2.value}", "${unknown3.value}", "${unknown4.value}", "${unknown5.value}", "${unknown6.value}", "${unknown7.value}", "${unknown8.value}", "${unknown9.value}"`;
+    } else {
+      debug.warn(
+        `Error while parsing instruction 0x48 (${JSON.stringify(action)}).`,
+      );
+    }
+  }
+
   private parseMoveCamera(action: Action): void {
     action.text = "should move camera";
 
@@ -1150,38 +1654,41 @@ export default class Script {
     const unknown7 = this.parseVariables(action);
 
     if (
-      Array.isArray(unknown1) &&
-      unknown1.length === 3 &&
-      Array.isArray(unknown2) &&
-      unknown2.length === 3 &&
-      Array.isArray(unknown3) &&
-      unknown3.length === 3 &&
+      // !Array.isArray(unknown1) &&
+      // unknown1.length === 3 &&
+      // !Array.isArray(unknown2) &&
+      // unknown2.length === 3 &&
+      // !Array.isArray(unknown3) &&
+      // unknown3.length === 3 &&
       !Array.isArray(unknown4) &&
       !Array.isArray(unknown5) &&
       !Array.isArray(unknown6) &&
       !Array.isArray(unknown7)
     ) {
-      const special1 = unknown1[0];
-      const value1 = unknown1[1].value;
-      const operator1 = unknown1[2].subtype;
+      // const special1 = unknown1[0];
+      // const value1 = unknown1[1].value;
+      // const operator1 = unknown1[2].subtype;
 
-      const special2 = unknown2[0];
-      const value2 = unknown2[1].value;
-      const operator2 = unknown2[2].subtype;
+      // const special2 = unknown2[0];
+      // const value2 = unknown2[1].value;
+      // const operator2 = unknown2[2].subtype;
 
-      const special3 = unknown3[0];
-      const value3 = unknown3[1].value;
-      const operator3 = unknown3[2].subtype;
+      // const special3 = unknown3[0];
+      // const value3 = unknown3[1].value;
+      // const operator3 = unknown3[2].subtype;
 
       action.color = "mediumorchid";
       action.text = "move camera: ";
-      action.text += `Unknown1 = "${operator1} ${value1} ${special1.subtype}", `;
-      action.text += `Unknown2 = "${operator2} ${value2} ${special2.subtype}", `;
-      action.text += `Unknown3 = "${operator3} ${value3} ${special3.subtype}", `;
-      action.text += `Unknown4 = "${unknown4.value.toHex(8)}", `;
-      action.text += `Unknown5 = "${unknown5.value.toHex(8)}", `;
-      action.text += `Unknown6 = "${unknown6.value.toHex(8)}", `;
-      action.text += `Unknown7 = "${unknown7.value}"`;
+      // action.text += `Unknown1 = "${operator1} ${value1} ${special1.subtype}", `;
+      // action.text += `Unknown2 = "${operator2} ${value2} ${special2.subtype}", `;
+      // action.text += `Unknown3 = "${operator3} ${value3} ${special3.subtype}", `;
+      action.text += `Unknown4 = "${unknown1}", `;
+      action.text += `Unknown5 = "${unknown2}", `;
+      action.text += `Unknown6 = "${unknown3}", `;
+      action.text += `Unknown4 = "${unknown4}", `;
+      action.text += `Unknown5 = "${unknown5}", `;
+      action.text += `Unknown6 = "${unknown6}", `;
+      action.text += `Unknown7 = "${unknown7}"`;
     } else {
       debug.warn(
         `Error while parsing move camera (${JSON.stringify(action)}).`,
@@ -1229,6 +1736,29 @@ export default class Script {
     }
   }
 
+  private parseUnknown4e(action: Action): void {
+    action.text = "unknown instruction 0x4e";
+
+    const unknown1 = this.parseVariables(action);
+    const unknown2 = this.parseVariables(action);
+    const unknown3 = this.parseVariables(action);
+    const unknown4 = this.parseVariables(action);
+
+    if (
+      !Array.isArray(unknown1) &&
+      !Array.isArray(unknown2) &&
+      !Array.isArray(unknown3) &&
+      !Array.isArray(unknown4)
+    ) {
+      action.color = "mediumorchid";
+      action.text = `unknown instruction 0x4e with values "${unknown1.value}", "${unknown2.value}", "${unknown3.value}", "${unknown4.value}"`;
+    } else {
+      debug.warn(
+        `Error while parsing instruction 0x4e (${JSON.stringify(action)}).`,
+      );
+    }
+  }
+
   private parseFog(action: Action): void {
     action.text = "should set fog";
 
@@ -1257,6 +1787,11 @@ export default class Script {
     } else {
       debug.warn(`Error while parsing fog (${JSON.stringify(action)}).`);
     }
+  }
+
+  private parseUnknown50(action: Action): void {
+    action.color = "mediumorchid";
+    action.text = "unknown instruction 0x50";
   }
 
   private parseLightColor(action: Action): void {
@@ -1373,6 +1908,53 @@ export default class Script {
     } else {
       debug.warn(
         `Error while parsing instruction 0x57 (${JSON.stringify(action)}).`,
+      );
+    }
+  }
+
+  private parseUnknown5a(action: Action): void {
+    action.text = "unknown instruction 0x5a";
+
+    const unknown = this.parseVariables(action);
+
+    const count = this.getValue(action);
+
+    let text = "";
+    let error = false;
+
+    for (let i = 0; i < count; i += 1) {
+      const unknown1 = this.parseVariables(action);
+      const unknown2 = this.parseVariables(action);
+      const unknown3 = this.parseVariables(action);
+      const unknown4 = this.parseVariables(action);
+      const unknown5 = this.parseVariables(action);
+      const unknown6 = this.parseVariables(action);
+      const unknown7 = this.parseVariables(action);
+      const unknown8 = this.parseVariables(action);
+      const unknown9 = this.parseVariables(action);
+
+      // if (
+      //   !Array.isArray(unknown1) ||
+      //   !Array.isArray(unknown2) ||
+      //   !Array.isArray(unknown3) ||
+      //   Array.isArray(unknown4) ||
+      //   !Array.isArray(unknown5) ||
+      //   Array.isArray(unknown6) ||
+      //   Array.isArray(unknown7)
+      // ) {
+      //   error = true;
+      //   break;
+      // }
+
+      text += `| "${unknown1}", "${unknown2}", "${unknown3}", "${unknown4}", "${unknown5}", "${unknown6}", "${unknown7}", "${unknown8}", "${unknown9}"`;
+    }
+
+    if (!Array.isArray(unknown) && !error) {
+      action.color = "mediumorchid";
+      action.text = `unknown instruction 0x5a with "${unknown.value}" then ${count} block(s) ${text.replace("|", "")}`;
+    } else {
+      debug.warn(
+        `Error while parsing instruction 0x5a (${JSON.stringify(action)}).`,
       );
     }
   }
@@ -1496,6 +2078,21 @@ export default class Script {
     }
   }
 
+  private parseUnknown65(action: Action): void {
+    action.text = "unknown instruction 0x65";
+
+    const unknown = this.parseVariables(action);
+
+    if (!Array.isArray(unknown)) {
+      action.color = "mediumorchid";
+      action.text = `unknown instruction 0x65 with value "${unknown.value}"`;
+    } else {
+      debug.warn(
+        `Error while parsing instruction 0x65 (${JSON.stringify(action)}).`,
+      );
+    }
+  }
+
   private parseUnknown67(action: Action): void {
     action.color = "mediumorchid";
     action.text = "unknown instruction 0x67";
@@ -1581,9 +2178,9 @@ export default class Script {
     const unknown1 = this.parseVariables(action);
     const unknown2 = this.parseVariables(action);
 
-    if (!Array.isArray(unknown1) && !Array.isArray(unknown2)) {
+    if (!Array.isArray(unknown1)) {
       action.color = "mediumorchid";
-      action.text = `unknown instruction 0x75 with values "${unknown1.value}", "${unknown2.value}"`;
+      action.text = `unknown instruction 0x75 with values "${unknown1.value}", "${unknown2}"`;
     } else {
       debug.warn(
         `Error while parsing instruction 0x75 (${JSON.stringify(action)}).`,
@@ -1665,6 +2262,178 @@ export default class Script {
     } else {
       debug.warn(
         `Error while parsing instruction 0x7c (${JSON.stringify(action)}).`,
+      );
+    }
+  }
+
+  private parseUnknown7e(action: Action): void {
+    action.text = "unknown instruction 0x7e";
+
+    const count = this.getValue(action);
+
+    let text = "";
+    let error = false;
+
+    for (let i = 0; i < count; i += 1) {
+      const unknown = this.parseVariables(action);
+
+      if (Array.isArray(unknown)) {
+        error = true;
+        break;
+      }
+
+      text += `, "${unknown.value}"`;
+    }
+
+    if (!error) {
+      action.color = "mediumorchid";
+      action.text = `unknown instruction 0x7e with ${count} value(s) ${text.replace(",", "")}`;
+    } else {
+      debug.warn(
+        `Error while parsing instruction 0x7e (${JSON.stringify(action)}).`,
+      );
+    }
+  }
+
+  private parseUnknown80(action: Action): void {
+    action.text = "unknown instruction 0x80";
+
+    const unknown1 = this.parseVariables(action);
+    const unknown2 = this.parseVariables(action);
+    const unknown3 = this.parseVariables(action);
+    const unknown4 = this.parseVariables(action);
+    const unknown5 = this.parseVariables(action);
+    const unknown6 = this.parseVariables(action);
+
+    if (
+      !Array.isArray(unknown1) &&
+      !Array.isArray(unknown2) &&
+      !Array.isArray(unknown3) &&
+      !Array.isArray(unknown4) &&
+      !Array.isArray(unknown5) &&
+      !Array.isArray(unknown6)
+    ) {
+      action.color = "mediumorchid";
+      action.text = `unknown instruction 0x80 with values "${unknown1.value}", "${unknown2.value}", "${unknown3.value}", "${unknown4.value}", "${unknown5.value}", "${unknown6.value}"`;
+    } else {
+      debug.warn(
+        `Error while parsing instruction 0x80 (${JSON.stringify(action)}).`,
+      );
+    }
+  }
+
+  private parseUnknown81(action: Action): void {
+    action.text = "unknown instruction 0x81";
+
+    const unknown1 = this.parseVariables(action);
+    const jumpOffset = action.offset + this.getValue(action) + 0x4;
+
+    if (!Array.isArray(unknown1)) {
+      action.color = "mediumorchid";
+      action.text = `unknown instruction 0x81 with values "${unknown1.value}", jump to "${jumpOffset.toHex(8)}" (if?)`;
+    } else {
+      debug.warn(
+        `Error while parsing instruction 0x81 (${JSON.stringify(action)}).`,
+      );
+    }
+  }
+
+  private parseUnknown82(action: Action): void {
+    action.text = "unknown instruction 0x82";
+
+    const unknown = this.parseVariables(action);
+
+    const count = this.getValue(action);
+
+    let text = "";
+    let error = false;
+
+    for (let i = 0; i < count; i += 1) {
+      const unknown1 = this.parseVariables(action);
+      const unknown2 = this.parseVariables(action);
+      const unknown3 = this.parseVariables(action);
+      const unknown4 = this.parseVariables(action);
+      const unknown5 = this.parseVariables(action);
+      const unknown6 = this.parseVariables(action);
+      const unknown7 = this.parseVariables(action);
+      const unknown8 = this.parseVariables(action);
+
+      // if (
+      //   !Array.isArray(unknown1) ||
+      //   !Array.isArray(unknown2) ||
+      //   !Array.isArray(unknown3) ||
+      //   Array.isArray(unknown4) ||
+      //   !Array.isArray(unknown5) ||
+      //   Array.isArray(unknown6) ||
+      //   Array.isArray(unknown7)
+      // ) {
+      //   error = true;
+      //   break;
+      // }
+
+      text += `| "${unknown1}", "${unknown2}", "${unknown3}", "${unknown4}", "${unknown5}", "${unknown6}", "${unknown7}", "${unknown8}"`;
+    }
+
+    if (!Array.isArray(unknown) && !error) {
+      action.color = "mediumorchid";
+      action.text = `unknown instruction 0x82 with "${unknown.value}" then ${count} block(s) ${text.replace("|", "")}`;
+    } else {
+      debug.warn(
+        `Error while parsing instruction 0x82 (${JSON.stringify(action)}).`,
+      );
+    }
+  }
+
+  private parseUnknown86(action: Action): void {
+    action.text = "unknown instruction 0x86";
+
+    const unknown1 = this.parseVariables(action);
+    const unknown2 = this.parseVariables(action);
+    const unknown3 = this.parseVariables(action);
+    const unknown4 = this.parseVariables(action);
+    const unknown5 = this.parseVariables(action);
+    const unknown6 = this.parseVariables(action);
+    const unknown7 = this.parseVariables(action);
+
+    if (
+      !Array.isArray(unknown1) &&
+      !Array.isArray(unknown2) &&
+      !Array.isArray(unknown3) &&
+      !Array.isArray(unknown4) &&
+      !Array.isArray(unknown5) &&
+      !Array.isArray(unknown6) &&
+      !Array.isArray(unknown7)
+    ) {
+      action.color = "mediumorchid";
+      action.text = `unknown instruction 0x86 with values "${unknown1.value}", "${unknown2.value}", "${unknown3.value}", "${unknown4.value}", "${unknown5.value}", "${unknown6.value}", "${unknown7.value}"`;
+    } else {
+      debug.warn(
+        `Error while parsing instruction 0x86 (${JSON.stringify(action)}).`,
+      );
+    }
+  }
+
+  private parseUnknown88(action: Action): void {
+    action.text = "unknown instruction 0x88";
+
+    const unknown1 = this.parseVariables(action);
+    const unknown2 = this.parseVariables(action);
+    const unknown3 = this.parseVariables(action);
+    const unknown4 = this.parseVariables(action);
+    const unknown5 = this.parseVariables(action);
+
+    if (
+      !Array.isArray(unknown1) &&
+      !Array.isArray(unknown2) &&
+      !Array.isArray(unknown3) &&
+      !Array.isArray(unknown4) &&
+      !Array.isArray(unknown5)
+    ) {
+      action.color = "mediumorchid";
+      action.text = `unknown instruction 0x88 with values "${unknown1.value}", "${unknown2.value}", "${unknown3.value}", "${unknown4.value}", "${unknown5.value}"`;
+    } else {
+      debug.warn(
+        `Error while parsing instruction 0x88 (${JSON.stringify(action)}).`,
       );
     }
   }
@@ -1760,6 +2529,66 @@ export default class Script {
   private parseUnknown9c(action: Action): void {
     action.color = "mediumorchid";
     action.text = "unknown instruction 0x9c";
+  }
+
+  private parseUnknownA4(action: Action): void {
+    action.text = "unknown instruction 0xa4";
+
+    const unknown1 = this.parseVariables(action);
+    const unknown2 = this.parseVariables(action);
+
+    if (!Array.isArray(unknown1) && !Array.isArray(unknown2)) {
+      action.color = "mediumorchid";
+      action.text = `unknown instruction 0xa4 with values "${unknown1.value}", "${unknown2.value}"`;
+    } else {
+      debug.warn(
+        `Error while parsing instruction 0xa4 (${JSON.stringify(action)}).`,
+      );
+    }
+  }
+
+  private parseUnknown9f(action: Action): void {
+    action.text = "unknown instruction 0x9f";
+
+    const count = this.getValue(action);
+
+    let text = "";
+    let error = false;
+
+    for (let i = 0; i < count; i += 1) {
+      const unknown1 = this.parseVariables(action);
+      const unknown2 = this.parseVariables(action);
+      const unknown3 = this.parseVariables(action);
+      const unknown4 = this.parseVariables(action);
+      const unknown5 = this.parseVariables(action);
+      const unknown6 = this.parseVariables(action);
+      const unknown7 = this.parseVariables(action);
+      const unknown8 = this.parseVariables(action);
+
+      // if (
+      //   !Array.isArray(unknown1) ||
+      //   !Array.isArray(unknown2) ||
+      //   !Array.isArray(unknown3) ||
+      //   Array.isArray(unknown4) ||
+      //   !Array.isArray(unknown5) ||
+      //   Array.isArray(unknown6) ||
+      //   Array.isArray(unknown7)
+      // ) {
+      //   error = true;
+      //   break;
+      // }
+
+      text += `| "${unknown1}", "${unknown2}", "${unknown3}", "${unknown4}", "${unknown5}", "${unknown6}", "${unknown7}", "${unknown8}"`;
+    }
+
+    if (!error) {
+      action.color = "mediumorchid";
+      action.text = `unknown instruction 0x9f with ${count} block(s) ${text.replace("|", "")}`;
+    } else {
+      debug.warn(
+        `Error while parsing instruction 0x9f (${JSON.stringify(action)}).`,
+      );
+    }
   }
 
   private parseUnknownA7(action: Action): void {
@@ -1876,6 +2705,27 @@ export default class Script {
     }
   }
 
+  private parseUnknownBe(action: Action): void {
+    action.text = "unknown instruction 0xce";
+
+    const unknown1 = this.parseVariables(action);
+    const unknown2 = this.parseVariables(action);
+    const unknown3 = this.parseVariables(action);
+
+    if (
+      !Array.isArray(unknown1) &&
+      !Array.isArray(unknown2) &&
+      !Array.isArray(unknown3)
+    ) {
+      action.color = "mediumorchid";
+      action.text = `unknown instruction 0xce with values "${unknown1.value}", "${unknown2.value}", "${unknown3.value}"`;
+    } else {
+      debug.warn(
+        `Error while parsing instruction 0xce (${JSON.stringify(action)}).`,
+      );
+    }
+  }
+
   private parseUnknownC3(action: Action): void {
     action.text = "unknown instruction 0xc3";
 
@@ -1905,6 +2755,21 @@ export default class Script {
   private parseRestorePartyMp(action: Action): void {
     action.color = "limegreen";
     action.text = "restore party's MP";
+  }
+
+  private parseUnknownCb(action: Action): void {
+    action.text = "unknown instruction 0xcb";
+
+    const unknown = this.parseVariables(action);
+
+    if (!Array.isArray(unknown)) {
+      action.color = "mediumorchid";
+      action.text = `unknown instruction 0xcb with value "${unknown.value}"`;
+    } else {
+      debug.warn(
+        `Error while parsing instruction 0xcb (${JSON.stringify(action)}).`,
+      );
+    }
   }
 
   private parseUnknownD0(action: Action): void {
@@ -2013,6 +2878,27 @@ export default class Script {
     }
   }
 
+  private parseUnknownEe(action: Action): void {
+    action.text = "unknown instruction 0xee";
+
+    const unknown1 = this.parseVariables(action);
+    const unknown2 = this.parseVariables(action);
+    const unknown3 = this.parseVariables(action);
+
+    if (
+      !Array.isArray(unknown1) &&
+      !Array.isArray(unknown2) &&
+      !Array.isArray(unknown3)
+    ) {
+      action.color = "mediumorchid";
+      action.text = `unknown instruction 0xee with values "${unknown1.value}", "${unknown2.value}", "${unknown3.value}"`;
+    } else {
+      debug.warn(
+        `Error while parsing instruction 0xee (${JSON.stringify(action)}).`,
+      );
+    }
+  }
+
   private parseUnknownF3(action: Action): void {
     action.text = "unknown instruction 0xf3";
 
@@ -2037,8 +2923,7 @@ export default class Script {
       !Array.isArray(unknown7) &&
       !Array.isArray(unknown8) &&
       !Array.isArray(unknown9) &&
-      !Array.isArray(unknown10) &&
-      unknown10.type === "unknown"
+      !Array.isArray(unknown10)
     ) {
       action.color = "mediumorchid";
       action.text = `unknown instruction 0xf3 with values "${unknown1.value}", "${unknown2.value}", "${unknown3.value}", "${unknown4.value}", "${unknown5.value}", "${unknown6.value}", "${unknown7.value}", "${unknown8.value}", "${unknown9.value}", "${unknown10.value}"`;

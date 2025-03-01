@@ -83,7 +83,7 @@
 
     let model: Model;
 
-    let loadAllEntities = type === "battleStage" || type === "shipBattle";
+    let loadAllEntities = !["model", "worldMap"].includes(type);
 
     if (type === "battleStage") {
       model = unpackSml(dataView);
