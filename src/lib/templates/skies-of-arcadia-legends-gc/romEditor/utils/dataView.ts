@@ -6,7 +6,7 @@ import {
   dataViewAltMetas,
   gameRegion,
 } from "$lib/stores";
-import { getInt, getIntFromArray } from "$lib/utils/bytes";
+import { getInt, intToArray } from "$lib/utils/bytes";
 import {
   File,
   getFile,
@@ -18,7 +18,11 @@ import {
 import { getRegionArray, mergeUint8Arrays } from "$lib/utils/format";
 
 import { offsetToMainDolStart } from "../template";
-import { getCompressedData, getDecompressedData } from "../utils";
+import {
+  getCompressedData,
+  getDecompressedData,
+  getEnemyGroupDetails,
+} from "../utils";
 import { mainDolModels } from "./resource";
 
 function getEnemyGroupFiles(): File[] {
@@ -40,6 +44,7 @@ export function initDataViewAlt(): void {
 
   const mainDol = getFile("system/main.dol")!;
   const firstLmt = getFile("battle/first.lmt")!;
+  const enemiesBackup = getFile("enemies_backup.gct");
 
   $dataViewAlt["main.dol"] = mainDol.dataView;
   $dataViewAlt.experienceCurves = firstLmt.dataView;
@@ -119,7 +124,13 @@ export function initDataViewAlt(): void {
   const enemyGroupsUint8Arrays: Uint8Array[] = [];
   const enemyEventGroupsUint8Arrays: Uint8Array[] = [];
 
-  const enemies = new Uint8Array(0xff * 0x20c);
+  let enemies: Uint8Array;
+
+  if (enemiesBackup) {
+    enemies = new Uint8Array(enemiesBackup.dataView.buffer);
+  } else {
+    enemies = new Uint8Array(0xff * 0x20c);
+  }
 
   const files = getEnemyGroupFiles();
 
@@ -149,10 +160,12 @@ export function initDataViewAlt(): void {
         startDataOffset = dataOffset;
       }
 
-      enemies.set(
-        decompressedData.slice(dataOffset, dataOffset + 0x20c),
-        index * 0x20c,
-      );
+      if (!enemiesBackup) {
+        enemies.set(
+          decompressedData.slice(dataOffset, dataOffset + 0x20c),
+          index * 0x20c,
+        );
+      }
 
       offset += 0x8;
     }
@@ -249,53 +262,114 @@ export function exportDataViewAlt(): ArrayBufferLike {
   ) {
     const enemiesData = new Uint8Array($dataViewAlt.enemies.buffer);
 
+    writeFile("enemies_backup.gct", $dataViewAlt.enemies);
+
     const files = getEnemyGroupFiles();
 
+    // Reserved for a099a_ep.enp file
+    const a099aHeadersUint8Arrays: Uint8Array[] = [
+      new Uint8Array([0x00, 0x00, 0xff, 0xff, 0x00, 0x0d, 0xff, 0xff]),
+    ];
+    const a099aDataUint8Arrays: Uint8Array[] = [];
+
+    let a099aDataOffset = 0x1a8;
+
     files.forEach((file, fileIndex) => {
-      const fileTmp = getFile(file.path);
+      const isEventGroup = file.name === "epevent.evp";
 
-      const decompressedData = getDecompressedData(fileTmp!.dataView);
+      let groupLength = 0xa;
+      let headerLength = 0x2a0;
 
-      let offset = 0x0;
-
-      while (true) {
-        const index = getIntFromArray(decompressedData, offset, "int32", true);
-        const dataOffset = getIntFromArray(decompressedData, offset + 0x4, "uint32", true); // prettier-ignore
-
-        if (index === -1) {
-          break;
-        }
-
-        decompressedData.set(
-          enemiesData.slice(index * 0x20c, (index + 0x1) * 0x20c),
-          dataOffset,
-        );
-
-        offset += 0x8;
+      if (isEventGroup) {
+        groupLength = 0x25;
+        headerLength = 0x640;
       }
 
-      if (file.name === "epevent.evp") {
+      const { enemies, groupCount } = getEnemyGroupDetails(
+        isEventGroup ? -1 : fileIndex - 1,
+      );
+
+      const enemyStatsOffset = headerLength + groupCount * groupLength;
+
+      const uint8Array = new Uint8Array(
+        enemyStatsOffset + enemies.length * 0x20c,
+      ).fill(0xff);
+
+      enemies.forEach((enemy, index) => {
+        const enemyIndex = intToArray(enemy, "uint32", true);
+        const dataOffset = intToArray(
+          enemyStatsOffset + index * 0x20c,
+          "uint32",
+          true,
+        );
+
+        uint8Array.set([...enemyIndex, ...dataOffset], index * 0x8);
+
+        uint8Array.set(
+          enemiesData.slice(enemy * 0x20c, (enemy + 0x1) * 0x20c),
+          enemyStatsOffset + index * 0x20c,
+        );
+      });
+
+      if (isEventGroup) {
         const part = new Uint8Array(
           $dataViewAlt.enemyEventGroups.buffer.slice(0xa0),
         );
 
-        decompressedData.set(part, 0x640);
+        uint8Array.set(part, 0x640);
       } else {
         const offset = (fileIndex - 1) * 0x150;
 
         const part = new Uint8Array(
-          $dataViewAlt.enemyGroups.buffer.slice(offset + 0x10, offset + 0x150),
+          $dataViewAlt.enemyGroups.buffer.slice(
+            offset + 0x10,
+            offset + 0x10 + groupCount * groupLength,
+          ),
         );
 
-        decompressedData.set(part, 0x2a0);
+        uint8Array.set(part, 0x2a0);
       }
 
-      const compressedData = getCompressedData(
-        new DataView(decompressedData.buffer),
-      );
+      // If a099a_ep.enp subfile, then push to a099a Uint8Array
+      if (file.name.match(/a099a/)) {
+        const name: number[] = [];
+
+        file.name
+          .replace(".enp", ".bin")
+          .split("")
+          .forEach((char) => {
+            name.push(char.charCodeAt(0));
+          });
+
+        const heaader = new Uint8Array(0x20);
+
+        heaader.set(name, 0x0);
+        heaader.set(intToArray(a099aDataOffset, "uint32", true), 0x14);
+        heaader.set(intToArray(uint8Array.byteLength, "uint32", true), 0x18);
+        heaader.set(intToArray(0xffffffff, "uint32", true), 0x1c);
+
+        a099aHeadersUint8Arrays.push(heaader);
+        a099aDataUint8Arrays.push(uint8Array);
+
+        a099aDataOffset += uint8Array.byteLength;
+      }
+
+      const compressedData = getCompressedData(new DataView(uint8Array.buffer));
 
       writeFile(file.path, new DataView(compressedData.buffer));
     });
+
+    // Writing a099a_ep.enp file
+    const a099aUint8Array = mergeUint8Arrays(
+      ...a099aHeadersUint8Arrays,
+      ...a099aDataUint8Arrays,
+    );
+
+    const compressedData = getCompressedData(
+      new DataView(a099aUint8Array.buffer),
+    );
+
+    writeFile("field/a099a_ep.enp", new DataView(compressedData.buffer));
   }
 
   rebuildGcm();

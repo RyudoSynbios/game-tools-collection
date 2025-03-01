@@ -84,6 +84,14 @@ export function overrideItem(item: Item): Item {
     const int = getInt(itemInt.offset + shift, "uint16", { bigEndian: true }, $dataViewAlt.enemies); // prettier-ignore
 
     itemInt.disabled = int === 0xffff;
+  } else if ("id" in item && item.id?.match(/enemyGroupIndex-/)) {
+    const itemInt = item as ItemInt;
+
+    const [index] = item.id.splitInt();
+
+    if (index >= 0x3 && index <= 0xf) {
+      itemInt.resource = "enemyStandards";
+    }
   } else if ("id" in item && item.id?.match(/enemyEventGroupNamePosition-/)) {
     const itemInt = item as ItemInt;
 
@@ -138,6 +146,13 @@ export function overrideGetInt(
     if (int === 0xffff) {
       return [true, 0];
     }
+  } else if ("id" in item && item.id?.match(/enemyGroup-/)) {
+    const [, type] = item.id.split("-");
+    const [index] = item.id.splitInt();
+
+    const enemies = getEnemyGroupDetails(type === "event" ? -1 : index).enemies;
+
+    return [true, enemies.length];
   } else if ("id" in item && item.id?.match(/enemyEventGroupNamePosition-/)) {
     const itemInt = item as ItemInt;
 
@@ -166,6 +181,8 @@ export function overrideGetInt(
 }
 
 export function overrideSetInt(item: Item, value: string): boolean {
+  const $dataViewAlt = get(dataViewAlt);
+
   if ("id" in item && item.id?.match(/reversePercent-/)) {
     const itemInt = item as ItemInt;
 
@@ -178,6 +195,26 @@ export function overrideSetInt(item: Item, value: string): boolean {
     setInt(itemInt.offset, "uint8", int, {}, dataViewAltKey);
 
     return true;
+  } else if ("id" in item && item.id === "enemyEventGroupName") {
+    const itemInt = item as ItemInt;
+
+    const previousInt = getInt(itemInt.offset, "uint8", {}, $dataViewAlt.enemyEventGroups); // prettier-ignore
+    const int = parseInt(value);
+
+    if (previousInt === 0xff || int === 0xff) {
+      let value = 0x1;
+
+      if (int === 0xff) {
+        value = 0xff;
+      }
+
+      setInt(itemInt.offset + 0x1, "uint8", value, {}, "enemyEventGroups");
+      setInt(itemInt.offset + 0x2, "uint8", value, {}, "enemyEventGroups");
+    }
+
+    setInt(itemInt.offset, "uint8", value, {}, "enemyEventGroups");
+
+    updateResources("enemyEventGroupNames");
   } else if ("id" in item && item.id === "weaponColor") {
     const itemInt = item as ItemInt;
 
@@ -239,21 +276,6 @@ export function afterSetInt(item: Item): void {
 
     setInt(itemInt.offset - 0x4, "uint16", value, { bigEndian: true }, "enemies"); // prettier-ignore
     setInt(itemInt.offset - 0x2, "uint16", value, { bigEndian: true }, "enemies"); // prettier-ignore
-  } else if ("id" in item && item.id === "enemyEventGroupName") {
-    const itemInt = item as ItemInt;
-
-    const int = getInt(itemInt.offset, "uint8", {}, $dataViewAlt.enemyEventGroups); // prettier-ignore
-
-    let value = 0x1;
-
-    if (int === 0xff) {
-      value = 0xff;
-    }
-
-    setInt(itemInt.offset + 0x1, "uint8", value, {}, "enemyEventGroups");
-    setInt(itemInt.offset + 0x2, "uint8", value, {}, "enemyEventGroups");
-  } else if ("id" in item && item.id === "enemyEventGroupName") {
-    updateResources("enemyEventGroupNames");
   } else if ("id" in item && item.id?.match(/weaponCondition/)) {
     updateResources("weaponConditionNames");
   }
@@ -386,6 +408,63 @@ export function getFileData(type: string, index: number): DataView {
   return new DataView(new ArrayBuffer(0));
 }
 
+export function getEnemyGroupDetails(index: number): {
+  enemies: number[];
+  groupCount: number;
+} {
+  const $dataViewAlt = get(dataViewAlt);
+
+  const isEventGroup = index === -1;
+
+  let dataView = $dataViewAlt.enemyGroups;
+  let enemiesOffset = index * 0x150;
+  let maxEnemies = 0xa;
+  let groupsOffset = enemiesOffset + 0x10;
+  let groupEnemyCount = 0x8;
+  let groupLength = 0xa;
+  let maxGroups = 0x20;
+
+  if (isEventGroup) {
+    dataView = $dataViewAlt.enemyEventGroups;
+    enemiesOffset = 0x0;
+    maxEnemies = 0x92;
+    groupsOffset = 0xa0;
+    groupEnemyCount = 0x7;
+    groupLength = 0x25;
+    maxGroups = 0x100;
+  }
+
+  const enemiesTmp: number[] = [];
+  let groupCount = 0;
+
+  while (groupCount < maxGroups) {
+    for (let i = 0x0; i < groupEnemyCount; i += 0x1) {
+      const offset = groupsOffset + (isEventGroup ? 0xd + i * 0x3 : 0x2 + i);
+
+      const index = getInt(offset, "uint8", {}, dataView);
+
+      enemiesTmp.push(index);
+    }
+
+    groupCount += 1;
+    groupsOffset += groupLength;
+  }
+
+  const enemies = enemiesTmp.reduce((enemies: number[], enemy) => {
+    if (
+      !enemies.includes(enemy) &&
+      enemy !== 0xff &&
+      enemies.length <= maxEnemies
+    ) {
+      enemies.push(enemy);
+    }
+
+    return enemies;
+  }, []);
+
+  return { enemies, groupCount };
+}
+
 export function getFilteredFiles(type: string): File[] {
   const files = getFiles();
 
@@ -493,7 +572,9 @@ export function getEnemyEventGroupNames(): Resource {
   [...Array(256).keys()].forEach((index) => {
     const enemyIndex = getInt(0xad + index * 0x25, "uint8", {}, $dataViewAlt.enemyEventGroups); // prettier-ignore
 
-    names[index] = enemies[enemyIndex];
+    if (enemyIndex !== 0xff) {
+      names[index] = enemies[enemyIndex];
+    }
   });
 
   return names;
