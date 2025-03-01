@@ -60,6 +60,10 @@
       }
     }
 
+    & :global(.gtc-three-stats) {
+      @apply absolute left-0 top-0;
+    }
+
     & :global(.lil-gui) {
       --width: 180px;
     }

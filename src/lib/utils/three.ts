@@ -1,3 +1,4 @@
+import { get } from "svelte/store";
 import {
   AmbientLight,
   BackSide,
@@ -35,6 +36,7 @@ import {
 } from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import { GUI } from "three/examples/jsm/libs/lil-gui.module.min.js";
+import Stats from "three/examples/jsm/libs/stats.module.js";
 import { toCreasedNormals } from "three/examples/jsm/utils/BufferGeometryUtils.js";
 
 import { isDebug } from "$lib/stores";
@@ -65,6 +67,7 @@ export interface MaterialOptions {
 }
 
 export default class Three {
+  private debug: boolean;
   private threeEl: HTMLDivElement;
   private scene: Scene;
   private renderer: WebGLRenderer;
@@ -91,6 +94,8 @@ export default class Three {
   private gridHelper: GridHelper;
   private gridSize: number;
   private wireframe: boolean;
+  private stats?: Stats;
+  private statsDrawCalls?: Stats.Panel;
   private gui: GUI;
   private guiController: {
     grid: boolean;
@@ -129,6 +134,8 @@ export default class Three {
   ) {
     const width = options?.width || 0;
     const height = options?.height || 0;
+
+    this.debug = get(isDebug);
 
     this.threeEl = threeEl;
 
@@ -228,6 +235,24 @@ export default class Three {
 
     this.wireframe = getLocalStorage("threeWireframe") === "true";
 
+    // Stats
+
+    if (this.debug) {
+      this.stats = new Stats();
+
+      this.statsDrawCalls = this.stats.addPanel(
+        new Stats.Panel("DC", "#ff8", "#221"),
+      );
+
+      this.stats.showPanel(0);
+
+      this.stats.dom.style.position = "absolute";
+      this.stats.dom.style.top = "0.5rem";
+      this.stats.dom.style.left = "0.5rem";
+
+      this.threeEl.appendChild(this.stats.dom);
+    }
+
     // GUI
 
     this.guiController = {
@@ -322,7 +347,16 @@ export default class Three {
   }
 
   public animate(): void {
+    if (this.stats) {
+      this.stats.begin();
+    }
+
     this.renderer.render(this.scene, this.camera);
+
+    if (this.stats) {
+      this.stats.end();
+      this.statsDrawCalls!.update(this.renderer.info.render.calls, 1000);
+    }
   }
 
   public setDummy(type: "hover" | "select", reference?: Mesh): void {
