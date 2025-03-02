@@ -260,6 +260,7 @@
 
         if (object.meshsOffset) {
           const { error: meshsError } = addMeshs(
+            entity,
             object,
             vertexBuffer,
             dataView,

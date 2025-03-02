@@ -4307,7 +4307,6 @@ const template: GameJson = {
                       resource: "assetScriptNames",
                       vertical: true,
                       flex: true,
-                      defaultIndex: 0xc,
                       items: [
                         {
                           type: "component",

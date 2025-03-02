@@ -26,7 +26,7 @@ export function unpackNmld(dataView: DataView): Model {
 
     const entity: Entity = {
       index: getInt(offset, "uint32", { bigEndian: true }, dataView),
-      unknown: getInt(offset + 0x4, "uint32", { bigEndian: true }, dataView),
+      entityId: getInt(offset + 0x4, "uint32", { bigEndian: true }, dataView),
       name: getString(offset + 0x24, 0x10, "uint8", { zeroTerminated: true }, dataView),
       linkedGrndFiles: [],
       linkedNjcmFiles: [],

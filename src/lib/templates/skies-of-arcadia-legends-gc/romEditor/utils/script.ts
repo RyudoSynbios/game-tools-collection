@@ -14,7 +14,10 @@ type FileType =
   | "mld (0x71)"
   | "script (0x2b)"
   | "script (0xd2)"
-  | "sound";
+  | "script (0x101)"
+  | "sound (0x45)"
+  | "sound (0xf8)"
+  | "sound (0xfa)";
 
 interface Action {
   color: string;
@@ -29,12 +32,6 @@ export interface Subroutine {
   name: string;
   expanded?: boolean;
   actions: Action[];
-}
-
-interface Variable {
-  type: string;
-  subtype: string;
-  value: number;
 }
 
 export default class Script {
@@ -83,8 +80,13 @@ export default class Script {
       this.loadSubroutine(i);
 
       if (
+        this.subroutines[i].actions.find((action) => action.text.match(/"%/))
+      ) {
+        this.subroutineStatus = "hasError";
+      } else if (
         this.subroutines[i].actions.length === 2 &&
-        this.subroutines[i].actions[1].text.match(/^\\h/)
+        (this.subroutines[i].actions[1].text.match(/^\\h/) ||
+          this.subroutines[i].actions[1].text.match(/^/))
       ) {
         this.subroutineStatus = "text";
       } else if (this.subroutineStatus === "") {
@@ -105,7 +107,7 @@ export default class Script {
     while (offset < this.endOffset) {
       const instruction = getInt(offset, "uint32", { bigEndian: true }, this.dataView); // prettier-ignore
 
-      if ((instruction & 0xff000000) === 0x5c000000) {
+      if ([0x5c000000, 0x81000000].includes((instruction & 0xff000000) >>> 0)) {
         const [length, text] = this.parseText(offset);
 
         subroutine.actions.push({ color: "limegreen", offset, length, text });
@@ -119,14 +121,6 @@ export default class Script {
         length: 1,
         text: instruction.toHex(8),
       };
-
-      // if (instruction === 0x22 || instruction === 0x23) {
-      //   console.log(
-      //     instruction.toHex(),
-      //     offset.toHex(),
-      //     getInt(offset + 0xc, "uint32", { bigEndian: true }, this.dataView),
-      //   );
-      // }
 
       if (
         !["hasError", "hasUnparsedInstruction"].includes(this.subroutineStatus)
@@ -144,8 +138,11 @@ export default class Script {
           case 0x6:
             this.parseUpdateSpecialValue(action);
             break;
+          case 0x7:
+            this.parseUnknown07(action);
+            break;
           case 0x9:
-            this.parseInit(action);
+            this.parseLabel(action);
             break;
           case 0xa:
             this.parseJump(action);
@@ -171,20 +168,26 @@ export default class Script {
           case 0x14:
             this.parseGetItem(action);
             break;
+          case 0x15:
+            this.parseUnknown15(action);
+            break;
           case 0x17:
             this.parseLoadFile(action, "mld (0x17)");
             break;
           case 0x18:
             this.parseDebugText(action);
             break;
+          case 0x19:
+            this.parseUnknown19(action);
+            break;
           case 0x1a:
-            this.parseUnknown1a(action);
+            this.parseSetEntityDefaultAnimation(action);
             break;
           case 0x1b:
-            this.parseUnknown1b(action);
+            this.parseSetEntityLookAtCamera(action);
             break;
           case 0x1c:
-            this.parseUnknown1c(action);
+            this.parseSetEntityAnimation(action);
             break;
           case 0x1d:
             this.parseUnknown1d(action);
@@ -210,11 +213,20 @@ export default class Script {
           case 0x24:
             this.parseUnknown24(action);
             break;
+          case 0x25:
+            this.parseUnknown25(action);
+            break;
+          case 0x27:
+            this.parseUnknown27(action);
+            break;
           case 0x28:
-            this.parseUnknown28(action);
+            this.parseSetCameraToEntity(action);
             break;
           case 0x29:
-            this.parseUnknown29(action);
+            this.parseSetEntityDefaultLookAt(action);
+            break;
+          case 0x2a:
+            this.parseUnknown2a(action);
             break;
           case 0x2b:
             this.parseLoadFile(action, "script (0x2b)");
@@ -225,6 +237,9 @@ export default class Script {
           case 0x2e:
             this.parseUnknown2e(action);
             break;
+          case 0x2f:
+            this.parseUnknown2f(action);
+            break;
           case 0x31:
             this.parseUnknown31(action);
             break;
@@ -234,20 +249,26 @@ export default class Script {
           case 0x33:
             this.parseUnknown33(action);
             break;
+          case 0x34:
+            this.parseUnknown34(action);
+            break;
+          case 0x35:
+            this.parseUnknown35(action);
+            break;
           case 0x37:
             this.parseUnknown37(action);
             break;
           case 0x38:
             this.parseUnknown38(action);
             break;
-          case 0x3d:
-            this.parseUnknown3d(action);
-            break;
           case 0x3b:
             this.parseFadeOut(action);
             break;
           case 0x3c:
             this.parseFadeIn(action);
+            break;
+          case 0x3d:
+            this.parseUnknown3d(action);
             break;
           case 0x3e:
             this.parseUnknown3e(action);
@@ -259,7 +280,7 @@ export default class Script {
             this.parseUnknown41(action);
             break;
           case 0x45:
-            this.parseLoadFile(action, "sound");
+            this.parseLoadFile(action, "sound (0x45)");
             break;
           case 0x46:
             this.parseUnknown46(action);
@@ -270,14 +291,20 @@ export default class Script {
           case 0x48:
             this.parseUnknown48(action);
             break;
+          case 0x49:
+            this.parseUnknown49(action);
+            break;
           case 0x4a:
             this.parseMoveCamera(action);
+            break;
+          case 0x4b:
+            this.parseUnknown4b(action);
             break;
           case 0x4c:
             this.parseUnknown4c(action);
             break;
           case 0x4d:
-            this.parseSetCharacterPosition(action);
+            this.parseSetPlayerPosition(action);
             break;
           case 0x4e:
             this.parseUnknown4e(action);
@@ -288,17 +315,29 @@ export default class Script {
           case 0x50:
             this.parseUnknown50(action);
             break;
+          case 0x51:
+            this.parseUnknown51(action);
+            break;
           case 0x52:
-            this.parseLightColor(action);
+            this.parseAmbientLight(action);
             break;
           case 0x53:
-            this.parseLightParameters(action);
+            this.parseDirectionalLight(action);
             break;
           case 0x54:
             this.parseUnknown54(action);
             break;
+          case 0x55:
+            this.parseUnknown55(action);
+            break;
+          case 0x56:
+            this.parseUnknown56(action);
+            break;
           case 0x57:
             this.parseUnknown57(action);
+            break;
+          case 0x59:
+            this.parseUnknown59(action);
             break;
           case 0x5a:
             this.parseUnknown5a(action);
@@ -315,6 +354,12 @@ export default class Script {
           case 0x5e:
             this.parseUnknown5e(action);
             break;
+          case 0x60:
+            this.parseUnknown60(action);
+            break;
+          case 0x61:
+            this.parseUnknown61(action);
+            break;
           case 0x62:
             this.parseUnknown62(action);
             break;
@@ -327,11 +372,29 @@ export default class Script {
           case 0x67:
             this.parseUnknown67(action);
             break;
+          case 0x68:
+            this.parseUnknown68(action);
+            break;
+          case 0x69:
+            this.parseUnknown69(action);
+            break;
+          case 0x6a:
+            this.parseUnknown6a(action);
+            break;
+          case 0x6b:
+            this.parseUnknown6b(action);
+            break;
+          case 0x6c:
+            this.parseUnknown6c(action);
+            break;
           case 0x6d:
             this.parseUnknown6d(action);
             break;
           case 0x6e:
             this.parseLoadFile(action, "mld (0x6e)");
+            break;
+          case 0x6f:
+            this.parseUnknown6f(action);
             break;
           case 0x70:
             this.parseInitEventBattle(action);
@@ -352,13 +415,28 @@ export default class Script {
             this.parseUnknown76(action);
             break;
           case 0x77:
-            this.parseUnknown77(action);
+            this.parseSetEntitiesInvisible(action);
+            break;
+          case 0x79:
+            this.parseUnknown79(action);
+            break;
+          case 0x7a:
+            this.parseUnknown7a(action);
+            break;
+          case 0x7b:
+            this.parseUnknown7b(action);
             break;
           case 0x7c:
             this.parseUnknown7c(action);
             break;
+          case 0x7d:
+            this.parseUnknown7d(action);
+            break;
           case 0x7e:
             this.parseUnknown7e(action);
+            break;
+          case 0x7f:
+            this.parseUnknown7f(action);
             break;
           case 0x80:
             this.parseUnknown80(action);
@@ -369,23 +447,71 @@ export default class Script {
           case 0x82:
             this.parseUnknown82(action);
             break;
+          case 0x83:
+            this.parseUnknown83(action);
+            break;
+          case 0x84:
+            this.parseUnknown84(action);
+            break;
+          case 0x85:
+            this.parseUnknown85(action);
+            break;
           case 0x86:
             this.parseUnknown86(action);
+            break;
+          case 0x87:
+            this.parseUnknown87(action);
             break;
           case 0x88:
             this.parseUnknown88(action);
             break;
+          case 0x89:
+            this.parseUnknown89(action);
+            break;
           case 0x8a:
             this.parseInitSave(action);
+            break;
+          case 0x8b:
+            this.parseUnknown8b(action);
+            break;
+          case 0x8c:
+            this.parseUnknown8c(action);
+            break;
+          case 0x8d:
+            this.parseUnknown8d(action);
+            break;
+          case 0x8e:
+            this.parseUnknown8e(action);
             break;
           case 0x90:
             this.parseDialogBox(action);
             break;
+          case 0x91:
+            this.parseUnknown91(action);
+            break;
           case 0x92:
             this.parseUnknown92(action);
             break;
+          case 0x93:
+            this.parseUnknown93(action);
+            break;
+          case 0x94:
+            this.parseUnknown94(action);
+            break;
           case 0x95:
             this.parseUnknown95(action);
+            break;
+          case 0x96:
+            this.parseUnknown96(action);
+            break;
+          case 0x97:
+            this.parseUnknown97(action);
+            break;
+          case 0x98:
+            this.parseUnknown98(action);
+            break;
+          case 0x99:
+            this.parseUnknown99(action);
             break;
           case 0x9a:
             this.parseOpenTreasure(action);
@@ -396,20 +522,68 @@ export default class Script {
           case 0x9c:
             this.parseUnknown9c(action);
             break;
+          case 0x9d:
+            this.parseUnknown9d(action);
+            break;
+          case 0x9e:
+            this.parseUnknown9e(action);
+            break;
           case 0x9f:
             this.parseUnknown9f(action);
+            break;
+          case 0xa0:
+            this.parseUnknownA0(action);
+            break;
+          case 0xa2:
+            this.parseUnknownA2(action);
+            break;
+          case 0xa3:
+            this.parseUnknownA3(action);
             break;
           case 0xa4:
             this.parseUnknownA4(action);
             break;
+          case 0xa5:
+            this.parseUnknownA5(action);
+            break;
+          case 0xa6:
+            this.parseUnknownA6(action);
+            break;
           case 0xa7:
             this.parseUnknownA7(action);
+            break;
+          case 0xa8:
+            this.parseUnknownA8(action);
+            break;
+          case 0xa9:
+            this.parseUnknownA9(action);
+            break;
+          case 0xaa:
+            this.parseUnknownAa(action);
             break;
           case 0xab:
             this.parseUnknownAb(action);
             break;
+          case 0xac:
+            this.parseUnknownAc(action);
+            break;
+          case 0xad:
+            this.parseUnknownAd(action);
+            break;
           case 0xae:
             this.parseUnknownAe(action);
+            break;
+          case 0xb0:
+            this.parseUnknownB0(action);
+            break;
+          case 0xb1:
+            this.parseUnknownB1(action);
+            break;
+          case 0xb2:
+            this.parseUnknownB2(action);
+            break;
+          case 0xb3:
+            this.parseUnknownB3(action);
             break;
           case 0xb4:
             this.parseUnknownB4(action);
@@ -432,11 +606,23 @@ export default class Script {
           case 0xbe:
             this.parseUnknownBe(action);
             break;
+          case 0xbf:
+            this.parseUnknownBf(action);
+            break;
           case 0xc3:
             this.parseUnknownC3(action);
             break;
           case 0xc4:
             this.parseUnknownC4(action);
+            break;
+          case 0xc5:
+            this.parseUnknownC5(action);
+            break;
+          case 0xc6:
+            this.parseUnknownC6(action);
+            break;
+          case 0xc7:
+            this.parseUnknownC7(action);
             break;
           case 0xc9:
             this.parseRestorePartyHp(action);
@@ -447,6 +633,9 @@ export default class Script {
           case 0xcb:
             this.parseUnknownCb(action);
             break;
+          case 0xce:
+            this.parseUnknownCe(action);
+            break;
           case 0xd0:
             this.parseUnknownD0(action);
             break;
@@ -456,11 +645,65 @@ export default class Script {
           case 0xd2:
             this.parseLoadFile(action, "script (0xd2)");
             break;
+          case 0xd3:
+            this.parseUnknownD3(action);
+            break;
+          case 0xd4:
+            this.parseUnknownD4(action);
+            break;
           case 0xd5:
             this.parseUnknownD5(action);
             break;
+          case 0xd7:
+            this.parseUnknownD7(action);
+            break;
+          case 0xd8:
+            this.parseUnknownD8(action);
+            break;
+          case 0xd9:
+            this.parseUnknownD9(action);
+            break;
+          case 0xda:
+            this.parseUnknownDa(action);
+            break;
+          case 0xdb:
+            this.parseUnknownDb(action);
+            break;
+          case 0xdc:
+            this.parseUnknownDc(action);
+            break;
+          case 0xde:
+            this.parseUnknownDe(action);
+            break;
+          case 0xdf:
+            this.parseUnknownDf(action);
+            break;
+          case 0xe0:
+            this.parseUnknownE0(action);
+            break;
+          case 0xe1:
+            this.parseUnknownE1(action);
+            break;
           case 0xe2:
             this.parseUnknownE2(action);
+            break;
+          case 0xe3:
+            this.parseUnknownE3(action);
+            break;
+          case 0xe4:
+            this.parseUnknownE4(action);
+            break;
+          case 0xe5:
+            this.parseUnknownE5(action);
+            break;
+          case 0xe6:
+            this.parseUnknownE6(action);
+            break;
+          case 0xe7:
+            this.parseUnknownE7(action);
+            break;
+          case 0xe8:
+            this.parseUnknownE8(action);
             break;
           case 0xe9:
             this.parseUnknownE9(action);
@@ -468,20 +711,71 @@ export default class Script {
           case 0xeb:
             this.parseUnknownEb(action);
             break;
+          case 0xed:
+            this.parseUnknownEd(action);
+            break;
           case 0xee:
             this.parseUnknownEe(action);
+            break;
+          case 0xf0:
+            this.parseUnknownF0(action);
+            break;
+          case 0xf1:
+            this.parseUnknownF1(action);
+            break;
+          case 0xf2:
+            this.parseUnknownF2(action);
             break;
           case 0xf3:
             this.parseUnknownF3(action);
             break;
+          case 0xf5:
+            this.parseUnknownF5(action);
+            break;
+          case 0xf6:
+            this.parseUnknownF6(action);
+            break;
           case 0xf7:
             this.parseUnknownF7(action);
+            break;
+          case 0xf8:
+            this.parseLoadFile(action, "sound (0xf8)");
             break;
           case 0xf9:
             this.parseUnknownF9(action);
             break;
+          case 0xfa:
+            this.parseLoadFile(action, "sound (0xfa)");
+            break;
+          case 0xfe:
+            this.parseUnknownFe(action);
+            break;
+          case 0xff:
+            this.parseUnknownFf(action);
+            break;
+          case 0x101:
+            this.parseLoadFile(action, "script (0x101)");
+            break;
+          case 0x103:
+            this.parseUnknown103(action);
+            break;
           case 0x104:
             this.parseRestoreShipHp(action);
+            break;
+          case 0x105:
+            this.parseUnknown105(action);
+            break;
+          case 0x106:
+            this.parseUnknown106(action);
+            break;
+          case 0x107:
+            this.parseUnknown107(action);
+            break;
+          case 0x108:
+            this.parseUnknown108(action);
+            break;
+          case 0x109:
+            this.parseUnknown109(action);
             break;
           default:
             action.color = "red";
@@ -513,49 +807,102 @@ export default class Script {
     }
   }
 
-  private getValue(action: Action): number {
+  private getValue(action: Action, increment = true): number {
     const value = getInt(action.offset, "int32", { bigEndian: true }, this.dataView); // prettier-ignore
-
-    action.offset += 0x4;
-    action.length += 1;
-
-    return value;
-  }
-
-  private isReturn(action: Action, increment = true): boolean {
-    const int = getInt(action.offset, "uint32", { bigEndian: true }, this.dataView); // prettier-ignore
 
     if (increment) {
       action.offset += 0x4;
       action.length += 1;
     }
 
-    return int === 0x1d;
+    return value;
   }
 
-  private parseFlagOffset(value: number): string {
+  private parseEventValue(value: number): string {
+    let text = `EVx${value.toHex(2)}`;
+
+    switch (value) {
+      case 0x57:
+        text = "language";
+        break;
+    }
+
+    return `{${text}}`;
+  }
+
+  private parseFlag(value: number): string {
     const baseOffset = (value >> 0x3) & 0x1ffffffc;
     const shift = Math.floor((0x1f - (value & 0x1f)) / 0x8);
     const bit = (value & 0x1f) - (0x3 - shift) * 0x8;
 
     const offset = baseOffset + shift;
 
-    let result = `${offset.toHex(8)}[${bit}]`;
+    let text = `${offset.toHex(8)}[${bit}]`;
 
     // TODO: To confirm with USA and Japan
-    if (offset === 0x84 && bit === 7) {
-      result += " (lock character movements)";
+    if (offset === 0x83 && bit === 1) {
+      text += " (no random encounter)";
+    } else if (offset === 0x84 && bit === 7) {
+      text += " (lock player movements)";
     } else if (offset === 0x8b && bit === 6) {
-      result += " (hide mini-map)";
+      text += " (hide mini-map)";
     }
 
-    return result;
+    return text;
   }
 
-  private parseVariables(action: Action): Variable | Variable[] {
+  private parseSpecialValue(value: number): string {
+    let text = `SPx${value.toHex(2)}`;
+
+    switch (value) {
+      case 0x0:
+        text = "Gold";
+        break;
+      case 0x1:
+        text = "Swashbuckler Rating";
+        break;
+      case 0x2:
+        text = "Vyse's HP";
+        break;
+      case 0x3:
+        text = "Aika's HP";
+        break;
+      case 0x4:
+        text = "Fina's HP";
+        break;
+      case 0x5:
+        text = "Drachma's HP";
+        break;
+      case 0x6:
+        text = "Enrique's HP";
+        break;
+      case 0x7:
+        text = "Gilder's HP";
+        break;
+      case 0xa:
+        text = "Player";
+        break;
+      case 0x18:
+        text = "Camera Position X?";
+        break;
+      case 0x19:
+        text = "Camera Position Y?";
+        break;
+      case 0x1a:
+        text = "Camera Position Z?";
+        break;
+      case 0x4a:
+        text = "Vyse's Level";
+        break;
+    }
+
+    return `[${text}]`;
+  }
+
+  private parseVariables(action: Action, isFlag = false): string {
     const variables = [];
 
-    while (!this.isReturn(action, false)) {
+    while (this.getValue(action, false) !== 0x1d) {
       const instruction = getInt(action.offset, "uint32", { bigEndian: true }, this.dataView); // prettier-ignore
 
       let type = "???";
@@ -634,13 +981,14 @@ export default class Script {
       } else {
         // Variable Types
         switch (instruction & 0xff000000) {
-          case 0x4000000: // Float
+          case 0x4000000:
             type = "float";
             value = getInt(action.offset + 0x4, "float32", { bigEndian: true }, this.dataView); // prettier-ignore
             action.offset += 0x4;
             action.length += 1;
             break;
-          case 0x8000000: // TODO
+          case 0x8000000:
+            type = "0x8000000";
             value = instruction & 0xffffff;
             break;
           case 0x10000000:
@@ -651,49 +999,12 @@ export default class Script {
             type = "flag";
             value = instruction & 0xffffff;
             break;
-          case 0x40000000: // TODO
+          case 0x40000000:
+            type = "0x40000000";
             value = instruction & 0xffffff;
             break;
           case 0x50000000:
             type = "special";
-            switch (instruction & 0xff) {
-              case 0x0:
-                subtype = "Gold";
-                break;
-              case 0x1:
-                subtype = "Swashbuckler Rating";
-                break;
-              case 0x2:
-                subtype = "Vyse's HP";
-                break;
-              case 0x3:
-                subtype = "Aika's HP";
-                break;
-              case 0x4:
-                subtype = "Fina's HP";
-                break;
-              case 0x5:
-                subtype = "Drachma's HP";
-                break;
-              case 0x6:
-                subtype = "Enrique's HP";
-                break;
-              case 0x7:
-                subtype = "Gilder's HP";
-                break;
-              case 0x18:
-                subtype = "Camera Position X?";
-                break;
-              case 0x19:
-                subtype = "Camera Position Y?";
-                break;
-              case 0x1a:
-                subtype = "Camera Position Z?";
-                break;
-              case 0x4a:
-                subtype = "Vyse's Level";
-                break;
-            }
             value = instruction & 0xffffff;
             break;
         }
@@ -708,176 +1019,100 @@ export default class Script {
     action.offset += 0x4;
     action.length += 1;
 
-    if (variables.length === 1) {
-      return variables[0];
+    const texts: string[] = [];
+
+    variables.forEach((variable) => {
+      if (variable.type === "0x8000000") {
+        texts.push(`${variable.value.toHex()} (${variable.type})`);
+      } else if (variable.type === "0x40000000") {
+        texts.push(`${variable.value.toHex()} (${variable.type})`);
+      } else if (variable.type === "eventValue") {
+        texts.push(this.parseEventValue(variable.value));
+      } else if (variable.type === "flag") {
+        texts.push(`${this.parseFlag(variable.value)}`);
+      } else if (variable.type === "float") {
+        texts.push(
+          `${isFlag ? this.parseFlag(variable.value) : variable.value}`,
+        );
+      } else if (variable.type === "special") {
+        texts.push(`${this.parseSpecialValue(variable.value)}`);
+      } else if (variable.type === "unknown") {
+        texts.push(`${variable.value.toHex(8)}`);
+      } else if (variable.type === "operator") {
+        const text = `${texts.at(-2)} ${variable.subtype} ${texts.at(-1)}`;
+        texts.splice(-2, 2);
+        texts.push(text);
+      }
+    });
+
+    if (variables.length === 2) {
+      debug.warn(variables.length, texts.join(""), action);
     }
 
-    return variables;
+    return texts.join("");
   }
 
   private parseIf(action: Action): void {
-    action.text = "should if";
+    const condition = this.parseVariables(action);
+    const offset = action.offset + this.getValue(action);
 
-    const variables = this.parseVariables(action);
-    const jumpOffset = action.offset + this.getValue(action);
-
-    let text = "";
-    let error = false;
-
-    // if (Array.isArray(variables) && variables.length >= 3) {
-    //   for (let i = 0; i < variables.length; i += 3) {
-    //     if (i >= 3) {
-    //       if (i + 3 > variables.length) {
-    //         error = true;
-    //         break;
-    //       }
-
-    //       const operator = variables[i + 3];
-
-    //       if (operator.type !== "operator") {
-    //         error = true;
-    //         break;
-    //       }
-
-    //       text = `${text} ${operator.subtype} `;
-
-    //       if (i + 3 === variables.length) {
-    //         error = true;
-    //         break;
-    //       }
-    //     }
-
-    //     const variable = variables[i];
-    //     const value = variables[i + 1].value;
-    //     const operator = variables[i + 2];
-
-    //     if (operator.type !== "operator") {
-    //       error = true;
-    //       break;
-    //     }
-
-    //     const variableValue =
-    //       variable.type === "flag"
-    //         ? this.parseFlagOffset(variable.value)
-    //         : variable.value;
-
-    //     text += `(${variable.type} ${variableValue} ${operator.subtype} ${value})`;
-
-    //     if (i >= 3) {
-    //       i += 1;
-    //     }
-    //   }
-    // } else {
-    //   error = true;
-    // }
-
-    action.color = "mediumorchid";
-    action.text = "if";
-
-    // if (!error) {
-    //   action.color = "limegreen";
-    //   action.text = `if ${text} then continue else jump to "${jumpOffset.toHex(8)}"`;
-    // } else {
-    //   debug.warn(
-    //     `Error while parsing if (${JSON.stringify(action)}) (${JSON.stringify(variables)}).`,
-    //   );
-    // }
+    action.color = "limegreen";
+    action.text = `if "${condition}" then continue else jump to "${offset.toHex(8)}"`;
   }
 
   private parseSwitch(action: Action): void {
-    action.text = "should switch";
-
     const variable = this.parseVariables(action);
 
-    if (!Array.isArray(variable)) {
-      const variableValue =
-        variable.type === "flag"
-          ? this.parseFlagOffset(variable.value)
-          : variable.value;
+    const count = this.getValue(action);
 
-      const count = this.getValue(action);
+    let text = "";
 
-      if (count > 10) {
-        debug.warn(`Error while parsing switch (${JSON.stringify(action)}).`);
-        return;
-      }
+    for (let i = 0; i < count; i += 1) {
+      const caseValue = this.getValue(action);
+      const offset = action.offset + this.getValue(action);
 
-      let text = "";
-
-      for (let i = 0; i < count; i += 1) {
-        const caseValue = this.getValue(action);
-        const jumpOffset = action.offset + this.getValue(action);
-
-        text += `, "case ${caseValue === -1 ? "default" : caseValue}: jump to ${jumpOffset.toHex(8)}"`;
-      }
-
-      action.color = "limegreen";
-      action.text = `switch variable "${variableValue}": ${text.replace(",", "")}`;
-    } else {
-      debug.warn(`Error while parsing switch (${JSON.stringify(action)}).`);
+      text += `, "case ${caseValue === -1 ? "default" : caseValue}: jump to ${offset.toHex(8)}"`;
     }
+
+    action.color = "mediumorchid";
+    action.text = `switch variable "${variable}": ${text.replace(", ", "")}`;
   }
 
   private parseUpdateEventValue(action: Action): void {
     action.text = "should update event value";
 
-    const variables = this.parseVariables(action);
+    const value = this.parseVariables(action);
 
-    if (
-      Array.isArray(variables) &&
-      variables.length === 3 &&
-      variables[0].type === "eventValue" &&
-      variables[2].type === "operator"
-    ) {
-      const offset = variables[0].value;
-      const value = variables[1].value;
-      const operator = variables[2].subtype;
-
-      action.color = "limegreen";
-      action.text = `update event value "${offset} ${operator} ${value}"`;
-    } else {
-      debug.warn(
-        `Error while parsing update event (${JSON.stringify(action)}).`,
-      );
-    }
+    action.color = "limegreen";
+    action.text = `update event value "${value}"`;
   }
 
   private parseUpdateSpecialValue(action: Action): void {
-    action.text = "should update special value";
-
-    const variables = this.parseVariables(action);
-
-    if (
-      Array.isArray(variables) &&
-      variables.length === 3 &&
-      variables[0].type === "special" &&
-      variables[2].type === "operator"
-    ) {
-      const special = variables[0];
-      const value = variables[1].value;
-      const operator = variables[2].subtype;
-
-      action.color = "limegreen";
-      action.text = `update special value: "${special.subtype} ${operator} ${value}"`;
-    } else {
-      debug.warn(
-        `Error while parsing update special (${JSON.stringify(action)}).`,
-      );
-    }
-  }
-
-  private parseInit(action: Action): void {
-    while (!this.isReturn(action));
+    const value = this.parseVariables(action);
 
     action.color = "limegreen";
-    action.text = "init";
+    action.text = `update special value: "${value}"`;
+  }
+
+  private parseUnknown07(action: Action): void {
+    const unknown = this.parseVariables(action);
+
+    action.color = "mediumorchid";
+    action.text = `unknown instruction 0x7 with value "${unknown}"`;
+  }
+
+  private parseLabel(action: Action): void {
+    while (this.getValue(action) !== 0x1d);
+
+    action.color = "limegreen";
+    action.text = "label";
   }
 
   private parseJump(action: Action): void {
-    const jumpOffset = action.offset + this.getValue(action);
+    const offset = action.offset + this.getValue(action);
 
     action.color = "limegreen";
-    action.text = `jump to "${jumpOffset.toHex(8)}"`;
+    action.text = `jump to "${offset.toHex(8)}"`;
   }
 
   private parseCallSubroutine(action: Action): void {
@@ -910,44 +1145,22 @@ export default class Script {
 
     const frames = this.parseVariables(action);
 
-    if (!Array.isArray(frames)) {
-      action.color = "limegreen";
-      action.text = `wait "${frames.value}" frames`;
-    } else {
-      debug.warn(
-        `Error while parsing wait frames (${JSON.stringify(action)}).`,
-      );
-    }
+    action.color = "limegreen";
+    action.text = `wait "${frames}" frame(s)`;
   }
 
   private parseSetFlag(action: Action): void {
-    action.text = "should set flag";
+    const flag = this.parseVariables(action, true);
 
-    const flag = this.parseVariables(action);
-
-    if (!Array.isArray(flag)) {
-      const flagOffset = this.parseFlagOffset(flag.value);
-
-      action.color = "limegreen";
-      action.text = `set flag at position "${flagOffset}"`;
-    } else {
-      debug.warn(`Error while parsing set flag (${JSON.stringify(action)}).`);
-    }
+    action.color = "limegreen";
+    action.text = `set flag "${flag}"`;
   }
 
   private parseUnsetFlag(action: Action): void {
-    action.text = "should unset flag";
+    const flag = this.parseVariables(action, true);
 
-    const flag = this.parseVariables(action);
-
-    if (!Array.isArray(flag)) {
-      const flagOffset = this.parseFlagOffset(flag.value);
-
-      action.color = "limegreen";
-      action.text = `unset flag at position "${flagOffset}"`;
-    } else {
-      debug.warn(`Error while parsing unset flag (${JSON.stringify(action)}).`);
-    }
+    action.color = "limegreen";
+    action.text = `unset flag "${flag}"`;
   }
 
   private parseGetItem(action: Action): void {
@@ -955,17 +1168,21 @@ export default class Script {
 
     const unknown = this.parseVariables(action);
 
-    if (!Array.isArray(unknown)) {
-      const inventory = getResource("inventories") as Resource;
+    const inventory = getResource("inventories") as Resource;
 
-      if (inventory[unknown.value]) {
-        action.color = "limegreen";
-        action.text = `get item "${inventory[unknown.value]}"`;
-        return;
-      }
+    const item = inventory[parseInt(unknown)];
+
+    if (item) {
+      action.color = "mediumorchid";
+      action.text = `get item "${item}"`;
     }
+  }
 
-    debug.warn(`Error while parsing get item (${JSON.stringify(action)}).`);
+  private parseUnknown15(action: Action): void {
+    const unknown = this.parseVariables(action);
+
+    action.color = "mediumorchid";
+    action.text = `unknown instruction 0x15 with value "${unknown}"`;
   }
 
   private parseDebugText(action: Action): void {
@@ -977,101 +1194,64 @@ export default class Script {
     action.text = `get debug text "${text[1]}"`;
   }
 
-  private parseUnknown1a(action: Action): void {
-    action.text = "unknown instruction 0x1a";
-
+  private parseUnknown19(action: Action): void {
     const unknown = this.parseVariables(action);
 
-    if (!Array.isArray(unknown)) {
-      action.color = "mediumorchid";
-      action.text = `unknown instruction 0x1a with value "${unknown.value}"`;
-    } else {
-      debug.warn(
-        `Error while parsing instruction 0x1a (${JSON.stringify(action)}).`,
-      );
+    const offset = action.offset + this.getValue(action);
+
+    const name = getString(offset, 0x100, "uint8", { zeroTerminated: true }, this.dataView); // prettier-ignore
+
+    if (offset < this.endOffset) {
+      this.endOffset = offset;
     }
+
+    action.color = "mediumorchid";
+    action.text = `unknown instruction 0x19 with value "${unknown}", "${name}" (${offset.toHex(8)})`;
   }
 
-  private parseUnknown1b(action: Action): void {
-    action.text = "unknown instruction 0x1b";
+  private parseSetEntityDefaultAnimation(action: Action): void {
+    const entity = this.parseVariables(action);
 
+    action.color = "mediumorchid";
+    action.text = `set default animation to entity "${entity}"`;
+  }
+
+  private parseSetEntityLookAtCamera(action: Action): void {
+    const entity = this.parseVariables(action);
+
+    action.color = "limegreen";
+    action.text = `set look at camera to entity "${entity}"`;
+  }
+
+  private parseSetEntityAnimation(action: Action): void {
+    const entity = this.parseVariables(action);
+    const animation = this.parseVariables(action);
     const unknown = this.parseVariables(action);
+    const speed = this.parseVariables(action);
 
-    if (!Array.isArray(unknown)) {
-      action.color = "mediumorchid";
-      action.text = `unknown instruction 0x1b with value "${unknown.value}"`;
-    } else {
-      debug.warn(
-        `Error while parsing instruction 0x1b (${JSON.stringify(action)}).`,
-      );
-    }
-  }
-
-  private parseUnknown1c(action: Action): void {
-    action.text = "unknown instruction 0x1c";
-
-    const unknown1 = this.parseVariables(action);
-    const unknown2 = this.parseVariables(action);
-    const unknown3 = this.parseVariables(action);
-    const unknown4 = this.parseVariables(action);
-
-    if (
-      !Array.isArray(unknown1) &&
-      !Array.isArray(unknown2) &&
-      !Array.isArray(unknown3) &&
-      !Array.isArray(unknown4)
-    ) {
-      action.color = "mediumorchid";
-      action.text = `unknown instruction 0x1c with values "${unknown1.value}", "${unknown2.value}", "${unknown3.value.toHex(8)}", "${unknown4.value}"`;
-    } else {
-      debug.warn(
-        `Error while parsing instruction 0x1c (${JSON.stringify(action)}).`,
-      );
-    }
+    action.color = "mediumorchid";
+    action.text = `set animation to entity "${entity}": Animation = "${animation}", Unknown = "${unknown}", Speed = "${speed}"`;
   }
 
   private parseUnknown1d(action: Action): void {
-    action.text = "unknown instruction 0x1d";
-
     const unknown1 = this.parseVariables(action);
     const unknown2 = this.parseVariables(action);
     const unknown3 = this.parseVariables(action);
     const unknown4 = this.parseVariables(action);
 
-    if (
-      !Array.isArray(unknown1) &&
-      !Array.isArray(unknown2) &&
-      !Array.isArray(unknown3) &&
-      !Array.isArray(unknown4)
-    ) {
-      action.color = "mediumorchid";
-      action.text = `unknown instruction 0x1d with values "${unknown1.value}", "${unknown2.value}", "${unknown3.value.toHex(8)}", "${unknown4.value}"`;
-    } else {
-      debug.warn(
-        `Error while parsing instruction 0x1d (${JSON.stringify(action)}).`,
-      );
-    }
+    action.color = "mediumorchid";
+    action.text = `unknown instruction 0x1d with values "${unknown1}", "${unknown2}", "${unknown3}", "${unknown4}"`;
   }
 
   private parseUnknown1e(action: Action): void {
-    action.text = "unknown instruction 0x1e";
-
     const unknown1 = this.parseVariables(action);
     const unknown2 = this.parseVariables(action);
 
-    if (!Array.isArray(unknown1) && !Array.isArray(unknown2)) {
-      action.color = "mediumorchid";
-      action.text = `unknown instruction 0x1e with values "${unknown1.value}", "${unknown2.value}"`;
-    } else {
-      debug.warn(
-        `Error while parsing instruction 0x1e (${JSON.stringify(action)}).`,
-      );
-    }
+    action.color = "mediumorchid";
+    action.text = `unknown instruction 0x1e with values "${unknown1}", "${unknown2}"`;
   }
 
   private parseUnknown1f(action: Action): void {
-    action.text = "unknown instruction 0x1f";
-
     const unknown1 = this.parseVariables(action);
     const unknown2 = this.parseVariables(action);
     const unknown3 = this.parseVariables(action);
@@ -1081,28 +1261,11 @@ export default class Script {
     const unknown7 = this.parseVariables(action);
     const unknown8 = this.parseVariables(action);
 
-    if (
-      !Array.isArray(unknown1) &&
-      !Array.isArray(unknown2) &&
-      !Array.isArray(unknown3) &&
-      !Array.isArray(unknown4) &&
-      !Array.isArray(unknown5) &&
-      !Array.isArray(unknown6) &&
-      !Array.isArray(unknown7) &&
-      !Array.isArray(unknown8)
-    ) {
-      action.color = "mediumorchid";
-      action.text = `unknown instruction 0x1f with values "${unknown1.value}", "${unknown2.value}", "${unknown3.value}", "${unknown4.value}", "${unknown5.value}", "${unknown6.value}", "${unknown7.value}", "${unknown8.value}"`;
-    } else {
-      debug.warn(
-        `Error while parsing instruction 0x1f (${JSON.stringify(action)}).`,
-      );
-    }
+    action.color = "mediumorchid";
+    action.text = `unknown instruction 0x1f with values "${unknown1}", "${unknown2}", "${unknown3}", "${unknown4}", "${unknown5}", "${unknown6}", "${unknown7}", "${unknown8}"`;
   }
 
   private parseUnknown20(action: Action): void {
-    action.text = "unknown instruction 0x20";
-
     const unknown1 = this.parseVariables(action);
     const unknown2 = this.parseVariables(action);
     const unknown3 = this.parseVariables(action);
@@ -1112,32 +1275,14 @@ export default class Script {
     const unknown7 = this.parseVariables(action);
     const unknown8 = this.parseVariables(action);
 
-    if (
-      !Array.isArray(unknown1) &&
-      !Array.isArray(unknown2) &&
-      !Array.isArray(unknown3) &&
-      !Array.isArray(unknown4) &&
-      !Array.isArray(unknown5) &&
-      !Array.isArray(unknown6) &&
-      !Array.isArray(unknown7) &&
-      !Array.isArray(unknown8)
-    ) {
-      action.color = "mediumorchid";
-      action.text = `unknown instruction 0x20 with values "${unknown1.value}", "${unknown2.value}", "${unknown3.value}", "${unknown4.value}", "${unknown5.value}", "${unknown6.value}", "${unknown7.value}", "${unknown8.value}"`;
-    } else {
-      debug.warn(
-        `Error while parsing instruction 0x20 (${JSON.stringify(action)}).`,
-      );
-    }
+    action.color = "mediumorchid";
+    action.text = `unknown instruction 0x20 with values "${unknown1}", "${unknown2}", "${unknown3}", "${unknown4}", "${unknown5}", "${unknown6}", "${unknown7}", "${unknown8}"`;
   }
 
   private parseUnknown21(action: Action): void {
-    action.text = "unknown instruction 0x21";
-
     const count = this.getValue(action);
 
     let text = "";
-    let error = false;
 
     for (let i = 0; i < count; i += 1) {
       const unknown1 = this.parseVariables(action);
@@ -1148,41 +1293,19 @@ export default class Script {
       const unknown6 = this.parseVariables(action);
       const unknown7 = this.parseVariables(action);
 
-      // if (
-      //   !Array.isArray(unknown1) ||
-      //   !Array.isArray(unknown2) ||
-      //   !Array.isArray(unknown3) ||
-      //   Array.isArray(unknown4) ||
-      //   !Array.isArray(unknown5) ||
-      //   Array.isArray(unknown6) ||
-      //   Array.isArray(unknown7)
-      // ) {
-      //   error = true;
-      //   break;
-      // }
-
-      text += `| "${unknown1}", "${unknown2}", "${unknown3}", "${unknown4}", "${unknown5}", "${unknown6}", "${unknown7}"`;
+      text += ` | "${unknown1}", "${unknown2}", "${unknown3}", "${unknown4}", "${unknown5}", "${unknown6}", "${unknown7}"`;
     }
 
-    if (!error) {
-      action.color = "mediumorchid";
-      action.text = `unknown instruction 0x21 with ${count} block(s) ${text.replace("|", "")}`;
-    } else {
-      debug.warn(
-        `Error while parsing instruction 0x21 (${JSON.stringify(action)}).`,
-      );
-    }
+    action.color = "mediumorchid";
+    action.text = `unknown instruction 0x21 with ${count} block(s) ${text.replace(" | ", "")}`;
   }
 
   private parseUnknown22(action: Action): void {
-    action.text = "unknown instruction 0x22";
-
     const unknown = this.parseVariables(action);
 
     const count = this.getValue(action);
 
     let text = "";
-    let error = false;
 
     for (let i = 0; i < count; i += 1) {
       const unknown1 = this.parseVariables(action);
@@ -1195,43 +1318,19 @@ export default class Script {
       const unknown8 = this.parseVariables(action);
       const unknown9 = this.parseVariables(action);
 
-      if (
-        Array.isArray(unknown1) ||
-        Array.isArray(unknown2) ||
-        Array.isArray(unknown3) ||
-        Array.isArray(unknown4) ||
-        Array.isArray(unknown5) ||
-        Array.isArray(unknown6) ||
-        Array.isArray(unknown7) ||
-        Array.isArray(unknown8) ||
-        Array.isArray(unknown9)
-      ) {
-        error = true;
-        break;
-      }
-
-      text += `| "${unknown1.value}", "${unknown2.value}", "${unknown3.value}", "${unknown4.value}", "${unknown5.value}", "${unknown6.value}", "${unknown7.value}", "${unknown8.value}", "${unknown9.value}"`;
+      text += ` | "${unknown1}", "${unknown2}", "${unknown3}", "${unknown4}", "${unknown5}", "${unknown6}", "${unknown7}", "${unknown8}", "${unknown9}"`;
     }
 
-    if (!Array.isArray(unknown) && !error) {
-      action.color = "mediumorchid";
-      action.text = `unknown instruction 0x22 with value "${unknown.value}" then ${count} block(s) ${text.replace("|", "")}`;
-    } else {
-      debug.warn(
-        `Error while parsing instruction 0x22 (${JSON.stringify(action)}).`,
-      );
-    }
+    action.color = "mediumorchid";
+    action.text = `unknown instruction 0x22 with value "${unknown}" then ${count} block(s) ${text.replace(" | ", "")}`;
   }
 
   private parseUnknown23(action: Action): void {
-    action.text = "unknown instruction 0x23";
-
     const unknown = this.parseVariables(action);
 
     const count = this.getValue(action);
 
     let text = "";
-    let error = false;
 
     for (let i = 0; i < count; i += 1) {
       const unknown1 = this.parseVariables(action);
@@ -1244,37 +1343,14 @@ export default class Script {
       const unknown8 = this.parseVariables(action);
       const unknown9 = this.parseVariables(action);
 
-      if (
-        Array.isArray(unknown1) ||
-        Array.isArray(unknown2) ||
-        Array.isArray(unknown3) ||
-        Array.isArray(unknown4) ||
-        Array.isArray(unknown5) ||
-        Array.isArray(unknown6) ||
-        Array.isArray(unknown7) ||
-        Array.isArray(unknown8) ||
-        Array.isArray(unknown9)
-      ) {
-        error = true;
-        break;
-      }
-
-      text += `| "${unknown1.value}", "${unknown2.value}", "${unknown3.value}", "${unknown4.value}", "${unknown5.value}", "${unknown6.value}", "${unknown7.value}", "${unknown8.value}", "${unknown9.value}"`;
+      text += ` | "${unknown1}", "${unknown2}", "${unknown3}", "${unknown4}", "${unknown5}", "${unknown6}", "${unknown7}", "${unknown8}", "${unknown9}"`;
     }
 
-    if (!Array.isArray(unknown) && !error) {
-      action.color = "mediumorchid";
-      action.text = `unknown instruction 0x23 with value "${unknown.value}" then ${count} block(s) ${text.replace("|", "")}`;
-    } else {
-      debug.warn(
-        `Error while parsing instruction 0x23 (${JSON.stringify(action)}).`,
-      );
-    }
+    action.color = "mediumorchid";
+    action.text = `unknown instruction 0x23 with value "${unknown}" then ${count} block(s) ${text.replace(" | ", "")}`;
   }
 
   private parseUnknown24(action: Action): void {
-    action.text = "unknown instruction 0x24";
-
     const unknown1 = this.parseVariables(action);
     const unknown2 = this.parseVariables(action);
     const unknown3 = this.parseVariables(action);
@@ -1284,59 +1360,63 @@ export default class Script {
     const unknown7 = this.parseVariables(action);
     const unknown8 = this.parseVariables(action);
 
-    if (
-      !Array.isArray(unknown1) &&
-      !Array.isArray(unknown2) &&
-      !Array.isArray(unknown3) &&
-      !Array.isArray(unknown4) &&
-      !Array.isArray(unknown5) &&
-      !Array.isArray(unknown6) &&
-      !Array.isArray(unknown7) &&
-      !Array.isArray(unknown8)
-    ) {
-      action.color = "mediumorchid";
-      action.text = `unknown instruction 0x24 with values "${unknown1.value}", "${unknown2.value}", "${unknown3.value}", "${unknown4.value}", "${unknown5.value}", "${unknown6.value}", "${unknown7.value}", "${unknown8.value}"`;
-    } else {
-      debug.warn(
-        `Error while parsing instruction 0x24 (${JSON.stringify(action)}).`,
-      );
-    }
+    action.color = "mediumorchid";
+    action.text = `unknown instruction 0x24 with values "${unknown1}", "${unknown2}", "${unknown3}", "${unknown4}", "${unknown5}", "${unknown6}", "${unknown7}", "${unknown8}"`;
   }
 
-  private parseUnknown28(action: Action): void {
-    action.text = "unknown instruction 0x28";
-
+  private parseUnknown25(action: Action): void {
     const unknown1 = this.parseVariables(action);
     const unknown2 = this.parseVariables(action);
     const unknown3 = this.parseVariables(action);
+    const unknown4 = this.parseVariables(action);
+    const unknown5 = this.parseVariables(action);
+    const unknown6 = this.parseVariables(action);
+    const unknown7 = this.parseVariables(action);
+    const unknown8 = this.parseVariables(action);
 
-    if (
-      !Array.isArray(unknown1) &&
-      !Array.isArray(unknown2) &&
-      !Array.isArray(unknown3)
-    ) {
-      action.color = "mediumorchid";
-      action.text = `unknown instruction 0x28 with values "${unknown1.value}", "${unknown2.value}", "${unknown3.value}"`;
-    } else {
-      debug.warn(
-        `Error while parsing instruction 0x28 (${JSON.stringify(action)}).`,
-      );
-    }
+    action.color = "mediumorchid";
+    action.text = `unknown instruction 0x25 with values "${unknown1}", "${unknown2}", "${unknown3}", "${unknown4}", "${unknown5}", "${unknown6}", "${unknown7}", "${unknown8}"`;
   }
 
-  private parseUnknown29(action: Action): void {
-    action.text = "unknown instruction 0x29";
+  private parseUnknown27(action: Action): void {
+    const unknown1 = this.parseVariables(action);
+    const unknown2 = this.parseVariables(action);
 
+    action.color = "mediumorchid";
+    action.text = `unknown instruction 0x27 with values "${unknown1}", "${unknown2}"`;
+  }
+
+  private parseSetCameraToEntity(action: Action): void {
+    const entity = this.parseVariables(action);
+    const lookAtY = this.parseVariables(action);
+    const isAnimated = this.parseVariables(action);
+
+    action.color = "limegreen";
+    action.text = `set camera to look at entity "${entity}" with Y = "${lookAtY}" (${isAnimated === "0" ? "not " : ""}animated)`;
+  }
+
+  private parseSetEntityDefaultLookAt(action: Action): void {
+    const entity = this.parseVariables(action);
+
+    action.color = "mediumorchid";
+    action.text = `set default look at to entity "${entity}"`;
+  }
+
+  private parseUnknown2a(action: Action): void {
     const unknown = this.parseVariables(action);
 
-    if (!Array.isArray(unknown)) {
-      action.color = "mediumorchid";
-      action.text = `unknown instruction 0x29 with value "${unknown.value}"`;
-    } else {
-      debug.warn(
-        `Error while parsing instruction 0x29 (${JSON.stringify(action)}).`,
-      );
+    const count = this.getValue(action);
+
+    let text = "";
+
+    for (let i = 0; i < count; i += 1) {
+      const unknown = this.parseVariables(action);
+
+      text += `, "${unknown}"`;
     }
+
+    action.color = "mediumorchid";
+    action.text = `unknown instruction 0x2a with value "${unknown}" then ${count} value(s) ${text.replace(", ", "")}`;
   }
 
   private parseUnknown2d(action: Action): void {
@@ -1345,8 +1425,6 @@ export default class Script {
   }
 
   private parseUnknown32(action: Action): void {
-    action.text = "unknown instruction 0x32";
-
     const unknown1 = this.parseVariables(action);
     const unknown2 = this.parseVariables(action);
     const unknown3 = this.parseVariables(action);
@@ -1354,264 +1432,168 @@ export default class Script {
     const unknown5 = this.parseVariables(action);
     const unknown6 = this.parseVariables(action);
 
-    if (
-      !Array.isArray(unknown1) &&
-      !Array.isArray(unknown2) &&
-      !Array.isArray(unknown3) &&
-      !Array.isArray(unknown4) &&
-      !Array.isArray(unknown5) &&
-      !Array.isArray(unknown6)
-    ) {
-      action.color = "mediumorchid";
-      action.text = `unknown instruction 0x32 with values "${unknown1.value}", "${unknown2.value}", "${unknown3.value}", "${unknown4.value}", "${unknown5.value}", "${unknown6.value}"`;
-    } else {
-      debug.warn(
-        `Error while parsing instruction 0x32 (${JSON.stringify(action)}).`,
-      );
-    }
+    action.color = "mediumorchid";
+    action.text = `unknown instruction 0x32 with values "${unknown1}", "${unknown2}", "${unknown3}", "${unknown4}", "${unknown5}", "${unknown6}"`;
   }
 
   private parseUnknown2e(action: Action): void {
-    action.text = "unknown instruction 0x2e";
-
     const unknown1 = this.parseVariables(action);
     const unknown2 = this.parseVariables(action);
     const unknown3 = this.parseVariables(action);
     const unknown4 = this.parseVariables(action);
 
-    if (
-      !Array.isArray(unknown1) &&
-      !Array.isArray(unknown2) &&
-      !Array.isArray(unknown3)
-      // !Array.isArray(unknown4)
-    ) {
-      action.color = "mediumorchid";
-      action.text = `unknown instruction 0x2e with values "${unknown1.value}", "${unknown2.value}", "${unknown3.value}", "${unknown4}"`;
-    } else {
-      debug.warn(
-        `Error while parsing instruction 0x2e (${JSON.stringify(action)}).`,
-      );
-    }
+    action.color = "mediumorchid";
+    action.text = `unknown instruction 0x2e with values "${unknown1}", "${unknown2}", "${unknown3}", "${unknown4}"`;
+  }
+
+  private parseUnknown2f(action: Action): void {
+    const unknown1 = this.parseVariables(action);
+    const unknown2 = this.parseVariables(action);
+    const unknown3 = this.parseVariables(action);
+    const unknown4 = this.parseVariables(action);
+
+    action.color = "mediumorchid";
+    action.text = `unknown instruction 0x2f with values "${unknown1}", "${unknown2}", "${unknown3}", "${unknown4}"`;
   }
 
   private parseUnknown31(action: Action): void {
-    action.text = "unknown instruction 0x31";
-
     const unknown = this.parseVariables(action);
 
-    if (!Array.isArray(unknown)) {
-      action.color = "mediumorchid";
-      action.text = `unknown instruction 0x31 with values "${unknown.value}"`;
-    } else {
-      debug.warn(
-        `Error while parsing instruction 0x31 (${JSON.stringify(action)}).`,
-      );
-    }
+    action.color = "mediumorchid";
+    action.text = `unknown instruction 0x31 with values "${unknown}"`;
   }
 
-  // TODO: Related to sound?
   private parseUnknown33(action: Action): void {
-    action.text = "unknown instruction 0x33";
-
     const unknown1 = this.parseVariables(action);
     const unknown2 = this.parseVariables(action);
     const unknown3 = this.parseVariables(action);
     const unknown4 = this.parseVariables(action);
 
-    if (
-      !Array.isArray(unknown1) &&
-      !Array.isArray(unknown2) &&
-      !Array.isArray(unknown3) &&
-      !Array.isArray(unknown4)
-    ) {
-      action.color = "mediumorchid";
-      action.text = `unknown instruction 0x33 with values "${unknown1.value}", "${unknown2.value}", "${unknown3.value}", "${unknown4.value}"`;
-    } else {
-      debug.warn(
-        `Error while parsing instruction 0x33 (${JSON.stringify(action)}).`,
-      );
-    }
+    action.color = "mediumorchid";
+    action.text = `unknown instruction 0x33 with values "${unknown1}", "${unknown2}", "${unknown3}", "${unknown4}"`;
+  }
+
+  private parseUnknown34(action: Action): void {
+    const unknown1 = this.parseVariables(action);
+    const unknown2 = this.parseVariables(action);
+    const unknown3 = this.parseVariables(action);
+    const unknown4 = this.parseVariables(action);
+    const unknown5 = this.parseVariables(action);
+    const unknown6 = this.parseVariables(action);
+
+    action.color = "mediumorchid";
+    action.text = `unknown instruction 0x34 with values "${unknown1}", "${unknown2}", "${unknown3}", "${unknown4}", "${unknown5}", "${unknown6}"`;
+  }
+
+  private parseUnknown35(action: Action): void {
+    const unknown1 = this.parseVariables(action);
+    const unknown2 = this.parseVariables(action);
+    const unknown3 = this.parseVariables(action);
+    const unknown4 = this.parseVariables(action);
+    const unknown5 = this.parseVariables(action);
+    const unknown6 = this.parseVariables(action);
+    const unknown7 = this.parseVariables(action);
+    const unknown8 = this.parseVariables(action);
+    const unknown9 = this.parseVariables(action);
+    const unknown10 = this.parseVariables(action);
+    const unknown11 = this.parseVariables(action);
+    const unknown12 = this.parseVariables(action);
+    const unknown13 = this.parseVariables(action);
+    const unknown14 = this.parseVariables(action);
+    const unknown15 = this.parseVariables(action);
+    const unknown16 = this.parseVariables(action);
+    const unknown17 = this.parseVariables(action);
+    const unknown18 = this.parseVariables(action);
+    const unknown19 = this.parseVariables(action);
+    const unknown20 = this.parseVariables(action);
+
+    action.color = "mediumorchid";
+    action.text = `unknown instruction 0x35 with values "${unknown1}", "${unknown2}", "${unknown3}", "${unknown4}", "${unknown5}", "${unknown6}", "${unknown7}", "${unknown8}", "${unknown9}", "${unknown10}", "${unknown11}", "${unknown12}", "${unknown13}", "${unknown14}", "${unknown15}", "${unknown16}", "${unknown17}", "${unknown18}", "${unknown19}", "${unknown20}"`;
   }
 
   private parseUnknown37(action: Action): void {
-    action.text = "unknown instruction 0x37";
-
     const unknown1 = this.parseVariables(action);
     const unknown2 = this.parseVariables(action);
     const unknown3 = this.parseVariables(action);
 
-    if (
-      !Array.isArray(unknown1) &&
-      !Array.isArray(unknown2) &&
-      !Array.isArray(unknown3)
-    ) {
-      action.color = "mediumorchid";
-      action.text = `unknown instruction 0x37 with values "${unknown1.value}", "${unknown2.value}", "${unknown3.value}"`;
-    } else {
-      debug.warn(
-        `Error while parsing instruction 0x37 (${JSON.stringify(action)}).`,
-      );
-    }
+    action.color = "mediumorchid";
+    action.text = `unknown instruction 0x37 with values "${unknown1}", "${unknown2}", "${unknown3}"`;
   }
 
   private parseUnknown38(action: Action): void {
-    action.text = "unknown instruction 0x38";
-
     const unknown = this.parseVariables(action);
 
-    if (!Array.isArray(unknown)) {
-      action.color = "mediumorchid";
-      action.text = `unknown instruction 0x38 with value "${unknown.value}"`;
-    } else {
-      debug.warn(
-        `Error while parsing instruction 0x38 (${JSON.stringify(action)}).`,
-      );
-    }
+    action.color = "mediumorchid";
+    action.text = `unknown instruction 0x38 with value "${unknown}"`;
   }
 
   private parseUnknown3d(action: Action): void {
-    action.text = "unknown instruction 0x3d";
-
     const unknown1 = this.parseVariables(action);
     const unknown2 = this.parseVariables(action);
     const unknown3 = this.parseVariables(action);
 
-    if (
-      !Array.isArray(unknown1) &&
-      !Array.isArray(unknown2) &&
-      !Array.isArray(unknown3)
-    ) {
-      action.color = "mediumorchid";
-      action.text = `unknown instruction 0x3d with values "${unknown1.value}", "${unknown2.value}", "${unknown3.value}"`;
-    } else {
-      debug.warn(
-        `Error while parsing instruction 0x3d (${JSON.stringify(action)}).`,
-      );
-    }
+    action.color = "mediumorchid";
+    action.text = `unknown instruction 0x3d with values "${unknown1}", "${unknown2}", "${unknown3}"`;
   }
 
   private parseFadeOut(action: Action): void {
-    action.text = "should fade out";
-
     const frames = this.parseVariables(action);
 
-    if (!Array.isArray(frames)) {
-      action.color = "limegreen";
-      action.text = `fade out for "${frames.value} frames"`;
-    } else {
-      debug.warn(`Error while parsing fade out (${JSON.stringify(action)}).`);
-    }
+    action.color = "limegreen";
+    action.text = `fade out for "${frames}" frames`;
   }
 
   private parseFadeIn(action: Action): void {
-    action.text = "should fade in";
-
     const frames = this.parseVariables(action);
 
-    if (!Array.isArray(frames)) {
-      action.color = "limegreen";
-      action.text = `fade in for "${frames.value} frames"`;
-    } else {
-      debug.warn(`Error while parsing fade (${JSON.stringify(action)}).`);
-    }
+    action.color = "limegreen";
+    action.text = `fade in for "${frames}" frames`;
   }
 
   private parseUnknown3e(action: Action): void {
-    action.text = "unknown instruction 0x3e";
-
     const unknown1 = this.parseVariables(action);
     const unknown2 = this.parseVariables(action);
 
-    if (!Array.isArray(unknown1) && !Array.isArray(unknown2)) {
-      action.color = "mediumorchid";
-      action.text = `unknown instruction 0x3e with values "${unknown1.value}", "${unknown2.value}"`;
-    } else {
-      debug.warn(
-        `Error while parsing instruction 0x3e (${JSON.stringify(action)}).`,
-      );
-    }
+    action.color = "mediumorchid";
+    action.text = `unknown instruction 0x3e with values "${unknown1}", "${unknown2}"`;
   }
 
   private parseUnknown3f(action: Action): void {
-    action.text = "unknown instruction 0x3f";
-
     const unknown1 = this.parseVariables(action);
     const unknown2 = this.parseVariables(action);
 
-    if (!Array.isArray(unknown1) && !Array.isArray(unknown2)) {
-      action.color = "mediumorchid";
-      action.text = `unknown instruction 0x3f with values "${unknown1.value}", "${unknown2.value}"`;
-    } else {
-      debug.warn(
-        `Error while parsing instruction 0x3f (${JSON.stringify(action)}).`,
-      );
-    }
+    action.color = "mediumorchid";
+    action.text = `unknown instruction 0x3f with values "${unknown1}", "${unknown2}"`;
   }
 
   private parseUnknown41(action: Action): void {
-    action.text = "unknown instruction 0x41";
-
     const unknown = this.parseVariables(action);
 
-    if (!Array.isArray(unknown)) {
-      action.color = "mediumorchid";
-      action.text = `unknown instruction 0x41 with value "${unknown.value}"`;
-    } else {
-      debug.warn(
-        `Error while parsing instruction 0x41 (${JSON.stringify(action)}).`,
-      );
-    }
+    action.color = "mediumorchid";
+    action.text = `unknown instruction 0x41 with value "${unknown}"`;
   }
 
   private parseUnknown46(action: Action): void {
-    action.text = "unknown instruction 0x46";
-
     const unknown1 = this.parseVariables(action);
     const unknown2 = this.parseVariables(action);
     const unknown3 = this.parseVariables(action);
     const unknown4 = this.parseVariables(action);
 
-    // if (
-    //   Array.isArray(unknown1) &&
-    //   Array.isArray(unknown2) &&
-    //   !Array.isArray(unknown3) &&
-    //   !Array.isArray(unknown4)
-    // ) {
     action.color = "mediumorchid";
     action.text = `unknown instruction 0x46 with values "${unknown1}", "${unknown2}", "${unknown3}", "${unknown4}"`;
-    // } else {
-    //   debug.warn(
-    //     `Error while parsing instruction 0x46 (${JSON.stringify(action)}).`,
-    //   );
-    // }
   }
 
   private parseSetCameraPosition(action: Action): void {
-    action.text = "should set camera position";
-
     const unknown1 = this.parseVariables(action);
     const unknown2 = this.parseVariables(action);
     const unknown3 = this.parseVariables(action);
     const unknown4 = this.parseVariables(action);
 
-    if (
-      !Array.isArray(unknown1) &&
-      !Array.isArray(unknown2) &&
-      !Array.isArray(unknown3) &&
-      !Array.isArray(unknown4)
-    ) {
-      action.color = "mediumorchid";
-      action.text = `set camera position: X = "${unknown1.value}", Y = "${unknown2.value}", Z = "${unknown3.value}", Unknown = "${unknown4.value}"`;
-    } else {
-      debug.warn(
-        `Error while parsing camera position (${JSON.stringify(action)}).`,
-      );
-    }
+    action.color = "mediumorchid";
+    action.text = `set camera position: X = "${unknown1}", Y = "${unknown2}", Z = "${unknown3}", Unknown = "${unknown4}"`;
   }
 
   private parseUnknown48(action: Action): void {
-    action.text = "unknown instruction 0x48";
-
     const unknown1 = this.parseVariables(action);
     const unknown2 = this.parseVariables(action);
     const unknown3 = this.parseVariables(action);
@@ -1622,24 +1604,24 @@ export default class Script {
     const unknown8 = this.parseVariables(action);
     const unknown9 = this.parseVariables(action);
 
-    if (
-      !Array.isArray(unknown1) &&
-      !Array.isArray(unknown2) &&
-      !Array.isArray(unknown3) &&
-      !Array.isArray(unknown4) &&
-      !Array.isArray(unknown5) &&
-      !Array.isArray(unknown6) &&
-      !Array.isArray(unknown7) &&
-      !Array.isArray(unknown8) &&
-      !Array.isArray(unknown9)
-    ) {
-      action.color = "mediumorchid";
-      action.text = `unknown instruction 0x48 with values "${unknown1.value}", "${unknown2.value}", "${unknown3.value}", "${unknown4.value}", "${unknown5.value}", "${unknown6.value}", "${unknown7.value}", "${unknown8.value}", "${unknown9.value}"`;
-    } else {
-      debug.warn(
-        `Error while parsing instruction 0x48 (${JSON.stringify(action)}).`,
-      );
-    }
+    action.color = "mediumorchid";
+    action.text = `unknown instruction 0x48 with values "${unknown1}", "${unknown2}", "${unknown3}", "${unknown4}", "${unknown5}", "${unknown6}", "${unknown7}", "${unknown8}", "${unknown9}"`;
+  }
+
+  private parseUnknown49(action: Action): void {
+    const unknown1 = this.parseVariables(action);
+    const unknown2 = this.parseVariables(action);
+    const unknown3 = this.parseVariables(action);
+    const unknown4 = this.parseVariables(action);
+    const unknown5 = this.parseVariables(action);
+    const unknown6 = this.parseVariables(action);
+    const unknown7 = this.parseVariables(action);
+    const unknown8 = this.parseVariables(action);
+    const unknown9 = this.parseVariables(action);
+    const unknown10 = this.parseVariables(action);
+
+    action.color = "mediumorchid";
+    action.text = `unknown instruction 0x49 with values "${unknown1}", "${unknown2}", "${unknown3}", "${unknown4}", "${unknown5}", "${unknown6}", "${unknown7}", "${unknown8}", "${unknown9}", "${unknown10}"`;
   }
 
   private parseMoveCamera(action: Action): void {
@@ -1653,173 +1635,11 @@ export default class Script {
     const unknown6 = this.parseVariables(action);
     const unknown7 = this.parseVariables(action);
 
-    if (
-      // !Array.isArray(unknown1) &&
-      // unknown1.length === 3 &&
-      // !Array.isArray(unknown2) &&
-      // unknown2.length === 3 &&
-      // !Array.isArray(unknown3) &&
-      // unknown3.length === 3 &&
-      !Array.isArray(unknown4) &&
-      !Array.isArray(unknown5) &&
-      !Array.isArray(unknown6) &&
-      !Array.isArray(unknown7)
-    ) {
-      // const special1 = unknown1[0];
-      // const value1 = unknown1[1].value;
-      // const operator1 = unknown1[2].subtype;
-
-      // const special2 = unknown2[0];
-      // const value2 = unknown2[1].value;
-      // const operator2 = unknown2[2].subtype;
-
-      // const special3 = unknown3[0];
-      // const value3 = unknown3[1].value;
-      // const operator3 = unknown3[2].subtype;
-
-      action.color = "mediumorchid";
-      action.text = "move camera: ";
-      // action.text += `Unknown1 = "${operator1} ${value1} ${special1.subtype}", `;
-      // action.text += `Unknown2 = "${operator2} ${value2} ${special2.subtype}", `;
-      // action.text += `Unknown3 = "${operator3} ${value3} ${special3.subtype}", `;
-      action.text += `Unknown4 = "${unknown1}", `;
-      action.text += `Unknown5 = "${unknown2}", `;
-      action.text += `Unknown6 = "${unknown3}", `;
-      action.text += `Unknown4 = "${unknown4}", `;
-      action.text += `Unknown5 = "${unknown5}", `;
-      action.text += `Unknown6 = "${unknown6}", `;
-      action.text += `Unknown7 = "${unknown7}"`;
-    } else {
-      debug.warn(
-        `Error while parsing move camera (${JSON.stringify(action)}).`,
-      );
-    }
-  }
-
-  private parseUnknown4c(action: Action): void {
-    action.text = "unknown instruction 0x4c";
-
-    const unknown = this.parseVariables(action);
-
-    if (!Array.isArray(unknown)) {
-      action.color = "mediumorchid";
-      action.text = `unknown instruction 0x4c with value "${unknown.value}"`;
-    } else {
-      debug.warn(
-        `Error while parsing instruction 0x4c (${JSON.stringify(action)}).`,
-      );
-    }
-  }
-
-  private parseSetCharacterPosition(action: Action): void {
-    action.text = "should set character position";
-
-    const unknown1 = this.parseVariables(action);
-    const unknown2 = this.parseVariables(action);
-    const unknown3 = this.parseVariables(action);
-    const unknown4 = this.parseVariables(action);
-    const unknown5 = this.parseVariables(action);
-
-    if (
-      !Array.isArray(unknown1) &&
-      !Array.isArray(unknown2) &&
-      !Array.isArray(unknown3) &&
-      !Array.isArray(unknown4) &&
-      !Array.isArray(unknown5)
-    ) {
-      action.color = "mediumorchid";
-      action.text = `set character position: Unknown = "${unknown1.value}", X = "${unknown2.value}", Y = "${unknown3.value}", Z = "${unknown4.value}", Rotation = "${unknown5.value}°"`;
-    } else {
-      debug.warn(
-        `Error while parsing character position (${JSON.stringify(action)}).`,
-      );
-    }
-  }
-
-  private parseUnknown4e(action: Action): void {
-    action.text = "unknown instruction 0x4e";
-
-    const unknown1 = this.parseVariables(action);
-    const unknown2 = this.parseVariables(action);
-    const unknown3 = this.parseVariables(action);
-    const unknown4 = this.parseVariables(action);
-
-    if (
-      !Array.isArray(unknown1) &&
-      !Array.isArray(unknown2) &&
-      !Array.isArray(unknown3) &&
-      !Array.isArray(unknown4)
-    ) {
-      action.color = "mediumorchid";
-      action.text = `unknown instruction 0x4e with values "${unknown1.value}", "${unknown2.value}", "${unknown3.value}", "${unknown4.value}"`;
-    } else {
-      debug.warn(
-        `Error while parsing instruction 0x4e (${JSON.stringify(action)}).`,
-      );
-    }
-  }
-
-  private parseFog(action: Action): void {
-    action.text = "should set fog";
-
-    const red = this.parseVariables(action);
-    const blue = this.parseVariables(action);
-    const green = this.parseVariables(action);
-
-    const transitionDuration = this.parseVariables(action);
-
-    const distanceMin = this.parseVariables(action);
-    const distanceMax = this.parseVariables(action);
-
-    const unknown = this.parseVariables(action);
-
-    if (
-      !Array.isArray(red) &&
-      !Array.isArray(blue) &&
-      !Array.isArray(green) &&
-      !Array.isArray(transitionDuration) &&
-      !Array.isArray(distanceMin) &&
-      !Array.isArray(distanceMax) &&
-      !Array.isArray(unknown)
-    ) {
-      action.color = "mediumorchid";
-      action.text = `set fog: R = "${red.value}", G = "${blue.value}", B = "${green.value}", TD = "${transitionDuration.value}", DMin = "${distanceMin.value}", Dmax = "${distanceMax.value}", Unknown = "${unknown.value}"`;
-    } else {
-      debug.warn(`Error while parsing fog (${JSON.stringify(action)}).`);
-    }
-  }
-
-  private parseUnknown50(action: Action): void {
     action.color = "mediumorchid";
-    action.text = "unknown instruction 0x50";
+    action.text = `move camera with values "${unknown1}", "${unknown2}", "${unknown3}", "${unknown4}", "${unknown5}", "${unknown6}", "${unknown7}"`;
   }
 
-  private parseLightColor(action: Action): void {
-    action.text = "should set light color";
-
-    const unknown = this.parseVariables(action);
-    const red = this.parseVariables(action);
-    const green = this.parseVariables(action);
-    const blue = this.parseVariables(action);
-
-    if (
-      !Array.isArray(unknown) &&
-      !Array.isArray(red) &&
-      !Array.isArray(green) &&
-      !Array.isArray(blue)
-    ) {
-      action.color = "mediumorchid";
-      action.text = `set light color: Unknown = "${unknown.value}", Red = "${red.value}", Green = "${green.value}", Blue = "${blue.value}"`;
-    } else {
-      debug.warn(
-        `Error while parsing set light color (${JSON.stringify(action)}).`,
-      );
-    }
-  }
-
-  private parseLightParameters(action: Action): void {
-    action.text = "should set light parameters";
-
+  private parseUnknown4b(action: Action): void {
     const unknown1 = this.parseVariables(action);
     const unknown2 = this.parseVariables(action);
     const unknown3 = this.parseVariables(action);
@@ -1827,28 +1647,107 @@ export default class Script {
     const unknown5 = this.parseVariables(action);
     const unknown6 = this.parseVariables(action);
     const unknown7 = this.parseVariables(action);
+    const unknown8 = this.parseVariables(action);
+    const unknown9 = this.parseVariables(action);
+    const unknown10 = this.parseVariables(action);
+    const unknown11 = this.parseVariables(action);
+    const unknown12 = this.parseVariables(action);
 
-    if (
-      !Array.isArray(unknown1) &&
-      !Array.isArray(unknown2) &&
-      !Array.isArray(unknown3) &&
-      !Array.isArray(unknown4) &&
-      !Array.isArray(unknown5) &&
-      !Array.isArray(unknown6) &&
-      !Array.isArray(unknown7)
-    ) {
-      action.color = "mediumorchid";
-      action.text = `set light parameters: Unknown1 = "${unknown1.value}", Unknown2 = "${unknown2.value}", Unknown3 = "${unknown3.value}", Unknown4 = "${unknown4.value}", Unknown5 = "${unknown5.value}", Unknown6 = "${unknown6.value}", Unknown7 = "${unknown7.value}"`;
-    } else {
-      debug.warn(
-        `Error while parsing set light parameters (${JSON.stringify(action)}).`,
-      );
-    }
+    action.color = "mediumorchid";
+    action.text = `unknown instruction 0x4b with values "${unknown1}", "${unknown2}", "${unknown3}", "${unknown4}", "${unknown5}", "${unknown6}", "${unknown7}", "${unknown8}", "${unknown9}", "${unknown10}", "${unknown11}", "${unknown12}"`;
+  }
+
+  private parseUnknown4c(action: Action): void {
+    const unknown = this.parseVariables(action);
+
+    action.color = "mediumorchid";
+    action.text = `unknown instruction 0x4c with value "${unknown}"`;
+  }
+
+  private parseSetPlayerPosition(action: Action): void {
+    const unknown1 = this.parseVariables(action);
+    const unknown2 = this.parseVariables(action);
+    const unknown3 = this.parseVariables(action);
+    const unknown4 = this.parseVariables(action);
+    const unknown5 = this.parseVariables(action);
+
+    action.color = "mediumorchid";
+    action.text = `set player position: Unknown = "${unknown1}", X = "${unknown2}", Y = "${unknown3}", Z = "${unknown4}", Rotation = "${unknown5}°"`;
+  }
+
+  private parseUnknown4e(action: Action): void {
+    const unknown1 = this.parseVariables(action);
+    const unknown2 = this.parseVariables(action);
+    const unknown3 = this.parseVariables(action);
+    const unknown4 = this.parseVariables(action);
+
+    action.color = "mediumorchid";
+    action.text = `unknown instruction 0x4e with values "${unknown1}", "${unknown2}", "${unknown3}", "${unknown4}"`;
+  }
+
+  private parseFog(action: Action): void {
+    const red = this.parseVariables(action);
+    const blue = this.parseVariables(action);
+    const green = this.parseVariables(action);
+
+    const transitionDuration = this.parseVariables(action);
+
+    const near = this.parseVariables(action);
+    const far = this.parseVariables(action);
+
+    const unknown = this.parseVariables(action);
+
+    action.color = "mediumorchid";
+    action.text = `set fog: RGB = "[${red}, ${blue}, ${green}]", Duration = "${transitionDuration}", Near = "${near}", Far = "${far}", Unknown = "${unknown}"`;
+  }
+
+  private parseUnknown50(action: Action): void {
+    action.color = "mediumorchid";
+    action.text = "unknown instruction 0x50";
+  }
+
+  private parseUnknown51(action: Action): void {
+    const unknown1 = this.parseVariables(action);
+    const unknown2 = this.parseVariables(action);
+    const unknown3 = this.parseVariables(action);
+    const unknown4 = this.parseVariables(action);
+    const unknown5 = this.parseVariables(action);
+    const unknown6 = this.parseVariables(action);
+    const unknown7 = this.parseVariables(action);
+    const unknown8 = this.parseVariables(action);
+    const unknown9 = this.parseVariables(action);
+
+    action.color = "mediumorchid";
+    action.text = `unknown instruction 0x51 with values "${unknown1}", "${unknown2}", "${unknown3}", "${unknown4}", "${unknown5}", "${unknown6}", "${unknown7}", "${unknown8}", "${unknown9}"`;
+  }
+
+  private parseAmbientLight(action: Action): void {
+    action.text = "should set ambient light";
+
+    const enabled = this.parseVariables(action);
+
+    const red = this.parseVariables(action);
+    const green = this.parseVariables(action);
+    const blue = this.parseVariables(action);
+
+    action.color = "limegreen";
+    action.text = `set ambient light: Enabled = "${enabled}", RGB = "[${red}, ${blue}, ${green}]"`;
+  }
+
+  private parseDirectionalLight(action: Action): void {
+    const enabled = this.parseVariables(action);
+    const unknown2 = this.parseVariables(action);
+    const unknown3 = this.parseVariables(action);
+    const unknown4 = this.parseVariables(action);
+    const red = this.parseVariables(action);
+    const green = this.parseVariables(action);
+    const blue = this.parseVariables(action);
+
+    action.color = "mediumorchid";
+    action.text = `set directional light: Enabled = "${enabled}", Unknown = "${unknown2}", Unknown = "${unknown3}", Unknown = "${unknown4}", RGB = "[${red}, ${blue}, ${green}]"`;
   }
 
   private parseUnknown54(action: Action): void {
-    action.text = "unknown instruction 0x54";
-
     const unknown1 = this.parseVariables(action);
     const unknown2 = this.parseVariables(action);
     const unknown3 = this.parseVariables(action);
@@ -1860,67 +1759,67 @@ export default class Script {
     const unknown9 = this.parseVariables(action);
     const unknown10 = this.parseVariables(action);
 
-    if (
-      !Array.isArray(unknown1) &&
-      !Array.isArray(unknown2) &&
-      !Array.isArray(unknown3) &&
-      !Array.isArray(unknown4) &&
-      !Array.isArray(unknown5) &&
-      !Array.isArray(unknown6) &&
-      !Array.isArray(unknown7) &&
-      !Array.isArray(unknown8) &&
-      !Array.isArray(unknown9) &&
-      !Array.isArray(unknown10)
-    ) {
-      action.color = "mediumorchid";
-      action.text = `unknown instruction 0x54 with values "${unknown1.value}", "${unknown2.value}", "${unknown3.value}", "${unknown4.value}", "${unknown5.value}", "${unknown6.value}", "${unknown7.value}", "${unknown8.value}", "${unknown9.value}", "${unknown10.value}"`;
-    } else {
-      debug.warn(
-        `Error while parsing instruction 0x54 (${JSON.stringify(action)}).`,
-      );
-    }
+    action.color = "mediumorchid";
+    action.text = `unknown instruction 0x54 with values "${unknown1}", "${unknown2}", "${unknown3}", "${unknown4}", "${unknown5}", "${unknown6}", "${unknown7}", "${unknown8}", "${unknown9}", "${unknown10}"`;
   }
 
-  private parseUnknown57(action: Action): void {
-    action.text = "unknown instruction 0x57";
-
+  private parseUnknown55(action: Action): void {
     const unknown = this.parseVariables(action);
 
     const count = this.getValue(action);
 
     let text = "";
-    let error = false;
 
     for (let i = 0; i < count; i += 1) {
       const unknown = this.parseVariables(action);
 
-      if (Array.isArray(unknown)) {
-        error = true;
-        break;
-      }
-
-      text += `, "${unknown.value}"`;
+      text += `, "${unknown}"`;
     }
 
-    if (!Array.isArray(unknown) && !error) {
-      action.color = "mediumorchid";
-      action.text = `unknown instruction 0x57 with value "${unknown.value}" then ${count} value(s) ${text.replace(",", "")}`;
-    } else {
-      debug.warn(
-        `Error while parsing instruction 0x57 (${JSON.stringify(action)}).`,
-      );
-    }
+    action.color = "mediumorchid";
+    action.text = `unknown instruction 0x55 with value "${unknown}" then ${count} value(s) ${text.replace(", ", "")}`;
   }
 
-  private parseUnknown5a(action: Action): void {
-    action.text = "unknown instruction 0x5a";
-
+  private parseUnknown56(action: Action): void {
     const unknown = this.parseVariables(action);
 
     const count = this.getValue(action);
 
     let text = "";
-    let error = false;
+
+    for (let i = 0; i < count; i += 1) {
+      const unknown = this.parseVariables(action);
+
+      text += `, "${unknown}"`;
+    }
+
+    action.color = "mediumorchid";
+    action.text = `unknown instruction 0x56 with value "${unknown}" then ${count} value(s) ${text.replace(", ", "")}`;
+  }
+
+  private parseUnknown57(action: Action): void {
+    const unknown = this.parseVariables(action);
+
+    const count = this.getValue(action);
+
+    let text = "";
+
+    for (let i = 0; i < count; i += 1) {
+      const unknown = this.parseVariables(action);
+
+      text += `, "${unknown}"`;
+    }
+
+    action.color = "mediumorchid";
+    action.text = `unknown instruction 0x57 with value "${unknown}" then ${count} value(s) ${text.replace(", ", "")}`;
+  }
+
+  private parseUnknown59(action: Action): void {
+    const unknown = this.parseVariables(action);
+
+    const count = this.getValue(action);
+
+    let text = "";
 
     for (let i = 0; i < count; i += 1) {
       const unknown1 = this.parseVariables(action);
@@ -1933,164 +1832,124 @@ export default class Script {
       const unknown8 = this.parseVariables(action);
       const unknown9 = this.parseVariables(action);
 
-      // if (
-      //   !Array.isArray(unknown1) ||
-      //   !Array.isArray(unknown2) ||
-      //   !Array.isArray(unknown3) ||
-      //   Array.isArray(unknown4) ||
-      //   !Array.isArray(unknown5) ||
-      //   Array.isArray(unknown6) ||
-      //   Array.isArray(unknown7)
-      // ) {
-      //   error = true;
-      //   break;
-      // }
-
-      text += `| "${unknown1}", "${unknown2}", "${unknown3}", "${unknown4}", "${unknown5}", "${unknown6}", "${unknown7}", "${unknown8}", "${unknown9}"`;
+      text += ` | "${unknown1}", "${unknown2}", "${unknown3}", "${unknown4}", "${unknown5}", "${unknown6}", "${unknown7}", "${unknown8}", "${unknown9}"`;
     }
 
-    if (!Array.isArray(unknown) && !error) {
-      action.color = "mediumorchid";
-      action.text = `unknown instruction 0x5a with "${unknown.value}" then ${count} block(s) ${text.replace("|", "")}`;
-    } else {
-      debug.warn(
-        `Error while parsing instruction 0x5a (${JSON.stringify(action)}).`,
-      );
+    action.color = "mediumorchid";
+    action.text = `unknown instruction 0x59 with "${unknown}" then ${count} block(s) ${text.replace(" | ", "")}`;
+  }
+
+  private parseUnknown5a(action: Action): void {
+    const unknown = this.parseVariables(action);
+
+    const count = this.getValue(action);
+
+    let text = "";
+
+    for (let i = 0; i < count; i += 1) {
+      const unknown1 = this.parseVariables(action);
+      const unknown2 = this.parseVariables(action);
+      const unknown3 = this.parseVariables(action);
+      const unknown4 = this.parseVariables(action);
+      const unknown5 = this.parseVariables(action);
+      const unknown6 = this.parseVariables(action);
+      const unknown7 = this.parseVariables(action);
+      const unknown8 = this.parseVariables(action);
+      const unknown9 = this.parseVariables(action);
+
+      text += ` | "${unknown1}", "${unknown2}", "${unknown3}", "${unknown4}", "${unknown5}", "${unknown6}", "${unknown7}", "${unknown8}", "${unknown9}"`;
     }
+
+    action.color = "mediumorchid";
+    action.text = `unknown instruction 0x5a with "${unknown}" then ${count} block(s) ${text.replace(" | ", "")}`;
   }
 
   private parseUnknown5b(action: Action): void {
-    action.text = "unknown instruction 0x5b";
-
     const unknown1 = this.parseVariables(action);
     const unknown2 = this.parseVariables(action);
 
-    if (!Array.isArray(unknown1) && !Array.isArray(unknown2)) {
-      action.color = "mediumorchid";
-      action.text = `unknown instruction 0x5b with values "${unknown1.value}", "${unknown2.value}"`;
-    } else {
-      debug.warn(
-        `Error while parsing instruction 0x5b (${JSON.stringify(action)}).`,
-      );
-    }
+    action.color = "mediumorchid";
+    action.text = `unknown instruction 0x5b with values "${unknown1}", "${unknown2}"`;
   }
 
   private parseUnknown5c(action: Action): void {
-    action.text = "unknown instruction 0x5c";
-
     const unknown = this.parseVariables(action);
 
-    if (!Array.isArray(unknown)) {
-      action.color = "mediumorchid";
-      action.text = `unknown instruction 0x5c with value "${unknown.value}"`;
-    } else {
-      debug.warn(
-        `Error while parsing instruction 0x5c (${JSON.stringify(action)}).`,
-      );
-    }
+    action.color = "mediumorchid";
+    action.text = `unknown instruction 0x5c with value "${unknown}"`;
   }
 
   private parseUnknown5d(action: Action): void {
-    action.text = "unknown instruction 0x5d";
-
     const unknown = this.parseVariables(action);
 
-    if (!Array.isArray(unknown)) {
-      action.color = "mediumorchid";
-      action.text = `unknown instruction 0x5d with value "${unknown.value}"`;
-    } else {
-      debug.warn(
-        `Error while parsing instruction 0x5d (${JSON.stringify(action)}).`,
-      );
-    }
+    action.color = "mediumorchid";
+    action.text = `unknown instruction 0x5d with value "${unknown}"`;
   }
 
   private parseUnknown5e(action: Action): void {
-    action.text = "unknown instruction 0x5e";
-
     const unknown = this.parseVariables(action);
 
-    if (!Array.isArray(unknown)) {
-      action.color = "mediumorchid";
-      action.text = `unknown instruction 0x5e with value "${unknown.value}"`;
-    } else {
-      debug.warn(
-        `Error while parsing instruction 0x5e (${JSON.stringify(action)}).`,
-      );
-    }
+    action.color = "mediumorchid";
+    action.text = `unknown instruction 0x5e with value "${unknown}"`;
+  }
+
+  private parseUnknown60(action: Action): void {
+    const unknown1 = this.parseVariables(action);
+    const unknown2 = this.parseVariables(action);
+    const unknown3 = this.parseVariables(action);
+    const unknown4 = this.parseVariables(action);
+    const unknown5 = this.parseVariables(action);
+    const unknown6 = this.parseVariables(action);
+    const unknown7 = this.parseVariables(action);
+
+    action.color = "mediumorchid";
+    action.text = `unknown instruction 0x60 with values "${unknown1}", "${unknown2}", "${unknown3}", "${unknown4}", "${unknown5}", "${unknown6}", "${unknown7}"`;
+  }
+
+  private parseUnknown61(action: Action): void {
+    const unknown1 = this.parseVariables(action);
+    const unknown2 = this.parseVariables(action);
+    const unknown3 = this.parseVariables(action);
+
+    action.color = "mediumorchid";
+    action.text = `unknown instruction 0x61 with values "${unknown1}", "${unknown2}", "${unknown3}"`;
   }
 
   private parseUnknown62(action: Action): void {
-    action.text = "unknown instruction 0x62";
-
     const count = this.getValue(action);
 
     let text = "";
-    let error = false;
 
     for (let i = 0; i < count; i += 1) {
       const unknown = this.parseVariables(action);
 
-      if (Array.isArray(unknown)) {
-        error = true;
-        break;
-      }
-
-      text += `, "${unknown.value}"`;
+      text += `, "${unknown}"`;
     }
 
-    if (!error) {
-      action.color = "mediumorchid";
-      action.text = `unknown instruction 0x62 with ${count} value(s) ${text.replace(",", "")}`;
-    } else {
-      debug.warn(
-        `Error while parsing instruction 0x62 (${JSON.stringify(action)}).`,
-      );
-    }
+    action.color = "mediumorchid";
+    action.text = `unknown instruction 0x62 with ${count} value(s) ${text.replace(", ", "")}`;
   }
 
   private parseUnknown63(action: Action): void {
-    action.text = "unknown instruction 0x63";
-
     const count = this.getValue(action);
 
     let text = "";
-    let error = false;
 
     for (let i = 0; i < count; i += 1) {
       const unknown = this.parseVariables(action);
 
-      if (Array.isArray(unknown)) {
-        error = true;
-        break;
-      }
-
-      text += `, "${unknown.value}"`;
+      text += `, "${unknown}"`;
     }
 
-    if (!error) {
-      action.color = "mediumorchid";
-      action.text = `unknown instruction 0x63 with ${count} value(s) ${text.replace(",", "")}`;
-    } else {
-      debug.warn(
-        `Error while parsing instruction 0x63 (${JSON.stringify(action)}).`,
-      );
-    }
+    action.color = "mediumorchid";
+    action.text = `unknown instruction 0x63 with ${count} value(s) ${text.replace(", ", "")}`;
   }
 
   private parseUnknown65(action: Action): void {
-    action.text = "unknown instruction 0x65";
-
     const unknown = this.parseVariables(action);
 
-    if (!Array.isArray(unknown)) {
-      action.color = "mediumorchid";
-      action.text = `unknown instruction 0x65 with value "${unknown.value}"`;
-    } else {
-      debug.warn(
-        `Error while parsing instruction 0x65 (${JSON.stringify(action)}).`,
-      );
-    }
+    action.color = "mediumorchid";
+    action.text = `unknown instruction 0x65 with value "${unknown}"`;
   }
 
   private parseUnknown67(action: Action): void {
@@ -2098,29 +1957,23 @@ export default class Script {
     action.text = "unknown instruction 0x67";
   }
 
-  private parseInitEventBattle(action: Action): void {
-    action.text = "should init event battle";
+  private parseUnknown68(action: Action): void {
+    const unknown1 = this.parseVariables(action);
+    const unknown2 = this.parseVariables(action);
+    const unknown3 = this.parseVariables(action);
 
-    const unknown = this.parseVariables(action);
-
-    const group = this.parseVariables(action);
-    const stage = this.parseVariables(action);
-    const transition = this.parseVariables(action);
-
-    if (
-      !Array.isArray(unknown) &&
-      !Array.isArray(group) &&
-      !Array.isArray(stage) &&
-      !Array.isArray(transition)
-    ) {
-      action.color = "mediumorchid";
-      action.text = `init event battle: Unknown = "${unknown.value}", Group = "${group.value}", Stage = "${stage.value}", Transition = "${transition.value}"`;
-    }
+    action.color = "mediumorchid";
+    action.text = `unknown instruction 0x68 with values "${unknown1}", "${unknown2}", "${unknown3}"`;
   }
 
-  private parseUnknown6d(action: Action): void {
-    action.text = "unknown instruction 0x6d";
+  private parseUnknown69(action: Action): void {
+    const unknown = this.parseVariables(action);
 
+    action.color = "mediumorchid";
+    action.text = `unknown instruction 0x69 with value "${unknown}`;
+  }
+
+  private parseUnknown6a(action: Action): void {
     const unknown1 = this.parseVariables(action);
     const unknown2 = this.parseVariables(action);
     const unknown3 = this.parseVariables(action);
@@ -2131,40 +1984,83 @@ export default class Script {
     const unknown8 = this.parseVariables(action);
     const unknown9 = this.parseVariables(action);
 
-    if (
-      !Array.isArray(unknown1) &&
-      !Array.isArray(unknown2) &&
-      !Array.isArray(unknown3) &&
-      !Array.isArray(unknown4) &&
-      !Array.isArray(unknown5) &&
-      !Array.isArray(unknown6) &&
-      !Array.isArray(unknown7) &&
-      !Array.isArray(unknown8) &&
-      !Array.isArray(unknown9)
-    ) {
-      action.color = "mediumorchid";
-      action.text = `unknown instruction 0x6d with values "${unknown1.value}", "${unknown2.value}", "${unknown3.value}", "${unknown4.value}", "${unknown5.value}", "${unknown6.value}", "${unknown7.value}", "${unknown8.value}", "${unknown9.value}"`;
-    } else {
-      debug.warn(
-        `Error while parsing instruction 0x6d (${JSON.stringify(action)}).`,
-      );
-    }
+    action.color = "mediumorchid";
+    action.text = `unknown instruction 0x6a with values "${unknown1}", "${unknown2}", "${unknown3}", "${unknown4}", "${unknown5}", "${unknown6}", "${unknown7}", "${unknown8}", "${unknown9}"`;
   }
 
-  private parseUnknown72(action: Action): void {
-    action.text = "unknown instruction 0x72";
-
+  private parseUnknown6b(action: Action): void {
     const unknown1 = this.parseVariables(action);
     const unknown2 = this.parseVariables(action);
 
-    if (!Array.isArray(unknown1) && !Array.isArray(unknown2)) {
-      action.color = "mediumorchid";
-      action.text = `unknown instruction 0x72 with values "${unknown1.value}", "${unknown2.value}"`;
-    } else {
-      debug.warn(
-        `Error while parsing instruction 0x72 (${JSON.stringify(action)}).`,
-      );
+    action.color = "mediumorchid";
+    action.text = `unknown instruction 0x6b with values "${unknown1}", "${unknown2}"`;
+  }
+
+  private parseUnknown6c(action: Action): void {
+    const unknown = this.parseVariables(action);
+
+    const count = this.getValue(action);
+
+    let text = "";
+
+    for (let i = 0; i < count; i += 1) {
+      const unknown1 = this.parseVariables(action);
+      const unknown2 = this.parseVariables(action);
+      const unknown3 = this.parseVariables(action);
+      const unknown4 = this.parseVariables(action);
+      const unknown5 = this.parseVariables(action);
+      const unknown6 = this.parseVariables(action);
+      const unknown7 = this.parseVariables(action);
+      const unknown8 = this.parseVariables(action);
+      const unknown9 = this.parseVariables(action);
+
+      text += ` | "${unknown1}", "${unknown2}", "${unknown3}", "${unknown4}", "${unknown5}", "${unknown6}", "${unknown7}", "${unknown8}", "${unknown9}"`;
     }
+
+    action.color = "mediumorchid";
+    action.text = `unknown instruction 0x6c with "${unknown}" then ${count} block(s) ${text.replace(" | ", "")}`;
+  }
+
+  private parseUnknown6f(action: Action): void {
+    const unknown1 = this.parseVariables(action);
+    const unknown2 = this.parseVariables(action);
+
+    action.color = "mediumorchid";
+    action.text = `unknown instruction 0x6f with values "${unknown1}", "${unknown2}"`;
+  }
+
+  private parseInitEventBattle(action: Action): void {
+    const unknown = this.parseVariables(action);
+
+    const group = this.parseVariables(action);
+    const stage = this.parseVariables(action);
+    const transition = this.parseVariables(action);
+
+    action.color = "mediumorchid";
+    action.text = `init event battle: Unknown = "${unknown}", Group = "${group}", Stage = "${stage}", Transition = "${transition}"`;
+  }
+
+  private parseUnknown6d(action: Action): void {
+    const unknown1 = this.parseVariables(action);
+    const unknown2 = this.parseVariables(action);
+    const unknown3 = this.parseVariables(action);
+    const unknown4 = this.parseVariables(action);
+    const unknown5 = this.parseVariables(action);
+    const unknown6 = this.parseVariables(action);
+    const unknown7 = this.parseVariables(action);
+    const unknown8 = this.parseVariables(action);
+    const unknown9 = this.parseVariables(action);
+
+    action.color = "mediumorchid";
+    action.text = `unknown instruction 0x6d with values "${unknown1}", "${unknown2}", "${unknown3}", "${unknown4}", "${unknown5}", "${unknown6}", "${unknown7}", "${unknown8}", "${unknown9}"`;
+  }
+
+  private parseUnknown72(action: Action): void {
+    const unknown1 = this.parseVariables(action);
+    const unknown2 = this.parseVariables(action);
+
+    action.color = "mediumorchid";
+    action.text = `unknown instruction 0x72 with values "${unknown1}", "${unknown2}"`;
   }
 
   private parseUnknown73(action: Action): void {
@@ -2173,131 +2069,131 @@ export default class Script {
   }
 
   private parseUnknown75(action: Action): void {
-    action.text = "unknown instruction 0x75";
-
     const unknown1 = this.parseVariables(action);
     const unknown2 = this.parseVariables(action);
 
-    if (!Array.isArray(unknown1)) {
-      action.color = "mediumorchid";
-      action.text = `unknown instruction 0x75 with values "${unknown1.value}", "${unknown2}"`;
-    } else {
-      debug.warn(
-        `Error while parsing instruction 0x75 (${JSON.stringify(action)}).`,
-      );
-    }
+    action.color = "mediumorchid";
+    action.text = `unknown instruction 0x75 with values "${unknown1}", "${unknown2}"`;
   }
 
   private parseUnknown76(action: Action): void {
-    action.text = "unknown instruction 0x76";
-
     const unknown = this.parseVariables(action);
 
     const count = this.getValue(action);
 
     let text = "";
-    let error = false;
 
     for (let i = 0; i < count; i += 1) {
       const unknown = this.parseVariables(action);
 
-      if (Array.isArray(unknown)) {
-        error = true;
-        break;
-      }
-
-      text += `, "${unknown.value}"`;
+      text += `, "${unknown}"`;
     }
 
-    if (!Array.isArray(unknown) && !error) {
-      action.color = "mediumorchid";
-      action.text = `unknown instruction 0x76 with value "${unknown.value}" then ${count} value(s) ${text.replace(",", "")}`;
-    } else {
-      debug.warn(
-        `Error while parsing instruction 0x76 (${JSON.stringify(action)}).`,
-      );
-    }
+    action.color = "mediumorchid";
+    action.text = `unknown instruction 0x76 with value "${unknown}" then ${count} value(s) ${text.replace(", ", "")}`;
   }
 
-  private parseUnknown77(action: Action): void {
-    action.text = "unknown instruction 0x77";
-
-    const unknown = this.parseVariables(action);
+  private parseSetEntitiesInvisible(action: Action): void {
+    const frames = this.parseVariables(action);
 
     const count = this.getValue(action);
 
     let text = "";
-    let error = false;
 
     for (let i = 0; i < count; i += 1) {
-      const unknown = this.parseVariables(action);
+      const entity = this.parseVariables(action);
 
-      if (Array.isArray(unknown)) {
-        error = true;
-        break;
-      }
-
-      text += `, "${unknown.value}"`;
+      text += `, "${entity}"`;
     }
 
-    if (!Array.isArray(unknown) && !error) {
-      action.color = "mediumorchid";
-      action.text = `unknown instruction 0x77 with value "${unknown.value}" then ${count} value(s) ${text.replace(",", "")}`;
-    } else {
-      debug.warn(
-        `Error while parsing instruction 0x77 (${JSON.stringify(action)}).`,
-      );
-    }
+    action.color = "limegreen";
+    action.text = `set invisibility in "${frames}" frames to ${count} entity(ies): ${text.replace(", ", "")}`;
   }
 
-  private parseUnknown7c(action: Action): void {
-    action.text = "unknown instruction 0x7c";
+  private parseUnknown79(action: Action): void {
+    const count = this.getValue(action);
 
+    let text = "";
+
+    for (let i = 0; i < count; i += 1) {
+      const unknown1 = this.parseVariables(action);
+      const unknown2 = this.parseVariables(action);
+      const unknown3 = this.parseVariables(action);
+      const unknown4 = this.parseVariables(action);
+      const unknown5 = this.parseVariables(action);
+      const unknown6 = this.parseVariables(action);
+      const unknown7 = this.parseVariables(action);
+
+      text += ` | "${unknown1}", "${unknown2}", "${unknown3}", "${unknown4}", "${unknown5}", "${unknown6}", "${unknown7}"`;
+    }
+
+    action.color = "mediumorchid";
+    action.text = `unknown instruction 0x79 with ${count} block(s) ${text.replace(" | ", "")}`;
+  }
+
+  private parseUnknown7a(action: Action): void {
+    const unknown1 = this.parseVariables(action);
+    const unknown2 = this.parseVariables(action);
+    const unknown3 = this.parseVariables(action);
+    const unknown4 = this.parseVariables(action);
+    const unknown5 = this.parseVariables(action);
+
+    action.color = "mediumorchid";
+    action.text = `unknown instruction 0x7a with values "${unknown1}", "${unknown2}", "${unknown3}", "${unknown4}", "${unknown5}"`;
+  }
+
+  private parseUnknown7b(action: Action): void {
     const unknown1 = this.parseVariables(action);
     const unknown2 = this.parseVariables(action);
 
-    if (!Array.isArray(unknown1) && !Array.isArray(unknown2)) {
-      action.color = "mediumorchid";
-      action.text = `unknown instruction 0x7c with values "${unknown1.value}", "${unknown2.value}"`;
-    } else {
-      debug.warn(
-        `Error while parsing instruction 0x7c (${JSON.stringify(action)}).`,
-      );
-    }
+    action.color = "mediumorchid";
+    action.text = `unknown instruction 0x7b with values "${unknown1}", "${unknown2}"`;
+  }
+
+  private parseUnknown7c(action: Action): void {
+    const unknown1 = this.parseVariables(action);
+    const unknown2 = this.parseVariables(action);
+
+    action.color = "mediumorchid";
+    action.text = `unknown instruction 0x7c with values "${unknown1}", "${unknown2}"`;
+  }
+
+  private parseUnknown7d(action: Action): void {
+    action.color = "mediumorchid";
+    action.text = "unknown instruction 0x7d";
   }
 
   private parseUnknown7e(action: Action): void {
-    action.text = "unknown instruction 0x7e";
-
     const count = this.getValue(action);
 
     let text = "";
-    let error = false;
 
     for (let i = 0; i < count; i += 1) {
       const unknown = this.parseVariables(action);
 
-      if (Array.isArray(unknown)) {
-        error = true;
-        break;
-      }
-
-      text += `, "${unknown.value}"`;
+      text += `, "${unknown}"`;
     }
 
-    if (!error) {
-      action.color = "mediumorchid";
-      action.text = `unknown instruction 0x7e with ${count} value(s) ${text.replace(",", "")}`;
-    } else {
-      debug.warn(
-        `Error while parsing instruction 0x7e (${JSON.stringify(action)}).`,
-      );
+    action.color = "mediumorchid";
+    action.text = `unknown instruction 0x7e with ${count} value(s) ${text.replace(", ", "")}`;
+  }
+
+  private parseUnknown7f(action: Action): void {
+    const count = this.getValue(action);
+
+    let text = "";
+
+    for (let i = 0; i < count; i += 1) {
+      const unknown = this.parseVariables(action);
+
+      text += `, "${unknown}"`;
     }
+
+    action.color = "mediumorchid";
+    action.text = `unknown instruction 0x7f with ${count} value(s) ${text.replace(", ", "")}`;
   }
 
   private parseUnknown80(action: Action): void {
-    action.text = "unknown instruction 0x80";
-
     const unknown1 = this.parseVariables(action);
     const unknown2 = this.parseVariables(action);
     const unknown3 = this.parseVariables(action);
@@ -2305,48 +2201,86 @@ export default class Script {
     const unknown5 = this.parseVariables(action);
     const unknown6 = this.parseVariables(action);
 
-    if (
-      !Array.isArray(unknown1) &&
-      !Array.isArray(unknown2) &&
-      !Array.isArray(unknown3) &&
-      !Array.isArray(unknown4) &&
-      !Array.isArray(unknown5) &&
-      !Array.isArray(unknown6)
-    ) {
-      action.color = "mediumorchid";
-      action.text = `unknown instruction 0x80 with values "${unknown1.value}", "${unknown2.value}", "${unknown3.value}", "${unknown4.value}", "${unknown5.value}", "${unknown6.value}"`;
-    } else {
-      debug.warn(
-        `Error while parsing instruction 0x80 (${JSON.stringify(action)}).`,
-      );
-    }
+    action.color = "mediumorchid";
+    action.text = `unknown instruction 0x80 with values "${unknown1}", "${unknown2}", "${unknown3}", "${unknown4}", "${unknown5}", "${unknown6}"`;
   }
 
   private parseUnknown81(action: Action): void {
-    action.text = "unknown instruction 0x81";
-
     const unknown1 = this.parseVariables(action);
-    const jumpOffset = action.offset + this.getValue(action) + 0x4;
+    const offset = action.offset + this.getValue(action) + 0x4;
 
-    if (!Array.isArray(unknown1)) {
-      action.color = "mediumorchid";
-      action.text = `unknown instruction 0x81 with values "${unknown1.value}", jump to "${jumpOffset.toHex(8)}" (if?)`;
-    } else {
-      debug.warn(
-        `Error while parsing instruction 0x81 (${JSON.stringify(action)}).`,
-      );
-    }
+    action.color = "mediumorchid";
+    action.text = `unknown instruction 0x81 with values "${unknown1}", jump to "${offset.toHex(8)}" (if?)`;
   }
 
   private parseUnknown82(action: Action): void {
-    action.text = "unknown instruction 0x82";
-
     const unknown = this.parseVariables(action);
 
     const count = this.getValue(action);
 
     let text = "";
-    let error = false;
+
+    for (let i = 0; i < count; i += 1) {
+      const unknown1 = this.parseVariables(action);
+      const unknown2 = this.parseVariables(action);
+      const unknown3 = this.parseVariables(action);
+      const unknown4 = this.parseVariables(action);
+      const unknown5 = this.parseVariables(action);
+      const unknown6 = this.parseVariables(action);
+      const unknown7 = this.parseVariables(action);
+
+      text += ` | "${unknown1}", "${unknown2}", "${unknown3}", "${unknown4}", "${unknown5}", "${unknown6}", "${unknown7}"`;
+    }
+
+    action.color = "mediumorchid";
+    action.text = `unknown instruction 0x82 with "${unknown}" then ${count} block(s) ${text.replace(" | ", "")}`;
+  }
+
+  private parseUnknown83(action: Action): void {
+    const count = this.getValue(action);
+
+    let text = "";
+
+    for (let i = 0; i < count; i += 1) {
+      const unknown1 = this.parseVariables(action);
+      const unknown2 = this.parseVariables(action);
+      const unknown3 = this.parseVariables(action);
+      const unknown4 = this.parseVariables(action);
+
+      text += ` | "${unknown1}", "${unknown2}", "${unknown3}", "${unknown4}"`;
+    }
+
+    action.color = "mediumorchid";
+    action.text = `unknown instruction 0x83 with ${count} block(s) ${text.replace(" | ", "")}`;
+  }
+
+  private parseUnknown84(action: Action): void {
+    const count = this.getValue(action);
+
+    let text = "";
+
+    for (let i = 0; i < count; i += 1) {
+      const unknown1 = this.parseVariables(action);
+      const unknown2 = this.parseVariables(action);
+      const unknown3 = this.parseVariables(action);
+      const unknown4 = this.parseVariables(action);
+      const unknown5 = this.parseVariables(action);
+      const unknown6 = this.parseVariables(action);
+      const unknown7 = this.parseVariables(action);
+
+      text += ` | "${unknown1}", "${unknown2}", "${unknown3}", "${unknown4}", "${unknown5}", "${unknown6}", "${unknown7}"`;
+    }
+
+    action.color = "mediumorchid";
+    action.text = `unknown instruction 0x84 with ${count} block(s) ${text.replace(" | ", "")}`;
+  }
+
+  private parseUnknown85(action: Action): void {
+    const count = this.getValue(action);
+
+    const unknown = this.parseVariables(action);
+
+    let text = "";
 
     for (let i = 0; i < count; i += 1) {
       const unknown1 = this.parseVariables(action);
@@ -2357,36 +2291,16 @@ export default class Script {
       const unknown6 = this.parseVariables(action);
       const unknown7 = this.parseVariables(action);
       const unknown8 = this.parseVariables(action);
+      const unknown9 = this.parseVariables(action);
 
-      // if (
-      //   !Array.isArray(unknown1) ||
-      //   !Array.isArray(unknown2) ||
-      //   !Array.isArray(unknown3) ||
-      //   Array.isArray(unknown4) ||
-      //   !Array.isArray(unknown5) ||
-      //   Array.isArray(unknown6) ||
-      //   Array.isArray(unknown7)
-      // ) {
-      //   error = true;
-      //   break;
-      // }
-
-      text += `| "${unknown1}", "${unknown2}", "${unknown3}", "${unknown4}", "${unknown5}", "${unknown6}", "${unknown7}", "${unknown8}"`;
+      text += ` | "${unknown1}", "${unknown2}", "${unknown3}", "${unknown4}", "${unknown5}", "${unknown6}", "${unknown7}", "${unknown8}", "${unknown9}"`;
     }
 
-    if (!Array.isArray(unknown) && !error) {
-      action.color = "mediumorchid";
-      action.text = `unknown instruction 0x82 with "${unknown.value}" then ${count} block(s) ${text.replace("|", "")}`;
-    } else {
-      debug.warn(
-        `Error while parsing instruction 0x82 (${JSON.stringify(action)}).`,
-      );
-    }
+    action.color = "mediumorchid";
+    action.text = `unknown instruction 0x85 with value "${unknown}" then ${count} block(s) ${text.replace(" | ", "")}`;
   }
 
   private parseUnknown86(action: Action): void {
-    action.text = "unknown instruction 0x86";
-
     const unknown1 = this.parseVariables(action);
     const unknown2 = this.parseVariables(action);
     const unknown3 = this.parseVariables(action);
@@ -2395,47 +2309,43 @@ export default class Script {
     const unknown6 = this.parseVariables(action);
     const unknown7 = this.parseVariables(action);
 
-    if (
-      !Array.isArray(unknown1) &&
-      !Array.isArray(unknown2) &&
-      !Array.isArray(unknown3) &&
-      !Array.isArray(unknown4) &&
-      !Array.isArray(unknown5) &&
-      !Array.isArray(unknown6) &&
-      !Array.isArray(unknown7)
-    ) {
-      action.color = "mediumorchid";
-      action.text = `unknown instruction 0x86 with values "${unknown1.value}", "${unknown2.value}", "${unknown3.value}", "${unknown4.value}", "${unknown5.value}", "${unknown6.value}", "${unknown7.value}"`;
-    } else {
-      debug.warn(
-        `Error while parsing instruction 0x86 (${JSON.stringify(action)}).`,
-      );
+    action.color = "mediumorchid";
+    action.text = `unknown instruction 0x86 with values "${unknown1}", "${unknown2}", "${unknown3}", "${unknown4}", "${unknown5}", "${unknown6}", "${unknown7}"`;
+  }
+
+  private parseUnknown87(action: Action): void {
+    const unknown = this.parseVariables(action);
+
+    const count = this.getValue(action);
+
+    let text = "";
+
+    for (let i = 0; i < count; i += 1) {
+      const unknown = this.parseVariables(action);
+
+      text += `, "${unknown}"`;
     }
+
+    action.color = "mediumorchid";
+    action.text = `unknown instruction 0x87 with value "${unknown}" then ${count} value(s) ${text.replace(", ", "")}`;
   }
 
   private parseUnknown88(action: Action): void {
-    action.text = "unknown instruction 0x88";
-
     const unknown1 = this.parseVariables(action);
     const unknown2 = this.parseVariables(action);
     const unknown3 = this.parseVariables(action);
     const unknown4 = this.parseVariables(action);
     const unknown5 = this.parseVariables(action);
 
-    if (
-      !Array.isArray(unknown1) &&
-      !Array.isArray(unknown2) &&
-      !Array.isArray(unknown3) &&
-      !Array.isArray(unknown4) &&
-      !Array.isArray(unknown5)
-    ) {
-      action.color = "mediumorchid";
-      action.text = `unknown instruction 0x88 with values "${unknown1.value}", "${unknown2.value}", "${unknown3.value}", "${unknown4.value}", "${unknown5.value}"`;
-    } else {
-      debug.warn(
-        `Error while parsing instruction 0x88 (${JSON.stringify(action)}).`,
-      );
-    }
+    action.color = "mediumorchid";
+    action.text = `unknown instruction 0x88 with values "${unknown1}", "${unknown2}", "${unknown3}", "${unknown4}", "${unknown5}"`;
+  }
+
+  private parseUnknown89(action: Action): void {
+    const unknown = this.parseVariables(action);
+
+    action.color = "mediumorchid";
+    action.text = `unknown instruction 0x89 with value "${unknown}"`;
   }
 
   private parseInitSave(action: Action): void {
@@ -2443,87 +2353,183 @@ export default class Script {
     action.text = "init save";
   }
 
-  private parseDialogBox(action: Action): void {
-    action.text = "should open dialog box";
+  private parseUnknown8b(action: Action): void {
+    const count = this.getValue(action);
 
+    let text = "";
+
+    for (let i = 0; i < count; i += 1) {
+      const unknown1 = this.parseVariables(action);
+      const unknown2 = this.parseVariables(action);
+      const unknown3 = this.parseVariables(action);
+      const unknown4 = this.parseVariables(action);
+      const unknown5 = this.parseVariables(action);
+      const unknown6 = this.parseVariables(action);
+      const unknown7 = this.parseVariables(action);
+
+      text += ` | "${unknown1}", "${unknown2}", "${unknown3}", "${unknown4}", "${unknown5}", "${unknown6}", "${unknown7}"`;
+    }
+
+    action.color = "mediumorchid";
+    action.text = `unknown instruction 0x8b with ${count} block(s) ${text.replace(" | ", "")}`;
+  }
+
+  private parseUnknown8c(action: Action): void {
+    const unknown = this.parseVariables(action);
+
+    action.color = "mediumorchid";
+    action.text = `unknown instruction 0x8c with value "${unknown}"`;
+  }
+
+  private parseUnknown8d(action: Action): void {
+    const unknown = this.parseVariables(action);
+
+    action.color = "mediumorchid";
+    action.text = `unknown instruction 0x8d with value "${unknown}"`;
+  }
+
+  private parseUnknown8e(action: Action): void {
+    const unknown1 = this.parseVariables(action);
+    const unknown2 = this.parseVariables(action);
+    const unknown3 = this.parseVariables(action);
+    const unknown4 = this.parseVariables(action);
+    const unknown5 = this.parseVariables(action);
+
+    action.color = "mediumorchid";
+    action.text = `unknown instruction 0x8e with values "${unknown1}", "${unknown2}", "${unknown3}", "${unknown4}", "${unknown5}"`;
+  }
+
+  private parseDialogBox(action: Action): void {
     const offset = action.offset + this.getValue(action);
 
     const unknown = this.parseVariables(action);
 
-    if (
-      !Array.isArray(unknown) &&
-      [0x100, 0x7fffffff].includes(unknown.value)
-    ) {
-      action.color = "mediumorchid";
-      action.text = `open dialog box and read ${offset.toHex(8)} ${unknown.value === 0x7fffffff ? "(keep open)" : "(then close)"}`;
-    } else {
-      debug.warn(`Error while parsing dialog box (${JSON.stringify(action)}).`);
-    }
+    action.color = "limegreen";
+    action.text = `open dialog box and read "${offset.toHex(8)}" ${unknown === "7fffffff" ? "and keep it open" : "then close it"}`;
+  }
+
+  private parseUnknown91(action: Action): void {
+    const unknown = this.parseVariables(action);
+
+    action.color = "mediumorchid";
+    action.text = `unknown instruction 0x91 with value "${unknown}"`;
   }
 
   private parseUnknown92(action: Action): void {
-    action.text = "unknown instruction 0x92";
-
     const unknown = this.parseVariables(action);
 
-    if (!Array.isArray(unknown)) {
-      action.color = "mediumorchid";
-      action.text = `unknown instruction 0x92 with value "${unknown.value}"`;
-    } else {
-      debug.warn(
-        `Error while parsing instruction 0x92 (${JSON.stringify(action)}).`,
-      );
+    action.color = "mediumorchid";
+    action.text = `unknown instruction 0x92 with value "${unknown}"`;
+  }
+
+  private parseUnknown93(action: Action): void {
+    const unknown1 = this.parseVariables(action);
+    const unknown2 = this.parseVariables(action);
+    const unknown3 = this.parseVariables(action);
+    const unknown4 = this.parseVariables(action);
+    const unknown5 = this.parseVariables(action);
+    const unknown6 = this.parseVariables(action);
+    const unknown7 = this.parseVariables(action);
+    const unknown8 = this.parseVariables(action);
+    const unknown9 = this.parseVariables(action);
+    const unknown10 = this.parseVariables(action);
+
+    action.color = "mediumorchid";
+    action.text = `unknown instruction 0x93 with values "${unknown1}", "${unknown2}", "${unknown3}", "${unknown4}", "${unknown5}", "${unknown6}", "${unknown7}", "${unknown8}", "${unknown9}", "${unknown10}"`;
+  }
+
+  private parseUnknown94(action: Action): void {
+    const count = this.getValue(action);
+
+    let text = "";
+
+    for (let i = 0; i < count; i += 1) {
+      const unknown1 = this.parseVariables(action);
+      const unknown2 = this.parseVariables(action);
+      const unknown3 = this.parseVariables(action);
+      const unknown4 = this.parseVariables(action);
+      const unknown5 = this.parseVariables(action);
+      const unknown6 = this.parseVariables(action);
+      const unknown7 = this.parseVariables(action);
+      const unknown8 = this.parseVariables(action);
+      const unknown9 = this.parseVariables(action);
+
+      text += ` | "${unknown1}", "${unknown2}", "${unknown3}", "${unknown4}", "${unknown5}", "${unknown6}", "${unknown7}", "${unknown8}", "${unknown9}"`;
     }
+
+    action.color = "mediumorchid";
+    action.text = `unknown instruction 0x94 with ${count} block(s) ${text.replace(" | ", "")}`;
   }
 
   private parseUnknown95(action: Action): void {
-    action.text = "unknown instruction 0x95";
-
     const unknown = this.parseVariables(action);
 
-    if (!Array.isArray(unknown)) {
-      action.color = "mediumorchid";
-      action.text = `unknown instruction 0x95 with value "${unknown.value}"`;
-    } else {
-      debug.warn(
-        `Error while parsing instruction 0x95 (${JSON.stringify(action)}).`,
-      );
+    action.color = "mediumorchid";
+    action.text = `unknown instruction 0x95 with value "${unknown}"`;
+  }
+
+  private parseUnknown96(action: Action): void {
+    const unknown = this.parseVariables(action);
+
+    action.color = "mediumorchid";
+    action.text = `unknown instruction 0x96 with value "${unknown}"`;
+  }
+
+  private parseUnknown97(action: Action): void {
+    const unknown1 = this.parseVariables(action);
+    const unknown2 = this.parseVariables(action);
+
+    action.color = "mediumorchid";
+    action.text = `unknown instruction 0x97 with values "${unknown1}", "${unknown2}"`;
+  }
+
+  private parseUnknown98(action: Action): void {
+    const count = this.getValue(action);
+
+    let text = "";
+
+    for (let i = 0; i < count; i += 1) {
+      const unknown = this.parseVariables(action);
+
+      text += `, "${unknown}"`;
     }
+
+    action.color = "mediumorchid";
+    action.text = `unknown instruction 0x98 with ${count} value(s) ${text.replace(", ", "")}`;
+  }
+
+  private parseUnknown99(action: Action): void {
+    const count = this.getValue(action);
+
+    let text = "";
+
+    for (let i = 0; i < count; i += 1) {
+      const unknown1 = this.parseVariables(action);
+      const unknown2 = this.parseVariables(action);
+      const unknown3 = this.parseVariables(action);
+
+      text += ` | "${unknown1}", "${unknown2}", "${unknown3}"`;
+    }
+
+    action.color = "mediumorchid";
+    action.text = `unknown instruction 0x99 with ${count} block(s) ${text.replace(" | ", "")}`;
   }
 
   private parseOpenTreasure(action: Action): void {
-    action.text = "should open treasure";
-
     const unknown = this.parseVariables(action);
 
-    if (!Array.isArray(unknown)) {
-      action.color = "mediumorchid";
-      action.text = `open treasure "${unknown.value}" (related to main.dol)`;
-    } else {
-      debug.warn(
-        `Error while parsing open treasure (${JSON.stringify(action)}).`,
-      );
-    }
+    action.color = "mediumorchid";
+    action.text = `open treasure "${unknown}" (related to main.dol)`;
   }
 
   private parseChoiceBox(action: Action): void {
-    action.text = "should open choice box";
-
     const choices = this.parseVariables(action);
     const offset = action.offset + this.getValue(action);
 
     const unknown = this.parseVariables(action);
 
-    if (
-      !Array.isArray(choices) &&
-      !Array.isArray(unknown) &&
-      [0x100, 0x7fffffff].includes(unknown.value)
-    ) {
-      action.color = "mediumorchid";
-      action.text = `open choice box with "${choices.value}" choices and read "${offset.toHex(8)}" ${unknown.value === 0x7fffffff ? "(keep open)" : "(then close)"}`;
-    } else {
-      debug.warn(`Error while parsing choice box (${JSON.stringify(action)}).`);
-    }
+    action.color = "limegreen";
+    action.text = `open choice box with "${choices}" choices and read "${offset.toHex(8)} ${unknown === "7fffffff" ? "and keep it open" : "then close it"}`;
   }
 
   private parseUnknown9c(action: Action): void {
@@ -2531,29 +2537,24 @@ export default class Script {
     action.text = "unknown instruction 0x9c";
   }
 
-  private parseUnknownA4(action: Action): void {
-    action.text = "unknown instruction 0xa4";
+  private parseUnknown9d(action: Action): void {
+    const unknown = this.parseVariables(action);
 
-    const unknown1 = this.parseVariables(action);
-    const unknown2 = this.parseVariables(action);
+    action.color = "mediumorchid";
+    action.text = `unknown instruction 0x9d with value "${unknown}"`;
+  }
 
-    if (!Array.isArray(unknown1) && !Array.isArray(unknown2)) {
-      action.color = "mediumorchid";
-      action.text = `unknown instruction 0xa4 with values "${unknown1.value}", "${unknown2.value}"`;
-    } else {
-      debug.warn(
-        `Error while parsing instruction 0xa4 (${JSON.stringify(action)}).`,
-      );
-    }
+  private parseUnknown9e(action: Action): void {
+    const unknown = this.parseVariables(action);
+
+    action.color = "mediumorchid";
+    action.text = `unknown instruction 0x9e with value "${unknown}"`;
   }
 
   private parseUnknown9f(action: Action): void {
-    action.text = "unknown instruction 0x9f";
-
     const count = this.getValue(action);
 
     let text = "";
-    let error = false;
 
     for (let i = 0; i < count; i += 1) {
       const unknown1 = this.parseVariables(action);
@@ -2565,30 +2566,87 @@ export default class Script {
       const unknown7 = this.parseVariables(action);
       const unknown8 = this.parseVariables(action);
 
-      // if (
-      //   !Array.isArray(unknown1) ||
-      //   !Array.isArray(unknown2) ||
-      //   !Array.isArray(unknown3) ||
-      //   Array.isArray(unknown4) ||
-      //   !Array.isArray(unknown5) ||
-      //   Array.isArray(unknown6) ||
-      //   Array.isArray(unknown7)
-      // ) {
-      //   error = true;
-      //   break;
-      // }
-
-      text += `| "${unknown1}", "${unknown2}", "${unknown3}", "${unknown4}", "${unknown5}", "${unknown6}", "${unknown7}", "${unknown8}"`;
+      text += ` | "${unknown1}", "${unknown2}", "${unknown3}", "${unknown4}", "${unknown5}", "${unknown6}", "${unknown7}", "${unknown8}"`;
     }
 
-    if (!error) {
-      action.color = "mediumorchid";
-      action.text = `unknown instruction 0x9f with ${count} block(s) ${text.replace("|", "")}`;
-    } else {
-      debug.warn(
-        `Error while parsing instruction 0x9f (${JSON.stringify(action)}).`,
-      );
-    }
+    action.color = "mediumorchid";
+    action.text = `unknown instruction 0x9f with ${count} block(s) ${text.replace(" | ", "")}`;
+  }
+
+  private parseUnknownA0(action: Action): void {
+    const unknown1 = this.parseVariables(action);
+    const unknown2 = this.parseVariables(action);
+    const unknown3 = this.parseVariables(action);
+    const unknown4 = this.parseVariables(action);
+    const unknown5 = this.parseVariables(action);
+    const unknown6 = this.parseVariables(action);
+    const unknown7 = this.parseVariables(action);
+
+    action.color = "mediumorchid";
+    action.text = `unknown instruction 0xa0 with values "${unknown1}", "${unknown2}", "${unknown3}", "${unknown4}", "${unknown5}", "${unknown6}", "${unknown7}"`;
+  }
+
+  private parseUnknownA2(action: Action): void {
+    const unknown = this.parseVariables(action);
+
+    action.color = "mediumorchid";
+    action.text = `unknown instruction 0xa2 with value "${unknown}"`;
+  }
+
+  private parseUnknownA3(action: Action): void {
+    const unknown1 = this.parseVariables(action);
+    const unknown2 = this.parseVariables(action);
+    const unknown3 = this.parseVariables(action);
+    const unknown4 = this.parseVariables(action);
+    const unknown5 = this.parseVariables(action);
+    const unknown6 = this.parseVariables(action);
+    const unknown7 = this.parseVariables(action);
+    const unknown8 = this.parseVariables(action);
+    const unknown9 = this.parseVariables(action);
+
+    action.color = "mediumorchid";
+    action.text = `unknown instruction 0xa3 with values "${unknown1}", "${unknown2}", "${unknown3}", "${unknown4}", "${unknown5}", "${unknown6}", "${unknown7}", "${unknown8}", "${unknown9}"`;
+  }
+
+  private parseUnknownA4(action: Action): void {
+    const unknown1 = this.parseVariables(action);
+    const unknown2 = this.parseVariables(action);
+
+    action.color = "mediumorchid";
+    action.text = `unknown instruction 0xa4 with values "${unknown1}", "${unknown2}"`;
+  }
+
+  private parseUnknownA5(action: Action): void {
+    const unknown1 = this.parseVariables(action);
+    const unknown2 = this.parseVariables(action);
+    const unknown3 = this.parseVariables(action);
+    const unknown4 = this.parseVariables(action);
+    const unknown5 = this.parseVariables(action);
+    const unknown6 = this.parseVariables(action);
+    const unknown7 = this.parseVariables(action);
+    const unknown8 = this.parseVariables(action);
+    const unknown9 = this.parseVariables(action);
+    const unknown10 = this.parseVariables(action);
+    const unknown11 = this.parseVariables(action);
+    const unknown12 = this.parseVariables(action);
+    const unknown13 = this.parseVariables(action);
+    const unknown14 = this.parseVariables(action);
+    const unknown15 = this.parseVariables(action);
+    const unknown16 = this.parseVariables(action);
+    const unknown17 = this.parseVariables(action);
+    const unknown18 = this.parseVariables(action);
+    const unknown19 = this.parseVariables(action);
+
+    action.color = "mediumorchid";
+    action.text = `unknown instruction 0xa5 with values "${unknown1}", "${unknown2}", "${unknown3}", "${unknown4}", "${unknown5}", "${unknown6}", "${unknown7}", "${unknown8}", "${unknown9}", "${unknown10}", "${unknown11}", "${unknown12}", "${unknown13}", "${unknown14}", "${unknown15}", "${unknown16}", "${unknown17}", "${unknown18}", "${unknown19}"`;
+  }
+
+  private parseUnknownA6(action: Action): void {
+    const unknown1 = this.parseVariables(action);
+    const unknown2 = this.parseVariables(action);
+
+    action.color = "mediumorchid";
+    action.text = `unknown instruction 0xa6 with values "${unknown1}", "${unknown2}"`;
   }
 
   private parseUnknownA7(action: Action): void {
@@ -2596,155 +2654,202 @@ export default class Script {
     action.text = "unknown instruction 0xa7";
   }
 
+  private parseUnknownA8(action: Action): void {
+    const unknown = this.parseVariables(action);
+
+    action.color = "mediumorchid";
+    action.text = `unknown instruction 0xa8 with value "${unknown}"`;
+  }
+
+  private parseUnknownA9(action: Action): void {
+    const unknown1 = this.parseVariables(action);
+    const unknown2 = this.parseVariables(action);
+    const unknown3 = this.parseVariables(action);
+    const unknown4 = this.parseVariables(action);
+
+    action.color = "mediumorchid";
+    action.text = `unknown instruction 0xa9 with values "${unknown1}", "${unknown2}", "${unknown3}", "${unknown4}"`;
+  }
+
+  private parseUnknownAa(action: Action): void {
+    action.color = "mediumorchid";
+    action.text = "unknown instruction 0xaa";
+  }
+
   private parseUnknownAb(action: Action): void {
     action.color = "mediumorchid";
     action.text = "unknown instruction 0xab";
   }
 
-  private parseUnknownAe(action: Action): void {
-    action.text = "unknown instruction 0xae";
-
+  private parseUnknownAc(action: Action): void {
     const unknown = this.parseVariables(action);
 
-    if (!Array.isArray(unknown)) {
-      action.color = "mediumorchid";
-      action.text = `unknown instruction 0xae with value "${unknown.value}"`;
-    } else {
-      debug.warn(
-        `Error while parsing instruction 0xae (${JSON.stringify(action)}).`,
-      );
-    }
+    action.color = "mediumorchid";
+    action.text = `unknown instruction 0xac with value "${unknown}"`;
+  }
+
+  private parseUnknownAd(action: Action): void {
+    const unknown = this.parseVariables(action);
+
+    action.color = "mediumorchid";
+    action.text = `unknown instruction 0xad with value "${unknown}"`;
+  }
+
+  private parseUnknownAe(action: Action): void {
+    const unknown = this.parseVariables(action);
+
+    action.color = "mediumorchid";
+    action.text = `unknown instruction 0xae with value "${unknown}"`;
+  }
+
+  private parseUnknownB0(action: Action): void {
+    const unknown1 = this.parseVariables(action);
+    const unknown2 = this.parseVariables(action);
+    const unknown3 = this.parseVariables(action);
+    const unknown4 = this.parseVariables(action);
+    const unknown5 = this.parseVariables(action);
+    const unknown6 = this.parseVariables(action);
+
+    action.color = "mediumorchid";
+    action.text = `unknown instruction 0xb0 with values "${unknown1}", "${unknown2}", "${unknown3}", "${unknown4}", "${unknown5}", "${unknown6}"`;
+  }
+
+  private parseUnknownB1(action: Action): void {
+    const unknown1 = this.parseVariables(action);
+    const unknown2 = this.parseVariables(action);
+    const unknown3 = this.parseVariables(action);
+    const unknown4 = this.parseVariables(action);
+    const unknown5 = this.parseVariables(action);
+    const unknown6 = this.parseVariables(action);
+    const unknown7 = this.parseVariables(action);
+    const unknown8 = this.parseVariables(action);
+    const unknown9 = this.parseVariables(action);
+    const unknown10 = this.parseVariables(action);
+    const unknown11 = this.parseVariables(action);
+    const unknown12 = this.parseVariables(action);
+    const unknown13 = this.parseVariables(action);
+
+    action.color = "mediumorchid";
+    action.text = `unknown instruction 0xb1 with values "${unknown1}", "${unknown2}", "${unknown3}", "${unknown4}", "${unknown5}", "${unknown6}", "${unknown7}", "${unknown8}", "${unknown9}", "${unknown10}", "${unknown11}", "${unknown12}", "${unknown13}"`;
+  }
+
+  private parseUnknownB2(action: Action): void {
+    const unknown1 = this.parseVariables(action);
+    const unknown2 = this.parseVariables(action);
+    const unknown3 = this.parseVariables(action);
+    const unknown4 = this.parseVariables(action);
+    const unknown5 = this.parseVariables(action);
+    const unknown6 = this.parseVariables(action);
+    const unknown7 = this.parseVariables(action);
+    const unknown8 = this.parseVariables(action);
+
+    action.color = "mediumorchid";
+    action.text = `unknown instruction 0xb2 with values "${unknown1}", "${unknown2}", "${unknown3}", "${unknown4}", "${unknown5}", "${unknown6}", "${unknown7}", "${unknown8}"`;
+  }
+
+  private parseUnknownB3(action: Action): void {
+    const unknown1 = this.parseVariables(action);
+    const unknown2 = this.parseVariables(action);
+    const unknown3 = this.parseVariables(action);
+    const unknown4 = this.parseVariables(action);
+
+    action.color = "mediumorchid";
+    action.text = `unknown instruction 0xb3 with values "${unknown1}", "${unknown2}", "${unknown3}", "${unknown4}"`;
   }
 
   private parseUnknownB4(action: Action): void {
-    action.text = "unknown instruction 0xb4";
-
     const unknown = this.parseVariables(action);
 
-    if (!Array.isArray(unknown)) {
-      action.color = "mediumorchid";
-      action.text = `unknown instruction 0xb4 with value "${unknown.value}"`;
-    } else {
-      debug.warn(
-        `Error while parsing instruction 0xb4 (${JSON.stringify(action)}).`,
-      );
-    }
+    action.color = "mediumorchid";
+    action.text = `unknown instruction 0xb4 with value "${unknown}"`;
   }
 
   private parseInitShop(action: Action): void {
-    action.text = "should init shop";
-
     const shop = this.parseVariables(action);
 
-    if (!Array.isArray(shop)) {
-      action.color = "limegreen";
-      action.text = `init shop "${shop.value}"`;
-    } else {
-      debug.warn(`Error while parsing init shop (${JSON.stringify(action)}).`);
-    }
+    action.color = "limegreen";
+    action.text = `init shop "${shop}"`;
   }
 
   private parseUnknownB7(action: Action): void {
-    action.text = "unknown instruction 0xb7";
-
     const unknown = this.parseVariables(action);
 
-    if (!Array.isArray(unknown)) {
-      action.color = "mediumorchid";
-      action.text = `unknown instruction 0xb7 with value "${unknown.value}"`;
-    } else {
-      debug.warn(
-        `Error while parsing instruction 0xb7 (${JSON.stringify(action)}).`,
-      );
-    }
+    action.color = "mediumorchid";
+    action.text = `unknown instruction 0xb7 with value "${unknown}"`;
   }
 
   private parseUnknownB8(action: Action): void {
-    action.text = "unknown instruction 0xb8";
-
     const unknown1 = this.parseVariables(action);
     const unknown2 = this.parseVariables(action);
 
-    if (!Array.isArray(unknown1) && !Array.isArray(unknown2)) {
-      action.color = "mediumorchid";
-      action.text = `unknown instruction 0xb8 with values "${unknown1.value}", "${unknown2.value}"`;
-    } else {
-      debug.warn(
-        `Error while parsing instruction 0xb8 (${JSON.stringify(action)}).`,
-      );
-    }
+    action.color = "mediumorchid";
+    action.text = `unknown instruction 0xb8 with values "${unknown1}", "${unknown2}"`;
   }
 
   private parseUnknownB9(action: Action): void {
-    action.text = "unknown instruction 0xb9";
-
     const unknown = this.parseVariables(action);
 
-    if (!Array.isArray(unknown)) {
-      action.color = "mediumorchid";
-      action.text = `unknown instruction 0xb9 with value "${unknown.value}"`;
-    } else {
-      debug.warn(
-        `Error while parsing instruction 0xb9 (${JSON.stringify(action)}).`,
-      );
-    }
+    action.color = "mediumorchid";
+    action.text = `unknown instruction 0xb9 with value "${unknown}"`;
   }
 
   private parseUnknownBa(action: Action): void {
-    action.text = "unknown instruction 0xba";
-
     const unknown = this.parseVariables(action);
 
-    if (!Array.isArray(unknown)) {
-      action.color = "mediumorchid";
-      action.text = `unknown instruction 0xba with value "${unknown.value}"`;
-    } else {
-      debug.warn(
-        `Error while parsing instruction 0xba (${JSON.stringify(action)}).`,
-      );
-    }
+    action.color = "mediumorchid";
+    action.text = `unknown instruction 0xba with value "${unknown}"`;
   }
 
   private parseUnknownBe(action: Action): void {
-    action.text = "unknown instruction 0xce";
-
     const unknown1 = this.parseVariables(action);
     const unknown2 = this.parseVariables(action);
     const unknown3 = this.parseVariables(action);
 
-    if (
-      !Array.isArray(unknown1) &&
-      !Array.isArray(unknown2) &&
-      !Array.isArray(unknown3)
-    ) {
-      action.color = "mediumorchid";
-      action.text = `unknown instruction 0xce with values "${unknown1.value}", "${unknown2.value}", "${unknown3.value}"`;
-    } else {
-      debug.warn(
-        `Error while parsing instruction 0xce (${JSON.stringify(action)}).`,
-      );
-    }
+    action.color = "mediumorchid";
+    action.text = `unknown instruction 0xbe with values "${unknown1}", "${unknown2}", "${unknown3}"`;
+  }
+
+  private parseUnknownBf(action: Action): void {
+    const unknown = this.parseVariables(action);
+
+    action.color = "mediumorchid";
+    action.text = `unknown instruction 0xbf with value "${unknown}"`;
   }
 
   private parseUnknownC3(action: Action): void {
-    action.text = "unknown instruction 0xc3";
-
     const unknown1 = this.parseVariables(action);
     const unknown2 = this.parseVariables(action);
 
-    if (!Array.isArray(unknown1) && !Array.isArray(unknown2)) {
-      action.color = "mediumorchid";
-      action.text = `unknown instruction 0xc3 with values "${unknown1.value}", "${unknown2.value}"`;
-    } else {
-      debug.warn(
-        `Error while parsing instruction 0xc3 (${JSON.stringify(action)}).`,
-      );
-    }
+    action.color = "mediumorchid";
+    action.text = `unknown instruction 0xc3 with values "${unknown1}", "${unknown2}"`;
   }
 
   private parseUnknownC4(action: Action): void {
     action.color = "mediumorchid";
     action.text = "unknown instruction 0xc4";
+  }
+
+  private parseUnknownC5(action: Action): void {
+    const unknown1 = this.parseVariables(action);
+    const unknown2 = this.parseVariables(action);
+
+    action.color = "mediumorchid";
+    action.text = `unknown instruction 0xc5 with values "${unknown1}", "${unknown2}"`;
+  }
+
+  private parseUnknownC6(action: Action): void {
+    const unknown1 = this.parseVariables(action);
+    const unknown2 = this.parseVariables(action);
+
+    action.color = "mediumorchid";
+    action.text = `unknown instruction 0xc6 with values "${unknown1}", "${unknown2}"`;
+  }
+
+  private parseUnknownC7(action: Action): void {
+    const unknown = this.parseVariables(action);
+
+    action.color = "mediumorchid";
+    action.text = `unknown instruction 0xc7 with values "${unknown}"`;
   }
 
   private parseRestorePartyHp(action: Action): void {
@@ -2758,18 +2863,15 @@ export default class Script {
   }
 
   private parseUnknownCb(action: Action): void {
-    action.text = "unknown instruction 0xcb";
-
     const unknown = this.parseVariables(action);
 
-    if (!Array.isArray(unknown)) {
-      action.color = "mediumorchid";
-      action.text = `unknown instruction 0xcb with value "${unknown.value}"`;
-    } else {
-      debug.warn(
-        `Error while parsing instruction 0xcb (${JSON.stringify(action)}).`,
-      );
-    }
+    action.color = "mediumorchid";
+    action.text = `unknown instruction 0xcb with value "${unknown}"`;
+  }
+
+  private parseUnknownCe(action: Action): void {
+    action.color = "mediumorchid";
+    action.text = "unknown instruction 0xce";
   }
 
   private parseUnknownD0(action: Action): void {
@@ -2782,9 +2884,23 @@ export default class Script {
     action.text = "unknown instruction 0xd1";
   }
 
-  private parseUnknownD5(action: Action): void {
-    action.text = "unknown instruction 0xd5";
+  private parseUnknownD3(action: Action): void {
+    action.color = "mediumorchid";
+    action.text = "unknown instruction 0xd3";
+  }
 
+  private parseUnknownD4(action: Action): void {
+    const unknown1 = this.parseVariables(action);
+    const unknown2 = this.parseVariables(action);
+    const unknown3 = this.parseVariables(action);
+    const unknown4 = this.parseVariables(action);
+    const unknown5 = this.parseVariables(action);
+
+    action.color = "mediumorchid";
+    action.text = `unknown instruction 0xd4 with values "${unknown1}", "${unknown2}", "${unknown3}", "${unknown4}", "${unknown5}"`;
+  }
+
+  private parseUnknownD5(action: Action): void {
     const unknown1 = this.parseVariables(action);
     const unknown2 = this.parseVariables(action);
     const unknown3 = this.parseVariables(action);
@@ -2803,105 +2919,271 @@ export default class Script {
     const unknown16 = this.parseVariables(action);
     const unknown17 = this.parseVariables(action);
 
-    if (
-      !Array.isArray(unknown1) &&
-      !Array.isArray(unknown2) &&
-      !Array.isArray(unknown3) &&
-      !Array.isArray(unknown4) &&
-      !Array.isArray(unknown5) &&
-      !Array.isArray(unknown6) &&
-      !Array.isArray(unknown7) &&
-      !Array.isArray(unknown8) &&
-      !Array.isArray(unknown9) &&
-      !Array.isArray(unknown10) &&
-      !Array.isArray(unknown11) &&
-      !Array.isArray(unknown12) &&
-      !Array.isArray(unknown13) &&
-      !Array.isArray(unknown14) &&
-      !Array.isArray(unknown15) &&
-      !Array.isArray(unknown16) &&
-      !Array.isArray(unknown17)
-    ) {
-      action.color = "mediumorchid";
-      action.text = `unknown instruction 0xd5 with values "${unknown1.value}", "${unknown2.value}", "${unknown3.value}", "${unknown4.value}", "${unknown5.value}", "${unknown6.value}", "${unknown7.value}", "${unknown8.value}", "${unknown9.value}", "${unknown10.value}", "${unknown11.value}", "${unknown12.value}", "${unknown13.value}", "${unknown14.value}", "${unknown15.value}", "${unknown16.value}", "${unknown17.value}"`;
-    } else {
-      debug.warn(
-        `Error while parsing instruction 0xd5 (${JSON.stringify(action)}).`,
-      );
+    action.color = "mediumorchid";
+    action.text = `unknown instruction 0xd5 with values "${unknown1}", "${unknown2}", "${unknown3}", "${unknown4}", "${unknown5}", "${unknown6}", "${unknown7}", "${unknown8}", "${unknown9}", "${unknown10}", "${unknown11}", "${unknown12}", "${unknown13}", "${unknown14}", "${unknown15}", "${unknown16}", "${unknown17}"`;
+  }
+
+  private parseUnknownD7(action: Action): void {
+    const unknown = this.parseVariables(action);
+
+    const offset = action.offset + this.getValue(action);
+
+    const name = getString(offset, 0x100, "uint8", { zeroTerminated: true }, this.dataView); // prettier-ignore
+
+    if (offset < this.endOffset) {
+      this.endOffset = offset;
     }
+
+    action.color = "mediumorchid";
+    action.text = `unknown instruction 0xd7 with value "${unknown}", "${name}" (${offset.toHex(8)})`;
+  }
+
+  private parseUnknownD8(action: Action): void {
+    const unknown = this.parseVariables(action);
+
+    action.color = "mediumorchid";
+    action.text = `unknown instruction 0xd8 with value "${unknown}"`;
+  }
+
+  private parseUnknownD9(action: Action): void {
+    const unknown = this.parseVariables(action);
+
+    action.color = "mediumorchid";
+    action.text = `unknown instruction 0xd9 with value "${unknown}"`;
+  }
+
+  private parseUnknownDa(action: Action): void {
+    const unknown = this.parseVariables(action);
+
+    action.color = "mediumorchid";
+    action.text = `unknown instruction 0xda with value "${unknown}"`;
+  }
+
+  private parseUnknownDb(action: Action): void {
+    const unknown = this.parseVariables(action);
+
+    action.color = "mediumorchid";
+    action.text = `unknown instruction 0xdb with value "${unknown}"`;
+  }
+
+  private parseUnknownDc(action: Action): void {
+    const unknown1 = this.parseVariables(action);
+    const unknown2 = this.parseVariables(action);
+    const unknown3 = this.parseVariables(action);
+    const unknown4 = this.parseVariables(action);
+    const unknown5 = this.parseVariables(action);
+    const unknown6 = this.parseVariables(action);
+    const unknown7 = this.parseVariables(action);
+    const unknown8 = this.parseVariables(action);
+    const unknown9 = this.parseVariables(action);
+
+    action.color = "mediumorchid";
+    action.text = `unknown instruction 0xdc with values "${unknown1}", "${unknown2}", "${unknown3}", "${unknown4}", "${unknown5}", "${unknown6}", "${unknown7}", "${unknown8}", "${unknown9}"`;
+  }
+
+  private parseUnknownDe(action: Action): void {
+    const unknown = this.parseVariables(action);
+
+    action.color = "mediumorchid";
+    action.text = `unknown instruction 0xde with value "${unknown}"`;
+  }
+
+  private parseUnknownDf(action: Action): void {
+    const unknown1 = this.parseVariables(action);
+    const unknown2 = this.parseVariables(action);
+    const unknown3 = this.parseVariables(action);
+    const unknown4 = this.parseVariables(action);
+    const unknown5 = this.parseVariables(action);
+    const unknown6 = this.parseVariables(action);
+    const unknown7 = this.parseVariables(action);
+    const unknown8 = this.parseVariables(action);
+    const unknown9 = this.parseVariables(action);
+    const unknown10 = this.parseVariables(action);
+    const unknown11 = this.parseVariables(action);
+    const unknown12 = this.parseVariables(action);
+    const unknown13 = this.parseVariables(action);
+    const unknown14 = this.parseVariables(action);
+    const unknown15 = this.parseVariables(action);
+    const unknown16 = this.parseVariables(action);
+    const unknown17 = this.parseVariables(action);
+    const unknown18 = this.parseVariables(action);
+    const unknown19 = this.parseVariables(action);
+    const unknown20 = this.parseVariables(action);
+    const unknown21 = this.parseVariables(action);
+    const unknown22 = this.parseVariables(action);
+    const unknown23 = this.parseVariables(action);
+    const unknown24 = this.parseVariables(action);
+    const unknown25 = this.parseVariables(action);
+
+    action.color = "mediumorchid";
+    action.text = `unknown instruction 0xdf with values "${unknown1}", "${unknown2}", "${unknown3}", "${unknown4}", "${unknown5}", "${unknown6}", "${unknown7}", "${unknown8}", "${unknown9}", "${unknown10}", "${unknown11}", "${unknown12}", "${unknown13}", "${unknown14}", "${unknown15}", "${unknown16}", "${unknown17}", "${unknown18}", "${unknown19}", "${unknown20}", "${unknown21}", "${unknown22}", "${unknown23}", "${unknown24}", "${unknown25}"`;
+  }
+
+  private parseUnknownE0(action: Action): void {
+    const unknown1 = this.parseVariables(action);
+    const unknown2 = this.parseVariables(action);
+    const unknown3 = this.parseVariables(action);
+    const unknown4 = this.parseVariables(action);
+    const unknown5 = this.parseVariables(action);
+    const unknown6 = this.parseVariables(action);
+    const unknown7 = this.parseVariables(action);
+    const unknown8 = this.parseVariables(action);
+    const unknown9 = this.parseVariables(action);
+    const unknown10 = this.parseVariables(action);
+    const unknown11 = this.parseVariables(action);
+    const unknown12 = this.parseVariables(action);
+    const unknown13 = this.parseVariables(action);
+    const unknown14 = this.parseVariables(action);
+    const unknown15 = this.parseVariables(action);
+    const unknown16 = this.parseVariables(action);
+    const unknown17 = this.parseVariables(action);
+    const unknown18 = this.parseVariables(action);
+    const unknown19 = this.parseVariables(action);
+    const unknown20 = this.parseVariables(action);
+    const unknown21 = this.parseVariables(action);
+    const unknown22 = this.parseVariables(action);
+    const unknown23 = this.parseVariables(action);
+    const unknown24 = this.parseVariables(action);
+    const unknown25 = this.parseVariables(action);
+
+    action.color = "mediumorchid";
+    action.text = `unknown instruction 0xe0 with values "${unknown1}", "${unknown2}", "${unknown3}", "${unknown4}", "${unknown5}", "${unknown6}", "${unknown7}", "${unknown8}", "${unknown9}", "${unknown10}", "${unknown11}", "${unknown12}", "${unknown13}", "${unknown14}", "${unknown15}", "${unknown16}", "${unknown17}", "${unknown18}", "${unknown19}", "${unknown20}", "${unknown21}", "${unknown22}", "${unknown23}", "${unknown24}", "${unknown25}"`;
+  }
+
+  private parseUnknownE1(action: Action): void {
+    const unknown1 = this.parseVariables(action);
+    const unknown2 = this.parseVariables(action);
+    const unknown3 = this.parseVariables(action);
+    const unknown4 = this.parseVariables(action);
+    const unknown5 = this.parseVariables(action);
+    const unknown6 = this.parseVariables(action);
+    const unknown7 = this.parseVariables(action);
+
+    action.color = "mediumorchid";
+    action.text = `unknown instruction 0xe1 with values "${unknown1}", "${unknown2}", "${unknown3}", "${unknown4}", "${unknown5}", "${unknown6}", "${unknown7}"`;
   }
 
   private parseUnknownE2(action: Action): void {
-    action.text = "unknown instruction 0xe2";
-
     const unknown1 = this.parseVariables(action);
     const unknown2 = this.parseVariables(action);
 
-    if (!Array.isArray(unknown1) && !Array.isArray(unknown2)) {
-      action.color = "mediumorchid";
-      action.text = `unknown instruction 0xe2 with values "${unknown1.value}", "${unknown2.value}"`;
-    } else {
-      debug.warn(
-        `Error while parsing instruction 0xe2 (${JSON.stringify(action)}).`,
-      );
-    }
+    action.color = "mediumorchid";
+    action.text = `unknown instruction 0xe2 with values "${unknown1}", "${unknown2}"`;
+  }
+
+  private parseUnknownE3(action: Action): void {
+    const unknown = this.parseVariables(action);
+
+    action.color = "mediumorchid";
+    action.text = `unknown instruction 0xe3 with values "${unknown}"`;
+  }
+
+  private parseUnknownE4(action: Action): void {
+    action.color = "mediumorchid";
+    action.text = "unknown instruction 0xe4";
+  }
+
+  private parseUnknownE5(action: Action): void {
+    action.color = "mediumorchid";
+    action.text = "unknown instruction 0xe5";
+  }
+
+  private parseUnknownE6(action: Action): void {
+    const unknown1 = this.parseVariables(action);
+    const unknown2 = this.parseVariables(action);
+    const unknown3 = this.parseVariables(action);
+    const unknown4 = this.parseVariables(action);
+    const unknown5 = this.parseVariables(action);
+    const unknown6 = this.parseVariables(action);
+    const unknown7 = this.parseVariables(action);
+
+    action.color = "mediumorchid";
+    action.text = `unknown instruction 0xe6 with values "${unknown1}", "${unknown2}", "${unknown3}", "${unknown4}", "${unknown5}", "${unknown6}", "${unknown7}"`;
+  }
+
+  private parseUnknownE7(action: Action): void {
+    const unknown = this.parseVariables(action);
+
+    action.color = "mediumorchid";
+    action.text = `unknown instruction 0xe7 with values "${unknown}"`;
+  }
+
+  private parseUnknownE8(action: Action): void {
+    const unknown1 = this.parseVariables(action);
+    const unknown2 = this.parseVariables(action);
+    const unknown3 = this.parseVariables(action);
+    const unknown4 = this.parseVariables(action);
+    const unknown5 = this.parseVariables(action);
+    const unknown6 = this.parseVariables(action);
+    const unknown7 = this.parseVariables(action);
+    const unknown8 = this.parseVariables(action);
+    const unknown9 = this.parseVariables(action);
+    const unknown10 = this.parseVariables(action);
+    const unknown11 = this.parseVariables(action);
+    const unknown12 = this.parseVariables(action);
+    const unknown13 = this.parseVariables(action);
+    const unknown14 = this.parseVariables(action);
+
+    action.color = "mediumorchid";
+    action.text = `unknown instruction 0xe8 with values "${unknown1}", "${unknown2}", "${unknown3}", "${unknown4}", "${unknown5}", "${unknown6}", "${unknown7}", "${unknown8}", "${unknown9}", "${unknown10}", "${unknown11}", "${unknown12}", "${unknown13}", "${unknown14}"`;
   }
 
   private parseUnknownE9(action: Action): void {
-    action.text = "unknown instruction 0xe9";
-
     const unknown1 = this.parseVariables(action);
     const unknown2 = this.parseVariables(action);
 
-    if (!Array.isArray(unknown1) && !Array.isArray(unknown2)) {
-      action.color = "mediumorchid";
-      action.text = `unknown instruction 0xe9 with values "${unknown1.value}", "${unknown2.value}"`;
-    } else {
-      debug.warn(
-        `Error while parsing instruction 0xe9 (${JSON.stringify(action)}).`,
-      );
-    }
+    action.color = "mediumorchid";
+    action.text = `unknown instruction 0xe9 with values "${unknown1}", "${unknown2}"`;
   }
 
   private parseUnknownEb(action: Action): void {
-    action.text = "unknown instruction 0xeb";
-
     const unknown = this.parseVariables(action);
 
-    if (!Array.isArray(unknown)) {
-      action.color = "mediumorchid";
-      action.text = `unknown instruction 0xeb with value "${unknown.value}"`;
-    } else {
-      debug.warn(
-        `Error while parsing instruction 0xeb (${JSON.stringify(action)}).`,
-      );
-    }
+    action.color = "mediumorchid";
+    action.text = `unknown instruction 0xeb with value "${unknown}"`;
+  }
+
+  private parseUnknownEd(action: Action): void {
+    action.color = "mediumorchid";
+    action.text = "unknown instruction 0xed";
   }
 
   private parseUnknownEe(action: Action): void {
-    action.text = "unknown instruction 0xee";
-
     const unknown1 = this.parseVariables(action);
     const unknown2 = this.parseVariables(action);
     const unknown3 = this.parseVariables(action);
 
-    if (
-      !Array.isArray(unknown1) &&
-      !Array.isArray(unknown2) &&
-      !Array.isArray(unknown3)
-    ) {
-      action.color = "mediumorchid";
-      action.text = `unknown instruction 0xee with values "${unknown1.value}", "${unknown2.value}", "${unknown3.value}"`;
-    } else {
-      debug.warn(
-        `Error while parsing instruction 0xee (${JSON.stringify(action)}).`,
-      );
-    }
+    action.color = "mediumorchid";
+    action.text = `unknown instruction 0xee with values "${unknown1}", "${unknown2}", "${unknown3}"`;
+  }
+
+  private parseUnknownF0(action: Action): void {
+    const unknown1 = this.parseVariables(action);
+    const unknown2 = this.parseVariables(action);
+    const unknown3 = this.parseVariables(action);
+    const unknown4 = this.parseVariables(action);
+    const unknown5 = this.parseVariables(action);
+    const unknown6 = this.parseVariables(action);
+
+    action.color = "mediumorchid";
+    action.text = `unknown instruction 0xf0 with values "${unknown1}", "${unknown2}", "${unknown3}", "${unknown4}", "${unknown5}", "${unknown6}"`;
+  }
+
+  private parseUnknownF1(action: Action): void {
+    action.color = "mediumorchid";
+    action.text = "unknown instruction 0xf1";
+  }
+
+  private parseUnknownF2(action: Action): void {
+    const unknown1 = this.parseVariables(action);
+    const unknown2 = this.parseVariables(action);
+    const unknown3 = this.parseVariables(action);
+
+    action.color = "mediumorchid";
+    action.text = `unknown instruction 0xf2 with values "${unknown1}", "${unknown2}", "${unknown3}"`;
   }
 
   private parseUnknownF3(action: Action): void {
-    action.text = "unknown instruction 0xf3";
-
     const unknown1 = this.parseVariables(action);
     const unknown2 = this.parseVariables(action);
     const unknown3 = this.parseVariables(action);
@@ -2913,25 +3195,38 @@ export default class Script {
     const unknown9 = this.parseVariables(action);
     const unknown10 = this.parseVariables(action);
 
-    if (
-      !Array.isArray(unknown1) &&
-      !Array.isArray(unknown2) &&
-      !Array.isArray(unknown3) &&
-      !Array.isArray(unknown4) &&
-      !Array.isArray(unknown5) &&
-      !Array.isArray(unknown6) &&
-      !Array.isArray(unknown7) &&
-      !Array.isArray(unknown8) &&
-      !Array.isArray(unknown9) &&
-      !Array.isArray(unknown10)
-    ) {
-      action.color = "mediumorchid";
-      action.text = `unknown instruction 0xf3 with values "${unknown1.value}", "${unknown2.value}", "${unknown3.value}", "${unknown4.value}", "${unknown5.value}", "${unknown6.value}", "${unknown7.value}", "${unknown8.value}", "${unknown9.value}", "${unknown10.value}"`;
-    } else {
-      debug.warn(
-        `Error while parsing instruction 0xf3 (${JSON.stringify(action)}).`,
-      );
+    action.color = "mediumorchid";
+    action.text = `unknown instruction 0xf3 with values "${unknown1}", "${unknown2}", "${unknown3}", "${unknown4}", "${unknown5}", "${unknown6}", "${unknown7}", "${unknown8}", "${unknown9}", "${unknown10}"`;
+  }
+
+  private parseUnknownF5(action: Action): void {
+    const count = this.getValue(action);
+
+    let text = "";
+
+    for (let i = 0; i < count; i += 1) {
+      const unknown = this.parseVariables(action);
+
+      text += `, "${unknown}"`;
     }
+
+    action.color = "mediumorchid";
+    action.text = `unknown instruction 0xf5 with ${count} value(s) ${text.replace(", ", "")}`;
+  }
+
+  private parseUnknownF6(action: Action): void {
+    const count = this.getValue(action);
+
+    let text = "";
+
+    for (let i = 0; i < count; i += 1) {
+      const unknown = this.parseVariables(action);
+
+      text += `, "${unknown}"`;
+    }
+
+    action.color = "mediumorchid";
+    action.text = `unknown instruction 0xf6 with ${count} value(s) ${text.replace(", ", "")}`;
   }
 
   private parseUnknownF7(action: Action): void {
@@ -2940,24 +3235,87 @@ export default class Script {
   }
 
   private parseUnknownF9(action: Action): void {
-    action.text = "unknown instruction 0xf9";
-
     const unknown1 = this.parseVariables(action);
     const unknown2 = this.parseVariables(action);
 
-    if (!Array.isArray(unknown1) && !Array.isArray(unknown2)) {
-      action.color = "mediumorchid";
-      action.text = `unknown instruction 0xf9 with values "${unknown1.value}", "${unknown2.value}"`;
-    } else {
-      debug.warn(
-        `Error while parsing instruction 0xf9 (${JSON.stringify(action)}).`,
-      );
-    }
+    action.color = "mediumorchid";
+    action.text = `unknown instruction 0xf9 with values "${unknown1}", "${unknown2}"`;
+  }
+
+  private parseUnknownFe(action: Action): void {
+    action.color = "mediumorchid";
+    action.text = "unknown instruction 0xfe";
+  }
+
+  private parseUnknownFf(action: Action): void {
+    action.color = "mediumorchid";
+    action.text = "unknown instruction 0xff";
+  }
+
+  private parseUnknown103(action: Action): void {
+    const unknown = this.parseVariables(action);
+
+    action.color = "mediumorchid";
+    action.text = `unknown instruction 0x103 with values "${unknown}"`;
   }
 
   private parseRestoreShipHp(action: Action): void {
     action.color = "limegreen";
     action.text = "restore ship's HP";
+  }
+
+  private parseUnknown105(action: Action): void {
+    action.color = "mediumorchid";
+    action.text = "unknown instruction 0x105";
+  }
+
+  private parseUnknown106(action: Action): void {
+    const unknown1 = this.parseVariables(action);
+    const unknown2 = this.parseVariables(action);
+    const unknown3 = this.parseVariables(action);
+    const unknown4 = this.parseVariables(action);
+    const unknown5 = this.parseVariables(action);
+
+    action.color = "mediumorchid";
+    action.text = `unknown instruction 0x106 with values "${unknown1}", "${unknown2}", "${unknown3}", "${unknown4}", "${unknown5}"`;
+  }
+
+  private parseUnknown107(action: Action): void {
+    const count = this.getValue(action);
+
+    let text = "";
+
+    for (let i = 0; i < count; i += 1) {
+      const unknown = this.parseVariables(action);
+
+      text += `, "${unknown}"`;
+    }
+
+    action.color = "mediumorchid";
+    action.text = `unknown instruction 0x107 with ${count} value(s) ${text.replace(", ", "")}`;
+  }
+
+  private parseUnknown108(action: Action): void {
+    const unknown1 = this.parseVariables(action);
+    const unknown2 = this.parseVariables(action);
+    const unknown3 = this.parseVariables(action);
+    const unknown4 = this.parseVariables(action);
+    const unknown5 = this.parseVariables(action);
+    const unknown6 = this.parseVariables(action);
+    const unknown7 = this.parseVariables(action);
+    const unknown8 = this.parseVariables(action);
+
+    action.color = "mediumorchid";
+    action.text = `unknown instruction 0x108 with values "${unknown1}", "${unknown2}", "${unknown3}", "${unknown4}", "${unknown5}", "${unknown6}", "${unknown7}", "${unknown8}"`;
+  }
+
+  private parseUnknown109(action: Action): void {
+    const unknown = this.parseVariables(action);
+
+    const offset = action.offset + this.getValue(action);
+
+    action.color = "mediumorchid";
+    action.text = `unknown instruction 0x109 with value "${unknown}" and read "${offset.toHex(8)}"`;
   }
 
   private parseLoadFile(action: Action, type: FileType): void {
@@ -2975,7 +3333,7 @@ export default class Script {
       debug.warn("Error while parsing sound", { offset, type, name });
     }
 
-    action.color = type.match(/mld|script/) ? "mediumorchid" : "limegreen";
+    action.color = "mediumorchid";
     action.text = `load ${type} "${name}" (${offset.toHex(8)})`;
   }
 

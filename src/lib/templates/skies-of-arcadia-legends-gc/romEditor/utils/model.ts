@@ -6,7 +6,7 @@ import { getGvrTexture, GvrTexture } from "$lib/utils/common/gamecube";
 import debug from "$lib/utils/debug";
 import Three from "$lib/utils/three";
 
-import { Model, NjtlFile } from "../utils";
+import { Entity, Model, NjtlFile } from "../utils";
 import { NjcmObject } from "./njcm";
 
 // TODO
@@ -254,6 +254,7 @@ export interface VerticesCache {
 }
 
 export function addMeshs(
+  entity: Entity,
   object: NjcmObject,
   vertexBuffer: number[],
   dataView: DataView,
@@ -589,6 +590,13 @@ export function addMeshs(
               // side,
               side: "double", // TODO: Temporary
               texture: material.texture,
+            },
+            onClick: () => {
+              debug.log({
+                name: entity.name,
+                entityId: entity.entityId,
+                object,
+              });
             },
           });
         }

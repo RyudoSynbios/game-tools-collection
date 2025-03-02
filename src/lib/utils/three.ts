@@ -37,7 +37,6 @@ import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import { GUI } from "three/examples/jsm/libs/lil-gui.module.min.js";
 import { toCreasedNormals } from "three/examples/jsm/utils/BufferGeometryUtils.js";
 
-import { isDebug } from "$lib/stores";
 import { generateUUID } from "$lib/utils/format";
 
 import debug from "./debug";
@@ -469,30 +468,14 @@ export default class Three {
         if (this.selectedObject.reference !== this.hoveredObject.reference) {
           this.setDummy("select", this.hoveredObject.reference);
 
-          if (isDebug) {
-            this.group.children.forEach((child, index) => {
-              if (child === this.hoveredObject.reference) {
-                console.log({
-                  index,
-                  position: {
-                    x: child.position.x,
-                    y: child.position.y,
-                    z: child.position.z,
-                  },
-                  rotation: {
-                    x: Math.round((child.rotation.x / (2 * Math.PI)) * 360),
-                    y: Math.round((child.rotation.y / (2 * Math.PI)) * 360),
-                    z: Math.round((child.rotation.z / (2 * Math.PI)) * 360),
-                  },
-                  scale: {
-                    x: child.scale.x,
-                    y: child.scale.y,
-                    z: child.scale.z,
-                  },
-                });
-              }
-            });
-          }
+          this.group.traverse((object) => {
+            if (
+              object === this.hoveredObject.reference &&
+              typeof object.userData.onClick === "function"
+            ) {
+              object.userData.onClick();
+            }
+          });
         } else {
           this.setDummy("select");
 
@@ -537,6 +520,7 @@ export default class Three {
       renderOrder?: number;
       geometry?: GeometryOptions;
       material?: MaterialOptions | MaterialOptions[];
+      onClick?: () => void;
     },
   ): Mesh | null {
     if (instanceId !== this.instanceId) {
@@ -580,6 +564,7 @@ export default class Three {
 
     const mesh = new Mesh(geometry, material);
     mesh.receiveShadow = true;
+    mesh.userData.onClick = options?.onClick;
 
     if (renderLast) {
       mesh.renderOrder = -1;
