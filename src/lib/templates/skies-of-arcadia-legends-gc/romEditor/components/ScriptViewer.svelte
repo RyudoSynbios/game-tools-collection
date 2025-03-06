@@ -14,6 +14,18 @@
   let script: Script;
   let subroutines: Subroutine[] = [];
 
+  function getColor(subroutine: Subroutine): string {
+    if (subroutine.name.match("(hasError)")) {
+      return "orange";
+    } else if (subroutine.name.match("(hasUnknownInstruction)")) {
+      return "mediumorchid";
+    } else if (subroutine.name.match("(hasUnparsedInstruction)")) {
+      return "red";
+    }
+
+    return "limegreen";
+  }
+
   function handleActionToggle(
     subroutineIndex: number,
     actionIndex: number,
@@ -48,7 +60,7 @@
 <!-- prettier-ignore -->
 <div class="gtc-scriptviewer">
   {#each subroutines as subroutine, subroutineIndex}
-    <p style="color: gold;" on:click={() => handleScriptToggle(subroutineIndex)}>
+    <p style="color: {getColor(subroutine)};" on:click={() => handleScriptToggle(subroutineIndex)}>
       {subroutine.offset.toHex(8)}: {subroutine.name}
     </p>
     {#if subroutine.expanded}
