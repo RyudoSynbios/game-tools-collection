@@ -298,6 +298,18 @@ export default class Three {
         setLocalStorage("threeWireframe", `${this.guiController.wireframe}`);
       });
 
+    this.gui.onOpenClose((gui) => {
+      if (gui.parent === undefined) {
+        setLocalStorage("threeGuiClosed", `${gui._closed}`);
+      }
+    });
+
+    const lsGuiClosed = getLocalStorage("threeGuiClosed");
+
+    if (lsGuiClosed === "true") {
+      this.gui.close();
+    }
+
     this.guiCustomFolder = this.gui.addFolder("Custom");
     this.guiCustomFolder.show(false);
 
