@@ -40,36 +40,44 @@
 
 <style lang="postcss">
   .gtc-modelviewer {
-    @apply relative z-10 w-full flex-1 rounded bg-primary-700 p-2;
+    @apply z-10 w-full flex-1 rounded bg-primary-700 p-2;
 
-    & :global(.gtc-three-message) {
-      @apply absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-xl font-bold;
-    }
+    & > div {
+      @apply relative;
 
-    & :global(.gtc-three-progression) {
-      @apply absolute left-1/2 top-1/2 w-3/4 -translate-x-1/2 rounded border border-primary-300 text-sm font-bold lg:w-1/2;
-
-      --tw-translate-y: calc(-50% + 30px);
-
-      & :global(div) {
-        @apply h-3 bg-primary-300;
+      & :global(.gtc-three-message) {
+        @apply absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-xl font-bold;
       }
 
-      & :global(p) {
-        @apply absolute right-0;
+      & :global(.gtc-three-progression) {
+        @apply absolute left-1/2 top-1/2 w-3/4 -translate-x-1/2 rounded border border-primary-300 text-sm font-bold lg:w-1/2;
+
+        --tw-translate-y: calc(-50% + 30px);
+
+        & :global(div) {
+          @apply h-3 bg-primary-300;
+        }
+
+        & :global(p) {
+          @apply absolute right-0;
+        }
       }
-    }
 
-    & :global(.gtc-three-stats) {
-      @apply absolute left-0 top-0;
-    }
+      & :global(.gtc-three-stats) {
+        @apply absolute left-0 top-0;
+      }
 
-    & :global(.lil-gui) {
-      --width: 180px;
-    }
+      & :global(.lil-gui) {
+        --width: 180px;
+      }
 
-    & :global(.lil-gui.root) {
-      @apply absolute right-2 top-2;
+      & :global(.lil-gui.root) {
+        @apply absolute right-2 top-2;
+      }
+
+      & :global(.lil-gui.root.tree) {
+        @apply absolute left-2 top-2;
+      }
     }
   }
 </style>
