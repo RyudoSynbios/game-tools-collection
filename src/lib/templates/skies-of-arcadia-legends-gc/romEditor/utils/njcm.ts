@@ -74,7 +74,6 @@ function parseNjcmObject(
     debug: "",
   };
 
-  // TODO: Remove
   object.flags.debug += object.flags.position ? 'p' : '-';
   object.flags.debug += object.flags.rotation ? 'r' : '-';
   object.flags.debug += object.flags.scale ? 's' : '-';

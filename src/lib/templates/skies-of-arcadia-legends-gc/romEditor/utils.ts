@@ -669,7 +669,7 @@ export interface Model {
 
 export interface Entity {
   index: number;
-  unknown: number;
+  entityId: number;
   name: string;
   linkedGrndFiles: number[];
   linkedNjcmFiles: number[];
