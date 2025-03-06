@@ -21,6 +21,7 @@
     "@pixi/sprite-tiling": "^7.4.2",
     "file-saver": "^2.0.5",
     "hex2dec": "^1.1.2",
+    "lil-gui": "^0.20.0",
     "long": "^5.2.3",
     "lz-string": "^1.5.0",
     "moment": "^2.30.1",
