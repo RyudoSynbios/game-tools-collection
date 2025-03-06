@@ -35,6 +35,7 @@
   let threeEl: HTMLDivElement;
 
   let textures: { [key: string]: DataView } = {};
+  let texturesCache: { [key: string]: Texture } = {};
   let isModalOpen = false;
 
   function getAssetId() {
@@ -133,6 +134,8 @@
 
     let error = false;
 
+    texturesCache = {};
+
     await entities.reduce(async (previousEntity, entityIndex, index) => {
       await previousEntity;
 
@@ -172,7 +175,12 @@
 
       debug.log(njcm);
 
-      const textures: Texture[] = await getTextures(njtl, model, canvas);
+      const textures: Texture[] = await getTextures(
+        njtl,
+        model,
+        canvas,
+        texturesCache,
+      );
 
       const vertexBuffer: number[] = [];
 
@@ -260,6 +268,7 @@
 
         if (object.meshsOffset) {
           const { error: meshsError } = addMeshs(
+            entity,
             object,
             vertexBuffer,
             dataView,

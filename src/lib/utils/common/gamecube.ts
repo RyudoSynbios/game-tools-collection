@@ -426,6 +426,7 @@ export function writeFile(path: string, dataView: DataView): void {
 export interface GvrTexture {
   width: number;
   height: number;
+  colorType: ColorType;
   data: Uint8Array;
 }
 
@@ -437,6 +438,7 @@ export function getGvrTexture(canvas: Canvas, dataView: DataView): GvrTexture {
     return {
       width: 0,
       height: 0,
+      colorType: "RGB5A3",
       data: new Uint8Array(),
     };
   }
@@ -590,6 +592,7 @@ export function getGvrTexture(canvas: Canvas, dataView: DataView): GvrTexture {
   return {
     width,
     height,
+    colorType,
     data,
   };
 }

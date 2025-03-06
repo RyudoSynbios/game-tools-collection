@@ -13,6 +13,7 @@ import {
   Group,
   LineBasicMaterial,
   LineSegments,
+  Material,
   Mesh,
   MeshBasicMaterial,
   MeshLambertMaterial,
@@ -27,6 +28,7 @@ import {
   RepeatWrapping,
   Scene,
   SRGBColorSpace,
+  Texture,
   TextureLoader,
   Vector2,
   Vector3,
@@ -58,12 +60,22 @@ export interface MaterialOptions {
   model?: "basic" | "lambert";
   opacity?: number;
   side?: Side;
-  texture?: {
-    base64?: string;
-    flipY?: boolean;
-    repeatX?: boolean | "mirrored";
-    repeatY?: boolean | "mirrored";
-  };
+  texture?: TextureOptions;
+}
+
+export interface MeshOptions {
+  id?: string;
+  group?: Group;
+  locked?: boolean;
+  renderOrder?: number;
+  onClick?: () => void;
+}
+
+export interface TextureOptions {
+  base64?: string;
+  flipY?: boolean;
+  repeatX?: boolean | "mirrored";
+  repeatY?: boolean | "mirrored";
 }
 
 export default class Three {
@@ -503,30 +515,14 @@ export default class Three {
         if (this.selectedObject.reference !== this.hoveredObject.reference) {
           this.setDummy("select", this.hoveredObject.reference);
 
-          if (isDebug) {
-            this.group.children.forEach((child, index) => {
-              if (child === this.hoveredObject.reference) {
-                console.log({
-                  index,
-                  position: {
-                    x: child.position.x,
-                    y: child.position.y,
-                    z: child.position.z,
-                  },
-                  rotation: {
-                    x: Math.round((child.rotation.x / (2 * Math.PI)) * 360),
-                    y: Math.round((child.rotation.y / (2 * Math.PI)) * 360),
-                    z: Math.round((child.rotation.z / (2 * Math.PI)) * 360),
-                  },
-                  scale: {
-                    x: child.scale.x,
-                    y: child.scale.y,
-                    z: child.scale.z,
-                  },
-                });
-              }
-            });
-          }
+          this.group.traverse((object) => {
+            if (
+              object === this.hoveredObject.reference &&
+              typeof object.userData.onClick === "function"
+            ) {
+              object.userData.onClick();
+            }
+          });
         } else {
           this.setDummy("select");
 
@@ -559,19 +555,10 @@ export default class Three {
   }
 
   public addMesh(
-    vertices: number[],
-    indices: number[],
-    uvs: number[],
+    geometry: BufferGeometry,
+    material: Material | Material[],
     instanceId: string,
-    options?: {
-      id?: string;
-      group?: Group;
-      locked?: boolean;
-      renderLast?: boolean;
-      renderOrder?: number;
-      geometry?: GeometryOptions;
-      material?: MaterialOptions | MaterialOptions[];
-    },
+    options?: MeshOptions,
   ): Mesh | null {
     if (instanceId !== this.instanceId) {
       return null;
@@ -580,44 +567,12 @@ export default class Three {
     const id = options?.id;
     const group = options?.group;
     const locked = options?.locked || false;
-    const renderLast = options?.renderLast || false;
+
     const renderOrder = options?.renderOrder || 0;
-
-    const geometry = this.generateGeometry(
-      vertices,
-      indices,
-      uvs,
-      options?.geometry,
-    );
-
-    let material;
-
-    if (Array.isArray(options?.material)) {
-      material = [];
-
-      options?.material.forEach((option, index) => {
-        geometry.addGroup(index * 6, 6, index);
-
-        material.push(
-          this.generateMaterial({
-            ...option,
-            depthTest: !renderLast,
-          }),
-        );
-      });
-    } else {
-      material = this.generateMaterial({
-        ...options?.material,
-        depthTest: !renderLast,
-      });
-    }
 
     const mesh = new Mesh(geometry, material);
     mesh.receiveShadow = true;
-
-    if (renderLast) {
-      mesh.renderOrder = -1;
-    }
+    mesh.userData.onClick = options?.onClick;
 
     if (renderOrder) {
       mesh.renderOrder = renderOrder;
@@ -750,25 +705,7 @@ export default class Three {
     }
 
     if (texture.base64) {
-      const map = new TextureLoader().load(texture.base64);
-      map.colorSpace = SRGBColorSpace;
-      map.flipY = texture.flipY;
-      map.minFilter = NearestFilter;
-      map.magFilter = NearestFilter;
-
-      if (texture.repeatX === "mirrored") {
-        map.wrapS = MirroredRepeatWrapping;
-      } else if (texture.repeatX) {
-        map.wrapS = RepeatWrapping;
-      }
-
-      if (texture.repeatY === "mirrored") {
-        map.wrapT = MirroredRepeatWrapping;
-      } else if (texture.repeatY) {
-        map.wrapT = RepeatWrapping;
-      }
-
-      materialParams.map = map;
+      materialParams.map = this.generateMaterialMap(texture);
     } else {
       materialParams.color = color;
     }
@@ -778,6 +715,35 @@ export default class Three {
     }
 
     return new MeshBasicMaterial(materialParams);
+  }
+
+  public generateMaterialMap(options: TextureOptions): Texture {
+    const texture = {
+      base64: options?.base64 || "",
+      flipY: options?.flipY !== undefined ? options?.flipY : true,
+      repeatX: options?.repeatX || false,
+      repeatY: options?.repeatY || false,
+    };
+
+    const map = new TextureLoader().load(texture.base64);
+    map.colorSpace = SRGBColorSpace;
+    map.flipY = texture.flipY;
+    map.minFilter = NearestFilter;
+    map.magFilter = NearestFilter;
+
+    if (texture.repeatX === "mirrored") {
+      map.wrapS = MirroredRepeatWrapping;
+    } else if (texture.repeatX) {
+      map.wrapS = RepeatWrapping;
+    }
+
+    if (texture.repeatY === "mirrored") {
+      map.wrapT = MirroredRepeatWrapping;
+    } else if (texture.repeatY) {
+      map.wrapT = RepeatWrapping;
+    }
+
+    return map;
   }
 
   public clone(object: Object3D): Object3D {

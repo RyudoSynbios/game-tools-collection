@@ -104,6 +104,21 @@ export async function addBattlefieldFloor(
                 base64 = await generateTexture(texture, canvas);
               }
 
+              const vertices = [
+                0,
+                heights[row * 16 + column * 4 + 0],
+                0,
+                32,
+                heights[row * 16 + column * 4 + 1],
+                0,
+                32,
+                heights[row * 16 + column * 4 + 2],
+                -32,
+                0,
+                heights[row * 16 + column * 4 + 3],
+                -32,
+              ];
+              const indices = [0, 1, 2, 2, 3, 0];
               let uvs = [0, 0, 1, 0, 1, 1, 1, 1, 0, 1, 0, 0];
 
               if (scenario === "3" || scenario === "premium") {
@@ -129,37 +144,20 @@ export async function addBattlefieldFloor(
                 uvs = flipUvs(uvs, "y");
               }
 
-              const mesh = three.addMesh(
-                [
-                  0,
-                  heights[row * 16 + column * 4 + 0],
-                  0,
-                  32,
-                  heights[row * 16 + column * 4 + 1],
-                  0,
-                  32,
-                  heights[row * 16 + column * 4 + 2],
-                  -32,
-                  0,
-                  heights[row * 16 + column * 4 + 3],
-                  -32,
-                ],
-                [0, 1, 2, 2, 3, 0],
-                uvs,
-                instanceId,
-                {
-                  group,
-                  geometry: {
-                    nonIndexed: true,
-                  },
-                  material: {
-                    color: 0x0,
-                    texture: {
-                      base64,
-                    },
-                  },
+              const geometry = three.generateGeometry(vertices, indices, uvs, {
+                nonIndexed: true,
+              });
+
+              const material = three.generateMaterial({
+                color: 0x0,
+                texture: {
+                  base64,
                 },
-              );
+              });
+
+              const mesh = three.addMesh(geometry, material, instanceId, {
+                group,
+              });
 
               if (mesh) {
                 mesh.position.x = blockColumn * 128 + column * 32;
@@ -191,27 +189,27 @@ export function addFloor(
     uvs = uvs.map((uv) => uv * 3);
   }
 
-  const mesh = three.addMesh(
-    [0, 0, 0, max, 0, 0, max, 0, -max, 0, 0, -max],
-    [0, 1, 2, 2, 3, 0],
-    uvs,
-    instanceId,
-    {
-      locked: true,
-      renderLast: true,
-      geometry: {
-        nonIndexed: true,
-      },
-      material: {
-        color: 0x0,
-        texture: {
-          base64: texture,
-          repeatX: true,
-          repeatY: true,
-        },
-      },
+  const vertices = [0, 0, 0, max, 0, 0, max, 0, -max, 0, 0, -max];
+  const indices = [0, 1, 2, 2, 3, 0];
+
+  const geometry = three.generateGeometry(vertices, indices, uvs, {
+    nonIndexed: true,
+  });
+
+  const material = three.generateMaterial({
+    color: 0x0,
+    depthTest: false,
+    texture: {
+      base64: texture,
+      repeatX: true,
+      repeatY: true,
     },
-  );
+  });
+
+  const mesh = three.addMesh(geometry, material, instanceId, {
+    locked: true,
+    renderOrder: -1,
+  });
 
   if (mesh) {
     mesh.position.x = position.x;
@@ -227,7 +225,6 @@ export function addFloor(
 
 interface OverrideOptions {
   palette?: Palette;
-  renderLast?: boolean;
   renderOrder?: number;
   materials?: MaterialOptions;
 }
@@ -261,14 +258,22 @@ export async function addObject(
     overrideOptions.palette,
   );
 
-  const mesh = three.addMesh(vertices, indices, materials.uvs, instanceId, {
+  const geometry = three.generateGeometry(vertices, indices, materials.uvs, {
+    nonIndexed: true,
+  });
+
+  const material = materials.options.map((option, index) => {
+    geometry.addGroup(index * 6, 6, index);
+
+    return three.generateMaterial({
+      ...option,
+      depthTest: overrideOptions?.renderOrder === 2 ? false : true,
+    });
+  });
+
+  const mesh = three.addMesh(geometry, material, instanceId, {
     id: offset.toHex(),
-    renderLast: overrideOptions?.renderLast,
     renderOrder: overrideOptions?.renderOrder,
-    geometry: {
-      nonIndexed: true,
-    },
-    material: materials.options,
   });
 
   return mesh;
@@ -605,7 +610,6 @@ export async function unpackMpd(
         };
       } else if (unknown === 0xbb8) {
         overrideOptionsCache[objectOffset] = {
-          renderLast: true,
           renderOrder: -2,
         };
       }

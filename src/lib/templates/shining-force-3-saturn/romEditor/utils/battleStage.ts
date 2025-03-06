@@ -36,40 +36,42 @@ export async function addObject(
     dataView,
   );
 
-  const mesh = three.addMesh(vertices, indices, materials.uvs, instanceId, {
+  const geometry = three.generateGeometry(vertices, indices, materials.uvs, {
+    nonIndexed: true,
+  });
+
+  const material = materials.options.map((option, index) => {
+    geometry.addGroup(index * 6, 6, index);
+
+    return three.generateMaterial(option);
+  });
+
+  const mesh = three.addMesh(geometry, material, instanceId, {
     id: offset.toHex(),
-    geometry: {
-      nonIndexed: true,
-    },
-    material: materials.options,
   });
 
   return mesh;
 }
 
 export function addFloor(texture: string, three: Three, instanceId: string) {
+  const vertices = [0, 0, 0, 512, 0, 0, 512, 0, -512, 0, 0, -512];
+  const indices = [0, 1, 2, 2, 3, 0];
   const uvs = [0, 0, 1, 0, 1, 1, 1, 1, 0, 1, 0, 0];
 
-  const mesh = three.addMesh(
-    [0, 0, 0, 512, 0, 0, 512, 0, -512, 0, 0, -512],
-    [0, 1, 2, 2, 3, 0],
-    uvs,
-    instanceId,
-    {
-      locked: true,
-      geometry: {
-        nonIndexed: true,
-      },
-      material: {
-        color: 0x0,
-        texture: {
-          base64: texture,
-          repeatX: true,
-          repeatY: true,
-        },
-      },
+  const geometry = three.generateGeometry(vertices, indices, uvs, {
+    nonIndexed: true,
+  });
+
+  const material = three.generateMaterial({
+    color: 0x0,
+    texture: {
+      base64: texture,
+      repeatX: true,
+      repeatY: true,
     },
-  );
+  });
+
+  const mesh = three.addMesh(geometry, material, instanceId, { locked: true });
 
   if (mesh) {
     mesh.position.x -= 256;

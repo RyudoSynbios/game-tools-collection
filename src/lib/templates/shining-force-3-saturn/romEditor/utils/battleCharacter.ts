@@ -33,16 +33,22 @@ export async function addObject(
     dataView,
   );
 
-  const mesh = three.addMesh(vertices, indices, materials.uvs, instanceId, {
-    id: offset.toHex(),
-    geometry: {
-      nonIndexed: true,
-      smoothAngle: Math.PI,
-    },
-    material: materials.options.map((option) => ({
+  const geometry = three.generateGeometry(vertices, indices, materials.uvs, {
+    nonIndexed: true,
+    smoothAngle: Math.PI,
+  });
+
+  const material = materials.options.map((option, index) => {
+    geometry.addGroup(index * 6, 6, index);
+
+    return three.generateMaterial({
       ...option,
       model: "lambert",
-    })),
+    });
+  });
+
+  const mesh = three.addMesh(geometry, material, instanceId, {
+    id: offset.toHex(),
   });
 
   return mesh;

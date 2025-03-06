@@ -1,23 +1,38 @@
-import { BufferAttribute, Euler, Group, Matrix4, Vector3 } from "three";
+import {
+  BufferAttribute,
+  BufferGeometry,
+  Color,
+  DoubleSide,
+  Euler,
+  Group,
+  Matrix4,
+  MeshLambertMaterial,
+  Vector3,
+} from "three";
+import { mergeGeometries } from "three/examples/jsm/utils/BufferGeometryUtils.js";
 
 import { extractBit, getInt } from "$lib/utils/bytes";
 import Canvas from "$lib/utils/canvas";
 import { getGvrTexture, GvrTexture } from "$lib/utils/common/gamecube";
 import debug from "$lib/utils/debug";
-import Three from "$lib/utils/three";
+import Three, { TextureOptions } from "$lib/utils/three";
 
-import { Model, NjtlFile } from "../utils";
+import type { ColorType } from "$lib/types";
+
+import { Entity, Model, NjtlFile } from "../utils";
 import { NjcmObject } from "./njcm";
 
 // TODO
 export interface Texture extends GvrTexture {
   base64: string;
+  colorType: ColorType;
 }
 
 export async function getTextures(
   njtl: NjtlFile,
   model: Model,
   canvas: Canvas,
+  texturesCache: { [key: string]: Texture },
 ): Promise<Texture[]> {
   const textures: Texture[] = [];
 
@@ -25,20 +40,24 @@ export async function getTextures(
     await njtl.textures.reduce(async (previousTexture, name) => {
       await previousTexture;
 
-      const gvrTexture = getGvrTexture(canvas, model.textures[name]);
+      if (!texturesCache[name]) {
+        const gvrTexture = getGvrTexture(canvas, model.textures[name]);
 
-      canvas.resize(gvrTexture.width, gvrTexture.height);
+        canvas.resize(gvrTexture.width, gvrTexture.height);
 
-      canvas.addGraphic(
-        "texture",
-        gvrTexture.data,
-        gvrTexture.width,
-        gvrTexture.height,
-      );
+        canvas.addGraphic(
+          "texture",
+          gvrTexture.data,
+          gvrTexture.width,
+          gvrTexture.height,
+        );
 
-      const base64 = await canvas.export();
+        const base64 = await canvas.export();
 
-      textures.push({ ...gvrTexture, base64 });
+        texturesCache[name] = { ...gvrTexture, base64 };
+      }
+
+      textures.push(texturesCache[name]);
     }, Promise.resolve());
   }
 
@@ -254,6 +273,7 @@ export interface VerticesCache {
 }
 
 export function addMeshs(
+  entity: Entity,
   object: NjcmObject,
   vertexBuffer: number[],
   dataView: DataView,
@@ -270,13 +290,14 @@ export function addMeshs(
   let error = false;
   let iteration = 0;
 
-  const material = {
-    color: 0xffffff,
-    opacity: 1,
-    texture: {},
-  };
+  let geometries: BufferGeometry[] = [];
+  let material = new MeshLambertMaterial({ alphaTest: 0.1, side: DoubleSide });
 
   while (true) {
+    if (instanceId !== three.getInstanceId()) {
+      return { error };
+    }
+
     const flags = getInt(offset, "uint8", {}, dataView);
     const type = getInt(offset + 0x1, "uint8", {}, dataView);
 
@@ -353,6 +374,24 @@ export function addMeshs(
         error = true;
     }
 
+    if ((!isMesh || end) && geometries.length > 0) {
+      const geometry = mergeGeometries(geometries);
+
+      three.addMesh(geometry, material, instanceId, {
+        group,
+        onClick: () => {
+          debug.log({
+            name: entity.name,
+            entityId: entity.entityId,
+            objectId: object.index,
+            object,
+          });
+        },
+      });
+
+      geometries = [];
+    }
+
     if (end) {
       debug.color(
         `{${object.parentIndex}} [${index}] (0x${offset.toHex(8)}) Mesh ${iteration} > flags: ${object.flags.debug}, type: 0x${type.toHex(2)}${color === "red" ? " > TYPE NOT HANDLED" : ""}`,
@@ -418,12 +457,21 @@ export function addMeshs(
       // const textureQuality = getInt(offset, "uint8", { bigEndian: true }, dataView);
       const textureIndex = getInt(offset + 0x1, "uint8", { bigEndian: true }, dataView); // prettier-ignore
 
-      material.texture = {
-        base64: textures[textureIndex].base64,
+      const texture = textures[textureIndex];
+
+      const textureOptions: TextureOptions = {
+        base64: texture.base64,
         flipY: false,
         repeatX: mirroredX ? "mirrored" : repeatX,
         repeatY: mirroredY ? "mirrored" : repeatY,
       };
+
+      material = material.clone();
+      material.map = three.generateMaterialMap(textureOptions);
+
+      if (texture.colorType === "RGB5A3") {
+        material.transparent = true;
+      }
 
       debug.color(
         `{${object.parentIndex}} [${index}] (0x${(offset - 0x2).toHex(8)}) Texture ${iteration} > flags: ${object.flags.debug}, type: 0x${type.toHex(2)}, textureIndex: ${textureIndex}`,
@@ -438,6 +486,8 @@ export function addMeshs(
     if (isMaterial) {
       const unknown2 = getInt(offset, "uint16", { bigEndian: true }, dataView);
 
+      material = material.clone();
+
       debug.color(
         `{${object.parentIndex}} [${index}] (0x${(offset - 0x2).toHex(8)}) Material ${iteration} > flags: ${object.flags.debug}, type: 0x${type.toHex(2)}, unknown2: ${unknown2.toHex(4)}`,
         color,
@@ -448,11 +498,15 @@ export function addMeshs(
       if (hasDiffuse) {
         const [diffuse, alpha] = getColor(offset, dataView);
 
-        material.color = diffuse;
+        material.color = new Color(diffuse);
         material.opacity = alpha;
 
+        if (alpha < 1) {
+          material.transparent = true;
+        }
+
         debug.color(
-          `{${object.parentIndex}} [${index}] (0x${(offset - 0x2).toHex(8)}) Material ${iteration} > flags: ${object.flags.debug}, type: 0x${type.toHex(2)}, diffuse: 0x${diffuse.toHex(6)}, alpha: ${material.opacity}`,
+          `{${object.parentIndex}} [${index}] (0x${(offset - 0x2).toHex(8)}) Material ${iteration} > flags: ${object.flags.debug}, type: 0x${type.toHex(2)}, diffuse: 0x${diffuse.toHex(6)}, alpha: ${alpha}`,
           color,
         );
 
@@ -475,7 +529,7 @@ export function addMeshs(
       if (hasSpecular) {
         const [specular, alpha] = getColor(offset, dataView);
 
-        // TODO
+        // material.specular = new Color(specular);
 
         debug.color(
           `{${object.parentIndex}} [${index}] (0x${(offset - 0x2).toHex(8)}) Material ${iteration} > flags: ${object.flags.debug}, type: 0x${type.toHex(2)}, specular: 0x${specular.toHex(6)}, alpha: ${alpha}`,
@@ -568,29 +622,23 @@ export function addMeshs(
         }
 
         // TODO
-        if (type === 0x40 && [0xbfbfbf, 0xffffff].includes(material.color)) {
-          material.color = 0xff0000;
+        if (
+          type === 0x40 &&
+          [0xbfbfbf, 0xffffff].includes(material.color.getHex())
+        ) {
+          material.color = new Color(0xff0000);
           material.opacity = 0.25;
+          material.transparent = true;
+          material.depthWrite = false;
         }
 
-        // TODO
         if (vertexBuffer.length > 0 && verticesCache.status !== "caching") {
-          three.addMesh(vertexBuffer, indices, uvs, instanceId, {
-            group,
-            renderOrder: material.opacity === 1 ? 0 : 1,
-            geometry: {
-              nonIndexed: true,
-              smoothAngle: Math.PI,
-            },
-            material: {
-              color: material.color,
-              model: "lambert",
-              opacity: material.opacity,
-              // side,
-              side: "double", // TODO: Temporary
-              texture: material.texture,
-            },
+          const geometry = three.generateGeometry(vertexBuffer, indices, uvs, {
+            nonIndexed: true,
+            smoothAngle: Math.PI,
           });
+
+          geometries.push(geometry);
         }
       }
 

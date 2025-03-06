@@ -368,17 +368,23 @@ export function addMesh(
     mesh.uvs.push(uv / multiplicator);
   });
 
-  three.addMesh(mesh.vertices, mesh.indices, mesh.uvs, instanceId, {
-    material: {
-      color: texture.color,
-      texture: {
-        base64: texture.base64,
-        flipY: false,
-        repeatX: texture.repeatX,
-        repeatY: texture.repeatY,
-      },
+  const geometry = three.generateGeometry(
+    mesh.vertices,
+    mesh.indices,
+    mesh.uvs,
+  );
+
+  const material = three.generateMaterial({
+    color: texture.color,
+    texture: {
+      base64: texture.base64,
+      flipY: false,
+      repeatX: texture.repeatX,
+      repeatY: texture.repeatY,
     },
   });
+
+  three.addMesh(geometry, material, instanceId);
 
   debug.color(`add mesh (${isFace ? "face" : "triangle"})`, "green");
 
