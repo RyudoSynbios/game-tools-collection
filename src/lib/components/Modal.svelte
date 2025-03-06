@@ -32,6 +32,10 @@
       @apply h-full rounded-xl bg-primary-800 p-4;
 
       max-width: calc(100vw - 4rem);
+
+      & :global(.gtc-tabs) {
+        @apply max-h-full;
+      }
     }
   }
 </style>
