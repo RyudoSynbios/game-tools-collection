@@ -346,6 +346,11 @@ export function addMeshs(
         hasDiffuse = true;
         hasAmbient = true;
         break;
+      case 0x14:
+        color = "mediumorchid";
+        isMaterial = true;
+        hasSpecular = true;
+        break;
       case 0x17:
         color = "mediumorchid";
         isMaterial = true;
