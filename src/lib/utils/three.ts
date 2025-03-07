@@ -839,8 +839,6 @@ export default class Three {
 
     this.controls.target.copy(center);
 
-    // this.camera.near = distance / 100;
-    // this.camera.far = distance * 100;
     this.camera.updateProjectionMatrix();
 
     this.camera.position.copy(this.controls.target).sub(direction);
