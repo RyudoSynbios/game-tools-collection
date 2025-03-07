@@ -100,12 +100,12 @@ function applyTransform(
 }
 
 export function getVertices(
+  entityIndex: number,
   object: NjcmObject,
   vertexBuffer: number[],
   dataView: DataView,
   // TODO: Remove
   objects: NjcmObject[],
-  loadAllEntities: boolean,
 ): { error: boolean } {
   const index = object.index;
   const vertices = [];
@@ -236,7 +236,7 @@ export function getVertices(
     let parent = object;
 
     while (parent) {
-      if (!loadAllEntities && parent.index === 0) {
+      if (entityIndex !== -1 && parent.index === 0) {
         break;
       }
 
@@ -498,7 +498,7 @@ export function addMeshs(
       if (hasDiffuse) {
         const [diffuse, alpha] = getColor(offset, dataView);
 
-        material.color = new Color(diffuse);
+        material.color = !material.map ? material.color : new Color(0xffffff);
         material.opacity = alpha;
 
         if (alpha < 1) {
@@ -623,8 +623,9 @@ export function addMeshs(
 
         // TODO
         if (
-          type === 0x40 &&
-          [0xbfbfbf, 0xffffff].includes(material.color.getHex())
+          entity.name === "goscript" ||
+          (type === 0x40 &&
+            [0xbfbfbf, 0xffffff].includes(material.color.getHex()))
         ) {
           material.color = new Color(0xff0000);
           material.opacity = 0.25;

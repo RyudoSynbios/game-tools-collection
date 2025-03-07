@@ -9,7 +9,7 @@
   import debug from "$lib/utils/debug";
   import Three from "$lib/utils/three";
 
-  import { getFileData, type Model } from "../utils";
+  import { getFileData, type Entity, type Model } from "../utils";
   import {
     addMeshs,
     getTextures,
@@ -26,8 +26,7 @@
 
   let previousAssetId = "";
 
-  let entityIndex = 0;
-  let njcmIndex = 0;
+  let entityIndex = -1;
 
   let canvas: Canvas;
   let three: Three;
@@ -64,8 +63,7 @@
     three.reset();
 
     if (getAssetId() !== previousAssetId) {
-      entityIndex = 0;
-      njcmIndex = 0;
+      entityIndex = -1;
     }
 
     const instanceId = three.getInstanceId();
@@ -84,8 +82,6 @@
 
     let model: Model;
 
-    let loadAllEntities = type === "battleStage" || type === "shipBattle";
-
     if (type === "battleStage") {
       model = unpackSml(dataView);
     } else {
@@ -94,24 +90,24 @@
 
     debug.log(model);
 
-    const filteredEntity = model.entities.filter(
+    const filteredEntities = model.entities.filter(
       (entity) => entity.linkedNjcmFiles.length,
     );
 
-    const entities: number[] = [];
+    const entities: Entity[] = [];
 
-    if (loadAllEntities) {
-      filteredEntity.forEach((entity) => entities.push(entity.index));
+    if (entityIndex === -1) {
+      filteredEntities.forEach((entity) => entities.push(entity));
+    } else {
+      entities.push(model.entities[entityIndex]);
     }
 
-    if (entities.length === 0 && filteredEntity.length > 0) {
-      if (!filteredEntity.find((entity) => entity.index === entityIndex)) {
-        entityIndex = filteredEntity[0].index;
-      }
+    if (filteredEntities.length > 1) {
+      const list: { [key: string]: number } = {
+        All: -1,
+      };
 
-      const list: { [key: string]: number } = {};
-
-      filteredEntity.forEach((file) => {
+      filteredEntities.forEach((file) => {
         list[`${file.index}: ${file.name}`] = file.index;
       });
 
@@ -124,56 +120,20 @@
         },
         list,
       );
-
-      entities.push(entityIndex);
     }
-
-    const excludeFirstShip = model.entities[0].name === "sb_ship00";
-
-    let movePartyShip = type !== "shipBattle";
 
     let error = false;
 
     texturesCache = {};
 
-    await entities.reduce(async (previousEntity, entityIndex, index) => {
+    await entities.reduce(async (previousEntity, entity, index) => {
       await previousEntity;
 
       if (instanceId !== three.getInstanceId()) {
         return previousEntity;
       }
 
-      const entity = model.entities[entityIndex];
       const njtl = model.njtlFiles[entity.linkedNjtlFiles[0]];
-
-      let njcm = model.njcmFiles[njcmIndex];
-
-      if (loadAllEntities) {
-        njcm = model.njcmFiles[entity.linkedNjcmFiles[0]];
-      } else if (!entity.linkedNjcmFiles.includes(njcmIndex)) {
-        njcmIndex = entity.linkedNjcmFiles[0];
-        njcm = model.njcmFiles[njcmIndex];
-      }
-
-      if (entity.linkedNjcmFiles.length > 1) {
-        const list: { [key: string]: number } = {};
-
-        entity.linkedNjcmFiles.forEach((njcm) => {
-          list[njcm.toHex()] = njcm;
-        });
-
-        three.addGuiListElement(
-          "njcmIndex",
-          "NJCM",
-          njcmIndex,
-          (value) => {
-            njcmIndex = value;
-          },
-          list,
-        );
-      }
-
-      debug.log(njcm);
 
       const textures: Texture[] = await getTextures(
         njtl,
@@ -187,7 +147,7 @@
       const mainGroup = three.addGroup();
       const groupIds: number[] = [];
 
-      if (loadAllEntities) {
+      if (entityIndex === -1) {
         mainGroup.position.x = entity.transform.positionX;
         mainGroup.position.y = entity.transform.positionY;
         mainGroup.position.z = entity.transform.positionZ;
@@ -205,17 +165,9 @@
 
       // TODO: Temporary
 
-      if (excludeFirstShip && entityIndex > 0 && entity.name === "sb_ship00") {
-        movePartyShip = true;
-      }
-
-      if (!movePartyShip) {
+      if (type === "shipBattle" && entity.entityId < 9000) {
         mainGroup.position.x += 100;
         mainGroup.position.y += 100;
-      }
-
-      if (!excludeFirstShip && entity.name === "sb_ship00") {
-        movePartyShip = true;
       }
 
       const verticesCache: VerticesCache = {
@@ -225,70 +177,74 @@
         rewind: false,
       };
 
-      for (let i = 0; i < njcm.objects.length; i += 1) {
-        const object = njcm.objects[i];
+      entity.linkedNjcmFiles.forEach((njcmIndex) => {
+        const njcm = model.njcmFiles[njcmIndex];
 
-        const group = new Group();
+        for (let i = 0; i < njcm.objects.length; i += 1) {
+          const object = njcm.objects[i];
 
-        groupIds.push(group.id);
+          const group = new Group();
 
-        if (object.index === 0) {
-          mainGroup.add(group);
-        } else {
-          const parentId = groupIds[object.parentIndex];
+          groupIds.push(group.id);
 
-          const parent = mainGroup.getObjectById(parentId);
-
-          if (parent) {
-            parent.add(group);
-          } else {
-            debug.warn("parent not found");
+          if (object.index === 0) {
             mainGroup.add(group);
+          } else {
+            const parentId = groupIds[object.parentIndex];
+
+            const parent = mainGroup.getObjectById(parentId);
+
+            if (parent) {
+              parent.add(group);
+            } else {
+              debug.warn("parent not found");
+              mainGroup.add(group);
+            }
           }
-        }
 
-        debug.color(
-          `{${object.parentIndex}} [${object.index}] (0x${(0).toHex(8)}) Object > flags: ${object.flags.debug}, vertices: 0x${(object.verticesOffset || 0).toHex(8)}, meshs: 0x${(object.meshsOffset || 0).toHex(8)}`,
-          "darkblue",
-        );
-
-        if (object.verticesOffset) {
-          const { error: verticesError } = getVertices(
-            object,
-            vertexBuffer,
-            dataView,
-            njcm.objects,
-            loadAllEntities,
+          debug.color(
+            `{${object.parentIndex}} [${object.index}] (0x${(0).toHex(8)}) Object > flags: ${object.flags.debug}, vertices: 0x${(object.verticesOffset || 0).toHex(8)}, meshs: 0x${(object.meshsOffset || 0).toHex(8)}`,
+            "darkblue",
           );
 
-          if (verticesError) {
-            error = true;
+          if (object.verticesOffset) {
+            const { error: verticesError } = getVertices(
+              entityIndex,
+              object,
+              vertexBuffer,
+              dataView,
+              njcm.objects,
+            );
+
+            if (verticesError) {
+              error = true;
+            }
+          }
+
+          if (object.meshsOffset) {
+            const { error: meshsError } = addMeshs(
+              entity,
+              object,
+              vertexBuffer,
+              dataView,
+              three,
+              instanceId,
+              group,
+              textures,
+              verticesCache,
+            );
+
+            if (meshsError) {
+              error = true;
+            }
+          }
+
+          if (verticesCache.rewind) {
+            i = verticesCache.index;
+            verticesCache.rewind = false;
           }
         }
-
-        if (object.meshsOffset) {
-          const { error: meshsError } = addMeshs(
-            entity,
-            object,
-            vertexBuffer,
-            dataView,
-            three,
-            instanceId,
-            group,
-            textures,
-            verticesCache,
-          );
-
-          if (meshsError) {
-            error = true;
-          }
-        }
-
-        if (verticesCache.rewind) {
-          i = verticesCache.index;
-          verticesCache.rewind = false;
-        }
-      }
+      });
 
       if (instanceId === three.getInstanceId()) {
         three.updateLoadingProgression(
@@ -338,7 +294,7 @@
   });
 
   $: {
-    assetIndex, entityIndex, njcmIndex, type;
+    assetIndex, entityIndex, type;
 
     if (canvas) {
       updateCanvas();
