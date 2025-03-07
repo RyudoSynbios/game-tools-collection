@@ -291,7 +291,8 @@ export function addMeshs(
   let iteration = 0;
 
   let geometries: BufferGeometry[] = [];
-  let material = new MeshLambertMaterial({ alphaTest: 0.1, side: DoubleSide });
+  let material = new MeshLambertMaterial();
+  let textureOptions: TextureOptions | null = null;
 
   while (true) {
     if (instanceId !== three.getInstanceId()) {
@@ -375,18 +376,29 @@ export function addMeshs(
     }
 
     if ((!isMesh || end) && geometries.length > 0) {
-      const geometry = mergeGeometries(geometries);
+      const geometriesWithUvs = geometries.filter(
+        (geometry) => geometry.attributes.uv,
+      );
+      const geometriesWithoutUvs = geometries.filter(
+        (geometry) => !geometry.attributes.uv,
+      );
 
-      three.addMesh(geometry, material, instanceId, {
-        group,
-        onClick: () => {
-          debug.log({
-            name: entity.name,
-            entityId: entity.entityId,
-            objectId: object.index,
-            object,
+      [geometriesWithUvs, geometriesWithoutUvs].forEach((geometries) => {
+        if (geometries.length > 0) {
+          const geometry = mergeGeometries(geometries);
+
+          three.addMesh(geometry, material, instanceId, {
+            group,
+            onClick: () => {
+              debug.log({
+                name: entity.name,
+                entityId: entity.entityId,
+                objectId: object.index,
+                object,
+              });
+            },
           });
-        },
+        }
       });
 
       geometries = [];
@@ -459,7 +471,7 @@ export function addMeshs(
 
       const texture = textures[textureIndex];
 
-      const textureOptions: TextureOptions = {
+      textureOptions = {
         base64: texture.base64,
         flipY: false,
         repeatX: mirroredX ? "mirrored" : repeatX,
@@ -486,7 +498,11 @@ export function addMeshs(
     if (isMaterial) {
       const unknown2 = getInt(offset, "uint16", { bigEndian: true }, dataView);
 
-      material = material.clone();
+      material = new MeshLambertMaterial({ alphaTest: 0.1, side: DoubleSide });
+
+      if (textureOptions) {
+        material.map = three.generateMaterialMap(textureOptions);
+      }
 
       debug.color(
         `{${object.parentIndex}} [${index}] (0x${(offset - 0x2).toHex(8)}) Material ${iteration} > flags: ${object.flags.debug}, type: 0x${type.toHex(2)}, unknown2: ${unknown2.toHex(4)}`,
@@ -621,12 +637,15 @@ export function addMeshs(
           }
         }
 
-        // TODO
-        if (
-          entity.name === "goscript" ||
+        // TODO: Find a true way to detect dummy / collision box
+
+        const isDummy =
+          entity.name.match(/esahaiti|goscript|hasigo/) ||
           (type === 0x40 &&
-            [0xbfbfbf, 0xffffff].includes(material.color.getHex()))
-        ) {
+            !textureOptions &&
+            [0xbfbfbf, 0xffffff].includes(material.color.getHex()));
+
+        if (isDummy) {
           material.color = new Color(0xff0000);
           material.opacity = 0.25;
           material.transparent = true;
