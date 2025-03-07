@@ -1020,6 +1020,7 @@ export default class Three {
 
   public destroy(): void {
     this.reset();
+    this.controls.dispose();
     this.gui.destroy();
     this.renderer.dispose();
     this.scene.clear();
