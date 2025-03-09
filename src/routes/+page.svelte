@@ -119,7 +119,7 @@
     <p>
       If a tool doesn't work as it should, if a game you love is missing or if
       you any questions, you can reach me on <a
-        href="https://discord.gg/bKrZcfWxXD"
+        href="https://discord.gg/3UJeXtsryS"
       >
         Discord
       </a>

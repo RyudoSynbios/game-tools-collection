@@ -29,7 +29,7 @@
     <div class="gtc-header-inner">
       <a class="gtc-header-logo" href="/">Game Tools Collection</a>
       <div>
-        <a href="https://discord.gg/bKrZcfWxXD" target="_blank">
+        <a href="https://discord.gg/3UJeXtsryS" target="_blank">
           <img src="/img/discord-mark-white.svg" alt="Discord Logo" />
         </a>
         <a
