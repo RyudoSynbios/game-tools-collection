@@ -486,7 +486,7 @@ export function addMeshs(
       material = material.clone();
       material.map = three.generateMaterialMap(textureOptions);
 
-      if (texture.colorType === "RGB5A3") {
+      if (["ARGB8888", "RGB5A3"].includes(texture.colorType)) {
         material.transparent = true;
       }
 

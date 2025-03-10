@@ -462,6 +462,9 @@ export function getGvrTexture(canvas: Canvas, dataView: DataView): GvrTexture {
     case 5:
       colorType = "RGB5A3";
       break;
+    case 6:
+      colorType = "ARGB8888";
+      break;
     case 14:
       colorType = "RGB565";
       break;
@@ -479,7 +482,7 @@ export function getGvrTexture(canvas: Canvas, dataView: DataView): GvrTexture {
     }
   }
 
-  if (![4, 5, 8, 14].includes(dataFormat)) {
+  if (![4, 5, 6, 8, 9, 14].includes(dataFormat)) {
     debug.warn(`Data format '${dataFormat}' not handled yet.`, {
       pixelFormat,
       dataFormat,
@@ -487,6 +490,36 @@ export function getGvrTexture(canvas: Canvas, dataView: DataView): GvrTexture {
       height,
       dataView,
     });
+  } else if (dataFormat === 6) {
+    const rows = height / 0x4;
+    const columns = width / 0x4;
+
+    let offset = 0x20;
+
+    for (let row = 0x0; row < rows; row += 0x1) {
+      for (let column = 0x0; column < columns; column += 0x1) {
+        const tileData = [];
+
+        for (let tile = 0x0; tile < 0x10; tile += 0x1) {
+          const int1 = getInt(offset, "uint16", { bigEndian: true }, dataView); // prettier-ignore
+          const int2 = getInt(offset + 0x20, "uint16", { bigEndian: true }, dataView); // prettier-ignore
+
+          const color = getColor((int1 << 0x10) | int2, colorType);
+
+          tileData.push(...color);
+
+          offset += 0x2;
+
+          if (offset % 0x20 === 0x0) {
+            offset += 0x20;
+          }
+        }
+
+        const data = new Uint8Array(tileData);
+
+        canvas.addGraphic("texture", data, 4, 4, column * 4, row * 4);
+      }
+    }
   } else if (dataFormat === 8) {
     const rows = height / 0x8;
     const columns = width / 0x8;
@@ -516,6 +549,34 @@ export function getGvrTexture(canvas: Canvas, dataView: DataView): GvrTexture {
         const data = new Uint8Array(tileData);
 
         canvas.addGraphic("texture", data, 8, 8, column * 0x8, row * 0x8);
+      }
+    }
+  } else if (dataFormat === 9) {
+    const rows = height / 0x4;
+    const columns = width / 0x8;
+
+    const palette = getPalette(colorType, 0x20, 0x100, {
+      bigEndian: true,
+      dataView,
+    });
+
+    let offset = 0x220;
+
+    for (let row = 0x0; row < rows; row += 0x1) {
+      for (let column = 0x0; column < columns; column += 0x1) {
+        const tileData = [];
+
+        for (let tile = 0x0; tile < 0x20; tile += 0x1) {
+          const int = getInt(offset, "uint8", {}, dataView);
+
+          tileData.push(...palette[int]);
+
+          offset += 0x1;
+        }
+
+        const data = new Uint8Array(tileData);
+
+        canvas.addGraphic("texture", data, 8, 4, column * 0x8, row * 0x4);
       }
     }
   } else if (dataFormat === 14) {

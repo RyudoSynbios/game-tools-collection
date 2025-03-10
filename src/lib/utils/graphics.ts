@@ -66,6 +66,12 @@ export function getColor(raw: number, type: ColorType): Color {
       blue = ((raw >> 0x1) & 0x1f) << 0x3;
       alpha = (raw & 0x1) * 255;
       break;
+    case "ARGB8888":
+      alpha = (raw >> 0x18) & 0xff;
+      red = (raw >> 0x10) & 0xff;
+      green = (raw >> 0x8) & 0xff;
+      blue = raw & 0xff;
+      break;
   }
 
   return [red, green, blue, alpha];

@@ -3,6 +3,7 @@ export type Color = [number, number, number, number];
 export type ColorType =
   | "ABGR555"
   | "ARGB555"
+  | "ARGB8888"
   | "BGR333"
   | "BGR555"
   | "RGB555"
