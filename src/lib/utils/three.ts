@@ -1,3 +1,4 @@
+import FileSaver from "file-saver";
 import { GUI } from "lil-gui";
 import { get } from "svelte/store";
 import {
@@ -46,6 +47,7 @@ import { generateUUID } from "$lib/utils/format";
 
 import debug from "./debug";
 import { getLocalStorage, setLocalStorage } from "./format";
+import OBJExporter from "./three/OBJExporter";
 
 export type Side = "front" | "back" | "double";
 
@@ -117,6 +119,7 @@ export default class Three {
     cameraReset: () => void;
     fullscreenToggle: () => void;
     textureListCallback: () => void;
+    exportObj: () => void;
   };
   private guiCustomFolder: GUI;
   private hoveredObject: {
@@ -275,6 +278,7 @@ export default class Three {
       cameraReset: this.resetCamera.bind(this),
       fullscreenToggle: this.fullscreenToggle.bind(this),
       textureListCallback: () => {},
+      exportObj: this.exportObj.bind(this),
     };
 
     this.gui = new GUI({
@@ -325,6 +329,12 @@ export default class Three {
       .add(this.guiController, "textureListCallback")
       .name("Texture List")
       .hide();
+
+    if (this.debug) {
+      miscellaneousFolder
+        .add(this.guiController, "exportObj")
+        .name("Export OBJ");
+    }
 
     // Dummies
 
@@ -886,6 +896,18 @@ export default class Three {
     }
 
     this.resize();
+  }
+
+  public exportObj(): void {
+    const exporter = new OBJExporter();
+
+    const data = exporter.parse(this.group);
+
+    const blob = new Blob([data], {
+      type: "application/octet-stream",
+    });
+
+    FileSaver.saveAs(blob, "object.obj");
   }
 
   public resize(): void {
