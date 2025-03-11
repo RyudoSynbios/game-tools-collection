@@ -123,7 +123,7 @@ export function getVertices(
     let color = "blue";
 
     let hasNormals = false;
-    let hasVertexColor = false;
+    let hasVertexColors = false;
     let hasSkinWeight = false;
 
     let end = false;
@@ -132,14 +132,14 @@ export function getVertices(
       case 0x22:
         break;
       case 0x23:
-        hasVertexColor = true;
+        hasVertexColors = true;
         break;
       case 0x29:
         hasNormals = true;
         break;
       case 0x2a:
         hasNormals = true;
-        hasVertexColor = true;
+        hasVertexColors = true;
         break;
       case 0x2c:
         hasNormals = true;
@@ -157,7 +157,7 @@ export function getVertices(
 
     if (end) {
       debug.color(
-        `{${object.parentIndex}} [${index}] (0x${offset.toHex(8)}) Vertices ${iteration} > flags: ${object.flags.debug}, type: 0x${type.toHex(2)}, size: 0x${size.toHex(4)}, unk2: 0x${unknown2.toHex(2)}${color === "red" ? " > TYPE NOT HANDLED" : ""}`,
+        `{${object.parentIndex}} [${index}] (0x${offset.toHex(8)}) Vertices ${iteration} > object: ${object.flags.debug}, type: 0x${type.toHex(2)}, size: 0x${size.toHex(4)}, unk2: 0x${unknown2.toHex(2)}${color === "red" ? " > TYPE NOT HANDLED" : ""}`,
         color,
       );
 
@@ -170,7 +170,7 @@ export function getVertices(
     // TODO: unknown3 shift in vertice table, so related indexes takes account of this shift > Find a way to link indices to vertice table
 
     debug.color(
-      `{${object.parentIndex}} [${index}] (0x${offset.toHex(8)}) Vertices ${iteration} > flags: ${object.flags.debug}, type: 0x${type.toHex(2)}, size: 0x${size.toHex(4)}, unk2: 0x${unknown2.toHex(2)}, count: ${count}, position: ${basePosition}`,
+      `{${object.parentIndex}} [${index}] (0x${offset.toHex(8)}) Vertices ${iteration} > object: ${object.flags.debug}, type: 0x${type.toHex(2)}, size: 0x${size.toHex(4)}, unk2: 0x${unknown2.toHex(2)}, count: ${count}, position: ${basePosition}`,
       color,
     );
 
@@ -193,7 +193,7 @@ export function getVertices(
         offset += 0xc;
       }
 
-      if (hasVertexColor) {
+      if (hasVertexColors) {
         // const vcRed = getInt(offset, "uint8", {}, dataView);
         // const vcGreen = getInt(offset + 0x1, "uint8", {}, dataView);
         // const vcBlue = getInt(offset + 0x2, "uint8", {}, dataView);
@@ -396,6 +396,7 @@ export function addMeshs(
             group,
             onClick: () => {
               debug.log({
+                index: entity.index,
                 name: entity.name,
                 entityId: entity.entityId,
                 objectId: object.index,
@@ -411,7 +412,7 @@ export function addMeshs(
 
     if (end) {
       debug.color(
-        `{${object.parentIndex}} [${index}] (0x${offset.toHex(8)}) Mesh ${iteration} > flags: ${object.flags.debug}, type: 0x${type.toHex(2)}${color === "red" ? " > TYPE NOT HANDLED" : ""}`,
+        `{${object.parentIndex}} [${index}] (0x${offset.toHex(8)}) Mesh ${iteration} > object: ${object.flags.debug}, flags: ${flags.toHex()}, type: 0x${type.toHex(2)}${color === "red" ? " > TYPE NOT HANDLED" : ""}`,
         color,
       );
 
@@ -426,7 +427,7 @@ export function addMeshs(
       const unknown2 = getInt(offset, "uint16", { bigEndian: true }, dataView);
 
       debug.color(
-        `{${object.parentIndex}} [${index}] (0x${(offset - 0x2).toHex(8)}) Cache ${iteration} > flags: ${object.flags.debug}, type: 0x${type.toHex(2)}, unk2: 0x${unknown2.toHex(4)} > ${flags}`,
+        `{${object.parentIndex}} [${index}] (0x${(offset - 0x2).toHex(8)}) Cache ${iteration} > object: ${object.flags.debug}, type: 0x${type.toHex(2)}, unk2: 0x${unknown2.toHex(4)} > ${flags}`,
         color,
       );
 
@@ -446,7 +447,7 @@ export function addMeshs(
 
     if (isRewind) {
       debug.color(
-        `{${object.parentIndex}} [${index}] (0x${(offset - 0x2).toHex(8)}) Rewind ${iteration} > flags: ${object.flags.debug}, type: 0x${type.toHex(2)} > ${flags}`,
+        `{${object.parentIndex}} [${index}] (0x${(offset - 0x2).toHex(8)}) Rewind ${iteration} > object: ${object.flags.debug}, type: 0x${type.toHex(2)} > ${flags}`,
         color,
       );
 
@@ -491,7 +492,7 @@ export function addMeshs(
       }
 
       debug.color(
-        `{${object.parentIndex}} [${index}] (0x${(offset - 0x2).toHex(8)}) Texture ${iteration} > flags: ${object.flags.debug}, type: 0x${type.toHex(2)}, textureIndex: ${textureIndex}`,
+        `{${object.parentIndex}} [${index}] (0x${(offset - 0x2).toHex(8)}) Texture ${iteration} > object: ${object.flags.debug}, flags: ${flags.toHex()}, type: 0x${type.toHex(2)}, textureIndex: ${textureIndex}`,
         color,
       );
 
@@ -503,14 +504,14 @@ export function addMeshs(
     if (isMaterial) {
       const unknown2 = getInt(offset, "uint16", { bigEndian: true }, dataView);
 
-      material = new MeshLambertMaterial({ alphaTest: 0.1, side: DoubleSide });
+      material = new MeshLambertMaterial({ alphaTest: 0.01, side: DoubleSide });
 
       if (textureOptions) {
         material.map = three.generateMaterialMap(textureOptions);
       }
 
       debug.color(
-        `{${object.parentIndex}} [${index}] (0x${(offset - 0x2).toHex(8)}) Material ${iteration} > flags: ${object.flags.debug}, type: 0x${type.toHex(2)}, unknown2: ${unknown2.toHex(4)}`,
+        `{${object.parentIndex}} [${index}] (0x${(offset - 0x2).toHex(8)}) Material ${iteration} > object: ${object.flags.debug}, flags: ${flags.toHex()}, type: 0x${type.toHex(2)}, unknown2: ${unknown2.toHex(4)}`,
         color,
       );
 
@@ -519,7 +520,9 @@ export function addMeshs(
       if (hasDiffuse) {
         const [diffuse, alpha] = getColor(offset, dataView);
 
-        material.color = !material.map ? material.color : new Color(0xffffff);
+        material.color = !material.map
+          ? new Color(diffuse)
+          : new Color(0xffffff);
         material.opacity = alpha;
 
         if (alpha < 1) {
@@ -527,7 +530,7 @@ export function addMeshs(
         }
 
         debug.color(
-          `{${object.parentIndex}} [${index}] (0x${(offset - 0x2).toHex(8)}) Material ${iteration} > flags: ${object.flags.debug}, type: 0x${type.toHex(2)}, diffuse: 0x${diffuse.toHex(6)}, alpha: ${alpha}`,
+          `{${object.parentIndex}} [${index}] (0x${(offset - 0x2).toHex(8)}) Material ${iteration} > object: ${object.flags.debug}, flags: ${flags.toHex()}, type: 0x${type.toHex(2)}, diffuse: 0x${diffuse.toHex(6)}, alpha: ${alpha}`,
           color,
         );
 
@@ -540,7 +543,7 @@ export function addMeshs(
         // TODO
 
         debug.color(
-          `{${object.parentIndex}} [${index}] (0x${(offset - 0x2).toHex(8)}) Material ${iteration} > flags: ${object.flags.debug}, type: 0x${type.toHex(2)}, ambient: 0x${ambient.toHex(6)}, alpha: ${alpha}`,
+          `{${object.parentIndex}} [${index}] (0x${(offset - 0x2).toHex(8)}) Material ${iteration} > object: ${object.flags.debug}, flags: ${flags.toHex()}, type: 0x${type.toHex(2)}, ambient: 0x${ambient.toHex(6)}, alpha: ${alpha}`,
           color,
         );
 
@@ -553,7 +556,7 @@ export function addMeshs(
         // material.specular = new Color(specular);
 
         debug.color(
-          `{${object.parentIndex}} [${index}] (0x${(offset - 0x2).toHex(8)}) Material ${iteration} > flags: ${object.flags.debug}, type: 0x${type.toHex(2)}, specular: 0x${specular.toHex(6)}, alpha: ${alpha}`,
+          `{${object.parentIndex}} [${index}] (0x${(offset - 0x2).toHex(8)}) Material ${iteration} > object: ${object.flags.debug}, flags: ${flags.toHex()}, type: 0x${type.toHex(2)}, specular: 0x${specular.toHex(6)}, alpha: ${alpha}`,
           color,
         );
 
@@ -564,18 +567,20 @@ export function addMeshs(
     // Mesh
 
     if (isMesh) {
+      // const applyVertexColors = extractBit(flags, 3);
+
       const unknown2 = getInt(offset, "uint16", { bigEndian: true }, dataView);
 
       const meshCount = getInt(offset + 0x2, "uint16", { bigEndian: true }, dataView); // prettier-ignore
 
       if (vertexBuffer.length > 0) {
         debug.color(
-          `{${object.parentIndex}} [${index}] (0x${(offset - 0x2).toHex(8)}) Mesh ${iteration} > flags: ${object.flags.debug}, type: 0x${type.toHex(2)}, unk2: 0x${unknown2.toHex(4)}, count: ${meshCount}`,
+          `{${object.parentIndex}} [${index}] (0x${(offset - 0x2).toHex(8)}) Mesh ${iteration} > object: ${object.flags.debug}, flags: ${flags.toHex()}, type: 0x${type.toHex(2)}, unk2: 0x${unknown2.toHex(4)}, count: ${meshCount}`,
           color,
         );
       } else {
         debug.color(
-          `{${object.parentIndex}} [${index}] (0x${(offset - 0x2).toHex(8)}) Mesh ${iteration} > flags: ${object.flags.debug}, type: 0x${type.toHex(2)}, unk2: 0x${unknown2.toHex(4)}, count: ${meshCount} > NO VERTICES`,
+          `{${object.parentIndex}} [${index}] (0x${(offset - 0x2).toHex(8)}) Mesh ${iteration} > object: ${object.flags.debug}, flags: ${flags.toHex()}, type: 0x${type.toHex(2)}, unk2: 0x${unknown2.toHex(4)}, count: ${meshCount} > NO VERTICES`,
           "red",
         );
       }

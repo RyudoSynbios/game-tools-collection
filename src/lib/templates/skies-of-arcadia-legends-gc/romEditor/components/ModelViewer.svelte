@@ -203,7 +203,7 @@
           }
 
           debug.color(
-            `{${object.parentIndex}} [${object.index}] (0x${(0).toHex(8)}) Object > flags: ${object.flags.debug}, vertices: 0x${(object.verticesOffset || 0).toHex(8)}, meshs: 0x${(object.meshsOffset || 0).toHex(8)}`,
+            `{${object.parentIndex}} [${object.index}] (0x${object.offset.toHex(8)}) Object > flags: ${object.flags.debug}, vertices: 0x${(object.verticesOffset || 0).toHex(8)}, meshs: 0x${(object.meshsOffset || 0).toHex(8)}`,
             "darkblue",
           );
 

@@ -49,9 +49,9 @@ export function unpackNmld(dataView: DataView): Model {
     // const offset2 = getInt(offset + 0xc, "uint32", { bigEndian: true }, dataView);
     // const offset3 = getInt(offset + 0x10, "uint32", { bigEndian: true }, dataView);
     const objectOffset = getInt(offset + 0x14, "uint32", { bigEndian: true }, dataView);
-    // const offset5 = getInt(offset + 0x18, "uint32", { bigEndian: true }, dataView);
-    // const offset6 = getInt(offset + 0x1c, "uint32", { bigEndian: true }, dataView);
-    // const offset7 = getInt(offset + 0x20, "uint32", { bigEndian: true }, dataView);
+    // const grndOffset = getInt(offset + 0x18, "uint32", { bigEndian: true }, dataView);
+    // const nmdmOffset = getInt(offset + 0x1c, "uint32", { bigEndian: true }, dataView);
+    // const spriteOffset = getInt(offset + 0x20, "uint32", { bigEndian: true }, dataView);
     // const unknownA = getInt(offset + 0x34, "uint32", { bigEndian: true }, dataView);
     // const unknownB = getInt(offset + 0x38, "uint32", { bigEndian: true }, dataView);
     // const unknownC = getInt(offset + 0x3c, "uint32", { bigEndian: true }, dataView);

@@ -19,6 +19,7 @@ export function unpackNjcm(offset: number, dataView: DataView): NjcmFile {
 export interface NjcmObject {
   index: number;
   parentIndex: number;
+  offset: number;
   flags: {
     position: boolean;
     rotation: boolean;
@@ -60,6 +61,7 @@ function parseNjcmObject(
   const object = {
     index: objects.length,
     parentIndex,
+    offset,
   } as NjcmObject;
 
   object.flags = {
