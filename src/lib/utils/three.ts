@@ -107,6 +107,7 @@ export default class Three {
   private fullscreen: boolean;
   private gridHelper: GridHelper;
   private gridSize: number;
+  private textureFlipY: boolean;
   private wireframe: boolean;
   private stats?: Stats;
   private statsDrawCalls?: Stats.Panel;
@@ -145,10 +146,13 @@ export default class Three {
         target: [number, number, number];
       };
       gridSize?: number;
+      textureFlipY?: boolean;
     },
   ) {
     const width = options?.width || 0;
     const height = options?.height || 0;
+    const textureFlipY =
+      options?.textureFlipY !== undefined ? options?.textureFlipY : true;
 
     this.debug = get(isDebug);
 
@@ -249,6 +253,10 @@ export default class Three {
     // Wireframe
 
     this.wireframe = getLocalStorage("threeWireframe") === "true";
+
+    // Flip Textures
+
+    this.textureFlipY = textureFlipY;
 
     // Stats
 
@@ -701,8 +709,6 @@ export default class Three {
     const side = options?.side || "front";
     const texture = {
       base64: options?.texture?.base64 || "",
-      flipY:
-        options?.texture?.flipY !== undefined ? options?.texture?.flipY : true,
       repeatX: options?.texture?.repeatX || false,
       repeatY: options?.texture?.repeatY || false,
     };
@@ -742,14 +748,13 @@ export default class Three {
   public generateMaterialMap(options: TextureOptions): Texture {
     const texture = {
       base64: options?.base64 || "",
-      flipY: options?.flipY !== undefined ? options?.flipY : true,
       repeatX: options?.repeatX || false,
       repeatY: options?.repeatY || false,
     };
 
     const map = new TextureLoader().load(texture.base64);
     map.colorSpace = SRGBColorSpace;
-    map.flipY = texture.flipY;
+    map.flipY = this.textureFlipY;
     map.minFilter = NearestFilter;
     map.magFilter = NearestFilter;
 

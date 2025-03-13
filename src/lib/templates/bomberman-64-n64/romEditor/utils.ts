@@ -378,7 +378,6 @@ export function addMesh(
     color: texture.color,
     texture: {
       base64: texture.base64,
-      flipY: false,
       repeatX: texture.repeatX,
       repeatY: texture.repeatY,
     },

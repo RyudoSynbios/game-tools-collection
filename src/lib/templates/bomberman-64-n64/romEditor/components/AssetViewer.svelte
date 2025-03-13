@@ -413,7 +413,7 @@
 
     canvasTexture.addLayer("texture", "image");
 
-    three = new Three(threeEl);
+    three = new Three(threeEl, { textureFlipY: false });
 
     updateCanvas();
   });

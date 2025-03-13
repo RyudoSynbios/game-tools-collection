@@ -283,6 +283,7 @@
 
     three = new Three(threeEl, {
       gridSize: 100,
+      textureFlipY: false,
     });
 
     updateCanvas();

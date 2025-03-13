@@ -479,7 +479,6 @@ export function addMeshs(
 
       textureOptions = {
         base64: texture.base64,
-        flipY: false,
         repeatX: mirroredX ? "mirrored" : repeatX,
         repeatY: mirroredY ? "mirrored" : repeatY,
       };
