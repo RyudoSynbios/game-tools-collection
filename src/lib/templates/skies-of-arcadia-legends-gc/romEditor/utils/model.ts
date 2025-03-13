@@ -485,6 +485,7 @@ export function addMeshs(
       };
 
       material = material.clone();
+      material.color = new Color(0xffffff);
       material.map = three.generateMaterialMap(textureOptions);
 
       if (["ARGB8888", "RGB5A3"].includes(texture.colorType)) {
