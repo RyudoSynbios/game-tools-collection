@@ -906,7 +906,7 @@ export default class Three {
   public exportObj(): void {
     const exporter = new OBJExporter();
 
-    const data = exporter.parse(this.group);
+    const data = exporter.parse(this.group, this.textureFlipY);
 
     const blob = new Blob([data], {
       type: "application/octet-stream",

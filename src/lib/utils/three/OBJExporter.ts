@@ -14,7 +14,7 @@ import {
 
 // Adapted from https://github.com/mrdoob/three.js/blob/dev/examples/jsm/exporters/OBJExporter.js
 export default class OBJExporter {
-  parse(object: Object3D) {
+  parse(object: Object3D, textureFlipY: boolean) {
     let output = "";
 
     let indexVertex = 0;
@@ -61,6 +61,11 @@ export default class OBJExporter {
       if (uvs !== undefined) {
         for (let i = 0, l = uvs.count; i < l; i++, nbVertexUvs++) {
           uv.fromBufferAttribute(uvs as BufferAttribute, i);
+
+          if (!textureFlipY) {
+            uv.y = 1 - uv.y;
+            uvs.setY(i, uv.y);
+          }
 
           output += "vt " + uv.x + " " + uv.y + "\n";
         }
