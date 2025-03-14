@@ -177,7 +177,7 @@
         rewind: false,
       };
 
-      entity.linkedNjcmFiles.forEach((njcmIndex) => {
+      entity.linkedNjcmFiles.forEach((njcmIndex, partIndex) => {
         const njcm = model.njcmFiles[njcmIndex];
 
         for (let i = 0; i < njcm.objects.length; i += 1) {
@@ -225,6 +225,7 @@
             const { error: meshsError } = addMeshs(
               entity,
               object,
+              partIndex,
               vertexBuffer,
               dataView,
               three,

@@ -275,6 +275,7 @@ export interface VerticesCache {
 export function addMeshs(
   entity: Entity,
   object: NjcmObject,
+  partIndex: number,
   vertexBuffer: number[],
   dataView: DataView,
   three: Three,
@@ -398,7 +399,9 @@ export function addMeshs(
               debug.log({
                 index: entity.index,
                 name: entity.name,
+                unknown: entity.unknown,
                 entityId: entity.entityId,
+                partIndex,
                 objectId: object.index,
                 object,
               });

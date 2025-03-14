@@ -27,7 +27,8 @@ export function unpackSml(dataView: DataView): Model {
 
     const entity: Entity = {
       index: getInt(i * 0x10 + 0x8, "uint32", { bigEndian: true }, dataView),
-      entityId: getInt(offset + 0x4, "uint32", { bigEndian: true }, dataView),
+      unknown: getInt(offset + 0x4, "uint16", { bigEndian: true }, dataView),
+      entityId: getInt(offset + 0x6, "uint16", { bigEndian: true }, dataView),
       name: getString(offset + 0x24, 0x10, "uint8", { zeroTerminated: true }, dataView),
       linkedGrndFiles: [],
       linkedNjcmFiles: [],
