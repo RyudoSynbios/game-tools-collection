@@ -72,3 +72,9 @@ npm run dev
 ```
 
 You should see a `Local` url, open it on your browser.
+
+---
+
+## Wiki
+
+You can view the documentation of this project here: [https://github.com/RyudoSynbios/game-tools-collection/wiki](https://github.com/RyudoSynbios/game-tools-collection/wiki)
