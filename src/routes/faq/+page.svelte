@@ -55,9 +55,6 @@
       <strong>Game Boy Advance: </strong>.sav, .srm, .sps (<i>GameShark</i>)
     </li>
     <li>
-      <strong>GameCube: </strong>.gci
-    </li>
-    <li>
       <strong>Nintendo DS: </strong>.dsv, .sav, .dss, .dst, .duc (<i
         >Action Replay Max DS</i
       >)
@@ -71,6 +68,9 @@
     <li>
       <strong>Nintendo 64: </strong>.eep, .fla, .sra, .srm, .n64 (<i>DexDrive</i
       >)
+    </li>
+    <li>
+      <strong>GameCube: </strong>.gci
     </li>
     <li>
       <strong>Dreamcast: </strong>.bin (<i>VMU raw dump</i>), .cdi
