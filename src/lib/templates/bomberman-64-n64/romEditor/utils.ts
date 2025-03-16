@@ -18,6 +18,7 @@ export interface Mesh {
 }
 
 export interface Texture {
+  name: string;
   base64: string;
   color: number;
   pixelsOffset: number;
@@ -140,6 +141,7 @@ export function resetTexture(
   const unknown1 = getIntFromArray(data, offset + 0x1, "uint24", true);
   const unknown2 = getIntFromArray(data, offset + 0x4, "uint32", true);
 
+  texture.name = "";
   texture.base64 = "";
   texture.pixelsOffset = 0x0;
   texture.paletteLength = 0x0;
@@ -322,6 +324,7 @@ export async function applyTexture(
 
   canvas.addGraphic("texture", textureTmp, texture.width, texture.height);
 
+  texture.name = `${texture.paletteOffset}`;
   texture.base64 = await canvas.export();
 
   textures.push({
@@ -377,6 +380,7 @@ export function addMesh(
   const material = three.generateMaterial({
     color: texture.color,
     texture: {
+      name: texture.name,
       base64: texture.base64,
       repeatX: texture.repeatX,
       repeatY: texture.repeatY,

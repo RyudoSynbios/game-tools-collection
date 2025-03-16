@@ -710,6 +710,7 @@ export default class Three {
     const opacity = options?.opacity !== undefined ? options?.opacity : 1;
     const side = options?.side || "front";
     const texture = {
+      name: options?.texture?.name || "",
       base64: options?.texture?.base64 || "",
       repeatX: options?.texture?.repeatX || false,
       repeatY: options?.texture?.repeatY || false,

@@ -163,6 +163,7 @@
     };
 
     let texture: Texture = {
+      name: "",
       base64: "",
       color: 0xffffff,
       pixelsOffset: 0x0,
@@ -202,6 +203,7 @@
         };
 
         texture = {
+          name: "",
           base64: "",
           color: 0xffffff,
           pixelsOffset: 0x0,
