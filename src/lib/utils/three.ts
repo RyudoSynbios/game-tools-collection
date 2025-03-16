@@ -1,4 +1,5 @@
 import FileSaver from "file-saver";
+import JSZip from "jszip";
 import { GUI } from "lil-gui";
 import { get } from "svelte/store";
 import {
@@ -74,6 +75,7 @@ export interface MeshOptions {
 }
 
 export interface TextureOptions {
+  name?: string;
   base64?: string;
   flipY?: boolean;
   repeatX?: boolean | "mirrored";
@@ -747,6 +749,7 @@ export default class Three {
 
   public generateMaterialMap(options: TextureOptions): Texture {
     const texture = {
+      name: options?.name || "",
       base64: options?.base64 || "",
       repeatX: options?.repeatX || false,
       repeatY: options?.repeatY || false,
@@ -757,6 +760,10 @@ export default class Three {
     map.flipY = this.textureFlipY;
     map.minFilter = NearestFilter;
     map.magFilter = NearestFilter;
+
+    if (texture.name) {
+      map.name = texture.name;
+    }
 
     if (texture.repeatX === "mirrored") {
       map.wrapS = MirroredRepeatWrapping;
@@ -906,13 +913,28 @@ export default class Three {
   public exportObj(): void {
     const exporter = new OBJExporter();
 
-    const data = exporter.parse(this.group, this.textureFlipY);
+    const files = exporter.parse(this.group, this.textureFlipY);
 
-    const blob = new Blob([data], {
+    const obj = new Blob([files.obj], {
       type: "application/octet-stream",
     });
 
-    FileSaver.saveAs(blob, "object.obj");
+    const mtl = new Blob([files.mtl], {
+      type: "application/octet-stream",
+    });
+
+    const zip = new JSZip();
+
+    zip.file("object.obj", obj);
+    zip.file("object.mtl", mtl);
+
+    Object.entries(files.textures).forEach(([name, data]) => {
+      zip.file(`${name}.png`, data, { base64: true });
+    });
+
+    zip.generateAsync({ type: "blob" }).then((content) => {
+      FileSaver.saveAs(content, "object.zip");
+    });
   }
 
   public resize(): void {

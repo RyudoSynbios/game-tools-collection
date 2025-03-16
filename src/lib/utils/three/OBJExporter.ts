@@ -5,6 +5,7 @@ import {
   Line,
   Matrix3,
   Mesh,
+  MeshLambertMaterial,
   Object3D,
   Points,
   SRGBColorSpace,
@@ -12,10 +13,18 @@ import {
   Vector3,
 } from "three";
 
+import { generateUUID } from "../format";
+
 // Adapted from https://github.com/mrdoob/three.js/blob/dev/examples/jsm/exporters/OBJExporter.js
 export default class OBJExporter {
-  parse(object: Object3D, textureFlipY: boolean) {
-    let output = "";
+  parse(
+    object: Object3D,
+    textureFlipY: boolean,
+  ): { obj: string; mtl: string; textures: { [name: string]: string } } {
+    let obj = "";
+    let mtl = "";
+
+    const textures: { [name: string]: string } = {};
 
     let indexVertex = 0;
     let indexVertexUvs = 0;
@@ -28,7 +37,7 @@ export default class OBJExporter {
 
     const face: string[] = [];
 
-    function parseMesh(mesh: Mesh) {
+    function parseMesh(mesh: Mesh): void {
       let nbVertex = 0;
       let nbNormals = 0;
       let nbVertexUvs = 0;
@@ -42,11 +51,28 @@ export default class OBJExporter {
       const uvs = geometry.getAttribute("uv");
       const indices = geometry.getIndex();
 
-      output += "o " + mesh.name + "\n";
+      obj += `\no ${mesh.name}\n`;
 
-      // if (mesh.material && mesh.material.name) {
-      //   output += "usemtl " + mesh.material.name + "\n";
-      // }
+      if (mesh.material && !Array.isArray(mesh.material)) {
+        const material = mesh.material as MeshLambertMaterial;
+
+        const name = `material.${generateUUID()}`;
+
+        obj += `usemtl ${name}\n`;
+
+        mtl += `\nnewmtl ${name}\n`;
+        mtl += `Kd ${material.color.r} ${material.color.g} ${material.color.b}\n`;
+        mtl += `d ${material.opacity}\n`;
+
+        if (material.map?.name) {
+          mtl += `map_Kd ${material.map.name}.png\n`;
+
+          textures[material.map.name] = material.map.source.data.src.replace(
+            "data:image/png;base64,",
+            "",
+          );
+        }
+      }
 
       if (vertices !== undefined) {
         for (let i = 0, l = vertices.count; i < l; i++, nbVertex++) {
@@ -54,7 +80,7 @@ export default class OBJExporter {
 
           vertex.applyMatrix4(mesh.matrixWorld);
 
-          output += "v " + vertex.x + " " + vertex.y + " " + vertex.z + "\n";
+          obj += `v ${vertex.x} ${vertex.y} ${vertex.z}\n`;
         }
       }
 
@@ -67,7 +93,7 @@ export default class OBJExporter {
             uvs.setY(i, uv.y);
           }
 
-          output += "vt " + uv.x + " " + uv.y + "\n";
+          obj += `vt ${uv.x} ${uv.y}\n`;
         }
       }
 
@@ -79,7 +105,7 @@ export default class OBJExporter {
 
           normal.applyMatrix3(normalMatrixWorld).normalize();
 
-          output += "vn " + normal.x + " " + normal.y + " " + normal.z + "\n";
+          obj += `vn ${normal.x} ${normal.y} ${normal.z}\n`;
         }
       }
 
@@ -94,11 +120,11 @@ export default class OBJExporter {
               (normals || uvs
                 ? "/" +
                   (uvs ? indexVertexUvs + j : "") +
-                  (normals ? "/" + (indexNormals + j) : "")
+                  (normals ? `/${indexNormals + j}` : "")
                 : "");
           }
 
-          output += "f " + face.join(" ") + "\n";
+          obj += `f ${face.join(" ")}\n`;
         }
       } else {
         for (let i = 0, l = vertices.count; i < l; i += 3) {
@@ -111,11 +137,11 @@ export default class OBJExporter {
               (normals || uvs
                 ? "/" +
                   (uvs ? indexVertexUvs + j : "") +
-                  (normals ? "/" + (indexNormals + j) : "")
+                  (normals ? `/${indexNormals + j}` : "")
                 : "");
           }
 
-          output += "f " + face.join(" ") + "\n";
+          obj += `f ${face.join(" ")}\n`;
         }
       }
 
@@ -124,7 +150,7 @@ export default class OBJExporter {
       indexNormals += nbNormals;
     }
 
-    function parseLine(line: Line) {
+    function parseLine(line: Line): void {
       let nbVertex = 0;
 
       const geometry = line.geometry;
@@ -132,7 +158,7 @@ export default class OBJExporter {
 
       const vertices = geometry.getAttribute("position");
 
-      output += "o " + line.name + "\n";
+      obj += `\no ${line.name}\n`;
 
       if (vertices !== undefined) {
         for (let i = 0, l = vertices.count; i < l; i++, nbVertex++) {
@@ -140,18 +166,18 @@ export default class OBJExporter {
 
           vertex.applyMatrix4(line.matrixWorld);
 
-          output += "v " + vertex.x + " " + vertex.y + " " + vertex.z + "\n";
+          obj += `v ${vertex.x} ${vertex.y} ${vertex.z}\n`;
         }
       }
 
       if (type === "Line") {
-        output += "l ";
+        obj += "l ";
 
         for (let j = 1, l = vertices.count; j <= l; j++) {
-          output += indexVertex + j + " ";
+          obj += `${indexVertex + j} `;
         }
 
-        output += "\n";
+        obj += "\n";
       }
 
       if (type === "LineSegments") {
@@ -160,14 +186,14 @@ export default class OBJExporter {
           j < l;
           j += 2, k = j + 1
         ) {
-          output += "l " + (indexVertex + j) + " " + (indexVertex + k) + "\n";
+          obj += `l ${indexVertex + j} ${indexVertex + k}\n`;
         }
       }
 
       indexVertex += nbVertex;
     }
 
-    function parsePoints(points: Points) {
+    function parsePoints(points: Points): void {
       let nbVertex = 0;
 
       const geometry = points.geometry;
@@ -175,33 +201,33 @@ export default class OBJExporter {
       const vertices = geometry.getAttribute("position");
       const colors = geometry.getAttribute("color");
 
-      output += "o " + points.name + "\n";
+      obj += `\no ${points.name}\n`;
 
       if (vertices !== undefined) {
         for (let i = 0, l = vertices.count; i < l; i++, nbVertex++) {
           vertex.fromBufferAttribute(vertices, i);
           vertex.applyMatrix4(points.matrixWorld);
 
-          output += "v " + vertex.x + " " + vertex.y + " " + vertex.z;
+          obj += `v ${vertex.x} ${vertex.y} ${vertex.z}`;
 
           if (colors !== undefined) {
             color.fromBufferAttribute(colors, i);
 
             ColorManagement.fromWorkingColorSpace(color, SRGBColorSpace);
 
-            output += " " + color.r + " " + color.g + " " + color.b;
+            obj += ` ${color.r} ${color.g} ${color.b}`;
           }
 
-          output += "\n";
+          obj += "\n";
         }
 
-        output += "p ";
+        obj += "p ";
 
         for (let j = 1, l = vertices.count; j <= l; j++) {
-          output += indexVertex + j + " ";
+          obj += `${indexVertex + j} `;
         }
 
-        output += "\n";
+        obj += "\n";
       }
 
       indexVertex += nbVertex;
@@ -221,6 +247,6 @@ export default class OBJExporter {
       }
     });
 
-    return output;
+    return { obj, mtl, textures };
   }
 }

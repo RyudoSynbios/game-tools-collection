@@ -26,6 +26,7 @@ import { NjcmObject } from "./njcm";
 export interface Texture extends GvrTexture {
   base64: string;
   colorType: ColorType;
+  name: string;
 }
 
 export async function getTextures(
@@ -54,7 +55,7 @@ export async function getTextures(
 
         const base64 = await canvas.export();
 
-        texturesCache[name] = { ...gvrTexture, base64 };
+        texturesCache[name] = { ...gvrTexture, base64, name };
       }
 
       textures.push(texturesCache[name]);
@@ -478,6 +479,7 @@ export function addMeshs(
       const texture = textures[textureIndex];
 
       textureOptions = {
+        name: texture.name,
         base64: texture.base64,
         repeatX: mirroredX ? "mirrored" : repeatX,
         repeatY: mirroredY ? "mirrored" : repeatY,
