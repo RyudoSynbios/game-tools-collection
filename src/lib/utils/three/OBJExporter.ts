@@ -61,8 +61,14 @@ export default class OBJExporter {
         obj += `usemtl ${name}\n`;
 
         mtl += `\nnewmtl ${name}\n`;
+        mtl += `Ns 100\n`;
+        mtl += `Ka 0 0 0\n`;
         mtl += `Kd ${material.color.r} ${material.color.g} ${material.color.b}\n`;
+        mtl += `Ks 0 0 0\n`;
+        mtl += `Ke 0 0 0\n`;
+        mtl += `Ni 1\n`;
         mtl += `d ${material.opacity}\n`;
+        mtl += `illum 1\n`;
 
         if (material.map?.name) {
           mtl += `map_Kd ${material.map.name}.png\n`;
