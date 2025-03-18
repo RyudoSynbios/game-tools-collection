@@ -453,10 +453,7 @@ export default class Three {
       this.gridHelper.visible = false;
       this.setMessage("Loading...");
       this.updateLoadingProgression(0);
-    } else if (
-      this.isGroupEmpty(this.group) &&
-      this.isGroupEmpty(this.groupLocked)
-    ) {
+    } else if (this.isSceneEmpty()) {
       this.setMessage("The scene is empty");
       this.updateLoadingProgression(-1);
     } else {
@@ -492,6 +489,10 @@ export default class Three {
   public setMessage(text: string): void {
     this.messageEl.innerText = text;
     this.progressionEl.style.display = text === "" ? "none" : "block";
+  }
+
+  private isSceneEmpty(): boolean {
+    return this.isGroupEmpty(this.group) && this.isGroupEmpty(this.groupLocked);
   }
 
   private onMouseDown(event: MouseEvent): void {
