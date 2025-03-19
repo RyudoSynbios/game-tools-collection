@@ -299,7 +299,9 @@ export default class Three {
       .add(this.guiController, "grid")
       .name("Grid")
       .onChange(() => {
-        this.gridHelper.visible = this.guiController.grid;
+        this.gridHelper.visible = !this.isSceneEmpty()
+          ? this.guiController.grid
+          : false;
         setLocalStorage("threeGrid", `${this.guiController.grid}`);
       });
 
@@ -454,6 +456,7 @@ export default class Three {
       this.setMessage("Loading...");
       this.updateLoadingProgression(0);
     } else if (this.isSceneEmpty()) {
+      this.gui.show();
       this.setMessage("The scene is empty");
       this.updateLoadingProgression(-1);
     } else {
