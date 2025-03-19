@@ -495,12 +495,15 @@ export function getFilteredFiles(type: string): File[] {
       return type === "battleCharacter";
     } else if (file.path.match(/^bchara\/(.*?).mld$/)) {
       return type === "weapon";
-    } else if (file.path.match(/^field\/a5(.*?).mld$/)) {
-      return type === "shipBattle";
     } else if (file.path.match(/^field\/fiel(.*?).mld$/)) {
       return type === "worldMap";
+    } else if (
+      file.path.match(/^field\/a(.*?).mld$/) &&
+      !file.path.match(/^field\/(a017x|a034j|a102|a221a|a300d)(.*?).mld$/)
+    ) {
+      return type === "map";
     } else if (file.path.match(/^field\/(.*?).mld$/)) {
-      return type === "model";
+      return type === "misc";
     } else if (file.path.match(/^field\/(.*?).sct$/)) {
       return type === "script";
     }

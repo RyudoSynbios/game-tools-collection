@@ -4293,7 +4293,7 @@ const template: GameJson = {
                 },
                 {
                   name: "Scripts",
-                  planned: true,
+                  hidden: true,
                   items: [
                     {
                       id: "assetViewer-script",
@@ -4318,16 +4318,16 @@ const template: GameJson = {
                   ],
                 },
                 {
-                  name: "Models",
+                  name: "Maps",
                   items: [
                     {
-                      id: "assetViewer-model",
-                      instanceId: "modelViewer",
+                      id: "assetViewer-script",
+                      instanceId: "mapViewer",
                       length: 0x2,
                       type: "container",
                       instanceType: "tabs",
                       instances: 0,
-                      resource: "assetModelNames",
+                      resource: "assetScriptNames",
                       vertical: true,
                       flex: true,
                       items: [
@@ -4335,8 +4335,8 @@ const template: GameJson = {
                           type: "component",
                           component: "ModelViewer",
                           props: {
-                            assetIndex: "modelViewer",
-                            type: "model",
+                            assetIndex: "mapViewer",
+                            type: "script",
                           },
                         },
                       ],
@@ -4363,32 +4363,6 @@ const template: GameJson = {
                           props: {
                             assetIndex: "worldMapViewer",
                             type: "worldMap",
-                          },
-                        },
-                      ],
-                    },
-                  ],
-                },
-                {
-                  name: "Ship Battles",
-                  items: [
-                    {
-                      id: "assetViewer-shipBattle",
-                      instanceId: "shipBattleViewer",
-                      length: 0x2,
-                      type: "container",
-                      instanceType: "tabs",
-                      instances: 0,
-                      resource: "assetShipBattleNames",
-                      vertical: true,
-                      flex: true,
-                      items: [
-                        {
-                          type: "component",
-                          component: "ModelViewer",
-                          props: {
-                            assetIndex: "shipBattleViewer",
-                            type: "shipBattle",
                           },
                         },
                       ],
@@ -4473,6 +4447,32 @@ const template: GameJson = {
                     },
                   ],
                 },
+                {
+                  name: "Miscellaneous",
+                  items: [
+                    {
+                      id: "assetViewer-misc",
+                      instanceId: "miscViewer",
+                      length: 0x2,
+                      type: "container",
+                      instanceType: "tabs",
+                      instances: 0,
+                      resource: "assetMiscNames",
+                      vertical: true,
+                      flex: true,
+                      items: [
+                        {
+                          type: "component",
+                          component: "ModelViewer",
+                          props: {
+                            assetIndex: "miscViewer",
+                            type: "misc",
+                          },
+                        },
+                      ],
+                    },
+                  ],
+                },
               ],
             },
           ],
@@ -4490,9 +4490,8 @@ const template: GameJson = {
     assetBattleStageNames: "getAssetNames('battleStage')",
     assetEnemyGroupNames: "getAssetNames('enemyGroup')",
     assetImageNames: "getAssetNames('image')",
-    assetModelNames: "getAssetNames('model')",
+    assetMiscNames: "getAssetNames('misc')",
     assetScriptNames: "getAssetNames('script')",
-    assetShipBattleNames: "getAssetNames('shipBattle')",
     assetWeaponNames: "getAssetNames('weapon')",
     assetWorldMapNames: "getAssetNames('worldMap')",
     characterNames: "getNames('party')",

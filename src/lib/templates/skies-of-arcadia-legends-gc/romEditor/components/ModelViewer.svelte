@@ -6,10 +6,17 @@
   import ModelViewer from "$lib/components/ModelViewer.svelte";
   import { dataViewAlt } from "$lib/stores";
   import Canvas from "$lib/utils/canvas";
+  import { getFile } from "$lib/utils/common/gamecube";
   import debug from "$lib/utils/debug";
   import Three from "$lib/utils/three";
 
-  import { getFileData, type Entity, type Model } from "../utils";
+  import {
+    getDecompressedData,
+    getFileData,
+    getFilteredFiles,
+    type Entity,
+    type Model,
+  } from "../utils";
   import {
     addMeshs,
     getTextures,
@@ -25,7 +32,9 @@
   export let type: string;
 
   let previousAssetId = "";
+  let previousfileIndex = -1;
 
+  let fileIndex = 0;
   let entityIndex = -1;
 
   let canvas: Canvas;
@@ -63,6 +72,11 @@
     three.reset();
 
     if (getAssetId() !== previousAssetId) {
+      fileIndex = 0;
+      entityIndex = -1;
+    }
+
+    if (fileIndex !== previousfileIndex) {
       entityIndex = -1;
     }
 
@@ -70,11 +84,56 @@
 
     three.setLoading(true);
 
-    const dataView = getFileData(type, assetIndex);
+    let dataView = new DataView(new ArrayBuffer(0));
+
+    let isShipBattle = false;
+
+    if (type === "script") {
+      const scripts = getFilteredFiles("script");
+      const script = scripts[assetIndex];
+
+      const files = getFilteredFiles("map").filter((map) =>
+        map.path.match(new RegExp(`^field/a${script.path.slice(8, -4)}`, "i")),
+      );
+
+      if (files.length === 0) {
+        three.setLoading(false);
+        three.setTextureListCallback(undefined);
+        return;
+      }
+
+      const file = getFile(files[fileIndex].path);
+
+      const list: { [key: string]: number } = {};
+
+      files.forEach((file, index) => {
+        list[file.name] = index;
+      });
+
+      three.addGuiListElement(
+        "fileIndex",
+        "File",
+        fileIndex,
+        (value) => {
+          fileIndex = value;
+        },
+        list,
+      );
+
+      if (file) {
+        if (file.path.match(/^field\/a5(.*?).mld$/)) {
+          isShipBattle = true;
+        }
+
+        dataView = new DataView(getDecompressedData(file.dataView).buffer);
+      }
+    } else {
+      dataView = getFileData(type, assetIndex);
+    }
 
     if (dataView.byteLength === 0) {
       three.setLoading(false);
-
+      three.setTextureListCallback(undefined);
       return;
     }
 
@@ -165,7 +224,7 @@
 
       // TODO: Temporary
 
-      if (type === "shipBattle" && entity.entityId < 9000) {
+      if (isShipBattle && entity.entityId < 9000) {
         mainGroup.position.x += 100;
         mainGroup.position.y += 100;
       }
@@ -295,13 +354,14 @@
   });
 
   $: {
-    assetIndex, entityIndex, type;
+    assetIndex, fileIndex, entityIndex, type;
 
     if (canvas) {
       updateCanvas();
     }
 
     previousAssetId = getAssetId();
+    previousfileIndex = fileIndex;
   }
 </script>
 
