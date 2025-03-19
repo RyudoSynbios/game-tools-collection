@@ -38,6 +38,12 @@ declare global {
     reverse: () => string;
     splitInt: () => number[];
   }
+
+  interface Window {
+    debugGTC: {
+      toggleTool: (tool: string) => void;
+    };
+  }
 }
 
 export {};
