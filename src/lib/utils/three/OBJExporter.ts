@@ -21,7 +21,7 @@ export default class OBJExporter {
     object: Object3D,
     textureFlipY: boolean,
   ): { obj: string; mtl: string; textures: { [name: string]: string } } {
-    let obj = "";
+    let obj = "mtllib object.mtl\n\n";
     let mtl = "";
 
     const textures: { [name: string]: string } = {};
@@ -51,7 +51,7 @@ export default class OBJExporter {
       const uvs = geometry.getAttribute("uv");
       const indices = geometry.getIndex();
 
-      obj += `\no ${mesh.name}\n`;
+      obj += `o ${mesh.name}\n`;
 
       if (mesh.material && !Array.isArray(mesh.material)) {
         const material = mesh.material as MeshLambertMaterial;
