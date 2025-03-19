@@ -43,8 +43,7 @@ export type DataTypeInt =
   | "float32";
 
 export type DebugOptions = {
-  showInputValues?: boolean;
-  showTabIndexes?: boolean;
+  [key: string]: boolean;
 };
 
 export type IntOperation = { [operand: string]: number | IntOperationConvert };

@@ -199,13 +199,11 @@
   }
 
   function handleShowInputValuesToggle(): void {
-    $debugOptions.showInputValues = !$debugOptions.showInputValues;
-    setLocalStorage("debugOptions", `${JSON.stringify($debugOptions)}`);
+    window.debugGTC.toggleTool("showInputValues");
   }
 
   function handleShowTabIndexesToggle(): void {
-    $debugOptions.showTabIndexes = !$debugOptions.showTabIndexes;
-    setLocalStorage("debugOptions", `${JSON.stringify($debugOptions)}`);
+    window.debugGTC.toggleTool("showTabIndexes");
   }
 
   function resetPatchStatus(): void {

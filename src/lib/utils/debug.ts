@@ -1,46 +1,65 @@
 import { get } from "svelte/store";
 
-import { isDebug } from "$lib/stores";
+import { debugOptions, isDebug } from "$lib/stores";
 
 class Debug {
-  public clear(): void {
+  private requiredOption: string;
+
+  constructor() {
+    this.requiredOption = "";
+  }
+
+  private canPrint(): boolean {
+    const $debugOptions = get(debugOptions);
     const $isDebug = get(isDebug);
 
-    if ($isDebug) {
+    let boolean = false;
+
+    if (
+      $isDebug &&
+      (this.requiredOption === "" || $debugOptions[this.requiredOption])
+    ) {
+      boolean = true;
+    }
+
+    this.requiredOption = "";
+
+    return boolean;
+  }
+
+  public clear(): void {
+    if (this.canPrint()) {
       console.clear();
     }
   }
 
-  public color(data: any, color: number | string): void {
-    const $isDebug = get(isDebug);
-
-    if ($isDebug) {
+  public color(data: unknown, color: number | string): void {
+    if (this.canPrint()) {
       console.log(`%c${data}`, `color: ${color};`);
     }
   }
 
-  public error(...data: any[]): void {
-    const $isDebug = get(isDebug);
-
-    if ($isDebug) {
+  public error(...data: unknown[]): void {
+    if (this.canPrint()) {
       console.error(...data);
     }
   }
 
-  public log(...data: any[]): void {
-    const $isDebug = get(isDebug);
-
-    if ($isDebug) {
+  public log(...data: unknown[]): void {
+    if (this.canPrint()) {
       console.log(...data);
     }
   }
 
-  public warn(...data: any[]): void {
-    const $isDebug = get(isDebug);
-
-    if ($isDebug) {
+  public warn(...data: unknown[]): void {
+    if (this.canPrint()) {
       console.warn(...data);
     }
+  }
+
+  public option(option: string): Debug {
+    this.requiredOption = option;
+    return this;
   }
 }
 
