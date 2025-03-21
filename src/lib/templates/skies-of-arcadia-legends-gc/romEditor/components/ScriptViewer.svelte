@@ -15,11 +15,11 @@
   let subroutines: Subroutine[] = [];
 
   function getColor(subroutine: Subroutine): string {
-    if (subroutine.name.match("(hasError)")) {
+    if (subroutine.status === "hasError") {
       return "orange";
-    } else if (subroutine.name.match("(hasUnknownInstruction)")) {
+    } else if (subroutine.status === "hasUnknownInstruction") {
       return "mediumorchid";
-    } else if (subroutine.name.match("(hasUnparsedInstruction)")) {
+    } else if (subroutine.status === "hasUnparsedInstruction") {
       return "red";
     }
 
@@ -61,7 +61,7 @@
 <div class="gtc-scriptviewer">
   {#each subroutines as subroutine, subroutineIndex}
     <p style="color: {getColor(subroutine)};" on:click={() => handleScriptToggle(subroutineIndex)}>
-      {subroutine.offset.toHex(8)}: {subroutine.name}
+      {subroutine.offset.toHex(8)}: {subroutine.name} ({subroutine.status})
     </p>
     {#if subroutine.expanded}
       <div class="gtc-scriptviewer-actions">
@@ -70,7 +70,7 @@
             style={`color: ${action.color}`}
             on:click={() => handleActionToggle(subroutineIndex, actionIndex)}
           >
-            {action.offset.toHex(8)}: {action.text}
+            {action.offset.toHex(8)}: {@html action.text}
           </p>
           {#if action.expanded && (action.color !== "red" || action.length > 1)}
             <div>
@@ -92,8 +92,13 @@
   .gtc-scriptviewer {
     @apply w-full whitespace-pre-line rounded bg-primary-700 p-2 text-xs;
 
-    & p {
+    & p,
+    & :global(span) {
       @apply font-source;
+    }
+
+    & :global(span:after) {
+      @apply font-normal;
     }
 
     & .gtc-scriptviewer-actions {

@@ -78,7 +78,7 @@
 
     if (isDummy(0x0, dataView)) {
       three.setLoading(false);
-
+      three.setTextureListCallback(undefined);
       return;
     }
 
