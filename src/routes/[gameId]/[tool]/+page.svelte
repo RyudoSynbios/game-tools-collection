@@ -14,7 +14,7 @@
   import Content from "$lib/components/Items/Content.svelte";
   import {
     dataView,
-    debugTools,
+    debugOptions,
     fileName,
     gameJson,
     gameTemplate,
@@ -199,13 +199,13 @@
   }
 
   function handleShowInputValuesToggle(): void {
-    $debugTools.showInputValues = !$debugTools.showInputValues;
-    setLocalStorage("debugTools", `${JSON.stringify($debugTools)}`);
+    $debugOptions.showInputValues = !$debugOptions.showInputValues;
+    setLocalStorage("debugOptions", `${JSON.stringify($debugOptions)}`);
   }
 
   function handleShowTabIndexesToggle(): void {
-    $debugTools.showTabIndexes = !$debugTools.showTabIndexes;
-    setLocalStorage("debugTools", `${JSON.stringify($debugTools)}`);
+    $debugOptions.showTabIndexes = !$debugOptions.showTabIndexes;
+    setLocalStorage("debugOptions", `${JSON.stringify($debugOptions)}`);
   }
 
   function resetPatchStatus(): void {
@@ -262,13 +262,16 @@
               <ul class="gtc-tool-toolbar">
                 <li on:click={handleShowTabIndexesToggle}>
                   Show tab indexes
-                  <input type="checkbox" checked={$debugTools.showTabIndexes} />
+                  <input
+                    type="checkbox"
+                    checked={$debugOptions.showTabIndexes}
+                  />
                 </li>
                 <li on:click={handleShowInputValuesToggle}>
                   Show input values
                   <input
                     type="checkbox"
-                    checked={$debugTools.showInputValues}
+                    checked={$debugOptions.showInputValues}
                   />
                 </li>
                 <li on:click={handleExitDebugMode}>Exit debug mode</li>

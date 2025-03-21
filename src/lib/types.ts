@@ -42,7 +42,7 @@ export type DataTypeInt =
   | "uint64"
   | "float32";
 
-export type DebugTools = {
+export type DebugOptions = {
   showInputValues?: boolean;
   showTabIndexes?: boolean;
 };

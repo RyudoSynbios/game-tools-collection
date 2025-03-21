@@ -3,7 +3,7 @@
 
   import AccessTimeIcon from "$lib/assets/AccessTime.svelte";
   import Content from "$lib/components/Items/Content.svelte";
-  import { debugTools, gameJson, gameUtils, isDebug } from "$lib/stores";
+  import { debugOptions, gameJson, gameUtils, isDebug } from "$lib/stores";
   import {
     generateIdFromArray,
     getUtils,
@@ -228,7 +228,7 @@
             title={tab.planned ? "This feature is not yet available" : ""}
             on:click={() => handleTabClick(index)}
           >
-            {#if item.indexes && $isDebug && $debugTools.showTabIndexes}
+            {#if item.indexes && $isDebug && $debugOptions.showTabIndexes}
               <span class="gtc-tab-index">{tab.index.toHex()}</span>
             {/if}
             {tab.name}
