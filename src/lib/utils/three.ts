@@ -559,10 +559,6 @@ export default class Three {
               object.userData.onClick();
             }
           });
-        } else {
-          this.setDummy("select");
-
-          this.selectedObject.reference = null;
         }
       } else if (this.selectedObject.reference) {
         this.setDummy("select");
