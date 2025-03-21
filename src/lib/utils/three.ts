@@ -57,6 +57,11 @@ export interface GeometryOptions {
   smoothAngle?: number;
 }
 
+export interface GroupOptions {
+  locked?: boolean;
+  onClick?: () => void;
+}
+
 export interface MaterialOptions {
   color?: number;
   depthTest?: boolean;
@@ -552,11 +557,8 @@ export default class Three {
           this.setDummy("select", this.hoveredObject.reference);
 
           this.group.traverse((object) => {
-            if (
-              object === this.hoveredObject.reference &&
-              typeof object.userData.onClick === "function"
-            ) {
-              object.userData.onClick();
+            if (object === this.hoveredObject.reference) {
+              this.triggerOnClick(object);
             }
           });
         }
@@ -570,12 +572,28 @@ export default class Three {
     this.updateFitControllerName();
   }
 
+  private triggerOnClick(object: Object3D): void {
+    let obj: Object3D | null = object;
+
+    while (obj) {
+      if (typeof obj.userData.onClick === "function") {
+        obj.userData.onClick();
+      }
+
+      obj = obj.parent;
+    }
+  }
+
   public getInstanceId(): string {
     return this.instanceId;
   }
 
-  public addGroup(locked = false): Group {
+  public addGroup(options?: GroupOptions): Group {
+    const locked = options?.locked !== undefined ? options?.locked : false;
+
     const group = new Group();
+
+    group.userData.onClick = options?.onClick;
 
     if (locked) {
       this.groupLocked.add(group);
