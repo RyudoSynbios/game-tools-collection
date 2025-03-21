@@ -391,23 +391,6 @@ export function getDecompressedData(dataView: DataView): Uint8Array {
   return new Lzss().decompress(compressedData, size);
 }
 
-export function getFileData(type: string, index: number): DataView {
-  const files = getFilteredFiles(type);
-  const file = getFile(files[index].path);
-
-  if (file) {
-    const magic = getString(0x0, 0x4, "uint8", {}, file.dataView);
-
-    if (magic === "AKLZ") {
-      return new DataView(getDecompressedData(file.dataView).buffer);
-    } else {
-      return file.dataView;
-    }
-  }
-
-  return new DataView(new ArrayBuffer(0));
-}
-
 export function getEnemyGroupDetails(index: number): {
   enemies: number[];
   groupCount: number;
@@ -463,6 +446,23 @@ export function getEnemyGroupDetails(index: number): {
   }, []);
 
   return { enemies, groupCount };
+}
+
+export function getFileData(type: string, index: number): DataView {
+  const files = getFilteredFiles(type);
+  const file = getFile(files[index].path);
+
+  if (file) {
+    const magic = getString(0x0, 0x4, "uint8", {}, file.dataView);
+
+    if (magic === "AKLZ") {
+      return new DataView(getDecompressedData(file.dataView).buffer);
+    } else {
+      return file.dataView;
+    }
+  }
+
+  return new DataView(new ArrayBuffer(0));
 }
 
 export function getFilteredFiles(type: string): File[] {
@@ -672,6 +672,7 @@ export interface Model {
 
 export interface Entity {
   index: number;
+  unknown: number;
   entityId: number;
   name: string;
   linkedGrndFiles: number[];

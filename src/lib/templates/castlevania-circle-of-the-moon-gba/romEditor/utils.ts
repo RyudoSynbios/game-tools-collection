@@ -350,7 +350,7 @@ export function getDecompressedData(offset: number): number[][] {
   const decompressedData: number[] = [];
 
   if (magic !== 0x10) {
-    debug.warn(`Image in offet 0x${offset.toHex()} is not LZ77 compressed.`);
+    debug.warn(`Image in offet 0x${offset.toHex()} is not LZSS compressed.`);
 
     return [];
   }

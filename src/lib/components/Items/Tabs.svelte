@@ -23,59 +23,59 @@
   let ulEl: HTMLUListElement;
   let innerHeight = 0;
   let isFocused = false;
-  let selectedTab = 0;
+  let tabIndex = 0;
   let tabs: ItemTabtWithIndex[];
   let previousId = "";
-  let previousSelectedTab = -1;
+  let previousTabIndex = -1;
 
   beforeUpdate(() => {
     const componentId = item.id || generateIdFromArray(tabs, "name");
 
     if (componentId !== previousId) {
-      selectedTab = item.defaultIndex || 0;
+      tabIndex = item.defaultIndex || 0;
 
       checkTab();
     }
 
     previousId = componentId;
-    previousSelectedTab = selectedTab;
+    previousTabIndex = tabIndex;
   });
 
   function checkTab(): void {
-    if (selectedTab > tabs.length - 1) {
-      selectedTab = 0;
+    if (tabIndex > tabs.length - 1) {
+      tabIndex = 0;
     }
 
     const firstTabAvailable = tabs.findIndex((tab) => !tab.disabled);
 
-    if (tabs[selectedTab].disabled && firstTabAvailable !== -1) {
-      selectedTab = firstTabAvailable;
+    if (tabs[tabIndex].disabled && firstTabAvailable !== -1) {
+      tabIndex = firstTabAvailable;
     }
   }
 
   function getNextEnabledTab(): number {
-    for (let i = selectedTab + 1; i < tabs.length; i += 1) {
+    for (let i = tabIndex + 1; i < tabs.length; i += 1) {
       if (!tabs[i].disabled) {
         return i;
       }
     }
 
-    return selectedTab;
+    return tabIndex;
   }
 
   function getPreviousEnabledTab(): number {
-    for (let i = selectedTab - 1; i >= 0; i -= 1) {
+    for (let i = tabIndex - 1; i >= 0; i -= 1) {
       if (!tabs[i].disabled) {
         return i;
       }
     }
 
-    return selectedTab;
+    return tabIndex;
   }
 
   function handleTabClick(index: number): void {
     if (tabs[index] && !tabs[index].disabled) {
-      selectedTab = index;
+      tabIndex = index;
     }
   }
 
@@ -108,7 +108,7 @@
         handleTabClick(getNextEnabledTab());
       }
 
-      const selectedTabEl = ulEl?.children[selectedTab] as HTMLLIElement;
+      const selectedTabEl = ulEl?.children[tabIndex] as HTMLLIElement;
 
       if (ulEl && selectedTabEl) {
         scrollIntoViewIfNecessary(ulEl, selectedTabEl);
@@ -197,8 +197,8 @@
   }
 
   $: {
-    if (item.onTabChange && selectedTab !== previousSelectedTab) {
-      getUtils(item.onTabChange.format(selectedTab));
+    if (item.onTabChange && tabIndex !== previousTabIndex) {
+      getUtils(item.onTabChange.format(tabIndex));
     }
   }
 </script>
@@ -224,7 +224,7 @@
             class="gtc-tab"
             class:gtc-tab-debug={item.hidden || tab.hidden}
             class:gtc-tab-disabled={tab.disabled}
-            class:gtc-tab-highlight={index === selectedTab}
+            class:gtc-tab-highlight={index === tabIndex}
             title={tab.planned ? "This feature is not yet available" : ""}
             on:click={() => handleTabClick(index)}
           >
@@ -240,11 +240,8 @@
       {/each}
     </ul>
     <div class="gtc-tabs-content">
-      {#if !tabs[selectedTab].disabled}
-        <Content
-          items={tabs[selectedTab].items}
-          flex={tabs[selectedTab].flex}
-        />
+      {#if !tabs[tabIndex].disabled}
+        <Content items={tabs[tabIndex].items} flex={tabs[tabIndex].flex} />
       {:else}
         <p>Content is disabled</p>
       {/if}

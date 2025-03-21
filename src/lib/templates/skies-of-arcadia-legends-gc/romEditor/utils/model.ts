@@ -102,6 +102,7 @@ function applyTransform(
 
 export function getVertices(
   entityIndex: number,
+  entity: Entity,
   object: NjcmObject,
   vertexBuffer: number[],
   dataView: DataView,
@@ -157,10 +158,12 @@ export function getVertices(
     }
 
     if (end) {
-      debug.color(
-        `{${object.parentIndex}} [${index}] (0x${offset.toHex(8)}) Vertices ${iteration} > object: ${object.flags.debug}, type: 0x${type.toHex(2)}, size: 0x${size.toHex(4)}, unk2: 0x${unknown2.toHex(2)}${color === "red" ? " > TYPE NOT HANDLED" : ""}`,
-        color,
-      );
+      debug
+        .option("soalMld")
+        .color(
+          `{${entity.index}} [${index}] (0x${offset.toHex(8)}) Vertices ${iteration} > object: ${object.flags.debug}, type: 0x${type.toHex(2)}, size: 0x${size.toHex(4)}, unk2: 0x${unknown2.toHex(2)}${color === "red" ? " > TYPE NOT HANDLED" : ""}`,
+          color,
+        );
 
       break;
     }
@@ -170,10 +173,12 @@ export function getVertices(
 
     // TODO: unknown3 shift in vertice table, so related indexes takes account of this shift > Find a way to link indices to vertice table
 
-    debug.color(
-      `{${object.parentIndex}} [${index}] (0x${offset.toHex(8)}) Vertices ${iteration} > object: ${object.flags.debug}, type: 0x${type.toHex(2)}, size: 0x${size.toHex(4)}, unk2: 0x${unknown2.toHex(2)}, count: ${count}, position: ${basePosition}`,
-      color,
-    );
+    debug
+      .option("soalMld")
+      .color(
+        `{${entity.index}} [${index}] (0x${offset.toHex(8)}) Vertices ${iteration} > object: ${object.flags.debug}, type: 0x${type.toHex(2)}, size: 0x${size.toHex(4)}, unk2: 0x${unknown2.toHex(2)}, count: ${count}, position: ${basePosition}`,
+        color,
+      );
 
     offset += 0x8;
 
@@ -276,6 +281,7 @@ export interface VerticesCache {
 export function addMeshs(
   entity: Entity,
   object: NjcmObject,
+  partIndex: number,
   vertexBuffer: number[],
   dataView: DataView,
   three: Three,
@@ -396,13 +402,18 @@ export function addMeshs(
           three.addMesh(geometry, material, instanceId, {
             group,
             onClick: () => {
-              debug.log({
-                index: entity.index,
-                name: entity.name,
-                entityId: entity.entityId,
-                objectId: object.index,
-                object,
-              });
+              debug.log(
+                {
+                  index: entity.index,
+                  name: entity.name,
+                  entityId: entity.entityId,
+                },
+                {
+                  objectId: object.index,
+                  object,
+                  partIndex,
+                },
+              );
             },
           });
         }
@@ -412,10 +423,12 @@ export function addMeshs(
     }
 
     if (end) {
-      debug.color(
-        `{${object.parentIndex}} [${index}] (0x${offset.toHex(8)}) Mesh ${iteration} > object: ${object.flags.debug}, flags: ${flags.toHex()}, type: 0x${type.toHex(2)}${color === "red" ? " > TYPE NOT HANDLED" : ""}`,
-        color,
-      );
+      debug
+        .option("soalMld")
+        .color(
+          `{${entity.index}} [${index}] (0x${offset.toHex(8)}) Mesh ${iteration} > object: ${object.flags.debug}, flags: ${flags.toHex()}, type: 0x${type.toHex(2)}${color === "red" ? " > TYPE NOT HANDLED" : ""}`,
+          color,
+        );
 
       break;
     }
@@ -427,10 +440,12 @@ export function addMeshs(
     if (isCache) {
       const unknown2 = getInt(offset, "uint16", { bigEndian: true }, dataView);
 
-      debug.color(
-        `{${object.parentIndex}} [${index}] (0x${(offset - 0x2).toHex(8)}) Cache ${iteration} > object: ${object.flags.debug}, type: 0x${type.toHex(2)}, unk2: 0x${unknown2.toHex(4)} > ${flags}`,
-        color,
-      );
+      debug
+        .option("soalMld")
+        .color(
+          `{${entity.index}} [${index}] (0x${(offset - 0x2).toHex(8)}) Cache ${iteration} > object: ${object.flags.debug}, type: 0x${type.toHex(2)}, unk2: 0x${unknown2.toHex(4)} > ${flags}`,
+          color,
+        );
 
       if (
         verticesCache.instance === -1 ||
@@ -447,10 +462,12 @@ export function addMeshs(
     }
 
     if (isRewind) {
-      debug.color(
-        `{${object.parentIndex}} [${index}] (0x${(offset - 0x2).toHex(8)}) Rewind ${iteration} > object: ${object.flags.debug}, type: 0x${type.toHex(2)} > ${flags}`,
-        color,
-      );
+      debug
+        .option("soalMld")
+        .color(
+          `{${entity.index}} [${index}] (0x${(offset - 0x2).toHex(8)}) Rewind ${iteration} > object: ${object.flags.debug}, type: 0x${type.toHex(2)} > ${flags}`,
+          color,
+        );
 
       if (verticesCache.instance === flags) {
         if (verticesCache.status === "caching") {
@@ -493,10 +510,12 @@ export function addMeshs(
         material.transparent = true;
       }
 
-      debug.color(
-        `{${object.parentIndex}} [${index}] (0x${(offset - 0x2).toHex(8)}) Texture ${iteration} > object: ${object.flags.debug}, flags: ${flags.toHex()}, type: 0x${type.toHex(2)}, textureIndex: ${textureIndex}`,
-        color,
-      );
+      debug
+        .option("soalMld")
+        .color(
+          `{${entity.index}} [${index}] (0x${(offset - 0x2).toHex(8)}) Texture ${iteration} > object: ${object.flags.debug}, flags: ${flags.toHex()}, type: 0x${type.toHex(2)}, textureIndex: ${textureIndex}`,
+          color,
+        );
 
       offset += 0x2;
     }
@@ -512,10 +531,12 @@ export function addMeshs(
         material.map = three.generateMaterialMap(textureOptions);
       }
 
-      debug.color(
-        `{${object.parentIndex}} [${index}] (0x${(offset - 0x2).toHex(8)}) Material ${iteration} > object: ${object.flags.debug}, flags: ${flags.toHex()}, type: 0x${type.toHex(2)}, unknown2: ${unknown2.toHex(4)}`,
-        color,
-      );
+      debug
+        .option("soalMld")
+        .color(
+          `{${entity.index}} [${index}] (0x${(offset - 0x2).toHex(8)}) Material ${iteration} > object: ${object.flags.debug}, flags: ${flags.toHex()}, type: 0x${type.toHex(2)}, unknown2: ${unknown2.toHex(4)}`,
+          color,
+        );
 
       offset += 0x2;
 
@@ -531,10 +552,12 @@ export function addMeshs(
           material.transparent = true;
         }
 
-        debug.color(
-          `{${object.parentIndex}} [${index}] (0x${(offset - 0x2).toHex(8)}) Material ${iteration} > object: ${object.flags.debug}, flags: ${flags.toHex()}, type: 0x${type.toHex(2)}, diffuse: 0x${diffuse.toHex(6)}, alpha: ${alpha}`,
-          color,
-        );
+        debug
+          .option("soalMld")
+          .color(
+            `{${entity.index}} [${index}] (0x${(offset - 0x2).toHex(8)}) Material ${iteration} > object: ${object.flags.debug}, flags: ${flags.toHex()}, type: 0x${type.toHex(2)}, diffuse: 0x${diffuse.toHex(6)}, alpha: ${alpha}`,
+            color,
+          );
 
         offset += 0x4;
       }
@@ -544,10 +567,12 @@ export function addMeshs(
 
         // TODO
 
-        debug.color(
-          `{${object.parentIndex}} [${index}] (0x${(offset - 0x2).toHex(8)}) Material ${iteration} > object: ${object.flags.debug}, flags: ${flags.toHex()}, type: 0x${type.toHex(2)}, ambient: 0x${ambient.toHex(6)}, alpha: ${alpha}`,
-          color,
-        );
+        debug
+          .option("soalMld")
+          .color(
+            `{${entity.index}} [${index}] (0x${(offset - 0x2).toHex(8)}) Material ${iteration} > object: ${object.flags.debug}, flags: ${flags.toHex()}, type: 0x${type.toHex(2)}, ambient: 0x${ambient.toHex(6)}, alpha: ${alpha}`,
+            color,
+          );
 
         offset += 0x4;
       }
@@ -557,10 +582,12 @@ export function addMeshs(
 
         // material.specular = new Color(specular);
 
-        debug.color(
-          `{${object.parentIndex}} [${index}] (0x${(offset - 0x2).toHex(8)}) Material ${iteration} > object: ${object.flags.debug}, flags: ${flags.toHex()}, type: 0x${type.toHex(2)}, specular: 0x${specular.toHex(6)}, alpha: ${alpha}`,
-          color,
-        );
+        debug
+          .option("soalMld")
+          .color(
+            `{${entity.index}} [${index}] (0x${(offset - 0x2).toHex(8)}) Material ${iteration} > object: ${object.flags.debug}, flags: ${flags.toHex()}, type: 0x${type.toHex(2)}, specular: 0x${specular.toHex(6)}, alpha: ${alpha}`,
+            color,
+          );
 
         offset += 0x4;
       }
@@ -576,15 +603,19 @@ export function addMeshs(
       const meshCount = getInt(offset + 0x2, "uint16", { bigEndian: true }, dataView); // prettier-ignore
 
       if (vertexBuffer.length > 0) {
-        debug.color(
-          `{${object.parentIndex}} [${index}] (0x${(offset - 0x2).toHex(8)}) Mesh ${iteration} > object: ${object.flags.debug}, flags: ${flags.toHex()}, type: 0x${type.toHex(2)}, unk2: 0x${unknown2.toHex(4)}, count: ${meshCount}`,
-          color,
-        );
+        debug
+          .option("soalMld")
+          .color(
+            `{${entity.index}} [${index}] (0x${(offset - 0x2).toHex(8)}) Mesh ${iteration} > object: ${object.flags.debug}, flags: ${flags.toHex()}, type: 0x${type.toHex(2)}, unk2: 0x${unknown2.toHex(4)}, count: ${meshCount}`,
+            color,
+          );
       } else {
-        debug.color(
-          `{${object.parentIndex}} [${index}] (0x${(offset - 0x2).toHex(8)}) Mesh ${iteration} > object: ${object.flags.debug}, flags: ${flags.toHex()}, type: 0x${type.toHex(2)}, unk2: 0x${unknown2.toHex(4)}, count: ${meshCount} > NO VERTICES`,
-          "red",
-        );
+        debug
+          .option("soalMld")
+          .color(
+            `{${entity.index}} [${index}] (0x${(offset - 0x2).toHex(8)}) Mesh ${iteration} > object: ${object.flags.debug}, flags: ${flags.toHex()}, type: 0x${type.toHex(2)}, unk2: 0x${unknown2.toHex(4)}, count: ${meshCount} > NO VERTICES`,
+            "red",
+          );
       }
 
       offset += 0x4;

@@ -236,7 +236,7 @@
         rewind: false,
       };
 
-      entity.linkedNjcmFiles.forEach((njcmIndex) => {
+      entity.linkedNjcmFiles.forEach((njcmIndex, partIndex) => {
         const njcm = model.njcmFiles[njcmIndex];
 
         for (let i = 0; i < njcm.objects.length; i += 1) {
@@ -261,14 +261,17 @@
             }
           }
 
-          debug.color(
-            `{${object.parentIndex}} [${object.index}] (0x${object.offset.toHex(8)}) Object > flags: ${object.flags.debug}, vertices: 0x${(object.verticesOffset || 0).toHex(8)}, meshs: 0x${(object.meshsOffset || 0).toHex(8)}`,
-            "darkblue",
-          );
+          debug
+            .option("soalMld")
+            .color(
+              `{${entity.index}} [${object.index}] (0x${object.offset.toHex(8)}) Object > flags: ${object.flags.debug}, vertices: 0x${(object.verticesOffset || 0).toHex(8)}, meshs: 0x${(object.meshsOffset || 0).toHex(8)}`,
+              "darkblue",
+            );
 
           if (object.verticesOffset) {
             const { error: verticesError } = getVertices(
               entityIndex,
+              entity,
               object,
               vertexBuffer,
               dataView,
@@ -284,6 +287,7 @@
             const { error: meshsError } = addMeshs(
               entity,
               object,
+              partIndex,
               vertexBuffer,
               dataView,
               three,
@@ -314,9 +318,9 @@
     }, Promise.resolve());
 
     if (error) {
-      debug.error("Something went wrong");
+      debug.option("soalMld").error("Something went wrong");
     } else {
-      debug.color("Successfully completed", "green");
+      debug.option("soalMld").color("Successfully completed", "green");
     }
 
     textures = model.textures;

@@ -41,18 +41,18 @@
   let threeEl: HTMLDivElement;
 
   let textures: Texture[] = [];
-  let isModalOpen = false;
+  let isTextureViewerOpen = false;
 
   function getAssetId() {
     return `${type}_${assetIndex}`;
   }
 
-  function handleModalClose(): void {
-    isModalOpen = false;
+  function handleTextureViewerClose(): void {
+    isTextureViewerOpen = false;
   }
 
-  function handleModalOpen(): void {
-    isModalOpen = true;
+  function handleTextureViewerOpen(): void {
+    isTextureViewerOpen = true;
   }
 
   async function updateCanvas(): Promise<void> {
@@ -78,7 +78,7 @@
 
     if (isDummy(0x0, dataView)) {
       three.setLoading(false);
-
+      three.setTextureListCallback(undefined);
       return;
     }
 
@@ -303,7 +303,7 @@
     }
 
     three.setTextureListCallback(
-      textures.length > 0 ? handleModalOpen : undefined,
+      textures.length > 0 ? handleTextureViewerOpen : undefined,
     );
 
     if (instanceId !== three.getInstanceId()) {
@@ -344,8 +344,8 @@
 
 <ModelViewer {three} bind:threeEl />
 
-{#if isModalOpen}
-  <Modal onClose={handleModalClose}>
+{#if isTextureViewerOpen}
+  <Modal onClose={handleTextureViewerClose}>
     <TextureViewer {textures} />
   </Modal>
 {/if}
