@@ -32,7 +32,7 @@ export async function addBattlefieldFloor(
   canvas: Canvas,
   dataView: DataView,
 ): Promise<Group> {
-  const group = three.addGroup(true);
+  const group = three.addGroup({ locked: true });
 
   const scenario = getScenario();
 
