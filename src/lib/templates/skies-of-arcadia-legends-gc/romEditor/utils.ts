@@ -510,6 +510,15 @@ export function getFilteredFiles(type: string): File[] {
   });
 }
 
+export function getMapFiles(index: number): File[] {
+  const files = getFilteredFiles("script");
+  const file = files[index];
+
+  return getFilteredFiles("map").filter((map) =>
+    map.path.match(new RegExp(`^field/a${file.path.slice(8, -4)}`, "i")),
+  );
+}
+
 export function getNames(type: string, relative: string): Resource {
   const $dataViewAlt = get(dataViewAlt);
 

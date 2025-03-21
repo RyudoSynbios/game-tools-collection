@@ -28,6 +28,11 @@ interface Action {
   expanded?: boolean;
 }
 
+export interface EntitySubroutines {
+  main?: Subroutine;
+  related?: Subroutine[];
+}
+
 export interface Subroutine {
   offset: number;
   name: string;
@@ -43,6 +48,13 @@ export default class Script {
   private endOffset: number;
   private jumpOffsets: number[];
   private subroutines: Subroutine[];
+  private currentSubroutineIndex: number;
+  private entities: {
+    [entityId: number]: {
+      main: number;
+      related: number[];
+    };
+  };
   private files: {
     offset: number;
     type: FileType;
@@ -59,6 +71,8 @@ export default class Script {
     this.jumpOffsets = [];
 
     this.subroutines = [];
+    this.currentSubroutineIndex = -1;
+    this.entities = {};
     this.files = [];
 
     // We prepare empty subroutines in order to retrieve them when callSubroutine instruction is used
@@ -78,6 +92,12 @@ export default class Script {
     }
 
     for (let i = 0x0; i < this.count; i += 1) {
+      const subroutine = this.subroutines[i];
+
+      if (subroutine.name.match(/^M[0-9]{5}$/)) {
+        this.pushEntity(subroutine.name.substring(1), i);
+      }
+
       this.jumpOffsets = [];
 
       this.loadSubroutine(i);
@@ -100,6 +120,8 @@ export default class Script {
 
   private loadSubroutine(index: number): void {
     const subroutine = this.subroutines[index];
+
+    this.currentSubroutineIndex = index;
 
     let { offset } = subroutine;
 
@@ -1271,6 +1293,8 @@ export default class Script {
 
   private parseAddEntityToEnterTable(action: Action): void {
     const entity = this.parseVariables(action);
+
+    this.pushEntity(entity);
 
     action.color = "limegreen";
     action.text = `add entity "${entity}" to enter table`;
@@ -3528,6 +3552,50 @@ export default class Script {
     const length = Math.ceil((offset - savedOffset) / 0x4);
 
     return [length, text];
+  }
+
+  private pushEntity(entity: string, mainSubroutineIndex = -1): void {
+    const entityId = entity === "[Player]" ? 0xffff : parseInt(entity);
+
+    if (!this.entities[entityId]) {
+      this.entities[entityId] = {
+        main: -1,
+        related: [],
+      };
+    }
+
+    if (mainSubroutineIndex !== -1) {
+      this.entities[entityId].main = mainSubroutineIndex;
+    } else if (
+      this.entities[entityId].main !== this.currentSubroutineIndex &&
+      !this.entities[entityId].related.includes(this.currentSubroutineIndex)
+    ) {
+      this.entities[entityId].related.push(this.currentSubroutineIndex);
+    }
+  }
+
+  public getEntitySubroutines(entityId: number): EntitySubroutines | undefined {
+    if (this.entities[entityId]) {
+      const subroutines: EntitySubroutines = {};
+
+      const { main, related } = this.entities[entityId];
+
+      if (main !== -1) {
+        subroutines.main = this.subroutines[main];
+      }
+
+      if (related.length > 0) {
+        subroutines.related = [];
+
+        related.forEach((index) => {
+          subroutines.related!.push(this.subroutines[index]);
+        });
+      }
+
+      return subroutines;
+    }
+
+    return undefined;
   }
 
   public getSubroutines(): Subroutine[] {

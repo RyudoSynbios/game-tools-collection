@@ -13,7 +13,7 @@
   import {
     getDecompressedData,
     getFileData,
-    getFilteredFiles,
+    getMapFiles,
     type Entity,
     type Model,
   } from "../utils";
@@ -25,6 +25,7 @@
     type VerticesCache,
   } from "../utils/model";
   import { unpackNmld } from "../utils/nmld";
+  import Script from "../utils/script";
   import { unpackSml } from "../utils/sml";
   import TextureViewer from "./TextureViewer.svelte";
 
@@ -88,13 +89,10 @@
 
     let isShipBattle = false;
 
-    if (type === "script") {
-      const scripts = getFilteredFiles("script");
-      const script = scripts[assetIndex];
+    let script: Script;
 
-      const files = getFilteredFiles("map").filter((map) =>
-        map.path.match(new RegExp(`^field/a${script.path.slice(8, -4)}`, "i")),
-      );
+    if (type === "script") {
+      const files = getMapFiles(assetIndex);
 
       if (files.length === 0) {
         three.setLoading(false);
@@ -126,6 +124,7 @@
         }
 
         dataView = new DataView(getDecompressedData(file.dataView).buffer);
+        script = new Script(getFileData("script", assetIndex));
       }
     } else {
       dataView = getFileData(type, assetIndex);
@@ -203,7 +202,21 @@
 
       const vertexBuffer: number[] = [];
 
-      const mainGroup = three.addGroup();
+      const mainGroup = three.addGroup({
+        onClick: () => {
+          debug.log(
+            "Entity",
+            {
+              index: entity.index,
+              name: entity.name,
+              unknown: entity.unknown,
+              entityId: entity.entityId,
+            },
+            script?.getEntitySubroutines(entity.entityId),
+          );
+        },
+      });
+
       const groupIds: number[] = [];
 
       if (entityIndex === -1) {
