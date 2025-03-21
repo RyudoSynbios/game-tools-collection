@@ -1,17 +1,17 @@
 import { writable } from "svelte/store";
 
-import type { DataViewAltMetas, DebugTools, GameJson } from "$lib/types";
+import type { DataViewAltMetas, DebugOptions, GameJson } from "$lib/types";
 
 import { getLocalStorage } from "./utils/format";
 
-const lsDebugTools = JSON.parse(getLocalStorage("debugTools") || "{}");
+const lsDebugOptions = JSON.parse(getLocalStorage("debugOptions") || "{}");
 
 export const dataView = writable(new DataView(new ArrayBuffer(0)));
 export const dataViewAlt = writable<{ [key: string]: DataView }>({});
 export const dataViewAltMetas = writable<{
   [key: string]: DataViewAltMetas | undefined;
 }>({});
-export const debugTools = writable<DebugTools>(lsDebugTools);
+export const debugOptions = writable<DebugOptions>(lsDebugOptions);
 export const fileHeaderShift = writable(0x0);
 export const fileName = writable("");
 export const fileVisualizerAddress = writable(0x0);

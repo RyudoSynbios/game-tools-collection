@@ -1,6 +1,6 @@
 <script lang="ts">
   import ExpandMoreIcon from "$lib/assets/ExpandMore.svelte";
-  import { debugTools, isDebug } from "$lib/stores";
+  import { debugOptions, isDebug } from "$lib/stores";
   import { scrollIntoViewIfNecessary } from "$lib/utils/ui";
 
   import type { ResourceGroups, ResourceLabels } from "$lib/types";
@@ -254,7 +254,7 @@
 
     valueDisplayed = index !== -1 ? options[index].value : "";
 
-    if ($isDebug && $debugTools.showInputValues) {
+    if ($isDebug && $debugOptions.showInputValues) {
       valueDisplayed = `${parseInt(`${value}`).toHex()}: ${valueDisplayed || "???"}`;
     }
 
@@ -336,7 +336,7 @@
                   on:click={() => handleChange(option)}
                   on:mousemove={handleHover}
                 >
-                  {#if $isDebug && $debugTools.showInputValues}
+                  {#if $isDebug && $debugOptions.showInputValues}
                     {parseInt(option.key).toHex()}:
                   {/if}
                   {option.value}
