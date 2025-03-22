@@ -25,8 +25,8 @@
     type VerticesCache,
   } from "../utils/model";
   import { unpackNmld } from "../utils/nmld";
-  import Script from "../utils/script";
   import { unpackSml } from "../utils/sml";
+  import ScriptViewer from "./ScriptViewer.svelte";
   import TextureViewer from "./TextureViewer.svelte";
 
   export let assetIndex: number;
@@ -45,18 +45,29 @@
 
   let textures: { [key: string]: DataView } = {};
   let texturesCache: { [key: string]: Texture } = {};
-  let isModalOpen = false;
+  let isScriptViewerOpen = false;
+  let isTextureViewerOpen = false;
+
+  let selectedEntity: number = -1;
 
   function getAssetId() {
     return `${type}_${assetIndex}`;
   }
 
-  function handleModalClose(): void {
-    isModalOpen = false;
+  function handleScriptViewerClose(): void {
+    isScriptViewerOpen = false;
   }
 
-  function handleModalOpen(): void {
-    isModalOpen = true;
+  function handleScriptViewerOpen(): void {
+    isScriptViewerOpen = true;
+  }
+
+  function handleTextureViewerClose(): void {
+    isTextureViewerOpen = false;
+  }
+
+  function handleTextureViewerOpen(): void {
+    isTextureViewerOpen = true;
   }
 
   async function updateCanvas(): Promise<void> {
@@ -89,9 +100,7 @@
 
     let isShipBattle = false;
 
-    let script: Script;
-
-    if (type === "script") {
+    if (type === "map") {
       const files = getMapFiles(assetIndex);
 
       if (files.length === 0) {
@@ -124,7 +133,6 @@
         }
 
         dataView = new DataView(getDecompressedData(file.dataView).buffer);
-        script = new Script(getFileData("script", assetIndex));
       }
     } else {
       dataView = getFileData(type, assetIndex);
@@ -136,7 +144,7 @@
       return;
     }
 
-    $dataViewAlt.debug = dataView;
+    $dataViewAlt.mld = dataView;
 
     let model: Model;
 
@@ -180,6 +188,12 @@
       );
     }
 
+    if (type === "map") {
+      three.addGuiButtonElement("showScriptModal", "Script", () => {
+        handleScriptViewerOpen();
+      });
+    }
+
     let error = false;
 
     texturesCache = {};
@@ -204,16 +218,7 @@
 
       const mainGroup = three.addGroup({
         onClick: () => {
-          debug.log(
-            "Entity",
-            {
-              index: entity.index,
-              name: entity.name,
-              unknown: entity.unknown,
-              entityId: entity.entityId,
-            },
-            script?.getEntitySubroutines(entity.entityId),
-          );
+          selectedEntity = entity.entityId;
         },
       });
 
@@ -339,7 +344,7 @@
     textures = model.textures;
 
     three.setTextureListCallback(
-      Object.keys(textures).length > 0 ? handleModalOpen : undefined,
+      Object.keys(textures).length > 0 ? handleTextureViewerOpen : undefined,
     );
 
     if (instanceId !== three.getInstanceId()) {
@@ -384,8 +389,14 @@
 
 <ModelViewer {three} bind:threeEl />
 
-{#if isModalOpen}
-  <Modal onClose={handleModalClose}>
+{#if isScriptViewerOpen}
+  <Modal onClose={handleScriptViewerClose}>
+    <ScriptViewer {assetIndex} entityId={selectedEntity} />
+  </Modal>
+{/if}
+
+{#if isTextureViewerOpen}
+  <Modal onClose={handleTextureViewerClose}>
     <TextureViewer {textures} />
   </Modal>
 {/if}

@@ -4292,42 +4292,16 @@ const template: GameJson = {
                   ],
                 },
                 {
-                  name: "Scripts",
-                  hidden: true,
-                  items: [
-                    {
-                      id: "assetViewer-script",
-                      instanceId: "scriptViewer",
-                      length: 0x2,
-                      type: "container",
-                      instanceType: "tabs",
-                      instances: 0,
-                      resource: "assetScriptNames",
-                      vertical: true,
-                      flex: true,
-                      items: [
-                        {
-                          type: "component",
-                          component: "ScriptViewer",
-                          props: {
-                            assetIndex: "scriptViewer",
-                          },
-                        },
-                      ],
-                    },
-                  ],
-                },
-                {
                   name: "Maps",
                   items: [
                     {
-                      id: "assetViewer-script",
+                      id: "assetViewer-map",
                       instanceId: "mapViewer",
                       length: 0x2,
                       type: "container",
                       instanceType: "tabs",
                       instances: 0,
-                      resource: "assetScriptNames",
+                      resource: "assetMapNames",
                       vertical: true,
                       flex: true,
                       items: [
@@ -4336,7 +4310,7 @@ const template: GameJson = {
                           component: "ModelViewer",
                           props: {
                             assetIndex: "mapViewer",
-                            type: "script",
+                            type: "map",
                           },
                         },
                       ],
@@ -4490,8 +4464,8 @@ const template: GameJson = {
     assetBattleStageNames: "getAssetNames('battleStage')",
     assetEnemyGroupNames: "getAssetNames('enemyGroup')",
     assetImageNames: "getAssetNames('image')",
+    assetMapNames: "getAssetNames('map')",
     assetMiscNames: "getAssetNames('misc')",
-    assetScriptNames: "getAssetNames('script')",
     assetWeaponNames: "getAssetNames('weapon')",
     assetWorldMapNames: "getAssetNames('worldMap')",
     characterNames: "getNames('party')",

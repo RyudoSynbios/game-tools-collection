@@ -23,14 +23,15 @@ type FileType =
 interface Action {
   color: string;
   offset: number;
-  text: string;
+  type: string;
+  debug: string;
   length: number;
   expanded?: boolean;
 }
 
 export interface EntitySubroutines {
-  main?: Subroutine;
-  related?: Subroutine[];
+  main: number;
+  related: number[];
 }
 
 export interface Subroutine {
@@ -49,12 +50,7 @@ export default class Script {
   private jumpOffsets: number[];
   private subroutines: Subroutine[];
   private currentSubroutineIndex: number;
-  private entities: {
-    [entityId: number]: {
-      main: number;
-      related: number[];
-    };
-  };
+  private entities: { [entityId: number]: EntitySubroutines };
   private files: {
     offset: number;
     type: FileType;
@@ -102,12 +98,12 @@ export default class Script {
 
       this.loadSubroutine(i);
 
-      if (subroutine.actions.find((action) => action.text.match(/"%/))) {
+      if (subroutine.actions.find((action) => action.debug.match(/"%/))) {
         subroutine.status = "hasError";
       } else if (
         subroutine.actions.length === 2 &&
-        (subroutine.actions[1].text.match(/^\\h/) ||
-          subroutine.actions[1].text.match(/^/))
+        (subroutine.actions[1].debug.match(/^\\h/) ||
+          subroutine.actions[1].debug.match(/^/))
       ) {
         subroutine.status = "text";
       } else if (subroutine.status === "" && subroutine.actions.length === 1) {
@@ -129,21 +125,28 @@ export default class Script {
       const instruction = getInt(offset, "uint32", { bigEndian: true }, this.dataView); // prettier-ignore
 
       if (
-        subroutine.actions.at(-1)?.text === "label" &&
+        subroutine.actions.at(-1)?.debug === "label" &&
         [0x5c000000, 0x81000000].includes((instruction & 0xff000000) >>> 0)
       ) {
         const [length, text] = this.parseText(offset);
 
-        subroutine.actions.push({ color: "limegreen", offset, length, text });
+        subroutine.actions.push({
+          color: "limegreen",
+          offset,
+          length,
+          type: "text",
+          debug: text,
+        });
 
         break;
       }
 
-      const action = {
+      const action: Action = {
         color: "orange",
         offset: offset + 0x4,
         length: 1,
-        text: instruction.toHex(8),
+        type: "",
+        debug: instruction.toHex(8),
       };
 
       if (
@@ -1139,7 +1142,8 @@ export default class Script {
     this.jumpOffsets.push(offset);
 
     action.color = "limegreen";
-    action.text = `if "${condition}" then continue else jump to "${offset.toHex(8)}"`;
+    action.type = "if";
+    action.debug = `if "${condition}" then continue else jump to "${offset.toHex(8)}"`;
   }
 
   private parseSwitch(action: Action): void {
@@ -1159,42 +1163,48 @@ export default class Script {
     }
 
     action.color = "limegreen";
-    action.text = `switch "${variable}": ${text.replace(", ", "")}`;
+    action.type = "switch";
+    action.debug = `switch "${variable}": ${text.replace(", ", "")}`;
   }
 
   private parseUpdateEventValue(action: Action): void {
     const value = this.parseVariables(action);
 
     action.color = "limegreen";
-    action.text = `update event value "${value}"`;
+    action.type = "updateEventValue";
+    action.debug = `update event value "${value}"`;
   }
 
   private parseUpdateSpecialValue(action: Action): void {
     const value = this.parseVariables(action);
 
     action.color = "limegreen";
-    action.text = `update special value: "${value}"`;
+    action.type = "updateEventValue";
+    action.debug = `update special value: "${value}"`;
   }
 
   private parseUnknown07(action: Action): void {
     const unknown = this.parseVariables(action);
 
     action.color = "mediumorchid";
-    action.text = `unknown instruction 0x7 with value "${unknown}"`;
+    action.type = "unknown07";
+    action.debug = `unknown instruction 0x7 with value "${unknown}"`;
   }
 
   private parseLabel(action: Action): void {
     while (this.getValue(action) !== 0x1d);
 
     action.color = "limegreen";
-    action.text = "label";
+    action.type = "label";
+    action.debug = "label";
   }
 
   private parseJump(action: Action): void {
     const offset = action.offset + this.getValue(action);
 
     action.color = "limegreen";
-    action.text = `jump to "${offset.toHex(8)}"`;
+    action.type = "jump";
+    action.debug = `jump to "${offset.toHex(8)}"`;
   }
 
   private parseCallSubroutine(action: Action): void {
@@ -1206,39 +1216,45 @@ export default class Script {
 
     if (subroutine) {
       action.color = "limegreen";
-      action.text = `call subroutine "${subroutine.name}" ("${offset.toHex(8)}")`;
+      action.type = "callSubroutine";
+      action.debug = `call subroutine "${subroutine.name}" ("${offset.toHex(8)}")`;
     }
   }
 
   private parseReturn(action: Action): void {
     action.color = "limegreen";
-    action.text = "return";
+    action.type = "return";
+    action.debug = "return";
   }
 
   private parseUnknown0d(action: Action): void {
     action.color = "mediumorchid";
-    action.text = "unknown instruction 0xd";
+    action.type = "unknown0d";
+    action.debug = "unknown instruction 0xd";
   }
 
   private parseWait(action: Action): void {
     const frames = this.parseVariables(action);
 
     action.color = "limegreen";
-    action.text = `wait "${frames}" frame(s)`;
+    action.type = "wait";
+    action.debug = `wait "${frames}" frame(s)`;
   }
 
   private parseSetFlag(action: Action): void {
     const flag = this.parseVariables(action, true);
 
     action.color = "limegreen";
-    action.text = `set flag "${flag}"`;
+    action.type = "updateFlag";
+    action.debug = `set flag "${flag}"`;
   }
 
   private parseUnsetFlag(action: Action): void {
     const flag = this.parseVariables(action, true);
 
     action.color = "limegreen";
-    action.text = `unset flag "${flag}"`;
+    action.type = "updateFlag";
+    action.debug = `unset flag "${flag}"`;
   }
 
   private parseAddItem(action: Action): void {
@@ -1250,7 +1266,8 @@ export default class Script {
 
     if (item) {
       action.color = "limegreen";
-      action.text = `add item "${item}"`;
+      action.type = "updateItem";
+      action.debug = `add item "${item}"`;
     }
   }
 
@@ -1263,7 +1280,8 @@ export default class Script {
 
     if (item) {
       action.color = "limegreen";
-      action.text = `remove item "${item}"`;
+      action.type = "updateItem";
+      action.debug = `remove item "${item}"`;
     }
   }
 
@@ -1273,7 +1291,8 @@ export default class Script {
     const text = this.parseText(offset);
 
     action.color = "limegreen";
-    action.text = `get debug text "${text[1]}"`;
+    action.type = "printDebugText";
+    action.debug = `print debug text "${text[1]}"`;
   }
 
   private parseUnknown19(action: Action): void {
@@ -1288,7 +1307,8 @@ export default class Script {
     }
 
     action.color = "mediumorchid";
-    action.text = `unknown instruction 0x19 (Select) with value "${unknown}", "${name}" (${offset.toHex(8)})`;
+    action.type = "unknown19";
+    action.debug = `unknown instruction 0x19 (Select) with value "${unknown}", "${name}" (${offset.toHex(8)})`;
   }
 
   private parseAddEntityToEnterTable(action: Action): void {
@@ -1297,14 +1317,16 @@ export default class Script {
     this.pushEntity(entity);
 
     action.color = "limegreen";
-    action.text = `add entity "${entity}" to enter table`;
+    action.type = "changeEnterTable";
+    action.debug = `add entity "${entity}" to enter table`;
   }
 
   private parseStartConversation(action: Action): void {
     const entity = this.parseVariables(action);
 
     action.color = "limegreen";
-    action.text = `start conversation with entity "${entity}"`;
+    action.type = "startConversation";
+    action.debug = `start conversation with entity "${entity}"`;
   }
 
   private parseSetEntityAnimation(action: Action): void {
@@ -1314,7 +1336,8 @@ export default class Script {
     const speed = this.parseVariables(action);
 
     action.color = "limegreen";
-    action.text = `set loop animation to entity "${entity}": Animation = "${animation}", Unknown = "${unknown}", Speed = "${speed}"`;
+    action.type = "playAnimation";
+    action.debug = `set loop animation to entity "${entity}": Animation = "${animation}", Unknown = "${unknown}", Speed = "${speed}"`;
   }
 
   private parsePlayEntityAnimation(action: Action): void {
@@ -1324,7 +1347,8 @@ export default class Script {
     const speed = this.parseVariables(action);
 
     action.color = "limegreen";
-    action.text = `play animation once to entity "${entity}": Animation = "${animation}", Unknown = "${unknown}", Speed = "${speed}"`;
+    action.type = "playAnimation";
+    action.debug = `play animation once to entity "${entity}": Animation = "${animation}", Unknown = "${unknown}", Speed = "${speed}"`;
   }
 
   private parseSetEntityFace(action: Action): void {
@@ -1332,7 +1356,8 @@ export default class Script {
     const face = this.parseVariables(action);
 
     action.color = "mediumorchid";
-    action.text = `set face "${face}" to entity "${entity}"`;
+    action.type = "setFace";
+    action.debug = `set face "${face}" to entity "${entity}"`;
   }
 
   private parseUnknown1f(action: Action): void {
@@ -1346,7 +1371,8 @@ export default class Script {
     const unknown8 = this.parseVariables(action);
 
     action.color = "mediumorchid";
-    action.text = `unknown instruction 0x1f (PutA) with values "${entity}", "${unknown2}", "${unknown3}", "${unknown4}", "${unknown5}", "${unknown6}", "${unknown7}", "${unknown8}"`;
+    action.type = "unknown1f";
+    action.debug = `unknown instruction 0x1f (PutA) with values "${entity}", "${unknown2}", "${unknown3}", "${unknown4}", "${unknown5}", "${unknown6}", "${unknown7}", "${unknown8}"`;
   }
 
   private parseUnknown20(action: Action): void {
@@ -1360,7 +1386,8 @@ export default class Script {
     const unknown8 = this.parseVariables(action);
 
     action.color = "mediumorchid";
-    action.text = `unknown instruction 0x20 (PutP) with values "${entity}", "${unknown2}", "${unknown3}", "${unknown4}", "${unknown5}", "${unknown6}", "${unknown7}", "${unknown8}"`;
+    action.type = "unknown20";
+    action.debug = `unknown instruction 0x20 (PutP) with values "${entity}", "${unknown2}", "${unknown3}", "${unknown4}", "${unknown5}", "${unknown6}", "${unknown7}", "${unknown8}"`;
   }
 
   private parseUnknown21(action: Action): void {
@@ -1381,7 +1408,8 @@ export default class Script {
     }
 
     action.color = "mediumorchid";
-    action.text = `unknown instruction 0x21 (mvCB2) with ${count} block(s) ${text.replace(" | ", "")}`;
+    action.type = "unknown21";
+    action.debug = `unknown instruction 0x21 (mvCB2) with ${count} block(s) ${text.replace(" | ", "")}`;
   }
 
   private parseUnknown22(action: Action): void {
@@ -1406,7 +1434,8 @@ export default class Script {
     }
 
     action.color = "mediumorchid";
-    action.text = `move (mvR) entity "${entity}" with ${count} block(s) ${text.replace(" | ", "")}`;
+    action.type = "moveEntity";
+    action.debug = `move (mvR) entity "${entity}" with ${count} block(s) ${text.replace(" | ", "")}`;
   }
 
   private parseUnknown23(action: Action): void {
@@ -1431,7 +1460,8 @@ export default class Script {
     }
 
     action.color = "mediumorchid";
-    action.text = `unknown instruction 0x23 (mv) with value "${entity}" then ${count} block(s) ${text.replace(" | ", "")}`;
+    action.type = "unknown23";
+    action.debug = `unknown instruction 0x23 (mv) with value "${entity}" then ${count} block(s) ${text.replace(" | ", "")}`;
   }
 
   private parseUnknown24(action: Action): void {
@@ -1445,7 +1475,8 @@ export default class Script {
     const unknown8 = this.parseVariables(action);
 
     action.color = "mediumorchid";
-    action.text = `unknown instruction 0x24 (rollA) with values "${entity}", "${unknown2}", "${unknown3}", "${unknown4}", "${unknown5}", "${unknown6}", "${unknown7}", "${unknown8}"`;
+    action.type = "unknown24";
+    action.debug = `unknown instruction 0x24 (rollA) with values "${entity}", "${unknown2}", "${unknown3}", "${unknown4}", "${unknown5}", "${unknown6}", "${unknown7}", "${unknown8}"`;
   }
 
   private parseUnknown25(action: Action): void {
@@ -1459,7 +1490,8 @@ export default class Script {
     const unknown8 = this.parseVariables(action);
 
     action.color = "mediumorchid";
-    action.text = `unknown instruction 0x25 (rollP) with values "${unknown1}", "${unknown2}", "${unknown3}", "${unknown4}", "${unknown5}", "${unknown6}", "${unknown7}", "${unknown8}"`;
+    action.type = "unknown25";
+    action.debug = `unknown instruction 0x25 (rollP) with values "${unknown1}", "${unknown2}", "${unknown3}", "${unknown4}", "${unknown5}", "${unknown6}", "${unknown7}", "${unknown8}"`;
   }
 
   private parseUnknown27(action: Action): void {
@@ -1467,7 +1499,8 @@ export default class Script {
     const unknown2 = this.parseVariables(action);
 
     action.color = "mediumorchid";
-    action.text = `unknown instruction 0x27 (NecA) with values "${unknown1}", "${unknown2}"`;
+    action.type = "unknown27";
+    action.debug = `unknown instruction 0x27 (NecA) with values "${unknown1}", "${unknown2}"`;
   }
 
   private parseSetCameraTargetEntity(action: Action): void {
@@ -1476,14 +1509,16 @@ export default class Script {
     const isAnimated = this.parseVariables(action);
 
     action.color = "limegreen";
-    action.text = `set camera target: Entity "${entity}", Y = "${positionY}", Animated = "${isAnimated}"`;
+    action.type = "setCamera";
+    action.debug = `set camera target: Entity "${entity}", Y = "${positionY}", Animated = "${isAnimated}"`;
   }
 
   private parseRemoveEntityFromEnterTable(action: Action): void {
     const entity = this.parseVariables(action);
 
     action.color = "limegreen";
-    action.text = `remove entity "${entity}" from enter table`;
+    action.type = "changeEnterTable";
+    action.debug = `remove entity "${entity}" from enter table`;
   }
 
   private parseUnknown2a(action: Action): void {
@@ -1500,12 +1535,14 @@ export default class Script {
     }
 
     action.color = "mediumorchid";
-    action.text = `unknown instruction 0x2a (Cl, make entities visible?) with value "${unknown}" then ${count} value(s) ${text.replace(", ", "")}`;
+    action.type = "unknown2a";
+    action.debug = `unknown instruction 0x2a (Cl, make entities visible?) with value "${unknown}" then ${count} value(s) ${text.replace(", ", "")}`;
   }
 
   private parseUnknown2d(action: Action): void {
     action.color = "mediumorchid";
-    action.text = "unknown instruction 0x2d (RunC0)";
+    action.type = "setCamera";
+    action.debug = "unknown instruction 0x2d (RunC0)";
   }
 
   private parseUnknown2e(action: Action): void {
@@ -1515,7 +1552,8 @@ export default class Script {
     const unknown4 = this.parseVariables(action);
 
     action.color = "mediumorchid";
-    action.text = `unknown instruction 0x2e (angleCA) with values "${unknown1}", "${unknown2}", "${unknown3}", "${unknown4}"`;
+    action.type = "unknown2e";
+    action.debug = `unknown instruction 0x2e (angleCA) with values "${unknown1}", "${unknown2}", "${unknown3}", "${unknown4}"`;
   }
 
   private parseUnknown2f(action: Action): void {
@@ -1525,14 +1563,16 @@ export default class Script {
     const unknown4 = this.parseVariables(action);
 
     action.color = "mediumorchid";
-    action.text = `unknown instruction 0x2f (angleCP) with values "${unknown1}", "${unknown2}", "${unknown3}", "${unknown4}"`;
+    action.type = "unknown2f";
+    action.debug = `unknown instruction 0x2f (angleCP) with values "${unknown1}", "${unknown2}", "${unknown3}", "${unknown4}"`;
   }
 
   private parseSetCameraZoom(action: Action): void {
     const zoom = this.parseVariables(action);
 
     action.color = "limegreen";
-    action.text = `set camera zoom to "${zoom}"`;
+    action.type = "setCamera";
+    action.debug = `set camera zoom to "${zoom}"`;
   }
 
   private parseUnknown32(action: Action): void {
@@ -1544,7 +1584,8 @@ export default class Script {
     const unknown6 = this.parseVariables(action);
 
     action.color = "mediumorchid";
-    action.text = `unknown instruction 0x32 (PutCA) with values "${unknown1}", "${unknown2}", "${unknown3}", "${unknown4}", "${unknown5}", "${unknown6}"`;
+    action.type = "unknown32";
+    action.debug = `unknown instruction 0x32 (PutCA) with values "${unknown1}", "${unknown2}", "${unknown3}", "${unknown4}", "${unknown5}", "${unknown6}"`;
   }
 
   private parsePlaySe(action: Action): void {
@@ -1554,7 +1595,8 @@ export default class Script {
     const unknown4 = this.parseVariables(action);
 
     action.color = "mediumorchid";
-    action.text = `play SE with values "${unknown1}", "${unknown2}", "${unknown3}", "${unknown4}"`;
+    action.type = "playSe";
+    action.debug = `play SE with values "${unknown1}", "${unknown2}", "${unknown3}", "${unknown4}"`;
   }
 
   private parseUnknown34(action: Action): void {
@@ -1566,7 +1608,8 @@ export default class Script {
     const unknown6 = this.parseVariables(action);
 
     action.color = "mediumorchid";
-    action.text = `unknown instruction 0x34 (PutCP) with values "${unknown1}", "${unknown2}", "${unknown3}", "${unknown4}", "${unknown5}", "${unknown6}"`;
+    action.type = "unknown34";
+    action.debug = `unknown instruction 0x34 (PutCP) with values "${unknown1}", "${unknown2}", "${unknown3}", "${unknown4}", "${unknown5}", "${unknown6}"`;
   }
 
   private parseUnknown35(action: Action): void {
@@ -1592,7 +1635,8 @@ export default class Script {
     const unknown20 = this.parseVariables(action);
 
     action.color = "mediumorchid";
-    action.text = `unknown instruction 0x35 (Mvj) with values "${unknown1}", "${unknown2}", "${unknown3}", "${unknown4}", "${unknown5}", "${unknown6}", "${unknown7}", "${unknown8}", "${unknown9}", "${unknown10}", "${unknown11}", "${unknown12}", "${unknown13}", "${unknown14}", "${unknown15}", "${unknown16}", "${unknown17}", "${unknown18}", "${unknown19}", "${unknown20}"`;
+    action.type = "unknown35";
+    action.debug = `unknown instruction 0x35 (Mvj) with values "${unknown1}", "${unknown2}", "${unknown3}", "${unknown4}", "${unknown5}", "${unknown6}", "${unknown7}", "${unknown8}", "${unknown9}", "${unknown10}", "${unknown11}", "${unknown12}", "${unknown13}", "${unknown14}", "${unknown15}", "${unknown16}", "${unknown17}", "${unknown18}", "${unknown19}", "${unknown20}"`;
   }
 
   private parsePlayBgm(action: Action): void {
@@ -1601,28 +1645,32 @@ export default class Script {
     const unknown3 = this.parseVariables(action);
 
     action.color = "mediumorchid";
-    action.text = `play BGM with values "${unknown1}", "${unknown2}", "${unknown3}"`;
+    action.type = "playBgm";
+    action.debug = `play BGM with values "${unknown1}", "${unknown2}", "${unknown3}"`;
   }
 
   private parseFadeInBgm(action: Action): void {
     const frames = this.parseVariables(action);
 
     action.color = "limegreen";
-    action.text = `fade in BGM for "${frames}" frames`;
+    action.type = "fadeBgm";
+    action.debug = `fade in BGM for "${frames}" frames`;
   }
 
   private parseFadeOut(action: Action): void {
     const frames = this.parseVariables(action);
 
     action.color = "limegreen";
-    action.text = `fade out for "${frames}" frames`;
+    action.type = "fadeScreen";
+    action.debug = `fade out for "${frames}" frames`;
   }
 
   private parseFadeIn(action: Action): void {
     const frames = this.parseVariables(action);
 
     action.color = "limegreen";
-    action.text = `fade in for "${frames}" frames`;
+    action.type = "fadeScreen";
+    action.debug = `fade in for "${frames}" frames`;
   }
 
   private parseUnknown3d(action: Action): void {
@@ -1631,7 +1679,8 @@ export default class Script {
     const unknown3 = this.parseVariables(action);
 
     action.color = "mediumorchid";
-    action.text = `unknown instruction 0x3d (Hopen) with values "${unknown1}", "${unknown2}", "${unknown3}"`;
+    action.type = "unknown3d";
+    action.debug = `unknown instruction 0x3d (Hopen) with values "${unknown1}", "${unknown2}", "${unknown3}"`;
   }
 
   private parseUnknown3e(action: Action): void {
@@ -1639,7 +1688,8 @@ export default class Script {
     const unknown2 = this.parseVariables(action);
 
     action.color = "mediumorchid";
-    action.text = `unknown instruction 0x3e (Hclose) with values "${unknown1}", "${unknown2}"`;
+    action.type = "unknown3e";
+    action.debug = `unknown instruction 0x3e (Hclose) with values "${unknown1}", "${unknown2}"`;
   }
 
   private parseUnknown3f(action: Action): void {
@@ -1647,14 +1697,16 @@ export default class Script {
     const unknown2 = this.parseVariables(action);
 
     action.color = "mediumorchid";
-    action.text = `unknown instruction 0x3f (Hchange) with values "${unknown1}", "${unknown2}"`;
+    action.type = "unknown3f";
+    action.debug = `unknown instruction 0x3f (Hchange) with values "${unknown1}", "${unknown2}"`;
   }
 
   private parseUnknown41(action: Action): void {
     const unknown = this.parseVariables(action);
 
     action.color = "mediumorchid";
-    action.text = `unknown instruction 0x41 (Hset) with value "${unknown}"`;
+    action.type = "unknown41";
+    action.debug = `unknown instruction 0x41 (Hset) with value "${unknown}"`;
   }
 
   private parseUnknown46(action: Action): void {
@@ -1664,7 +1716,8 @@ export default class Script {
     const unknown4 = this.parseVariables(action);
 
     action.color = "mediumorchid";
-    action.text = `unknown instruction 0x46 (RunC1a) with values "${unknown1}", "${unknown2}", "${unknown3}", "${unknown4}"`;
+    action.type = "setCamera";
+    action.debug = `unknown instruction 0x46 (RunC1a) with values "${unknown1}", "${unknown2}", "${unknown3}", "${unknown4}"`;
   }
 
   private parseSetCameraPosition(action: Action): void {
@@ -1674,7 +1727,8 @@ export default class Script {
     const isAnimated = this.parseVariables(action);
 
     action.color = "limegreen";
-    action.text = `set camera position: Position = "[${positionX}, ${positionY}, ${positionZ}]", Animated = "${isAnimated}"`;
+    action.type = "setCamera";
+    action.debug = `set camera position: Position = "[${positionX}, ${positionY}, ${positionZ}]", Animated = "${isAnimated}"`;
   }
 
   private parseUnknown48(action: Action): void {
@@ -1689,7 +1743,8 @@ export default class Script {
     const unknown9 = this.parseVariables(action);
 
     action.color = "mediumorchid";
-    action.text = `unknown instruction 0x48 (RunC3) with values "${unknown1}", "${unknown2}", "${unknown3}", "${unknown4}", "${unknown5}", "${unknown6}", "${unknown7}", "${unknown8}", "${unknown9}"`;
+    action.type = "setCamera";
+    action.debug = `unknown instruction 0x48 (RunC3) with values "${unknown1}", "${unknown2}", "${unknown3}", "${unknown4}", "${unknown5}", "${unknown6}", "${unknown7}", "${unknown8}", "${unknown9}"`;
   }
 
   private parseUnknown49(action: Action): void {
@@ -1705,7 +1760,8 @@ export default class Script {
     const unknown10 = this.parseVariables(action);
 
     action.color = "mediumorchid";
-    action.text = `unknown instruction 0x49 (RunC4) with values "${unknown1}", "${unknown2}", "${unknown3}", "${unknown4}", "${unknown5}", "${unknown6}", "${unknown7}", "${unknown8}", "${unknown9}", "${unknown10}"`;
+    action.type = "setCamera";
+    action.debug = `unknown instruction 0x49 (RunC4) with values "${unknown1}", "${unknown2}", "${unknown3}", "${unknown4}", "${unknown5}", "${unknown6}", "${unknown7}", "${unknown8}", "${unknown9}", "${unknown10}"`;
   }
 
   private parseSetCameraPositionTarget(action: Action): void {
@@ -1718,7 +1774,8 @@ export default class Script {
     const isAnimated = this.parseVariables(action);
 
     action.color = "limegreen";
-    action.text = `set camera position and target: Position = "[${positionX}, ${positionY}, ${positionZ}]", Target = "[${targetX}", "${targetY}", "${targetZ}"], Animated = "${isAnimated}"`;
+    action.type = "setCamera";
+    action.debug = `set camera position and target: Position = "[${positionX}, ${positionY}, ${positionZ}]", Target = "[${targetX}", "${targetY}", "${targetZ}"], Animated = "${isAnimated}"`;
   }
 
   private parseUnknown4b(action: Action): void {
@@ -1736,14 +1793,16 @@ export default class Script {
     const unknown12 = this.parseVariables(action);
 
     action.color = "mediumorchid";
-    action.text = `unknown instruction 0x4b (RunC6) with values "${unknown1}", "${unknown2}", "${unknown3}", "${unknown4}", "${unknown5}", "${unknown6}", "${unknown7}", "${unknown8}", "${unknown9}", "${unknown10}", "${unknown11}", "${unknown12}"`;
+    action.type = "setCamera";
+    action.debug = `unknown instruction 0x4b (RunC6) with values "${unknown1}", "${unknown2}", "${unknown3}", "${unknown4}", "${unknown5}", "${unknown6}", "${unknown7}", "${unknown8}", "${unknown9}", "${unknown10}", "${unknown11}", "${unknown12}"`;
   }
 
   private parseUnknown4c(action: Action): void {
     const unknown = this.parseVariables(action);
 
     action.color = "mediumorchid";
-    action.text = `unknown instruction 0x4c (retC) with value "${unknown}"`;
+    action.type = "unknown4c";
+    action.debug = `unknown instruction 0x4c (retC) with value "${unknown}"`;
   }
 
   private parseSetPlayerPosition(action: Action): void {
@@ -1754,7 +1813,8 @@ export default class Script {
     const rotation = this.parseVariables(action);
 
     action.color = "mediumorchid";
-    action.text = `set player position: Ground? = "${unknown1}", Position = "[${positionX}, ${positionY}, ${positionZ}]", Rotation = "${rotation}°"`;
+    action.type = "setPlayerPosition";
+    action.debug = `set player position: Ground? = "${unknown1}", Position = "[${positionX}, ${positionY}, ${positionZ}]", Rotation = "${rotation}°"`;
   }
 
   private parseUnknown4e(action: Action): void {
@@ -1764,7 +1824,8 @@ export default class Script {
     const unknown4 = this.parseVariables(action);
 
     action.color = "mediumorchid";
-    action.text = `unknown instruction 0x4e (PlayColMO) with values "${unknown1}", "${unknown2}", "${unknown3}", "${unknown4}"`;
+    action.type = "unknown4e";
+    action.debug = `unknown instruction 0x4e (PlayColMO) with values "${unknown1}", "${unknown2}", "${unknown3}", "${unknown4}"`;
   }
 
   private parseSetFog1(action: Action): void {
@@ -1777,12 +1838,14 @@ export default class Script {
     const unknown = this.parseVariables(action);
 
     action.color = "mediumorchid";
-    action.text = `set fog 1: RGB = "[${red}, ${blue}, ${green}]", Duration = "${transitionDuration}", Near = "${near}", Far = "${far}", Unknown = "${unknown}"`;
+    action.type = "setFog";
+    action.debug = `set fog 1: RGB = "[${red}, ${blue}, ${green}]", Duration = "${transitionDuration}", Near = "${near}", Far = "${far}", Unknown = "${unknown}"`;
   }
 
   private parseResetFog(action: Action): void {
     action.color = "limegreen";
-    action.text = "reset fog";
+    action.type = "resetFog";
+    action.debug = "reset fog";
   }
 
   private parseSetUnknownLight1(action: Action): void {
@@ -1797,7 +1860,8 @@ export default class Script {
     const blue = this.parseVariables(action);
 
     action.color = "mediumorchid";
-    action.text = `set unknown light 1: Enabled = "${enabled}", Unknown = "${unknown2}", Unknown = "${unknown3}", Unknown = "${unknown4}", Unknown = "${unknown5}", Unknown = "${unknown6}", RGB = "[${red}, ${blue}, ${green}]"`;
+    action.type = "setLight";
+    action.debug = `set unknown light 1: Enabled = "${enabled}", Unknown = "${unknown2}", Unknown = "${unknown3}", Unknown = "${unknown4}", Unknown = "${unknown5}", Unknown = "${unknown6}", RGB = "[${red}, ${blue}, ${green}]"`;
   }
 
   private parseSetAmbientLight(action: Action): void {
@@ -1807,7 +1871,8 @@ export default class Script {
     const blue = this.parseVariables(action);
 
     action.color = "limegreen";
-    action.text = `set ambient light: Enabled = "${enabled}", RGB = "[${red}, ${blue}, ${green}]"`;
+    action.type = "setLight";
+    action.debug = `set ambient light: Enabled = "${enabled}", RGB = "[${red}, ${blue}, ${green}]"`;
   }
 
   private parseSetDirectionalLight(action: Action): void {
@@ -1820,7 +1885,8 @@ export default class Script {
     const blue = this.parseVariables(action);
 
     action.color = "limegreen";
-    action.text = `set directional light: Enabled = "${enabled}", Position = "[${positionX}, ${positionY}, ${positionZ}]", RGB = "[${red}, ${blue}, ${green}]"`;
+    action.type = "setLight";
+    action.debug = `set directional light: Enabled = "${enabled}", Position = "[${positionX}, ${positionY}, ${positionZ}]", RGB = "[${red}, ${blue}, ${green}]"`;
   }
 
   private parseSetPointLight(action: Action): void {
@@ -1836,7 +1902,8 @@ export default class Script {
     const blue = this.parseVariables(action);
 
     action.color = "mediumorchid";
-    action.text = `set point light "${light}": Enabled = "${enabled}", Position = "[${positionX}, ${positionY}, ${positionZ}]", Unknown = "${unknown}", Radius = "${radius}", RGB = "[${red}, ${blue}, ${green}]"`;
+    action.type = "setLight";
+    action.debug = `set point light "${light}": Enabled = "${enabled}", Position = "[${positionX}, ${positionY}, ${positionZ}]", Unknown = "${unknown}", Radius = "${radius}", RGB = "[${red}, ${blue}, ${green}]"`;
   }
 
   private parseUnknown55(action: Action): void {
@@ -1853,7 +1920,8 @@ export default class Script {
     }
 
     action.color = "mediumorchid";
-    action.text = `unknown instruction 0x55 (ukisuguR) with value "${unknown}" then ${count} value(s) ${text.replace(", ", "")}`;
+    action.type = "unknown55";
+    action.debug = `unknown instruction 0x55 (ukisuguR) with value "${unknown}" then ${count} value(s) ${text.replace(", ", "")}`;
   }
 
   private parseUnknown56(action: Action): void {
@@ -1870,7 +1938,8 @@ export default class Script {
     }
 
     action.color = "mediumorchid";
-    action.text = `unknown instruction 0x56 (Ukisugu1) with value "${unknown}" then ${count} value(s) ${text.replace(", ", "")}`;
+    action.type = "unknown56";
+    action.debug = `unknown instruction 0x56 (Ukisugu1) with value "${unknown}" then ${count} value(s) ${text.replace(", ", "")}`;
   }
 
   private parseUnknown57(action: Action): void {
@@ -1887,7 +1956,8 @@ export default class Script {
     }
 
     action.color = "mediumorchid";
-    action.text = `unknown instruction 0x57 (Ukinoru) with value "${unknown}" then ${count} value(s) ${text.replace(", ", "")}`;
+    action.type = "unknown57";
+    action.debug = `unknown instruction 0x57 (Ukinoru) with value "${unknown}" then ${count} value(s) ${text.replace(", ", "")}`;
   }
 
   private parseUnknown59(action: Action): void {
@@ -1912,7 +1982,8 @@ export default class Script {
     }
 
     action.color = "mediumorchid";
-    action.text = `unknown instruction 0x59 (mvF) with "${unknown}" then ${count} block(s) ${text.replace(" | ", "")}`;
+    action.type = "unknown59";
+    action.debug = `unknown instruction 0x59 (mvF) with "${unknown}" then ${count} block(s) ${text.replace(" | ", "")}`;
   }
 
   private parseUnknown5a(action: Action): void {
@@ -1937,7 +2008,8 @@ export default class Script {
     }
 
     action.color = "mediumorchid";
-    action.text = `unknown instruction 0x5a (mvS) with "${entity}" then ${count} block(s) ${text.replace(" | ", "")}`;
+    action.type = "unknown5a";
+    action.debug = `unknown instruction 0x5a (mvS) with "${entity}" then ${count} block(s) ${text.replace(" | ", "")}`;
   }
 
   private parseUnknown5b(action: Action): void {
@@ -1945,28 +2017,32 @@ export default class Script {
     const unknown2 = this.parseVariables(action);
 
     action.color = "mediumorchid";
-    action.text = `unknown instruction 0x5b (ChangeRoof) with values "${unknown1}", "${unknown2}"`;
+    action.type = "unknown5b";
+    action.debug = `unknown instruction 0x5b (ChangeRoof) with values "${unknown1}", "${unknown2}"`;
   }
 
   private parseUnknown5c(action: Action): void {
     const boolean = this.parseVariables(action);
 
     action.color = "mediumorchid";
-    action.text = `unknown instruction 0x5c (scptiLinkEnable) with value "${boolean}"`;
+    action.type = "unknown5c";
+    action.debug = `unknown instruction 0x5c (scptiLinkEnable) with value "${boolean}"`;
   }
 
   private parseUnknown5d(action: Action): void {
     const boolean = this.parseVariables(action);
 
     action.color = "mediumorchid";
-    action.text = `unknown instruction 0x5d (visibility link) with value "${boolean}"`;
+    action.type = "unknown5d";
+    action.debug = `unknown instruction 0x5d (visibility link) with value "${boolean}"`;
   }
 
   private parseUnknown5e(action: Action): void {
     const unknown = this.parseVariables(action);
 
     action.color = "mediumorchid";
-    action.text = `unknown instruction 0x5e (setiLink) with value "${unknown}"`;
+    action.type = "unknown5e";
+    action.debug = `unknown instruction 0x5e (setiLink) with value "${unknown}"`;
   }
 
   private parseUnknown60(action: Action): void {
@@ -1979,7 +2055,8 @@ export default class Script {
     const unknown7 = this.parseVariables(action);
 
     action.color = "mediumorchid";
-    action.text = `unknown instruction 0x60 (RunC7b) with values "${unknown1}", "${unknown2}", "${unknown3}", "${unknown4}", "${unknown5}", "${unknown6}", "${unknown7}"`;
+    action.type = "setCamera";
+    action.debug = `unknown instruction 0x60 (RunC7b) with values "${unknown1}", "${unknown2}", "${unknown3}", "${unknown4}", "${unknown5}", "${unknown6}", "${unknown7}"`;
   }
 
   private parseChangeEntityParts(action: Action): void {
@@ -1988,7 +2065,8 @@ export default class Script {
     const njcm = this.parseVariables(action);
 
     action.color = "limegreen";
-    action.text = `change part "${partToChange}" to NJCM "${njcm}" on entity "${entity}"`;
+    action.type = "changePart";
+    action.debug = `change part "${partToChange}" to NJCM "${njcm}" on entity "${entity}"`;
   }
 
   private parseUnknown62(action: Action): void {
@@ -2003,7 +2081,8 @@ export default class Script {
     }
 
     action.color = "mediumorchid";
-    action.text = `unknown instruction 0x62 (TaskOn): ${text.replace(", ", "")}`;
+    action.type = "unknown62";
+    action.debug = `unknown instruction 0x62 (TaskOn): ${text.replace(", ", "")}`;
   }
 
   private parseUnknown63(action: Action): void {
@@ -2018,19 +2097,22 @@ export default class Script {
     }
 
     action.color = "mediumorchid";
-    action.text = `unknown instruction 0x63 (TaskOff): ${text.replace(", ", "")}`;
+    action.type = "unknown63";
+    action.debug = `unknown instruction 0x63 (TaskOff): ${text.replace(", ", "")}`;
   }
 
   private parseUnknown65(action: Action): void {
     const unknown = this.parseVariables(action);
 
     action.color = "mediumorchid";
-    action.text = `unknown instruction 0x65 (stopSE) with value "${unknown}"`;
+    action.type = "unknown65";
+    action.debug = `unknown instruction 0x65 (stopSE) with value "${unknown}"`;
   }
 
   private parseStopSnd(action: Action): void {
     action.color = "mediumorchid";
-    action.text = "stop SND (BGM + SE?)";
+    action.type = "stopSnd";
+    action.debug = "stop SND (BGM + SE?)";
   }
 
   private parseUnknown68(action: Action): void {
@@ -2039,14 +2121,16 @@ export default class Script {
     const unknown3 = this.parseVariables(action);
 
     action.color = "mediumorchid";
-    action.text = `unknown instruction 0x68 (swingOnC) with values "${unknown1}", "${unknown2}", "${unknown3}"`;
+    action.type = "unknown68";
+    action.debug = `unknown instruction 0x68 (swingOnC) with values "${unknown1}", "${unknown2}", "${unknown3}"`;
   }
 
   private parseUnknown69(action: Action): void {
     const unknown = this.parseVariables(action);
 
     action.color = "mediumorchid";
-    action.text = `unknown instruction 0x69 (swingOffC) with value "${unknown}`;
+    action.type = "unknown69";
+    action.debug = `unknown instruction 0x69 (swingOffC) with value "${unknown}`;
   }
 
   private parseUnknown6a(action: Action): void {
@@ -2061,7 +2145,8 @@ export default class Script {
     const unknown9 = this.parseVariables(action);
 
     action.color = "mediumorchid";
-    action.text = `unknown instruction 0x6a (ParentOn) with values "${unknown1}", "${unknown2}", "${unknown3}", "${unknown4}", "${unknown5}", "${unknown6}", "${unknown7}", "${unknown8}", "${unknown9}"`;
+    action.type = "unknown6a";
+    action.debug = `unknown instruction 0x6a (ParentOn) with values "${unknown1}", "${unknown2}", "${unknown3}", "${unknown4}", "${unknown5}", "${unknown6}", "${unknown7}", "${unknown8}", "${unknown9}"`;
   }
 
   private parseUnknown6b(action: Action): void {
@@ -2069,7 +2154,8 @@ export default class Script {
     const unknown2 = this.parseVariables(action);
 
     action.color = "mediumorchid";
-    action.text = `unknown instruction 0x6b (ParentOff) with values "${unknown1}", "${unknown2}"`;
+    action.type = "unknown6b";
+    action.debug = `unknown instruction 0x6b (ParentOff) with values "${unknown1}", "${unknown2}"`;
   }
 
   private parseUnknown6c(action: Action): void {
@@ -2094,7 +2180,8 @@ export default class Script {
     }
 
     action.color = "mediumorchid";
-    action.text = `unknown instruction 0x6c (mvSF) with "${unknown}" then ${count} block(s) ${text.replace(" | ", "")}`;
+    action.type = "unknown6c";
+    action.debug = `unknown instruction 0x6c (mvSF) with "${unknown}" then ${count} block(s) ${text.replace(" | ", "")}`;
   }
 
   private parseSetFog2(action: Action): void {
@@ -2109,7 +2196,8 @@ export default class Script {
     const farDensity = this.parseVariables(action);
 
     action.color = "mediumorchid";
-    action.text = `set fog 2 (setNewFog): RGB = "[${red}, ${blue}, ${green}]", Duration = "${transitionDuration}", Near = "${near}", Near Density = "${nearDensity}", Unknown = "${unknown}", Far = "${far}", Far Density = "${farDensity}"`;
+    action.type = "setFog";
+    action.debug = `set fog 2 (setNewFog): RGB = "[${red}, ${blue}, ${green}]", Duration = "${transitionDuration}", Near = "${near}", Near Density = "${nearDensity}", Unknown = "${unknown}", Far = "${far}", Far Density = "${farDensity}"`;
   }
 
   private parseUnknown6f(action: Action): void {
@@ -2117,7 +2205,8 @@ export default class Script {
     const unknown2 = this.parseVariables(action);
 
     action.color = "mediumorchid";
-    action.text = `unknown instruction 0x6f (RunC8) with values "${unknown1}", "${unknown2}"`;
+    action.type = "setCamera";
+    action.debug = `unknown instruction 0x6f (RunC8) with values "${unknown1}", "${unknown2}"`;
   }
 
   private parseInitEventBattle(action: Action): void {
@@ -2128,7 +2217,8 @@ export default class Script {
     const transition = this.parseVariables(action);
 
     action.color = "mediumorchid";
-    action.text = `init event battle: Unknown = "${unknown}", Group = "${group}", Stage = "${stage}", Transition = "${transition}"`;
+    action.type = "initEventBattle";
+    action.debug = `init event battle: Unknown = "${unknown}", Group = "${group}", Stage = "${stage}", Transition = "${transition}"`;
   }
 
   private parseUnknown72(action: Action): void {
@@ -2136,12 +2226,14 @@ export default class Script {
     const index = this.parseVariables(action);
 
     action.color = "mediumorchid";
-    action.text = `unknown instruction 0x72 (chgGrdMdl) with values "${placement}", "${index}"`;
+    action.type = "unknown72";
+    action.debug = `unknown instruction 0x72 (chgGrdMdl) with values "${placement}", "${index}"`;
   }
 
   private parseUnknown73(action: Action): void {
     action.color = "mediumorchid";
-    action.text = "unknown instruction 0x73 (warp to title screen?)";
+    action.type = "unknown73";
+    action.debug = "unknown instruction 0x73 (warp to title screen?)";
   }
 
   private parseUnknown75(action: Action): void {
@@ -2149,7 +2241,8 @@ export default class Script {
     const frames = this.parseVariables(action);
 
     action.color = "mediumorchid";
-    action.text = `unknown instruction 0x75 (CWait "Entity wait for x frames") with values "${entity}", "${frames}"`;
+    action.type = "unknown75";
+    action.debug = `unknown instruction 0x75 (CWait "Entity wait for x frames") with values "${entity}", "${frames}"`;
   }
 
   private parseSetEntitiesVisible(action: Action): void {
@@ -2166,7 +2259,8 @@ export default class Script {
     }
 
     action.color = "limegreen";
-    action.text = `set visibility in "${frames}" frames to ${count} entity(ies): ${text.replace(", ", "")}`;
+    action.type = "setVisibility";
+    action.debug = `set visibility in "${frames}" frames to ${count} entity(ies): ${text.replace(", ", "")}`;
   }
 
   private parseSetEntitiesInvisible(action: Action): void {
@@ -2183,7 +2277,8 @@ export default class Script {
     }
 
     action.color = "limegreen";
-    action.text = `set invisibility in "${frames}" frames to ${count} entity(ies): ${text.replace(", ", "")}`;
+    action.type = "setVisibility";
+    action.debug = `set invisibility in "${frames}" frames to ${count} entity(ies): ${text.replace(", ", "")}`;
   }
 
   private parseUnknown79(action: Action): void {
@@ -2204,7 +2299,8 @@ export default class Script {
     }
 
     action.color = "mediumorchid";
-    action.text = `unknown instruction 0x79 (mvCA) with ${count} block(s) ${text.replace(" | ", "")}`;
+    action.type = "unknown79";
+    action.debug = `unknown instruction 0x79 (mvCA) with ${count} block(s) ${text.replace(" | ", "")}`;
   }
 
   private parseUnknown7a(action: Action): void {
@@ -2215,7 +2311,8 @@ export default class Script {
     const unknown5 = this.parseVariables(action);
 
     action.color = "mediumorchid";
-    action.text = `unknown instruction 0x7a (RunC9) with values "${unknown1}", "${unknown2}", "${unknown3}", "${unknown4}", "${unknown5}"`;
+    action.type = "setCamera";
+    action.debug = `unknown instruction 0x7a (RunC9) with values "${unknown1}", "${unknown2}", "${unknown3}", "${unknown4}", "${unknown5}"`;
   }
 
   private parseUnknown7b(action: Action): void {
@@ -2223,7 +2320,8 @@ export default class Script {
     const unknown2 = this.parseVariables(action);
 
     action.color = "mediumorchid";
-    action.text = `unknown instruction 0x7b (TrackUp) with values "${unknown1}", "${unknown2}"`;
+    action.type = "unknown7b";
+    action.debug = `unknown instruction 0x7b (TrackUp) with values "${unknown1}", "${unknown2}"`;
   }
 
   private parseAnimateCameraZoom(action: Action): void {
@@ -2231,12 +2329,14 @@ export default class Script {
     const frames = this.parseVariables(action);
 
     action.color = "limegreen";
-    action.text = `animate camera zoom to "${zoom}" in "${frames}" frames`;
+    action.type = "setCamera";
+    action.debug = `animate camera zoom to "${zoom}" in "${frames}" frames`;
   }
 
   private parseUnknown7d(action: Action): void {
     action.color = "mediumorchid";
-    action.text = "unknown instruction 0x7d";
+    action.type = "unknown7d";
+    action.debug = "unknown instruction 0x7d";
   }
 
   private parseUnknown7e(action: Action): void {
@@ -2251,7 +2351,8 @@ export default class Script {
     }
 
     action.color = "mediumorchid";
-    action.text = `unknown instruction 0x7e with ${count} value(s) ${text.replace(", ", "")}`;
+    action.type = "unknown7e";
+    action.debug = `unknown instruction 0x7e with ${count} value(s) ${text.replace(", ", "")}`;
   }
 
   private parseUnknown7f(action: Action): void {
@@ -2266,7 +2367,8 @@ export default class Script {
     }
 
     action.color = "mediumorchid";
-    action.text = `unknown instruction 0x7f with ${count} value(s) ${text.replace(", ", "")}`;
+    action.type = "unknown7f";
+    action.debug = `unknown instruction 0x7f with ${count} value(s) ${text.replace(", ", "")}`;
   }
 
   private parseUnknown80(action: Action): void {
@@ -2278,7 +2380,8 @@ export default class Script {
     const unknown6 = this.parseVariables(action);
 
     action.color = "mediumorchid";
-    action.text = `unknown instruction 0x80 (PlayMO2) with values "${unknown1}", "${unknown2}", "${unknown3}", "${unknown4}", "${unknown5}", "${unknown6}"`;
+    action.type = "unknown80";
+    action.debug = `unknown instruction 0x80 (PlayMO2) with values "${unknown1}", "${unknown2}", "${unknown3}", "${unknown4}", "${unknown5}", "${unknown6}"`;
   }
 
   private parseUnknown81(action: Action): void {
@@ -2288,7 +2391,8 @@ export default class Script {
     this.jumpOffsets.push(offset);
 
     action.color = "mediumorchid";
-    action.text = `unknown instruction 0x81 (WWW) with values "${unknown1}", jump to "${offset.toHex(8)}" (if?)`;
+    action.type = "unknown81";
+    action.debug = `unknown instruction 0x81 (WWW) with values "${unknown1}", jump to "${offset.toHex(8)}" (if?)`;
   }
 
   private parseUnknown82(action: Action): void {
@@ -2311,7 +2415,8 @@ export default class Script {
     }
 
     action.color = "mediumorchid";
-    action.text = `unknown instruction 0x82 (mv2) with "${unknown}" then ${count} block(s) ${text.replace(" | ", "")}`;
+    action.type = "unknown82";
+    action.debug = `unknown instruction 0x82 (mv2) with "${unknown}" then ${count} block(s) ${text.replace(" | ", "")}`;
   }
 
   private parseAnimateAmbientLight(action: Action): void {
@@ -2329,7 +2434,8 @@ export default class Script {
     }
 
     action.color = "limegreen";
-    action.text = `animate ambient light with ${count} step(s) ${text.replace(" | ", "")}`;
+    action.type = "setLight";
+    action.debug = `animate ambient light with ${count} step(s) ${text.replace(" | ", "")}`;
   }
 
   private parseAnimateDirectionalLight(action: Action): void {
@@ -2350,7 +2456,8 @@ export default class Script {
     }
 
     action.color = "limegreen";
-    action.text = `animate directional light with ${count} step(s) ${text.replace(" | ", "")}`;
+    action.type = "setLight";
+    action.debug = `animate directional light with ${count} step(s) ${text.replace(" | ", "")}`;
   }
 
   private parseAnimatePointLight(action: Action): void {
@@ -2375,7 +2482,8 @@ export default class Script {
     }
 
     action.color = "mediumorchid";
-    action.text = `animate point light "${light}" with ${count} step(s) ${text.replace(" | ", "")}`;
+    action.type = "setLight";
+    action.debug = `animate point light "${light}" with ${count} step(s) ${text.replace(" | ", "")}`;
   }
 
   private parseUnknown86(action: Action): void {
@@ -2388,7 +2496,8 @@ export default class Script {
     const frames = this.parseVariables(action);
 
     action.color = "mediumorchid";
-    action.text = `unknown instruction 0x86 (Proll "Entity wait for x frames) with values "${entity}", "${unknown2}", "${unknown3}", "${unknown4}", "${unknown5}", "${unknown6}", "${frames}"`;
+    action.type = "unknown86";
+    action.debug = `unknown instruction 0x86 (Proll "Entity wait for x frames) with values "${entity}", "${unknown2}", "${unknown3}", "${unknown4}", "${unknown5}", "${unknown6}", "${frames}"`;
   }
 
   private parseUnknown87(action: Action): void {
@@ -2405,7 +2514,8 @@ export default class Script {
     }
 
     action.color = "mediumorchid";
-    action.text = `unknown instruction 0x87 (fogM) with value "${unknown}" then ${count} value(s) ${text.replace(", ", "")}`;
+    action.type = "unknown87";
+    action.debug = `unknown instruction 0x87 (fogM) with value "${unknown}" then ${count} value(s) ${text.replace(", ", "")}`;
   }
 
   private parseSetEntityScale(action: Action): void {
@@ -2416,19 +2526,22 @@ export default class Script {
     const transitionDuration = this.parseVariables(action);
 
     action.color = "limegreen";
-    action.text = `set scale of entity "${entity}": Scale = "[${scaleX}, ${scaleY}, ${scaleZ}]", Duration = "${transitionDuration}"`;
+    action.type = "setScale";
+    action.debug = `set scale of entity "${entity}": Scale = "[${scaleX}, ${scaleY}, ${scaleZ}]", Duration = "${transitionDuration}"`;
   }
 
   private parseSetPlayerAsEntity(action: Action): void {
     const entity = this.parseVariables(action);
 
     action.color = "limegreen";
-    action.text = `set player as entity "${entity}"`;
+    action.type = "setPlayer";
+    action.debug = `set player as entity "${entity}"`;
   }
 
   private parseInitSave(action: Action): void {
     action.color = "limegreen";
-    action.text = "init save";
+    action.type = "initSave";
+    action.debug = "init save";
   }
 
   private parseUnknown8b(action: Action): void {
@@ -2449,21 +2562,24 @@ export default class Script {
     }
 
     action.color = "mediumorchid";
-    action.text = `unknown instruction 0x8b (mvCALP) with ${count} block(s) ${text.replace(" | ", "")}`;
+    action.type = "unknown8b";
+    action.debug = `unknown instruction 0x8b (mvCALP) with ${count} block(s) ${text.replace(" | ", "")}`;
   }
 
   private parseWhiteOut(action: Action): void {
     const frames = this.parseVariables(action);
 
     action.color = "limegreen";
-    action.text = `white out for "${frames}" frames`;
+    action.type = "fadeScreen";
+    action.debug = `white out for "${frames}" frames`;
   }
 
   private parseWhiteIn(action: Action): void {
     const frames = this.parseVariables(action);
 
     action.color = "limegreen";
-    action.text = `white in for "${frames}" frames`;
+    action.type = "fadeScreen";
+    action.debug = `white in for "${frames}" frames`;
   }
 
   private parseUnknown8e(action: Action): void {
@@ -2474,7 +2590,8 @@ export default class Script {
     const unknown5 = this.parseVariables(action);
 
     action.color = "mediumorchid";
-    action.text = `unknown instruction 0x8e (grey out?) with values "${unknown1}", "${unknown2}", "${unknown3}", "${unknown4}", "${unknown5}"`;
+    action.type = "unknown8e";
+    action.debug = `unknown instruction 0x8e (grey out?) with values "${unknown1}", "${unknown2}", "${unknown3}", "${unknown4}", "${unknown5}"`;
   }
 
   private parseDialogBox(action: Action): void {
@@ -2485,21 +2602,24 @@ export default class Script {
     const [, text] = this.parseText(offset + 0x10);
 
     action.color = "limegreen";
-    action.text = `open dialog box and read "<span data-title="${text}">${offset.toHex(8)}</span>" ${unknown === "7fffffff" ? "and keep it open" : "then close it"}`;
+    action.type = "openDialog";
+    action.debug = `open dialog box and read "<span data-title="${text}">${offset.toHex(8)}</span>" ${unknown === "7fffffff" ? "and keep it open" : "then close it"}`;
   }
 
   private parseUnknown91(action: Action): void {
     const unknown = this.parseVariables(action);
 
     action.color = "mediumorchid";
-    action.text = `unknown instruction 0x91 (random occurence?) with value "${unknown}"`;
+    action.type = "unknown91";
+    action.debug = `unknown instruction 0x91 (random occurence?) with value "${unknown}"`;
   }
 
   private parseUnknown92(action: Action): void {
     const unknown = this.parseVariables(action);
 
     action.color = "mediumorchid";
-    action.text = `unknown instruction 0x92 (added object information?) with value "${unknown}"`;
+    action.type = "unknown92";
+    action.debug = `unknown instruction 0x92 (added object information?) with value "${unknown}"`;
   }
 
   private parseUnknown93(action: Action): void {
@@ -2515,7 +2635,8 @@ export default class Script {
     const unknown10 = this.parseVariables(action);
 
     action.color = "mediumorchid";
-    action.text = `unknown instruction 0x93 (setAsk2) with values "${unknown1}", "${unknown2}", "${unknown3}", "${unknown4}", "${unknown5}", "${unknown6}", "${unknown7}", "${unknown8}", "${unknown9}", "${unknown10}"`;
+    action.type = "unknown93";
+    action.debug = `unknown instruction 0x93 (setAsk2) with values "${unknown1}", "${unknown2}", "${unknown3}", "${unknown4}", "${unknown5}", "${unknown6}", "${unknown7}", "${unknown8}", "${unknown9}", "${unknown10}"`;
   }
 
   private parseUnknown94(action: Action): void {
@@ -2538,21 +2659,24 @@ export default class Script {
     }
 
     action.color = "mediumorchid";
-    action.text = `unknown instruction 0x94 (related to light1) with ${count} block(s) ${text.replace(" | ", "")}`;
+    action.type = "unknown94";
+    action.debug = `unknown instruction 0x94 (related to light1) with ${count} block(s) ${text.replace(" | ", "")}`;
   }
 
   private parseUnknown95(action: Action): void {
     const unknown = this.parseVariables(action);
 
     action.color = "mediumorchid";
-    action.text = `unknown instruction 0x95 (enter the effect under control) with value "${unknown}"`;
+    action.type = "unknown95";
+    action.debug = `unknown instruction 0x95 (enter the effect under control) with value "${unknown}"`;
   }
 
   private parseUnknown96(action: Action): void {
     const unknown = this.parseVariables(action);
 
     action.color = "mediumorchid";
-    action.text = `unknown instruction 0x96 (return the effect under control) with value "${unknown}"`;
+    action.type = "unknown96";
+    action.debug = `unknown instruction 0x96 (return the effect under control) with value "${unknown}"`;
   }
 
   private parseUnknown97(action: Action): void {
@@ -2560,7 +2684,8 @@ export default class Script {
     const unknown2 = this.parseVariables(action);
 
     action.color = "mediumorchid";
-    action.text = `unknown instruction 0x97 with values "${unknown1}", "${unknown2}"`;
+    action.type = "unknown97";
+    action.debug = `unknown instruction 0x97 with values "${unknown1}", "${unknown2}"`;
   }
 
   private parseUnknown98(action: Action): void {
@@ -2575,7 +2700,8 @@ export default class Script {
     }
 
     action.color = "mediumorchid";
-    action.text = `unknown instruction 0x98 (reset task recursively) with ${count} value(s) ${text.replace(", ", "")}`;
+    action.type = "unknown98";
+    action.debug = `unknown instruction 0x98 (reset task recursively) with ${count} value(s) ${text.replace(", ", "")}`;
   }
 
   private parseInitVibration(action: Action): void {
@@ -2592,14 +2718,16 @@ export default class Script {
     }
 
     action.color = "mediumorchid";
-    action.text = `init vibration with ${count} block(s) ${text.replace(" | ", "")}`;
+    action.type = "initVibration";
+    action.debug = `init vibration with ${count} block(s) ${text.replace(" | ", "")}`;
   }
 
   private parseOpenTreasure(action: Action): void {
     const unknown = this.parseVariables(action);
 
     action.color = "mediumorchid";
-    action.text = `open treasure "${unknown}" (related to main.dol)`;
+    action.type = "openTreasure";
+    action.debug = `open treasure "${unknown}" (related to main.dol)`;
   }
 
   private parseChoiceBox(action: Action): void {
@@ -2611,12 +2739,14 @@ export default class Script {
     const [, text] = this.parseText(offset + 0x10);
 
     action.color = "limegreen";
-    action.text = `open choice box with "${choices}" choices and read "<span data-title="${text}">${offset.toHex(8)}</span>" ${unknown === "7fffffff" ? "and keep it open" : "then close it"}`;
+    action.type = "openChoice";
+    action.debug = `open choice box with "${choices}" choices and read "<span data-title="${text}">${offset.toHex(8)}</span>" ${unknown === "7fffffff" ? "and keep it open" : "then close it"}`;
   }
 
   private parseRestoreShipPosition(action: Action): void {
     action.color = "limegreen";
-    action.text = "restore ship position";
+    action.type = "restoreShipPosition";
+    action.debug = "restore ship position";
   }
 
   private parseAddToParty(action: Action): void {
@@ -2628,7 +2758,8 @@ export default class Script {
 
     if (character) {
       action.color = "limegreen";
-      action.text = `add "${character}" to party`;
+      action.type = "changeParty";
+      action.debug = `add "${character}" to party`;
     }
   }
 
@@ -2641,7 +2772,8 @@ export default class Script {
 
     if (character) {
       action.color = "limegreen";
-      action.text = `remove "${character}" from party`;
+      action.type = "changeParty";
+      action.debug = `remove "${character}" from party`;
     }
   }
 
@@ -2664,7 +2796,8 @@ export default class Script {
     }
 
     action.color = "mediumorchid";
-    action.text = `unknown instruction 0x9f (mvCA3) with ${count} block(s) ${text.replace(" | ", "")}`;
+    action.type = "unknown9f";
+    action.debug = `unknown instruction 0x9f (mvCA3) with ${count} block(s) ${text.replace(" | ", "")}`;
   }
 
   private parseUnknownA0(action: Action): void {
@@ -2677,14 +2810,16 @@ export default class Script {
     const unknown7 = this.parseVariables(action);
 
     action.color = "mediumorchid";
-    action.text = `unknown instruction 0xa0 (gChangegrd) with values "${unknown1}", "${unknown2}", "${unknown3}", "${unknown4}", "${unknown5}", "${unknown6}", "${unknown7}"`;
+    action.type = "unknownA0";
+    action.debug = `unknown instruction 0xa0 (gChangegrd) with values "${unknown1}", "${unknown2}", "${unknown3}", "${unknown4}", "${unknown5}", "${unknown6}", "${unknown7}"`;
   }
 
   private parseUnknownA2(action: Action): void {
     const unknown = this.parseVariables(action);
 
     action.color = "mediumorchid";
-    action.text = `unknown instruction 0xa2 (RunC10) with value "${unknown}"`;
+    action.type = "setCamera";
+    action.debug = `unknown instruction 0xa2 (RunC10) with value "${unknown}"`;
   }
 
   private parseUnknownA3(action: Action): void {
@@ -2699,7 +2834,8 @@ export default class Script {
     const unknown9 = this.parseVariables(action);
 
     action.color = "mediumorchid";
-    action.text = `unknown instruction 0xa3 (RunC11) with values "${unknown1}", "${unknown2}", "${unknown3}", "${unknown4}", "${unknown5}", "${unknown6}", "${unknown7}", "${unknown8}", "${unknown9}"`;
+    action.type = "setCamera";
+    action.debug = `unknown instruction 0xa3 (RunC11) with values "${unknown1}", "${unknown2}", "${unknown3}", "${unknown4}", "${unknown5}", "${unknown6}", "${unknown7}", "${unknown8}", "${unknown9}"`;
   }
 
   private parseUnknownA4(action: Action): void {
@@ -2707,7 +2843,8 @@ export default class Script {
     const unknown2 = this.parseVariables(action);
 
     action.color = "mediumorchid";
-    action.text = `unknown instruction 0xa4 (houseClear) with values "${unknown1}", "${unknown2}"`;
+    action.type = "unknownA4";
+    action.debug = `unknown instruction 0xa4 (houseClear) with values "${unknown1}", "${unknown2}"`;
   }
 
   private parseUnknownA5(action: Action): void {
@@ -2732,7 +2869,8 @@ export default class Script {
     const unknown19 = this.parseVariables(action);
 
     action.color = "mediumorchid";
-    action.text = `unknown instruction 0xa5 (related to ship battle) with values "${unknown1}", "${unknown2}", "${unknown3}", "${unknown4}", "${unknown5}", "${unknown6}", "${unknown7}", "${unknown8}", "${unknown9}", "${unknown10}", "${unknown11}", "${unknown12}", "${unknown13}", "${unknown14}", "${unknown15}", "${unknown16}", "${unknown17}", "${unknown18}", "${unknown19}"`;
+    action.type = "unknownA5";
+    action.debug = `unknown instruction 0xa5 (related to ship battle) with values "${unknown1}", "${unknown2}", "${unknown3}", "${unknown4}", "${unknown5}", "${unknown6}", "${unknown7}", "${unknown8}", "${unknown9}", "${unknown10}", "${unknown11}", "${unknown12}", "${unknown13}", "${unknown14}", "${unknown15}", "${unknown16}", "${unknown17}", "${unknown18}", "${unknown19}"`;
   }
 
   private parseUnknownA6(action: Action): void {
@@ -2740,19 +2878,22 @@ export default class Script {
     const unknown2 = this.parseVariables(action);
 
     action.color = "mediumorchid";
-    action.text = `unknown instruction 0xa6 (related to ship battle) with values "${unknown1}", "${unknown2}"`;
+    action.type = "unknownA6";
+    action.debug = `unknown instruction 0xa6 (related to ship battle) with values "${unknown1}", "${unknown2}"`;
   }
 
   private parseOpenShipBattleMenu(action: Action): void {
     action.color = "limegreen";
-    action.text = "open ship battle menu";
+    action.type = "openShipBattleMenu";
+    action.debug = "open ship battle menu";
   }
 
   private parseUnknownA8(action: Action): void {
     const unknown = this.parseVariables(action);
 
     action.color = "mediumorchid";
-    action.text = `unknown instruction 0xa8 (change to 2P modifier?) with value "${unknown}"`;
+    action.type = "unknownA8";
+    action.debug = `unknown instruction 0xa8 (change to 2P modifier?) with value "${unknown}"`;
   }
 
   private parseUnknownA9(action: Action): void {
@@ -2762,38 +2903,44 @@ export default class Script {
     const unknown4 = this.parseVariables(action);
 
     action.color = "mediumorchid";
-    action.text = `unknown instruction 0xa9 (change the color of the 2P modifier) with values "${unknown1}", "${unknown2}", "${unknown3}", "${unknown4}"`;
+    action.type = "unknownA9";
+    action.debug = `unknown instruction 0xa9 (change the color of the 2P modifier) with values "${unknown1}", "${unknown2}", "${unknown3}", "${unknown4}"`;
   }
 
   private parseUnknownAa(action: Action): void {
     action.color = "mediumorchid";
-    action.text = "unknown instruction 0xaa (ship battle initialized?)";
+    action.type = "unknownAa";
+    action.debug = "unknown instruction 0xaa (ship battle initialized?)";
   }
 
   private parseUnknownAb(action: Action): void {
     action.color = "mediumorchid";
-    action.text = "unknown instruction 0xab (ship battle paused?)";
+    action.type = "unknownAb";
+    action.debug = "unknown instruction 0xab (ship battle paused?)";
   }
 
   private parseUnknownAc(action: Action): void {
     const unknown = this.parseVariables(action);
 
     action.color = "mediumorchid";
-    action.text = `unknown instruction 0xac (ship battle scene table start?) with value "${unknown}"`;
+    action.type = "unknownAc";
+    action.debug = `unknown instruction 0xac (ship battle scene table start?) with value "${unknown}"`;
   }
 
   private parseUnknownAd(action: Action): void {
     const unknown = this.parseVariables(action);
 
     action.color = "mediumorchid";
-    action.text = `unknown instruction 0xad (ship battle scene table end?) with value "${unknown}"`;
+    action.type = "unknownAd";
+    action.debug = `unknown instruction 0xad (ship battle scene table end?) with value "${unknown}"`;
   }
 
   private parseUnknownAe(action: Action): void {
     const unknown = this.parseVariables(action);
 
     action.color = "mediumorchid";
-    action.text = `unknown instruction 0xae (path?) with value "${unknown}"`;
+    action.type = "unknownAe";
+    action.debug = `unknown instruction 0xae (path?) with value "${unknown}"`;
   }
 
   private parseUnknownB0(action: Action): void {
@@ -2805,7 +2952,8 @@ export default class Script {
     const unknown6 = this.parseVariables(action);
 
     action.color = "mediumorchid";
-    action.text = `unknown instruction 0xb0 (partsScale) with values "${unknown1}", "${unknown2}", "${unknown3}", "${unknown4}", "${unknown5}", "${unknown6}"`;
+    action.type = "unknownB0";
+    action.debug = `unknown instruction 0xb0 (partsScale) with values "${unknown1}", "${unknown2}", "${unknown3}", "${unknown4}", "${unknown5}", "${unknown6}"`;
   }
 
   private parseUnknownB1(action: Action): void {
@@ -2824,7 +2972,8 @@ export default class Script {
     const unknown13 = this.parseVariables(action);
 
     action.color = "mediumorchid";
-    action.text = `unknown instruction 0xb1 (getHakken) with values "${unknown1}", "${unknown2}", "${unknown3}", "${unknown4}", "${unknown5}", "${unknown6}", "${unknown7}", "${unknown8}", "${unknown9}", "${unknown10}", "${unknown11}", "${unknown12}", "${unknown13}"`;
+    action.type = "unknownB1";
+    action.debug = `unknown instruction 0xb1 (getHakken) with values "${unknown1}", "${unknown2}", "${unknown3}", "${unknown4}", "${unknown5}", "${unknown6}", "${unknown7}", "${unknown8}", "${unknown9}", "${unknown10}", "${unknown11}", "${unknown12}", "${unknown13}"`;
   }
 
   private parseUnknownB2(action: Action): void {
@@ -2838,7 +2987,8 @@ export default class Script {
     const unknown8 = this.parseVariables(action);
 
     action.color = "mediumorchid";
-    action.text = `unknown instruction 0xb2 (putCM) with values "${unknown1}", "${unknown2}", "${unknown3}", "${unknown4}", "${unknown5}", "${unknown6}", "${unknown7}", "${unknown8}"`;
+    action.type = "unknownB2";
+    action.debug = `unknown instruction 0xb2 (putCM) with values "${unknown1}", "${unknown2}", "${unknown3}", "${unknown4}", "${unknown5}", "${unknown6}", "${unknown7}", "${unknown8}"`;
   }
 
   private parseUnknownB3(action: Action): void {
@@ -2848,28 +2998,32 @@ export default class Script {
     const unknown4 = this.parseVariables(action);
 
     action.color = "mediumorchid";
-    action.text = `unknown instruction 0xb3 (RunC13B) with values "${unknown1}", "${unknown2}", "${unknown3}", "${unknown4}"`;
+    action.type = "setCamera";
+    action.debug = `unknown instruction 0xb3 (RunC13B) with values "${unknown1}", "${unknown2}", "${unknown3}", "${unknown4}"`;
   }
 
   private parseUnknownB4(action: Action): void {
     const unknown = this.parseVariables(action);
 
     action.color = "mediumorchid";
-    action.text = `unknown instruction 0xb4 (Htaskset) with value "${unknown}"`;
+    action.type = "unknownB4";
+    action.debug = `unknown instruction 0xb4 (Htaskset) with value "${unknown}"`;
   }
 
   private parseInitShop(action: Action): void {
     const shop = this.parseVariables(action);
 
     action.color = "limegreen";
-    action.text = `init shop "${shop}"`;
+    action.type = "initShop";
+    action.debug = `init shop "${shop}"`;
   }
 
   private parseUnknownB7(action: Action): void {
     const unknown = this.parseVariables(action);
 
     action.color = "mediumorchid";
-    action.text = `unknown instruction 0xb7 (item information has been added to $KAZU) with value "${unknown}"`;
+    action.type = "unknownB7";
+    action.debug = `unknown instruction 0xb7 (item information has been added to $KAZU) with value "${unknown}"`;
   }
 
   private parseUnknownB8(action: Action): void {
@@ -2877,21 +3031,24 @@ export default class Script {
     const unknown2 = this.parseVariables(action);
 
     action.color = "mediumorchid";
-    action.text = `unknown instruction 0xb8 (RunC14) with values "${unknown1}", "${unknown2}"`;
+    action.type = "setCamera";
+    action.debug = `unknown instruction 0xb8 (RunC14) with values "${unknown1}", "${unknown2}"`;
   }
 
   private parseUnknownB9(action: Action): void {
     const unknown = this.parseVariables(action);
 
     action.color = "mediumorchid";
-    action.text = `unknown instruction 0xb9 (SoraMadoOn Compass Display) with value "${unknown}"`;
+    action.type = "unknownB9";
+    action.debug = `unknown instruction 0xb9 (SoraMadoOn Compass Display) with value "${unknown}"`;
   }
 
   private parseUnknownBa(action: Action): void {
     const unknown = this.parseVariables(action);
 
     action.color = "mediumorchid";
-    action.text = `unknown instruction 0xba (SoraMadoOff Compass Hidden) with value "${unknown}"`;
+    action.type = "unknownBa";
+    action.debug = `unknown instruction 0xba (SoraMadoOff Compass Hidden) with value "${unknown}"`;
   }
 
   private parseUnknownBe(action: Action): void {
@@ -2900,14 +3057,16 @@ export default class Script {
     const unknown3 = this.parseVariables(action);
 
     action.color = "mediumorchid";
-    action.text = `unknown instruction 0xbe (mapDefMO) with values "${unknown1}", "${unknown2}", "${unknown3}"`;
+    action.type = "unknownBe";
+    action.debug = `unknown instruction 0xbe (mapDefMO) with values "${unknown1}", "${unknown2}", "${unknown3}"`;
   }
 
   private parseUnknownBf(action: Action): void {
     const unknown = this.parseVariables(action);
 
     action.color = "mediumorchid";
-    action.text = `unknown instruction 0xbf (ship info?) with value "${unknown}"`;
+    action.type = "unknownBf";
+    action.debug = `unknown instruction 0xbf (ship info?) with value "${unknown}"`;
   }
 
   private parseWaitForKey(action: Action): void {
@@ -2915,12 +3074,14 @@ export default class Script {
     const frames = this.parseVariables(action);
 
     action.color = "mediumorchid";
-    action.text = `wait for key with value "${unknown1}" and "${frames}" frames`;
+    action.type = "waitForKey";
+    action.debug = `wait for key with value "${unknown1}" and "${frames}" frames`;
   }
 
   private parseUnknownC4(action: Action): void {
     action.color = "mediumorchid";
-    action.text = "unknown instruction 0xc4 (camera related?)";
+    action.type = "unknownC4";
+    action.debug = "unknown instruction 0xc4 (camera related?)";
   }
 
   private parseUnknownC5(action: Action): void {
@@ -2928,7 +3089,8 @@ export default class Script {
     const unknown2 = this.parseVariables(action);
 
     action.color = "mediumorchid";
-    action.text = `unknown instruction 0xc5 (camera path related?) with values "${unknown1}", "${unknown2}"`;
+    action.type = "unknownC5";
+    action.debug = `unknown instruction 0xc5 (camera path related?) with values "${unknown1}", "${unknown2}"`;
   }
 
   private parseUnknownC6(action: Action): void {
@@ -2936,51 +3098,60 @@ export default class Script {
     const unknown2 = this.parseVariables(action);
 
     action.color = "mediumorchid";
-    action.text = `unknown instruction 0xc6 (Set Shadow) with values "${unknown1}", "${unknown2}"`;
+    action.type = "unknownC6";
+    action.debug = `unknown instruction 0xc6 (Set Shadow) with values "${unknown1}", "${unknown2}"`;
   }
 
   private parseResetShadow(action: Action): void {
     const entity = this.parseVariables(action);
 
     action.color = "limegreen";
-    action.text = `reset shadow of entity "${entity}"`;
+    action.type = "resetShadow";
+    action.debug = `reset shadow of entity "${entity}"`;
   }
 
   private parseRestorePartyHp(action: Action): void {
     action.color = "limegreen";
-    action.text = "restore party's HP";
+    action.type = "restoreParty";
+    action.debug = "restore party's HP";
   }
 
   private parseRestorePartyMp(action: Action): void {
     action.color = "limegreen";
-    action.text = "restore party's MP";
+    action.type = "restoreParty";
+    action.debug = "restore party's MP";
   }
 
   private parseUnknownCb(action: Action): void {
     const unknown = this.parseVariables(action);
 
     action.color = "mediumorchid";
-    action.text = `unknown instruction 0xcb (delSetAsk2) with value "${unknown}"`;
+    action.type = "unknownCb";
+    action.debug = `unknown instruction 0xcb (delSetAsk2) with value "${unknown}"`;
   }
 
   private parseUnknownCe(action: Action): void {
     action.color = "mediumorchid";
-    action.text = "unknown instruction 0xce (ship battle sbGetTime)";
+    action.type = "unknownCe";
+    action.debug = "unknown instruction 0xce (ship battle sbGetTime)";
   }
 
   private parseUnknownD0(action: Action): void {
     action.color = "mediumorchid";
-    action.text = "unknown instruction 0xd0 (sbCammOn)";
+    action.type = "unknownD0";
+    action.debug = "unknown instruction 0xd0 (sbCammOn)";
   }
 
   private parseUnknownD1(action: Action): void {
     action.color = "mediumorchid";
-    action.text = "unknown instruction 0xd1 (sbCammOff)";
+    action.type = "unknownD1";
+    action.debug = "unknown instruction 0xd1 (sbCammOff)";
   }
 
   private parseUnknownD3(action: Action): void {
     action.color = "mediumorchid";
-    action.text = "unknown instruction 0xd3 (sb_end)";
+    action.type = "unknownD3";
+    action.debug = "unknown instruction 0xd3 (sb_end)";
   }
 
   private parseUnknownD4(action: Action): void {
@@ -2991,7 +3162,8 @@ export default class Script {
     const unknown5 = this.parseVariables(action);
 
     action.color = "mediumorchid";
-    action.text = `unknown instruction 0xd4 (sb command enemy, warp to me099q.sct?) with values "${unknown1}", "${unknown2}", "${unknown3}", "${unknown4}", "${unknown5}"`;
+    action.type = "unknownD4";
+    action.debug = `unknown instruction 0xd4 (sb command enemy, warp to me099q.sct?) with values "${unknown1}", "${unknown2}", "${unknown3}", "${unknown4}", "${unknown5}"`;
   }
 
   private parseUnknownD5(action: Action): void {
@@ -3014,7 +3186,8 @@ export default class Script {
     const unknown17 = this.parseVariables(action);
 
     action.color = "mediumorchid";
-    action.text = `unknown instruction 0xd5 (sbBT) with values "${unknown1}", "${unknown2}", "${unknown3}", "${unknown4}", "${unknown5}", "${unknown6}", "${unknown7}", "${unknown8}", "${unknown9}", "${unknown10}", "${unknown11}", "${unknown12}", "${unknown13}", "${unknown14}", "${unknown15}", "${unknown16}", "${unknown17}"`;
+    action.type = "unknownD5";
+    action.debug = `unknown instruction 0xd5 (sbBT) with values "${unknown1}", "${unknown2}", "${unknown3}", "${unknown4}", "${unknown5}", "${unknown6}", "${unknown7}", "${unknown8}", "${unknown9}", "${unknown10}", "${unknown11}", "${unknown12}", "${unknown13}", "${unknown14}", "${unknown15}", "${unknown16}", "${unknown17}"`;
   }
 
   private parseUnknownD7(action: Action): void {
@@ -3029,35 +3202,40 @@ export default class Script {
     }
 
     action.color = "mediumorchid";
-    action.text = `unknown instruction 0xd7 (reqPCM) with value "${unknown}", "${name}" (${offset.toHex(8)})`;
+    action.type = "unknownD7";
+    action.debug = `unknown instruction 0xd7 (reqPCM) with value "${unknown}", "${name}" (${offset.toHex(8)})`;
   }
 
   private parseUnknownD8(action: Action): void {
     const unknown = this.parseVariables(action);
 
     action.color = "mediumorchid";
-    action.text = `unknown instruction 0xd8 (startPCM) with value "${unknown}"`;
+    action.type = "unknownD8";
+    action.debug = `unknown instruction 0xd8 (startPCM) with value "${unknown}"`;
   }
 
   private parseUnknownD9(action: Action): void {
     const unknown = this.parseVariables(action);
 
     action.color = "mediumorchid";
-    action.text = `unknown instruction 0xd9 (sonarSet) with value "${unknown}"`;
+    action.type = "unknownD9";
+    action.debug = `unknown instruction 0xd9 (sonarSet) with value "${unknown}"`;
   }
 
   private parseUnknownDa(action: Action): void {
     const unknown = this.parseVariables(action);
 
     action.color = "mediumorchid";
-    action.text = `unknown instruction 0xda (crewIn) with value "${unknown}"`;
+    action.type = "unknownDa";
+    action.debug = `unknown instruction 0xda (crewIn) with value "${unknown}"`;
   }
 
   private parseUnknownDb(action: Action): void {
     const unknown = this.parseVariables(action);
 
     action.color = "mediumorchid";
-    action.text = `unknown instruction 0xdb (World Map Switch?) with value "${unknown}"`;
+    action.type = "unknownDb";
+    action.debug = `unknown instruction 0xdb (World Map Switch?) with value "${unknown}"`;
   }
 
   private parseUnknownDc(action: Action): void {
@@ -3072,14 +3250,16 @@ export default class Script {
     const unknown9 = this.parseVariables(action);
 
     action.color = "mediumorchid";
-    action.text = `unknown instruction 0xdc (ParentOnNew) with values "${unknown1}", "${unknown2}", "${unknown3}", "${unknown4}", "${unknown5}", "${unknown6}", "${unknown7}", "${unknown8}", "${unknown9}"`;
+    action.type = "unknownDc";
+    action.debug = `unknown instruction 0xdc (ParentOnNew) with values "${unknown1}", "${unknown2}", "${unknown3}", "${unknown4}", "${unknown5}", "${unknown6}", "${unknown7}", "${unknown8}", "${unknown9}"`;
   }
 
   private parseSetShip(action: Action): void {
     const ship = this.parseVariables(action);
 
     action.color = "limegreen";
-    action.text = `set ship "${ship}"`;
+    action.type = "setShip";
+    action.debug = `set ship "${ship}"`;
   }
 
   private parseUnknownDf(action: Action): void {
@@ -3110,7 +3290,8 @@ export default class Script {
     const unknown25 = this.parseVariables(action);
 
     action.color = "mediumorchid";
-    action.text = `unknown instruction 0xdf with values "${unknown1}", "${unknown2}", "${unknown3}", "${unknown4}", "${unknown5}", "${unknown6}", "${unknown7}", "${unknown8}", "${unknown9}", "${unknown10}", "${unknown11}", "${unknown12}", "${unknown13}", "${unknown14}", "${unknown15}", "${unknown16}", "${unknown17}", "${unknown18}", "${unknown19}", "${unknown20}", "${unknown21}", "${unknown22}", "${unknown23}", "${unknown24}", "${unknown25}"`;
+    action.type = "unknownDf";
+    action.debug = `unknown instruction 0xdf with values "${unknown1}", "${unknown2}", "${unknown3}", "${unknown4}", "${unknown5}", "${unknown6}", "${unknown7}", "${unknown8}", "${unknown9}", "${unknown10}", "${unknown11}", "${unknown12}", "${unknown13}", "${unknown14}", "${unknown15}", "${unknown16}", "${unknown17}", "${unknown18}", "${unknown19}", "${unknown20}", "${unknown21}", "${unknown22}", "${unknown23}", "${unknown24}", "${unknown25}"`;
   }
 
   private parseUnknownE0(action: Action): void {
@@ -3141,7 +3322,8 @@ export default class Script {
     const unknown25 = this.parseVariables(action);
 
     action.color = "mediumorchid";
-    action.text = `unknown instruction 0xe0 with values "${unknown1}", "${unknown2}", "${unknown3}", "${unknown4}", "${unknown5}", "${unknown6}", "${unknown7}", "${unknown8}", "${unknown9}", "${unknown10}", "${unknown11}", "${unknown12}", "${unknown13}", "${unknown14}", "${unknown15}", "${unknown16}", "${unknown17}", "${unknown18}", "${unknown19}", "${unknown20}", "${unknown21}", "${unknown22}", "${unknown23}", "${unknown24}", "${unknown25}"`;
+    action.type = "unknownE0";
+    action.debug = `unknown instruction 0xe0 with values "${unknown1}", "${unknown2}", "${unknown3}", "${unknown4}", "${unknown5}", "${unknown6}", "${unknown7}", "${unknown8}", "${unknown9}", "${unknown10}", "${unknown11}", "${unknown12}", "${unknown13}", "${unknown14}", "${unknown15}", "${unknown16}", "${unknown17}", "${unknown18}", "${unknown19}", "${unknown20}", "${unknown21}", "${unknown22}", "${unknown23}", "${unknown24}", "${unknown25}"`;
   }
 
   private parseUnknownE1(action: Action): void {
@@ -3154,7 +3336,8 @@ export default class Script {
     const unknown7 = this.parseVariables(action);
 
     action.color = "mediumorchid";
-    action.text = `unknown instruction 0xe1 with values "${unknown1}", "${unknown2}", "${unknown3}", "${unknown4}", "${unknown5}", "${unknown6}", "${unknown7}"`;
+    action.type = "unknownE1";
+    action.debug = `unknown instruction 0xe1 with values "${unknown1}", "${unknown2}", "${unknown3}", "${unknown4}", "${unknown5}", "${unknown6}", "${unknown7}"`;
   }
 
   private parseUnknownE2(action: Action): void {
@@ -3162,7 +3345,8 @@ export default class Script {
     const unknown2 = this.parseVariables(action);
 
     action.color = "mediumorchid";
-    action.text = `unknown instruction 0xe2 with values "${unknown1}", "${unknown2}"`;
+    action.type = "unknownE2";
+    action.debug = `unknown instruction 0xe2 with values "${unknown1}", "${unknown2}"`;
   }
 
   private parseRemoveFromPartyEquipment(action: Action): void {
@@ -3174,18 +3358,21 @@ export default class Script {
 
     if (character) {
       action.color = "limegreen";
-      action.text = `remove "${character}" from party (equipment included)`;
+      action.type = "changeParty";
+      action.debug = `remove "${character}" from party (equipment included)`;
     }
   }
 
   private parseUnknownE4(action: Action): void {
     action.color = "mediumorchid";
-    action.text = "unknown instruction 0xe4 (partyCHG)";
+    action.type = "unknownE4";
+    action.debug = "unknown instruction 0xe4 (partyCHG)";
   }
 
   private parseUnknownE5(action: Action): void {
     action.color = "mediumorchid";
-    action.text = "unknown instruction 0xe5 (partyMRG)";
+    action.type = "unknownE5";
+    action.debug = "unknown instruction 0xe5 (partyMRG)";
   }
 
   private parseUnknownE6(action: Action): void {
@@ -3198,14 +3385,16 @@ export default class Script {
     const unknown7 = this.parseVariables(action);
 
     action.color = "mediumorchid";
-    action.text = `unknown instruction 0xe6 (RunC12) with values "${unknown1}", "${unknown2}", "${unknown3}", "${unknown4}", "${unknown5}", "${unknown6}", "${unknown7}"`;
+    action.type = "setCamera";
+    action.debug = `unknown instruction 0xe6 (RunC12) with values "${unknown1}", "${unknown2}", "${unknown3}", "${unknown4}", "${unknown5}", "${unknown6}", "${unknown7}"`;
   }
 
   private parseInitGuild(action: Action): void {
     const guild = this.parseVariables(action);
 
     action.color = "limegreen";
-    action.text = `init guild "${guild}"`;
+    action.type = "initGuild";
+    action.debug = `init guild "${guild}"`;
   }
 
   private parseUnknownE8(action: Action): void {
@@ -3225,7 +3414,8 @@ export default class Script {
     const unknown14 = this.parseVariables(action);
 
     action.color = "mediumorchid";
-    action.text = `unknown instruction 0xe8 with values "${unknown1}", "${unknown2}", "${unknown3}", "${unknown4}", "${unknown5}", "${unknown6}", "${unknown7}", "${unknown8}", "${unknown9}", "${unknown10}", "${unknown11}", "${unknown12}", "${unknown13}", "${unknown14}"`;
+    action.type = "unknownE8";
+    action.debug = `unknown instruction 0xe8 with values "${unknown1}", "${unknown2}", "${unknown3}", "${unknown4}", "${unknown5}", "${unknown6}", "${unknown7}", "${unknown8}", "${unknown9}", "${unknown10}", "${unknown11}", "${unknown12}", "${unknown13}", "${unknown14}"`;
   }
 
   private parseUnknownE9(action: Action): void {
@@ -3249,19 +3439,22 @@ export default class Script {
     }
 
     action.color = "limegreen";
-    action.text = `get "${item}" and set flag "${flag}"`;
+    action.type = "getCupilItem";
+    action.debug = `get "${item}" and set flag "${flag}"`;
   }
 
   private parseChangeKmap(action: Action): void {
     const entity = this.parseVariables(action);
 
     action.color = "mediumorchid";
-    action.text = `change kmap "${entity}"`;
+    action.type = "changeKmap";
+    action.debug = `change kmap "${entity}"`;
   }
 
   private parseUnknownEd(action: Action): void {
     action.color = "mediumorchid";
-    action.text = "unknown instruction 0xed (warp to title screen?)";
+    action.type = "unknownEd";
+    action.debug = "unknown instruction 0xed (warp to title screen?)";
   }
 
   private parseUnknownEe(action: Action): void {
@@ -3270,7 +3463,8 @@ export default class Script {
     const positionZ = this.parseVariables(action);
 
     action.color = "limegreen";
-    action.text = `warp to world map at position "[${positionX}, ${positionY}, ${positionZ}]"`;
+    action.type = "warpToWorldMap";
+    action.debug = `warp to world map at position "[${positionX}, ${positionY}, ${positionZ}]"`;
   }
 
   private parseUnknownF0(action: Action): void {
@@ -3282,12 +3476,14 @@ export default class Script {
     const unknown6 = this.parseVariables(action);
 
     action.color = "mediumorchid";
-    action.text = `unknown instruction 0xf0 (scrEffect) with values "${unknown1}", "${unknown2}", "${unknown3}", "${unknown4}", "${unknown5}", "${unknown6}"`;
+    action.type = "unknownF0";
+    action.debug = `unknown instruction 0xf0 (scrEffect) with values "${unknown1}", "${unknown2}", "${unknown3}", "${unknown4}", "${unknown5}", "${unknown6}"`;
   }
 
   private parseUnknownF1(action: Action): void {
     action.color = "mediumorchid";
-    action.text = "unknown instruction 0xf1 (scrEffectOff";
+    action.type = "unknownF1";
+    action.debug = "unknown instruction 0xf1 (scrEffectOff";
   }
 
   private parseUnknownF2(action: Action): void {
@@ -3296,7 +3492,8 @@ export default class Script {
     const unknown3 = this.parseVariables(action);
 
     action.color = "mediumorchid";
-    action.text = `unknown instruction 0xf2 with values "${unknown1}", "${unknown2}", "${unknown3}"`;
+    action.type = "unknownF2";
+    action.debug = `unknown instruction 0xf2 with values "${unknown1}", "${unknown2}", "${unknown3}"`;
   }
 
   private parseUnknownF3(action: Action): void {
@@ -3312,7 +3509,8 @@ export default class Script {
     const unknown10 = this.parseVariables(action);
 
     action.color = "mediumorchid";
-    action.text = `unknown instruction 0xf3 (setAsk3) with values "${unknown1}", "${unknown2}", "${unknown3}", "${unknown4}", "${unknown5}", "${unknown6}", "${unknown7}", "${unknown8}", "${unknown9}", "${unknown10}"`;
+    action.type = "unknownF3";
+    action.debug = `unknown instruction 0xf3 (setAsk3) with values "${unknown1}", "${unknown2}", "${unknown3}", "${unknown4}", "${unknown5}", "${unknown6}", "${unknown7}", "${unknown8}", "${unknown9}", "${unknown10}"`;
   }
 
   private parseUnknownF5(action: Action): void {
@@ -3327,7 +3525,8 @@ export default class Script {
     }
 
     action.color = "mediumorchid";
-    action.text = `unknown instruction 0xf5 (TaskOn) with ${count} value(s) ${text.replace(", ", "")}`;
+    action.type = "unknownF5";
+    action.debug = `unknown instruction 0xf5 (TaskOn) with ${count} value(s) ${text.replace(", ", "")}`;
   }
 
   private parseUnknownF6(action: Action): void {
@@ -3342,12 +3541,14 @@ export default class Script {
     }
 
     action.color = "mediumorchid";
-    action.text = `unknown instruction 0xf6 (TaskOff) with ${count} value(s) ${text.replace(", ", "")}`;
+    action.type = "unknownF6";
+    action.debug = `unknown instruction 0xf6 (TaskOff) with ${count} value(s) ${text.replace(", ", "")}`;
   }
 
   private parseUnknownF7(action: Action): void {
     action.color = "mediumorchid";
-    action.text = "unknown instruction 0xf7 (stopAllSND)";
+    action.type = "unknownF7";
+    action.debug = "unknown instruction 0xf7 (stopAllSND)";
   }
 
   private parseSetEntityNormalFace(action: Action): void {
@@ -3355,7 +3556,8 @@ export default class Script {
     const face = this.parseVariables(action);
 
     action.color = "mediumorchid";
-    action.text = `set normal face "${face}" to entity "${entity}"`;
+    action.type = "setFace";
+    action.debug = `set normal face "${face}" to entity "${entity}"`;
   }
 
   private parseUnknownFc(action: Action): void {
@@ -3363,17 +3565,20 @@ export default class Script {
     const unknown2 = this.parseVariables(action);
 
     action.color = "mediumorchid";
-    action.text = `unknown instruction 0xfc (MA2RndSwitch) with values "${unknown1}", "${unknown2}"`;
+    action.type = "unknownFc";
+    action.debug = `unknown instruction 0xfc (MA2RndSwitch) with values "${unknown1}", "${unknown2}"`;
   }
 
   private parseUnknownFe(action: Action): void {
     action.color = "mediumorchid";
-    action.text = "unknown instruction 0xfe";
+    action.type = "unknownFe";
+    action.debug = "unknown instruction 0xfe";
   }
 
   private parseUnknownFf(action: Action): void {
     action.color = "mediumorchid";
-    action.text = "unknown instruction 0xff";
+    action.type = "unknownFf";
+    action.debug = "unknown instruction 0xff";
   }
 
   private parseUnknown102(action: Action): void {
@@ -3388,24 +3593,28 @@ export default class Script {
     }
 
     action.color = "mediumorchid";
-    action.text = `unknown instruction 0x102 with ${count} value(s) ${text.replace(", ", "")}`;
+    action.type = "unknown102";
+    action.debug = `unknown instruction 0x102 with ${count} value(s) ${text.replace(", ", "")}`;
   }
 
   private parseUnknown103(action: Action): void {
     const unknown = this.parseVariables(action);
 
     action.color = "mediumorchid";
-    action.text = `unknown instruction 0x103 (Message from Hamacho Sennin) with values "${unknown}"`;
+    action.type = "unknown103";
+    action.debug = `unknown instruction 0x103 (Message from Hamacho Sennin) with values "${unknown}"`;
   }
 
   private parseRestoreShipHp(action: Action): void {
     action.color = "limegreen";
-    action.text = "restore ship's HP";
+    action.type = "restoreShipHp";
+    action.debug = "restore ship's HP";
   }
 
   private parseDisplayDiscoveryCount(action: Action): void {
     action.color = "limegreen";
-    action.text = "display Discovery count";
+    action.type = "displayDiscovertyCount";
+    action.debug = "display Discovery count";
   }
 
   private parseUnknown106(action: Action): void {
@@ -3416,7 +3625,8 @@ export default class Script {
     const unknown5 = this.parseVariables(action);
 
     action.color = "mediumorchid";
-    action.text = `unknown instruction 0x106 (grey in?) with values "${unknown1}", "${unknown2}", "${unknown3}", "${unknown4}", "${unknown5}"`;
+    action.type = "unknown106";
+    action.debug = `unknown instruction 0x106 (grey in?) with values "${unknown1}", "${unknown2}", "${unknown3}", "${unknown4}", "${unknown5}"`;
   }
 
   private parseUnknown107(action: Action): void {
@@ -3431,7 +3641,8 @@ export default class Script {
     }
 
     action.color = "mediumorchid";
-    action.text = `unknown instruction 0x107 with ${count} value(s) ${text.replace(", ", "")}`;
+    action.type = "unknown107";
+    action.debug = `unknown instruction 0x107 with ${count} value(s) ${text.replace(", ", "")}`;
   }
 
   private parseUnknown108(action: Action): void {
@@ -3445,7 +3656,8 @@ export default class Script {
     const unknown8 = this.parseVariables(action);
 
     action.color = "mediumorchid";
-    action.text = `unknown instruction 0x108 (FldPutA) with values "${unknown1}", "${unknown2}", "${unknown3}", "${unknown4}", "${unknown5}", "${unknown6}", "${unknown7}", "${unknown8}"`;
+    action.type = "unknown108";
+    action.debug = `unknown instruction 0x108 (FldPutA) with values "${unknown1}", "${unknown2}", "${unknown3}", "${unknown4}", "${unknown5}", "${unknown6}", "${unknown7}", "${unknown8}"`;
   }
 
   private parseDisplayCriminalList(action: Action): void {
@@ -3456,7 +3668,8 @@ export default class Script {
     const [, text] = this.parseText(offset + 0x10);
 
     action.color = "limegreen";
-    action.text = `display criminal list using "${value}" and read "<span data-title="${text}">${offset.toHex(8)}</span>"`;
+    action.type = "displayCriminalList";
+    action.debug = `display criminal list using "${value}" and read "<span data-title="${text}">${offset.toHex(8)}</span>"`;
   }
 
   private parseLoadFile(action: Action, type: FileType): void {
@@ -3488,11 +3701,13 @@ export default class Script {
         break;
       case "script (0x2b)":
         action.color = "limegreen";
-        action.text = `warp to "${name}" (${offset.toHex(8)})`;
+        action.type = "warp";
+        action.debug = `warp to "${name}" (${offset.toHex(8)})`;
         return;
       case "script (0xd2)":
         action.color = "limegreen";
-        action.text = `start ship battle "${name}" (${offset.toHex(8)})`;
+        action.type = "startShipBattle";
+        action.debug = `start ship battle "${name}" (${offset.toHex(8)})`;
         return;
       case "script (0xd6)":
         text = " (script > fune warp)";
@@ -3502,7 +3717,8 @@ export default class Script {
         break;
       case "sound (0x45)":
         action.color = "limegreen";
-        action.text = `load sound "${name}" (${offset.toHex(8)})`;
+        action.type = "loadSound";
+        action.debug = `load sound "${name}" (${offset.toHex(8)})`;
         return;
       case "sound (0xf8)":
         text = " (sound > load mlt fast)";
@@ -3513,7 +3729,8 @@ export default class Script {
     }
 
     action.color = "mediumorchid";
-    action.text = `load ${type}${text} "${name}" (${offset.toHex(8)})`;
+    action.type = `load${type}`;
+    action.debug = `load ${type}${text} "${name}" (${offset.toHex(8)})`;
   }
 
   private parseText(offset: number): [number, string] {
@@ -3567,7 +3784,6 @@ export default class Script {
     if (mainSubroutineIndex !== -1) {
       this.entities[entityId].main = mainSubroutineIndex;
     } else if (
-      this.entities[entityId].main !== this.currentSubroutineIndex &&
       !this.entities[entityId].related.includes(this.currentSubroutineIndex)
     ) {
       this.entities[entityId].related.push(this.currentSubroutineIndex);
@@ -3575,27 +3791,7 @@ export default class Script {
   }
 
   public getEntitySubroutines(entityId: number): EntitySubroutines | undefined {
-    if (this.entities[entityId]) {
-      const subroutines: EntitySubroutines = {};
-
-      const { main, related } = this.entities[entityId];
-
-      if (main !== -1) {
-        subroutines.main = this.subroutines[main];
-      }
-
-      if (related.length > 0) {
-        subroutines.related = [];
-
-        related.forEach((index) => {
-          subroutines.related!.push(this.subroutines[index]);
-        });
-      }
-
-      return subroutines;
-    }
-
-    return undefined;
+    return this.entities[entityId];
   }
 
   public getSubroutines(): Subroutine[] {

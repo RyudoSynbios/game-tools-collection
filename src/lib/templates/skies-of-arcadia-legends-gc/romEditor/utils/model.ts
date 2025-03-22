@@ -402,11 +402,18 @@ export function addMeshs(
           three.addMesh(geometry, material, instanceId, {
             group,
             onClick: () => {
-              debug.log("Object", {
-                objectId: object.index,
-                object,
-                partIndex,
-              });
+              debug.log(
+                {
+                  index: entity.index,
+                  name: entity.name,
+                  entityId: entity.entityId,
+                },
+                {
+                  objectId: object.index,
+                  object,
+                  partIndex,
+                },
+              );
             },
           });
         }

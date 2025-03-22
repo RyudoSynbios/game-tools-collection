@@ -39,7 +39,7 @@
     height: number;
     texture: Uint8Array;
   }[] = [];
-  let isModalOpen = false;
+  let isTextureViewerOpen = false;
   let view: "canvas" | "three" = "three";
 
   let tableOffset = 0x300000;
@@ -68,12 +68,12 @@
     tableOffset += 0x8;
   }
 
-  function handleModalClose(): void {
-    isModalOpen = false;
+  function handleTextureViewerClose(): void {
+    isTextureViewerOpen = false;
   }
 
-  function handleModalOpen(): void {
-    isModalOpen = true;
+  function handleTextureViewerOpen(): void {
+    isTextureViewerOpen = true;
   }
 
   async function updateCanvas(): Promise<void> {
@@ -374,7 +374,7 @@
     }, Promise.resolve());
 
     three.setTextureListCallback(
-      textures.length > 0 ? handleModalOpen : undefined,
+      textures.length > 0 ? handleTextureViewerOpen : undefined,
     );
 
     if (instanceId !== three.getInstanceId()) {
@@ -445,8 +445,8 @@
   <div class:gtc-assetviewer-hidden={view !== "three"}>
     <ModelViewer {three} bind:threeEl />
   </div>
-  {#if isModalOpen}
-    <Modal onClose={handleModalClose}>
+  {#if isTextureViewerOpen}
+    <Modal onClose={handleTextureViewerClose}>
       <TextureViewer {textures} />
     </Modal>
   {/if}
