@@ -1,6 +1,6 @@
 import FileSaver from "file-saver";
 import JSZip from "jszip";
-import { GUI } from "lil-gui";
+import { Controller, GUI } from "lil-gui";
 import { get } from "svelte/store";
 import {
   AmbientLight,
@@ -122,7 +122,7 @@ export default class Three {
   private guiController: {
     grid: boolean;
     wireframe: boolean;
-    custom: { [key: string]: number };
+    custom: { [key: string]: unknown };
     cameraFit: () => void;
     cameraReset: () => void;
     fullscreenToggle: () => void;
@@ -1011,21 +1011,39 @@ export default class Three {
     this.guiCustomFolder.show(false);
   }
 
+  public addGuiButtonElement(
+    name: string,
+    label: string,
+    onClick: (value: number) => void,
+  ): Controller {
+    this.guiCustomFolder.show(true);
+
+    this.guiController.custom[name] = onClick;
+
+    const controller = this.guiCustomFolder
+      .add(this.guiController.custom, name)
+      .name(label);
+
+    return controller;
+  }
+
   public addGuiListElement(
     name: string,
     label: string,
     value: number,
     callback: (value: number) => void,
     options = {},
-  ): void {
+  ): Controller {
     this.guiCustomFolder.show(true);
 
     this.guiController.custom[name] = value;
 
-    this.guiCustomFolder
+    const controller = this.guiCustomFolder
       .add(this.guiController.custom, name, options)
       .name(label)
       .onChange(callback);
+
+    return controller;
   }
 
   private updateFitControllerName(): void {
