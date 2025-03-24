@@ -76,6 +76,7 @@ export interface MeshOptions {
   group?: Group;
   locked?: boolean;
   renderOrder?: number;
+  userData?: Record<string, unknown>;
   onClick?: () => void;
 }
 
@@ -622,6 +623,7 @@ export default class Three {
 
     const mesh = new Mesh(geometry, material);
     mesh.receiveShadow = true;
+    mesh.userData = { ...mesh.userData, ...options?.userData };
     mesh.userData.onClick = options?.onClick;
 
     if (renderOrder) {
@@ -998,6 +1000,10 @@ export default class Three {
         material.dispose();
       });
     }
+  }
+
+  public getSelectedObject(): Mesh | null {
+    return this.selectedObject.reference;
   }
 
   public resetGui(): void {

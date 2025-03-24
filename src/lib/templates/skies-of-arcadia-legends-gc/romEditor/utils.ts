@@ -501,13 +501,22 @@ export function getFilteredFiles(type: string): File[] {
       file.path.match(/^field\/a(.*?).mld$/) &&
       !file.path.match(/^field\/(a017x|a034j|a102|a221a|a300d)(.*?).mld$/)
     ) {
-      return type === "map";
+      return type === "mld";
     } else if (file.path.match(/^field\/(.*?).mld$/)) {
       return type === "misc";
     } else if (file.path.match(/^field\/(.*?).sct$/)) {
-      return type === "script";
+      return type === "map";
     }
   });
+}
+
+export function getMapFiles(index: number): File[] {
+  const files = getFilteredFiles("map");
+  const file = files[index];
+
+  return getFilteredFiles("mld").filter((map) =>
+    map.path.match(new RegExp(`^field/a${file.path.slice(8, -4)}`, "i")),
+  );
 }
 
 export function getNames(type: string, relative: string): Resource {

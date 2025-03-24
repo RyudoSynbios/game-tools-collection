@@ -401,6 +401,9 @@ export function addMeshs(
 
           three.addMesh(geometry, material, instanceId, {
             group,
+            userData: {
+              entityId: entity.entityId,
+            },
             onClick: () => {
               debug.log(
                 {

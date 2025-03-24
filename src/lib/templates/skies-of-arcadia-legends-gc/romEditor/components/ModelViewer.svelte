@@ -13,7 +13,7 @@
   import {
     getDecompressedData,
     getFileData,
-    getFilteredFiles,
+    getMapFiles,
     type Entity,
     type Model,
   } from "../utils";
@@ -26,6 +26,7 @@
   } from "../utils/model";
   import { unpackNmld } from "../utils/nmld";
   import { unpackSml } from "../utils/sml";
+  import ScriptViewer from "./ScriptViewer.svelte";
   import TextureViewer from "./TextureViewer.svelte";
 
   export let assetIndex: number;
@@ -44,18 +45,41 @@
 
   let textures: { [key: string]: DataView } = {};
   let texturesCache: { [key: string]: Texture } = {};
-  let isModalOpen = false;
+  let isScriptViewerOpen = false;
+  let isTextureViewerOpen = false;
+
+  let selectedEntity: number = -1;
+
+  function displayScriptButton() {
+    if (type === "map") {
+      three.addGuiButtonElement("showScriptModal", "Script", () => {
+        const object = three.getSelectedObject();
+
+        selectedEntity = object?.userData.entityId || -1;
+
+        handleScriptViewerOpen();
+      });
+    }
+  }
 
   function getAssetId() {
     return `${type}_${assetIndex}`;
   }
 
-  function handleModalClose(): void {
-    isModalOpen = false;
+  function handleScriptViewerClose(): void {
+    isScriptViewerOpen = false;
   }
 
-  function handleModalOpen(): void {
-    isModalOpen = true;
+  function handleScriptViewerOpen(): void {
+    isScriptViewerOpen = true;
+  }
+
+  function handleTextureViewerClose(): void {
+    isTextureViewerOpen = false;
+  }
+
+  function handleTextureViewerOpen(): void {
+    isTextureViewerOpen = true;
   }
 
   async function updateCanvas(): Promise<void> {
@@ -74,6 +98,7 @@
     if (getAssetId() !== previousAssetId) {
       fileIndex = 0;
       entityIndex = -1;
+      selectedEntity = -1;
     }
 
     if (fileIndex !== previousfileIndex) {
@@ -88,17 +113,13 @@
 
     let isShipBattle = false;
 
-    if (type === "script") {
-      const scripts = getFilteredFiles("script");
-      const script = scripts[assetIndex];
-
-      const files = getFilteredFiles("map").filter((map) =>
-        map.path.match(new RegExp(`^field/a${script.path.slice(8, -4)}`, "i")),
-      );
+    if (type === "map") {
+      const files = getMapFiles(assetIndex);
 
       if (files.length === 0) {
         three.setLoading(false);
         three.setTextureListCallback(undefined);
+        displayScriptButton();
         return;
       }
 
@@ -134,10 +155,11 @@
     if (dataView.byteLength === 0) {
       three.setLoading(false);
       three.setTextureListCallback(undefined);
+      displayScriptButton();
       return;
     }
 
-    $dataViewAlt.debug = dataView;
+    $dataViewAlt.mld = dataView;
 
     let model: Model;
 
@@ -181,6 +203,8 @@
       );
     }
 
+    displayScriptButton();
+
     let error = false;
 
     texturesCache = {};
@@ -204,6 +228,7 @@
       const vertexBuffer: number[] = [];
 
       const mainGroup = three.addGroup();
+
       const groupIds: number[] = [];
 
       if (entityIndex === -1) {
@@ -326,7 +351,7 @@
     textures = model.textures;
 
     three.setTextureListCallback(
-      Object.keys(textures).length > 0 ? handleModalOpen : undefined,
+      Object.keys(textures).length > 0 ? handleTextureViewerOpen : undefined,
     );
 
     if (instanceId !== three.getInstanceId()) {
@@ -371,8 +396,14 @@
 
 <ModelViewer {three} bind:threeEl />
 
-{#if isModalOpen}
-  <Modal onClose={handleModalClose}>
+{#if isScriptViewerOpen}
+  <Modal onClose={handleScriptViewerClose}>
+    <ScriptViewer {assetIndex} entityId={selectedEntity} />
+  </Modal>
+{/if}
+
+{#if isTextureViewerOpen}
+  <Modal onClose={handleTextureViewerClose}>
     <TextureViewer {textures} />
   </Modal>
 {/if}
