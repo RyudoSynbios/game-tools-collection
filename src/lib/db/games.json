@@ -48,6 +48,17 @@
     }
   },
   {
+    "id": "bouncer-the-ps2",
+    "name": "Bouncer, The",
+    "consoleId": "playstation-2",
+    "tools": {
+      "saveEditor": {
+        "createdAt": "2025-03-31",
+        "regions": ["🇪🇺", "🇺🇸", "🇯🇵"]
+      }
+    }
+  },
+  {
     "id": "castlevania-aria-of-sorrow-gba",
     "name": "Castlevania: Aria of Sorrow",
     "consoleId": "game-boy-advance",
