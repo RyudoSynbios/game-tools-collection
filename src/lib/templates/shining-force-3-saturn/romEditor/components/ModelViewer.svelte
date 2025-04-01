@@ -302,13 +302,13 @@
       }
     }
 
-    three.setTextureListCallback(
-      textures.length > 0 ? handleTextureViewerOpen : undefined,
-    );
-
     if (instanceId !== three.getInstanceId()) {
       return;
     }
+
+    three.setTextureListCallback(
+      textures.length > 0 ? handleTextureViewerOpen : undefined,
+    );
 
     three.setLoading(false);
   }

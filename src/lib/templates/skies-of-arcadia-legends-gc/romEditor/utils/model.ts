@@ -498,27 +498,34 @@ export function addMeshs(
 
       const texture = textures[textureIndex];
 
-      textureOptions = {
-        name: texture.name,
-        base64: texture.base64,
-        repeatX: mirroredX ? "mirrored" : repeatX,
-        repeatY: mirroredY ? "mirrored" : repeatY,
-      };
+      if (texture) {
+        textureOptions = {
+          name: texture.name,
+          base64: texture.base64,
+          repeatX: mirroredX ? "mirrored" : repeatX,
+          repeatY: mirroredY ? "mirrored" : repeatY,
+        };
 
-      material = material.clone();
-      material.color = new Color(0xffffff);
-      material.map = three.generateMaterialMap(textureOptions);
+        material = material.clone();
+        material.color = new Color(0xffffff);
+        material.map = three.generateMaterialMap(textureOptions);
 
-      if (["ARGB8888", "RGB5A3"].includes(texture.colorType)) {
-        material.transparent = true;
-      }
+        if (["ARGB8888", "RGB5A3"].includes(texture.colorType)) {
+          material.transparent = true;
+        }
 
-      debug
-        .option("soalMld")
-        .color(
-          `{${entity.index}} [${index}] (0x${(offset - 0x2).toHex(8)}) Texture ${iteration} > object: ${object.flags.debug}, flags: ${flags.toHex()}, type: 0x${type.toHex(2)}, textureIndex: ${textureIndex}`,
-          color,
+        debug
+          .option("soalMld")
+          .color(
+            `{${entity.index}} [${index}] (0x${(offset - 0x2).toHex(8)}) Texture ${iteration} > object: ${object.flags.debug}, flags: ${flags.toHex()}, type: 0x${type.toHex(2)}, textureIndex: ${textureIndex}`,
+            color,
+          );
+      } else {
+        debug.warn(
+          `Texture not found on entity ${entity.index}: ${textureIndex}`,
+          textures,
         );
+      }
 
       offset += 0x2;
     }
@@ -683,13 +690,10 @@ export function addMeshs(
           }
         }
 
-        // TODO: Find a true way to detect dummy / collision box
-
         const isDummy =
           entity.name.match(/esahaiti|goscript|hasigo/) ||
-          (type === 0x40 &&
-            !textureOptions &&
-            [0xbfbfbf, 0xffffff].includes(material.color.getHex()));
+          (!textureOptions &&
+            [0xb2b2b2, 0xbfbfbf, 0xffffff].includes(material.color.getHex()));
 
         if (isDummy) {
           material.color = new Color(0xff0000);

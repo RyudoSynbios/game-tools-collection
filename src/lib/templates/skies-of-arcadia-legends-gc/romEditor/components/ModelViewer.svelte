@@ -348,15 +348,15 @@
       debug.option("soalMld").color("Successfully completed", "green");
     }
 
+    if (instanceId !== three.getInstanceId()) {
+      return;
+    }
+
     textures = model.textures;
 
     three.setTextureListCallback(
       Object.keys(textures).length > 0 ? handleTextureViewerOpen : undefined,
     );
-
-    if (instanceId !== three.getInstanceId()) {
-      return;
-    }
 
     three.setLoading(false);
   }
