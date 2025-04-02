@@ -333,6 +333,7 @@ export function parseContainer(
     item.prependSubinstance.forEach((subitem: any) => {
       parsedItem.items.push({
         name: subitem.name,
+        flex: subitem.flex,
         items: subitem.items
           ? subitem.items.reduce((results: any, subitem: any) => {
               const parsedItem = parseItem(subitem, shifts, parents, options);
@@ -415,6 +416,7 @@ export function parseContainer(
     item.appendSubinstance.forEach((subitem: any) => {
       parsedItem.items.push({
         name: subitem.name,
+        flex: subitem.flex,
         items: subitem.items
           ? subitem.items.reduce((results: any, subitem: any) => {
               const parsedItem = parseItem(subitem, shifts, parents, options);

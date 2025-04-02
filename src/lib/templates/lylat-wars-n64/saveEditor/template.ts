@@ -1,6 +1,6 @@
 import type { GameJson, ItemSection } from "$lib/types";
 
-import { rankings } from "./resource";
+import { rankings } from "./utils/resource";
 
 const template: GameJson = {
   validator: {
