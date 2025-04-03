@@ -560,6 +560,17 @@
     }
   },
   {
+    "id": "super-mario-64-n64",
+    "name": "Super Mario 64",
+    "consoleId": "nintendo-64",
+    "tools": {
+      "saveEditor": {
+        "createdAt": "2025-04-03",
+        "regions": ["🇪🇺", "🇺🇸", "🇯🇵"]
+      }
+    }
+  },
+  {
     "id": "super-smash-bros-n64",
     "name": "Super Smash Bros.",
     "consoleId": "nintendo-64",

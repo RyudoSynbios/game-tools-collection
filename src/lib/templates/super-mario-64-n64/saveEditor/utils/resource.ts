@@ -1,0 +1,17 @@
+export const courses = {
+  0x1: "Bob-omb Battlefield",
+  0x2: "Whomp's Fortress",
+  0x3: "Jolly Roger Bay",
+  0x4: "Cool, Cool Mountain",
+  0x5: "Big Boo's Haunt",
+  0x6: "Hazy Maze Cave",
+  0x7: "Lethal Lava Land",
+  0x8: "Shifting Sand Land",
+  0x9: "Dire, Dire Docks",
+  0xa: "Snowman's Land",
+  0xb: "Wet-Dry World",
+  0xc: "Tall, Tall Mountain",
+  0xd: "Tiny-Huge Island",
+  0xe: "Tick Tock Clock",
+  0xf: "Rainbow Ride",
+};
