@@ -141,7 +141,9 @@ Number.prototype.toHex = function (length = 0) {
 };
 
 String.prototype.format = function (value: number) {
-  return this.replace("%d", `${value}`).replace("%o", getOrdinalSuffix(value));
+  return this.replace("%d", `${value}`)
+    .replace("%o", getOrdinalSuffix(value))
+    .replace("%s", String.fromCharCode(0x40 + value));
 };
 
 String.prototype.reverse = function () {
