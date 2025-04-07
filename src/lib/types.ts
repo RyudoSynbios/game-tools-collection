@@ -170,6 +170,7 @@ export interface ItemBitflags {
   type: "bitflags";
   flags: ItemBitflag[];
   hint?: string;
+  maxWidth?: boolean;
   noMargin?: boolean;
   reversed?: boolean;
   disabled?: boolean;

@@ -82,6 +82,7 @@
   <div
     class="gtc-bitflags"
     class:gtc-bitflags-debug={item.hidden}
+    class:gtc-bitflags-maxWidth={item.maxWidth}
     class:gtc-bitflags-nomargin={item.noMargin}
   >
     {#if item.name}
@@ -118,6 +119,10 @@
 
     &.gtc-bitflags-debug {
       @apply bg-orange-950 text-orange-800;
+    }
+
+    &.gtc-bitflags-maxWidth {
+      @apply w-auto;
     }
 
     &.gtc-bitflags-nomargin {
