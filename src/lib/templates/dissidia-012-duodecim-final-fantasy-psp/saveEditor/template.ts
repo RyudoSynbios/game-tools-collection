@@ -326,6 +326,33 @@ const template: GameJson = {
                               dataType: "uint8",
                               max: 150,
                             },
+                          ],
+                        },
+                        {
+                          type: "section",
+                          flex: true,
+                          items: [
+                            {
+                              name: "Set",
+                              offset: 0x7c3,
+                              type: "variable",
+                              dataType: "uint8",
+                              resource: "sets",
+                            },
+                            {
+                              name: "Look",
+                              offset: 0x7c4,
+                              type: "variable",
+                              dataType: "uint8",
+                              resource: "looks",
+                              hint: "Some looks may not work if the corresponding DLC is not installed.",
+                            },
+                          ],
+                        },
+                        {
+                          type: "section",
+                          flex: true,
+                          items: [
                             {
                               name: "Current Lost HP",
                               offset: 0x5c,
@@ -7393,6 +7420,20 @@ const template: GameJson = {
       0xe: "Ninja",
       0xf: "Sage",
       0xffffffff: "-",
+    },
+    looks: {
+      0x1: "Normal",
+      0x2: "Alt 1",
+      0x3: "Alt 2",
+      0x4: "DLC 1",
+      0x5: "DLC 2",
+      0x6: "DLC 3",
+      0x7: "DLC 4",
+      0x8: "DLC 5",
+      0x9: "DLC 6",
+      0xa: "DLC 7",
+      0xb: "DLC 8",
+      0xc: "DLC 9",
     },
     movieLengths: {
       0x0: "Short",
