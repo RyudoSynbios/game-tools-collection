@@ -178,7 +178,6 @@ export const enemies = [
       { index: 0x381, name: "114 Sephiroth" },
     ],
   },
-
   {
     name: "INTERmission",
     enemies: [

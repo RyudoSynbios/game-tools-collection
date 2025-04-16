@@ -383,7 +383,6 @@ const template: GameJson = {
                               dataType: "uint16",
                               bigEndian: true,
                             },
-
                             {
                               name: "Confusion",
                               dataViewAltKey: "party",
@@ -392,7 +391,6 @@ const template: GameJson = {
                               dataType: "uint16",
                               bigEndian: true,
                             },
-
                             {
                               name: "???",
                               dataViewAltKey: "party",
@@ -402,7 +400,6 @@ const template: GameJson = {
                               bigEndian: true,
                               hidden: true,
                             },
-
                             {
                               name: "Weak",
                               dataViewAltKey: "party",
@@ -411,7 +408,6 @@ const template: GameJson = {
                               dataType: "uint16",
                               bigEndian: true,
                             },
-
                             {
                               name: "???",
                               dataViewAltKey: "party",
@@ -421,7 +417,6 @@ const template: GameJson = {
                               bigEndian: true,
                               hidden: true,
                             },
-
                             {
                               name: "???",
                               dataViewAltKey: "party",
@@ -3189,7 +3184,6 @@ const template: GameJson = {
                                       dataType: "uint16",
                                       bigEndian: true,
                                     },
-
                                     {
                                       name: "Confusion",
                                       dataViewAltKey: "enemies",
@@ -3198,7 +3192,6 @@ const template: GameJson = {
                                       dataType: "uint16",
                                       bigEndian: true,
                                     },
-
                                     {
                                       name: "???",
                                       dataViewAltKey: "enemies",
@@ -3208,7 +3201,6 @@ const template: GameJson = {
                                       bigEndian: true,
                                       hidden: true,
                                     },
-
                                     {
                                       name: "Weak",
                                       dataViewAltKey: "enemies",
@@ -3217,7 +3209,6 @@ const template: GameJson = {
                                       dataType: "uint16",
                                       bigEndian: true,
                                     },
-
                                     {
                                       name: "???",
                                       dataViewAltKey: "enemies",
@@ -3227,7 +3218,6 @@ const template: GameJson = {
                                       bigEndian: true,
                                       hidden: true,
                                     },
-
                                     {
                                       name: "???",
                                       dataViewAltKey: "enemies",

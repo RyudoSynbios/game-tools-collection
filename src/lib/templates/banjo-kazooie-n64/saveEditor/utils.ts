@@ -114,7 +114,7 @@ export function overrideGetInt(item: Item): [boolean, number | undefined] {
     ]);
 
     return [true, int];
-  } else if ("id" in item && item.id === "totalJigsaws") {
+  } else if ("id" in item && item.id === "totalJiggies") {
     const itemInt = item as ItemInt;
 
     let int = 0;

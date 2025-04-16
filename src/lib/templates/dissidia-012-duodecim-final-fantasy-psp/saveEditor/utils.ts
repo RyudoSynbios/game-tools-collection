@@ -56,7 +56,7 @@ export function overrideParseItem(item: Item): Item {
       item.flags.forEach((flag) => {
         flag.offset += getShift(flag.offset);
       });
-    } else if ("offset" in item && item.offset) {
+    } else if ("offset" in item) {
       item.offset += getShift(item.offset);
     }
   }

@@ -67,7 +67,7 @@ export function parseItem(
           dataView,
           highlightedOffsets,
           flag.offset,
-          `${item.name || ""} [${flag.bit}]: ${flag.label || name}`,
+          `[${flag.bit}]: ${item.name || ""} ${flag.label || name}`,
           item.type,
         );
       }

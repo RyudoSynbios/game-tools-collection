@@ -19,7 +19,7 @@ import type {
   ItemString,
 } from "$lib/types";
 
-import { charactersBP, locations, ranksBP } from "../utils/resource";
+import { charactersBP, locations, ranksBP } from "./utils/resource";
 
 export function beforeInitDataView(dataView: DataView): DataView {
   return unpackMemoryCard(dataView);

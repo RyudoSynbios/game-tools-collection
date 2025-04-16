@@ -15,11 +15,6 @@
     "manufacturerId": "nintendo"
   },
   {
-    "id": "gamecube",
-    "name": "GameCube",
-    "manufacturerId": "nintendo"
-  },
-  {
     "id": "nintendo-ds",
     "name": "Nintendo DS",
     "manufacturerId": "nintendo"
@@ -40,9 +35,9 @@
     "manufacturerId": "nintendo"
   },
   {
-    "id": "dreamcast",
-    "name": "Dreamcast",
-    "manufacturerId": "sega"
+    "id": "gamecube",
+    "name": "GameCube",
+    "manufacturerId": "nintendo"
   },
   {
     "id": "mega-drive",
@@ -52,6 +47,11 @@
   {
     "id": "saturn",
     "name": "Sega Saturn",
+    "manufacturerId": "sega"
+  },
+  {
+    "id": "dreamcast",
+    "name": "Dreamcast",
     "manufacturerId": "sega"
   },
   {

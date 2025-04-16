@@ -1467,7 +1467,7 @@ const template: GameJson = {
                                     { offset: 0x2bb, bit: 7, label: "Visited", separator: true },
                                     { offset: 0x2a5, bit: 7, label: "Elevator to Falls down" },
                                     { offset: 0x2a6, bit: 0, label: "Pool emptied" },
-                                    { offset: 0x2a9, bit: 5, label: "First time pool emptied" },
+                                    { offset: 0x2a9, bit: 5, label: "Pool emptied for the first time" },
                                   ],
                                 },
                               ],

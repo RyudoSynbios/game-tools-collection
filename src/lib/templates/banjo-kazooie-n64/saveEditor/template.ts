@@ -138,7 +138,7 @@ const template: GameJson = {
                               convert: { from: "seconds", to: "hours" },
                             },
                           ],
-                          max: 180,
+                          max: 17,
                           disabled: true,
                         },
                         {
@@ -180,8 +180,8 @@ const template: GameJson = {
                       ],
                     },
                     {
-                      id: "totalJigsaws",
-                      name: "Total Jigsaws",
+                      id: "totalJiggies",
+                      name: "Total Jiggies",
                       offset: 0x2,
                       type: "variable",
                       dataType: "uint8",
@@ -202,7 +202,7 @@ const template: GameJson = {
                   flex: true,
                   items: [
                     {
-                      name: "Jigsaws",
+                      name: "Jiggies",
                       offset: 0x69,
                       type: "variable",
                       dataType: "uint8",
@@ -470,7 +470,7 @@ const template: GameJson = {
                                   flex: true,
                                   items: [
                                     {
-                                      name: "Jigsaws",
+                                      name: "Jiggies",
                                       type: "bitflags",
                                       flags: [
                                         { offset: 0x8, bit: 3, label: "Entrance" },
@@ -513,7 +513,7 @@ const template: GameJson = {
                                   flex: true,
                                   items: [
                                     {
-                                      name: "Jigsaws on Gruntilda Puzzle",
+                                      name: "Jiggies on Gruntilda Puzzle",
                                       offset: 0x4f,
                                       type: "variable",
                                       dataType: "uint8",
@@ -524,7 +524,7 @@ const template: GameJson = {
                                       max: 25,
                                     },
                                     {
-                                      name: "Jigsaws on Honeycomb Puzzle",
+                                      name: "Jiggies on Honeycomb Puzzle",
                                       offset: 0x4f,
                                       type: "variable",
                                       dataType: "uint16",
@@ -583,10 +583,10 @@ const template: GameJson = {
                                         { offset: 0x55, bit: 7, label: "GOLDFEATHERS cheat given by Cheato" },
                                         { offset: 0x52, bit: 7, label: "Gruntilda's dialogue when entrance in her lair", hidden: true },
                                         { offset: 0x54, bit: 7, label: "Bottles' dialog when near of a puzzle", hidden: true },
-                                        { offset: 0x42, bit: 7, label: "Bottles' dialog explaining how to place a Jigsaw Piece in a puzzle", hidden: true },
+                                        { offset: 0x42, bit: 7, label: "Bottles' dialog explaining how to place a Jiggy in a puzzle", hidden: true },
                                         { offset: 0x42, bit: 6, label: "Bottles' dialog explaining how to complete puzzles", hidden: true },
-                                        { offset: 0x5b, bit: 7, label: "Bottles' dialog explaining how to remove Jigsaw from puzzle", hidden: true },
-                                        { offset: 0x5c, bit: 0, label: "Bottles' dialog explaining how to place all Jigsaws into a puzzle", hidden: true },
+                                        { offset: 0x5b, bit: 7, label: "Bottles' dialog explaining how to remove a Jiggy from puzzle", hidden: true },
+                                        { offset: 0x5c, bit: 0, label: "Bottles' dialog explaining how to place all Jiggies into a puzzle", hidden: true },
                                         { offset: 0x53, bit: 1, label: "Bottles' dialog explaining about notes outside a world", hidden: true },
                                         { offset: 0x58, bit: 1, label: "Gruntilda's dialog explaining about monsters appearance once world door unlocked", hidden: true },
                                         { offset: 0x4b, bit: 4, label: "First Note Door open related", hidden: true },
@@ -640,7 +640,7 @@ const template: GameJson = {
                                         { offset: 0x44, bit: 5, label: "Water Level 2 of Rusty Bucket Bay area raised" },
                                         { offset: 0x44, bit: 6, label: "<b>Rusty Bucket Bay area</b>: Animation of Water Level 3 (temporary)", hidden: true },
                                         { offset: 0x44, bit: 7, label: "<b>Rusty Bucket Bay area</b>: Water Level 3 (temporary)", hidden: true },
-                                        { offset: 0x59, bit: 5, label: "<b>Rusty Bucket Bay area</b>: Grate behind Rusty Bucket Bay Switch Witch Jigsaw destroyed", hidden: true },
+                                        { offset: 0x59, bit: 5, label: "<b>Rusty Bucket Bay area</b>: Grate behind Rusty Bucket Bay Switch Witch Jiggy destroyed", hidden: true },
                                         { offset: 0x4a, bit: 3, label: "Podium to puzzle of Click Clock Wood activated" },
                                         { offset: 0x4a, bit: 4, label: "Animation of activation of podium to puzzle of Click Clock Wood", hidden: true },
                                         { offset: 0x5e, bit: 4, label: "<b>Grunty's Furnace Fun</b>: Gruntilda's dialog explaining the rules", hidden: true },
@@ -750,13 +750,13 @@ const template: GameJson = {
                                   flex: true,
                                   items: [
                                     {
-                                      name: "Jigsaws",
+                                      name: "Jiggies",
                                       type: "bitflags",
                                       flags: [
                                         { offset: 0x2, bit: 0, label: "Conga's orange blocks" },
                                         { offset: 0x2, bit: 1, label: "5 Jinjos rescued" },
                                         { offset: 0x2, bit: 2, label: "At the top of the termites nest" },
-                                        { offset: 0x2, bit: 3, label: "In the eye of the skull of Mumbo's hut" },
+                                        { offset: 0x2, bit: 3, label: "In the eye of the Mumbo's Skull" },
                                         { offset: 0x2, bit: 4, label: "Feeding Juju" },
                                         { offset: 0x2, bit: 5, label: "Inside a hut of the village" },
                                         { offset: 0x2, bit: 6, label: "At the center of the stone structure" },
@@ -771,7 +771,7 @@ const template: GameJson = {
                                       flags: [
                                         { offset: 0x12, bit: 1, label: "Near Conga" },
                                         { offset: 0x12, bit: 2, label: "Near the stone structure" },
-                                        { offset: 0x12, bit: 3, label: "Near Mumbo's hut" },
+                                        { offset: 0x12, bit: 3, label: "Near Mumbo's Skull" },
                                         { offset: 0x12, bit: 4, label: "Near entrance" },
                                         { offset: 0x12, bit: 5, label: "Inside the termites nest" },
                                       ],
@@ -796,7 +796,7 @@ const template: GameJson = {
                                   flex: true,
                                   items: [
                                     {
-                                      name: "Jigsaws on World Puzzle",
+                                      name: "Jiggies on World Puzzle",
                                       offset: 0x4b,
                                       type: "variable",
                                       dataType: "bit",
@@ -904,7 +904,7 @@ const template: GameJson = {
                                   flex: true,
                                   items: [
                                     {
-                                      name: "Jigsaws",
+                                      name: "Jiggies",
                                       type: "bitflags",
                                       flags: [
                                         { offset: 0x3, bit: 0, label: "Sandcastle password" },
@@ -955,7 +955,7 @@ const template: GameJson = {
                                   flex: true,
                                   items: [
                                     {
-                                      name: "Jigsaws on World Puzzle",
+                                      name: "Jiggies on World Puzzle",
                                       offset: 0x4b,
                                       type: "variable",
                                       dataType: "uint8",
@@ -1067,7 +1067,7 @@ const template: GameJson = {
                                   flex: true,
                                   items: [
                                     {
-                                      name: "Jigsaws",
+                                      name: "Jiggies",
                                       type: "bitflags",
                                       flags: [
                                         { offset: 0x4, bit: 0, label: "Above Clanker using his tail" },
@@ -1113,7 +1113,7 @@ const template: GameJson = {
                                   flex: true,
                                   items: [
                                     {
-                                      name: "Jigsaws on World Puzzle",
+                                      name: "Jiggies on World Puzzle",
                                       offset: 0x4c,
                                       type: "variable",
                                       dataType: "uint8",
@@ -1223,7 +1223,7 @@ const template: GameJson = {
                                   flex: true,
                                   items: [
                                     {
-                                      name: "Jigsaws",
+                                      name: "Jiggies",
                                       type: "bitflags",
                                       flags: [
                                         { offset: 0x5, bit: 0, label: "45 seconds race" },
@@ -1247,7 +1247,7 @@ const template: GameJson = {
                                         { offset: 0x14, bit: 6, label: "Under one of the tree of the treetop area" },
                                         { offset: 0x14, bit: 7, label: "Near the big egg" },
                                         { offset: 0x15, bit: 1, label: "Near the red eye Croctus on the treetop area" },
-                                        { offset: 0x15, bit: 2, label: "Behind Mumbo's hut" },
+                                        { offset: 0x15, bit: 2, label: "Behind Mumbo's Skull" },
                                         { offset: 0x15, bit: 3, label: "On the path of the 45 seconds race" },
                                         { offset: 0x15, bit: 4, label: "Near Tiptup in Tanktup's shell" },
                                         { offset: 0x15, bit: 5, label: "Inside the crocodile" },
@@ -1274,7 +1274,7 @@ const template: GameJson = {
                                   flex: true,
                                   items: [
                                     {
-                                      name: "Jigsaws on World Puzzle",
+                                      name: "Jiggies on World Puzzle",
                                       offset: 0x4c,
                                       type: "variable",
                                       dataType: "uint8",
@@ -1385,7 +1385,7 @@ const template: GameJson = {
                                   flex: true,
                                   items: [
                                     {
-                                      name: "Jigsaws",
+                                      name: "Jiggies",
                                       type: "bitflags",
                                       flags: [
                                         { offset: 0x7, bit: 0, label: "First sled race against Boggy" },
@@ -1436,7 +1436,7 @@ const template: GameJson = {
                                   flex: true,
                                   items: [
                                     {
-                                      name: "Jigsaws on World Puzzle",
+                                      name: "Jiggies on World Puzzle",
                                       offset: 0x4c,
                                       type: "variable",
                                       dataType: "uint16",
@@ -1549,7 +1549,7 @@ const template: GameJson = {
                                   flex: true,
                                   items: [
                                     {
-                                      name: "Jigsaws",
+                                      name: "Jiggies",
                                       type: "bitflags",
                                       flags: [
                                         { offset: 0x9, bit: 0, label: "In the tile puzzle pyramid" },
@@ -1600,7 +1600,7 @@ const template: GameJson = {
                                   flex: true,
                                   items: [
                                     {
-                                      name: "Jigsaws on World Puzzle",
+                                      name: "Jiggies on World Puzzle",
                                       offset: 0x4d,
                                       type: "variable",
                                       dataType: "uint8",
@@ -1722,7 +1722,7 @@ const template: GameJson = {
                                   flex: true,
                                   items: [
                                     {
-                                      name: "Jigsaws",
+                                      name: "Jiggies",
                                       type: "bitflags",
                                       flags: [
                                         { offset: 0xd, bit: 0, label: "After the organ lesson in the church" },
@@ -1779,7 +1779,7 @@ const template: GameJson = {
                                   flex: true,
                                   items: [
                                     {
-                                      name: "Jigsaws on World Puzzle",
+                                      name: "Jiggies on World Puzzle",
                                       offset: 0x4d,
                                       type: "variable",
                                       dataType: "uint16",
@@ -1896,7 +1896,7 @@ const template: GameJson = {
                                   flex: true,
                                   items: [
                                     {
-                                      name: "Jigsaws",
+                                      name: "Jiggies",
                                       type: "bitflags",
                                       flags: [
                                         { offset: 0xc, bit: 0, label: "In the captain's room" },
@@ -1952,7 +1952,7 @@ const template: GameJson = {
                                   flex: true,
                                   items: [
                                     {
-                                      name: "Jigsaws on World Puzzle",
+                                      name: "Jiggies on World Puzzle",
                                       offset: 0x4e,
                                       type: "variable",
                                       dataType: "uint8",
@@ -2065,7 +2065,7 @@ const template: GameJson = {
                                   flex: true,
                                   items: [
                                     {
-                                      name: "Jigsaws",
+                                      name: "Jiggies",
                                       type: "bitflags",
                                       flags: [
                                         { offset: 0xb, bit: 0, label: "At the top of the tree" },
@@ -2087,7 +2087,7 @@ const template: GameJson = {
                                         { offset: 0x1d, bit: 0, label: "<b>Spring</b>: On the entrance above a Snarebear" },
                                         { offset: 0x1d, bit: 3, label: "<b>Spring</b>: In the treehouse" },
                                         { offset: 0x1d, bit: 4, label: "<b>Spring</b>: On a branch of the tree" },
-                                        { offset: 0x1d, bit: 6, label: "<b>Spring</b>: In the brambles near Mumbo's hut" },
+                                        { offset: 0x1d, bit: 6, label: "<b>Spring</b>: In the brambles near Mumbo's Skull" },
                                         { offset: 0x1d, bit: 6, label: "<b>Spring</b>: Near Eyrie's nest" },
                                         { offset: 0x1d, bit: 7, label: "<b>Spring</b>: Near the wooden arch to the tree above a Snarebear" },
                                         { offset: 0x1e, bit: 1, label: "<b>Spring</b>: Near the edge of the beehive" },
@@ -2098,7 +2098,7 @@ const template: GameJson = {
                                         { offset: 0x1e, bit: 5, label: "<b>Summer</b>: Above a Snarebear before ascending the tree" },
                                         { offset: 0x1e, bit: 6, label: "<b>Summer</b>: In a branch of the tree" },
                                         { offset: 0x1e, bit: 7, label: "<b>Summer</b>: In the entrance of Gnawty's house" },
-                                        { offset: 0x1f, bit: 1, label: "<b>Summer</b>: In Mumbo's hut" },
+                                        { offset: 0x1f, bit: 1, label: "<b>Summer</b>: Inside Mumbo's Skull" },
                                         { offset: 0x1f, bit: 2, label: "<b>Autumn</b>: Following the leaves path" },
                                         { offset: 0x1f, bit: 3, label: "<b>Autumn</b>: On the entrance above a Snarebear" },
                                         { offset: 0x1f, bit: 4, label: "<b>Autumn</b>: At the top of the tree above a Snarebear" },
@@ -2131,7 +2131,7 @@ const template: GameJson = {
                                   flex: true,
                                   items: [
                                     {
-                                      name: "Jigsaws on World Puzzle",
+                                      name: "Jiggies on World Puzzle",
                                       offset: 0x4e,
                                       type: "variable",
                                       dataType: "uint16",
