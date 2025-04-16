@@ -33,6 +33,17 @@
     }
   },
   {
+    "id": "banjo-tooie-n64",
+    "name": "Banjo-Tooie",
+    "consoleId": "nintendo-64",
+    "tools": {
+      "saveEditor": {
+        "createdAt": "2025-04-16",
+        "regions": ["🇪🇺", "🇺🇸", "🇯🇵", "🇦🇺"]
+      }
+    }
+  },
+  {
     "id": "bomberman-64-n64",
     "name": "Bomberman 64",
     "consoleId": "nintendo-64",
