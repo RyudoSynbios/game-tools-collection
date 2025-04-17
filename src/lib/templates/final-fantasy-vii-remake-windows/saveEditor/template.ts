@@ -218,7 +218,6 @@ const template: GameJson = {
           name: "Party",
           items: [
             {
-              id: "materia",
               length: 0x40,
               type: "container",
               instanceType: "tabs",
