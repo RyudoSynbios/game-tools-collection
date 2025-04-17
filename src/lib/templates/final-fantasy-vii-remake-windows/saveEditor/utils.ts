@@ -102,9 +102,7 @@ export function overrideItem(item: Item): Item {
 
     const materia = materiaList.find((materia) => materia.index === index);
 
-    if (materia) {
-      itemInt.max = materia.level;
-    }
+    itemInt.max = materia ? materia.level : 1;
   } else if ("id" in item && item.id === "materiaAp") {
     const itemInt = item as ItemInt;
 
@@ -112,9 +110,7 @@ export function overrideItem(item: Item): Item {
 
     const materia = materiaList.find((materia) => materia.index === index);
 
-    if (materia) {
-      itemInt.max = materia.ap;
-    }
+    itemInt.max = materia ? materia.ap : 0;
   } else if ("id" in item && item.id?.match(/proficiency-/)) {
     const itemInt = item as ItemInt;
 

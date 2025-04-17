@@ -218,7 +218,6 @@ const template: GameJson = {
           name: "Party",
           items: [
             {
-              id: "materia",
               length: 0x40,
               type: "container",
               instanceType: "tabs",
@@ -601,7 +600,6 @@ const template: GameJson = {
                         {
                           name: "Weapon Materia",
                           type: "section",
-                          flex: true,
                           items: [
                             {
                               type: "section",
@@ -661,7 +659,6 @@ const template: GameJson = {
                         {
                           name: "Armor Materia",
                           type: "section",
-                          flex: true,
                           items: [
                             {
                               type: "section",
