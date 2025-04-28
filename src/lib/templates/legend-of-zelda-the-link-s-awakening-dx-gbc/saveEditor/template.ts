@@ -500,6 +500,7 @@ const template: GameJson = {
                               type: "variable",
                               dataType: "uint8",
                               max: 26,
+                              binaryCodedDecimal: true,
                             },
                             {
                               name: "Golden Leaves / Slime Key",
