@@ -112,6 +112,12 @@ const template: GameJson = {
                           dataType: "uint8",
                           binaryCodedDecimal: true,
                         },
+                        {
+                          name: "Theft Count",
+                          offset: 0x473,
+                          type: "variable",
+                          dataType: "uint8",
+                        },
                       ],
                     },
                     {
