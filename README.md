@@ -22,6 +22,7 @@ Link to the website: [https://game-tools-collection.com](https://game-tools-coll
 | Dissidia 012: Duodecim Final Fantasy      | PSP      | Save                    | EUR / USA / JAP                               |
 | Donkey Kong Land                          | GB       | Save                    | EUR / USA / JAP                               |
 | Final Fantasy IX                          | PS       | Save                    | EUR / USA / JAP / FRA / GER / ITA / SPA       |
+| Final Fantasy VII Rebirth                 | WIN      | Save                    | WORLD                                         |
 | Final Fantasy VII Remake                  | WIN      | Save                    | WORLD                                         |
 | Final Fight One                           | GBA      | Save                    | EUR / USA / JAP                               |
 | Game & Watch Gallery 3                    | GBC      | Save                    | EUR / USA / JAP / AUS                         |
