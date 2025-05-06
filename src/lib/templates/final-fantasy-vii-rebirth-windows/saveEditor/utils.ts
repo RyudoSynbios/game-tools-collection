@@ -155,6 +155,7 @@ export function afterSetInt(item: Item): void {
     setInt(itemInt.offset + 0x4, "uint32", 0);
     setInt(itemInt.offset + 0xc, "uint8", 1);
 
+    updateResources("equippableMateriaNames");
     updateResources("inventoryMateriaNames");
   } else if ("id" in item && item.id === "materiaLevel") {
     const itemInt = item as ItemInt;
@@ -217,6 +218,7 @@ export function afterSetInt(item: Item): void {
     setInt(detailsOffset + 0xc, "uint32", quantity);
     setInt(itemInt.offset - 0x4, "uint32", id);
 
+    updateResources("equippedWeaponNames");
     updateResources("inventoryWeaponNames");
   } else if ("id" in item && item.id?.match(/item-/)) {
     const itemInt = item as ItemInt;
