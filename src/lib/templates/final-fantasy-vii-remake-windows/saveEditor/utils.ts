@@ -292,7 +292,9 @@ export function afterSetInt(item: Item, flag: ItemBitflag): void {
     const [index] = item.id.splitInt();
 
     const weaponIndex = getInt(itemInt.offset, "uint32") || 0xffffffff;
+    const materiaSet = weaponIndex !== 0xffffffff ? index + 8 : 0xffffffff;
 
+    setInt(itemInt.offset + 0x4, "uint32", materiaSet);
     setInt(itemInt.offset + 0x40014 + index * 0x20, "uint32", weaponIndex);
 
     updateResources("inventoryWeaponNames");
