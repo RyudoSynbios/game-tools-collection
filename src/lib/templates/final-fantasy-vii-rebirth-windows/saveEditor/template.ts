@@ -1,6 +1,12 @@
-import type { GameJson } from "$lib/types";
+import type { GameJson, ItemInt } from "$lib/types";
 
-import { characters, enemies, materias, weapons } from "./utils/resource";
+import {
+  challenges,
+  characters,
+  enemies,
+  materias,
+  weapons,
+} from "./utils/resource";
 
 const template: GameJson = {
   validator: {
@@ -1296,8 +1302,389 @@ const template: GameJson = {
         },
         {
           name: "Challenges",
-          planned: true,
-          items: [],
+          items: [
+            {
+              type: "tabs",
+              items: challenges.map((category) => ({
+                name: category.name,
+                items: [
+                  {
+                    type: "tabs",
+                    items: category.types.map((type) => ({
+                      name: type.name,
+                      items: [
+                        {
+                          type: "tabs",
+                          vertical: true,
+                          items: type.challenges.map((challenge) => {
+                            const recordShift = challenge.recordIndex * 0x40;
+
+                            return {
+                              name: challenge.name,
+                              items: [
+                                {
+                                  type: "section",
+                                  flex: true,
+                                  items: [
+                                    {
+                                      id: `challengeProgression-${challenge.recordIndex}`,
+                                      name: "Progression",
+                                      offset: 0x44f79 + challenge.completionIndex,
+                                      type: "variable",
+                                      dataType: "bit",
+                                      bit: challenge.completionBit,
+                                      resource: "challengeProgressions",
+                                      disabled: true,
+                                    },
+                                    {
+                                      name: "Displayed Completed Difficulty",
+                                      offset: 0x4adf5 + recordShift,
+                                      type: "variable",
+                                      dataType: "uint8",
+                                      hidden: true,
+                                    },
+                                    {
+                                      name: "Reached Battle",
+                                      offset: 0x4adf6 + recordShift,
+                                      type: "variable",
+                                      dataType: "int8",
+                                      operations: [{ "+": 1 }],
+                                      min: 0,
+                                      max: 5,
+                                    },
+                                  ],
+                                },
+                                {
+                                  name: "Easy",
+                                  type: "section",
+                                  flex: true,
+                                  items: [
+                                    {
+                                      name: "Progression",
+                                      offset: 0x4adf4 + recordShift,
+                                      type: "variable",
+                                      dataType: "bit",
+                                      bit: 2,
+                                      hidden: true,
+                                    },
+                                    {
+                                      name: "Completion Time",
+                                      type: "group",
+                                      mode: "time",
+                                      items: [
+                                        {
+                                          id: `completionTime-${challenge.recordIndex}-0`,
+                                          offset: 0x4adf8 + recordShift,
+                                          type: "variable",
+                                          dataType: "uint32",
+                                          operations: [
+                                            {
+                                              convert: {
+                                                from: "seconds",
+                                                to: "hours",
+                                              },
+                                            },
+                                          ],
+                                          max: 99,
+                                        },
+                                        {
+                                          id: `completionTime-${challenge.recordIndex}-0`,
+                                          offset: 0x4adf8 + recordShift,
+                                          type: "variable",
+                                          dataType: "uint32",
+                                          operations: [
+                                            {
+                                              convert: {
+                                                from: "seconds",
+                                                to: "minutes",
+                                              },
+                                            },
+                                          ],
+                                          leadingZeros: 1,
+                                          max: 59,
+                                        },
+                                        {
+                                          id: `completionTime-${challenge.recordIndex}-0`,
+                                          offset: 0x4adf8 + recordShift,
+                                          type: "variable",
+                                          dataType: "uint32",
+                                          operations: [
+                                            {
+                                              convert: {
+                                                from: "seconds",
+                                                to: "seconds",
+                                              },
+                                            },
+                                          ],
+                                          leadingZeros: 1,
+                                          max: 59,
+                                        },
+                                      ],
+                                    },
+                                    ...[...Array(challenge.members).keys()].map(
+                                      (index) =>
+                                        ({
+                                          name: `Character${challenge.members > 1 ? ` ${index + 1}` : ""}`,
+                                          offset: 0x4ae0c + recordShift + index,
+                                          type: "variable",
+                                          dataType: "uint8",
+                                          resource: "partyCharacters",
+                                          autocomplete: true,
+                                        }) as ItemInt,
+                                    ),
+                                  ],
+                                },
+                                {
+                                  name: "Normal",
+                                  type: "section",
+                                  flex: true,
+                                  items: [
+                                    {
+                                      name: "Progression",
+                                      offset: 0x4adf4 + recordShift,
+                                      type: "variable",
+                                      dataType: "bit",
+                                      bit: 3,
+                                      hidden: true,
+                                    },
+                                    {
+                                      name: "Completion Time",
+                                      type: "group",
+                                      mode: "time",
+                                      items: [
+                                        {
+                                          id: `completionTime-${challenge.recordIndex}-1`,
+                                          offset: 0x4adfc + recordShift,
+                                          type: "variable",
+                                          dataType: "uint32",
+                                          operations: [
+                                            {
+                                              convert: {
+                                                from: "seconds",
+                                                to: "hours",
+                                              },
+                                            },
+                                          ],
+                                          max: 99,
+                                        },
+                                        {
+                                          id: `completionTime-${challenge.recordIndex}-1`,
+                                          offset: 0x4adfc + recordShift,
+                                          type: "variable",
+                                          dataType: "uint32",
+                                          operations: [
+                                            {
+                                              convert: {
+                                                from: "seconds",
+                                                to: "minutes",
+                                              },
+                                            },
+                                          ],
+                                          leadingZeros: 1,
+                                          max: 59,
+                                        },
+                                        {
+                                          id: `completionTime-${challenge.recordIndex}-1`,
+                                          offset: 0x4adfc + recordShift,
+                                          type: "variable",
+                                          dataType: "uint32",
+                                          operations: [
+                                            {
+                                              convert: {
+                                                from: "seconds",
+                                                to: "seconds",
+                                              },
+                                            },
+                                          ],
+                                          leadingZeros: 1,
+                                          max: 59,
+                                        },
+                                      ],
+                                    },
+                                    ...[...Array(challenge.members).keys()].map(
+                                      (index) =>
+                                        ({
+                                          name: `Character${challenge.members > 1 ? ` ${index + 1}` : ""}`,
+                                          offset: 0x4ae12 + recordShift + index,
+                                          type: "variable",
+                                          dataType: "uint8",
+                                          resource: "partyCharacters",
+                                          autocomplete: true,
+                                        }) as ItemInt,
+                                    ),
+                                  ],
+                                },
+                                {
+                                  name: "Dynamic",
+                                  type: "section",
+                                  flex: true,
+                                  items: [
+                                    {
+                                      name: "Progression",
+                                      offset: 0x4adf4 + recordShift,
+                                      type: "variable",
+                                      dataType: "bit",
+                                      bit: 5,
+                                      hidden: true,
+                                    },
+                                    {
+                                      name: "Completion Time",
+                                      type: "group",
+                                      mode: "time",
+                                      items: [
+                                        {
+                                          id: `completionTime-${challenge.recordIndex}-3`,
+                                          offset: 0x4ae04 + recordShift,
+                                          type: "variable",
+                                          dataType: "uint32",
+                                          operations: [
+                                            {
+                                              convert: {
+                                                from: "seconds",
+                                                to: "hours",
+                                              },
+                                            },
+                                          ],
+                                          max: 99,
+                                        },
+                                        {
+                                          id: `completionTime-${challenge.recordIndex}-3`,
+                                          offset: 0x4ae04 + recordShift,
+                                          type: "variable",
+                                          dataType: "uint32",
+                                          operations: [
+                                            {
+                                              convert: {
+                                                from: "seconds",
+                                                to: "minutes",
+                                              },
+                                            },
+                                          ],
+                                          leadingZeros: 1,
+                                          max: 59,
+                                        },
+                                        {
+                                          id: `completionTime-${challenge.recordIndex}-3`,
+                                          offset: 0x4ae04 + recordShift,
+                                          type: "variable",
+                                          dataType: "uint32",
+                                          operations: [
+                                            {
+                                              convert: {
+                                                from: "seconds",
+                                                to: "seconds",
+                                              },
+                                            },
+                                          ],
+                                          leadingZeros: 1,
+                                          max: 59,
+                                        },
+                                      ],
+                                    },
+                                    ...[...Array(challenge.members).keys()].map(
+                                      (index) =>
+                                        ({
+                                          name: `Character${challenge.members > 1 ? ` ${index + 1}` : ""}`,
+                                          offset: 0x4ae1e + recordShift + index,
+                                          type: "variable",
+                                          dataType: "uint8",
+                                          resource: "partyCharacters",
+                                          autocomplete: true,
+                                        }) as ItemInt,
+                                    ),
+                                  ],
+                                },
+                                {
+                                  name: "Hard",
+                                  type: "section",
+                                  flex: true,
+                                  items: [
+                                    {
+                                      name: "Progression",
+                                      offset: 0x4adf4 + recordShift,
+                                      type: "variable",
+                                      dataType: "bit",
+                                      bit: 4,
+                                      hidden: true,
+                                    },
+                                    {
+                                      name: "Completion Time",
+                                      type: "group",
+                                      mode: "time",
+                                      items: [
+                                        {
+                                          id: `completionTime-${challenge.recordIndex}-2`,
+                                          offset: 0x4ae00 + recordShift,
+                                          type: "variable",
+                                          dataType: "uint32",
+                                          operations: [
+                                            {
+                                              convert: {
+                                                from: "seconds",
+                                                to: "hours",
+                                              },
+                                            },
+                                          ],
+                                          max: 99,
+                                        },
+                                        {
+                                          id: `completionTime-${challenge.recordIndex}-2`,
+                                          offset: 0x4ae00 + recordShift,
+                                          type: "variable",
+                                          dataType: "uint32",
+                                          operations: [
+                                            {
+                                              convert: {
+                                                from: "seconds",
+                                                to: "minutes",
+                                              },
+                                            },
+                                          ],
+                                          leadingZeros: 1,
+                                          max: 59,
+                                        },
+                                        {
+                                          id: `completionTime-${challenge.recordIndex}-2`,
+                                          offset: 0x4ae00 + recordShift,
+                                          type: "variable",
+                                          dataType: "uint32",
+                                          operations: [
+                                            {
+                                              convert: {
+                                                from: "seconds",
+                                                to: "seconds",
+                                              },
+                                            },
+                                          ],
+                                          leadingZeros: 1,
+                                          max: 59,
+                                        },
+                                      ],
+                                    },
+                                    ...[...Array(challenge.members).keys()].map(
+                                      (index) =>
+                                        ({
+                                          name: `Character${challenge.members > 1 ? ` ${index + 1}` : ""}`,
+                                          offset: 0x4ae18 + recordShift + index,
+                                          type: "variable",
+                                          dataType: "uint8",
+                                          resource: "partyCharacters",
+                                          autocomplete: true,
+                                        }) as ItemInt,
+                                    ),
+                                  ],
+                                },
+                              ],
+                            };
+                          }),
+                        },
+                      ],
+                    })),
+                  },
+                ],
+              })),
+            },
+          ],
         },
         {
           name: "Events",
@@ -1327,6 +1714,10 @@ const template: GameJson = {
     caitSithOutfits: {
       0x0: "Fortune-Teller Extraordinaire",
       0x1: "Court Jester",
+    },
+    challengeProgressions: {
+      0x0: "-",
+      0x1: "Completed",
     },
     characters,
     cloudOutfits: {

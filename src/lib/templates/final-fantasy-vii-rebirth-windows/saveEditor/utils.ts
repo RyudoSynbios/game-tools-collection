@@ -89,6 +89,14 @@ export function overrideGetInt(item: Item): [boolean, number | undefined] {
     });
 
     return [true, int];
+  } else if ("id" in item && item.id?.match(/completionTime-/)) {
+    const itemInt = item as ItemInt;
+
+    const int = getInt(itemInt.offset, "uint32");
+
+    if (int === 0x7fffffff) {
+      return [true, 0x0];
+    }
   }
 
   return [false, undefined];
@@ -125,6 +133,14 @@ export function overrideSetInt(item: Item, value: string): boolean {
     }
 
     return true;
+  } else if ("id" in item && item.id?.match(/completionTime-/)) {
+    const itemInt = item as ItemInt;
+
+    const int = getInt(itemInt.offset, "uint32");
+
+    if (int === 0x7fffffff) {
+      setInt(itemInt.offset, "uint32", 0x0);
+    }
   }
 
   return false;
@@ -241,6 +257,73 @@ export function afterSetInt(item: Item): void {
     updateResources("accessories");
     updateResources("armors");
     updateResources("inventoryItemNames");
+  } else if ("id" in item && item.id?.match(/completionTime-/)) {
+    const itemInt = item as ItemInt;
+
+    const [recordIndex, index] = item.id.splitInt();
+
+    const int = getInt(itemInt.offset, "uint32");
+
+    // Set negative Completion Time if needed
+
+    if (int === 0x0) {
+      setInt(itemInt.offset, "uint32", 0x7fffffff);
+    }
+
+    // Set Difficulty Progression
+
+    let offset = itemInt.offset;
+
+    offset -= 0x4 * (index + 1);
+
+    setInt(offset, "bit", int > 0 ? 1 : 0, { bit: index + 2 });
+
+    // Set Challenge Progression
+
+    const progressionItem = getItem(
+      `challengeProgression-${recordIndex}`,
+    ) as ItemInt;
+
+    const challengeCompleted = getInt(offset, "uint8", {
+      binary: { bitStart: 1, bitLength: 5 },
+    });
+
+    setInt(progressionItem.offset, "bit", challengeCompleted, {
+      bit: progressionItem.bit,
+    });
+
+    // Quests related challenges are also counted somewhere else
+
+    // Gus's Party
+    if ([0x3, 0x2c, 0x39, 0x30, 0x58].includes(recordIndex)) {
+      setInt(progressionItem.offset - 0x285, "bit", challengeCompleted, {
+        bit: progressionItem.bit,
+      });
+    }
+
+    // UPA Challenge
+    if (recordIndex === 0x5e) {
+      setInt(progressionItem.offset - 0x288, "bit", challengeCompleted, {
+        bit: 3,
+      });
+    }
+
+    // Set Completed Difficulty
+
+    let completedDifficulty = 0x5;
+    let bestTime = 0x7fffffff;
+
+    for (let i = 0x0; i < 0x5; i += 0x1) {
+      const timeOffset = offset + 0x4 * (i + 1);
+      const time = getInt(timeOffset, "uint32");
+
+      if (time < bestTime) {
+        completedDifficulty = i;
+        bestTime = time;
+      }
+    }
+
+    setInt(offset + 0x1, "uint8", completedDifficulty);
   }
 }
 

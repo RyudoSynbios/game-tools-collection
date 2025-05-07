@@ -63,6 +63,234 @@ export const characters: Resource = {
   // 0x3b: "???",
 };
 
+// prettier-ignore
+export const challenges = [
+  {
+    name: "Chadley Combat Simulator",
+    types: [
+      {
+        name: "Summons",
+        challenges: [
+          { name: "Titan", completionIndex: 0x8, completionBit: 7, recordIndex: 0x38, members: 3 },
+          { name: "Phoenix", completionIndex: 0x9, completionBit: 0, recordIndex: 0x48, members: 3 },
+          { name: "Alexander", completionIndex: 0x9, completionBit: 1, recordIndex: 0x52, members: 3 },
+          { name: "Kujata", completionIndex: 0x9, completionBit: 2, recordIndex: 0x1f, members: 3 },
+          { name: "Bahamut Arisen", completionIndex: 0x9, completionBit: 3, recordIndex: 0x24, members: 3 },
+          { name: "Odin", completionIndex: 0x9, completionBit: 4, recordIndex: 0x29, members: 3 },
+        ],
+      },
+      {
+        name: "Assignments",
+        challenges: [
+          { name: "Grasslands: Horror on the Range", completionIndex: 0x0, completionBit: 1, recordIndex: 0x43, members: 3 },
+          { name: "Grasslands: Plains Stalkers", completionIndex: 0x0, completionBit: 2, recordIndex: 0x59, members: 3 },
+          { name: "Grasslands: Natural Order", completionIndex: 0x0, completionBit: 3, recordIndex: 0x21, members: 3 },
+          { name: "Junon: Conqueror of the Skies", completionIndex: 0x1, completionBit: 4, recordIndex: 0x8, members: 3 },
+          { name: "Junon: White Squall", completionIndex: 0x1, completionBit: 5, recordIndex: 0x2e, members: 3 },
+          { name: "Corel: Oh, Skewer It", completionIndex: 0x2, completionBit: 5, recordIndex: 0x5, members: 3 },
+          { name: "Corel: Sand Slitherers", completionIndex: 0x2, completionBit: 6, recordIndex: 0x40, members: 3 },
+          { name: "Corel: Badlands Beasts", completionIndex: 0x2, completionBit: 7, recordIndex: 0x5d, members: 3 },
+          { name: "Gongaga: Lethal Combo", completionIndex: 0x3, completionBit: 7, recordIndex: 0x42, members: 3 },
+          { name: "Gongaga: Rooter in the Planet", completionIndex: 0x4, completionBit: 0, recordIndex: 0x2a, members: 3 },
+          { name: "Gongaga: Distant Tremors", completionIndex: 0x4, completionBit: 1, recordIndex: 0x55, members: 3 },
+          { name: "Cosmo: Flower of Destruction", completionIndex: 0x5, completionBit: 1, recordIndex: 0xd, members: 3 },
+          { name: "Cosmo: Nature's Vengeance", completionIndex: 0x5, completionBit: 2, recordIndex: 0x23, members: 3 },
+          { name: "Cosmo: Antediluvian Memories", completionIndex: 0x5, completionBit: 3, recordIndex: 0x62, members: 3 },
+          { name: "Nibel: Death's Harbingers", completionIndex: 0x6, completionBit: 4, recordIndex: 0x31, members: 3 },
+          { name: "Nibel: Chthonian Rondo", completionIndex: 0x6, completionBit: 5, recordIndex: 0x45, members: 3 },
+        ],
+      },
+      {
+        name: "Regions",
+        challenges: [
+          { name: "Grasslands: Level 1", completionIndex: 0x0, completionBit: 5, recordIndex: 0x61, members: 3 },
+          { name: "Grasslands: Level 2", completionIndex: 0x0, completionBit: 6, recordIndex: 0x57, members: 3 },
+          { name: "Junon: Level 1", completionIndex: 0x1, completionBit: 7, recordIndex: 0x46, members: 3 },
+          { name: "Junon: Level 2", completionIndex: 0x2, completionBit: 0, recordIndex: 0x1, members: 3 },
+          { name: "Corel: Level 1", completionIndex: 0x3, completionBit: 1, recordIndex: 0x34, members: 3 },
+          { name: "Corel: Level 2", completionIndex: 0x3, completionBit: 2, recordIndex: 0x50, members: 3 },
+          { name: "Gongaga: Level 1", completionIndex: 0x4, completionBit: 3, recordIndex: 0x37, members: 3 },
+          { name: "Gongaga: Level 2", completionIndex: 0x4, completionBit: 4, recordIndex: 0x1d, members: 3 },
+          { name: "Cosmo Canyon: Level 1", completionIndex: 0x5, completionBit: 5, recordIndex: 0x25, members: 3 },
+          { name: "Cosmo Canyon: Level 2", completionIndex: 0x5, completionBit: 6, recordIndex: 0x3d, members: 3 },
+          { name: "Nibel: Level 1", completionIndex: 0x6, completionBit: 7, recordIndex: 0x5a, members: 3 },
+          { name: "Nibel: Level 2", completionIndex: 0x7, completionBit: 0, recordIndex: 0x1a, members: 3 },
+        ],
+      },
+      {
+        name: "Biology",
+        challenges: [
+          { name: "Know Thine Enemy", completionIndex: 0x0, completionBit: 0, recordIndex: 0x2f, members: 3 },
+          { name: "Blinded by Light", completionIndex: 0x0, completionBit: 7, recordIndex: 0x15, members: 3 },
+          { name: "Breath of Life", completionIndex: 0x2, completionBit: 1, recordIndex: 0x1e, members: 3 },
+          { name: "At Any Cost", completionIndex: 0x3, completionBit: 3, recordIndex: 0x63, members: 3 },
+          { name: "Head Case", completionIndex: 0x4, completionBit: 5, recordIndex: 0x51, members: 3 },
+          { name: "That's the Smell", completionIndex: 0x5, completionBit: 7, recordIndex: 0x11, members: 3 },
+          { name: "Stony Stare", completionIndex: 0x7, completionBit: 1, recordIndex: 0x2d, members: 3 },
+        ],
+      },
+      {
+        name: "Brutal",
+        challenges: [
+          { name: "Army of the Damned", completionIndex: 0x7, completionBit: 5, recordIndex: 0xc7, members: 3 },
+          { name: "Requiem for the Scorned", completionIndex: 0x7, completionBit: 6, recordIndex: 0xb5, members: 3 },
+          { name: "Unending Nightmare", completionIndex: 0x7, completionBit: 7, recordIndex: 0xa6, members: 3 },
+          { name: "Hellions' Intonement", completionIndex: 0x8, completionBit: 0, recordIndex: 0x72, members: 3 },
+          { name: "The Seventh Seal", completionIndex: 0x8, completionBit: 1, recordIndex: 0xba, members: 3 },
+          { name: "Rulers of the Outer Worlds", completionIndex: 0x8, completionBit: 2, recordIndex: 0xad, members: 3 },
+        ],
+      },
+      {
+        name: "Legendary",
+        challenges: [
+          { name: "Cloud vs. The Warriors", completionIndex: 0x8, completionBit: 3, recordIndex: 0xa0, members: 1 },
+          { name: "Barret vs. The Colossi", completionIndex: 0x8, completionBit: 4, recordIndex: 0x93, members: 1 },
+          { name: "Tifa vs. The Martialists", completionIndex: 0x8, completionBit: 5, recordIndex: 0xab, members: 1 },
+          { name: "Aerith vs The Magi", completionIndex: 0x8, completionBit: 6, recordIndex: 0x7d, members: 1 },
+          { name: "Red XIII vs. The Beasts", completionIndex: 0x15, completionBit: 7, recordIndex: 0x6a, members: 1 },
+          { name: "Yuffie vs. The Wronged", completionIndex: 0x16, completionBit: 0, recordIndex: 0xb3, members: 1 },
+          { name: "Cait Sith vs. The Abominable", completionIndex: 0x16, completionBit: 1, recordIndex: 0xb7, members: 1 },
+          { name: "Bonds of Friendship", completionIndex: 0x16, completionBit: 3, recordIndex: 0xb6, members: 2 },
+          { name: "To Be a Hero", completionIndex: 0x16, completionBit: 2, recordIndex: 0xb0, members: 2 },
+        ],
+      },
+      {
+        name: "Tutorial",
+        challenges: [
+          { name: "Beginner's Hall", completionIndex: 0xb, completionBit: 5, recordIndex: 0xa4, members: 2 },
+          { name: "Cloud", completionIndex: 0xb, completionBit: 6, recordIndex: 0x8b, members: 1 },
+          { name: "Barret", completionIndex: 0xb, completionBit: 7, recordIndex: 0x9d, members: 1 },
+          { name: "Tifa", completionIndex: 0xc, completionBit: 0, recordIndex: 0xa3, members: 1 },
+          { name: "Aerith", completionIndex: 0xc, completionBit: 1, recordIndex: 0x73, members: 1 },
+          { name: "Red XIII", completionIndex: 0xc, completionBit: 2, recordIndex: 0xbf, members: 1 },
+          { name: "Yuffie", completionIndex: 0xc, completionBit: 3, recordIndex: 0x8d, members: 1 },
+          { name: "Cait Sith", completionIndex: 0xc, completionBit: 4, recordIndex: 0x96, members: 1 },
+          { name: "Zack", completionIndex: 0xc, completionBit: 6, recordIndex: 0xac, members: 1 },
+          { name: "Sephiroth", completionIndex: 0xc, completionBit: 5, recordIndex: 0x9f, members: 1 },
+          { name: "Synergy", completionIndex: 0xc, completionBit: 7, recordIndex: 0x97, members: 3 },
+        ],
+      },
+    ],
+  },
+  {
+    name: "Shinra Combat Simulator",
+    types: [
+      {
+        name: "Preliminary Trials",
+        challenges: [
+          { name: "Aerial Specimens", completionIndex: 0x14, completionBit: 7, recordIndex: 0x5b, members: 3 },
+          { name: "Ruthless Specimens", completionIndex: 0x15, completionBit: 0, recordIndex: 0x12, members: 3 },
+          { name: "Comparable Specimens", completionIndex: 0x15, completionBit: 1, recordIndex: 0x2b, members: 3 },
+          { name: "Bioselected Specimens", completionIndex: 0x15, completionBit: 2, recordIndex: 0xf, members: 3 },
+        ],
+      },
+      {
+        name: "Evaluations",
+        challenges: [
+          { name: "Fusion Analysis", completionIndex: 0x15, completionBit: 3, recordIndex: 0x4d, members: 3 },
+          { name: "Dominant Traits", completionIndex: 0x15, completionBit: 4, recordIndex: 0x17, members: 3 },
+          { name: "Antinomic Traits", completionIndex: 0x15, completionBit: 5, recordIndex: 0x35, members: 3 },
+          { name: "Forsaken Specimens", completionIndex: 0x15, completionBit: 6, recordIndex: 0x60, members: 3 },
+        ],
+      },
+    ],
+  },
+  {
+    name: "Beast Battleground",
+    types: [
+      {
+        name: "Sylkis Cup",
+        challenges: [
+          { name: "Round 1: Field of Nightmares", completionIndex: 0x11, completionBit: 1, recordIndex: 0x81, members: 1 },
+          { name: "Round 2: Potent of Ruin", completionIndex: 0x11, completionBit: 2, recordIndex: 0x67, members: 1 },
+          { name: "Final Round: Unknown Error", completionIndex: 0x11, completionBit: 3, recordIndex: 0x88, members: 1 },
+        ],
+      },
+      {
+        name: "Prison Tourney",
+        challenges: [
+          { name: "Subterranean Terrors", completionIndex: 0x11, completionBit: 4, recordIndex: 0xa9, members: 1 },
+          { name: "Chicken or the Egg-splosive", completionIndex: 0x11, completionBit: 5, recordIndex: 0x76, members: 1 },
+          { name: "Proof of Life", completionIndex: 0x11, completionBit: 6, recordIndex: 0xaa, members: 1 },
+        ],
+      },
+      {
+        name: "Gus's Party",
+        challenges: [
+          { name: "The Ninja vs. Winged Ones", completionIndex: 0x11, completionBit: 7, recordIndex: 0x3, members: 1 },
+          { name: "The Flower Seller vs. Fireballs", completionIndex: 0x12, completionBit: 0, recordIndex: 0x2c, members: 1 },
+          { name: "The Gunner vs. Wind Sages", completionIndex: 0x12, completionBit: 1, recordIndex: 0x39, members: 1 },
+          { name: "The Pugilist vs. The Undertaker", completionIndex: 0x12, completionBit: 2, recordIndex: 0x30, members: 1 },
+          { name: "The Merc vs. Bloodstained Jester", completionIndex: 0x12, completionBit: 3, recordIndex: 0x58, members: 1 },
+        ],
+      },
+    ],
+  },
+  {
+    name: "Musclehead Colosseum",
+    types: [
+      {
+        name: "2 (Easy)",
+        challenges: [
+          { name: "The Zoomies", completionIndex: 0xd, completionBit: 1, recordIndex: 0x2, members: 2 },
+          { name: "Devil-May-Care Desperados", completionIndex: 0xd, completionBit: 2, recordIndex: 0x20, members: 2 },
+          { name: "Exemplary Exterminators", completionIndex: 0xd, completionBit: 3, recordIndex: 0x49, members: 2 },
+          { name: "Ghoulish Delights", completionIndex: 0xd, completionBit: 4, recordIndex: 0x3e, members: 2 },
+        ],
+      },
+      {
+        name: "2 (Advanced)",
+        challenges: [
+          { name: "Frogjutsu", completionIndex: 0xe, completionBit: 3, recordIndex: 0x84, members: 2 },
+          { name: "Ribbit Me This", completionIndex: 0xe, completionBit: 4, recordIndex: 0xc1, members: 2 },
+          { name: "Birds of a Feather", completionIndex: 0xd, completionBit: 5, recordIndex: 0x41, members: 2 },
+          { name: "Disorderly Peacekeepers", completionIndex: 0xd, completionBit: 6, recordIndex: 0x1c, members: 2 },
+          { name: "Into the Woods", completionIndex: 0xd, completionBit: 7, recordIndex: 0x26, members: 2 },
+          { name: "Popularity Contest", completionIndex: 0xe, completionBit: 0, recordIndex: 0x3b, members: 2 },
+          { name: "Silent of Silenced", completionIndex: 0xe, completionBit: 1, recordIndex: 0x56, members: 2 },
+          { name: "Sedition", completionIndex: 0xe, completionBit: 2, recordIndex: 0x54, members: 2 },
+        ],
+      },
+      {
+        name: "6 (Easy)",
+        challenges: [
+          { name: "The Uncouth", completionIndex: 0xe, completionBit: 5, recordIndex: 0x3a, members: 6 },
+          { name: "The Befouled", completionIndex: 0xe, completionBit: 6, recordIndex: 0x6, members: 6 },
+          { name: "Peas in a Pod", completionIndex: 0xe, completionBit: 7, recordIndex: 0x10, members: 6 },
+          { name: "Scratch That", completionIndex: 0xf, completionBit: 0, recordIndex: 0x13, members: 6 },
+          { name: "Match Made in Pain", completionIndex: 0xf, completionBit: 1, recordIndex: 0x14, members: 6 },
+          { name: "League of Reprobates", completionIndex: 0xf, completionBit: 2, recordIndex: 0x18, members: 6 },
+          { name: "Pecking Order", completionIndex: 0xf, completionBit: 3, recordIndex: 0x4f, members: 6 },
+          { name: "Access Denied", completionIndex: 0xf, completionBit: 4, recordIndex: 0x3f, members: 6 },
+        ],
+      },
+      {
+        name: "6 (Advanced)",
+        challenges: [
+          { name: "Harmony of Discord", completionIndex: 0xf, completionBit: 6, recordIndex: 0xe, members: 6 },
+          { name: "Gourmands Are We", completionIndex: 0xf, completionBit: 7, recordIndex: 0x47, members: 6 },
+          { name: "Primordial Protectors", completionIndex: 0x10, completionBit: 1, recordIndex: 0xa, members: 6 },
+          { name: "Out of the Shadows", completionIndex: 0x10, completionBit: 3, recordIndex: 0x4b, members: 6 },
+          { name: "War of the Mascots", completionIndex: 0xf, completionBit: 5, recordIndex: 0x4e, members: 6 },
+          { name: "The Archfiends", completionIndex: 0x10, completionBit: 0, recordIndex: 0x27, members: 6 },
+          { name: "Legendary Showdown", completionIndex: 0x10, completionBit: 2, recordIndex: 0x3c, members: 6 },
+          { name: "Ululating Quartet", completionIndex: 0x10, completionBit: 4, recordIndex: 0x53, members: 6 },
+          { name: "The Boss and the Hound", completionIndex: 0x10, completionBit: 5, recordIndex: 0x7, members: 6 },
+          { name: "Four-Way Deadlock", completionIndex: 0x10, completionBit: 6, recordIndex: 0x4c, members: 6 },
+          { name: "Dragon Warrior", completionIndex: 0x10, completionBit: 7, recordIndex: 0xc, members: 6 },
+          { name: "Riotous Feast", completionIndex: 0x11, completionBit: 0, recordIndex: 0x44, members: 6 },
+        ],
+      },
+      {
+        name: "UPA Challenge",
+        challenges: [
+          { name: "Send in the Clowns", completionIndex: 0x14, completionBit: 6, recordIndex: 0x5e, members: 3 },
+        ],
+      },
+    ],
+  },
+];
+
 export const enemies = [
   { index: 0x7e, name: "001 Security Officer" },
   { index: 0x36a, name: "002 Elite Security Officer" },
