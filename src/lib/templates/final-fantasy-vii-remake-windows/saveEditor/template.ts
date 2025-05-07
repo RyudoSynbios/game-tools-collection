@@ -1,4 +1,4 @@
-import type { GameJson } from "$lib/types";
+import type { GameJson, ItemInt } from "$lib/types";
 
 import {
   challenges,
@@ -1421,30 +1421,17 @@ const template: GameJson = {
                                   },
                                 ],
                               },
-                              {
-                                name: "Character 1",
-                                offset: 0x46e00 + recordShift,
-                                type: "variable",
-                                dataType: "uint8",
-                                resource: "characters",
-                                autocomplete: true,
-                              },
-                              {
-                                name: "Character 2",
-                                offset: 0x46e01 + recordShift,
-                                type: "variable",
-                                dataType: "uint8",
-                                resource: "characters",
-                                autocomplete: true,
-                              },
-                              {
-                                name: "Character 3",
-                                offset: 0x46e02 + recordShift,
-                                type: "variable",
-                                dataType: "uint8",
-                                resource: "characters",
-                                autocomplete: true,
-                              },
+                              ...[...Array(challenge.members).keys()].map(
+                                (index) =>
+                                  ({
+                                    name: `Character${challenge.members > 1 ? ` ${index + 1}` : ""}`,
+                                    offset: 0x46e00 + recordShift + index,
+                                    type: "variable",
+                                    dataType: "uint8",
+                                    resource: "characters",
+                                    autocomplete: true,
+                                  }) as ItemInt,
+                              ),
                             ],
                           },
                           {
@@ -1514,30 +1501,17 @@ const template: GameJson = {
                                   },
                                 ],
                               },
-                              {
-                                name: "Character 1",
-                                offset: 0x46e03 + recordShift,
-                                type: "variable",
-                                dataType: "uint8",
-                                resource: "characters",
-                                autocomplete: true,
-                              },
-                              {
-                                name: "Character 2",
-                                offset: 0x46e04 + recordShift,
-                                type: "variable",
-                                dataType: "uint8",
-                                resource: "characters",
-                                autocomplete: true,
-                              },
-                              {
-                                name: "Character 3",
-                                offset: 0x46e05 + recordShift,
-                                type: "variable",
-                                dataType: "uint8",
-                                resource: "characters",
-                                autocomplete: true,
-                              },
+                              ...[...Array(challenge.members).keys()].map(
+                                (index) =>
+                                  ({
+                                    name: `Character${challenge.members > 1 ? ` ${index + 1}` : ""}`,
+                                    offset: 0x46e03 + recordShift + index,
+                                    type: "variable",
+                                    dataType: "uint8",
+                                    resource: "characters",
+                                    autocomplete: true,
+                                  }) as ItemInt,
+                              ),
                             ],
                           },
                           {
@@ -1607,30 +1581,17 @@ const template: GameJson = {
                                   },
                                 ],
                               },
-                              {
-                                name: "Character 1",
-                                offset: 0x46e10 + recordShift,
-                                type: "variable",
-                                dataType: "uint8",
-                                resource: "characters",
-                                autocomplete: true,
-                              },
-                              {
-                                name: "Character 2",
-                                offset: 0x46e11 + recordShift,
-                                type: "variable",
-                                dataType: "uint8",
-                                resource: "characters",
-                                autocomplete: true,
-                              },
-                              {
-                                name: "Character 3",
-                                offset: 0x46e12 + recordShift,
-                                type: "variable",
-                                dataType: "uint8",
-                                resource: "characters",
-                                autocomplete: true,
-                              },
+                              ...[...Array(challenge.members).keys()].map(
+                                (index) =>
+                                  ({
+                                    name: `Character${challenge.members > 1 ? ` ${index + 1}` : ""}`,
+                                    offset: 0x46e10 + recordShift + index,
+                                    type: "variable",
+                                    dataType: "uint8",
+                                    resource: "characters",
+                                    autocomplete: true,
+                                  }) as ItemInt,
+                              ),
                             ],
                           },
                           {
@@ -1700,30 +1661,17 @@ const template: GameJson = {
                                   },
                                 ],
                               },
-                              {
-                                name: "Character 1",
-                                offset: 0x46e06 + recordShift,
-                                type: "variable",
-                                dataType: "uint8",
-                                resource: "characters",
-                                autocomplete: true,
-                              },
-                              {
-                                name: "Character 2",
-                                offset: 0x46e07 + recordShift,
-                                type: "variable",
-                                dataType: "uint8",
-                                resource: "characters",
-                                autocomplete: true,
-                              },
-                              {
-                                name: "Character 3",
-                                offset: 0x46e08 + recordShift,
-                                type: "variable",
-                                dataType: "uint8",
-                                resource: "characters",
-                                autocomplete: true,
-                              },
+                              ...[...Array(challenge.members).keys()].map(
+                                (index) =>
+                                  ({
+                                    name: `Character${challenge.members > 1 ? ` ${index + 1}` : ""}`,
+                                    offset: 0x46e06 + recordShift + index,
+                                    type: "variable",
+                                    dataType: "uint8",
+                                    resource: "characters",
+                                    autocomplete: true,
+                                  }) as ItemInt,
+                              ),
                             ],
                           },
                           {
@@ -1793,30 +1741,17 @@ const template: GameJson = {
                                   },
                                 ],
                               },
-                              {
-                                name: "Character 1",
-                                offset: 0x46e09 + recordShift,
-                                type: "variable",
-                                dataType: "uint8",
-                                resource: "characters",
-                                autocomplete: true,
-                              },
-                              {
-                                name: "Character 2",
-                                offset: 0x46e0a + recordShift,
-                                type: "variable",
-                                dataType: "uint8",
-                                resource: "characters",
-                                autocomplete: true,
-                              },
-                              {
-                                name: "Character 3",
-                                offset: 0x46e0b + recordShift,
-                                type: "variable",
-                                dataType: "uint8",
-                                resource: "characters",
-                                autocomplete: true,
-                              },
+                              ...[...Array(challenge.members).keys()].map(
+                                (index) =>
+                                  ({
+                                    name: `Character${challenge.members > 1 ? ` ${index + 1}` : ""}`,
+                                    offset: 0x46e09 + recordShift + index,
+                                    type: "variable",
+                                    dataType: "uint8",
+                                    resource: "characters",
+                                    autocomplete: true,
+                                  }) as ItemInt,
+                              ),
                             ],
                           },
                         ],
