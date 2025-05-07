@@ -109,7 +109,7 @@ const template: GameJson = {
                   items: [
                     {
                       name: "Slot",
-                      offset: 0x01,
+                      offset: 0x1,
                       type: "variable",
                       dataType: "uint8",
                       hidden: true,

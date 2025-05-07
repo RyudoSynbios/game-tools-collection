@@ -4,7 +4,7 @@ const template: GameJson = {
   validator: {
     regions: {
       europe_usa_japan: {
-        0x0: [0xdf, 0xc0, 0xad, 0xde, 0x02],
+        0x0: [0xdf, 0xc0, 0xad, 0xde, 0x2],
       },
     },
     text: "Drag 'n' drop here or click to add a save file.",
