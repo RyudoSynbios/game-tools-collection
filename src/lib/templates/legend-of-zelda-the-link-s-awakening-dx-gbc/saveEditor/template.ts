@@ -112,6 +112,12 @@ const template: GameJson = {
                           dataType: "uint8",
                           binaryCodedDecimal: true,
                         },
+                        {
+                          name: "Theft Count",
+                          offset: 0x473,
+                          type: "variable",
+                          dataType: "uint8",
+                        },
                       ],
                     },
                     {
@@ -494,6 +500,7 @@ const template: GameJson = {
                               type: "variable",
                               dataType: "uint8",
                               max: 26,
+                              binaryCodedDecimal: true,
                             },
                             {
                               name: "Golden Leaves / Slime Key",
