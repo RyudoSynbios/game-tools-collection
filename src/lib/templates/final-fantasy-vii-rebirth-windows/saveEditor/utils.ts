@@ -1,7 +1,13 @@
 import { getInt, setInt } from "$lib/utils/bytes";
 import { getItem, getResource, updateResources } from "$lib/utils/parser";
 
-import { Item, ItemInt, Resource, ResourceGroups } from "$lib/types";
+import {
+  Item,
+  ItemInt,
+  ItemSection,
+  Resource,
+  ResourceGroups,
+} from "$lib/types";
 
 import {
   itemList,
@@ -25,8 +31,24 @@ export function overrideParseItem(item: Item): Item {
   return item;
 }
 
+export function overrideShift(item: Item, shifts: number[]): number[] {
+  if ("id" in item && item.id?.match(/abilities-/)) {
+    return shifts.slice(0, -1);
+  }
+
+  return shifts;
+}
+
 export function overrideItem(item: Item): Item {
-  if ("id" in item && item.id === "materiaLevel") {
+  if ("id" in item && item.id?.match(/abilities-/)) {
+    const itemSection = item as ItemSection;
+
+    const [targetedCharacter, characterIndex] = item.id.splitInt();
+
+    itemSection.hidden = targetedCharacter !== characterIndex;
+
+    return itemSection;
+  } else if ("id" in item && item.id === "materiaLevel") {
     const itemInt = item as ItemInt;
 
     const index = getInt(itemInt.offset - 0xc, "uint32");
