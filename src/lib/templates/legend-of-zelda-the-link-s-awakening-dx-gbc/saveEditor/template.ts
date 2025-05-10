@@ -109,8 +109,9 @@ const template: GameJson = {
                           name: "Death Count",
                           offset: 0x45c,
                           type: "variable",
-                          dataType: "uint8",
+                          dataType: "uint16",
                           binaryCodedDecimal: true,
+                          max: 999,
                         },
                         {
                           name: "Theft Count",
@@ -135,41 +136,37 @@ const template: GameJson = {
                               hidden: true,
                             },
                             {
-                              name: "Map Type",
+                              name: "Location Type",
                               offset: 0x464,
                               type: "variable",
                               dataType: "uint8",
-                              resource: "mapType",
-                            },
-                          ],
-                        },
-                        {
-                          type: "section",
-                          flex: true,
-                          items: [
-                            {
-                              name: "Area Row",
-                              offset: 0x466,
-                              type: "variable",
-                              dataType: "lower4",
+                              resource: "locationTypes",
                             },
                             {
-                              name: "Area Column",
+                              name: "Location",
                               offset: 0x466,
                               type: "variable",
-                              dataType: "upper4",
+                              dataType: "uint8",
+                              resource: "locations",
+                              autocomplete: true,
                             },
                             {
                               name: "Position X",
                               offset: 0x467,
                               type: "variable",
                               dataType: "uint8",
+                              min: 8,
+                              max: 152,
+                              step: 8,
                             },
                             {
                               name: "Position Y",
                               offset: 0x468,
                               type: "variable",
                               dataType: "uint8",
+                              min: 16,
+                              max: 128,
+                              step: 8,
                             },
                           ],
                         },
@@ -178,16 +175,12 @@ const template: GameJson = {
                           flex: true,
                           items: [
                             {
-                              name: "Last Overworld Area Row",
+                              name: "Last Overworld Location",
                               offset: 0x459,
                               type: "variable",
-                              dataType: "lower4",
-                            },
-                            {
-                              name: "Last Overworld Area Column",
-                              offset: 0x459,
-                              type: "variable",
-                              dataType: "upper4",
+                              dataType: "uint8",
+                              resource: "locations",
+                              autocomplete: true,
                             },
                           ],
                         },
@@ -362,6 +355,33 @@ const template: GameJson = {
                       ],
                     },
                     {
+                      name: "Item Upgrades",
+                      flex: true,
+                      items: [
+                        {
+                          name: "Sword Level",
+                          offset: 0x453,
+                          type: "variable",
+                          dataType: "uint8",
+                          max: 2,
+                        },
+                        {
+                          name: "Shield Level",
+                          offset: 0x449,
+                          type: "variable",
+                          dataType: "uint8",
+                          max: 2,
+                        },
+                        {
+                          name: "Bracelet Level",
+                          offset: 0x448,
+                          type: "variable",
+                          dataType: "uint8",
+                          max: 2,
+                        },
+                      ],
+                    },
+                    {
                       name: "Quantities",
                       flex: true,
                       items: [
@@ -431,35 +451,7 @@ const template: GameJson = {
                       ],
                     },
                     {
-                      name: "Items Power",
-                      flex: true,
-                      items: [
-                        {
-                          name: "Sword Level",
-                          offset: 0x453,
-                          type: "variable",
-                          dataType: "uint8",
-                          max: 2,
-                        },
-                        {
-                          name: "Shield Level",
-                          offset: 0x449,
-                          type: "variable",
-                          dataType: "uint8",
-                          max: 2,
-                        },
-                        {
-                          name: "Bracelet Level",
-                          offset: 0x448,
-                          type: "variable",
-                          dataType: "uint8",
-                          max: 2,
-                        },
-                      ],
-                    },
-                    {
                       name: "Ocarina",
-                      flex: true,
                       items: [
                         {
                           name: "Selected Song",
@@ -499,8 +491,8 @@ const template: GameJson = {
                               offset: 0x414,
                               type: "variable",
                               dataType: "uint8",
-                              max: 26,
                               binaryCodedDecimal: true,
+                              max: 26,
                             },
                             {
                               name: "Golden Leaves / Slime Key",
@@ -517,45 +509,14 @@ const template: GameJson = {
                           items: [
                             {
                               name: "Key Items",
-                              type: "section",
-                              background: true,
-                              items: [
-                                {
-                                  name: "Flippers",
-                                  offset: 0x411,
-                                  type: "variable",
-                                  dataType: "boolean",
-                                },
-                                {
-                                  name: "Secret Medicine",
-                                  offset: 0x412,
-                                  type: "variable",
-                                  dataType: "boolean",
-                                },
-                                {
-                                  name: "Tail Key",
-                                  offset: 0x415,
-                                  type: "variable",
-                                  dataType: "boolean",
-                                },
-                                {
-                                  name: "Angler Key",
-                                  offset: 0x416,
-                                  type: "variable",
-                                  dataType: "boolean",
-                                },
-                                {
-                                  name: "Face Key",
-                                  offset: 0x417,
-                                  type: "variable",
-                                  dataType: "boolean",
-                                },
-                                {
-                                  name: "Bird Key",
-                                  offset: 0x418,
-                                  type: "variable",
-                                  dataType: "boolean",
-                                },
+                              type: "bitflags",
+                              flags: [
+                                { offset: 0x411, bit: 0, label: "Flippers" },
+                                { offset: 0x412, bit: 0, label: "Secret Medicine" },
+                                { offset: 0x415, bit: 0, label: "Tail Key" },
+                                { offset: 0x416, bit: 0, label: "Angler Key" },
+                                { offset: 0x417, bit: 0, label: "Face Key" },
+                                { offset: 0x418, bit: 0, label: "Bird Key" },
                               ],
                             },
                             {
@@ -646,33 +607,12 @@ const template: GameJson = {
                       items: [
                         {
                           name: "Items",
-                          type: "section",
-                          background: true,
-                          items: [
-                            {
-                              name: "Map",
-                              offset: 0x41b,
-                              type: "variable",
-                              dataType: "boolean",
-                            },
-                            {
-                              name: "Compass",
-                              offset: 0x41c,
-                              type: "variable",
-                              dataType: "boolean",
-                            },
-                            {
-                              name: "Stone Beak",
-                              offset: 0x41d,
-                              type: "variable",
-                              dataType: "boolean",
-                            },
-                            {
-                              name: "Boss Key",
-                              offset: 0x41e,
-                              type: "variable",
-                              dataType: "boolean",
-                            },
+                          type: "bitflags",
+                          flags: [
+                            { offset: 0x41b, bit: 0, label: "Map" },
+                            { offset: 0x41c, bit: 0, label: "Compass" },
+                            { offset: 0x41d, bit: 0, label: "Stone Beak" },
+                            { offset: 0x41e, bit: 0, label: "Boss Key" },
                           ],
                         },
                         {
@@ -694,30 +634,31 @@ const template: GameJson = {
               ],
             },
             {
-              name: "Maps",
-              planned: true,
+              name: "Events",
               items: [
                 {
-                  length: 0x100,
-                  type: "container",
-                  instanceType: "tabs",
-                  instances: 3,
-                  resource: "mapType",
+                  type: "tabs",
+                  vertical: true,
                   items: [
                     {
-                      length: 0x10,
-                      type: "container",
-                      instanceType: "tabs",
-                      instances: 16,
-                      enumeration: "Row %d",
+                      name: "Heart Pieces",
                       items: [
                         {
-                          length: 0x1,
-                          type: "container",
-                          instanceType: "tabs",
-                          instances: 16,
-                          enumeration: "Column %d",
-                          items: [],
+                          type: "bitflags",
+                          flags: [
+                            { offset: 0x3a9, bit: 4, label: "<b>Mabe Village</b>: Inside the well" },
+                            { offset: 0x3b6, bit: 4, label: "<b>Mabe Village</b>: Fishing Pond" },
+                            { offset: 0x149, bit: 4, label: "<b>Kokolint Prairie</b>: Surrounded by pits" },
+                            { offset: 0x3b0, bit: 4, label: "<b>Mysterious Woods Cave</b>: In a cave" },
+                            { offset: 0x3ea, bit: 4, label: "<b>Ukuku Prairie</b>: In a cave" },
+                            { offset: 0x2ed, bit: 4, label: "<b>Yarna Desert Cave</b>: Inside the quicksand" },
+                            { offset: 0x3e4, bit: 4, label: "<b>Cemetery</b>: In a cave" },
+                            { offset: 0x17d, bit: 4, label: "<b>Kanalet Castle</b>: Underwater" },
+                            { offset: 0x3eb, bit: 4, label: "<b>Animal Village</b>: In a cave" },
+                            { offset: 0x2f7, bit: 4, label: "<b>Tal Tal Mountain Range</b>: In a flooded cave" },
+                            { offset: 0x3bf, bit: 4, label: "<b>Tal Tal Mountain Range</b>: In a cave" },
+                            { offset: 0x105, bit: 4, label: "<b>Tal Tal Mountain Range</b>: Outside Turtle Rock" },
+                          ],
                         },
                       ],
                     },
@@ -970,13 +911,14 @@ const template: GameJson = {
         0xfd: "ü",
       },
     ],
+    locationTypes: {
+      0x0: "Overworld",
+      0x1: "Dungeons / Buildings",
+    },
+    locations: "getLocationNames()",
     magicPowderVariation: {
       0x0: "Magic Powder",
       0x1: "Sleepy Toadstool",
-    },
-    mapType: {
-      0x0: "Overworld",
-      0x1: "Dungeons / Buildings",
     },
     songs: {
       0x0: "Ballad of the Wind Fish",

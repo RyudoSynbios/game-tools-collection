@@ -246,7 +246,7 @@
         textIndex = `P${index >> 0x8} L${(index & 0xff) + 0x1}`;
       }
 
-      text = `<b>${textIndex}:</b> ${text}`;
+      text = `<b>${textIndex}</b>: ${text}`;
 
       if (index >= dialogsStartIndex) {
         dialogsTexts.push(text);
