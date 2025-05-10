@@ -1,6 +1,6 @@
 import { getInt, setInt } from "$lib/utils/bytes";
 
-import type { Item, ItemInt } from "$lib/types";
+import type { Item, ItemInt, Resource } from "$lib/types";
 
 export function afterSetInt(item: Item): void {
   if ("id" in item && item.id === "health") {
@@ -64,4 +64,18 @@ export function afterSetInt(item: Item): void {
 
     setInt(itemInt.offset - 0x33, "uint8", arrows);
   }
+}
+
+export function getLocationNames(): Resource {
+  const names: Resource = {};
+
+  for (let column = 0; column < 16; column += 1) {
+    for (let row = 0; row < 16; row += 1) {
+      const index = (column << 0x4) | row;
+
+      names[index] = `${String.fromCharCode(0x41 + column)}${row + 1}`;
+    }
+  }
+
+  return names;
 }

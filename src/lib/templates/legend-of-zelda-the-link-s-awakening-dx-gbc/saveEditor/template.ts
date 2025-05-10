@@ -109,8 +109,9 @@ const template: GameJson = {
                           name: "Death Count",
                           offset: 0x45c,
                           type: "variable",
-                          dataType: "uint8",
+                          dataType: "uint16",
                           binaryCodedDecimal: true,
+                          max: 999,
                         },
                         {
                           name: "Theft Count",
@@ -135,41 +136,37 @@ const template: GameJson = {
                               hidden: true,
                             },
                             {
-                              name: "Map Type",
+                              name: "Location Type",
                               offset: 0x464,
                               type: "variable",
                               dataType: "uint8",
-                              resource: "mapType",
-                            },
-                          ],
-                        },
-                        {
-                          type: "section",
-                          flex: true,
-                          items: [
-                            {
-                              name: "Area Row",
-                              offset: 0x466,
-                              type: "variable",
-                              dataType: "lower4",
+                              resource: "locationTypes",
                             },
                             {
-                              name: "Area Column",
+                              name: "Location",
                               offset: 0x466,
                               type: "variable",
-                              dataType: "upper4",
+                              dataType: "uint8",
+                              resource: "locations",
+                              autocomplete: true,
                             },
                             {
                               name: "Position X",
                               offset: 0x467,
                               type: "variable",
                               dataType: "uint8",
+                              min: 8,
+                              max: 152,
+                              step: 8,
                             },
                             {
                               name: "Position Y",
                               offset: 0x468,
                               type: "variable",
                               dataType: "uint8",
+                              min: 16,
+                              max: 128,
+                              step: 8,
                             },
                           ],
                         },
@@ -178,16 +175,12 @@ const template: GameJson = {
                           flex: true,
                           items: [
                             {
-                              name: "Last Overworld Area Row",
+                              name: "Last Overworld Location",
                               offset: 0x459,
                               type: "variable",
-                              dataType: "lower4",
-                            },
-                            {
-                              name: "Last Overworld Area Column",
-                              offset: 0x459,
-                              type: "variable",
-                              dataType: "upper4",
+                              dataType: "uint8",
+                              resource: "locations",
+                              autocomplete: true,
                             },
                           ],
                         },
@@ -499,8 +492,8 @@ const template: GameJson = {
                               offset: 0x414,
                               type: "variable",
                               dataType: "uint8",
-                              max: 26,
                               binaryCodedDecimal: true,
+                              max: 26,
                             },
                             {
                               name: "Golden Leaves / Slime Key",
@@ -702,7 +695,7 @@ const template: GameJson = {
                   type: "container",
                   instanceType: "tabs",
                   instances: 3,
-                  resource: "mapType",
+                  resource: "locationTypes",
                   items: [
                     {
                       length: 0x10,
@@ -970,13 +963,14 @@ const template: GameJson = {
         0xfd: "ü",
       },
     ],
+    locationTypes: {
+      0x0: "Overworld",
+      0x1: "Dungeons / Buildings",
+    },
+    locations: "getLocationNames()",
     magicPowderVariation: {
       0x0: "Magic Powder",
       0x1: "Sleepy Toadstool",
-    },
-    mapType: {
-      0x0: "Overworld",
-      0x1: "Dungeons / Buildings",
     },
     songs: {
       0x0: "Ballad of the Wind Fish",
