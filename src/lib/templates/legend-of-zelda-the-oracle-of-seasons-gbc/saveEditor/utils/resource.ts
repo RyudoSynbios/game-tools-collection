@@ -1,0 +1,33 @@
+export const dungeons = [
+  { index: 0x0, name: "Hero's Cave" },
+  { index: 0x1, name: "Level 1: Gnarled Root" },
+  { index: 0x2, name: "Level 2: Snake's Remains" },
+  { index: 0x3, name: "Level 3: Poison Moth's Lair" },
+  { index: 0x4, name: "Level 4: Dancing Dragon Dungeon" },
+  { index: 0x5, name: "Level 5: Unicorn's Cave" },
+  { index: 0x6, name: "Level 6: Ancient Ruins" },
+  { index: 0x7, name: "Level 7: Explorer's Crypt" },
+  { index: 0x8, name: "Level 8: Sword & Shield Dungeon" },
+  { index: 0x9, name: "Onox's Castle" },
+  { index: 0xa, name: "Room of Rites" },
+  { index: 0xb, name: "Hero's Cave (Linked Game)" },
+];
+
+export const gashasLocations = [
+  { index: 0x0, name: "Mt. Cucco" },
+  { index: 0x3, name: "Mt. Cucco" },
+  { index: 0x1, name: "Tarm Ruins" },
+  { index: 0x2, name: "Goron Mountain" },
+  { index: 0x5, name: "Sunken City" },
+  { index: 0x4, name: "Temple Remains" },
+  { index: 0x6, name: "Holodrum Plain" },
+  { index: 0x7, name: "Spool Swamp" },
+  { index: 0x8, name: "Eyeglass Lake" },
+  { index: 0x9, name: "Holodrum Plain" },
+  { index: 0xa, name: "North Horon" },
+  { index: 0xb, name: "Woods of Winter" },
+  { index: 0xc, name: "Spool Swamp" },
+  { index: 0xf, name: "Mayor Ruul's Residence" },
+  { index: 0xd, name: "Samasa Desert" },
+  { index: 0xe, name: "Western Coast" },
+];

@@ -408,6 +408,17 @@
     }
   },
   {
+    "id": "legend-of-zelda-the-oracle-of-seasons-gbc",
+    "name": "Legend of Zelda, The: Oracle of Seasons",
+    "consoleId": "game-boy-color",
+    "tools": {
+      "saveEditor": {
+        "createdAt": "2025-05-13",
+        "regions": ["🇪🇺", "🇺🇸", "🇯🇵", "🇦🇺"]
+      }
+    }
+  },
+  {
     "id": "lylat-wars-n64",
     "name": "Lylat Wars",
     "consoleId": "nintendo-64",
