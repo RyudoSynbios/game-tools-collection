@@ -256,6 +256,7 @@ const template: GameJson = {
                               hidden: true,
                             },
                             {
+                              id: "partyLevel",
                               name: "Level",
                               offset: 0x30,
                               type: "variable",
@@ -264,6 +265,7 @@ const template: GameJson = {
                               max: 70,
                             },
                             {
+                              id: "partyExperience",
                               name: "Experience",
                               offset: 0x50,
                               type: "variable",

@@ -15,6 +15,7 @@ import {
   materiaList,
   materiaTypes,
   outfits,
+  partyLevels,
 } from "./utils/resource";
 
 export function overrideParseItem(item: Item): Item {
@@ -169,7 +170,31 @@ export function overrideSetInt(item: Item, value: string): boolean {
 }
 
 export function afterSetInt(item: Item): void {
-  if ("id" in item && item.id?.match(/materia-/)) {
+  if ("id" in item && item.id === "partyLevel") {
+    const itemInt = item as ItemInt;
+
+    const level = getInt(itemInt.offset, "uint8");
+    const experience = partyLevels[level - 15] || 7200;
+
+    setInt(itemInt.offset + 0x20, "uint32", experience);
+  } else if ("id" in item && item.id === "partyExperience") {
+    const itemInt = item as ItemInt;
+
+    const experience = getInt(itemInt.offset, "uint32");
+
+    let level = 15;
+
+    for (let i = 0; i < Object.values(partyLevels).length; i += 1) {
+      if (
+        experience >= partyLevels[i] &&
+        (!partyLevels[i + 1] || experience < partyLevels[i + 1])
+      ) {
+        level += i;
+      }
+    }
+
+    setInt(itemInt.offset - 0x20, "uint8", level);
+  } else if ("id" in item && item.id?.match(/materia-/)) {
     const itemInt = item as ItemInt;
 
     const materiaIndex = getInt(itemInt.offset, "uint32");
