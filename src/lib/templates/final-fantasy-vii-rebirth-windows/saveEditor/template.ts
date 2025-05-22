@@ -89,6 +89,30 @@ const template: GameJson = {
               ],
             },
             {
+              name: "Party",
+              type: "section",
+              flex: true,
+              items: [
+                {
+                  id: "partyLevel",
+                  name: "Level",
+                  offset: 0x4eec4,
+                  type: "variable",
+                  dataType: "uint32",
+                  min: 1,
+                  max: 10,
+                },
+                {
+                  id: "partyExperience",
+                  name: "Experience",
+                  offset: 0x4eec4,
+                  type: "variable",
+                  dataType: "uint32",
+                  max: 3125,
+                },
+              ],
+            },
+            {
               name: "Character Outfits",
               type: "section",
               flex: true,

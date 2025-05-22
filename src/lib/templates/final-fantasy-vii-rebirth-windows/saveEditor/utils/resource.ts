@@ -1593,6 +1593,10 @@ export const outfits: {
   caitSith: [{ index: 0x1, offset: 0x44d33, bit: 4 }],
 };
 
+export const partyLevels = [
+  0, 140, 330, 570, 860, 1200, 1590, 2030, 2520, 3125,
+];
+
 export const weaponList = [
   { index: 0x3e9, name: "Buster Sword" },
   { index: 0x3ea, name: "Sleek Saber" },
