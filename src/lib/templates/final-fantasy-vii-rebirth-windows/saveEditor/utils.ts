@@ -3,6 +3,8 @@ import { getItem, getResource, updateResources } from "$lib/utils/parser";
 
 import {
   Item,
+  ItemBitflag,
+  ItemBitflags,
   ItemInt,
   ItemSection,
   Resource,
@@ -225,7 +227,7 @@ export function overrideSetInt(item: Item, value: string): boolean {
   return false;
 }
 
-export function afterSetInt(item: Item): void {
+export function afterSetInt(item: Item, flag: ItemBitflag): void {
   if ("id" in item && item.id === "characterLevel") {
     const itemInt = item as ItemInt;
 
@@ -427,6 +429,18 @@ export function afterSetInt(item: Item): void {
     }
 
     setInt(offset + 0x1, "uint8", completedDifficulty);
+  } else if ("id" in item && item.id === "hiddenEvents") {
+    const itemBitflags = item as ItemBitflags;
+
+    const checked = getInt(flag.offset, "bit", { bit: flag.bit });
+
+    const index = itemBitflags.flags.findIndex(
+      (item) => item.offset === flag.offset && item.bit === flag.bit,
+    );
+
+    const hiddenFlag = itemBitflags.flags[index + 1];
+
+    setInt(hiddenFlag.offset, "bit", checked, { bit: hiddenFlag.bit });
   }
 }
 
