@@ -256,7 +256,7 @@ const template: GameJson = {
                               hidden: true,
                             },
                             {
-                              id: "partyLevel",
+                              id: "characterLevel",
                               name: "Level",
                               offset: 0x30,
                               type: "variable",
@@ -265,7 +265,7 @@ const template: GameJson = {
                               max: 70,
                             },
                             {
-                              id: "partyExperience",
+                              id: "characterExperience",
                               name: "Experience",
                               offset: 0x50,
                               type: "variable",
@@ -279,7 +279,6 @@ const template: GameJson = {
                               offset: 0xa8,
                               type: "variable",
                               dataType: "uint32",
-                              // min: 0, // TODO ?
                             },
                           ],
                         },
