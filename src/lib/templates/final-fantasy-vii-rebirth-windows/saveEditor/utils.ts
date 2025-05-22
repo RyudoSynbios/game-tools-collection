@@ -11,6 +11,7 @@ import {
 
 import {
   characterLevels,
+  craftmanshipLevels,
   itemList,
   itemTypes,
   materiaList,
@@ -130,6 +131,23 @@ export function overrideGetInt(item: Item): [boolean, number | undefined] {
     });
 
     return [true, int];
+  } else if ("id" in item && item.id === "craftmanshipLevel") {
+    const itemInt = item as ItemInt;
+
+    const experience = getInt(itemInt.offset, "uint32");
+
+    let level = 1;
+
+    for (let i = 0; i < Object.values(craftmanshipLevels).length; i += 1) {
+      if (
+        experience >= craftmanshipLevels[i] &&
+        (!craftmanshipLevels[i + 1] || experience < craftmanshipLevels[i + 1])
+      ) {
+        level += i;
+      }
+    }
+
+    return [true, level];
   } else if ("id" in item && item.id?.match(/completionTime-/)) {
     const itemInt = item as ItemInt;
 
@@ -182,6 +200,16 @@ export function overrideSetInt(item: Item, value: string): boolean {
     if (outfit) {
       setInt(outfit.offset, "bit", 1, { bit: outfit.bit });
     }
+
+    return true;
+  } else if ("id" in item && item.id === "craftmanshipLevel") {
+    const itemInt = item as ItemInt;
+
+    const level = parseInt(value);
+
+    const experience = craftmanshipLevels[level - 1] || craftmanshipLevels[0];
+
+    setInt(itemInt.offset, "uint32", experience);
 
     return true;
   } else if ("id" in item && item.id?.match(/completionTime-/)) {

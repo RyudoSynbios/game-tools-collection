@@ -300,6 +300,11 @@ export const challenges = [
   },
 ];
 
+export const craftmanshipLevels = [
+  0, 20, 50, 110, 230, 350, 450, 680, 950, 1260, 1430, 1700, 2070, 2510, 2880,
+  3450, 4950,
+];
+
 export const enemies = [
   { index: 0x7e, name: "001 Security Officer" },
   { index: 0x36a, name: "002 Elite Security Officer" },

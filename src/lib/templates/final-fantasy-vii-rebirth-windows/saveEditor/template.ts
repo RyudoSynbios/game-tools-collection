@@ -1736,11 +1736,28 @@ const template: GameJson = {
                   name: "General",
                   items: [
                     {
-                      name: "Craftmanship Experience",
-                      offset: 0x3db8,
-                      type: "variable",
-                      dataType: "uint32",
-                      max: 4950,
+                      name: "Craftmanship",
+                      type: "section",
+                      flex: true,
+                      items: [
+                        {
+                          id: "craftmanshipLevel",
+                          name: "Level",
+                          offset: 0x3db8,
+                          type: "variable",
+                          dataType: "uint32",
+                          min: 1,
+                          max: 17,
+                        },
+                        {
+                          id: "craftmanshipExperience",
+                          name: "Experience",
+                          offset: 0x3db8,
+                          type: "variable",
+                          dataType: "uint32",
+                          max: 4950,
+                        },
+                      ],
                     },
                   ],
                 },
