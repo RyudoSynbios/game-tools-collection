@@ -2754,7 +2754,7 @@ const template: GameJson = {
                           ],
                         },
                         {
-                          name: "Intel",
+                          name: "World Intel",
                           flex: true,
                           items: [
                             {
@@ -2945,7 +2945,7 @@ const template: GameJson = {
                           ],
                         },
                         {
-                          name: "Intel",
+                          name: "World Intel",
                           flex: true,
                           items: [
                             {
@@ -3148,7 +3148,7 @@ const template: GameJson = {
                           ],
                         },
                         {
-                          name: "Intel",
+                          name: "World Intel",
                           flex: true,
                           items: [
                             {
@@ -3342,7 +3342,7 @@ const template: GameJson = {
                           ],
                         },
                         {
-                          name: "Intel",
+                          name: "World Intel",
                           flex: true,
                           items: [
                             {
@@ -3571,7 +3571,7 @@ const template: GameJson = {
                           ],
                         },
                         {
-                          name: "Intel",
+                          name: "World Intel",
                           flex: true,
                           items: [
                             {
@@ -3760,7 +3760,7 @@ const template: GameJson = {
                           ],
                         },
                         {
-                          name: "Intel",
+                          name: "World Intel",
                           flex: true,
                           items: [
                             {
@@ -3922,7 +3922,7 @@ const template: GameJson = {
                           ],
                         },
                         {
-                          name: "Intel",
+                          name: "World Intel",
                           flex: true,
                           items: [
                             {
