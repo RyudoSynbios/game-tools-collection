@@ -152,6 +152,7 @@ const template: GameJson = {
                   type: "variable",
                   dataType: "uint32",
                   resource: "enemySkills",
+                  autocomplete: true,
                 },
                 {
                   name: "Skill 2",
@@ -159,6 +160,7 @@ const template: GameJson = {
                   type: "variable",
                   dataType: "uint32",
                   resource: "enemySkills",
+                  autocomplete: true,
                 },
                 {
                   name: "Skill 3",
@@ -166,6 +168,7 @@ const template: GameJson = {
                   type: "variable",
                   dataType: "uint32",
                   resource: "enemySkills",
+                  autocomplete: true,
                 },
                 {
                   name: "Skill 4",
@@ -173,6 +176,7 @@ const template: GameJson = {
                   type: "variable",
                   dataType: "uint32",
                   resource: "enemySkills",
+                  autocomplete: true,
                 },
               ],
             },
@@ -1851,7 +1855,7 @@ const template: GameJson = {
     enemySkills: {
       0x0: "-",
       0x8760d: "Spirit Siphon",
-      0x0bfa73: "Algid Aura",
+      0xbfa73: "Algid Aura",
       0x1a61c4: "Self-Destruct",
       0x1a7cdf: "Bad Breath",
     },
@@ -1887,6 +1891,7 @@ const template: GameJson = {
     accessories: [0xffffffff],
     armors: [0xffffffff],
     characters: [0x9],
+    enemySkills: [0x0, 0x1a61c4, 0x8760d, 0xbfa73, 0x1a7cdf],
     interMissionOutfits: [0x1],
     inventoryMateriaNames: [0xffffffff],
     inventoryWeaponNames: [0xffffffff],
