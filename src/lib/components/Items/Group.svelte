@@ -56,7 +56,7 @@
 
 <style lang="postcss">
   .gtc-group {
-    @apply mb-4 mr-4 w-fit rounded bg-primary-700;
+    @apply mb-4 mr-4 h-fit w-fit rounded bg-primary-700;
 
     min-width: 196px;
 

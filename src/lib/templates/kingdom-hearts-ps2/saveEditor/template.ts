@@ -2552,7 +2552,7 @@ const template: GameJson = {
                       ],
                     },
                     {
-                      name: "Mini Games",
+                      name: "Mini-Games",
                       items: [
                         {
                           type: "tabs",
