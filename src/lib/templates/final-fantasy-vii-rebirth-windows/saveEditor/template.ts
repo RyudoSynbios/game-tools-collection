@@ -1,10 +1,11 @@
-import type { GameJson, ItemInt } from "$lib/types";
+import type { GameJson, ItemInt, ItemSection } from "$lib/types";
 
 import {
   challenges,
   characters,
   enemies,
   materias,
+  pianoPieces,
   weapons,
 } from "./utils/resource";
 
@@ -2722,6 +2723,497 @@ const template: GameJson = {
           ],
         },
         {
+          name: "Mini-Games",
+          items: [
+            {
+              type: "tabs",
+              vertical: true,
+              items: [
+                {
+                  name: "Piano",
+                  items: [
+                    {
+                      type: "bitflags",
+                      hidden: true,
+                      flags: [
+                        { offset: 0x45066, bit: 5, label: "Talk with Dorian" },
+                        { offset: 0x45066, bit: 6, label: "Piano Quest Complete" },
+                        { offset: 0x45068, bit: 5, label: "Tifa can play Piano" },
+                        { offset: 0x45068, bit: 6, label: "Aerith can play Piano" },
+                        { offset: 0x45068, bit: 7, label: "Yuffie can play Piano" },
+                      ],
+                    },
+                    ...pianoPieces.map((piece, index) => {
+                      const offset = 0x45066 + Math.floor((7 + index) / 8);
+                      const bit = (7 + index) % 8;
+
+                      return {
+                        name: piece.name,
+                        type: "section",
+                        items: [
+                          {
+                            type: "bitflags",
+                            hidden: true,
+                            flags: [
+                              { offset: 0xe12c5 + index * 0x10, bit: 6, label: "Seen" },
+                              { offset: 0xe12c5 + index * 0x10, bit: 7, label: "Completed" },
+                              ...(index < 6
+                                ? [{ offset, bit, label: "Rank A completed" }]
+                                : []),
+                            ],
+                          },
+                          {
+                            type: "section",
+                            flex: true,
+                            items: [
+                              {
+                                id: `pianoRank-${index}`,
+                                name: "Rank",
+                                offset: 0xe12cc + index * 0x10,
+                                type: "variable",
+                                dataType: "uint32",
+                                resource: "pianoRanks",
+                              },
+                              {
+                                id: `pianoScore-${index}`,
+                                name: "Score",
+                                offset: 0xe12cc + index * 0x10,
+                                type: "variable",
+                                dataType: "uint32",
+                                max: piece.scores[3],
+                              },
+                              {
+                                name: "Great Count",
+                                offset: 0xe12c8 + index * 0x10,
+                                type: "variable",
+                                dataType: "uint8",
+                                hidden: true,
+                              },
+                              {
+                                name: "Good Count",
+                                offset: 0xe12c6 + index * 0x10,
+                                type: "variable",
+                                dataType: "uint8",
+                                hidden: true,
+                              },
+                              index < 6
+                                ? {
+                                    id: `pianoReward-${index}`,
+                                    name: "Reward",
+                                    offset: 0x45067 + Math.floor((6 + index) / 8),
+                                    type: "variable",
+                                    dataType: "bit",
+                                    bit: (6 + index) % 8,
+                                    resource: "pianoRewards",
+                                  }
+                                : {},
+                            ],
+                          },
+                        ],
+                      } as ItemSection;
+                    }),
+                  ],
+                },
+                {
+                  name: "Card Carnival",
+                  flex: true,
+                  items: [
+                    {
+                      name: "Easy Card Puzzles",
+                      type: "bitflags",
+                      flags: [
+                        { offset: 0x44fc9, bit: 5, label: "Three-Card Stud" },
+                        { offset: 0x44fc9, bit: 6, label: "Go for Choco-Broke" },
+                        { offset: 0x44fc9, bit: 7, label: "Mischief-Making Moogles" },
+                      ],
+                    },
+                    {
+                      name: "Advanced Card Puzzles",
+                      type: "bitflags",
+                      flags: [
+                        { offset: 0x44fca, bit: 1, label: "Spears and Needles" },
+                        { offset: 0x44fca, bit: 2, label: "Sea Devil by Night" },
+                        { offset: 0x45009, bit: 5, label: "A Kingly Clash" },
+                        { offset: 0x44fca, bit: 3, label: "One Shot, One Kill" },
+                        { offset: 0x44fca, bit: 4, label: "Curse of the Gi" },
+                      ],
+                    },
+                    {
+                      name: "Collection Challenges",
+                      type: "bitflags",
+                      flags: [
+                        { offset: 0x44fca, bit: 5, label: "Collector's Card: Cloud" },
+                        { offset: 0x44fca, bit: 6, label: "Collector's Card: Barret" },
+                        { offset: 0x44fca, bit: 7, label: "Collector's Card: Tifa" },
+                        { offset: 0x44fcb, bit: 0, label: "Collector's Card: Aerith" },
+                        { offset: 0x44fcb, bit: 1, label: "Collector's Card: Red XIII" },
+                        { offset: 0x44fcb, bit: 2, label: "Collector's Card: Yuffie" },
+                        { offset: 0x44fcb, bit: 3, label: "Collector's Card: Cait Sith" },
+                        { offset: 0x45009, bit: 2, label: "Collector's Card: Cid" },
+                        { offset: 0x45009, bit: 3, label: "Collector's Card: Vincent" },
+                      ],
+                    },
+                    {
+                      name: "Skill Drills",
+                      type: "bitflags",
+                      flags: [
+                        { offset: 0x45009, bit: 6, label: "Power-Down Practice" },
+                        { offset: 0x45009, bit: 7, label: "Chain Reactions" },
+                        { offset: 0x4500a, bit: 0, label: "Major Power Outage" },
+                        { offset: 0x4500a, bit: 1, label: "Back to Replace-ics" },
+                        { offset: 0x4500a, bit: 2, label: "Replacement Test" },
+                      ],
+                    },
+                  ],
+                },
+                {
+                  name: "Pirate Rampage",
+                  items: [
+                    {
+                      name: "Brigantine",
+                      type: "section",
+                      flex: true,
+                      items: [
+                        {
+                          type: "section",
+                          flex: true,
+                          noMargin: true,
+                          items: [
+                            {
+                              name: "Round 1",
+                              offset: 0xe3f74,
+                              type: "variable",
+                              dataType: "uint16",
+                            },
+                            {
+                              name: "Round 2",
+                              offset: 0xe3f76,
+                              type: "variable",
+                              dataType: "uint16",
+                            },
+                            {
+                              name: "Round 3",
+                              offset: 0xe3f78,
+                              type: "variable",
+                              dataType: "uint16",
+                            },
+                            {
+                              name: "Round 4",
+                              offset: 0xe3f7a,
+                              type: "variable",
+                              dataType: "uint16",
+                            },
+                          ],
+                        },
+                        {
+                          name: "Rank Rewards",
+                          type: "bitflags",
+                          flags: [
+                            { offset: 0x44c05, bit: 2, label: "Rank I" },
+                            { offset: 0x44c05, bit: 3, label: "Rank II" },
+                            { offset: 0x44c05, bit: 4, label: "Rank III" },
+                          ],
+                        },
+                        {
+                          name: "Personal Best",
+                          offset: 0x2efc4c,
+                          type: "variable",
+                          dataType: "float32",
+                          max: 999999,
+                        },
+                      ],
+                    },
+                    {
+                      name: "Ghost Ship",
+                      type: "section",
+                      flex: true,
+                      items: [
+                        {
+                          type: "section",
+                          flex: true,
+                          noMargin: true,
+                          items: [
+                            {
+                              name: "Round 1",
+                              offset: 0xe3f7c,
+                              type: "variable",
+                              dataType: "uint16",
+                            },
+                            {
+                              name: "Round 2",
+                              offset: 0xe3f7e,
+                              type: "variable",
+                              dataType: "uint16",
+                            },
+                            {
+                              name: "Round 3",
+                              offset: 0xe3f80,
+                              type: "variable",
+                              dataType: "uint16",
+                            },
+                            {
+                              name: "Round 4",
+                              offset: 0xe3f82,
+                              type: "variable",
+                              dataType: "uint16",
+                            },
+                          ],
+                        },
+                        {
+                          name: "Rank Rewards",
+                          type: "bitflags",
+                          flags: [
+                            { offset: 0x44c05, bit: 6, label: "Rank I" },
+                            { offset: 0x44c05, bit: 7, label: "Rank II" },
+                            { offset: 0x44c06, bit: 0, label: "Rank III" },
+                          ],
+                        },
+                        {
+                          name: "Personal Best",
+                          offset: 0x2efc84,
+                          type: "variable",
+                          dataType: "float32",
+                          max: 999999,
+                        },
+                      ],
+                    },
+                  ],
+                },
+                {
+                  name: "Run Wild",
+                  items: [
+                    {
+                      name: "Free-for-All",
+                      type: "section",
+                      flex: true,
+                      items: [
+                        {
+                          name: "Rank Rewards",
+                          type: "bitflags",
+                          flags: [
+                            { offset: 0x44c04, bit: 3, label: "Rank I" },
+                            { offset: 0x44c04, bit: 4, label: "Rank II" },
+                            { offset: 0x44c04, bit: 5, label: "Rank III" },
+                          ],
+                        },
+                      ],
+                    },
+                    {
+                      name: "Time Trial",
+                      type: "section",
+                      flex: true,
+                      items: [
+                        {
+                          name: "Rank Rewards",
+                          type: "bitflags",
+                          flags: [
+                            { offset: 0x44c04, bit: 6, label: "Rank I" },
+                            { offset: 0x44c04, bit: 7, label: "Rank II" },
+                            { offset: 0x44c05, bit: 0, label: "Rank III" },
+                          ],
+                        },
+                        {
+                          name: "Best Time",
+                          type: "group",
+                          mode: "time",
+                          items: [
+                            {
+                              offset: 0x2efc54,
+                              type: "variable",
+                              dataType: "float32",
+                              operations: [
+                                {
+                                  convert: { from: "seconds", to: "minutes" },
+                                },
+                              ],
+                              max: 4,
+                            },
+                            {
+                              offset: 0x2efc54,
+                              type: "variable",
+                              dataType: "float32",
+                              operations: [
+                                {
+                                  convert: {
+                                    from: "seconds",
+                                    to: "seconds",
+                                  },
+                                },
+                              ],
+                              leadingZeros: 1,
+                              max: 59,
+                            },
+                            {
+                              offset: 0x2efc54,
+                              type: "variable",
+                              dataType: "float32",
+                              operations: [
+                                {
+                                  convert: {
+                                    from: "seconds",
+                                    to: "milliseconds",
+                                  },
+                                },
+                              ],
+                              leadingZeros: 2,
+                              max: 999,
+                              step: 100,
+                            },
+                          ],
+                        },
+                      ],
+                    },
+                  ],
+                },
+                {
+                  name: "Wheelie Event",
+                  flex: true,
+                  items: [
+                    {
+                      name: "Licenses",
+                      type: "bitflags",
+                      flags: [
+                        { offset: 0x44c0d, bit: 3, label: "Rookie License" },
+                        { offset: 0x44c0d, bit: 4, label: "Veteran License" },
+                        { offset: 0x44c0d, bit: 5, label: "Expert License" },
+                        { offset: 0x44c0d, bit: 6, label: "Master License" },
+                      ],
+                    },
+                    {
+                      name: "Distance Traveled",
+                      offset: 0x2efc5c,
+                      type: "variable",
+                      dataType: "float32",
+                      operations: [{ "/": 100 }],
+                      max: 99999,
+                    },
+                  ],
+                },
+                {
+                  name: "Crunch-Off",
+                  items: [
+                    {
+                      name: "Rank Rewards",
+                      type: "bitflags",
+                      flags: [
+                        { offset: 0x44c03, bit: 7, label: "Basic" },
+                        { offset: 0x44c04, bit: 0, label: "Rank I" },
+                        { offset: 0x44c04, bit: 1, label: "Rank II" },
+                        { offset: 0x44c04, bit: 2, label: "Rank III" },
+                      ],
+                    },
+                  ],
+                },
+                {
+                  name: "3D Brawler",
+                  flex: true,
+                  items: [
+                    {
+                      name: "Availables",
+                      type: "bitflags",
+                      flags: [
+                        { offset: 0x44bde, bit: 3, label: "Saucer Brawler" },
+                        { offset: 0x44bdd, bit: 6, label: "Fat Moogle" },
+                        { offset: 0x44bdd, bit: 7, label: "Dio" },
+                        { offset: 0x44bde, bit: 0, label: "Shiva" },
+                        { offset: 0x44bde, bit: 1, label: "Ifrit" },
+                        { offset: 0x44bde, bit: 2, label: "Sephiroth" },
+                      ],
+                    },
+                    {
+                      name: "Unlocked",
+                      type: "bitflags",
+                      flags: [
+                        { offset: 0x44bde, bit: 3, label: "Saucer Brawler" },
+                        { offset: 0x44bde, bit: 4, label: "Fat Moogle" },
+                        { offset: 0x44bde, bit: 5, label: "Dio" },
+                        { offset: 0x44bde, bit: 6, label: "Shiva" },
+                        { offset: 0x44bde, bit: 7, label: "Ifrit" },
+                        { offset: 0x44bdf, bit: 0, label: "Sephiroth" },
+                      ],
+                    },
+                    {
+                      name: "Rewards",
+                      type: "bitflags",
+                      flags: [
+                        { offset: 0x44bdf, bit: 6, label: "Saucer Brawler" },
+                        { offset: 0x44bdf, bit: 7, label: "Fat Moogle" },
+                        { offset: 0x44be0, bit: 0, label: "Dio" },
+                        { offset: 0x44be0, bit: 1, label: "Shiva" },
+                        { offset: 0x44be0, bit: 2, label: "Ifrit" },
+                        { offset: 0x44be0, bit: 3, label: "Sephiroth" },
+                      ],
+                    },
+                    {
+                      name: "Perfects",
+                      type: "bitflags",
+                      flags: [
+                        { offset: 0x44fba, bit: 0, label: "Saucer Brawler" },
+                        { offset: 0x44fba, bit: 1, label: "Fat Moogle" },
+                        { offset: 0x44fba, bit: 2, label: "Dio" },
+                        { offset: 0x44fba, bit: 3, label: "Shiva" },
+                        { offset: 0x44fba, bit: 4, label: "Ifrit" },
+                        { offset: 0x44fba, bit: 5, label: "Sephiroth" },
+                      ],
+                    },
+                  ],
+                },
+                {
+                  name: "G-Bike",
+                  items: [
+                    {
+                      name: "Standard",
+                      type: "section",
+                      flex: true,
+                      items: [
+                        {
+                          name: "Rank Rewards",
+                          type: "bitflags",
+                          flags: [
+                            { offset: 0x44bdd, bit: 1, label: "Rank I" },
+                            { offset: 0x44bdd, bit: 0, label: "Rank II" },
+                            { offset: 0x44bdc, bit: 7, label: "Rank III" },
+                          ],
+                        },
+                        {
+                          name: "Personal Best",
+                          offset: 0x36d918,
+                          type: "variable",
+                          dataType: "uint32",
+                          max: 999999,
+                        },
+                      ],
+                    },
+                    {
+                      name: "Expert",
+                      type: "section",
+                      flex: true,
+                      items: [
+                        {
+                          name: "Rank Rewards",
+                          type: "bitflags",
+                          flags: [
+                            { offset: 0x44bdd, bit: 4, label: "Rank I" },
+                            { offset: 0x44bdd, bit: 3, label: "Rank II" },
+                            { offset: 0x44bdd, bit: 2, label: "Rank III" },
+                          ],
+                        },
+                        {
+                          name: "Personal Best",
+                          offset: 0x36d9dc,
+                          type: "variable",
+                          dataType: "uint32",
+                          max: 999999,
+                        },
+                      ],
+                    },
+                  ],
+                },
+              ],
+            },
+          ],
+        },
+        {
           name: "Events",
           items: [
             {
@@ -4072,6 +4564,17 @@ const template: GameJson = {
       0x7: "Zack Fair",
       0x8: "Sephiroth",
       0x10: "-",
+    },
+    pianoRanks: {
+      0x0: "-",
+      0x1: "C",
+      0x2: "B",
+      0x3: "A",
+      0x4: "★",
+    },
+    pianoRewards: {
+      0x0: "-",
+      0x1: "Obtained",
     },
     summons: "getInventoryMateriaNames(true,'summons')",
     tifaOutfits: {

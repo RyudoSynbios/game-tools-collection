@@ -20,6 +20,7 @@ import {
   materiaTypes,
   outfits,
   partyLevels,
+  pianoPieces,
 } from "./utils/resource";
 
 export function overrideParseItem(item: Item): Item {
@@ -77,6 +78,14 @@ export function overrideItem(item: Item): Item {
     if (type === 0x8) {
       itemInt.max = undefined;
     }
+
+    return itemInt;
+  } else if ("id" in item && item.id?.match(/pianoScore-/)) {
+    const itemInt = item as ItemInt;
+
+    const isCompleted = getInt(itemInt.offset - 0x7, "bit", { bit: 7 });
+
+    itemInt.disabled = !isCompleted;
 
     return itemInt;
   }
@@ -158,6 +167,29 @@ export function overrideGetInt(item: Item): [boolean, number | undefined] {
     if (int === 0x7fffffff) {
       return [true, 0x0];
     }
+  } else if ("id" in item && item.id?.match(/pianoRank-/)) {
+    const itemInt = item as ItemInt;
+
+    const [index] = item.id.splitInt();
+
+    const scores = pianoPieces[index].scores;
+
+    const isCompleted = getInt(itemInt.offset - 0x7, "bit", { bit: 7 });
+    const score = getInt(itemInt.offset, "uint32");
+
+    if (!isCompleted) {
+      return [true, 0x0];
+    }
+
+    let rank = 1;
+
+    for (let i = 0; i < Object.values(scores).length; i += 1) {
+      if (score >= scores[i] && (!scores[i + 1] || score < scores[i + 1])) {
+        rank += i;
+      }
+    }
+
+    return [true, rank];
   }
 
   return [false, undefined];
@@ -222,6 +254,23 @@ export function overrideSetInt(item: Item, value: string): boolean {
     if (int === 0x7fffffff) {
       setInt(itemInt.offset, "uint32", 0x0);
     }
+  } else if ("id" in item && item.id?.match(/pianoRank-/)) {
+    const itemInt = item as ItemInt;
+
+    const [index] = item.id.splitInt();
+
+    const scores = pianoPieces[index].scores;
+
+    const rank = parseInt(value);
+
+    const score = scores[rank - 1] || scores[0];
+
+    setInt(itemInt.offset - 0x7, "bit", rank === 0x0 ? 0 : 1, { bit: 7 });
+    setInt(itemInt.offset, "uint32", score);
+
+    checkPianoRank(index, itemInt.offset, score);
+
+    return true;
   }
 
   return false;
@@ -429,6 +478,35 @@ export function afterSetInt(item: Item, flag: ItemBitflag): void {
     }
 
     setInt(offset + 0x1, "uint8", completedDifficulty);
+  } else if ("id" in item && item.id?.match(/pianoScore-/)) {
+    const itemInt = item as ItemInt;
+
+    const [index] = item.id.splitInt();
+
+    const score = getInt(itemInt.offset, "uint32");
+
+    checkPianoRank(index, itemInt.offset, score);
+  } else if ("id" in item && item.id?.match(/pianoReward-/)) {
+    const rewardItem = getItem("pianoReward-0") as ItemInt;
+
+    let count = 0;
+
+    for (let i = 0x0; i < 0x6; i += 0x1) {
+      const offset = rewardItem.offset + Math.floor((6 + i) / 8);
+      const bit = (rewardItem.bit! + i) % 8;
+
+      const checked = getInt(offset, "bit", { bit });
+
+      if (checked) {
+        count += 1;
+      }
+    }
+
+    const checked = count === 6;
+
+    setInt(rewardItem.offset - 0x1, "bit", checked ? 1 : 0, { bit: 6 }); // Piano Quest Complete
+    setInt(rewardItem.offset + 0x1, "bit", checked ? 1 : 0, { bit: 6 }); // Aerith can play Piano
+    setInt(rewardItem.offset + 0x1, "bit", checked ? 1 : 0, { bit: 7 }); // Yuffie can play Piano
   } else if ("id" in item && item.id === "hiddenEvents") {
     const itemBitflags = item as ItemBitflags;
 
@@ -442,6 +520,20 @@ export function afterSetInt(item: Item, flag: ItemBitflag): void {
 
     setInt(hiddenFlag.offset, "bit", checked, { bit: hiddenFlag.bit });
   }
+}
+
+function checkPianoRank(index: number, offset: number, score: number): void {
+  if (index >= 6) {
+    return;
+  }
+
+  offset = offset - index * 0x10 - 0x9c266 + Math.floor((7 + index) / 8);
+
+  const bit = (7 + index) % 8;
+
+  const checked = score >= pianoPieces[index].scores[2];
+
+  setInt(offset, "bit", checked ? 1 : 0, { bit: bit });
 }
 
 export function getItemNames(): Resource {

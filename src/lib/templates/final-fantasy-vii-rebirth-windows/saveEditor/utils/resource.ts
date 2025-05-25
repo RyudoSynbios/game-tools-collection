@@ -1602,6 +1602,41 @@ export const partyLevels = [
   0, 140, 330, 570, 860, 1200, 1590, 2030, 2520, 3125,
 ];
 
+export const pianoPieces = [
+  {
+    name: "On Our Way",
+    scores: [0, 10400, 12600, 14800],
+  },
+  {
+    name: "Tifa's Theme",
+    scores: [0, 10200, 12300, 14600],
+  },
+  {
+    name: "Barret's Theme",
+    scores: [0, 7600, 9300, 10900],
+  },
+  {
+    name: "Cinco de Chocobo",
+    scores: [0, 10200, 12300, 14500],
+  },
+  {
+    name: "Two Legs? Nothin' To It",
+    scores: [0, 14400, 17400, 20500],
+  },
+  {
+    name: "Aerith's Theme",
+    scores: [0, 9900, 12100, 14200],
+  },
+  {
+    name: "Let the Battles Begin!",
+    scores: [0, 17900, 21800, 25600],
+  },
+  {
+    name: "One-Winged Angel",
+    scores: [0, 21700, 26400, 31000],
+  },
+];
+
 export const weaponList = [
   { index: 0x3e9, name: "Buster Sword" },
   { index: 0x3ea, name: "Sleek Saber" },
