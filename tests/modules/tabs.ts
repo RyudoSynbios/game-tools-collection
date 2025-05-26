@@ -15,6 +15,8 @@ export async function expectTabs(
 }
 
 export async function selectTab(tab: string, tabIndex: number): Promise<void> {
+  await page.waitForSelector(".gtc-tabs > ul");
+
   const tabsEl = await page.$$(".gtc-tabs > ul");
   const tabEl = await tabsEl[tabIndex].$(`li:nth-child(${tab})`);
 
