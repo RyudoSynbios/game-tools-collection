@@ -11,8 +11,8 @@ describe(game, () => {
 
   // prettier-ignore
   test.each([
-    ["should load a filled standard save (Europe, Australia)",         "filled.mcr" , ["r|australia", 't|["Slot 1"]'         , "s|2$1", "c|0x115466eb", "i|2", "w|3", "c|0x116466eb"]],
-    ["should load a filled standard save (Japan)"            ,         "filled.mcr" , ["r|japan"    , 't|["Slot 1"]'         , "s|2$1", "c|0x1144870a", "i|1", "w|2", "c|0x1154870a"]],
+    ["should load a filled standard save (Europe, Australia)",          "filled.mcr", ["r|australia", 't|["Slot 1"]'         , "s|2$1", "c|0x115466eb", "i|2", "w|3", "c|0x116466eb"]],
+    ["should load a filled standard save (Japan)"            ,          "filled.mcr", ["r|japan"    , 't|["Slot 1"]'         , "s|2$1", "c|0x1144870a", "i|1", "w|2", "c|0x1154870a"]],
     ["should load a deleted standard save"                   ,         "deleted.mcr", [               't|[]']],
     ["should load a deleted standard save (Slot 1)"          ,   "deleted-slot1.mcr", [               't|["Slot 1"]'         , "s|2$1", "c|0x115466eb", "i|2", "w|3", "c|0x116466eb"]],
     ["should load a standard save (Europe, Australia)"       , "europeaustralia.mcr", [               't|["Slot 1"]'         , "s|2$1", "c|0x1144870a", "i|1", "w|2", "c|0x1154870a"]],

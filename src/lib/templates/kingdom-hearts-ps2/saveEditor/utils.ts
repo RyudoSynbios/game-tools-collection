@@ -196,7 +196,7 @@ export function overrideSetInt(item: Item, value: string): boolean {
     for (let i = 0x0; i < itemString.length * 2; i += 0x1, count += 0x1) {
       const offset = itemString.offset + i;
 
-      const index = Object.values(letters[2]).findIndex(
+      const index = Object.values(letters).findIndex(
         (letter) => letter === value[count],
       );
 
@@ -204,7 +204,7 @@ export function overrideSetInt(item: Item, value: string): boolean {
       let letterDataType: "uint8" | "uint16" = "uint8";
 
       if (index !== -1) {
-        int = parseInt(getObjKey(letters[2], index));
+        int = parseInt(getObjKey(letters, index));
 
         if (int > 0xff) {
           letterDataType = "uint16";
