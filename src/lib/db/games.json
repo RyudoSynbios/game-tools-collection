@@ -151,6 +151,17 @@
     }
   },
   {
+    "id": "ctr-crash-team-racing-ps",
+    "name": "CTR: Crash Team Racing",
+    "consoleId": "playstation",
+    "tools": {
+      "saveEditor": {
+        "createdAt": "2025-05-27",
+        "regions": ["🇪🇺", "🇺🇸", "🇯🇵"]
+      }
+    }
+  },
+  {
     "id": "dead-or-alive-2-ps2",
     "name": "Dead or Alive 2",
     "consoleId": "playstation-2",

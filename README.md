@@ -17,6 +17,7 @@ Link to the website: [https://game-tools-collection.com](https://game-tools-coll
 | Castlevania: Order of Ecclesia            | DS       | Save                    | EUR / USA / JAP / KOR                         |
 | Castlevania: Symphony of the Night        | PS       | Save                    | EUR / USA / JAP                               |
 | Crash Bandicoot                           | PS       | Save                    | EUR / USA / JAP / AUS                         |
+| CTR: Crash Team Racing                    | PS       | Save                    | EUR / USA / JAP                               |
 | Dead or Alive 2                           | PS2      | Save                    | EUR                                           |
 | Diablo II: Lord of Destruction            | WIN      | Save                    | WORLD                                         |
 | Dissidia 012: Duodecim Final Fantasy      | PSP      | Save                    | EUR / USA / JAP                               |
