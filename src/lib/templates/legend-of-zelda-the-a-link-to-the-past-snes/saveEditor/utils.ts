@@ -21,7 +21,7 @@ export function overrideGetRegions(dataView: DataView): string[] {
       ($gameTemplate.items[0] as ItemContainer).items[0],
     ) as ItemChecksum;
 
-    const shift = 0x500 * i;
+    const shift = i * 0x500;
 
     itemChecksum.offset += shift;
     itemChecksum.control.offsetStart += shift;
