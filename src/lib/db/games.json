@@ -184,6 +184,17 @@
     }
   },
   {
+    "id": "diddy-kong-racing-n64",
+    "name": "Diddy Kong Racing",
+    "consoleId": "nintendo-64",
+    "tools": {
+      "saveEditor": {
+        "createdAt": "2025-06-04",
+        "regions": ["🇪🇺", "🇺🇸", "🇯🇵"]
+      }
+    }
+  },
+  {
     "id": "dissidia-012-duodecim-final-fantasy-psp",
     "name": "Dissidia 012: Duodecim Final Fantasy",
     "consoleId": "playstation-portable",
