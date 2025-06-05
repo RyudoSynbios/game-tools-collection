@@ -300,6 +300,32 @@ export const challenges = [
   },
 ];
 
+export const chocoboRaces = {
+  gradeIII: [
+    { index: 0x0, name: "The Carbuncle Classic" },
+    { index: 0x27, name: "The Moogle Oaks" },
+    { index: 0x15, name: "The Cactuar Derby" },
+    { index: 0x32, name: "The Bomb Blowout" },
+    { index: 0x3e, name: "The Malboro Memorial" },
+    { index: 0x3f, name: "The Tonberry Derby" },
+    { index: 0x3c, name: "The Coeurl Championship" },
+    { index: 0x1d, name: "The Behemoth Grand Prix" },
+    { index: 0x16, name: "The Ultima Stakes" },
+  ],
+  gradeII: [
+    { index: 0x1c, name: "The Ifrit Blaze" },
+    { index: 0xd, name: "The Shiva Icefields" },
+    { index: 0xe, name: "The Leviathan Riptide" },
+    { index: 0x5, name: "The Ramuh Bolt" },
+    { index: 0x3d, name: "The Titan Slam" },
+    { index: 0x10, name: "The Kujata Stampede" },
+    { index: 0x31, name: "The Odin Straights" },
+    { index: 0x14, name: "The Alexander Siege" },
+    { index: 0x33, name: "The Phoenix Trial" },
+    { index: 0x37, name: "The Bahamut Skirmish" },
+  ],
+};
+
 export const craftmanshipLevels = [
   0, 20, 50, 110, 230, 350, 450, 680, 950, 1260, 1430, 1700, 2070, 2510, 2880,
   3450, 4950,

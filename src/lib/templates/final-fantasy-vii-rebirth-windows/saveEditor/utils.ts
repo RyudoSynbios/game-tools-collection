@@ -13,6 +13,7 @@ import {
 
 import {
   characterLevels,
+  chocoboRaces,
   craftmanshipLevels,
   itemList,
   itemTypes,
@@ -507,6 +508,39 @@ export function afterSetInt(item: Item, flag: ItemBitflag): void {
     setInt(rewardItem.offset - 0x1, "bit", checked ? 1 : 0, { bit: 6 }); // Piano Quest Complete
     setInt(rewardItem.offset + 0x1, "bit", checked ? 1 : 0, { bit: 6 }); // Aerith can play Piano
     setInt(rewardItem.offset + 0x1, "bit", checked ? 1 : 0, { bit: 7 }); // Yuffie can play Piano
+  } else if ("id" in item && item.id?.match(/chocoboRace-/)) {
+    const itemInt = item as ItemInt;
+
+    const [, type] = item.id.split("-");
+    const [index] = item.id.splitInt();
+
+    let offset = itemInt.offset - (index ? index * 0x4 : 0x0);
+    let bit = 0;
+    let value = 0;
+
+    if (type === "gradeiii") {
+      const raceIndex = chocoboRaces.gradeIII.findIndex(
+        (race) => race.index === index,
+      );
+
+      offset = offset - 0x328818 + Math.floor((5 + raceIndex) / 0x8);
+      value = getInt(itemInt.offset, "uint32") > 0 ? 1 : 0;
+      bit = (5 + raceIndex) % 8;
+    } else if (type === "gradeii") {
+      const raceIndex = chocoboRaces.gradeII.findIndex(
+        (race) => race.index === index,
+      );
+
+      offset = offset - 0x328817 + Math.floor((6 + raceIndex) / 0x8);
+      value = getInt(itemInt.offset, "uint32") > 0 ? 1 : 0;
+      bit = (6 + raceIndex) % 8;
+    } else if (type === "gradei") {
+      offset -= 0x3288a1;
+      value = getInt(itemInt.offset, "uint32") === 1 ? 1 : 0;
+      bit = 3;
+    }
+
+    setInt(offset, "bit", value, { bit });
   } else if ("id" in item && item.id === "hiddenEvents") {
     const itemBitflags = item as ItemBitflags;
 

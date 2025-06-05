@@ -1,8 +1,9 @@
-import type { GameJson, ItemInt, ItemSection } from "$lib/types";
+import type { GameJson, ItemGroup, ItemInt, ItemSection } from "$lib/types";
 
 import {
   challenges,
   characters,
+  chocoboRaces,
   enemies,
   materias,
   pianoPieces,
@@ -3015,7 +3016,7 @@ const template: GameJson = {
                         {
                           name: "Best Time",
                           type: "group",
-                          mode: "time",
+                          mode: "chrono",
                           items: [
                             {
                               offset: 0x2efc54,
@@ -3159,6 +3160,607 @@ const template: GameJson = {
                   ],
                 },
                 {
+                  name: "Chocobo Races",
+                  items: [
+                    {
+                      type: "tabs",
+                      items: [
+                        {
+                          name: "General",
+                          items: [
+                            {
+                              type: "section",
+                              flex: true,
+                              items: [
+                                {
+                                  name: "Unlocked Grades",
+                                  type: "bitflags",
+                                  flags: [
+                                    { offset: 0x36d924, bit: 0, label: "Grade II" },
+                                    { offset: 0x4505c, bit: 3, label: "Grade I" },
+                                  ],
+                                },
+                                {
+                                  name: "Unlocked Chocobos",
+                                  type: "bitflags",
+                                  flags: [
+                                    { offset: 0x449f6, bit: 1, label: "Mecha-Chocobo" },
+                                  ],
+                                },
+                              ],
+                            },
+                            {
+                              type: "section",
+                              flex: true,
+                              items: [
+                                {
+                                  name: "Piko",
+                                  type: "section",
+                                  flex: true,
+                                  items: [
+                                    {
+                                      name: "Races",
+                                      offset: 0x36d98c,
+                                      type: "variable",
+                                      dataType: "int32",
+                                      min: 0,
+                                    },
+                                    {
+                                      name: "Wins",
+                                      offset: 0x36d9e8,
+                                      type: "variable",
+                                      dataType: "int32",
+                                      min: 0,
+                                    },
+                                  ],
+                                },
+                                {
+                                  name: "Belle",
+                                  type: "section",
+                                  flex: true,
+                                  items: [
+                                    {
+                                      name: "Races",
+                                      offset: 0x36db34,
+                                      type: "variable",
+                                      dataType: "int32",
+                                      min: 0,
+                                    },
+                                    {
+                                      name: "Wins",
+                                      offset: 0x36d9cc,
+                                      type: "variable",
+                                      dataType: "int32",
+                                      min: 0,
+                                    },
+                                  ],
+                                },
+                                {
+                                  name: "Kyma",
+                                  type: "section",
+                                  flex: true,
+                                  items: [
+                                    {
+                                      name: "Races",
+                                      offset: 0x36d9b0,
+                                      type: "variable",
+                                      dataType: "int32",
+                                      min: 0,
+                                    },
+                                    {
+                                      name: "Wins",
+                                      offset: 0x36d9b8,
+                                      type: "variable",
+                                      dataType: "int32",
+                                      min: 0,
+                                    },
+                                  ],
+                                },
+                                {
+                                  name: "Fango",
+                                  type: "section",
+                                  flex: true,
+                                  items: [
+                                    {
+                                      name: "Races",
+                                      offset: 0x36d9c8,
+                                      type: "variable",
+                                      dataType: "int32",
+                                      min: 0,
+                                    },
+                                    {
+                                      name: "Wins",
+                                      offset: 0x36da20,
+                                      type: "variable",
+                                      dataType: "int32",
+                                      min: 0,
+                                    },
+                                  ],
+                                },
+                                {
+                                  name: "Aponi",
+                                  type: "section",
+                                  flex: true,
+                                  items: [
+                                    {
+                                      name: "Races",
+                                      offset: 0x36dadc,
+                                      type: "variable",
+                                      dataType: "int32",
+                                      min: 0,
+                                    },
+                                    {
+                                      name: "Wins",
+                                      offset: 0x36da94,
+                                      type: "variable",
+                                      dataType: "int32",
+                                      min: 0,
+                                    },
+                                  ],
+                                },
+                                {
+                                  name: "Selena",
+                                  type: "section",
+                                  flex: true,
+                                  items: [
+                                    {
+                                      name: "Races",
+                                      offset: 0x36dab0,
+                                      type: "variable",
+                                      dataType: "int32",
+                                      min: 0,
+                                    },
+                                    {
+                                      name: "Wins",
+                                      offset: 0x36da6c,
+                                      type: "variable",
+                                      dataType: "int32",
+                                      min: 0,
+                                    },
+                                  ],
+                                },
+                                {
+                                  name: "Mecha-Chocobo",
+                                  type: "section",
+                                  flex: true,
+                                  items: [
+                                    {
+                                      name: "Races",
+                                      offset: 0x36d8f4,
+                                      type: "variable",
+                                      dataType: "int32",
+                                      min: 0,
+                                    },
+                                    {
+                                      name: "Wins",
+                                      offset: 0x36da40,
+                                      type: "variable",
+                                      dataType: "int32",
+                                      min: 0,
+                                    },
+                                  ],
+                                },
+                              ],
+                            },
+                          ],
+                        },
+                        {
+                          name: "Grade III",
+                          items: [
+                            {
+                              type: "bitflags",
+                              hidden: true,
+                              flags: [
+                                { offset: 0x4505c, bit: 5, label: "The Carbuncle Classic" },
+                                { offset: 0x4505c, bit: 6, label: "The Moogle Oaks" },
+                                { offset: 0x4505c, bit: 7, label: "The Cactuar Derby" },
+                                { offset: 0x4505d, bit: 0, label: "The Bomb Blowout" },
+                                { offset: 0x4505d, bit: 1, label: "The Malboro Memorial" },
+                                { offset: 0x4505d, bit: 2, label: "The Tonberry Derby" },
+                                { offset: 0x4505d, bit: 3, label: "The Coeurl Championship" },
+                                { offset: 0x4505d, bit: 4, label: "The Behemoth Grand Prix" },
+                                { offset: 0x4505d, bit: 5, label: "The Ultima Stakes" },
+                              ],
+                            },
+                            {
+                              type: "section",
+                              flex: true,
+                              items: chocoboRaces.gradeIII.map(
+                                (race) =>
+                                  ({
+                                    name: race.name,
+                                    type: "group",
+                                    mode: "chrono",
+                                    items: [
+                                      {
+                                        id: `chocoboRace-gradeiii-${race.index}`,
+                                        offset: 0x36d874 + race.index * 0x4,
+                                        type: "variable",
+                                        dataType: "uint32",
+                                        operations: [
+                                          { "/": 100 },
+                                          {
+                                            convert: {
+                                              from: "seconds",
+                                              to: "minutes",
+                                            },
+                                          },
+                                        ],
+                                        max: 59,
+                                      },
+                                      {
+                                        id: `chocoboRace-gradeiii-${race.index}`,
+                                        offset: 0x36d874 + race.index * 0x4,
+                                        type: "variable",
+                                        dataType: "uint32",
+                                        operations: [
+                                          { "/": 100 },
+                                          {
+                                            convert: {
+                                              from: "seconds",
+                                              to: "seconds",
+                                            },
+                                          },
+                                        ],
+                                        leadingZeros: 1,
+                                        max: 59,
+                                      },
+                                      {
+                                        id: `chocoboRace-gradeiii-${race.index}`,
+                                        offset: 0x36d874 + race.index * 0x4,
+                                        type: "variable",
+                                        dataType: "uint32",
+                                        operations: [
+                                          { "/": 100 },
+                                          {
+                                            convert: {
+                                              from: "seconds",
+                                              to: "milliseconds",
+                                            },
+                                          },
+                                        ],
+                                        leadingZeros: 2,
+                                        max: 999,
+                                        step: 10,
+                                      },
+                                    ],
+                                  }) as ItemGroup,
+                              ),
+                            },
+                          ],
+                        },
+                        {
+                          name: "Grade II",
+                          items: [
+                            {
+                              type: "bitflags",
+                              hidden: true,
+                              flags: [
+                                { offset: 0x4505d, bit: 6, label: "The Ifrit Blaze" },
+                                { offset: 0x4505d, bit: 7, label: "The Shiva Icefields" },
+                                { offset: 0x4505e, bit: 0, label: "The Leviathan Riptide" },
+                                { offset: 0x4505e, bit: 1, label: "The Ramuh Bolt" },
+                                { offset: 0x4505e, bit: 2, label: "The Titan Slam" },
+                                { offset: 0x4505e, bit: 3, label: "The Kujata Stampede" },
+                                { offset: 0x4505e, bit: 4, label: "The Odin Straights" },
+                                { offset: 0x4505e, bit: 5, label: "The Alexander Siege" },
+                                { offset: 0x4505e, bit: 6, label: "The Phoenix Trial" },
+                                { offset: 0x4505e, bit: 7, label: "The Bahamut Skirmish" },
+                              ],
+                            },
+                            {
+                              type: "section",
+                              flex: true,
+                              items: chocoboRaces.gradeII.map(
+                                (race) =>
+                                  ({
+                                    name: race.name,
+                                    type: "group",
+                                    mode: "chrono",
+                                    items: [
+                                      {
+                                        id: `chocoboRace-gradeii-${race.index}`,
+                                        offset: 0x36d874 + race.index * 0x4,
+                                        type: "variable",
+                                        dataType: "uint32",
+                                        operations: [
+                                          { "/": 100 },
+                                          {
+                                            convert: {
+                                              from: "seconds",
+                                              to: "minutes",
+                                            },
+                                          },
+                                        ],
+                                        max: 59,
+                                      },
+                                      {
+                                        id: `chocoboRace-gradeii-${race.index}`,
+                                        offset: 0x36d874 + race.index * 0x4,
+                                        type: "variable",
+                                        dataType: "uint32",
+                                        operations: [
+                                          { "/": 100 },
+                                          {
+                                            convert: {
+                                              from: "seconds",
+                                              to: "seconds",
+                                            },
+                                          },
+                                        ],
+                                        leadingZeros: 1,
+                                        max: 59,
+                                      },
+                                      {
+                                        id: `chocoboRace-gradeii-${race.index}`,
+                                        offset: 0x36d874 + race.index * 0x4,
+                                        type: "variable",
+                                        dataType: "uint32",
+                                        operations: [
+                                          { "/": 100 },
+                                          {
+                                            convert: {
+                                              from: "seconds",
+                                              to: "milliseconds",
+                                            },
+                                          },
+                                        ],
+                                        leadingZeros: 2,
+                                        max: 999,
+                                        step: 10,
+                                      },
+                                    ],
+                                  }) as ItemGroup,
+                              ),
+                            },
+                          ],
+                        },
+                        {
+                          name: "Grade I",
+                          items: [
+                            {
+                              type: "bitflags",
+                              hidden: true,
+                              flags: [
+                                { offset: 0x45063, bit: 3, label: "The Gold Cup" },
+                              ],
+                            },
+                            {
+                              name: "The Gold Cup - 1st Leg",
+                              type: "section",
+                              flex: true,
+                              items: [
+                                {
+                                  name: "Best Time",
+                                  type: "group",
+                                  mode: "chrono",
+                                  items: [
+                                    {
+                                      offset: 0x36d8a4,
+                                      type: "variable",
+                                      dataType: "uint32",
+                                      operations: [
+                                        { "/": 100 },
+                                        {
+                                          convert: {
+                                            from: "seconds",
+                                            to: "minutes",
+                                          },
+                                        },
+                                      ],
+                                      max: 59,
+                                    },
+                                    {
+                                      offset: 0x36d8a4,
+                                      type: "variable",
+                                      dataType: "uint32",
+                                      operations: [
+                                        { "/": 100 },
+                                        {
+                                          convert: {
+                                            from: "seconds",
+                                            to: "seconds",
+                                          },
+                                        },
+                                      ],
+                                      leadingZeros: 1,
+                                      max: 59,
+                                    },
+                                    {
+                                      offset: 0x36d8a4,
+                                      type: "variable",
+                                      dataType: "uint32",
+                                      operations: [
+                                        { "/": 100 },
+                                        {
+                                          convert: {
+                                            from: "seconds",
+                                            to: "milliseconds",
+                                          },
+                                        },
+                                      ],
+                                      leadingZeros: 2,
+                                      max: 999,
+                                      step: 10,
+                                    },
+                                  ],
+                                },
+                                {
+                                  name: "Best Placement",
+                                  offset: 0x36d8b8,
+                                  type: "variable",
+                                  dataType: "uint32",
+                                  max: 10,
+                                },
+                              ],
+                            },
+                            {
+                              name: "The Gold Cup - 2nd Leg",
+                              type: "section",
+                              flex: true,
+                              items: [
+                                {
+                                  name: "Best Time",
+                                  type: "group",
+                                  mode: "chrono",
+                                  items: [
+                                    {
+                                      offset: 0x36d934,
+                                      type: "variable",
+                                      dataType: "uint32",
+                                      operations: [
+                                        { "/": 100 },
+                                        {
+                                          convert: {
+                                            from: "seconds",
+                                            to: "minutes",
+                                          },
+                                        },
+                                      ],
+                                      max: 59,
+                                    },
+                                    {
+                                      offset: 0x36d934,
+                                      type: "variable",
+                                      dataType: "uint32",
+                                      operations: [
+                                        { "/": 100 },
+                                        {
+                                          convert: {
+                                            from: "seconds",
+                                            to: "seconds",
+                                          },
+                                        },
+                                      ],
+                                      leadingZeros: 1,
+                                      max: 59,
+                                    },
+                                    {
+                                      offset: 0x36d934,
+                                      type: "variable",
+                                      dataType: "uint32",
+                                      operations: [
+                                        { "/": 100 },
+                                        {
+                                          convert: {
+                                            from: "seconds",
+                                            to: "milliseconds",
+                                          },
+                                        },
+                                      ],
+                                      leadingZeros: 2,
+                                      max: 999,
+                                      step: 10,
+                                    },
+                                  ],
+                                },
+                                {
+                                  name: "Best Placement",
+                                  offset: 0x36d8ec,
+                                  type: "variable",
+                                  dataType: "uint32",
+                                  max: 10,
+                                },
+                              ],
+                            },
+                            {
+                              name: "The Gold Cup - 3rd Leg",
+                              type: "section",
+                              flex: true,
+                              items: [
+                                {
+                                  name: "Best Time",
+                                  type: "group",
+                                  mode: "chrono",
+                                  items: [
+                                    {
+                                      offset: 0x36d8a0,
+                                      type: "variable",
+                                      dataType: "uint32",
+                                      operations: [
+                                        { "/": 100 },
+                                        {
+                                          convert: {
+                                            from: "seconds",
+                                            to: "minutes",
+                                          },
+                                        },
+                                      ],
+                                      max: 59,
+                                    },
+                                    {
+                                      offset: 0x36d8a0,
+                                      type: "variable",
+                                      dataType: "uint32",
+                                      operations: [
+                                        { "/": 100 },
+                                        {
+                                          convert: {
+                                            from: "seconds",
+                                            to: "seconds",
+                                          },
+                                        },
+                                      ],
+                                      leadingZeros: 1,
+                                      max: 59,
+                                    },
+                                    {
+                                      offset: 0x36d8a0,
+                                      type: "variable",
+                                      dataType: "uint32",
+                                      operations: [
+                                        { "/": 100 },
+                                        {
+                                          convert: {
+                                            from: "seconds",
+                                            to: "milliseconds",
+                                          },
+                                        },
+                                      ],
+                                      leadingZeros: 2,
+                                      max: 999,
+                                      step: 10,
+                                    },
+                                  ],
+                                },
+                                {
+                                  name: "Best Placement",
+                                  offset: 0x36d944,
+                                  type: "variable",
+                                  dataType: "uint32",
+                                  max: 10,
+                                },
+                              ],
+                            },
+                            {
+                              name: "The Gold Cup",
+                              type: "section",
+                              flex: true,
+                              items: [
+                                {
+                                  name: "Highest Score",
+                                  offset: 0x36d788,
+                                  type: "variable",
+                                  dataType: "uint32",
+                                  max: 45,
+                                },
+                                {
+                                  id: "chocoboRace-gradei",
+                                  name: "Best Placement",
+                                  offset: 0x36d904,
+                                  type: "variable",
+                                  dataType: "uint32",
+                                  max: 10,
+                                },
+                              ],
+                            },
+                          ],
+                        },
+                      ],
+                    },
+                  ],
+                },
+                {
                   name: "G-Bike",
                   items: [
                     {
@@ -3201,6 +3803,57 @@ const template: GameJson = {
                         {
                           name: "Personal Best",
                           offset: 0x36d9dc,
+                          type: "variable",
+                          dataType: "uint32",
+                          max: 999999,
+                        },
+                      ],
+                    },
+                  ],
+                },
+                {
+                  name: "Galactic Saviors",
+                  items: [
+                    {
+                      name: "Standard",
+                      type: "section",
+                      flex: true,
+                      items: [
+                        {
+                          name: "Rank Rewards",
+                          type: "bitflags",
+                          flags: [
+                            { offset: 0x44bdc, bit: 3, label: "Rank I" },
+                            { offset: 0x44bdc, bit: 2, label: "Rank II" },
+                            { offset: 0x44bdc, bit: 1, label: "Rank III" },
+                          ],
+                        },
+                        {
+                          name: "Personal Best",
+                          offset: 0x32cb8,
+                          type: "variable",
+                          dataType: "uint32",
+                          max: 999999,
+                        },
+                      ],
+                    },
+                    {
+                      name: "Expert",
+                      type: "section",
+                      flex: true,
+                      items: [
+                        {
+                          name: "Rank Rewards",
+                          type: "bitflags",
+                          flags: [
+                            { offset: 0x44bdc, bit: 6, label: "Rank I" },
+                            { offset: 0x44bdc, bit: 5, label: "Rank II" },
+                            { offset: 0x44bdc, bit: 4, label: "Rank III" },
+                          ],
+                        },
+                        {
+                          name: "Personal Best",
+                          offset: 0x32cbc,
                           type: "variable",
                           dataType: "uint32",
                           max: 999999,
@@ -4576,6 +5229,11 @@ const template: GameJson = {
       0x0: "-",
       0x1: "Obtained",
     },
+    redXiiiOutfits: {
+      0x0: "Laboratory Escapee",
+      0x1: "Hellhound",
+      0x2: "Midgar Infantry",
+    },
     summons: "getInventoryMateriaNames(true,'summons')",
     tifaOutfits: {
       0x0: "Pride of Seventh Heaven",
@@ -4584,11 +5242,6 @@ const template: GameJson = {
       0x3: "Midgar Infantry",
       0x4: "Midgar Infantry (Helmet)",
       0x5: "Without Gloves",
-    },
-    redXiiiOutfits: {
-      0x0: "Laboratory Escapee",
-      0x1: "Hellhound",
-      0x2: "Midgar Infantry",
     },
     weapons: {
       ...weapons,
