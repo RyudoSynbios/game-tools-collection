@@ -541,6 +541,31 @@ export function afterSetInt(item: Item, flag: ItemBitflag): void {
     }
 
     setInt(offset, "bit", value, { bit });
+  } else if ("id" in item && item.id?.match(/gearsAndGambits-/)) {
+    const itemInt = item as ItemInt;
+
+    const [index] = item.id.splitInt();
+
+    const int = getInt(itemInt.offset, "uint32");
+
+    let offset = itemInt.offset;
+
+    switch (index) {
+      case 0:
+        offset -= 0x3a6719;
+        break;
+      case 1:
+        offset -= 0x3a6789;
+        break;
+      case 2:
+        offset -= 0x3a6791;
+        break;
+      case 3:
+        offset -= 0x3a661d;
+        break;
+    }
+
+    setInt(offset, "bit", int > 0 ? 1 : 0, { bit: index });
   } else if ("id" in item && item.id === "hiddenEvents") {
     const itemBitflags = item as ItemBitflags;
 

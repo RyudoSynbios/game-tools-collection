@@ -2944,6 +2944,21 @@ const template: GameJson = {
                   ],
                 },
                 {
+                  name: "Fort Condor",
+                  items: [
+                    {
+                      name: "Cleared Stages on Hard",
+                      type: "bitflags",
+                      flags: [
+                        { offset: 0x44fdd, bit: 7, label: "Stage 1" },
+                        { offset: 0x44fde, bit: 0, label: "Stage 2" },
+                        { offset: 0x44fde, bit: 1, label: "Stage 3" },
+                        { offset: 0x44fde, bit: 2, label: "Stage 4" },
+                      ],
+                    },
+                  ],
+                },
+                {
                   name: "Jumpfrog",
                   items: [
                     {
@@ -4024,6 +4039,57 @@ const template: GameJson = {
                   ],
                 },
                 {
+                  name: "Desert Rush",
+                  items: [
+                    {
+                      name: "Standard",
+                      type: "section",
+                      flex: true,
+                      items: [
+                        {
+                          name: "Rank Rewards",
+                          type: "bitflags",
+                          flags: [
+                            { offset: 0x44b9a, bit: 4, label: "Rank I" },
+                            { offset: 0x44b9a, bit: 5, label: "Rank II" },
+                            { offset: 0x44b9a, bit: 6, label: "Rank III" },
+                          ],
+                        },
+                        {
+                          name: "Personal Best",
+                          offset: 0x382738,
+                          type: "variable",
+                          dataType: "uint32",
+                          max: 999999,
+                        },
+                      ],
+                    },
+                    {
+                      name: "Challenging",
+                      type: "section",
+                      flex: true,
+                      items: [
+                        {
+                          name: "Rank Rewards",
+                          type: "bitflags",
+                          flags: [
+                            { offset: 0x44b9a, bit: 7, label: "Rank I" },
+                            { offset: 0x44b9b, bit: 0, label: "Rank II" },
+                            { offset: 0x44b9b, bit: 1, label: "Rank III" },
+                          ],
+                        },
+                        {
+                          name: "Personal Best",
+                          offset: 0x38275c,
+                          type: "variable",
+                          dataType: "uint32",
+                          max: 999999,
+                        },
+                      ],
+                    },
+                  ],
+                },
+                {
                   name: "G-Bike",
                   items: [
                     {
@@ -4246,6 +4312,379 @@ const template: GameJson = {
                         {
                           name: "Personal Best (Hard)",
                           offset: 0x304d64,
+                          type: "variable",
+                          dataType: "uint32",
+                          max: 999999,
+                        },
+                      ],
+                    },
+                  ],
+                },
+                {
+                  name: "Gears and Gambits",
+                  items: [
+                    {
+                      type: "bitflags",
+                      hidden: true,
+                      flags: [
+                        { offset: 0x44fe3, bit: 0, label: "Stage 1 Hard Mode" },
+                        { offset: 0x44fe3, bit: 1, label: "Stage 2 Hard Mode" },
+                        { offset: 0x44fe3, bit: 2, label: "Stage 3 Hard Mode" },
+                        { offset: 0x44fe3, bit: 3, label: "Stage 4 Hard Mode" },
+                      ],
+                    },
+                    {
+                      name: "Stage 1 (Hard)",
+                      type: "section",
+                      flex: true,
+                      items: [
+                        {
+                          name: "Duration",
+                          type: "group",
+                          mode: "chrono",
+                          items: [
+                            {
+                              offset: 0x3eb634,
+                              type: "variable",
+                              dataType: "float32",
+                              operations: [
+                                { convert: { from: "seconds", to: "minutes" } },
+                              ],
+                              max: 59,
+                            },
+                            {
+                              offset: 0x3eb634,
+                              type: "variable",
+                              dataType: "float32",
+                              operations: [
+                                { convert: { from: "seconds", to: "seconds" } },
+                              ],
+                              leadingZeros: 1,
+                              max: 59,
+                            },
+                            {
+                              offset: 0x3eb634,
+                              type: "variable",
+                              dataType: "float32",
+                              operations: [
+                                {
+                                  convert: {
+                                    from: "seconds",
+                                    to: "milliseconds",
+                                  },
+                                },
+                              ],
+                              leadingZeros: 2,
+                              max: 999,
+                              step: 100,
+                            },
+                          ],
+                        },
+                        {
+                          id: "gearsAndGambits-0",
+                          name: "Portal HP Remaining",
+                          offset: 0x3eb6fc,
+                          type: "variable",
+                          dataType: "uint32",
+                          max: 2000,
+                        },
+                        {
+                          name: "Robots Deployed",
+                          offset: 0x3eb680,
+                          type: "variable",
+                          dataType: "uint32",
+                          max: 999,
+                        },
+                        {
+                          name: "ATB Spent",
+                          offset: 0x3eb518,
+                          type: "variable",
+                          dataType: "uint32",
+                          max: 999,
+                        },
+                      ],
+                    },
+                    {
+                      name: "Stage 2 (Hard)",
+                      type: "section",
+                      flex: true,
+                      items: [
+                        {
+                          name: "Duration",
+                          type: "group",
+                          mode: "chrono",
+                          items: [
+                            {
+                              offset: 0x3eb454,
+                              type: "variable",
+                              dataType: "float32",
+                              operations: [
+                                { convert: { from: "seconds", to: "minutes" } },
+                              ],
+                              max: 59,
+                            },
+                            {
+                              offset: 0x3eb454,
+                              type: "variable",
+                              dataType: "float32",
+                              operations: [
+                                { convert: { from: "seconds", to: "seconds" } },
+                              ],
+                              leadingZeros: 1,
+                              max: 59,
+                            },
+                            {
+                              offset: 0x3eb454,
+                              type: "variable",
+                              dataType: "float32",
+                              operations: [
+                                {
+                                  convert: {
+                                    from: "seconds",
+                                    to: "milliseconds",
+                                  },
+                                },
+                              ],
+                              leadingZeros: 2,
+                              max: 999,
+                              step: 100,
+                            },
+                          ],
+                        },
+                        {
+                          id: "gearsAndGambits-1",
+                          name: "Portal HP Remaining",
+                          offset: 0x3eb76c,
+                          type: "variable",
+                          dataType: "uint32",
+                          max: 2000,
+                        },
+                        {
+                          name: "Robots Deployed",
+                          offset: 0x3eb708,
+                          type: "variable",
+                          dataType: "uint32",
+                          max: 999,
+                        },
+                        {
+                          name: "ATB Spent",
+                          offset: 0x3eb754,
+                          type: "variable",
+                          dataType: "uint32",
+                          max: 999,
+                        },
+                      ],
+                    },
+                    {
+                      name: "Stage 3 (Hard)",
+                      type: "section",
+                      flex: true,
+                      items: [
+                        {
+                          name: "Duration",
+                          type: "group",
+                          mode: "chrono",
+                          items: [
+                            {
+                              offset: 0x3eb770,
+                              type: "variable",
+                              dataType: "float32",
+                              operations: [
+                                { convert: { from: "seconds", to: "minutes" } },
+                              ],
+                              max: 59,
+                            },
+                            {
+                              offset: 0x3eb770,
+                              type: "variable",
+                              dataType: "float32",
+                              operations: [
+                                { convert: { from: "seconds", to: "seconds" } },
+                              ],
+                              leadingZeros: 1,
+                              max: 59,
+                            },
+                            {
+                              offset: 0x3eb770,
+                              type: "variable",
+                              dataType: "float32",
+                              operations: [
+                                {
+                                  convert: {
+                                    from: "seconds",
+                                    to: "milliseconds",
+                                  },
+                                },
+                              ],
+                              leadingZeros: 2,
+                              max: 999,
+                              step: 100,
+                            },
+                          ],
+                        },
+                        {
+                          id: "gearsAndGambits-2",
+                          name: "Portal HP Remaining",
+                          offset: 0x3eb774,
+                          type: "variable",
+                          dataType: "uint32",
+                          max: 2000,
+                        },
+                        {
+                          name: "Robots Deployed",
+                          offset: 0x3eb688,
+                          type: "variable",
+                          dataType: "uint32",
+                          max: 999,
+                        },
+                        {
+                          name: "ATB Spent",
+                          offset: 0x3eb5d4,
+                          type: "variable",
+                          dataType: "uint32",
+                          max: 999,
+                        },
+                      ],
+                    },
+                    {
+                      name: "Stage 4 (Hard)",
+                      type: "section",
+                      flex: true,
+                      items: [
+                        {
+                          name: "Duration",
+                          type: "group",
+                          mode: "chrono",
+                          items: [
+                            {
+                              offset: 0x3eb5f0,
+                              type: "variable",
+                              dataType: "float32",
+                              operations: [
+                                { convert: { from: "seconds", to: "minutes" } },
+                              ],
+                              max: 59,
+                            },
+                            {
+                              offset: 0x3eb5f0,
+                              type: "variable",
+                              dataType: "float32",
+                              operations: [
+                                { convert: { from: "seconds", to: "seconds" } },
+                              ],
+                              leadingZeros: 1,
+                              max: 59,
+                            },
+                            {
+                              offset: 0x3eb5f0,
+                              type: "variable",
+                              dataType: "float32",
+                              operations: [
+                                {
+                                  convert: {
+                                    from: "seconds",
+                                    to: "milliseconds",
+                                  },
+                                },
+                              ],
+                              leadingZeros: 2,
+                              max: 999,
+                              step: 100,
+                            },
+                          ],
+                        },
+                        {
+                          id: "gearsAndGambits-3",
+                          name: "Portal HP Remaining",
+                          offset: 0x3eb600,
+                          type: "variable",
+                          dataType: "uint32",
+                          max: 2000,
+                        },
+                        {
+                          name: "Robots Deployed",
+                          offset: 0x3eb65c,
+                          type: "variable",
+                          dataType: "uint32",
+                          max: 999,
+                        },
+                        {
+                          name: "ATB Spent",
+                          offset: 0x3eb53c,
+                          type: "variable",
+                          dataType: "uint32",
+                          max: 999,
+                        },
+                      ],
+                    },
+                  ],
+                },
+                {
+                  name: "Glide de Chocobo",
+                  items: [
+                    {
+                      name: "Training Course No. 1",
+                      type: "section",
+                      flex: true,
+                      items: [
+                        {
+                          name: "Rank Rewards",
+                          type: "bitflags",
+                          flags: [
+                            { offset: 0x4506f, bit: 0, label: "Rank I" },
+                            { offset: 0x4506e, bit: 7, label: "Rank II" },
+                            { offset: 0x4506e, bit: 6, label: "Rank III" },
+                          ],
+                        },
+                        {
+                          name: "Personal Best",
+                          offset: 0x3eb534,
+                          type: "variable",
+                          dataType: "uint32",
+                          max: 999999,
+                        },
+                      ],
+                    },
+                    {
+                      name: "Training Course No. 2",
+                      type: "section",
+                      flex: true,
+                      items: [
+                        {
+                          name: "Rank Rewards",
+                          type: "bitflags",
+                          flags: [
+                            { offset: 0x4506f, bit: 3, label: "Rank I" },
+                            { offset: 0x4506f, bit: 2, label: "Rank II" },
+                            { offset: 0x4506f, bit: 1, label: "Rank III" },
+                          ],
+                        },
+                        {
+                          name: "Personal Best",
+                          offset: 0x3eb710,
+                          type: "variable",
+                          dataType: "uint32",
+                          max: 999999,
+                        },
+                      ],
+                    },
+                    {
+                      name: "Training Course No. 3",
+                      type: "section",
+                      flex: true,
+                      items: [
+                        {
+                          name: "Rank Rewards",
+                          type: "bitflags",
+                          flags: [
+                            { offset: 0x4506f, bit: 6, label: "Rank I" },
+                            { offset: 0x4506f, bit: 5, label: "Rank II" },
+                            { offset: 0x4506f, bit: 4, label: "Rank III" },
+                          ],
+                        },
+                        {
+                          name: "Personal Best",
+                          offset: 0x3eb514,
                           type: "variable",
                           dataType: "uint32",
                           max: 999999,
