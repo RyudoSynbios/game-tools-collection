@@ -397,6 +397,10 @@ function readFile(
       uint8Arrays.push(part);
 
       fileSize += part.byteLength;
+
+      if (fileSize >= file.size) {
+        break;
+      }
     }
 
     nextClusterIndex = getNextClusterIndex(dataView, clusterIndex);
@@ -471,6 +475,10 @@ function writeFile(file: File, blob: ArrayBuffer): void {
       }
 
       fileSize += part.byteLength;
+
+      if (fileSize >= file.size) {
+        break;
+      }
     }
 
     nextClusterIndex = getNextClusterIndex(memoryCardRaw, clusterIndex);
