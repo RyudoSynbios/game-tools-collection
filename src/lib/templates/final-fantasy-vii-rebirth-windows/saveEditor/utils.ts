@@ -479,35 +479,6 @@ export function afterSetInt(item: Item, flag: ItemBitflag): void {
     }
 
     setInt(offset + 0x1, "uint8", completedDifficulty);
-  } else if ("id" in item && item.id?.match(/pianoScore-/)) {
-    const itemInt = item as ItemInt;
-
-    const [index] = item.id.splitInt();
-
-    const score = getInt(itemInt.offset, "uint32");
-
-    checkPianoRank(index, itemInt.offset, score);
-  } else if ("id" in item && item.id?.match(/pianoReward-/)) {
-    const rewardItem = getItem("pianoReward-0") as ItemInt;
-
-    let count = 0;
-
-    for (let i = 0x0; i < 0x6; i += 0x1) {
-      const offset = rewardItem.offset + Math.floor((6 + i) / 8);
-      const bit = (rewardItem.bit! + i) % 8;
-
-      const checked = getInt(offset, "bit", { bit });
-
-      if (checked) {
-        count += 1;
-      }
-    }
-
-    const checked = count === 6;
-
-    setInt(rewardItem.offset - 0x1, "bit", checked ? 1 : 0, { bit: 6 }); // Piano Quest Complete
-    setInt(rewardItem.offset + 0x1, "bit", checked ? 1 : 0, { bit: 6 }); // Aerith can play Piano
-    setInt(rewardItem.offset + 0x1, "bit", checked ? 1 : 0, { bit: 7 }); // Yuffie can play Piano
   } else if ("id" in item && item.id?.match(/chocoboRace-/)) {
     const itemInt = item as ItemInt;
 
@@ -566,6 +537,45 @@ export function afterSetInt(item: Item, flag: ItemBitflag): void {
     }
 
     setInt(offset, "bit", int > 0 ? 1 : 0, { bit: index });
+  } else if ("id" in item && item.id?.match(/pianoScore-/)) {
+    const itemInt = item as ItemInt;
+
+    const [index] = item.id.splitInt();
+
+    const score = getInt(itemInt.offset, "uint32");
+
+    checkPianoRank(index, itemInt.offset, score);
+  } else if ("id" in item && item.id?.match(/pianoReward-/)) {
+    const rewardItem = getItem("pianoReward-0") as ItemInt;
+
+    let count = 0;
+
+    for (let i = 0x0; i < 0x6; i += 0x1) {
+      const offset = rewardItem.offset + Math.floor((6 + i) / 8);
+      const bit = (rewardItem.bit! + i) % 8;
+
+      const checked = getInt(offset, "bit", { bit });
+
+      if (checked) {
+        count += 1;
+      }
+    }
+
+    const checked = count === 6;
+
+    setInt(rewardItem.offset - 0x1, "bit", checked ? 1 : 0, { bit: 6 }); // Piano Quest Complete
+    setInt(rewardItem.offset + 0x1, "bit", checked ? 1 : 0, { bit: 6 }); // Aerith can play Piano
+    setInt(rewardItem.offset + 0x1, "bit", checked ? 1 : 0, { bit: 7 }); // Yuffie can play Piano
+  } else if ("id" in item && item.id?.match(/queensBlood-/)) {
+    const itemBitflags = item as ItemBitflags;
+
+    const [shift] = item.id.splitInt();
+
+    const offset = itemBitflags.flags[0].offset - shift;
+
+    const count = (getInt(offset, "uint32") & 0x7ffffffe).toBitCount();
+
+    setInt(offset - 0x124ac, "uint32", count);
   } else if ("id" in item && item.id === "hiddenEvents") {
     const itemBitflags = item as ItemBitflags;
 

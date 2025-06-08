@@ -4584,6 +4584,174 @@ const template: GameJson = {
                   ],
                 },
                 {
+                  name: "Queen's Blood",
+                  items: [
+                    {
+                      name: "Defeated Players",
+                      offset: 0x32b18,
+                      type: "variable",
+                      dataType: "uint32",
+                      hidden: true,
+                    },
+                    {
+                      name: "Grasslands",
+                      type: "section",
+                      flex: true,
+                      items: [
+                        {
+                          id: "queensBlood-0",
+                          name: "Kalm",
+                          type: "bitflags",
+                          flags: [
+                            { offset: 0x44fc4, bit: 1, label: "Ned" },
+                            { offset: 0x44fc4, bit: 2, label: "Nene" },
+                            { offset: 0x44fc4, bit: 3, label: "Zahira" },
+                          ],
+                        },
+                      ],
+                    },
+                    {
+                      name: "Junon Region",
+                      type: "section",
+                      flex: true,
+                      items: [
+                        {
+                          id: "queensBlood-0",
+                          name: "Under Junon",
+                          type: "bitflags",
+                          flags: [
+                            { offset: 0x44fc4, bit: 4, label: "Isabelle" },
+                            { offset: 0x44fc4, bit: 5, label: "The Moore Twins" },
+                            { offset: 0x44fc4, bit: 6, label: "Zogan" },
+                          ],
+                        },
+                        {
+                          id: "queensBlood-0",
+                          name: "Crow's Nest",
+                          type: "bitflags",
+                          flags: [
+                            { offset: 0x44fc4, bit: 7, label: "Michaela" },
+                            { offset: 0x44fc5, bit: 1, label: "Neil" },
+                            { offset: 0x44fc5, bit: 0, label: "Cameron" },
+                          ],
+                        },
+                      ],
+                    },
+                    {
+                      name: "Corel Region",
+                      type: "section",
+                      flex: true,
+                      items: [
+                        {
+                          id: "queensBlood-1",
+                          name: "Costal Del Sol",
+                          type: "bitflags",
+                          flags: [
+                            { offset: 0x44fc5, bit: 2, label: "Dokaccha" },
+                            { offset: 0x44fc5, bit: 3, label: "Maahir" },
+                            { offset: 0x44fc5, bit: 4, label: "Riana" },
+                          ],
+                        },
+                        {
+                          id: "queensBlood-1",
+                          name: "North Corel",
+                          type: "bitflags",
+                          flags: [
+                            { offset: 0x44fc5, bit: 6, label: "Rolf" },
+                            { offset: 0x44fc5, bit: 7, label: "Biff" },
+                            { offset: 0x44fc5, bit: 5, label: "Navalan" },
+                          ],
+                        },
+                        {
+                          id: "queensBlood-2",
+                          name: "The Gold Saucer",
+                          type: "bitflags",
+                          flags: [
+                            { offset: 0x44fc6, bit: 0, label: "Specter of the Cards" },
+                          ],
+                        },
+                        {
+                          id: "queensBlood-2",
+                          name: "The Dustbowl",
+                          type: "bitflags",
+                          flags: [
+                            { offset: 0x44fc6, bit: 1, label: "Dax" },
+                            { offset: 0x44fc6, bit: 2, label: "Pietro" },
+                            { offset: 0x44fc6, bit: 3, label: "Mary" },
+                            { offset: 0x44fc6, bit: 4, label: "Wize 3.0 Ver.2.0" },
+                          ],
+                        },
+                      ],
+                    },
+                    {
+                      name: "Gongaga Region",
+                      type: "section",
+                      flex: true,
+                      items: [
+                        {
+                          id: "queensBlood-2",
+                          name: "Gongaga",
+                          type: "bitflags",
+                          flags: [
+                            { offset: 0x44fc6, bit: 6, label: "Zhijun" },
+                            { offset: 0x44fc6, bit: 7, label: "Oscar" },
+                            { offset: 0x44fc6, bit: 5, label: "Regina" },
+                          ],
+                        },
+                        {
+                          id: "queensBlood-3",
+                          name: "Gongaga Ruins",
+                          type: "bitflags",
+                          flags: [
+                            { offset: 0x44fc7, bit: 6, label: "Shadowblood Queen" },
+                          ],
+                        },
+                      ],
+                    },
+                    {
+                      name: "Cosmo Canyon Region",
+                      type: "section",
+                      flex: true,
+                      items: [
+                        {
+                          id: "queensBlood-3",
+                          name: "Cosmo Canyon",
+                          type: "bitflags",
+                          flags: [
+                            { offset: 0x44fc7, bit: 0, label: "Robin" },
+                            { offset: 0x44fc7, bit: 1, label: "Ka'dina" },
+                            { offset: 0x44fc7, bit: 2, label: "Bernard" },
+                          ],
+                        },
+                      ],
+                    },
+                    {
+                      name: "Nibel Region",
+                      type: "section",
+                      flex: true,
+                      items: [
+                        {
+                          id: "queensBlood-3",
+                          name: "Nibelheim",
+                          type: "bitflags",
+                          flags: [
+                            { offset: 0x44fc7, bit: 4, label: "Dale" },
+                            { offset: 0x44fc7, bit: 5, label: "Turner" },
+                          ],
+                        },
+                        {
+                          id: "queensBlood-3",
+                          name: "Shinra Manor",
+                          type: "bitflags",
+                          flags: [
+                            { offset: 0x44fc7, bit: 3, label: "Vincent" },
+                          ],
+                        },
+                      ],
+                    },
+                  ],
+                },
+                {
                   name: "Run Wild",
                   items: [
                     {
