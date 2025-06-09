@@ -587,7 +587,9 @@ export function afterSetInt(item: Item, flag: ItemBitflag): void {
 
     const hiddenFlag = itemBitflags.flags[index + 1];
 
-    setInt(hiddenFlag.offset, "bit", checked, { bit: hiddenFlag.bit });
+    if (hiddenFlag.hidden) {
+      setInt(hiddenFlag.offset, "bit", checked, { bit: hiddenFlag.bit });
+    }
   }
 }
 
