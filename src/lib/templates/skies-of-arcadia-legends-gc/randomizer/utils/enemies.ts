@@ -112,8 +112,8 @@ export function randomizeEnemies(
       experience *= prng.getFloat(0.5, 1.5, `enemies_enemy_experience_1_${i}`);
       gold *= prng.getFloat(0.5, 1.5, `enemies_enemy_gold_1_${i}`);
     } else if (options.enemies.experienceGold === 0x2) {
-      experience = prng.getInt(0.1, 4, `enemies_enemy_experience_2_${i}`);
-      gold = prng.getInt(0.1, 4, `enemies_enemy_gold_2_${i}`);
+      experience *= prng.getInt(0.1, 4, `enemies_enemy_experience_2_${i}`);
+      gold *= prng.getInt(0.1, 4, `enemies_enemy_gold_2_${i}`);
     }
 
     setInt(offset + 0x1e, "uint16", experience, { bigEndian: true }, "enemies");
