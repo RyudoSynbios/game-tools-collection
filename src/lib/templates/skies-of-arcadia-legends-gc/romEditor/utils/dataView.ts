@@ -252,6 +252,7 @@ export function exportDataViewAlt(): ArrayBufferLike {
   });
 
   writeFile("system/main.dol", new DataView(data.buffer));
+  writeFile("battle/first.lmt", $dataViewAlt.experienceCurves);
 
   // Enemies
 
