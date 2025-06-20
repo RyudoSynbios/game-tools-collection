@@ -1,13 +1,7 @@
 import { get } from "svelte/store";
 
 import { gameRegion } from "$lib/stores";
-import {
-  extractBit,
-  getBoolean,
-  getInt,
-  setBoolean,
-  setInt,
-} from "$lib/utils/bytes";
+import { getBoolean, getInt, setBoolean, setInt } from "$lib/utils/bytes";
 import { formatChecksum } from "$lib/utils/checksum";
 import { byteswapDataView, getHeaderShift } from "$lib/utils/common/nintendo64";
 import { getShift } from "$lib/utils/parser";
@@ -21,6 +15,8 @@ import type {
   ItemString,
   ItemTab,
 } from "$lib/types";
+
+import { itemQuantites } from "./utils/resource";
 
 export function initHeaderShift(dataView: DataView): number {
   return getHeaderShift(dataView, "fla");
@@ -110,72 +106,51 @@ export function overrideParseContainerItemsShifts(
   return [false, undefined];
 }
 
+export function overrideItem(item: Item): Item {
+  if ("id" in item && item.id?.match(/value-/)) {
+    const itemInt = item as ItemInt;
+
+    const [, type] = item.id.split("-");
+
+    const { shift, bitStart, valuesMax } = itemQuantites[type];
+
+    const upgrade = getInt(itemInt.offset + shift, "uint8", {
+      binary: { bitStart, bitLength: 2 },
+    });
+
+    itemInt.max = valuesMax[upgrade];
+  } else if ("id" in item && item.id === "health") {
+    const itemInt = item as ItemInt;
+
+    const healthMax = getInt(itemInt.offset - 0x2, "uint16", {
+      bigEndian: true,
+    });
+
+    itemInt.max = healthMax / 16;
+  } else if ("id" in item && item.id === "magic") {
+    const itemInt = item as ItemInt;
+
+    const magicLevel = getInt(itemInt.offset - 0x1, "uint8");
+    let max = 0;
+
+    if (magicLevel === 0x1) {
+      max = 48;
+    } else if (magicLevel === 0x2) {
+      max = 96;
+    }
+
+    itemInt.max = max;
+
+    return itemInt;
+  }
+
+  return item;
+}
+
 export function overrideGetInt(
   item: Item,
 ): [boolean, number | string | undefined] {
-  if ("id" in item && item.id === "heartPieces") {
-    const itemInt = item as ItemInt;
-
-    const value = getInt(itemInt.offset, "uint8");
-
-    let int = 0;
-
-    if (extractBit(value, 4)) {
-      int += 1;
-    }
-
-    if (extractBit(value, 5)) {
-      int += 2;
-    }
-
-    return [true, int];
-  } else if ("id" in item && item.id === "quiver") {
-    const itemInt = item as ItemInt;
-
-    const value = getInt(itemInt.offset, "uint8");
-
-    let int = 0;
-
-    if (extractBit(value, 0)) {
-      int += 1;
-    }
-
-    if (extractBit(value, 1)) {
-      int += 2;
-    }
-
-    return [true, int];
-  } else if ("id" in item && item.id === "bombBag") {
-    const itemInt = item as ItemInt;
-
-    const value = getInt(itemInt.offset, "uint8");
-
-    let int = 0;
-
-    if (extractBit(value, 3)) {
-      int += 1;
-    }
-
-    if (extractBit(value, 4)) {
-      int += 2;
-    }
-
-    return [true, int];
-  } else if ("id" in item && item.id === "wallet") {
-    const itemInt = item as ItemInt;
-
-    let int = 0x0;
-
-    const value = getInt(itemInt.offset, "uint8");
-
-    if (extractBit(value, 4)) {
-      int = 0x1;
-    } else if (extractBit(value, 5)) {
-      int = 0x2;
-    }
-
-    return [true, int];
-  } else if ("id" in item && item.id === "hideoutCode") {
+  if ("id" in item && item.id === "hideoutCode") {
     const itemString = item as ItemString;
 
     let string = "";
@@ -286,17 +261,48 @@ export function overrideSetInt(item: Item, value: string): boolean {
 }
 
 export function afterSetInt(item: Item): void {
-  if ("id" in item && item.id === "health") {
+  if ("id" in item && item.id?.match(/max-/)) {
     const itemInt = item as ItemInt;
 
-    let health = getInt(itemInt.offset, "uint16", { bigEndian: true });
-    const healthMax = getInt(itemInt.offset - 0x2, "uint16", {
-      bigEndian: true,
+    const [, type] = item.id.split("-");
+
+    const { shift, dataType, valuesMax } = itemQuantites[type];
+
+    let value = getInt(itemInt.offset - shift, dataType, {
+      bigEndian: dataType === "uint16",
     });
 
-    health = Math.min(health, healthMax);
+    const upgrade = getInt(itemInt.offset, "uint8", {
+      binary: itemInt.binary,
+    });
 
-    setInt(itemInt.offset, "uint16", health, { bigEndian: true });
+    value = Math.min(value, valuesMax[upgrade]);
+
+    setInt(itemInt.offset - shift, dataType, value, {
+      bigEndian: dataType === "uint16",
+    });
+  } else if ("id" in item && item.id === "rupeesMax") {
+    const itemInt = item as ItemInt;
+
+    let rupees = getInt(itemInt.offset - 0x80, "uint16", { bigEndian: true });
+    const wallet = getInt(itemInt.offset, "uint8", {
+      binary: {
+        bitStart: 4,
+        bitLength: 2,
+      },
+    });
+
+    let rupeesMax = 99;
+
+    if (wallet === 0x1) {
+      rupeesMax = 200;
+    } else if (wallet === 0x2) {
+      rupeesMax = 500;
+    }
+
+    rupees = Math.min(rupees, rupeesMax);
+
+    setInt(itemInt.offset - 0x80, "uint16", rupees, { bigEndian: true });
   } else if ("id" in item && item.id === "healthMax") {
     const itemInt = item as ItemInt;
 
@@ -316,21 +322,6 @@ export function afterSetInt(item: Item): void {
     }
 
     setInt(itemInt.offset + 0x9f, "uint8", int);
-  } else if ("id" in item && item.id === "magic") {
-    const itemInt = item as ItemInt;
-
-    let magic = getInt(itemInt.offset, "uint8");
-    const magicMax = getInt(itemInt.offset - 0x1, "uint8");
-
-    if (magicMax === 0x1) {
-      magic = Math.min(48, magic);
-    } else if (magicMax === 0x2) {
-      magic = Math.min(96, magic);
-    } else {
-      magic = Math.min(0, magic);
-    }
-
-    setInt(itemInt.offset, "uint8", magic);
   } else if ("id" in item && item.id === "magicLevel") {
     const itemInt = item as ItemInt;
 
