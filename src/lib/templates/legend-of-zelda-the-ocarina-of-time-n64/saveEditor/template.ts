@@ -190,6 +190,14 @@ const template: GameJson = {
                       ],
                     },
                     {
+                      id: "magic",
+                      name: "Magic",
+                      offset: 0x53,
+                      type: "variable",
+                      dataType: "uint8",
+                      max: 96,
+                    },
+                    {
                       name: "Heart Pieces",
                       offset: 0xc4,
                       type: "variable",
@@ -200,6 +208,12 @@ const template: GameJson = {
                       },
                       max: 3,
                     },
+                  ],
+                },
+                {
+                  type: "section",
+                  flex: true,
+                  items: [
                     {
                       id: "magicLevel",
                       name: "Magic Level",
@@ -207,14 +221,6 @@ const template: GameJson = {
                       type: "variable",
                       dataType: "uint8",
                       resource: "magicBars",
-                    },
-                    {
-                      id: "magic",
-                      name: "Magic",
-                      offset: 0x53,
-                      type: "variable",
-                      dataType: "uint8",
-                      max: 96,
                     },
                     {
                       id: "doubleDefense",
