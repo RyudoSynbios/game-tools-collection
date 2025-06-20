@@ -430,6 +430,17 @@
     }
   },
   {
+    "id": "legend-of-zelda-the-ocarina-of-time-n64",
+    "name": "Legend of Zelda, The: Ocarina of Time",
+    "consoleId": "nintendo-64",
+    "tools": {
+      "saveEditor": {
+        "createdAt": "2025-06-20",
+        "regions": ["🇪🇺", "🇺🇸", "🇯🇵"]
+      }
+    }
+  },
+  {
     "id": "legend-of-zelda-the-oracle-of-ages-gbc",
     "name": "Legend of Zelda, The: Oracle of Ages",
     "consoleId": "game-boy-color",
