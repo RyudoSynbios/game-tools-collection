@@ -419,6 +419,7 @@ const template: GameJson = {
                           flex: true,
                           items: [
                             {
+                              id: "max-arrows",
                               name: "Quiver",
                               offset: 0xbb,
                               type: "variable",
@@ -430,6 +431,7 @@ const template: GameJson = {
                               resource: "quivers",
                             },
                             {
+                              id: "max-bombs",
                               name: "Bomb Bag",
                               offset: 0xbb,
                               type: "variable",

@@ -372,6 +372,7 @@ const template: GameJson = {
                           flex: true,
                           items: [
                             {
+                              id: "max-dekuSeeds",
                               name: "Deku Seeds Bullet Bag",
                               offset: 0xc2,
                               type: "variable",
@@ -383,6 +384,7 @@ const template: GameJson = {
                               resource: "bulletBags",
                             },
                             {
+                              id: "max-arrows",
                               name: "Quiver",
                               offset: 0xc3,
                               type: "variable",
@@ -394,6 +396,7 @@ const template: GameJson = {
                               resource: "quivers",
                             },
                             {
+                              id: "max-bombs",
                               name: "Bomb Bag",
                               offset: 0xc3,
                               type: "variable",
