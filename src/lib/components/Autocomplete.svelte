@@ -236,7 +236,19 @@
 
         scrollIntoViewIfNecessary(dropdownEl, newHoverElementEl);
       } else if (event.key === "Enter") {
-        hoverElementEl.click();
+        const noHoveredElements = hoverElementEl.classList.contains(
+          "gtc-autocomplete-dropdown-group",
+        );
+
+        if (noHoveredElements) {
+          const firstLiEl = dropdownEl.querySelector(
+            ".gtc-autocomplete-dropdown-group li:first-child",
+          ) as HTMLLIElement;
+
+          firstLiEl.click();
+        } else {
+          hoverElementEl.click();
+        }
 
         isFocused = true;
       }
