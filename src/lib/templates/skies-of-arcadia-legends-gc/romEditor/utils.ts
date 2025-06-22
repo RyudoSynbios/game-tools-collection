@@ -41,6 +41,7 @@ export function overrideParseItem(item: Item): Item {
     } else if ($gameRegion === 2) {
       itemString.letterDataType = "uint16";
       itemString.letterBigEndian = true;
+      itemString.encoding = "windows31J";
     }
 
     return itemString;
@@ -558,6 +559,7 @@ export function getNames(type: string, relative: string): Resource {
         item.letterDataType,
         {
           letterBigEndian: item.letterBigEndian,
+          encoding: item.encoding,
           zeroTerminated: item.zeroTerminated,
         },
         $dataViewAlt[type],
@@ -619,6 +621,7 @@ function getShopName(offset: number, item: ItemString): string {
     item.letterDataType,
     {
       letterBigEndian: item.letterBigEndian,
+      encoding: item.encoding,
       zeroTerminated: item.zeroTerminated,
     },
     $dataViewAlt["main.dol"],

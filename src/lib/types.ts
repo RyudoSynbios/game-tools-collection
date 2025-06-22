@@ -337,6 +337,7 @@ export interface ItemString {
   letterDataType: "uint8" | "uint16" | "uint24" | "uint32";
   letterBigEndian?: boolean;
   fallback?: number;
+  encoding?: "windows31J";
   zeroTerminated?: boolean;
   regex?: string;
   resource?: string;

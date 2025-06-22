@@ -736,6 +736,7 @@ export function setBigInt(
 interface StringOptions {
   bigEndian?: boolean;
   letterBigEndian?: boolean;
+  encoding?: "windows31J";
   zeroTerminated?: boolean;
   regex?: string;
   resource?: string;
@@ -774,7 +775,10 @@ export function getString(
       string += char !== undefined ? char : " ";
     } else if (int === 0x0) {
       string += " ";
-    } else if (letterDataType === "uint16") {
+    } else if (
+      letterDataType === "uint16" &&
+      options.encoding === "windows31J"
+    ) {
       string += decodeWindows31J(int);
     } else {
       string += String.fromCharCode(int);
@@ -838,7 +842,10 @@ export function setString(
             int = parseInt(getObjKey(resource, index));
           }
         } else if (!options.regex || char.match(new RegExp(options.regex))) {
-          if (letterDataType === "uint16") {
+          if (
+            letterDataType === "uint16" &&
+            options.encoding === "windows31J"
+          ) {
             int = encodeWindows31J(char);
           } else {
             int = char.charCodeAt(0);

@@ -32,6 +32,7 @@
         {
           bigEndian: item.bigEndian,
           letterBigEndian: item.letterBigEndian,
+          encoding: item.encoding,
           zeroTerminated: item.zeroTerminated,
           regex: item.regex,
           resource: item.resource,
@@ -71,6 +72,7 @@
       value = getString(item.offset, item.length, item.letterDataType, {
         bigEndian: item.bigEndian,
         letterBigEndian: item.letterBigEndian,
+        encoding: item.encoding,
         zeroTerminated: item.zeroTerminated,
         resource: item.resource,
       }, dataViewAlt);

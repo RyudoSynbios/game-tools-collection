@@ -4063,6 +4063,7 @@ const template: GameJson = {
                           dataType: "string",
                           letterDataType: "uint16",
                           letterBigEndian: true,
+                          encoding: "windows31J",
                           zeroTerminated: true,
                           hidden: true,
                         },

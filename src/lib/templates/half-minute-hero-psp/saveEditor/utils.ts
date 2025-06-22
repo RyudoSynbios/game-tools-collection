@@ -17,6 +17,7 @@ export function overrideParseItem(item: Item): Item {
     itemString.length = 0xc;
     itemString.letterDataType = "uint16";
     itemString.letterBigEndian = true;
+    itemString.encoding = "windows31J";
     itemString.regex = undefined;
 
     return itemString;
