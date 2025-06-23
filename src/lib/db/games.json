@@ -703,6 +703,17 @@
     }
   },
   {
+    "id": "theatrhythm-final-fantasy-curtain-call-3ds",
+    "name": "Theatrhythm Final Fantasy: Curtain Call",
+    "consoleId": "nintendo-3ds",
+    "tools": {
+      "saveEditor": {
+        "createdAt": "2025-06-23",
+        "regions": ["🇪🇺", "🇺🇸", "🇯🇵"]
+      }
+    }
+  },
+  {
     "id": "timesplitters-2-ps2",
     "name": "TimeSplitters 2",
     "consoleId": "playstation-2",

@@ -20,6 +20,11 @@
     "manufacturerId": "nintendo"
   },
   {
+    "id": "nintendo-3ds",
+    "name": "Nintendo 3DS",
+    "manufacturerId": "nintendo"
+  },
+  {
     "id": "nintendo-entertainment-system",
     "name": "Nintendo Entertainment System",
     "manufacturerId": "nintendo"
