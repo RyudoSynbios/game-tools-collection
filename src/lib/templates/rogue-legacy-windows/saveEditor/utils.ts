@@ -57,7 +57,7 @@ export function overrideParseItem(item: Item): Item | ItemTab {
     const itemTab = item as ItemTab;
 
     if ($fileName !== "RogueLegacyPlayer.rcdat") {
-      itemTab.hidden = true;
+      itemTab.disabled = true;
     }
 
     return itemTab;
@@ -65,7 +65,7 @@ export function overrideParseItem(item: Item): Item | ItemTab {
     const itemTab = item as ItemTab;
 
     if ($fileName !== "RogueLegacyBP.rcdat") {
-      itemTab.hidden = true;
+      itemTab.disabled = true;
     }
 
     return itemTab;

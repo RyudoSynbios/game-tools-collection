@@ -796,7 +796,7 @@ const template: GameJson = {
                           },
                         ],
                       },
-                      ...record.vehicules.map((vehicule, index) => {
+                      ...record.vehicles.map((vehicle, index) => {
                         const offset = record.index * 0x4 + index * 0x4;
 
                         return {
@@ -804,7 +804,7 @@ const template: GameJson = {
                           flex: true,
                           items: [
                             {
-                              name: `Best Time (${vehicule})`,
+                              name: `Best Time (${vehicle})`,
                               type: "section",
                               flex: true,
                               items: [

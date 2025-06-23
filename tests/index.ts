@@ -43,23 +43,25 @@ export async function ejectFile(): Promise<void> {
   }
 }
 
-export async function saveShouldBeRejected(saveFile: string): Promise<void> {
-  const isFileExists = fs.existsSync(`${path}/${saveFile}`);
+export async function saveShouldBeRejected(
+  saveFilePath: string,
+): Promise<void> {
+  const isFileExists = fs.existsSync(`${path}/${saveFilePath}`);
 
   if (!isFileExists) {
-    console.log(`File doesn't exists: "${`${path}/${saveFile}`}"`);
+    console.log(`File doesn't exists: "${`${path}/${saveFilePath}`}"`);
   }
 
   expect(isFileExists).toBeTruthy();
 
   const inputFileEl = await page.$('input[type="file"]');
 
-  await inputFileEl?.uploadFile(`${path}/${saveFile}`);
+  await inputFileEl?.uploadFile(`${path}/${saveFilePath}`);
 
   const dropzoneErrorEl = await page.$(".gtc-dropzone-error");
 
   if (!dropzoneErrorEl) {
-    console.log(`Tested file: "${`${path}/${saveFile}`}"`);
+    console.log(`Tested file: "${`${path}/${saveFilePath}`}"`);
   }
 
   expect(dropzoneErrorEl).toBeTruthy();

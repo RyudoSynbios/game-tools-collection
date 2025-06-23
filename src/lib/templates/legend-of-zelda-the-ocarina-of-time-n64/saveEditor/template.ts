@@ -1079,7 +1079,6 @@ const template: GameJson = {
                           type: "bitflags",
                           flags: [
                             { offset: 0x34b, bit: 1, label: "Dungeon cleared" },
-                            { offset: 0xef8, bit: 7, label: "Ring above Death Mountain disappeared" },
                           ],
                         },
                         {
@@ -1117,7 +1116,6 @@ const template: GameJson = {
                           flags: [
                             { offset: 0xa7c, bit: 7, label: "Dungeon opened" },
                             { offset: 0x367, bit: 1, label: "Dungeon cleared" },
-                            { offset: 0xf00, bit: 1, label: "Lake Hylia filled up" },
                           ],
                         },
                         {
@@ -1226,7 +1224,7 @@ const template: GameJson = {
                           name: "Events",
                           type: "bitflags",
                           flags: [
-                            { offset: 0xf01, bit: 7, label: "Well emptied" },
+                            { offset: 0xf01, bit: 7, label: "Dungeon opened" },
                           ],
                         },
                         {
@@ -1555,10 +1553,13 @@ const template: GameJson = {
                           flex: true,
                           items: [
                             {
+                              name: "Adult",
                               type: "bitflags",
                               flags: [
                                 { offset: 0xef6, bit: 0, label: "Epona rescued" },
                                 { offset: 0xeff, bit: 5, label: "Master Sword not blocked by Sheik" },
+                                { offset: 0xef8, bit: 7, label: "Ring above Death Mountain disappeared" },
+                                { offset: 0xf00, bit: 1, label: "Lake Hylia filled up" },
                               ],
                             },
                           ],
