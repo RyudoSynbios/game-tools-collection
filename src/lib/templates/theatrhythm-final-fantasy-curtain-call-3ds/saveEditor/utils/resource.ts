@@ -852,10 +852,11 @@ export const inventory = [
 ];
 
 export const items = inventory.reduce((items: Resource, type) => {
-  if (!type.name.match(/Quest Medleys/))
+  if (["Items", "Ability Scrolls"].includes(type.name)) {
     type.items.forEach((item) => {
       items[item.index] = item.name;
     });
+  }
 
   return items;
 }, {});

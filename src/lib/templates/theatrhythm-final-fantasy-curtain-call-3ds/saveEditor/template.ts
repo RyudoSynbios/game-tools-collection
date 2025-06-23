@@ -1796,7 +1796,6 @@ const template: GameJson = {
         name: inventory[0].name,
         options: inventory[0].items.map((item) => item.index),
       },
-
       {
         name: inventory[4].name,
         options: inventory[4].items.map((item) => item.index),

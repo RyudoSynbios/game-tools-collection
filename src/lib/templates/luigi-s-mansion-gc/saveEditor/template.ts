@@ -1104,7 +1104,6 @@ const template: GameJson = {
                                 { offset: 0x23b4, bit: 1, label: "<b>Boo</b>: GumBoo" },
                               ],
                             },
-
                             {
                               name: "Money",
                               type: "bitflags",
@@ -1259,7 +1258,6 @@ const template: GameJson = {
                                 { offset: 0x23b4, bit: 5, label: "<b>Boo</b>: Booligan" },
                               ],
                             },
-
                             {
                               name: "Money",
                               type: "bitflags",
