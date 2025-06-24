@@ -38,6 +38,7 @@
         >
           <img src="/img/github-mark-white.svg" alt="GitHub Logo" />
         </a>
+        <a href="/">Home</a>
         <a href="/faq">FAQ</a>
         <a href="/about">About</a>
       </div>
