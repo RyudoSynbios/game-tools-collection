@@ -90,6 +90,7 @@ export function overrideSetInt(
 
   return false;
 }
+
 export function afterSetInt(item: Item): void {
   if ("id" in item && item.id === "health") {
     const itemInt = item as ItemInt;

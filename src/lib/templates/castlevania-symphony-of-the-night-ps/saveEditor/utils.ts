@@ -95,11 +95,11 @@ export function overrideSetInt(item: Item, value: string): boolean {
   if ("id" in item && item.id === "location") {
     const itemInt = item as ItemInt;
 
-    const hex = parseInt(value).toHex(6);
+    const int = parseInt(value);
 
-    const location1 = parseInt(hex.slice(0, -4), 16);
-    const location2 = parseInt(hex.slice(-4, -2), 16);
-    const location3 = parseInt(hex.slice(-2), 16);
+    const location1 = int >> 0x10;
+    const location2 = (int >> 0x8) & 0xff;
+    const location3 = int & 0xff;
 
     setInt(itemInt.offset, "uint8", location1);
     setInt(itemInt.offset + 0x4, "uint8", location2);

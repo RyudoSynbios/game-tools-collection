@@ -149,7 +149,6 @@ const template: GameJson = {
                       max: 10,
                     },
                     {
-                      id: "partyExperience",
                       name: "Experience",
                       offset: 0x4eec4,
                       type: "variable",
