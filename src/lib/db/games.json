@@ -507,6 +507,17 @@
     }
   },
   {
+    "id": "muramasa-the-demon-blade-wii",
+    "name": "Muramasa: The Demon Blade",
+    "consoleId": "wii",
+    "tools": {
+      "saveEditor": {
+        "createdAt": "2025-06-26",
+        "regions": ["🇪🇺", "🇺🇸", "🇯🇵"]
+      }
+    }
+  },
+  {
     "id": "mystic-quest-legend-snes",
     "name": "Mystic Quest Legend",
     "consoleId": "super-nintendo",

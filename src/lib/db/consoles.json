@@ -45,6 +45,11 @@
     "manufacturerId": "nintendo"
   },
   {
+    "id": "wii",
+    "name": "Wii",
+    "manufacturerId": "nintendo"
+  },
+  {
     "id": "mega-drive",
     "name": "Mega Drive",
     "manufacturerId": "sega"
