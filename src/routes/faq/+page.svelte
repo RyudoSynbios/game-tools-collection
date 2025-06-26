@@ -113,6 +113,13 @@
       editing, use the same tool to convert your file back.
     </p>
   </Spoiler>
+  <Spoiler title="My data.bin save file won't load (Wii)">
+    <p>It looks like you're trying to edit an encrypted save file.</p>
+    <p>
+      You must first decrypt your save before you can use it in a save editor.
+    </p>
+    <p>Some tools like Dolphin can handle this kind of conversion.</p>
+  </Spoiler>
   <Spoiler title="My .bcr file won't load (Saturn)">
     <p>Your save file may be compressed.</p>
     <p>
