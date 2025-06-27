@@ -10,6 +10,9 @@ import {
   weapons,
 } from "./utils/resource";
 
+const statsHint =
+  "This attribute is disabled because the game doesn't take it into account when loading the save.\nIt will be calculated automatically based on the level, abilities, etc.";
+
 const template: GameJson = {
   validator: {
     fileNames: [/ff7rebirth([0-9]+).sav/],
@@ -434,6 +437,7 @@ const template: GameJson = {
                               offset: 0xec,
                               type: "variable",
                               dataType: "uint32",
+                              hint: statsHint,
                               disabled: true,
                             },
                             {
@@ -454,6 +458,7 @@ const template: GameJson = {
                               offset: 0x58,
                               type: "variable",
                               dataType: "uint32",
+                              hint: statsHint,
                               disabled: true,
                             },
                             {
@@ -461,6 +466,7 @@ const template: GameJson = {
                               offset: 0x5c,
                               type: "variable",
                               dataType: "uint32",
+                              hint: statsHint,
                               disabled: true,
                             },
                             {
@@ -468,6 +474,7 @@ const template: GameJson = {
                               offset: 0x60,
                               type: "variable",
                               dataType: "uint32",
+                              hint: statsHint,
                               disabled: true,
                             },
                             {
@@ -475,6 +482,7 @@ const template: GameJson = {
                               offset: 0x64,
                               type: "variable",
                               dataType: "uint32",
+                              hint: statsHint,
                               disabled: true,
                             },
                             {
@@ -482,6 +490,7 @@ const template: GameJson = {
                               offset: 0x70,
                               type: "variable",
                               dataType: "uint32",
+                              hint: statsHint,
                               disabled: true,
                             },
                             {
@@ -489,6 +498,7 @@ const template: GameJson = {
                               offset: 0x74,
                               type: "variable",
                               dataType: "uint32",
+                              hint: statsHint,
                               disabled: true,
                             },
                             {
@@ -496,6 +506,7 @@ const template: GameJson = {
                               offset: 0x78,
                               type: "variable",
                               dataType: "uint32",
+                              hint: statsHint,
                               disabled: true,
                             },
                             {
@@ -503,6 +514,7 @@ const template: GameJson = {
                               offset: 0x7c,
                               type: "variable",
                               dataType: "uint32",
+                              hint: statsHint,
                               disabled: true,
                             },
                             {
@@ -510,6 +522,7 @@ const template: GameJson = {
                               offset: 0x68,
                               type: "variable",
                               dataType: "uint32",
+                              hint: statsHint,
                               disabled: true,
                             },
                             {
@@ -517,6 +530,7 @@ const template: GameJson = {
                               offset: 0x80,
                               type: "variable",
                               dataType: "uint32",
+                              hint: statsHint,
                               disabled: true,
                             },
                             {
@@ -524,6 +538,7 @@ const template: GameJson = {
                               offset: 0x6c,
                               type: "variable",
                               dataType: "uint32",
+                              hint: statsHint,
                               disabled: true,
                             },
                           ],
