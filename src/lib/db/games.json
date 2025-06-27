@@ -507,6 +507,17 @@
     }
   },
   {
+    "id": "mission-impossible-n64",
+    "name": "Mission: Impossible",
+    "consoleId": "nintendo-64",
+    "tools": {
+      "saveEditor": {
+        "createdAt": "2025-06-27",
+        "regions": ["🇪🇺", "🇺🇸", "🇫🇷", "🇩🇪", "🇮🇹", "🇪🇸"]
+      }
+    }
+  },
+  {
     "id": "muramasa-the-demon-blade-wii",
     "name": "Muramasa: The Demon Blade",
     "consoleId": "wii",

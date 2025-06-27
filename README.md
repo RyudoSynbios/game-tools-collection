@@ -49,6 +49,7 @@ Link to the website: [https://game-tools-collection.com](https://game-tools-coll
 | Lylat Wars                                | N64      | Save                    | EUR / USA / JAP / AUS                         |
 | Mario Party                               | N64      | Save                    | EUR / USA / JAP                               |
 | Marvel vs. Capcom 2: New Age of Heroes    | DC       | Save                    | EUR / USA / JAP                               |
+| Mission: Impossible                       | N64      | Save                    | EUR / USA / FRA / GER / ITA / SPA             |
 | Muramasa: The Demon Blade                 | WII      | Save                    | EUR / USA / JAP                               |
 | Mystic Quest Legend                       | SNES     | Save / Rom              | EUR / USA / JAP / FRA / GER                   |
 | Mystical Ninja 2 Starring Goemon          | N64      | Save                    | EUR / USA / JAP                               |
