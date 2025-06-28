@@ -24,6 +24,7 @@ Link to the website: [https://game-tools-collection.com](https://game-tools-coll
 | Diddy Kong Racing                         | N64      | Save                    | EUR / USA / JAP                               |
 | Dissidia 012: Duodecim Final Fantasy      | PSP      | Save                    | EUR / USA / JAP                               |
 | Donkey Kong Land                          | GB       | Save                    | EUR / USA / JAP                               |
+| Final Fantasy                             | NES      | Save                    | USA / JAP                                     |
 | Final Fantasy IX                          | PS       | Save                    | EUR / USA / JAP / FRA / GER / ITA / SPA       |
 | Final Fantasy VII Rebirth                 | WIN      | Save                    | WORLD                                         |
 | Final Fantasy VII Remake                  | WIN      | Save                    | WORLD                                         |

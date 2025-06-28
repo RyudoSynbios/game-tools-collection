@@ -228,6 +228,17 @@
     }
   },
   {
+    "id": "final-fantasy-nes",
+    "name": "Final Fantasy",
+    "consoleId": "nintendo-entertainment-system",
+    "tools": {
+      "saveEditor": {
+        "createdAt": "2025-06-28",
+        "regions": ["🇺🇸", "🇯🇵"]
+      }
+    }
+  },
+  {
     "id": "final-fantasy-ix-ps",
     "name": "Final Fantasy IX",
     "consoleId": "playstation",
