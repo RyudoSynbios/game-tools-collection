@@ -124,7 +124,7 @@ export function generateChecksum(item: ItemChecksum): number {
     checksum += getInt(i, "uint16");
   }
 
-  while (checksum > 0x10000) {
+  while (checksum > 0xffff) {
     checksum = (checksum & 0xffff) + (checksum >> 0x10);
   }
 
