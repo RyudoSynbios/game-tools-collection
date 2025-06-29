@@ -11,7 +11,7 @@ describe(game, () => {
 
   // prettier-ignore
   test.each([
-    ["should load a standard save (World)"  ,     "ff7rebirth001.sav", ["i|2000"]],
+    ["should load a standard save (World)", "ff7rebirth001.sav", ["i|2000"]],
   ])("%s", async (...args) =>
     await snippet(`${game}/${args[1]}`, args[2]),
   );

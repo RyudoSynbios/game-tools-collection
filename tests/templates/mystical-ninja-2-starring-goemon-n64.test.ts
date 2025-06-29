@@ -24,7 +24,7 @@ describe(game, () => {
     ["should load an empty standard save"         ,   "empty.mpk", [            't|["Options"]']],
     ["should load a deleted standard save"        , "deleted.mpk", [            't|["Options"]']],
     ["should load a filled standard save (Europe)",  "filled.mpk", ["r|europe", 't|["Slot 2","Options"]'         , "s|2$1", "c|0x6d9c72c4", "i|2", "s|2$2", "i|136", "w|137", "c|0x1d46dfc7"]],
-    ["should load a filled standard save (USA)"   ,  "filled.mpk", ["r|usa",    't|["Slot 3","Options"]'         , "s|3$1", "c|0xa09897d7", "i|1", "s|2$2", "i|134", "w|135", "c|0xd0423ad4"]],
+    ["should load a filled standard save (USA)"   ,  "filled.mpk", ["r|usa"   , 't|["Slot 3","Options"]'         , "s|3$1", "c|0xa09897d7", "i|1", "s|2$2", "i|134", "w|135", "c|0xd0423ad4"]],
     ["should load a standard save (Europe)"       ,  "europe.mpk", [            't|["Slot 1","Options"]'         , "s|1$1", "c|0x94f4c941", "i|1", "s|2$2", "i|103", "w|104", "c|0x49a6d93e"]],
     ["should load a standard save (USA)"          ,     "usa.mpk", [            't|["Slot 3","Options"]'         , "s|3$1", "c|0xd5f430d2", "i|4", "s|2$2", "i|144", "w|145", "c|0xa52e9dd1"]],
     ["should load a standard save (Japan)"        ,   "japan.sra", [            't|["Slot 2","Options"]'         , "s|2$1", "c|0x92e76c8b", "i|3", "s|2$2", "i|131", "w|132", "c|0xc4233235"]],
