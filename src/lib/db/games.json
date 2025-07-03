@@ -703,6 +703,17 @@
     }
   },
   {
+    "id": "super-punch-out-snes",
+    "name": "Super Punch Out!!",
+    "consoleId": "super-nintendo",
+    "tools": {
+      "saveEditor": {
+        "createdAt": "2025-07-03",
+        "regions": ["🇪🇺", "🇺🇸", "🇯🇵"]
+      }
+    }
+  },
+  {
     "id": "super-smash-bros-n64",
     "name": "Super Smash Bros.",
     "consoleId": "nintendo-64",
