@@ -6,6 +6,7 @@ Link to the website: [https://game-tools-collection.com](https://game-tools-coll
 | ----------------------------------------- | -------- | ----------------------- | --------------------------------------------- |
 | 007: Agent Under Fire                     | PS2      | Save                    | EUR / USA / KOR                               |
 | 1080° Snowboarding                        | N64      | Save                    | EUR / USA / JAP                               |
+| 3D Dot Game Heroes                        | PS3      | Save                    | EUR / USA / JAP                               |
 | Akumajou Dracula X: Chi no Rondo          | PCECD    | Save                    | JAP                                           |
 | Banjo-Kazooie                             | N64      | Save                    | EUR / USA / JAP                               |
 | Banjo-Tooie                               | N64      | Save                    | EUR / USA / JAP                               |
