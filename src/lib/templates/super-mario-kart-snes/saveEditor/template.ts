@@ -1,0 +1,335 @@
+import type { GameJson } from "$lib/types";
+
+const template: GameJson = {
+  validator: {
+    regions: {
+      europe_usa_japan: {},
+    },
+    text: "Drag 'n' drop here or click to add a save file.",
+    error: "Not a valid save file.",
+  },
+  items: [
+    {
+      type: "tabs",
+      items: [
+        {
+          name: "Mario Kart GP",
+          items: [
+            {
+              name: "Checksum",
+              offset: 0x7f0,
+              type: "checksum",
+              dataType: "uint16",
+              control: {
+                offsetStart: 0x7f2,
+                offsetEnd: 0x7f6,
+              },
+            },
+            {
+              name: "50cc Class",
+              type: "section",
+              flex: true,
+              items: [
+                {
+                  name: "Mushroom Cup",
+                  offset: 0x7f2,
+                  type: "variable",
+                  dataType: "uint8",
+                  binary: { bitStart: 2, bitLength: 2 },
+                  resource: "cups",
+                  test: true,
+                },
+                {
+                  name: "Flower Cup",
+                  offset: 0x7f3,
+                  type: "variable",
+                  dataType: "uint8",
+                  binary: { bitStart: 2, bitLength: 2 },
+                  resource: "cups",
+                },
+                {
+                  name: "Star Cup",
+                  offset: 0x7f4,
+                  type: "variable",
+                  dataType: "uint8",
+                  binary: { bitStart: 2, bitLength: 2 },
+                  resource: "cups",
+                },
+              ],
+            },
+            {
+              name: "100cc Class",
+              type: "section",
+              flex: true,
+              items: [
+                {
+                  name: "Mushroom Cup",
+                  offset: 0x7f2,
+                  type: "variable",
+                  dataType: "uint8",
+                  binary: { bitStart: 0, bitLength: 2 },
+                  resource: "cups",
+                },
+                {
+                  name: "Flower Cup",
+                  offset: 0x7f3,
+                  type: "variable",
+                  dataType: "uint8",
+                  binary: { bitStart: 0, bitLength: 2 },
+                  resource: "cups",
+                },
+                {
+                  name: "Star Cup",
+                  offset: 0x7f4,
+                  type: "variable",
+                  dataType: "uint8",
+                  binary: { bitStart: 0, bitLength: 2 },
+                  resource: "cups",
+                },
+                {
+                  name: "Special Cup",
+                  offset: 0x7f5,
+                  type: "variable",
+                  dataType: "uint8",
+                  binary: { bitStart: 0, bitLength: 2 },
+                  resource: "cups",
+                },
+              ],
+            },
+            {
+              name: "150cc Class",
+              type: "section",
+              flex: true,
+              items: [
+                {
+                  name: "Mushroom Cup",
+                  offset: 0x7f2,
+                  type: "variable",
+                  dataType: "uint8",
+                  binary: { bitStart: 4, bitLength: 2 },
+                  resource: "cups",
+                },
+                {
+                  name: "Flower Cup",
+                  offset: 0x7f3,
+                  type: "variable",
+                  dataType: "uint8",
+                  binary: { bitStart: 4, bitLength: 2 },
+                  resource: "cups",
+                },
+                {
+                  name: "Star Cup",
+                  offset: 0x7f4,
+                  type: "variable",
+                  dataType: "uint8",
+                  binary: { bitStart: 4, bitLength: 2 },
+                  resource: "cups",
+                },
+                {
+                  name: "Special Cup",
+                  offset: 0x7f5,
+                  type: "variable",
+                  dataType: "uint8",
+                  binary: { bitStart: 4, bitLength: 2 },
+                  resource: "cups",
+                },
+              ],
+            },
+          ],
+        },
+        {
+          name: "Time Trial",
+          items: [
+            {
+              length: 0x14,
+              type: "container",
+              instanceType: "tabs",
+              instances: 20,
+              resource: "courses",
+              resourceOrder: true,
+              vertical: true,
+              items: [
+                {
+                  id: "timeTrialChecksum",
+                  name: "Checksum",
+                  offset: 0x660,
+                  type: "checksum",
+                  dataType: "uint16",
+                  control: {
+                    offsetStart: 0x660,
+                    offsetEnd: 0x674,
+                  },
+                },
+                {
+                  type: "section",
+                  flex: true,
+                  items: [
+                    {
+                      type: "section",
+                      flex: true,
+                      items: [
+                        {
+                          length: 0x3,
+                          type: "container",
+                          instanceType: "section",
+                          instances: 5,
+                          items: [
+                            {
+                              type: "section",
+                              flex: true,
+                              items: [
+                                {
+                                  name: "%o Place",
+                                  type: "group",
+                                  mode: "time",
+                                  items: [
+                                    {
+                                      id: "time-minutes",
+                                      offset: 0x664,
+                                      type: "variable",
+                                      dataType: "lower4",
+                                      binaryCodedDecimal: true,
+                                      max: 9,
+                                    },
+                                    {
+                                      id: "time-seconds",
+                                      offset: 0x663,
+                                      type: "variable",
+                                      dataType: "uint8",
+                                      binaryCodedDecimal: true,
+                                      leadingZeros: 1,
+                                      max: 59,
+                                    },
+                                    {
+                                      id: "time-milliseconds",
+                                      offset: 0x662,
+                                      type: "variable",
+                                      dataType: "uint8",
+                                      binaryCodedDecimal: true,
+                                      leadingZeros: 1,
+                                      max: 99,
+                                    },
+                                  ],
+                                },
+                                {
+                                  id: "character",
+                                  name: "Character",
+                                  offset: 0x664,
+                                  type: "variable",
+                                  dataType: "uint8",
+                                  resource: "characters",
+                                },
+                              ],
+                            },
+                          ],
+                        },
+                      ],
+                    },
+                    {
+                      type: "section",
+                      flex: true,
+                      items: [
+                        {
+                          name: "Best Lap",
+                          type: "group",
+                          mode: "time",
+                          items: [
+                            {
+                              id: "time-minutes",
+                              offset: 0x673,
+                              type: "variable",
+                              dataType: "lower4",
+                              binaryCodedDecimal: true,
+                              max: 9,
+                            },
+                            {
+                              id: "time-seconds",
+                              offset: 0x672,
+                              type: "variable",
+                              dataType: "uint8",
+                              binaryCodedDecimal: true,
+                              leadingZeros: 1,
+                              max: 59,
+                            },
+                            {
+                              id: "time-milliseconds",
+                              offset: 0x671,
+                              type: "variable",
+                              dataType: "uint8",
+                              binaryCodedDecimal: true,
+                              leadingZeros: 1,
+                              max: 99,
+                              test: true,
+                            },
+                          ],
+                        },
+                        {
+                          id: "character",
+                          name: "Character",
+                          offset: 0x673,
+                          type: "variable",
+                          dataType: "uint8",
+                          resource: "characters",
+                        },
+                      ],
+                    },
+                  ],
+                },
+              ],
+            },
+          ],
+        },
+      ],
+    },
+  ],
+  resources: {
+    characters: {
+      0x0: "-",
+      0x1: "Mario",
+      0x2: "Luigi",
+      0x3: "Bowser",
+      0x4: "Princess",
+      0x5: "D.K.JR",
+      0x6: "Koopa",
+      0x7: "Toad",
+      0x8: "Yoshi",
+    },
+    courses: {
+      0x0: "Mario Circuit 3",
+      0x1: "Ghost Valley 2",
+      0x2: "Donut Plains 2",
+      0x3: "Bowser Castle 2",
+      0x4: "Vanilla Lake 2",
+      0x5: "Rainbow Road",
+      0x6: "Koopa Beach 2",
+      0x7: "Mario Circuit 1",
+      0x8: "Ghost Valley 3",
+      0x9: "Bowser Castle 3",
+      0xa: "Choco Island 2",
+      0xb: "Donut Plains 3",
+      0xc: "Vanilla Lake 1",
+      0xd: "Koopa Beach 1",
+      0xe: "Mario Circuit 4",
+      0xf: "Mario Circuit 2",
+      0x10: "Ghost Valley 1",
+      0x11: "Bowser Castle 1",
+      0x12: "Choco Island 1",
+      0x13: "Donut Plains 1",
+    },
+    cups: {
+      0x0: "-",
+      0x1: "Gold",
+      0x2: "Silver",
+      0x3: "Bronze",
+    },
+  },
+  resourcesOrder: {
+    courses: [
+      0x7, 0x13, 0x10, 0x11, 0xf, 0x12, 0x1, 0x2, 0x3, 0x0, 0xd, 0xa, 0xc, 0x9,
+      0xe, 0xb, 0x6, 0x8, 0x4, 0x5,
+    ],
+    cups: [0x0, 0x3, 0x2, 0x1],
+  },
+};
+
+export default template;
