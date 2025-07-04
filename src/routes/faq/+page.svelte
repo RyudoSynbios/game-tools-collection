@@ -118,7 +118,9 @@
     <p>
       You must first decrypt your save before you can use it in a save editor.
     </p>
-    <p>Some tools like Dolphin can handle this kind of conversion.</p>
+    <p>
+      Some tools like <strong>Dolphin</strong> can handle this kind of conversion.
+    </p>
   </Spoiler>
   <Spoiler title="My .bcr file won't load (Saturn)">
     <p>Your save file may be compressed.</p>

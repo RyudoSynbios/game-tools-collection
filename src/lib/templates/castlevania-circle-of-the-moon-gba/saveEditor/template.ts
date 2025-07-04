@@ -74,6 +74,13 @@ const template: GameJson = {
                       test: true,
                     },
                     {
+                      name: "Mode",
+                      offset: 0x9c,
+                      type: "variable",
+                      dataType: "uint16",
+                      resource: "modes",
+                    },
+                    {
                       name: "Playtime",
                       type: "group",
                       mode: "time",
@@ -111,13 +118,6 @@ const template: GameJson = {
                           max: 59,
                         },
                       ],
-                    },
-                    {
-                      name: "Mode",
-                      offset: 0x9c,
-                      type: "variable",
-                      dataType: "uint16",
-                      resource: "modes",
                     },
                     {
                       name: "Location",

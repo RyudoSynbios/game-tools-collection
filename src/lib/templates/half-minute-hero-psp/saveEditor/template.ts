@@ -2146,7 +2146,7 @@ const template: GameJson = {
                         { offset: 0x118, bit: 7, label: "Bill" },
                         { offset: 0x119, bit: 0, label: "Clive" },
                         { offset: 0x119, bit: 1, label: "Scorpio", separator: true },
-                        { offset: 0x119, bit: 2, label: "Johnny &amp; Max" },
+                        { offset: 0x119, bit: 2, label: "Johnny & Max" },
                         { offset: 0x119, bit: 3, label: "Black Knight Lord Zain" },
                         { offset: 0x119, bit: 4, label: "Anaphylac" },
                         { offset: 0x119, bit: 5, label: "Ultimate Evil Lord" },
