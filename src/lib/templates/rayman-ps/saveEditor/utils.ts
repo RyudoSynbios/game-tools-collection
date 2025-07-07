@@ -48,23 +48,26 @@ export function overrideParseContainerItemsShifts(
   return [false, undefined];
 }
 
-export function afterSetInt(item: Item): void {
+export function overrideItem(item: Item): Item {
   if ("id" in item && item.id === "health") {
     const itemInt = item as ItemInt;
 
-    let health = getInt(itemInt.offset, "uint8");
-    const healthMax = getInt(itemInt.offset - 0x77, "uint8");
+    const maxHealth = getInt(itemInt.offset - 0x77, "uint8") + 0x1;
 
-    health = Math.min(health, healthMax);
+    itemInt.max = maxHealth;
+  }
 
-    setInt(itemInt.offset, "uint8", health);
-  } else if ("id" in item && item.id === "healthMax") {
+  return item;
+}
+
+export function afterSetInt(item: Item): void {
+  if ("id" in item && item.id === "maxHealth") {
     const itemInt = item as ItemInt;
 
     let health = getInt(itemInt.offset + 0x77, "uint8");
-    const healthMax = getInt(itemInt.offset, "uint8");
+    const maxHealth = getInt(itemInt.offset, "uint8");
 
-    health = Math.min(health, healthMax);
+    health = Math.min(health, maxHealth);
 
     setInt(itemInt.offset + 0x77, "uint8", health);
   } else if ("id" in item && item.id?.match(/level-/)) {

@@ -2,65 +2,62 @@ import { getInt, setInt } from "$lib/utils/bytes";
 
 import type { Item, ItemInt, Resource } from "$lib/types";
 
-export function afterSetInt(item: Item): void {
+export function overrideItem(item: Item): Item {
   if ("id" in item && item.id === "health") {
     const itemInt = item as ItemInt;
 
-    let health = getInt(itemInt.offset, "uint8");
-    const healthMax = getInt(itemInt.offset + 0x1, "uint8");
+    const maxHealth = getInt(itemInt.offset + 0x1, "uint8");
 
-    health = Math.min(health, healthMax * 8);
-
-    setInt(itemInt.offset, "uint8", health);
-  } else if ("id" in item && item.id === "healthMax") {
-    const itemInt = item as ItemInt;
-
-    let health = getInt(itemInt.offset - 0x1, "uint8");
-    const healthMax = getInt(itemInt.offset, "uint8");
-
-    health = Math.min(health, healthMax * 8);
-
-    setInt(itemInt.offset - 0x1, "uint8", health);
+    itemInt.max = maxHealth;
   } else if (
     "id" in item &&
     (item.id === "magicPowder" || item.id === "bombs")
   ) {
     const itemInt = item as ItemInt;
 
-    let quantities = getInt(itemInt.offset, "uint8");
-    const quantitiesMax = getInt(itemInt.offset + 0x2a, "uint8");
+    const maxQuantities = getInt(itemInt.offset + 0x2a, "uint8");
 
-    quantities = Math.min(quantities, quantitiesMax);
+    itemInt.max = maxQuantities;
+  } else if ("id" in item && item.id === "arrows") {
+    const itemInt = item as ItemInt;
 
-    setInt(itemInt.offset, "uint8", quantities);
+    const maxArrows = getInt(itemInt.offset + 0x33, "uint8");
+
+    itemInt.max = maxArrows;
+  }
+
+  return item;
+}
+
+export function afterSetInt(item: Item): void {
+  if ("id" in item && item.id === "maxHealth") {
+    const itemInt = item as ItemInt;
+
+    let health = getInt(itemInt.offset - 0x1, "uint8");
+    const maxHealth = getInt(itemInt.offset, "uint8");
+
+    health = Math.min(health, maxHealth * 8);
+
+    setInt(itemInt.offset - 0x1, "uint8", health);
   } else if (
     "id" in item &&
-    (item.id === "magicPowderMax" || item.id === "bombsMax")
+    (item.id === "maxMagicPowder" || item.id === "maxBombs")
   ) {
     const itemInt = item as ItemInt;
 
     let quantities = getInt(itemInt.offset - 0x2a, "uint8");
-    const quantitiesMax = getInt(itemInt.offset, "uint8");
+    const maxQuantities = getInt(itemInt.offset, "uint8");
 
-    quantities = Math.min(quantities, quantitiesMax);
+    quantities = Math.min(quantities, maxQuantities);
 
     setInt(itemInt.offset - 0x2a, "uint8", quantities);
-  } else if ("id" in item && item.id === "arrows") {
-    const itemInt = item as ItemInt;
-
-    let arrows = getInt(itemInt.offset, "uint8");
-    const arrowsMax = getInt(itemInt.offset + 0x33, "uint8");
-
-    arrows = Math.min(arrows, arrowsMax);
-
-    setInt(itemInt.offset, "uint8", arrows);
-  } else if ("id" in item && item.id === "arrowsMax") {
+  } else if ("id" in item && item.id === "maxArrows") {
     const itemInt = item as ItemInt;
 
     let arrows = getInt(itemInt.offset - 0x33, "uint8");
-    const arrowsMax = getInt(itemInt.offset, "uint8");
+    const maxArrows = getInt(itemInt.offset, "uint8");
 
-    arrows = Math.min(arrows, arrowsMax);
+    arrows = Math.min(arrows, maxArrows);
 
     setInt(itemInt.offset - 0x33, "uint8", arrows);
   }

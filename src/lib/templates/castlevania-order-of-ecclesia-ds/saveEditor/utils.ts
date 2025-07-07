@@ -60,6 +60,12 @@ export function overrideItem(item: Item): Item {
     });
 
     return itemTabs;
+  } else if ("id" in item && item.id === "level") {
+    const itemInt = item as ItemInt;
+
+    const maxLevel = getInt(itemInt.offset + 0x4ea, "uint8");
+
+    itemInt.max = maxLevel;
   }
 
   return item;
@@ -175,10 +181,7 @@ export function afterSetInt(item: Item, flag: ItemBitflag): void {
   } else if ("id" in item && item.id === "level") {
     const itemInt = item as ItemInt;
 
-    let level = getInt(itemInt.offset, "uint8");
-    const maxLevel = getInt(itemInt.offset + 0x4ea, "uint8");
-
-    level = Math.min(level, maxLevel);
+    const level = getInt(itemInt.offset, "uint8");
 
     let experience = 0;
 
@@ -186,7 +189,6 @@ export function afterSetInt(item: Item, flag: ItemBitflag): void {
       experience = 2 * level + 5 * level ** 2 + 3 * level ** 3;
     }
 
-    setInt(itemInt.offset, "uint8", level);
     setInt(itemInt.offset + 0x5c, "uint32", experience);
   } else if ("id" in item && item.id === "maxLevel") {
     const itemInt = item as ItemInt;

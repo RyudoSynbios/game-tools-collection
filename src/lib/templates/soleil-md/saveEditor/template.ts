@@ -158,10 +158,9 @@ const template: GameJson = {
                           type: "variable",
                           dataType: "uint16",
                           bigEndian: true,
-                          max: 32,
                         },
                         {
-                          id: "healthMax",
+                          id: "maxHealth",
                           offset: 0x62,
                           type: "variable",
                           dataType: "uint16",

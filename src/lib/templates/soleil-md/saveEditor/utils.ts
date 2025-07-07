@@ -47,6 +47,20 @@ export function overrideParseItem(item: Item): Item {
   return item;
 }
 
+export function overrideItem(item: Item): Item {
+  if ("id" in item && item.id === "health") {
+    const itemInt = item as ItemInt;
+
+    const maxHealth = getInt(itemInt.offset + 0x2, "uint16", {
+      bigEndian: true,
+    });
+
+    itemInt.max = maxHealth;
+  }
+
+  return item;
+}
+
 export function afterSetInt(item: Item, flag: ItemBitflag): void {
   if ("id" in item && item.id === "location") {
     const itemInt = item as ItemInt;
@@ -213,24 +227,13 @@ export function afterSetInt(item: Item, flag: ItemBitflag): void {
     setInt(itemInt.offset + 0x4, "uint16", locationSavePreview, {
       bigEndian: true,
     });
-  } else if ("id" in item && item.id === "health") {
-    const itemInt = item as ItemInt;
-
-    let health = getInt(itemInt.offset, "uint16", { bigEndian: true });
-    const healthMax = getInt(itemInt.offset + 0x2, "uint16", {
-      bigEndian: true,
-    });
-
-    health = Math.min(health, healthMax);
-
-    setInt(itemInt.offset, "uint16", health, { bigEndian: true });
-  } else if ("id" in item && item.id === "healthMax") {
+  } else if ("id" in item && item.id === "maxHealth") {
     const itemInt = item as ItemInt;
 
     let health = getInt(itemInt.offset - 0x2, "uint16", { bigEndian: true });
-    const healthMax = getInt(itemInt.offset, "uint16", { bigEndian: true });
+    const maxHealth = getInt(itemInt.offset, "uint16", { bigEndian: true });
 
-    health = Math.min(health, healthMax);
+    health = Math.min(health, maxHealth);
 
     setInt(itemInt.offset - 0x2, "uint16", health, { bigEndian: true });
   } else if ("id" in item && item.id?.match(/equippedAnimal-/)) {

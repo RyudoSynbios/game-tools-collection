@@ -179,11 +179,10 @@ const template: GameJson = {
                                   dataType: "uint8",
                                   operations: [{ "/": 4 }],
                                   min: 0.25,
-                                  max: 16,
                                   step: 0.25,
                                 },
                                 {
-                                  id: "healthMax",
+                                  id: "maxHealth",
                                   offset: 0x103,
                                   type: "variable",
                                   dataType: "uint8",
@@ -631,7 +630,7 @@ const template: GameJson = {
                                   binaryCodedDecimal: true,
                                 },
                                 {
-                                  id: "bombsMax",
+                                  id: "maxBombs",
                                   offset: 0x10b,
                                   type: "variable",
                                   dataType: "uint8",
@@ -665,7 +664,7 @@ const template: GameJson = {
                                   binaryCodedDecimal: true,
                                 },
                                 {
-                                  id: "seedsMax",
+                                  id: "maxSeeds",
                                   offset: 0x10e,
                                   type: "variable",
                                   dataType: "uint8",
@@ -686,7 +685,7 @@ const template: GameJson = {
                                   binaryCodedDecimal: true,
                                 },
                                 {
-                                  id: "seedsMax",
+                                  id: "maxSeeds",
                                   offset: 0x10e,
                                   type: "variable",
                                   dataType: "uint8",
@@ -707,7 +706,7 @@ const template: GameJson = {
                                   binaryCodedDecimal: true,
                                 },
                                 {
-                                  id: "seedsMax",
+                                  id: "maxSeeds",
                                   offset: 0x10e,
                                   type: "variable",
                                   dataType: "uint8",
@@ -728,7 +727,7 @@ const template: GameJson = {
                                   binaryCodedDecimal: true,
                                 },
                                 {
-                                  id: "seedsMax",
+                                  id: "maxSeeds",
                                   offset: 0x10e,
                                   type: "variable",
                                   dataType: "uint8",
@@ -749,7 +748,7 @@ const template: GameJson = {
                                   binaryCodedDecimal: true,
                                 },
                                 {
-                                  id: "seedsMax",
+                                  id: "maxSeeds",
                                   offset: 0x10e,
                                   type: "variable",
                                   dataType: "uint8",

@@ -98,10 +98,9 @@ const template: GameJson = {
                           dataType: "uint8",
                           operations: [{ "+": 1 }],
                           min: 1,
-                          max: 5,
                         },
                         {
-                          id: "healthMax",
+                          id: "maxHealth",
                           offset: 0x409,
                           type: "variable",
                           dataType: "uint8",

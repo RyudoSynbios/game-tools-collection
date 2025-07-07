@@ -122,11 +122,11 @@ export function overrideItem(item: Item): Item {
   } else if ("id" in item && item.id === "health") {
     const itemInt = item as ItemInt;
 
-    const healthMax = getInt(itemInt.offset - 0x2, "uint16", {
+    const maxHealth = getInt(itemInt.offset - 0x2, "uint16", {
       bigEndian: true,
     });
 
-    itemInt.max = healthMax / 16;
+    itemInt.max = maxHealth / 16;
   } else if ("id" in item && item.id === "magic") {
     const itemInt = item as ItemInt;
 
@@ -281,35 +281,13 @@ export function afterSetInt(item: Item): void {
     setInt(itemInt.offset - shift, dataType, value, {
       bigEndian: dataType === "uint16",
     });
-  } else if ("id" in item && item.id === "rupeesMax") {
-    const itemInt = item as ItemInt;
-
-    let rupees = getInt(itemInt.offset - 0x80, "uint16", { bigEndian: true });
-    const wallet = getInt(itemInt.offset, "uint8", {
-      binary: {
-        bitStart: 4,
-        bitLength: 2,
-      },
-    });
-
-    let rupeesMax = 99;
-
-    if (wallet === 0x1) {
-      rupeesMax = 200;
-    } else if (wallet === 0x2) {
-      rupeesMax = 500;
-    }
-
-    rupees = Math.min(rupees, rupeesMax);
-
-    setInt(itemInt.offset - 0x80, "uint16", rupees, { bigEndian: true });
-  } else if ("id" in item && item.id === "healthMax") {
+  } else if ("id" in item && item.id === "maxHealth") {
     const itemInt = item as ItemInt;
 
     let health = getInt(itemInt.offset + 0x2, "uint16", { bigEndian: true });
-    const healthMax = getInt(itemInt.offset, "uint16", { bigEndian: true });
+    const maxHealth = getInt(itemInt.offset, "uint16", { bigEndian: true });
 
-    health = Math.min(health, healthMax);
+    health = Math.min(health, maxHealth);
 
     setInt(itemInt.offset + 0x2, "uint16", health, { bigEndian: true });
 
@@ -318,7 +296,7 @@ export function afterSetInt(item: Item): void {
     const hasDoubleDefense = getBoolean(itemInt.offset + 0xe);
 
     if (hasDoubleDefense) {
-      int = healthMax / 16;
+      int = maxHealth / 16;
     }
 
     setInt(itemInt.offset + 0x9f, "uint8", int);
@@ -348,12 +326,12 @@ export function afterSetInt(item: Item): void {
     let int = 0;
 
     const hasDoubleDefense = getBoolean(itemInt.offset);
-    const healthMax = getInt(itemInt.offset - 0xe, "uint16", {
+    const maxHealth = getInt(itemInt.offset - 0xe, "uint16", {
       bigEndian: true,
     });
 
     if (hasDoubleDefense) {
-      int = healthMax / 16;
+      int = maxHealth / 16;
     }
 
     setInt(itemInt.offset + 0x91, "uint8", int);

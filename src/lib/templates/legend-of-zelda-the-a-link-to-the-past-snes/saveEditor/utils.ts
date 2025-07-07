@@ -55,6 +55,42 @@ export function overrideParseItem(item: Item): Item {
   return item;
 }
 
+export function overrideItem(item: Item): Item {
+  const $gameTemplate = get(gameTemplate);
+
+  if ("id" in item && item.id === "health") {
+    const itemInt = item as ItemInt;
+
+    const maxHealth = getInt(itemInt.offset - 0x1, "uint8", {
+      operations: itemInt.operations,
+    });
+
+    itemInt.max = maxHealth;
+  } else if ("id" in item && item.id === "bombs") {
+    const itemInt = item as ItemInt;
+
+    const bombBag = getInt(itemInt.offset + 0x2d, "uint8");
+
+    const maxBombs = parseInt(
+      $gameTemplate.resources!.maxBombs[bombBag] as string,
+    );
+
+    itemInt.max = maxBombs;
+  } else if ("id" in item && item.id === "arrows") {
+    const itemInt = item as ItemInt;
+
+    const quiver = getInt(itemInt.offset - 0x6, "uint8");
+
+    const maxArrows = parseInt(
+      $gameTemplate.resources!.maxArrows[quiver] as string,
+    );
+
+    itemInt.max = maxArrows;
+  }
+
+  return item;
+}
+
 export function overrideSetInt(item: Item, value: string): boolean {
   const $gameRegion = get(gameRegion);
 
@@ -83,71 +119,36 @@ export function overrideSetInt(item: Item, value: string): boolean {
 export function afterSetInt(item: Item): void {
   const $gameTemplate = get(gameTemplate);
 
-  if ("id" in item && item.id === "health") {
-    const itemInt = item as ItemInt;
-
-    let health = getInt(itemInt.offset, "uint8");
-    const healthMax = getInt(itemInt.offset - 0x1, "uint8");
-
-    health = Math.min(health, healthMax);
-
-    setInt(itemInt.offset, "uint8", health);
-  } else if ("id" in item && item.id === "healthMax") {
+  if ("id" in item && item.id === "maxHealth") {
     const itemInt = item as ItemInt;
 
     let health = getInt(itemInt.offset + 0x1, "uint8");
-    const healthMax = getInt(itemInt.offset, "uint8");
+    const maxHealth = getInt(itemInt.offset, "uint8");
 
-    health = Math.min(health, healthMax);
+    health = Math.min(health, maxHealth);
 
     setInt(itemInt.offset + 0x1, "uint8", health);
-  } else if ("id" in item && item.id === "bombs") {
-    const itemInt = item as ItemInt;
-
-    let bombs = getInt(itemInt.offset, "uint8");
-    const bombsMax = getInt(itemInt.offset + 0x2d, "uint8");
-
-    const bombsMaxRef = parseInt(
-      $gameTemplate.resources!.bombsMax[bombsMax] as string,
-    );
-
-    bombs = Math.min(bombs, bombsMaxRef);
-
-    setInt(itemInt.offset, "uint8", bombs);
-  } else if ("id" in item && item.id === "bombsMax") {
+  } else if ("id" in item && item.id === "maxBombs") {
     const itemInt = item as ItemInt;
 
     let bombs = getInt(itemInt.offset - 0x2d, "uint8");
-    const bombsMax = getInt(itemInt.offset, "uint8");
+    const maxBombs = getInt(itemInt.offset, "uint8");
 
     const bombsMaxRef = parseInt(
-      $gameTemplate.resources!.bombsMax[bombsMax] as string,
+      $gameTemplate.resources!.maxBombs[maxBombs] as string,
     );
 
     bombs = Math.min(bombs, bombsMaxRef);
 
     setInt(itemInt.offset - 0x2d, "uint8", bombs);
-  } else if ("id" in item && item.id === "arrows") {
-    const itemInt = item as ItemInt;
-
-    let arrows = getInt(itemInt.offset, "uint8");
-    const arrowsMax = getInt(itemInt.offset - 0x6, "uint8");
-
-    const arrowsMaxRef = parseInt(
-      $gameTemplate.resources!.arrowsMax[arrowsMax] as string,
-    );
-
-    arrows = Math.min(arrows, arrowsMaxRef);
-
-    setInt(itemInt.offset, "uint8", arrows);
-  } else if ("id" in item && item.id === "arrowsMax") {
+  } else if ("id" in item && item.id === "maxArrows") {
     const itemInt = item as ItemInt;
 
     let arrows = getInt(itemInt.offset + 0x6, "uint8");
-    const arrowsMax = getInt(itemInt.offset, "uint8");
+    const maxArrows = getInt(itemInt.offset, "uint8");
 
     const arrowsMaxRef = parseInt(
-      $gameTemplate.resources!.arrowsMax[arrowsMax] as string,
+      $gameTemplate.resources!.maxArrows[maxArrows] as string,
     );
 
     arrows = Math.min(arrows, arrowsMaxRef);

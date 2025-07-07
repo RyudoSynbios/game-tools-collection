@@ -175,7 +175,7 @@ const template: GameJson = {
                                   step: 0.25,
                                 },
                                 {
-                                  id: "healthMax",
+                                  id: "maxHealth",
                                   offset: 0x34,
                                   type: "variable",
                                   dataType: "uint16",

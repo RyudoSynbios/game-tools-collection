@@ -28,7 +28,43 @@ export function overrideParseItem(item: Item): Item {
 }
 
 export function overrideItem(item: Item): Item {
-  if ("id" in item && item.id?.match(/ring-/)) {
+  if ("id" in item && item.id === "health") {
+    const itemInt = item as ItemInt;
+
+    const maxHealth = getInt(itemInt.offset + 0x1, "uint8", {
+      operations: itemInt.operations,
+    });
+
+    itemInt.max = maxHealth;
+  } else if ("id" in item && item.id === "bombs") {
+    const itemInt = item as ItemInt;
+
+    const maxBombs = getInt(itemInt.offset + 0x1, "uint8", {
+      binaryCodedDecimal: true,
+    });
+
+    itemInt.max = maxBombs;
+  } else if ("id" in item && item.id?.match(/seeds-/)) {
+    const itemInt = item as ItemInt;
+
+    const [shift] = item.id.splitInt();
+
+    let maxSeeds = getInt(itemInt.offset - shift - 0x5, "uint8");
+
+    switch (maxSeeds) {
+      case 1:
+        maxSeeds = 20;
+        break;
+      case 2:
+        maxSeeds = 50;
+        break;
+      case 3:
+        maxSeeds = 99;
+        break;
+    }
+
+    itemInt.max = maxSeeds;
+  } else if ("id" in item && item.id?.match(/ring-/)) {
     const itemInt = item as ItemInt;
 
     const [index] = item.id.splitInt();
@@ -139,22 +175,13 @@ export function afterSetInt(item: Item, flag: ItemBitflag): void {
     const checked = getInt(itemInt.offset, "bit", { bit: itemInt.bit });
 
     setInt(itemInt.offset + 0xbe, "bit", checked, { bit: 4 });
-  } else if ("id" in item && item.id === "health") {
-    const itemInt = item as ItemInt;
-
-    let health = getInt(itemInt.offset, "uint8");
-    const healthMax = getInt(itemInt.offset + 0x1, "uint8");
-
-    health = Math.min(health, healthMax);
-
-    setInt(itemInt.offset, "uint8", health);
-  } else if ("id" in item && item.id === "healthMax") {
+  } else if ("id" in item && item.id === "maxHealth") {
     const itemInt = item as ItemInt;
 
     let health = getInt(itemInt.offset - 0x1, "uint8");
-    const healthMax = getInt(itemInt.offset, "uint8");
+    const maxHealth = getInt(itemInt.offset, "uint8");
 
-    health = Math.min(health, healthMax);
+    health = Math.min(health, maxHealth);
 
     setInt(itemInt.offset - 0x1, "uint8", health);
   } else if ("id" in item && item.id === "galeSeedsWarps") {
@@ -191,74 +218,40 @@ export function afterSetInt(item: Item, flag: ItemBitflag): void {
 
       setInt(flag.offset + 0x2, "bit", checked, { bit: 0 });
     }
-  } else if ("id" in item && item.id === "bombs") {
+  } else if ("id" in item && item.id === "maxBombs") {
     const itemInt = item as ItemInt;
 
-    let quantities = getInt(itemInt.offset, "uint8");
-    const quantitiesMax = getInt(itemInt.offset + 0x1, "uint8");
+    let bombs = getInt(itemInt.offset - 0x1, "uint8");
+    const maxBombs = getInt(itemInt.offset, "uint8");
 
-    quantities = Math.min(quantities, quantitiesMax);
+    bombs = Math.min(bombs, maxBombs);
 
-    setInt(itemInt.offset, "uint8", quantities);
-  } else if ("id" in item && item.id === "bombsMax") {
+    setInt(itemInt.offset - 0x1, "uint8", bombs);
+  } else if ("id" in item && item.id === "maxSeeds") {
     const itemInt = item as ItemInt;
 
-    let quantities = getInt(itemInt.offset - 0x1, "uint8");
-    const quantitiesMax = getInt(itemInt.offset, "uint8");
+    let maxSeeds = getInt(itemInt.offset, "uint8");
 
-    quantities = Math.min(quantities, quantitiesMax);
-
-    setInt(itemInt.offset - 0x1, "uint8", quantities);
-  } else if ("id" in item && item.id?.match(/seeds-/)) {
-    const itemInt = item as ItemInt;
-
-    const [shift] = item.id.splitInt();
-
-    let quantities = getInt(itemInt.offset, "uint8", {
-      binaryCodedDecimal: true,
-    });
-    let quantitiesMax = getInt(itemInt.offset - shift - 0x5, "uint8");
-
-    switch (quantitiesMax) {
+    switch (maxSeeds) {
       case 1:
-        quantitiesMax = 20;
+        maxSeeds = 20;
         break;
       case 2:
-        quantitiesMax = 50;
+        maxSeeds = 50;
         break;
       case 3:
-        quantitiesMax = 99;
-        break;
-    }
-
-    quantities = Math.min(quantities, quantitiesMax);
-
-    setInt(itemInt.offset, "uint8", quantities, { binaryCodedDecimal: true });
-  } else if ("id" in item && item.id === "seedsMax") {
-    const itemInt = item as ItemInt;
-
-    let quantitiesMax = getInt(itemInt.offset, "uint8");
-
-    switch (quantitiesMax) {
-      case 1:
-        quantitiesMax = 20;
-        break;
-      case 2:
-        quantitiesMax = 50;
-        break;
-      case 3:
-        quantitiesMax = 99;
+        maxSeeds = 99;
         break;
     }
 
     for (let i = 0x0; i < 0x6; i += 0x1) {
-      let quantities = getInt(itemInt.offset + 0x5 + i, "uint8", {
+      let seeds = getInt(itemInt.offset + 0x5 + i, "uint8", {
         binaryCodedDecimal: true,
       });
 
-      quantities = Math.min(quantities, quantitiesMax);
+      seeds = Math.min(seeds, maxSeeds);
 
-      setInt(itemInt.offset + 0x5 + i, "uint8", quantities, {
+      setInt(itemInt.offset + 0x5 + i, "uint8", seeds, {
         binaryCodedDecimal: true,
       });
     }

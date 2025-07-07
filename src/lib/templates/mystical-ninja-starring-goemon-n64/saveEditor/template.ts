@@ -200,11 +200,10 @@ const template: GameJson = {
                           bigEndian: true,
                           operations: [{ "/": 2 }],
                           min: 0.5,
-                          max: 20,
                           step: 0.5,
                         },
                         {
-                          id: "healthMax",
+                          id: "maxHealth",
                           offset: 0x172,
                           type: "variable",
                           dataType: "uint16",

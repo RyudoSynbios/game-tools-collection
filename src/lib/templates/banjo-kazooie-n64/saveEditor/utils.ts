@@ -83,14 +83,30 @@ export function overrideParseContainerItemsShifts(
   return [false, undefined];
 }
 
-function getNotesBinary(offset: number): string {
-  let binary = "";
+export function overrideItem(item: Item): Item {
+  if ("id" in item && item.id === "eggs") {
+    const itemInt = item as ItemInt;
 
-  for (let i = 0x0; i < 0x8; i += 0x1) {
-    binary += getInt(offset + i, "uint8").toBinary();
+    const maxEggs = (getInt(itemInt.offset - 0xf, "bit", { bit: 6 }) + 1) * 100;
+
+    itemInt.max = maxEggs;
+  } else if ("id" in item && item.id === "redFeathers") {
+    const itemInt = item as ItemInt;
+
+    const maxRedFeathers =
+      (getInt(itemInt.offset - 0x10, "bit", { bit: 7 }) + 1) * 50;
+
+    itemInt.max = maxRedFeathers;
+  } else if ("id" in item && item.id === "goldFeathers") {
+    const itemInt = item as ItemInt;
+
+    const maxGoldFeathers =
+      (getInt(itemInt.offset - 0x10, "bit", { bit: 0 }) + 1) * 10;
+
+    itemInt.max = maxGoldFeathers;
   }
 
-  return binary.substring(1);
+  return item;
 }
 
 export function overrideGetInt(item: Item): [boolean, number | undefined] {
@@ -178,61 +194,32 @@ export function overrideSetInt(item: Item, value: string): boolean {
 }
 
 export function afterSetInt(item: Item): void {
-  if ("id" in item && item.id === "eggs") {
-    const itemInt = item as ItemInt;
-
-    let eggs = getInt(itemInt.offset, "uint8");
-    const eggsMax = (getInt(itemInt.offset - 0xf, "bit", { bit: 6 }) + 1) * 100;
-
-    eggs = Math.min(eggs, eggsMax);
-
-    setInt(itemInt.offset, "uint8", eggs);
-  } else if ("id" in item && item.id === "eggsMax") {
+  if ("id" in item && item.id === "maxEggs") {
     const itemInt = item as ItemInt;
 
     let eggs = getInt(itemInt.offset + 0xf, "uint8");
-    const eggsMax = (getInt(itemInt.offset, "bit", { bit: 6 }) + 1) * 100;
+    const maxEggs = (getInt(itemInt.offset, "bit", { bit: 6 }) + 1) * 100;
 
-    eggs = Math.min(eggs, eggsMax);
+    eggs = Math.min(eggs, maxEggs);
 
     setInt(itemInt.offset + 0xf, "uint8", eggs);
-  } else if ("id" in item && item.id === "redFeathers") {
-    const itemInt = item as ItemInt;
-
-    let redFeathers = getInt(itemInt.offset, "uint8");
-    const redFeathersMax =
-      (getInt(itemInt.offset - 0x10, "bit", { bit: 7 }) + 1) * 50;
-
-    redFeathers = Math.min(redFeathers, redFeathersMax);
-
-    setInt(itemInt.offset, "uint8", redFeathers);
-  } else if ("id" in item && item.id === "redFeathersMax") {
+  } else if ("id" in item && item.id === "maxRedFeathers") {
     const itemInt = item as ItemInt;
 
     let redFeathers = getInt(itemInt.offset + 0x10, "uint8");
-    const redFeathersMax = (getInt(itemInt.offset, "bit", { bit: 7 }) + 1) * 50;
+    const maxRedFeathers = (getInt(itemInt.offset, "bit", { bit: 7 }) + 1) * 50;
 
-    redFeathers = Math.min(redFeathers, redFeathersMax);
+    redFeathers = Math.min(redFeathers, maxRedFeathers);
 
     setInt(itemInt.offset + 0x10, "uint8", redFeathers);
-  } else if ("id" in item && item.id === "goldFeathers") {
-    const itemInt = item as ItemInt;
-
-    let goldFeathers = getInt(itemInt.offset, "uint8");
-    const goldFeathersMax =
-      (getInt(itemInt.offset - 0x10, "bit", { bit: 0 }) + 1) * 10;
-
-    goldFeathers = Math.min(goldFeathers, goldFeathersMax);
-
-    setInt(itemInt.offset, "uint8", goldFeathers);
-  } else if ("id" in item && item.id === "goldFeathersMax") {
+  } else if ("id" in item && item.id === "maxGoldFeathers") {
     const itemInt = item as ItemInt;
 
     let goldFeathers = getInt(itemInt.offset + 0x10, "uint8");
-    const goldFeathersMax =
+    const maxGoldFeathers =
       (getInt(itemInt.offset, "bit", { bit: 0 }) + 1) * 10;
 
-    goldFeathers = Math.min(goldFeathers, goldFeathersMax);
+    goldFeathers = Math.min(goldFeathers, maxGoldFeathers);
 
     setInt(itemInt.offset + 0x10, "uint8", goldFeathers);
   }
@@ -251,4 +238,14 @@ export function generateChecksum(
 
 export function beforeSaving(): ArrayBufferLike {
   return byteswapDataView("eep").buffer;
+}
+
+function getNotesBinary(offset: number): string {
+  let binary = "";
+
+  for (let i = 0x0; i < 0x8; i += 0x1) {
+    binary += getInt(offset + i, "uint8").toBinary();
+  }
+
+  return binary.substring(1);
 }
