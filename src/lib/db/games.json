@@ -22,6 +22,17 @@
     }
   },
   {
+    "id": "3d-dot-game-heroes-ps3",
+    "name": "3D Dot Game Heroes",
+    "consoleId": "playstation-3",
+    "tools": {
+      "saveEditor": {
+        "createdAt": "2025-07-07",
+        "regions": ["🇪🇺", "🇺🇸", "🇯🇵"]
+      }
+    }
+  },
+  {
     "id": "akumajou-dracula-x-chi-no-rondo-pcecd",
     "name": "Akumajou Dracula X: Chi no Rondo",
     "consoleId": "pc-engine-cd",

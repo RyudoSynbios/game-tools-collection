@@ -75,6 +75,11 @@
     "manufacturerId": "sony"
   },
   {
+    "id": "playstation-3",
+    "name": "PlayStation 3",
+    "manufacturerId": "sony"
+  },
+  {
     "id": "playstation-portable",
     "name": "PlayStation Portable",
     "manufacturerId": "sony"

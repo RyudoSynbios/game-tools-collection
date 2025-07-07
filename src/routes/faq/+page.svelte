@@ -128,6 +128,15 @@
       Try changing the extension to <strong>*.gz</strong>, then decompress it.
     </p>
   </Spoiler>
+  <Spoiler title="How can i edit my PlayStation 3 save?">
+    <p>
+      PlayStation 3 save files are encrypted by default when exported from a
+      PlayStation 3. You need to decrypt your save in order to edit it.
+    </p>
+    <p>
+      Some tools like <strong>Apollo Save Tool</strong> can handle this kind of conversion.
+    </p>
+  </Spoiler>
   <Spoiler title="How can i edit my PSP save?">
     <p>
       PSP save files are encrypted by default when exported from a PSP or
