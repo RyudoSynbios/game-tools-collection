@@ -1,19 +1,20 @@
 <script lang="ts">
-  import { page } from "$app/stores";
+  import { page } from "$app/state";
   import GameTile from "$lib/components/GameTile.svelte";
   import { getConsoles, getGames, type Order, type Tool } from "$lib/utils/db";
 
-  let consoles = getConsoles();
-  let games = getGames();
+  const consoles = getConsoles();
 
-  let titleEl: HTMLInputElement;
-  let consoleEl: HTMLSelectElement;
-  let toolEl: HTMLSelectElement;
-  let orderEl: HTMLSelectElement;
+  let games = $state(getGames());
 
-  let searchConsole = "";
-  let searchTool = "";
-  let order = "";
+  let titleEl = $state<HTMLInputElement>()!;
+  let consoleEl = $state<HTMLSelectElement>()!;
+  let toolEl = $state<HTMLSelectElement>()!;
+  let orderEl = $state<HTMLSelectElement>()!;
+
+  let searchConsole = $state("");
+  let searchTool = $state("");
+  let order = $state("");
 
   function handleFilter(): void {
     games = getGames({
@@ -32,7 +33,7 @@
 <svelte:head>
   <title>Game Tools Collection: Customize your games!</title>
   <meta property="og:title" content="Game Tools Collection: Customize your games!" />
-  <meta property="og:image" content="{$page.url.origin}/img/icon.png" />
+  <meta property="og:image" content="{page.url.origin}/img/icon.png" />
 </svelte:head>
 
 <div class="gtc-home">
@@ -41,13 +42,13 @@
       type="text"
       placeholder="Search a game..."
       bind:this={titleEl}
-      on:change={handleFilter}
-      on:keyup={handleFilter}
+      onchange={handleFilter}
+      onkeyup={handleFilter}
     />
     <select
       class:gtc-home-select-filled={searchConsole}
       bind:this={consoleEl}
-      on:change={handleFilter}
+      onchange={handleFilter}
     >
       <option value="">Console</option>
       {#each consoles as console}
@@ -57,7 +58,7 @@
     <select
       class:gtc-home-select-filled={searchTool}
       bind:this={toolEl}
-      on:change={handleFilter}
+      onchange={handleFilter}
     >
       <option value="">Tool</option>
       <option value="saveEditor">Save Editor</option>
@@ -67,7 +68,7 @@
     <select
       class:gtc-home-select-filled={order}
       bind:this={orderEl}
-      on:change={handleFilter}
+      onchange={handleFilter}
     >
       <option value="">Order</option>
       <option value="createdAt">New</option>
@@ -132,18 +133,20 @@
 </div>
 
 <style lang="postcss">
+  @reference "../app.css";
+
   .gtc-home {
     & .gtc-home-filters {
       @apply flex flex-wrap justify-center 2xl:justify-start;
 
       & input,
       & select {
-        @apply mb-2 mr-2;
+        @apply mr-2 mb-2;
       }
     }
 
     .gtc-home-games {
-      @apply -mr-4 mt-2 flex flex-wrap justify-center 2xl:justify-start;
+      @apply mt-2 -mr-4 flex flex-wrap justify-center 2xl:justify-start;
 
       & > p {
         @apply my-12 text-white;
@@ -151,7 +154,7 @@
     }
 
     & .gtc-home-description {
-      @apply mt-4 rounded bg-primary-900 p-4 text-white;
+      @apply bg-primary-900 mt-4 rounded p-4 text-white;
 
       & a {
         @apply font-bold;
@@ -168,7 +171,7 @@
 
     & input,
     & select {
-      @apply rounded bg-primary-600 text-xs;
+      @apply bg-primary-600 rounded text-xs;
     }
 
     & input {

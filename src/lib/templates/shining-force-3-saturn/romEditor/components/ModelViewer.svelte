@@ -28,20 +28,24 @@
   } from "../utils/mpd";
   import TextureViewer from "./TextureViewer.svelte";
 
-  export let assetIndex: number;
-  export let type: string;
+  interface Props {
+    assetIndex: number;
+    type: string;
+  }
 
-  let previousAssetId = "";
+  let { assetIndex, type }: Props = $props();
 
-  let modelIndex = 0;
+  let previousAssetId = $state("");
 
-  let canvas: Canvas;
-  let three: Three;
+  let modelIndex = $state(0);
 
-  let threeEl: HTMLDivElement;
+  let canvas = $state<Canvas>()!;
+  let three = $state<Three>()!;
 
-  let textures: Texture[] = [];
-  let isTextureViewerOpen = false;
+  let threeEl = $state<HTMLDivElement>()!;
+
+  let textures: Texture[] = $state([]);
+  let isTextureViewerOpen = $state(false);
 
   function getAssetId() {
     return `${type}_${assetIndex}`;
@@ -331,15 +335,13 @@
     three.destroy();
   });
 
-  $: {
-    assetIndex, modelIndex, type;
-
+  $effect(() => {
     if (canvas) {
       updateCanvas();
     }
 
     previousAssetId = getAssetId();
-  }
+  });
 </script>
 
 <ModelViewer {three} bind:threeEl />
@@ -349,6 +351,3 @@
     <TextureViewer {textures} />
   </Modal>
 {/if}
-
-<style lang="postcss">
-</style>

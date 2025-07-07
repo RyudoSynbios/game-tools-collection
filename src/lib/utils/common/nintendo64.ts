@@ -10,7 +10,7 @@ import {
 } from "$lib/utils/format";
 import { checkValidator } from "$lib/utils/validator";
 
-import type { ItemChecksum, Validator } from "$lib/types";
+import type { DataViewABL, ItemChecksum, Validator } from "$lib/types";
 
 import { decodeNintendo64MpkFont } from "../encoding";
 
@@ -127,7 +127,7 @@ export function byteswapDataView(
 // Global objects
 
 let mpk = {} as Mpk;
-let mpkRaw = new DataView(new ArrayBuffer(0));
+let mpkRaw: DataViewABL = new DataView(new ArrayBuffer(0));
 let saves: Save[] = [];
 
 export function generateMpk(dataView: DataView, shift: number): void {
@@ -307,7 +307,7 @@ export function repackMpk(): ArrayBufferLike {
       const blob = $dataView.buffer.slice(
         save.offset,
         save.offset + save.note.size,
-      );
+      ) as ArrayBuffer;
 
       writeNote(save.note, blob);
     });
@@ -382,7 +382,7 @@ function long(value: number): Long {
 // Adapted from https://github.com/bryc/rare-n64-chksm
 export function generateRareChecksum(
   item: ItemChecksum,
-  dataView = new DataView(new ArrayBuffer(0)),
+  dataView: DataViewABL = new DataView(new ArrayBuffer(0)),
 ): [Long, Long] {
   let checksum1 = long(0x0);
   let polynormal = long(0x13108b3c1);

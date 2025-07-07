@@ -114,10 +114,10 @@
     }
 
     if (!item.uncontrolled) {
-      let dataViewAlt;
+      let _dataViewAlt;
 
       if (isDataViewAltExists(item.dataViewAltKey || "")) {
-        dataViewAlt = $dataViewAlt[item.dataViewAltKey as string];
+        _dataViewAlt = $dataViewAlt[item.dataViewAltKey as string];
       }
 
       // prettier-ignore
@@ -125,7 +125,7 @@
         if (item.dataType !== "int64" && item.dataType !== "uint64") {
           int = getInt(item.offset, item.dataType, {
             bigEndian: item.bigEndian,
-          }, dataViewAlt);
+          }, _dataViewAlt);
 
           value = getInt(item.offset, item.dataType, {
             bigEndian: item.bigEndian,
@@ -133,11 +133,11 @@
             binary: item.binary,
             bit: item.bit,
             operations: item.operations,
-          }, dataViewAlt);
+          }, _dataViewAlt);
         } else {
           value = getBigInt(item.offset, item.dataType, {
             bigEndian: item.bigEndian,
-          }, dataViewAlt);
+          }, _dataViewAlt);
         }
       }
 
@@ -239,9 +239,11 @@
 {/if}
 
 <style lang="postcss">
+  @reference "../../../app.css";
+
   .gtc-int {
     &.gtc-int-button {
-      @apply mb-4 mr-4 flex w-fit items-end justify-between rounded bg-primary-700 p-2;
+      @apply bg-primary-700 mr-4 mb-4 flex w-fit items-end justify-between rounded p-2;
 
       & :global(.gtc-autocomplete),
       & :global(.gtc-input),
@@ -250,7 +252,7 @@
       }
 
       & button {
-        @apply rounded-l-none bg-primary-400 leading-4 text-white;
+        @apply bg-primary-400 rounded-l-none leading-4 text-white;
 
         &:hover {
           @apply bg-primary-300;

@@ -1,7 +1,11 @@
 <script lang="ts">
   import type { Game } from "$lib/types";
 
-  export let game: Game;
+  interface Props {
+    game: Game;
+  }
+
+  let { game }: Props = $props();
 </script>
 
 <div class="gtc-tile">
@@ -61,8 +65,10 @@
 </div>
 
 <style lang="postcss">
+  @reference "../../app.css";
+
   .gtc-tile {
-    @apply mb-4 mr-4 shadow-xl;
+    @apply mr-4 mb-4 shadow-xl;
 
     width: 308px;
 
@@ -86,7 +92,7 @@
     }
 
     & .gtc-tile-content {
-      @apply rounded-b bg-primary-900 pt-2;
+      @apply bg-primary-900 rounded-b pt-2;
 
       & p:first-of-type {
         @apply overflow-hidden text-ellipsis whitespace-nowrap text-white;
@@ -101,7 +107,7 @@
       }
 
       & .gtc-tile-tools {
-        @apply mt-2 flex border-t border-primary-600;
+        @apply border-primary-600 mt-2 flex border-t;
 
         & .gtc-tile-toollink,
         & .gtc-tile-tooldisabled {

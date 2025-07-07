@@ -9,11 +9,15 @@
 
   import { albumOffset } from "../template";
 
-  export let photoIndex: number;
+  interface Props {
+    photoIndex: number;
+  }
 
-  let canvasEl: HTMLDivElement;
+  let { photoIndex }: Props = $props();
 
-  let canvas: Canvas;
+  let canvasEl = $state<HTMLDivElement>()!;
+
+  let canvas = $state<Canvas>()!;
 
   const palette: Palette = [
     [0xff, 0xff, 0xff, 0xff],
@@ -76,21 +80,21 @@
     canvas.destroy();
   });
 
-  $: {
-    photoIndex;
-
+  $effect(() => {
     if (canvas) {
       updateCanvas();
     }
-  }
+  });
 </script>
 
 <div class="gtc-photocanvas">
-  <div bind:this={canvasEl} />
+  <div bind:this={canvasEl}></div>
 </div>
 
 <style lang="postcss">
+  @reference "../../../../../app.css";
+
   .gtc-photocanvas {
-    @apply mb-4 mr-4 w-fit rounded bg-primary-700 p-2;
+    @apply bg-primary-700 mr-4 mb-4 w-fit rounded p-2;
   }
 </style>

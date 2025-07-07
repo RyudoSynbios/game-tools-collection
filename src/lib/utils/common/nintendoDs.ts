@@ -1,4 +1,4 @@
-import type { ItemChecksum } from "$lib/types";
+import type { DataViewABL, ItemChecksum } from "$lib/types";
 
 import { getInt } from "../bytes";
 import { formatChecksum } from "../checksum";
@@ -34,7 +34,7 @@ const dataArray = [
 export function generateBiosChecksum(
   item: ItemChecksum,
   salt: number,
-  dataView = new DataView(new ArrayBuffer(0)),
+  dataView: DataViewABL = new DataView(new ArrayBuffer(0)),
 ): number {
   let checksum = salt;
 

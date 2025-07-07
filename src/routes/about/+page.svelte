@@ -1,11 +1,11 @@
 <script lang="ts">
-  import { page } from "$app/stores";
+  import { page } from "$app/state";
 </script>
 
 <svelte:head>
   <title>About | Game Tools Collection</title>
   <meta property="og:title" content="About" />
-  <meta property="og:image" content="{$page.url.origin}/img/icon.png" />
+  <meta property="og:image" content="{page.url.origin}/img/icon.png" />
 </svelte:head>
 
 <div class="gtc-about">
@@ -37,8 +37,10 @@
 </div>
 
 <style lang="postcss">
+  @reference "../../app.css";
+
   .gtc-about {
-    @apply mt-4 rounded bg-primary-900 p-4 text-white;
+    @apply bg-primary-900 mt-4 rounded p-4 text-white;
 
     & p {
       @apply mb-4 text-sm;

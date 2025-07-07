@@ -8,6 +8,8 @@
 </svg>
 
 <style lang="postcss">
+  @reference "../../app.css";
+
   .gtc-icon-accesstime {
     @apply max-h-full max-w-full fill-current;
   }

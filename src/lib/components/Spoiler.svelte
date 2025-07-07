@@ -1,27 +1,36 @@
 <script lang="ts">
-  export let title = "";
+  import type { Snippet } from "svelte";
 
-  let open = false;
+  interface Props {
+    title: string;
+    children: Snippet;
+  }
+
+  let { title, children }: Props = $props();
+
+  let open = $state(false);
 
   function toggleOpen(): void {
     open = !open;
   }
 </script>
 
-<!-- svelte-ignore a11y-click-events-have-key-events -->
-<!-- svelte-ignore a11y-no-static-element-interactions -->
+<!-- svelte-ignore a11y_click_events_have_key_events -->
+<!-- svelte-ignore a11y_no_static_element_interactions -->
 <div class="gtc-spoiler" class:gtc-spoiler-open={open}>
-  <div class="gtc-spoiler-title" on:click={toggleOpen}>
+  <div class="gtc-spoiler-title" onclick={toggleOpen}>
     <h2>- {title}</h2>
   </div>
   <div class="gtc-spoiler-slot">
-    <slot />
+    {@render children()}
   </div>
 </div>
 
 <style lang="postcss">
+  @reference "../../app.css";
+
   .gtc-spoiler {
-    @apply mb-4 rounded bg-primary-800;
+    @apply bg-primary-800 mb-4 rounded;
 
     & .gtc-spoiler-title {
       @apply cursor-pointer p-4;

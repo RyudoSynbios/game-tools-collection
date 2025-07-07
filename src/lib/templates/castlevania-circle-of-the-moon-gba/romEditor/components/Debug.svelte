@@ -9,7 +9,7 @@
   import { pointerToDssCardsGraphics } from "../template";
   import { getDecompressedGraphic } from "../utils";
 
-  let canvasEl: HTMLDivElement;
+  let canvasEl = $state<HTMLDivElement>()!;
 
   let canvas: Canvas;
 
@@ -55,8 +55,5 @@
 </script>
 
 <div class="gtc-debug">
-  <div bind:this={canvasEl} />
+  <div bind:this={canvasEl}></div>
 </div>
-
-<style lang="postcss">
-</style>

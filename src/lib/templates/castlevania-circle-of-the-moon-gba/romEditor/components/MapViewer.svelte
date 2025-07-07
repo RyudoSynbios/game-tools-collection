@@ -38,15 +38,19 @@
     getSpriteData,
   } from "../utils";
 
-  export let roomIndex: number;
+  interface Props {
+    roomIndex: number;
+  }
 
-  let canvasEl: HTMLDivElement;
-  let canvasDebugEl: HTMLDivElement;
+  let { roomIndex }: Props = $props();
 
-  let canvas: Canvas;
+  let canvasEl = $state<HTMLDivElement>()!;
+  let canvasDebugEl = $state<HTMLDivElement>()!;
+
+  let canvas = $state<Canvas>()!;
   let canvasDebug: Canvas;
 
-  let monsterSet = 0;
+  let monsterSet = $state(0);
 
   const mapInfos = getMapsInfos();
   const mapBlocksPointer = getRegionArray(pointerToMapBlocks);
@@ -608,13 +612,11 @@
     }
   });
 
-  $: {
-    roomIndex;
-
+  $effect(() => {
     if (canvas) {
       updateCanvas();
     }
-  }
+  });
 </script>
 
 <div class="gtc-mapviewer">
@@ -645,16 +647,18 @@
   <div>
     {#if $isDebug}
       <div class="gtc-mapviewer-canvasdebug">
-        <div bind:this={canvasDebugEl} />
+        <div bind:this={canvasDebugEl}></div>
       </div>
     {/if}
     <div class="gtc-mapviewer-canvas">
-      <div bind:this={canvasEl} />
+      <div bind:this={canvasEl}></div>
     </div>
   </div>
 </div>
 
 <style lang="postcss">
+  @reference "../../../../../app.css";
+
   .gtc-mapviewer {
     & > div {
       @apply flex;
@@ -664,7 +668,7 @@
       @apply flex;
 
       & .gtc-mapviewer-layers {
-        @apply mb-4 mr-4 w-fit rounded bg-primary-700 p-2;
+        @apply bg-primary-700 mr-4 mb-4 w-fit rounded p-2;
 
         & p {
           @apply mb-2 text-sm font-bold;
@@ -682,7 +686,7 @@
 
     & .gtc-mapviewer-canvasdebug,
     & .gtc-mapviewer-canvas {
-      @apply w-fit self-start rounded bg-primary-700 p-2;
+      @apply bg-primary-700 w-fit self-start rounded p-2;
     }
 
     & .gtc-mapviewer-canvasdebug {

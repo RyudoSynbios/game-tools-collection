@@ -3,28 +3,43 @@
 
   import Canvas from "$lib/utils/canvas";
 
-  export let spriteIndex: number;
-  export let spriteWidth: number;
-  export let spriteHeight: number;
-  export let mainScale = 1;
-  export let dropdownScale = 1;
-  export let spritesPerRow = 8;
-  export let sprites: (Uint8Array | null)[];
-  export let onSpriteChange: (index: number) => void;
+  interface Props {
+    spriteIndex: number;
+    spriteWidth: number;
+    spriteHeight: number;
+    mainScale?: number;
+    dropdownScale?: number;
+    spritesPerRow?: number;
+    sprites: (Uint8Array | null)[];
+    onSpriteChange: (index: number) => void;
+  }
 
-  let canvasEl: HTMLDivElement;
-  let canvasDropdownEl: HTMLDivElement;
+  let {
+    spriteIndex,
+    spriteWidth,
+    spriteHeight,
+    mainScale = 1,
+    dropdownScale = 1,
+    spritesPerRow = 8,
+    sprites,
+    onSpriteChange,
+  }: Props = $props();
 
-  let canvas: Canvas;
+  let canvasEl = $state<HTMLDivElement>()!;
+  let canvasDropdownEl = $state<HTMLDivElement>()!;
+
+  let canvas = $state<Canvas>()!;
   let canvasDropdown: Canvas;
 
-  let isDropdownOpen = false;
+  let isDropdownOpen = $state(false);
 
   function handleDropdownClose(): void {
     isDropdownOpen = false;
   }
 
-  function handleDropdownToggle(): void {
+  function handleDropdownToggle(event: Event): void {
+    event.stopPropagation();
+
     if (spriteIndex !== undefined) {
       isDropdownOpen = !isDropdownOpen;
     }
@@ -115,37 +130,37 @@
     canvasDropdown.destroy();
   });
 
-  $: {
-    spriteIndex;
-
+  $effect(() => {
     if (canvas) {
       updateCanvas();
     }
-  }
+  });
 </script>
 
-<svelte:window on:click={handleDropdownClose} />
+<svelte:window onclick={handleDropdownClose} />
 
-<!-- svelte-ignore a11y-click-events-have-key-events -->
-<!-- svelte-ignore a11y-no-static-element-interactions -->
+<!-- svelte-ignore a11y_click_events_have_key_events -->
+<!-- svelte-ignore a11y_no_static_element_interactions -->
 <div class="gtc-spriteselector">
   <div
     class="gtc-spriteselector-main"
     class:gtc-spriteselector-nopointer={spriteIndex === undefined}
     bind:this={canvasEl}
-    on:click|stopPropagation={handleDropdownToggle}
-  />
+    onclick={handleDropdownToggle}
+  ></div>
   <div
     class="gtc-spriteselector-dropdown"
     class:gtc-spriteselector-dropdown-show={isDropdownOpen}
     bind:this={canvasDropdownEl}
-    on:click|stopPropagation
-  />
+    onclick={(event: Event) => event.stopPropagation()}
+  ></div>
 </div>
 
 <style lang="postcss">
+  @reference "../../app.css";
+
   .gtc-spriteselector {
-    @apply relative z-20 mb-4 mr-4 self-start rounded bg-primary-700 p-2;
+    @apply bg-primary-700 relative z-20 mr-4 mb-4 self-start rounded p-2;
 
     & .gtc-spriteselector-main {
       @apply cursor-pointer;
@@ -156,7 +171,7 @@
     }
 
     & .gtc-spriteselector-dropdown {
-      @apply absolute left-full top-0 hidden overflow-auto rounded bg-primary-700 p-2 shadow-xl;
+      @apply bg-primary-700 absolute top-0 left-full hidden overflow-auto rounded p-2 shadow-xl;
 
       max-height: 40vh;
 

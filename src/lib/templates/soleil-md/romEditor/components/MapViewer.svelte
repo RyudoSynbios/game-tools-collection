@@ -13,12 +13,16 @@
   import { pointerToRoomsTable } from "../template";
   import { getDecompressedData, getTiles, pointerToOffset } from "../utils";
 
-  export let roomIndex: number;
+  interface Props {
+    roomIndex: number;
+  }
 
-  let canvasEl: HTMLDivElement;
-  let canvasDebugEl: HTMLDivElement;
+  let { roomIndex }: Props = $props();
 
-  let canvas: Canvas;
+  let canvasEl = $state<HTMLDivElement>()!;
+  let canvasDebugEl = $state<HTMLDivElement>()!;
+
+  let canvas = $state<Canvas>()!;
   let canvasDebug: Canvas;
 
   const roomsTableOffset = pointerToOffset(pointerToRoomsTable);
@@ -399,13 +403,11 @@
     }
   });
 
-  $: {
-    roomIndex;
-
+  $effect(() => {
     if (canvas) {
       updateCanvas();
     }
-  }
+  });
 </script>
 
 <div class="gtc-mapviewer">
@@ -423,16 +425,18 @@
   <div>
     {#if $isDebug}
       <div class="gtc-mapviewer-canvasdebug">
-        <div bind:this={canvasDebugEl} />
+        <div bind:this={canvasDebugEl}></div>
       </div>
     {/if}
     <div class="gtc-mapviewer-canvas">
-      <div bind:this={canvasEl} />
+      <div bind:this={canvasEl}></div>
     </div>
   </div>
 </div>
 
 <style lang="postcss">
+  @reference "../../../../../app.css";
+
   .gtc-mapviewer {
     & > div {
       @apply flex;
@@ -448,7 +452,7 @@
 
     & .gtc-mapviewer-canvasdebug,
     & .gtc-mapviewer-canvas {
-      @apply w-fit self-start rounded bg-primary-700 p-2;
+      @apply bg-primary-700 w-fit self-start rounded p-2;
     }
 
     & .gtc-mapviewer-canvasdebug {

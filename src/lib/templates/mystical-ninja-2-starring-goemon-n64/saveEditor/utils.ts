@@ -19,6 +19,7 @@ import { clone } from "$lib/utils/format";
 import { getItem } from "$lib/utils/parser";
 
 import type {
+  DataViewABL,
   Item,
   ItemBitflag,
   ItemBitflags,
@@ -244,7 +245,7 @@ export function afterSetInt(item: Item, flag: ItemBitflag): void {
 
 export function generateChecksum(
   item: ItemChecksum,
-  dataView = new DataView(new ArrayBuffer(0)),
+  dataView: DataViewABL = new DataView(new ArrayBuffer(0)),
 ): number {
   const bitMask = 0x4c11db7;
 

@@ -10,6 +10,8 @@
   import debug from "$lib/utils/debug";
   import Three from "$lib/utils/three";
 
+  import type { DataViewABL } from "$lib/types";
+
   import {
     getDecompressedData,
     getFileData,
@@ -29,26 +31,30 @@
   import ScriptViewer from "./ScriptViewer.svelte";
   import TextureViewer from "./TextureViewer.svelte";
 
-  export let assetIndex: number;
-  export let type: string;
+  interface Props {
+    assetIndex: number;
+    type: string;
+  }
 
-  let previousAssetId = "";
-  let previousfileIndex = -1;
+  let { assetIndex, type }: Props = $props();
 
-  let fileIndex = 0;
-  let entityIndex = -1;
+  let previousAssetId = $state("");
+  let previousfileIndex = $state(-1);
 
-  let canvas: Canvas;
-  let three: Three;
+  let fileIndex = $state(0);
+  let entityIndex = $state(-1);
 
-  let threeEl: HTMLDivElement;
+  let canvas = $state<Canvas>()!;
+  let three = $state<Three>()!;
 
-  let textures: { [key: string]: DataView } = {};
+  let threeEl = $state<HTMLDivElement>()!;
+
+  let textures: { [key: string]: DataView } = $state({});
   let texturesCache: { [key: string]: Texture } = {};
-  let isScriptViewerOpen = false;
-  let isTextureViewerOpen = false;
+  let isScriptViewerOpen = $state(false);
+  let isTextureViewerOpen = $state(false);
 
-  let selectedEntity: number = -1;
+  let selectedEntity: number = $state(-1);
 
   function displayScriptButton() {
     if (type === "map") {
@@ -109,7 +115,7 @@
 
     three.setLoading(true);
 
-    let dataView = new DataView(new ArrayBuffer(0));
+    let dataView: DataViewABL = new DataView(new ArrayBuffer(0));
 
     let isShipBattle = false;
 
@@ -382,16 +388,14 @@
     three.destroy();
   });
 
-  $: {
-    assetIndex, fileIndex, entityIndex, type;
-
+  $effect(() => {
     if (canvas) {
       updateCanvas();
     }
 
     previousAssetId = getAssetId();
     previousfileIndex = fileIndex;
-  }
+  });
 </script>
 
 <ModelViewer {three} bind:threeEl />
@@ -407,6 +411,3 @@
     <TextureViewer {textures} />
   </Modal>
 {/if}
-
-<style lang="postcss">
-</style>

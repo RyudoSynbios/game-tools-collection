@@ -12,19 +12,37 @@
   import { enrichGameJson } from "$lib/utils/parser";
   import { getRegionIndex, getRegions } from "$lib/utils/validator";
 
-  export let logo = "";
-  export let name = "";
+  interface Props {
+    logo: string;
+    name: string;
+  }
 
-  let inputEl: HTMLInputElement;
-  let isDragging = false;
+  let { logo, name }: Props = $props();
+
+  let inputEl = $state<HTMLInputElement>()!;
+  let isDragging = $state(false);
   let dataViewTmp: DataView | undefined;
   let fileHeaderShiftTmp = 0x0;
-  let fileIsLoading = false;
+  let fileIsLoading = $state(false);
   let fileNameTmp = "";
-  let regions: string[] = [];
-  let error = "";
+  let regions: string[] = $state([]);
+  let error = $state("");
+
+  function handleDragLeave(event: DragEvent): void {
+    event.preventDefault();
+
+    isDragging = false;
+  }
+
+  function handleDragOver(event: DragEvent): void {
+    event.preventDefault();
+
+    isDragging = true;
+  }
 
   function handleDrop(event: DragEvent): void {
+    event.preventDefault();
+
     const files = event.dataTransfer?.files;
 
     if (files) {
@@ -32,14 +50,6 @@
 
       handleUploadedFile(file);
     }
-  }
-
-  function handleDragLeave(): void {
-    isDragging = false;
-  }
-
-  function handleDragOver(): void {
-    isDragging = true;
   }
 
   function handleDropzoneClick(): void {
@@ -142,15 +152,15 @@
   }
 </script>
 
-<!-- svelte-ignore a11y-click-events-have-key-events -->
-<!-- svelte-ignore a11y-no-static-element-interactions -->
+<!-- svelte-ignore a11y_click_events_have_key_events -->
+<!-- svelte-ignore a11y_no_static_element_interactions -->
 <div class="gtc-dropzone">
   <div
     class="gtc-dropzone-inner"
-    on:click={handleDropzoneClick}
-    on:dragleave|preventDefault={handleDragLeave}
-    on:dragover|preventDefault={handleDragOver}
-    on:drop|preventDefault={handleDrop}
+    onclick={handleDropzoneClick}
+    ondragleave={handleDragLeave}
+    ondragover={handleDragOver}
+    ondrop={handleDrop}
   >
     <img src={logo} alt={name} />
     {#if isDragging}
@@ -166,7 +176,7 @@
     {#if error}
       <p class="gtc-dropzone-error">{@html $gameTemplate.validator.error}</p>
     {/if}
-    <input type="file" bind:this={inputEl} on:change={handleInputChange} />
+    <input type="file" bind:this={inputEl} onchange={handleInputChange} />
   </div>
   {#if regions.length > 1}
     <RegionModal {regions} onSubmit={(region) => initTool(region)} />
@@ -174,21 +184,23 @@
 </div>
 
 <style lang="postcss">
+  @reference "../../app.css";
+
   .gtc-dropzone {
-    @apply select-none rounded bg-primary-900 p-2;
+    @apply bg-primary-900 rounded p-2 select-none;
 
     width: 600px;
     height: 400px;
 
     & .gtc-dropzone-inner {
-      @apply flex h-full w-full cursor-pointer flex-col items-center justify-center border-2 border-dashed border-primary-500 p-4 text-white;
+      @apply border-primary-500 flex h-full w-full cursor-pointer flex-col items-center justify-center border-2 border-dashed p-4 text-white;
 
       & .gtc-dropzone-hint {
-        @apply whitespace-pre-line text-center text-primary-400;
+        @apply text-primary-400 text-center whitespace-pre-line;
       }
 
       & .gtc-dropzone-error {
-        @apply text-center text-primary-300;
+        @apply text-primary-300 text-center;
       }
 
       & input {

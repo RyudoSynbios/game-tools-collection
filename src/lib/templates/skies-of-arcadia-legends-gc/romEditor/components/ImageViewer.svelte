@@ -9,11 +9,15 @@
   import { getFileData } from "../utils";
   import { unpackNmld } from "../utils/nmld";
 
-  export let assetIndex: number;
+  interface Props {
+    assetIndex: number;
+  }
 
-  let canvasEl: HTMLDivElement;
+  let { assetIndex }: Props = $props();
 
-  let canvas: Canvas;
+  let canvasEl = $state<HTMLDivElement>()!;
+
+  let canvas = $state<Canvas>()!;
 
   async function updateCanvas(): Promise<void> {
     let dataView = getFileData("image", assetIndex);
@@ -70,21 +74,21 @@
     canvas.destroy();
   });
 
-  $: {
-    assetIndex;
-
+  $effect(() => {
     if (canvas) {
       updateCanvas();
     }
-  }
+  });
 </script>
 
 <div class="gtc-imageviewer">
-  <div bind:this={canvasEl} />
+  <div bind:this={canvasEl}></div>
 </div>
 
 <style lang="postcss">
+  @reference "../../../../../app.css";
+
   .gtc-imageviewer {
-    @apply w-fit self-start rounded bg-primary-700 p-2;
+    @apply bg-primary-700 w-fit self-start rounded p-2;
   }
 </style>

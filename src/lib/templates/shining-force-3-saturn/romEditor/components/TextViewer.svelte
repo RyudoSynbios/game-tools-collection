@@ -13,13 +13,17 @@
     getText,
   } from "../utils";
 
-  export let assetIndex: number;
+  interface Props {
+    assetIndex: number;
+  }
 
-  let display = "formatted";
-  let type = "dialogs";
-  let indexFormat = "pageLine";
-  let commonTexts: string[] = [];
-  let dialogsTexts: string[] = [];
+  let { assetIndex }: Props = $props();
+
+  let display = $state("formatted");
+  let type = $state("dialogs");
+  let indexFormat = $state("pageLine");
+  let commonTexts: string[] = $state([]);
+  let dialogsTexts: string[] = $state([]);
 
   function handleDisplayChange(event: Event): void {
     display = (event.target as HTMLInputElement).value;
@@ -33,10 +37,11 @@
     type = (event.target as HTMLInputElement).value;
   }
 
-  $: {
-    const scenario = getScenario();
+  const scenario = getScenario();
 
-    const files = getFilteredFiles("text");
+  const files = getFilteredFiles("text");
+
+  $effect(() => {
     const file = files[assetIndex];
     const dataView = getFileData("text", assetIndex);
 
@@ -80,8 +85,8 @@
       dialogsStartIndex += 0x1f;
     }
 
-    commonTexts = [];
-    dialogsTexts = [];
+    const commonTextsTmp: string[] = [];
+    const dialogsTextsTmp: string[] = [];
 
     let index = 0;
 
@@ -249,14 +254,17 @@
       text = `<b>${textIndex}</b>: ${text}`;
 
       if (index >= dialogsStartIndex) {
-        dialogsTexts.push(text);
+        dialogsTextsTmp.push(text);
       } else {
-        commonTexts.push(text);
+        commonTextsTmp.push(text);
       }
 
       index += 1;
     }
-  }
+
+    commonTexts = commonTextsTmp;
+    dialogsTexts = dialogsTextsTmp;
+  });
 </script>
 
 <div class="gtc-textviewer">
@@ -307,6 +315,8 @@
 </div>
 
 <style lang="postcss">
+  @reference "../../../../../app.css";
+
   .gtc-textviewer {
     @apply w-full;
 
@@ -315,7 +325,7 @@
     }
 
     & .gtc-textviewer-content {
-      @apply whitespace-pre-line rounded bg-primary-700 p-2 text-sm;
+      @apply bg-primary-700 rounded p-2 text-sm whitespace-pre-line;
 
       &.gtc-textviewer-content-formatted {
         @apply text-white;

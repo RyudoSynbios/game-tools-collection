@@ -219,11 +219,8 @@ export function overrideSetInt(item: Item, value: string): boolean {
   return false;
 }
 
-export function generateChecksum(
-  item: ItemChecksum,
-  dataView = new DataView(new ArrayBuffer(0)),
-): bigint {
-  const [checksum1, checksum2] = generateRareChecksum(item, dataView);
+export function generateChecksum(item: ItemChecksum): bigint {
+  const [checksum1, checksum2] = generateRareChecksum(item);
 
   const high = checksum1.toString(16).padStart(8, "0").slice(-8);
   const low = checksum1.xor(checksum2).toString(16).padStart(8, "0").slice(-8);

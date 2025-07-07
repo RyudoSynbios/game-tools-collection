@@ -11,9 +11,13 @@
   } from "../template";
   import { getSprite } from "../utils";
 
-  export let abilityIndex: number;
+  interface Props {
+    abilityIndex: number;
+  }
 
-  let iconIndex: number;
+  let { abilityIndex }: Props = $props();
+
+  let iconIndex = $state(-1);
 
   function handleSpriteChange(index: number): void {
     iconIndex = index;
@@ -58,9 +62,9 @@
   const pointer = getRegionArray(pointerToAbilities);
   const offset = getInt(pointer, "uint24");
 
-  $: {
+  $effect(() => {
     iconIndex = getInt(offset + abilityIndex * 0x10 + 0x4, "uint8");
-  }
+  });
 </script>
 
 <SpriteSelector
@@ -71,6 +75,3 @@
   {sprites}
   onSpriteChange={handleSpriteChange}
 />
-
-<style lang="postcss">
-</style>

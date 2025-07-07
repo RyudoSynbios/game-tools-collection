@@ -1,4 +1,6 @@
 {
-  "css.lint.unknownAtRules": "ignore",
-  "eslint.validate": ["svelte"]
+  "eslint.validate": ["svelte"],
+  "files.associations": {
+    "*.css": "tailwindcss"
+  }
 }

@@ -12,8 +12,12 @@
 
   import type { Item } from "$lib/types";
 
-  export let items: Item[];
-  export let flex = false;
+  interface Props {
+    items: Item[];
+    flex?: boolean;
+  }
+
+  let { items, flex = false }: Props = $props();
 </script>
 
 <div class="gtc-content" class:gtc-content-flex={flex}>
@@ -43,6 +47,8 @@
 </div>
 
 <style lang="postcss">
+  @reference "../../../app.css";
+
   .gtc-content.gtc-content-flex {
     @apply flex min-h-full flex-wrap content-start;
   }

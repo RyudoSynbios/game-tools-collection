@@ -367,8 +367,10 @@
 </div>
 
 <style lang="postcss">
+  @reference "../../app.css";
+
   .gtc-autocomplete {
-    @apply relative mb-4 mr-4 w-fit rounded bg-primary-700 p-2;
+    @apply bg-primary-700 relative mr-4 mb-4 w-fit rounded p-2;
 
     &.gtc-autocomplete-debug {
       @apply bg-orange-950 text-orange-800;
@@ -382,19 +384,19 @@
       }
 
       & span {
-        @apply w-5 cursor-pointer rounded bg-primary-400 text-center text-sm font-bold;
+        @apply bg-primary-400 w-5 cursor-pointer rounded text-center text-sm font-bold;
       }
     }
 
     &.gtc-autocomplete-disabled .gtc-autocomplete-input {
       & input,
       & :global(svg) {
-        @apply bg-gray-100 bg-opacity-30;
+        @apply bg-gray-100/30;
       }
     }
 
     & .gtc-autocomplete-input {
-      @apply flex items-center text-primary-900;
+      @apply text-primary-900 flex items-center;
 
       & input {
         @apply flex-1 pr-1;
@@ -416,7 +418,7 @@
     }
 
     & .gtc-autocomplete-dropdown {
-      @apply absolute z-10 overflow-auto bg-white text-sm text-primary-900;
+      @apply text-primary-900 absolute z-10 overflow-auto bg-white text-sm;
 
       width: calc(100% - 1rem);
       max-height: 40vh;
@@ -440,7 +442,7 @@
       }
 
       & .gtc-autocomplete-nohover {
-        @apply px-2 text-primary-300;
+        @apply text-primary-300 px-2;
       }
 
       &::-webkit-scrollbar-corner,

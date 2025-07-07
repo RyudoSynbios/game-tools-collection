@@ -25,22 +25,26 @@
   } from "../utils";
   import TextureViewer from "./TextureViewer.svelte";
 
-  export let assetIndex: number;
+  interface Props {
+    assetIndex: number;
+  }
+
+  let { assetIndex }: Props = $props();
 
   let canvas: Canvas;
-  let canvasTexture: Canvas;
-  let three: Three;
+  let canvasTexture = $state<Canvas>()!;
+  let three = $state<Three>()!;
 
-  let canvasEl: HTMLDivElement;
-  let threeEl: HTMLDivElement;
+  let canvasEl = $state<HTMLDivElement>()!;
+  let threeEl = $state<HTMLDivElement>()!;
 
   let textures: {
     width: number;
     height: number;
     texture: Uint8Array;
-  }[] = [];
-  let isTextureViewerOpen = false;
-  let view: "canvas" | "three" = "three";
+  }[] = $state([]);
+  let isTextureViewerOpen = $state(false);
+  let view: "canvas" | "three" = $state("three");
 
   let tableOffset = 0x300000;
 
@@ -426,13 +430,11 @@
     three.destroy();
   });
 
-  $: {
-    assetIndex;
-
+  $effect(() => {
     if (canvasTexture && three) {
       updateCanvas();
     }
-  }
+  });
 </script>
 
 <div class="gtc-assetviewer">
@@ -440,7 +442,7 @@
     class="gtc-assetviewer-canvas"
     class:gtc-assetviewer-hidden={view !== "canvas"}
   >
-    <div bind:this={canvasEl} />
+    <div bind:this={canvasEl}></div>
   </div>
   <div class:gtc-assetviewer-hidden={view !== "three"}>
     <ModelViewer {three} bind:threeEl />
@@ -453,11 +455,13 @@
 </div>
 
 <style lang="postcss">
+  @reference "../../../../../app.css";
+
   .gtc-assetviewer {
     @apply z-10 w-full flex-1;
 
     & .gtc-assetviewer-canvas {
-      @apply w-fit rounded bg-primary-700 p-2;
+      @apply bg-primary-700 w-fit rounded p-2;
     }
 
     & .gtc-assetviewer-hidden {

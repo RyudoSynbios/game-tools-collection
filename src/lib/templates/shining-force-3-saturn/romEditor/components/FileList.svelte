@@ -3,9 +3,8 @@
   import Select from "$lib/components/Select.svelte";
   import { getFiles } from "$lib/utils/common/iso9660";
 
-  let search = "";
-  let indexFormat = "hexadecimal";
-  let text = "";
+  let search = $state("");
+  let indexFormat = $state("hexadecimal");
 
   function handleIndexFormatChange(event: Event): void {
     indexFormat = (event.target as HTMLInputElement).value;
@@ -15,10 +14,10 @@
     search = (event.target as HTMLInputElement).value;
   }
 
-  $: {
-    text = "";
+  const files = getFiles();
 
-    const files = getFiles();
+  const text = $derived.by(() => {
+    let text = "";
 
     files
       .filter((file) => {
@@ -37,7 +36,9 @@
 
         text += `<p><b>${index}</b>: ${file.name}</p>`;
       });
-  }
+
+    return text;
+  });
 </script>
 
 <div class="gtc-filelist">
@@ -65,13 +66,15 @@
 </div>
 
 <style lang="postcss">
+  @reference "../../../../../app.css";
+
   .gtc-filelist {
     & .gtc-filelist-inputs {
       @apply flex;
     }
 
     & .gtc-filelist-content {
-      @apply whitespace-pre-line rounded bg-primary-700 p-2;
+      @apply bg-primary-700 rounded p-2 whitespace-pre-line;
     }
   }
 </style>

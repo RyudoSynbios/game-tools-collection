@@ -129,8 +129,10 @@
 </div>
 
 <style lang="postcss">
+  @reference "../../app.css";
+
   .gtc-input {
-    @apply mb-4 mr-4 w-fit rounded bg-primary-700 p-2;
+    @apply bg-primary-700 mr-4 mb-4 w-fit rounded p-2;
 
     &.gtc-input-debug {
       @apply bg-orange-950 text-orange-800;
@@ -140,7 +142,7 @@
       & .gtc-input-content {
         & input,
         & span {
-          @apply bg-gray-100 bg-opacity-30;
+          @apply bg-gray-100/30;
         }
 
         span {
@@ -174,7 +176,7 @@
       }
 
       & span {
-        @apply w-5 cursor-pointer rounded bg-primary-400 text-center text-sm font-bold;
+        @apply bg-primary-400 w-5 cursor-pointer rounded text-center text-sm font-bold;
       }
     }
 

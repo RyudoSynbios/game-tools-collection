@@ -9,14 +9,17 @@ export async function expectInput(
   const inputEl = inputsEl[inputIndex];
 
   const inputValue = await page.evaluate(async (el) => {
+    const inputEl = el as HTMLInputElement;
+
     switch (el.tagName) {
       case "INPUT":
-        return el.value.trim();
+        return inputEl.value.trim();
       case "SELECT":
-        return (
-          el.querySelector(`option[value="${el.value}"]`)?.textContent.trim() ||
-          ""
-        );
+        const optionEl = inputEl.querySelector(
+          `option[value="${inputEl.value}"]`,
+        ) as HTMLOptionElement;
+
+        return optionEl?.textContent?.trim() || "";
     }
   }, inputEl);
 
@@ -36,8 +39,10 @@ export async function writeInput(
 
   await page.evaluate(
     (el, value) => {
-      el.value = value;
-      el.dispatchEvent(new Event("change"));
+      const inputEl = el as HTMLInputElement;
+
+      inputEl.value = value;
+      inputEl.dispatchEvent(new Event("change"));
     },
     inputEl,
     valueToWrite,

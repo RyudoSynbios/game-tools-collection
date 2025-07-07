@@ -5,12 +5,16 @@
 
   import type { ItemChecksum } from "$lib/types";
 
-  export let item: ItemChecksum;
+  interface Props {
+    item: ItemChecksum;
+  }
 
-  let value: string;
+  let { item }: Props = $props();
 
-  $: {
+  const value = $derived.by(() => {
     $dataView;
+
+    let value = "";
 
     const dataTypeLength = dataTypeToLength(item.dataType) * 2;
 
@@ -24,8 +28,8 @@
       }).toHex(dataTypeLength);
     }
 
-    value = `0x${value}`;
-  }
+    return `0x${value}`;
+  });
 </script>
 
 <div class="gtc-checksum">
@@ -39,6 +43,3 @@
     onChange={() => {}}
   />
 </div>
-
-<style lang="postcss">
-</style>

@@ -1,23 +1,31 @@
 <script lang="ts">
+  import { untrack } from "svelte";
+
   import { dataViewAlt, isDebug } from "$lib/stores";
   import { getInt } from "$lib/utils/bytes";
+
+  import type { DataViewABL } from "$lib/types";
 
   import { getFileData } from "../utils";
   import Script, { type ScriptEvent } from "../utils/script";
 
-  export let assetIndex: number;
-  export let entityId = -1;
-  export let debug = false;
+  interface Props {
+    assetIndex: number;
+    entityId: number;
+    debug?: boolean;
+  }
 
-  let rootEl: HTMLDivElement;
+  let { assetIndex, entityId, debug = false }: Props = $props();
 
-  let dataView = new DataView(new ArrayBuffer(0));
-  let script: Script;
+  let rootEl = $state<HTMLDivElement>();
 
-  let tabIndex = 0;
-  let events: ScriptEvent[] = [];
-  let eventIndex = -1;
-  let related: number[] = [];
+  let dataView: DataViewABL = $state(new DataView(new ArrayBuffer(0)));
+  let script = $state<Script>();
+
+  let tabIndex = $state(0);
+  let events: ScriptEvent[] = $state([]);
+  let eventIndex = $state(-1);
+  let related: number[] = $state([]);
 
   function getColor(event: ScriptEvent): string {
     if (event.status === "hasError") {
@@ -32,7 +40,7 @@
   }
 
   function handleActionToggle(eventIndex: number, actionIndex: number): void {
-    events = script.expandAction(eventIndex, actionIndex);
+    events = script!.expandAction(eventIndex, actionIndex);
   }
 
   function handleScriptClick(index: number): void {
@@ -41,26 +49,28 @@
   }
 
   function handleScriptToggle(index: number): void {
-    events = script.expandEvent(index);
+    events = script!.expandEvent(index);
   }
 
-  $: {
+  $effect(() => {
     if (debug || script === undefined) {
       dataView = getFileData("map", assetIndex);
 
-      $dataViewAlt.sct = dataView;
+      untrack(() => {
+        $dataViewAlt.sct = dataView;
 
-      script = new Script(dataView);
+        script = new Script(dataView);
 
-      events = script.getEvents();
+        events = script.getEvents();
 
-      const entityEvents = script.getEntityEvents(entityId);
+        const entityEvents = script.getEntityEvents(entityId);
 
-      if (entityEvents) {
-        eventIndex = entityEvents.main;
-        related = entityEvents.related;
-        tabIndex = 1;
-      }
+        if (entityEvents) {
+          eventIndex = entityEvents.main;
+          related = entityEvents.related;
+          tabIndex = 1;
+        }
+      });
 
       if (eventIndex !== -1) {
         tabIndex = 2;
@@ -70,12 +80,12 @@
     if (rootEl) {
       rootEl.scrollTo({ top: 0 });
     }
-  }
+  });
 </script>
 
-<!-- svelte-ignore a11y-click-events-have-key-events -->
-<!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
-<!-- svelte-ignore a11y-no-static-element-interactions -->
+<!-- svelte-ignore a11y_click_events_have_key_events -->
+<!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
+<!-- svelte-ignore a11y_no_static_element_interactions -->
 <!-- prettier-ignore -->
 <div
   class="gtc-scriptviewer"
@@ -87,7 +97,7 @@
       {#each events as event, eventIndex}
         <p
           style="color: {getColor(event)};"
-          on:click={() => handleScriptToggle(eventIndex)}
+          onclick={() => handleScriptToggle(eventIndex)}
         >
           {event.offset.toHex(8)}: {event.name} ({event.status})
         </p>
@@ -96,7 +106,7 @@
             {#each event.actions as action, actionIndex}
               <p
                 style={`color: ${action.color}`}
-                on:click={() => handleActionToggle(eventIndex, actionIndex)}
+                onclick={() => handleActionToggle(eventIndex, actionIndex)}
               >
                 {action.offset.toHex(8)}: {@html action.debug}
               </p>
@@ -120,14 +130,14 @@
       <ul class="gtc-scriptviewer-tabs">
         <li
           class:gtc-scriptviewer-tab-highlight={tabIndex === 0}
-          on:click={() => (tabIndex = 0)}
+          onclick={() => (tabIndex = 0)}
         >
           All
         </li>
         {#if related.length > 0}
           <li
             class:gtc-scriptviewer-tab-highlight={tabIndex === 1}
-            on:click={() => (tabIndex = 1)}
+            onclick={() => (tabIndex = 1)}
           >
             Related to {entityId}
           </li>
@@ -135,7 +145,7 @@
         {#if eventIndex !== -1}
           <li
             class:gtc-scriptviewer-tab-highlight={tabIndex === 2}
-            on:click={() => (tabIndex = 2)}
+            onclick={() => (tabIndex = 2)}
           >
             View
           </li>
@@ -146,7 +156,7 @@
           {#if !["hidden", "text"].includes(event.status)}
             <p
               style="color: {getColor(event)};"
-              on:click={() => handleScriptClick(eventIndex)}
+              onclick={() => handleScriptClick(eventIndex)}
             >
               {event.name}
             </p>
@@ -156,7 +166,7 @@
         {#each related as index}
           <p
             style="color: {getColor(events[index])};"
-            on:click={() => handleScriptClick(index)}
+            onclick={() => handleScriptClick(index)}
           >
             {events[index].name}
           </p>
@@ -179,7 +189,7 @@
                 ["else", "endcase", "endif", "while"].includes(action.subtype))
                 ? ":"
                 : "⬪"}
-              {@html script.printInstruction(action)}
+              {@html script!.printInstruction(action)}
             </p>
           {/if}
         {/each}
@@ -189,11 +199,13 @@
 </div>
 
 <style lang="postcss">
+  @reference "../../../../../app.css";
+
   .gtc-scriptviewer {
     @apply flex h-full w-screen overflow-auto text-xs lg:w-[50vw];
 
     &.gtc-scriptviewer-debug {
-      @apply w-full rounded bg-primary-700 p-2 text-xs;
+      @apply bg-primary-700 w-full rounded p-2 text-xs;
     }
 
     & > div {
@@ -205,7 +217,7 @@
 
       & :global(p),
       & :global(span) {
-        @apply whitespace-pre-line font-source;
+        @apply font-source whitespace-pre-line;
       }
 
       & .gtc-scriptviewer-tabs {
@@ -216,7 +228,7 @@
         }
 
         & li.gtc-scriptviewer-tab-highlight {
-          @apply rounded bg-primary-400;
+          @apply bg-primary-400 rounded;
         }
       }
 

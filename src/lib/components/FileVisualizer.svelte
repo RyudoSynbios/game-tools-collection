@@ -24,25 +24,25 @@
 
   import Modal from "./Modal.svelte";
 
-  let contentEl: HTMLDivElement;
-  let tooltipEl: HTMLDivElement;
-  let gotoEl: HTMLInputElement;
-  let searchTextEl: HTMLInputElement;
-  let searchTypeEl: HTMLSelectElement;
-  let searchBigEndianEl: HTMLInputElement;
+  let contentEl = $state<HTMLDivElement>()!;
+  let tooltipEl = $state<HTMLDivElement>()!;
+  let gotoEl = $state<HTMLInputElement>()!;
+  let searchTextEl = $state<HTMLInputElement>()!;
+  let searchTypeEl = $state<HTMLSelectElement>()!;
+  let searchBigEndianEl = $state<HTMLInputElement>()!;
 
-  let contentHeight = 0;
-  let rows: number[] = [];
-  let visibleRows: number[] = [];
+  let contentHeight = $state(0);
+  let rows: number[] = $state([]);
+  let visibleRows: number[] = $state([]);
 
-  let paddingTop = 0;
-  let paddingBottom = 0;
+  let paddingTop = $state(0);
+  let paddingBottom = $state(0);
 
-  let start = 0;
-  let end = 0;
+  let start = $state(0);
+  let end = $state(0);
 
-  let selectedDataView = $dataView;
-  let previousDataViewKey = "";
+  let selectedDataView = $state($dataView);
+  let previousDataViewKey = $state("");
 
   if ($fileVisualizerDataViewKey !== "main") {
     selectedDataView = $dataViewAlt[$fileVisualizerDataViewKey];
@@ -52,14 +52,14 @@
     text: string;
     dataType: Exclude<DataTypeInt, "int64" | "uint64">;
     bigEndian: boolean;
-  } = {
+  } = $state({
     text: "",
     dataType: "uint8",
     bigEndian: false,
-  };
+  });
 
   let highlightedOffsets: HighlightedOffsets = {};
-  let tooltip = "";
+  let tooltip = $state("");
 
   const rowHeight = 24;
 
@@ -293,27 +293,25 @@
     });
   });
 
-  $: {
+  $effect(() => {
     if ($fileVisualizerDataViewKey !== previousDataViewKey) {
       rows = [...Array(Math.ceil(selectedDataView.byteLength / 0x10)).keys()];
     }
 
     previousDataViewKey = $fileVisualizerDataViewKey;
-  }
+  });
 
-  $: {
-    contentHeight, search;
-
+  $effect(() => {
     if (contentEl) {
       handleScroll();
 
       visibleRows = rows.slice(start, end).map((i) => i * 0x10);
     }
-  }
+  });
 </script>
 
-<!-- svelte-ignore a11y-click-events-have-key-events -->
-<!-- svelte-ignore a11y-no-static-element-interactions -->
+<!-- svelte-ignore a11y_click_events_have_key_events -->
+<!-- svelte-ignore a11y_no_static_element_interactions -->
 <Modal onClose={handleClose}>
   <div class="gtc-filevisualizer">
     <div class="gtc-filevisualizer-toolbar">
@@ -330,7 +328,7 @@
           ]}
           onChange={handleDataViewChange}
         />
-        <button type="button" on:click={() => handleExport()}>Export</button>
+        <button type="button" onclick={() => handleExport()}>Export</button>
       </div>
       <div class="gtc-filevisualizer-goto">
         <Input
@@ -341,7 +339,7 @@
           onEnter={handleGoto}
           bind:inputEl={gotoEl}
         />
-        <button type="button" on:click={() => handleGoto()}>Go</button>
+        <button type="button" onclick={() => handleGoto()}>Go</button>
       </div>
       <div class="gtc-filevisualizer-search">
         <Input
@@ -366,10 +364,10 @@
           onChange={handleSearchTypeChange}
           bind:selectEl={searchTypeEl}
         />
-        <button type="button" on:click={() => handleSearch("previous")}>
+        <button type="button" onclick={() => handleSearch("previous")}>
           &lt;
         </button>
-        <button type="button" on:click={() => handleSearch("next")}>
+        <button type="button" onclick={() => handleSearch("next")}>
           &gt;
         </button>
         <Checkbox
@@ -384,9 +382,9 @@
       class="gtc-filevisualizer-content"
       bind:this={contentEl}
       bind:offsetHeight={contentHeight}
-      on:blur={handleMouseOut}
-      on:mouseout={handleMouseOut}
-      on:scroll={handleScroll}
+      onblur={handleMouseOut}
+      onmouseout={handleMouseOut}
+      onscroll={handleScroll}
     >
       <div
         style="padding-top: {paddingTop}px; padding-bottom: {paddingBottom}px;"
@@ -408,7 +406,7 @@
                     "bitflags"}
                   class:gtc-filevisualizer-hex-search={highlightedOffset?.type ===
                     "search"}
-                  on:mousemove={(event) => handleMouseMove(event, row + offset)}
+                  onmousemove={(event) => handleMouseMove(event, row + offset)}
                 >
                   {row + offset < selectedDataView.byteLength
                     ? getInt(row + offset, "uint8", {}, selectedDataView).toHex(
@@ -430,7 +428,7 @@
                     "bitflags"}
                   class:gtc-filevisualizer-hex-search={highlightedOffset?.type ===
                     "search"}
-                  on:mousemove={(event) => handleMouseMove(event, row + offset)}
+                  onmousemove={(event) => handleMouseMove(event, row + offset)}
                 >
                   {row + offset < selectedDataView.byteLength
                     ? String.fromCharCode(
@@ -455,6 +453,8 @@
 </Modal>
 
 <style lang="postcss">
+  @reference "../../app.css";
+
   .gtc-filevisualizer {
     @apply flex h-full;
 
@@ -464,7 +464,7 @@
       & .gtc-filevisualizer-dataview,
       & .gtc-filevisualizer-goto,
       & .gtc-filevisualizer-search {
-        @apply mb-4 flex items-end justify-between rounded bg-primary-700 p-2;
+        @apply bg-primary-700 mb-4 flex items-end justify-between rounded p-2;
 
         & :global(.gtc-input),
         & :global(.gtc-select) {
@@ -472,7 +472,7 @@
         }
 
         & button {
-          @apply rounded-l-none bg-primary-400 leading-4 text-white;
+          @apply bg-primary-400 rounded-l-none leading-4 text-white;
 
           &:hover {
             @apply bg-primary-300;
@@ -514,7 +514,7 @@
         }
 
         & :global(.gtc-checkbox) {
-          @apply absolute right-2 top-2;
+          @apply absolute top-2 right-2;
         }
       }
     }
@@ -528,7 +528,7 @@
         @apply flex;
 
         & .gtc-filevisualizer-offsets {
-          @apply h-6 bg-primary-500 px-4 text-center font-source uppercase;
+          @apply bg-primary-500 font-source h-6 px-4 text-center uppercase;
         }
 
         & .gtc-filevisualizer-bytes {
@@ -544,11 +544,11 @@
           @apply flex flex-wrap content-start px-2;
 
           & .gtc-filevisualizer-hex {
-            @apply h-6 w-7 px-1 text-center font-source uppercase;
+            @apply font-source h-6 w-7 px-1 text-center uppercase;
           }
 
           & .gtc-filevisualizer-char {
-            @apply h-6 text-center font-source;
+            @apply font-source h-6 text-center;
 
             width: 0.625rem;
           }
@@ -611,7 +611,7 @@
     }
 
     & .gtc-filevisualizer-tooltip {
-      @apply fixed right-0 top-0 hidden whitespace-pre-wrap rounded bg-primary-900 px-4 py-2 text-sm text-white opacity-90;
+      @apply bg-primary-900 fixed top-0 right-0 hidden rounded px-4 py-2 text-sm whitespace-pre-wrap text-white opacity-90;
 
       width: fit-content;
 

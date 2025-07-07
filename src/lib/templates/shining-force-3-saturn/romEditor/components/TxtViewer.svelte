@@ -1,15 +1,17 @@
 <script lang="ts">
   import { getFileData, readTxt } from "../utils";
 
-  export let assetIndex: number;
+  interface Props {
+    assetIndex: number;
+  }
 
-  let text = "";
+  let { assetIndex }: Props = $props();
 
-  $: {
+  const text = $derived.by(() => {
     const dataView = getFileData("txt", assetIndex);
 
-    text = readTxt(dataView);
-  }
+    return readTxt(dataView);
+  });
 </script>
 
 <div class="gtc-txtviewer">
@@ -17,7 +19,9 @@
 </div>
 
 <style lang="postcss">
+  @reference "../../../../../app.css";
+
   .gtc-txtviewer {
-    @apply h-fit whitespace-pre-line rounded bg-primary-700 p-2;
+    @apply bg-primary-700 h-fit rounded p-2 whitespace-pre-line;
   }
 </style>

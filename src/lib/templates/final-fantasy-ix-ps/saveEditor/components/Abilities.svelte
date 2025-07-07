@@ -3,16 +3,18 @@
   import { getInt } from "$lib/utils/bytes";
   import { getItem, getResource } from "$lib/utils/parser";
 
-  import type { ItemSection, ItemString, Resource } from "$lib/types";
+  import type { Item, ItemSection, ItemString, Resource } from "$lib/types";
 
   import { abilities } from "../utils/resource";
 
-  export let slotIndex: number;
-  export let characterIndex: number;
+  interface Props {
+    slotIndex: number;
+    characterIndex: number;
+  }
 
-  let item: ItemSection;
+  let { slotIndex, characterIndex }: Props = $props();
 
-  $: {
+  const item: ItemSection = $derived.by(() => {
     const itemString = getItem(
       `slot-${slotIndex}-characterName-${characterIndex}`,
     ) as ItemString;
@@ -21,16 +23,13 @@
 
     const characterAbilities = abilities[characterId];
 
-    item = {
-      type: "section",
-      items: [],
-    };
+    const items: Item[] = [];
 
     if (characterAbilities) {
       const names = getResource("abilities") as Resource;
       const offset = itemString.offset + 0x58;
 
-      item.items = [
+      items.push(
         {
           name: "Command Abilities",
           type: "section",
@@ -55,16 +54,16 @@
             max: ability.max,
           })),
         },
-      ];
-
-      console.log(characterAbilities);
+      );
     }
-  }
+
+    return {
+      type: "section",
+      items,
+    };
+  });
 </script>
 
 <div class="gtc-abilities">
   <Section {item} />
 </div>
-
-<style lang="postcss">
-</style>

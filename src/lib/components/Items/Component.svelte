@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { SvelteComponent } from "svelte";
+  import type { Component } from "svelte";
 
   import { gameUtils } from "$lib/stores";
   import debug from "$lib/utils/debug";
@@ -7,24 +7,25 @@
 
   import type { ItemComponent } from "$lib/types";
 
-  export let item: ItemComponent;
+  interface Props {
+    item: ItemComponent;
+  }
 
-  let component: SvelteComponent;
+  let { item }: Props = $props();
 
-  $: {
+  const SvelteComponent: Component = $derived.by(() => {
     if (utilsExists("getComponent")) {
-      const tmp = $gameUtils.getComponent(item.component);
+      const component = $gameUtils.getComponent(item.component);
 
-      if (tmp) {
-        component = tmp;
-      } else {
+      if (!component) {
         debug.warn(`Component '${item.component}' not found`);
       }
+
+      return component;
     }
-  }
+  });
 </script>
 
-<svelte:component this={component} {...item.props} />
-
-<style lang="postcss">
-</style>
+{#if SvelteComponent}
+  <SvelteComponent {...item.props} />
+{/if}

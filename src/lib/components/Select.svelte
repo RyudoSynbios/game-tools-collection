@@ -65,15 +65,17 @@
 </div>
 
 <style lang="postcss">
+  @reference "../../app.css";
+
   .gtc-select {
-    @apply mb-4 mr-4 w-fit rounded bg-primary-700 p-2;
+    @apply bg-primary-700 mr-4 mb-4 w-fit rounded p-2;
 
     &.gtc-select-debug {
       @apply bg-orange-950 text-orange-800;
     }
 
     &.gtc-select-disabled select {
-      @apply bg-gray-100 bg-opacity-30;
+      @apply bg-gray-100/30;
     }
 
     &.gtc-select-lg select {
@@ -88,7 +90,7 @@
       }
 
       & span {
-        @apply w-5 cursor-pointer rounded bg-primary-400 text-center text-sm font-bold;
+        @apply bg-primary-400 w-5 cursor-pointer rounded text-center text-sm font-bold;
       }
     }
   }

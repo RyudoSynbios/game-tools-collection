@@ -6,11 +6,15 @@
 
   import { getFileData } from "../utils";
 
-  export let assetIndex: number;
+  interface Props {
+    assetIndex: number;
+  }
 
-  let canvasEl: HTMLDivElement;
+  let { assetIndex }: Props = $props();
 
-  let canvas: Canvas;
+  let canvasEl = $state<HTMLDivElement>()!;
+
+  let canvas = $state<Canvas>()!;
 
   async function updateCanvas(): Promise<void> {
     const dataView = getFileData("video", assetIndex);
@@ -36,21 +40,21 @@
     canvas.destroy();
   });
 
-  $: {
-    assetIndex;
-
+  $effect(() => {
     if (canvas) {
       updateCanvas();
     }
-  }
+  });
 </script>
 
 <div class="gtc-videoviewer">
-  <div bind:this={canvasEl} />
+  <div bind:this={canvasEl}></div>
 </div>
 
 <style lang="postcss">
+  @reference "../../../../../app.css";
+
   .gtc-videoviewer {
-    @apply w-fit self-start rounded bg-primary-700 p-2;
+    @apply bg-primary-700 w-fit self-start rounded p-2;
   }
 </style>

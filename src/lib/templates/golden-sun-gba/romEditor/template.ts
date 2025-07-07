@@ -1355,7 +1355,7 @@ const template: GameJson = {
                                   type: "bitflags",
                                   flags: [
                                     { offset: 0x3, bit: 0, label: "Curses when equipped" },
-                                    { offset: 0x3, bit: 1, label: "Can't be removed",},
+                                    { offset: 0x3, bit: 1, label: "Can't be removed" },
                                     { offset: 0x3, bit: 2, label: "Rare item" },
                                     { offset: 0x3, bit: 3, label: "Important item" },
                                     { offset: 0x3, bit: 4, label: "Carry up to 30" },

@@ -1,117 +1,144 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
 
-@font-face {
-  font-family: "Roboto";
-  font-style: normal;
-  font-weight: 400;
-  src: url("/fonts/Roboto-Light.ttf") format("truetype");
+@theme {
+  --breakpoint-2xl: 1320px;
+  --color-primary-300: #6b7280;
+  --color-primary-400: #3a4352;
+  --color-primary-500: #293340;
+  --color-primary-600: #253043;
+  --color-primary-700: #2a3441;
+  --color-primary-800: #1f2937;
+  --color-primary-900: #192231;
+  --font-roboto: "Roboto";
+  --font-source: "Source Code Pro";
 }
 
-@font-face {
-  font-family: "Roboto";
-  font-style: normal;
-  font-weight: 700;
-  src: url("/fonts/Roboto-Bold.ttf") format("truetype");
-}
+@utility no-scrollbar {
+  -ms-verflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
 
-@font-face {
-  font-family: "Roboto";
-  font-style: normal;
-  font-weight: 900;
-  src: url("/fonts/Roboto-Black.ttf") format("truetype");
-}
-
-@font-face {
-  font-family: "Source Code Pro";
-  font-style: normal;
-  font-weight: 400;
-  src: url("/fonts/SourceCodePro-Light.ttf") format("truetype");
-}
-
-* {
-  font-family: "Roboto";
-  outline: transparent;
-  user-select: none;
-  -webkit-user-drag: none;
-}
-
-body {
-  @apply bg-primary-800 text-primary-300;
-}
-
-canvas {
-  image-rendering: pixelated;
-}
-
-button {
-  @apply rounded bg-primary-700 px-4 py-2 text-sm text-primary-300;
-
-  &:hover {
-    @apply bg-primary-300 text-white;
+  &::-webkit-scrollbar {
+    display: none;
   }
 }
 
-h1 {
-  @apply mb-4 text-2xl font-black;
-}
+@layer base {
+  @font-face {
+    font-family: "Roboto";
+    font-style: normal;
+    font-weight: 400;
+    src: url("/fonts/Roboto-Light.ttf") format("truetype");
+  }
 
-h2 {
-  @apply mb-4 font-bold;
-}
+  @font-face {
+    font-family: "Roboto";
+    font-style: normal;
+    font-weight: 700;
+    src: url("/fonts/Roboto-Bold.ttf") format("truetype");
+  }
 
-img {
-  @apply inline-block;
-}
+  @font-face {
+    font-family: "Roboto";
+    font-style: normal;
+    font-weight: 900;
+    src: url("/fonts/Roboto-Black.ttf") format("truetype");
+  }
 
-input:not([type="checkbox"]),
-select {
-  @apply h-8 text-primary-900;
+  @font-face {
+    font-family: "Source Code Pro";
+    font-style: normal;
+    font-weight: 400;
+    src: url("/fonts/SourceCodePro-Light.ttf") format("truetype");
+  }
 
-  width: 180px;
-}
+  * {
+    font-family: "Roboto";
+    border-color: #e5e7eb;
+    outline: transparent;
+    user-select: none;
+    -webkit-user-drag: none;
+  }
 
-input {
-  @apply px-2 py-1 text-sm;
-}
+  body {
+    @apply bg-primary-800 text-primary-300;
+  }
 
-select {
-  @apply p-1 text-sm;
-}
+  canvas {
+    image-rendering: pixelated;
+  }
 
-[data-title] {
-  @apply relative;
-}
+  button {
+    @apply bg-primary-700 text-primary-300 cursor-pointer rounded px-4 py-2 text-sm;
 
-[data-title]:hover:after {
-  @apply visible opacity-100;
+    &:hover {
+      @apply bg-primary-300 text-white;
+    }
+  }
 
-  transition: all 0.1s ease 0.5s;
-}
+  h1 {
+    @apply mb-4 text-2xl font-black;
+  }
 
-[data-title]:after {
-  @apply invisible absolute top-8 z-50 w-64 -translate-x-1/2 whitespace-pre-line rounded bg-primary-500 px-2 py-1 text-left text-xs opacity-0 shadow-md;
+  h2 {
+    @apply mb-4 font-bold;
+  }
 
-  content: attr(data-title);
-}
+  img {
+    @apply inline-block;
+  }
 
-::-webkit-scrollbar {
-  @apply h-2 w-2 rounded bg-primary-800;
-}
+  input:not([type="checkbox"]),
+  select {
+    @apply text-primary-900 h-8;
 
-::-webkit-scrollbar-corner {
-  @apply rounded bg-primary-800;
-}
+    width: 180px;
+  }
 
-::-webkit-scrollbar-track {
-  @apply rounded bg-primary-800;
-}
+  input {
+    @apply px-2 py-1 text-sm;
 
-::-webkit-scrollbar-thumb {
-  @apply rounded bg-primary-700;
+    background-color: field;
+  }
 
-  &:hover {
-    @apply bg-primary-400;
+  select {
+    @apply bg-inherit p-1 text-sm;
+
+    background-color: field;
+  }
+
+  [data-title] {
+    @apply relative;
+  }
+
+  [data-title]:hover:after {
+    @apply visible opacity-100;
+
+    transition: all 0.1s ease 0.5s;
+  }
+
+  [data-title]:after {
+    @apply bg-primary-500 invisible absolute top-8 z-50 w-64 -translate-x-1/2 rounded px-2 py-1 text-left text-xs whitespace-pre-line opacity-0 shadow-md;
+
+    content: attr(data-title);
+  }
+
+  ::-webkit-scrollbar {
+    @apply bg-primary-800 h-2 w-2 rounded;
+  }
+
+  ::-webkit-scrollbar-corner {
+    @apply bg-primary-800 rounded;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-primary-800 rounded;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-primary-700 rounded;
+
+    &:hover {
+      @apply bg-primary-400;
+    }
   }
 }

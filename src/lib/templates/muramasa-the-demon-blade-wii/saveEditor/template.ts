@@ -7,7 +7,7 @@ const template: GameJson = {
       europe_usa_japan: { 0x0: [0x4e, 0x50, 0x53, 0x44] }, // "NPSD"
     },
     text: "Drag 'n' drop here or click to add a save file.",
-    hint: 'Only works with decrypted saves (see FAQ).',
+    hint: "Only works with decrypted saves (see FAQ).",
     error: "Not a valid save file.",
   },
   items: [

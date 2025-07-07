@@ -53,10 +53,10 @@
       [isOverrided, flags] = $gameUtils.overrideGetInt(item);
     }
 
-    let dataViewAlt: DataView;
+    let _dataViewAlt: DataView;
 
     if (isDataViewAltExists(item.dataViewAltKey || "")) {
-      dataViewAlt = $dataViewAlt[item.dataViewAltKey as string];
+      _dataViewAlt = $dataViewAlt[item.dataViewAltKey as string];
     }
 
     // prettier-ignore
@@ -67,7 +67,7 @@
             ...flag,
             checked: getBitflag(flag.offset, flag.bit, {
               reversed: item.reversed || flag.reversed,
-            }, dataViewAlt),
+            }, _dataViewAlt),
           });
 
           return flags;
@@ -103,7 +103,7 @@
             onChange={(event) => handleInputChange(flag, event)}
           />
           {#if flag.separator}
-            <p />
+            <p></p>
           {/if}
         </div>
       {/if}
@@ -112,8 +112,10 @@
 {/if}
 
 <style lang="postcss">
+  @reference "../../../app.css";
+
   .gtc-bitflags {
-    @apply mb-4 mr-4 h-fit w-fit rounded bg-primary-700 p-2;
+    @apply bg-primary-700 mr-4 mb-4 h-fit w-fit rounded p-2;
 
     min-width: 196px;
 
@@ -145,7 +147,7 @@
       }
 
       & span {
-        @apply w-5 cursor-pointer rounded bg-primary-400 text-center text-sm font-bold;
+        @apply bg-primary-400 w-5 cursor-pointer rounded text-center text-sm font-bold;
       }
     }
 

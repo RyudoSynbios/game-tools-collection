@@ -14,6 +14,8 @@
 </svg>
 
 <style lang="postcss">
+  @reference "../../app.css";
+
   .gtc-icon-save {
     @apply max-h-full max-w-full fill-current;
   }

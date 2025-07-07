@@ -4,16 +4,20 @@
   import Canvas from "$lib/utils/canvas";
   import { generateGraphicsSheet } from "$lib/utils/graphics";
 
-  export let textures: {
-    width: number;
-    height: number;
-    texture: Uint8Array;
-  }[];
+  interface Props {
+    textures: {
+      width: number;
+      height: number;
+      texture: Uint8Array;
+    }[];
+  }
 
-  let canvasEl: HTMLDivElement;
+  let { textures }: Props = $props();
 
-  let innerWidth = 0;
-  let canvas: Canvas;
+  let canvasEl = $state<HTMLDivElement>()!;
+
+  let innerWidth = $state(0);
+  let canvas = $state<Canvas>()!;
 
   async function updateCanvas(): Promise<void> {
     const width = Math.min(innerWidth - 104, 1024);
@@ -48,22 +52,22 @@
     canvas.destroy();
   });
 
-  $: {
-    innerWidth;
-
+  $effect(() => {
     if (canvas) {
       updateCanvas();
     }
-  }
+  });
 </script>
 
 <svelte:window bind:innerWidth />
 
 <div class="gtc-textureviewer">
-  <div bind:this={canvasEl} />
+  <div bind:this={canvasEl}></div>
 </div>
 
 <style lang="postcss">
+  @reference "../../../../../app.css";
+
   .gtc-textureviewer {
     @apply h-full overflow-auto;
   }

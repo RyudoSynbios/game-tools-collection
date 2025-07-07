@@ -79,6 +79,3 @@
   {sprites}
   onSpriteChange={handleSpriteChange}
 />
-
-<style lang="postcss">
-</style>

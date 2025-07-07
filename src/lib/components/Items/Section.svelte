@@ -5,33 +5,41 @@
 
   import type { ItemSection } from "$lib/types";
 
-  export let item: ItemSection;
+  interface Props {
+    item: ItemSection;
+  }
 
-  $: {
+  let { item }: Props = $props();
+
+  const section: ItemSection = $derived.by(() => {
     $dataView;
 
     if (utilsExists("overrideItem")) {
-      item = $gameUtils.overrideItem(item);
+      return $gameUtils.overrideItem(item);
     }
-  }
+
+    return item;
+  });
 </script>
 
-{#if !item.hidden || $isDebug}
+{#if !section.hidden || $isDebug}
   <div
     class="gtc-section"
-    class:gtc-section-background={item.background}
-    class:gtc-section-debug={item.hidden}
-    class:gtc-section-flex1={item.flex1}
-    class:gtc-section-nomargin={item.noMargin}
+    class:gtc-section-background={section.background}
+    class:gtc-section-debug={section.hidden}
+    class:gtc-section-flex1={section.flex1}
+    class:gtc-section-nomargin={section.noMargin}
   >
-    {#if item.name}
-      <p>{@html item.name}</p>
+    {#if section.name}
+      <p>{@html section.name}</p>
     {/if}
-    <Content items={item.items} flex={item.flex} />
+    <Content items={section.items} flex={section.flex} />
   </div>
 {/if}
 
 <style lang="postcss">
+  @reference "../../../app.css";
+
   .gtc-section {
     @apply mb-4;
 
@@ -42,7 +50,7 @@
     }
 
     &.gtc-section-background {
-      @apply mb-4 mr-4 w-fit rounded bg-primary-700 p-2;
+      @apply bg-primary-700 mr-4 mb-4 w-fit rounded p-2;
     }
 
     &.gtc-section-debug {

@@ -14,11 +14,15 @@
   } from "../template";
   import { generateBattleBackgroundCanvas, pointerToOffset } from "../utils";
 
-  export let backgroundIndex: number;
+  interface Props {
+    backgroundIndex: number;
+  }
 
-  let canvasEl: HTMLDivElement;
+  let { backgroundIndex }: Props = $props();
 
-  let canvas: Canvas;
+  let canvasEl = $state<HTMLDivElement>()!;
+
+  let canvas = $state<Canvas>()!;
 
   function updateCanvas(): void {
     const tilesetsOffset = pointerToOffset(pointerToBattleBackgroundSets);
@@ -91,22 +95,24 @@
     canvas.destroy();
   });
 
-  $: {
-    $dataView, backgroundIndex;
+  $effect(() => {
+    $dataView;
 
     if (canvas) {
       updateCanvas();
     }
-  }
+  });
 </script>
 
 <div class="gtc-battlebackgroundcanvas">
-  <div bind:this={canvasEl} />
+  <div bind:this={canvasEl}></div>
 </div>
 
 <style lang="postcss">
+  @reference "../../../../../app.css";
+
   .gtc-battlebackgroundcanvas {
-    @apply mb-4 mr-4 w-fit rounded bg-primary-700 p-2;
+    @apply bg-primary-700 mr-4 mb-4 w-fit rounded p-2;
 
     height: 216px;
   }

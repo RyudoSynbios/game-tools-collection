@@ -1,8 +1,12 @@
 <script lang="ts">
   import { capitalize } from "$lib/utils/format";
 
-  export let regions: string[];
-  export let onSubmit: (region: string) => void;
+  interface Props {
+    regions: string[];
+    onSubmit: (region: string) => void;
+  }
+
+  let { regions, onSubmit }: Props = $props();
 
   const regionsFormatted = Object.values(regions).reduce(
     (results: { id: string; name: string }[], region) => {
@@ -36,14 +40,14 @@
   );
 </script>
 
-<!-- svelte-ignore a11y-click-events-have-key-events -->
-<!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
+<!-- svelte-ignore a11y_click_events_have_key_events -->
+<!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
 <div class="gtc-regionmodal-backdrop">
   <div class="gtc-regionmodal">
     <p>Please select the region of your save file:</p>
     <ul>
       {#each regionsFormatted as region}
-        <li on:click={() => onSubmit(region.id)}>
+        <li onclick={() => onSubmit(region.id)}>
           {region.name}
         </li>
       {/each}
@@ -52,13 +56,15 @@
 </div>
 
 <style lang="postcss">
+  @reference "../../app.css";
+
   .gtc-regionmodal-backdrop {
     @apply absolute inset-0 flex items-center justify-center bg-black/50 text-white;
 
     z-index: 10000;
 
     & .gtc-regionmodal {
-      @apply flex flex-col items-center justify-center rounded-xl bg-primary-900 p-4;
+      @apply bg-primary-900 flex flex-col items-center justify-center rounded-xl p-4;
 
       width: 600px;
       height: 400px;

@@ -6,12 +6,16 @@
 
   import { getImagesCanvas } from "../utils/image";
 
-  export let assetIndex: number;
-  export let type: "image" | "sprite";
+  interface Props {
+    assetIndex: number;
+    type: "image" | "sprite";
+  }
 
-  let canvasEl: HTMLDivElement;
+  let { assetIndex, type }: Props = $props();
 
-  let canvas: Canvas;
+  let canvasEl = $state<HTMLDivElement>()!;
+
+  let canvas = $state<Canvas>()!;
 
   async function updateCanvas(): Promise<void> {
     const imagesCanvas = getImagesCanvas(assetIndex, type);
@@ -49,21 +53,21 @@
     canvas.destroy();
   });
 
-  $: {
-    assetIndex, type;
-
+  $effect(() => {
     if (canvas) {
       updateCanvas();
     }
-  }
+  });
 </script>
 
 <div class="gtc-imageviewer">
-  <div bind:this={canvasEl} />
+  <div bind:this={canvasEl}></div>
 </div>
 
 <style lang="postcss">
+  @reference "../../../../../app.css";
+
   .gtc-imageviewer {
-    @apply w-fit self-start rounded bg-primary-700 p-2;
+    @apply bg-primary-700 w-fit self-start rounded p-2;
   }
 </style>

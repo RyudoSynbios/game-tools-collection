@@ -2,7 +2,7 @@
   import FileSaver from "file-saver";
   import { onDestroy } from "svelte";
 
-  import { page } from "$app/stores";
+  import { page } from "$app/state";
   import ChecksumsIcon from "$lib/assets/Checksums.svelte";
   import EjectIcon from "$lib/assets/Eject.svelte";
   import ManageSearchIcon from "$lib/assets/ManageSearch.svelte";
@@ -30,11 +30,11 @@
 
   import type { Game, GameJson, Patch } from "$lib/types";
 
-  const game = getGame($page.params["gameId"]) as Game;
+  const game = getGame(page.params["gameId"]) as Game;
 
-  let tool = $page.params["tool"];
+  let tool = $state("");
 
-  switch (tool) {
+  switch (page.params["tool"]) {
     case "randomizer":
       tool = "Randomizer";
       break;
@@ -46,15 +46,16 @@
       break;
   }
 
+  let debugToolbarOpen = $state(false);
+
+  let patchInputEl = $state<HTMLInputElement>()!;
+  let patchToolbarOpen = $state(false);
+  let patchIsLoading = $state(false);
+  let patchError = $state(false);
+  let patchSuccess = $state(false);
+
   let logoClickCount = 0;
   let logoClickTimer: NodeJS.Timeout;
-  let debugToolbarOpen = false;
-
-  let patchInputEl: HTMLInputElement;
-  let patchToolbarOpen = false;
-  let patchIsLoading = false;
-  let patchError = false;
-  let patchSuccess = false;
 
   function handleClick(): void {
     debugToolbarOpen = false;
@@ -94,7 +95,7 @@
   function handleFileSave(): void {
     updateChecksums();
 
-    let buffer = $dataView.buffer;
+    let buffer = $dataView.buffer as ArrayBuffer;
 
     if (utilsExists("beforeSaving")) {
       buffer = $gameUtils.beforeSaving();
@@ -160,7 +161,7 @@
       try {
         const patch: Patch<unknown> = JSON.parse(`${event.target?.result}`);
 
-        if (patch.identifier !== $page.params["gameId"]) {
+        if (patch.identifier !== page.params["gameId"]) {
           patchIsLoading = false;
           patchError = true;
           return;
@@ -223,14 +224,14 @@
 <svelte:head>
   <title>{game.name} - {game.console.name} - {tool} | Game Tools Collection</title>
   <meta property="og:title" content="{game.name} - {game.console.name} - {tool}" />
-  <meta property="og:image" content="{$page.url.origin}/img/games/{game.id}/logo.png" />
+  <meta property="og:image" content="{page.url.origin}/img/games/{game.id}/logo.png" />
 </svelte:head>
 
-<svelte:window on:click={handleClick} />
+<svelte:window onclick={handleClick} />
 
-<!-- svelte-ignore a11y-click-events-have-key-events -->
-<!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
-<!-- svelte-ignore a11y-no-static-element-interactions -->
+<!-- svelte-ignore a11y_click_events_have_key_events -->
+<!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
+<!-- svelte-ignore a11y_no_static_element_interactions -->
 <div class="gtc-tool">
   {#if $dataView.byteLength === 0}
     <div class="gtc-tool-dropzone">
@@ -244,42 +245,45 @@
       <img
         src="/img/games/{game.id}/logo.png"
         alt="{game.name} ({game.console.name})"
-        on:click={handleLogoClick}
+        onclick={handleLogoClick}
       />
       <div>
         {#if $isDebug}
-          <div class="gtc-tool-debugtoolbar" on:click|stopPropagation>
+          <div
+            class="gtc-tool-debugtoolbar"
+            onclick={(event: Event) => event.stopPropagation()}
+          >
             <button
               type="button"
               class:gtc-tool-debugtoolbar-focus={debugToolbarOpen}
-              on:click={handleDebugToolbarToggle}
+              onclick={handleDebugToolbarToggle}
             >
               <SettingsIcon />
             </button>
             {#if debugToolbarOpen}
               <ul class="gtc-tool-toolbar">
-                <li on:click={handleShowTabIndexesToggle}>
+                <li onclick={handleShowTabIndexesToggle}>
                   Show tab indexes
                   <input
                     type="checkbox"
                     checked={$debugOptions.showTabIndexes}
                   />
                 </li>
-                <li on:click={handleShowInputValuesToggle}>
+                <li onclick={handleShowInputValuesToggle}>
                   Show input values
                   <input
                     type="checkbox"
                     checked={$debugOptions.showInputValues}
                   />
                 </li>
-                <li on:click={handleExitDebugMode}>Exit debug mode</li>
+                <li onclick={handleExitDebugMode}>Exit debug mode</li>
               </ul>
             {/if}
           </div>
           <button
             type="button"
             class="gtc-tool-filevisualizer"
-            on:click={handleFileVisualizerOpen}
+            onclick={handleFileVisualizerOpen}
           >
             <ManageSearchIcon /> File Visualizer
           </button>
@@ -287,18 +291,21 @@
             <button
               type="button"
               class="gtc-tool-checksums"
-              on:click={handleFileChecksum}
+              onclick={handleFileChecksum}
             >
               <ChecksumsIcon /> Checksums
             </button>
           {/if}
         {/if}
         {#if utilsExists("importPatch") || utilsExists("generatePatch")}
-          <div class="gtc-tool-patchtoolbar" on:click|stopPropagation>
+          <div
+            class="gtc-tool-patchtoolbar"
+            onclick={(event: Event) => event.stopPropagation()}
+          >
             <button
               type="button"
               class:gtc-tool-patchtoolbar-focus={patchToolbarOpen}
-              on:click={handlePatchToolbarToggle}
+              onclick={handlePatchToolbarToggle}
             >
               <PatchIcon /> Patch
             </button>
@@ -309,7 +316,7 @@
                     class:gtc-tool-patchtoolbar-loading={patchIsLoading}
                     class:gtc-tool-patchtoolbar-error={patchError}
                     class:gtc-tool-patchtoolbar-success={patchSuccess}
-                    on:click={handlePatchImportClick}
+                    onclick={handlePatchImportClick}
                   >
                     Import Patch
                     {#if patchIsLoading}
@@ -322,21 +329,21 @@
                     <input
                       type="file"
                       bind:this={patchInputEl}
-                      on:change={handlePatchInputChange}
+                      onchange={handlePatchInputChange}
                     />
                   </li>
                 {/if}
                 {#if utilsExists("generatePatch")}
-                  <li on:click={handlePatchGenerate}>Generate Patch</li>
+                  <li onclick={handlePatchGenerate}>Generate Patch</li>
                 {/if}
               </ul>
             {/if}
           </div>
         {/if}
-        <button type="button" class="gtc-tool-eject" on:click={handleFileEject}>
+        <button type="button" class="gtc-tool-eject" onclick={handleFileEject}>
           <EjectIcon /> Eject
         </button>
-        <button type="button" class="gtc-tool-save" on:click={handleFileSave}>
+        <button type="button" class="gtc-tool-save" onclick={handleFileSave}>
           <SaveIcon />
           {tool === "Randomizer" ? "Generate" : "Save"}
         </button>
@@ -350,6 +357,8 @@
 </div>
 
 <style lang="postcss">
+  @reference "../../../app.css";
+
   .gtc-tool {
     @apply flex flex-1 flex-col;
 
@@ -399,7 +408,7 @@
           }
 
           & :global(svg) {
-            @apply -ml-1 mr-2 h-5 w-5;
+            @apply mr-2 -ml-1 h-5 w-5;
           }
         }
 
@@ -456,7 +465,7 @@
         }
 
         .gtc-tool-toolbar {
-          @apply absolute left-2 top-10 z-20 w-44 rounded bg-primary-500 py-1 text-xs;
+          @apply bg-primary-500 absolute top-10 left-2 z-20 w-44 rounded py-1 text-xs;
 
           & li {
             @apply flex cursor-pointer px-2 py-1;
@@ -466,7 +475,7 @@
             }
 
             & input[type="checkbox"] {
-              @apply ml-2 w-2.5 cursor-pointer accent-primary-400;
+              @apply accent-primary-400 ml-2 w-2.5 cursor-pointer;
             }
           }
         }

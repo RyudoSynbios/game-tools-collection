@@ -1,7 +1,11 @@
 <script lang="ts">
   import Tabs from "$lib/components/Items/Tabs.svelte";
 
-  export let textures: { [key: string]: DataView };
+  interface Props {
+    textures: { [key: string]: DataView };
+  }
+
+  let { textures }: Props = $props();
 </script>
 
 <div class="gtc-textureviewer">
@@ -26,6 +30,8 @@
 </div>
 
 <style lang="postcss">
+  @reference "../../../../../app.css";
+
   .gtc-textureviewer {
     @apply h-full w-screen max-w-5xl overflow-auto;
   }

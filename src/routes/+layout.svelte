@@ -1,10 +1,16 @@
 <script lang="ts">
-  import { onMount } from "svelte";
+  import { onMount, type Snippet } from "svelte";
 
   import { isDirty } from "$lib/stores";
   import "$lib/utils/prototype";
 
   import "../app.css";
+
+  interface Props {
+    children: Snippet;
+  }
+
+  let { children }: Props = $props();
 
   function handleBeforeUnload(event: Event): string | void {
     if ($isDirty) {
@@ -22,7 +28,7 @@
   });
 </script>
 
-<svelte:window on:beforeunload={handleBeforeUnload} />
+<svelte:window onbeforeunload={handleBeforeUnload} />
 
 <div class="gtc-app">
   <div class="gtc-header">
@@ -46,17 +52,19 @@
   </div>
   <div class="gtc-body">
     <div class="gtc-body-inner">
-      <slot />
+      {@render children()}
     </div>
   </div>
 </div>
 
 <style lang="postcss">
+  @reference "../app.css";
+
   .gtc-app {
     @apply flex h-screen flex-col;
 
     & .gtc-header {
-      @apply fixed inset-x-0 top-0 z-10 flex bg-primary-900 p-4 text-white;
+      @apply bg-primary-900 fixed inset-x-0 top-0 z-10 flex p-4 text-white;
 
       & .gtc-header-inner {
         @apply relative mx-auto flex w-full max-w-7xl justify-between;

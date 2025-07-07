@@ -1,12 +1,12 @@
 <script lang="ts">
-  import { page } from "$app/stores";
+  import { page } from "$app/state";
   import Spoiler from "$lib/components/Spoiler.svelte";
 </script>
 
 <svelte:head>
   <title>FAQ | Game Tools Collection</title>
   <meta property="og:title" content="FAQ" />
-  <meta property="og:image" content="{$page.url.origin}/img/icon.png" />
+  <meta property="og:image" content="{page.url.origin}/img/icon.png" />
 </svelte:head>
 
 <div class="gtc-faq">
@@ -164,8 +164,10 @@
 </div>
 
 <style lang="postcss">
+  @reference "../../app.css";
+
   .gtc-faq {
-    @apply mt-4 rounded bg-primary-900 p-4 text-white;
+    @apply bg-primary-900 mt-4 rounded p-4 text-white;
 
     & :global(.gtc-spoiler):last-of-type {
       @apply m-0;

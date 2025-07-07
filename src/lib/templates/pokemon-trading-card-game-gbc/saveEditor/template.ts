@@ -453,7 +453,9 @@ const template: GameJson = {
                         {
                           name: "Challenge Machine",
                           type: "bitflags",
-                          flags: [{ offset: 0x5881, bit: 1, label: "Unlocked" }],
+                          flags: [
+                            { offset: 0x5881, bit: 1, label: "Unlocked" },
+                          ],
                         },
                       ],
                     },

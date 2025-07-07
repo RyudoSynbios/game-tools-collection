@@ -4,11 +4,15 @@
   import Canvas from "$lib/utils/canvas";
   import { getGvrTexture } from "$lib/utils/common/gamecube";
 
-  export let dataView: DataView;
+  interface Props {
+    dataView: DataView;
+  }
 
-  let canvasEl: HTMLDivElement;
+  let { dataView }: Props = $props();
 
-  let canvas: Canvas;
+  let canvasEl = $state<HTMLDivElement>()!;
+
+  let canvas = $state<Canvas>()!;
 
   async function updateCanvas(): Promise<void> {
     canvas.reset();
@@ -34,18 +38,13 @@
     canvas.destroy();
   });
 
-  $: {
-    dataView;
-
+  $effect(() => {
     if (canvas) {
       updateCanvas();
     }
-  }
+  });
 </script>
 
 <div class="gtc-texture">
-  <div bind:this={canvasEl} />
+  <div bind:this={canvasEl}></div>
 </div>
-
-<style lang="postcss">
-</style>

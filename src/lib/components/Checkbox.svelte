@@ -26,6 +26,8 @@
 </label>
 
 <style lang="postcss">
+  @reference "../../app.css";
+
   .gtc-checkbox {
     display: block;
 

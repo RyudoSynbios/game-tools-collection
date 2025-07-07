@@ -250,13 +250,15 @@
 {/if}
 
 <style lang="postcss">
+  @reference "../../../app.css";
+
   .gtc-tabs {
     @apply flex-1;
 
     min-height: 50vh;
 
     & > ul {
-      @apply flex flex-wrap overflow-hidden rounded bg-primary-700;
+      @apply bg-primary-700 flex flex-wrap overflow-hidden rounded;
 
       & > .gtc-tab {
         @apply flex h-9 cursor-pointer items-center px-4 py-2 text-sm;
@@ -264,7 +266,7 @@
         &:hover:not(.gtc-tab-debug):not(.gtc-tab-disabled):not(
             .gtc-tab-highlight
           ) {
-          @apply rounded bg-primary-400;
+          @apply bg-primary-400 rounded;
         }
 
         &.gtc-tab-debug {
@@ -272,11 +274,11 @@
         }
 
         &.gtc-tab-disabled {
-          @apply cursor-not-allowed bg-primary-400;
+          @apply bg-primary-400 cursor-not-allowed;
         }
 
         &.gtc-tab-highlight:not(.gtc-tab-disabled) {
-          @apply rounded bg-primary-300 text-white;
+          @apply bg-primary-300 rounded text-white;
 
           &.gtc-tab-debug {
             @apply bg-orange-900 text-orange-100;
@@ -301,7 +303,7 @@
       @apply md:flex;
 
       & > ul {
-        @apply mb-4 mr-4 block overflow-y-scroll no-scrollbar md:mb-0;
+        @apply no-scrollbar mr-4 mb-4 block overflow-y-scroll md:mb-0;
 
         min-width: 200px;
       }

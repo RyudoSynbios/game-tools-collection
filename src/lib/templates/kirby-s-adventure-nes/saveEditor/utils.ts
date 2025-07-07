@@ -6,6 +6,7 @@ import { formatChecksum } from "$lib/utils/checksum";
 import { clone } from "$lib/utils/format";
 
 import type {
+  DataViewABL,
   Item,
   ItemBitflag,
   ItemBitflags,
@@ -172,7 +173,7 @@ export function afterSetInt(item: Item, flag: ItemBitflag): void {
 
 export function generateChecksum(
   item: ItemChecksum,
-  dataView = new DataView(new ArrayBuffer(0)),
+  dataView: DataViewABL = new DataView(new ArrayBuffer(0)),
 ): number {
   let checksumByte1 = 0x0;
   let checksumByte2 = 0x0;

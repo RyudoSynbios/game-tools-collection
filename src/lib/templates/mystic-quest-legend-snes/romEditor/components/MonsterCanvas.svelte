@@ -14,11 +14,15 @@
     pointerToOffset,
   } from "../utils";
 
-  export let monsterIndex: number;
+  interface Props {
+    monsterIndex: number;
+  }
 
-  let canvasEl: HTMLDivElement;
+  let { monsterIndex }: Props = $props();
 
-  let canvas: Canvas;
+  let canvasEl = $state<HTMLDivElement>()!;
+
+  let canvas = $state<Canvas>()!;
 
   function updateCanvas(): void {
     const [width, height] = getMonsterSpriteSize(monsterIndex);
@@ -64,21 +68,23 @@
     canvas.destroy();
   });
 
-  $: {
-    $dataView, monsterIndex;
+  $effect(() => {
+    $dataView;
 
     if (canvas) {
       updateCanvas();
     }
-  }
+  });
 </script>
 
 <div class="gtc-monstercanvas">
-  <div bind:this={canvasEl} />
+  <div bind:this={canvasEl}></div>
 </div>
 
 <style lang="postcss">
+  @reference "../../../../../app.css";
+
   .gtc-monstercanvas {
-    @apply mr-4 w-fit self-start rounded bg-primary-700 p-2;
+    @apply bg-primary-700 mr-4 w-fit self-start rounded p-2;
   }
 </style>

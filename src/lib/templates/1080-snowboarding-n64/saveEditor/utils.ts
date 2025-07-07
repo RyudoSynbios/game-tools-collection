@@ -5,7 +5,13 @@ import { getBigInt, getInt, setInt } from "$lib/utils/bytes";
 import { byteswapDataView, getHeaderShift } from "$lib/utils/common/nintendo64";
 import { clone } from "$lib/utils/format";
 
-import type { Item, ItemChecksum, ItemInt, ItemSection } from "$lib/types";
+import type {
+  DataViewABL,
+  Item,
+  ItemChecksum,
+  ItemInt,
+  ItemSection,
+} from "$lib/types";
 
 export function initHeaderShift(dataView: DataView): number {
   return getHeaderShift(dataView, "sra");
@@ -65,7 +71,7 @@ export function afterSetInt(item: Item): void {
 
 export function generateChecksum(
   item: ItemChecksum,
-  dataView = new DataView(new ArrayBuffer(0)),
+  dataView: DataViewABL = new DataView(new ArrayBuffer(0)),
 ): bigint {
   let checksum1 = 0x0;
   let checksum2 = 0x0;

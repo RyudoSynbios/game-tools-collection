@@ -7,15 +7,15 @@
 
   import { generateMonsterCanvas } from "../utils";
 
-  let canvasEl: HTMLDivElement;
+  let canvasEl = $state<HTMLDivElement>()!;
 
   let canvas: Canvas;
 
-  let viewWidth = 128;
-  let viewHeight = 512;
+  let viewWidth = $state(128);
+  let viewHeight = $state(512);
 
-  let spriteOffset = 0x28d77; // 0x20000
-  let paletteOffset = 0x48000; // 0x3daf0
+  let spriteOffset = $state(0x28d77); // 0x20000
+  let paletteOffset = $state(0x48000); // 0x3daf0
 
   let shiftPressed = false;
   let ctrlPressed = false;
@@ -101,7 +101,7 @@
   });
 </script>
 
-<svelte:window on:keydown={handleKeyDown} on:keyup={handleKeyUp} />
+<svelte:window onkeydown={handleKeyDown} onkeyup={handleKeyUp} />
 
 <div class="gtc-debug">
   <div class="gtc-debug-inputs">
@@ -133,10 +133,12 @@
       onChange={handleViewHeightChange}
     />
   </div>
-  <div bind:this={canvasEl} />
+  <div bind:this={canvasEl}></div>
 </div>
 
 <style lang="postcss">
+  @reference "../../../../../app.css";
+
   .gtc-debug {
     & .gtc-debug-inputs {
       @apply flex;
