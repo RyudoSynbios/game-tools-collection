@@ -332,7 +332,7 @@
   });
 
   $: {
-    assetIndex, modelIndex, type;
+    (assetIndex, modelIndex, type);
 
     if (canvas) {
       updateCanvas();
@@ -349,6 +349,3 @@
     <TextureViewer {textures} />
   </Modal>
 {/if}
-
-<style lang="postcss">
-</style>

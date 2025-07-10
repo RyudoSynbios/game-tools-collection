@@ -86,7 +86,7 @@
 </script>
 
 <div class="gtc-photocanvas">
-  <div bind:this={canvasEl} />
+  <div bind:this={canvasEl}></div>
 </div>
 
 <style lang="postcss">

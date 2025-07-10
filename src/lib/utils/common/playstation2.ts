@@ -8,7 +8,7 @@ import {
   numberArrayToString,
 } from "$lib/utils/format";
 
-import type { Validator } from "$lib/types";
+import type { DataViewABL, Validator } from "$lib/types";
 
 import { checkValidator } from "../validator";
 
@@ -116,7 +116,7 @@ const columnParityMasks = [...Array(256).keys()];
 // Global objects
 
 let memoryCard = {} as MemoryCard;
-let memoryCardRaw = new DataView(new ArrayBuffer(0));
+let memoryCardRaw: DataViewABL = new DataView(new ArrayBuffer(0));
 let saves: Save[] = [];
 let filteredSaves: Save[] = [];
 
@@ -602,7 +602,7 @@ export function repackMemoryCard(): ArrayBufferLike {
           const blob = $dataView.buffer.slice(
             offset,
             offset + fileSizeOnMemoryCard,
-          );
+          ) as ArrayBuffer;
 
           writeFile(entry, blob);
 

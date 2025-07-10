@@ -65,7 +65,7 @@
   });
 
   $: {
-    $dataView, monsterIndex;
+    ($dataView, monsterIndex);
 
     if (canvas) {
       updateCanvas();
@@ -74,7 +74,7 @@
 </script>
 
 <div class="gtc-monstercanvas">
-  <div bind:this={canvasEl} />
+  <div bind:this={canvasEl}></div>
 </div>
 
 <style lang="postcss">

@@ -114,10 +114,10 @@
     }
 
     if (!item.uncontrolled) {
-      let dataViewAlt;
+      let _dataViewAlt;
 
       if (isDataViewAltExists(item.dataViewAltKey || "")) {
-        dataViewAlt = $dataViewAlt[item.dataViewAltKey as string];
+        _dataViewAlt = $dataViewAlt[item.dataViewAltKey as string];
       }
 
       // prettier-ignore
@@ -125,7 +125,7 @@
         if (item.dataType !== "int64" && item.dataType !== "uint64") {
           int = getInt(item.offset, item.dataType, {
             bigEndian: item.bigEndian,
-          }, dataViewAlt);
+          }, _dataViewAlt);
 
           value = getInt(item.offset, item.dataType, {
             bigEndian: item.bigEndian,
@@ -133,11 +133,11 @@
             binary: item.binary,
             bit: item.bit,
             operations: item.operations,
-          }, dataViewAlt);
+          }, _dataViewAlt);
         } else {
           value = getBigInt(item.offset, item.dataType, {
             bigEndian: item.bigEndian,
-          }, dataViewAlt);
+          }, _dataViewAlt);
         }
       }
 

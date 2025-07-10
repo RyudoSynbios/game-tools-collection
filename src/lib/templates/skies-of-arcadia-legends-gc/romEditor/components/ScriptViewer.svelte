@@ -2,6 +2,8 @@
   import { dataViewAlt, isDebug } from "$lib/stores";
   import { getInt } from "$lib/utils/bytes";
 
+  import type { DataViewABL } from "$lib/types";
+
   import { getFileData } from "../utils";
   import Script, { type ScriptEvent } from "../utils/script";
 
@@ -11,7 +13,7 @@
 
   let rootEl: HTMLDivElement;
 
-  let dataView = new DataView(new ArrayBuffer(0));
+  let dataView: DataViewABL = new DataView(new ArrayBuffer(0));
   let script: Script;
 
   let tabIndex = 0;

@@ -92,7 +92,7 @@
   });
 
   $: {
-    $dataView, backgroundIndex;
+    ($dataView, backgroundIndex);
 
     if (canvas) {
       updateCanvas();
@@ -101,7 +101,7 @@
 </script>
 
 <div class="gtc-battlebackgroundcanvas">
-  <div bind:this={canvasEl} />
+  <div bind:this={canvasEl}></div>
 </div>
 
 <style lang="postcss">

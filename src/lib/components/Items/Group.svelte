@@ -46,7 +46,7 @@
           {:else if item.mode === "time"}
             <span>:</span>
           {:else}
-            <span />
+            <span></span>
           {/if}
         {/if}
       {/each}

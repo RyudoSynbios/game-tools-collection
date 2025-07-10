@@ -5,7 +5,8 @@ import { getInt, getString, setInt } from "$lib/utils/bytes";
 import { formatChecksum } from "$lib/utils/checksum";
 import { getItem, updateResources } from "$lib/utils/parser";
 
-import {
+import type {
+  DataViewABL,
   Item,
   ItemBitflag,
   ItemBitflags,
@@ -53,7 +54,7 @@ export function afterSetInt(item: Item, flag: ItemBitflag): void {
 
 export function generateChecksum(
   item: ItemChecksum,
-  dataView = new DataView(new ArrayBuffer(0)),
+  dataView: DataViewABL = new DataView(new ArrayBuffer(0)),
 ): number {
   let checksum = 0x0;
 

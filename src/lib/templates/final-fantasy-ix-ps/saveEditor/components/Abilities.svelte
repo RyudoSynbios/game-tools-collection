@@ -65,6 +65,3 @@
 <div class="gtc-abilities">
   <Section {item} />
 </div>
-
-<style lang="postcss">
-</style>

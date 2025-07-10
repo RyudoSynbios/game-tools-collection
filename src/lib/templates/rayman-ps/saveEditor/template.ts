@@ -763,7 +763,7 @@ const template: GameJson = {
       0x0: "Levels",
       0x12: "Save Points",
     },
-  }
+  },
 };
 
 export default template;

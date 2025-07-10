@@ -13,11 +13,9 @@
 
   $: {
     if (utilsExists("getComponent")) {
-      const tmp = $gameUtils.getComponent(item.component);
+      component = $gameUtils.getComponent(item.component);
 
-      if (tmp) {
-        component = tmp;
-      } else {
+      if (!component) {
         debug.warn(`Component '${item.component}' not found`);
       }
     }
@@ -25,6 +23,3 @@
 </script>
 
 <svelte:component this={component} {...item.props} />
-
-<style lang="postcss">
-</style>

@@ -853,11 +853,11 @@
   </div>
   {#if $isDebug}
     <div class="gtc-mapviewer-canvasdebug">
-      <div bind:this={canvasDebugEl} />
+      <div bind:this={canvasDebugEl}></div>
     </div>
   {/if}
   <div class="gtc-mapviewer-canvas">
-    <div bind:this={canvasEl} />
+    <div bind:this={canvasEl}></div>
   </div>
 </div>
 

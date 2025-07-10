@@ -46,7 +46,7 @@
 </script>
 
 <div class="gtc-videoviewer">
-  <div bind:this={canvasEl} />
+  <div bind:this={canvasEl}></div>
 </div>
 
 <style lang="postcss">

@@ -143,6 +143,7 @@ export function afterSetInt(item: Item): void {
     setInt(itemInt.offset, "uint8", stat);
   } else if ("id" in item && item.id === "mName") {
     updateResources("monsterNames");
+    updateResources("monsterGroupNames");
   } else if ("id" in item && item.id === "mgMonster") {
     updateResources("monsterGroupNames");
   }

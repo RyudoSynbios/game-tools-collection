@@ -55,8 +55,5 @@
 </script>
 
 <div class="gtc-debug">
-  <div bind:this={canvasEl} />
+  <div bind:this={canvasEl}></div>
 </div>
-
-<style lang="postcss">
-</style>

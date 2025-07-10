@@ -80,7 +80,7 @@
 </script>
 
 <div class="gtc-imageviewer">
-  <div bind:this={canvasEl} />
+  <div bind:this={canvasEl}></div>
 </div>
 
 <style lang="postcss">

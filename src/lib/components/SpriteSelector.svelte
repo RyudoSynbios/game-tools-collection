@@ -134,13 +134,13 @@
     class:gtc-spriteselector-nopointer={spriteIndex === undefined}
     bind:this={canvasEl}
     on:click|stopPropagation={handleDropdownToggle}
-  />
+  ></div>
   <div
     class="gtc-spriteselector-dropdown"
     class:gtc-spriteselector-dropdown-show={isDropdownOpen}
     bind:this={canvasDropdownEl}
     on:click|stopPropagation
-  />
+  ></div>
 </div>
 
 <style lang="postcss">

@@ -44,8 +44,5 @@
 </script>
 
 <div class="gtc-texture">
-  <div bind:this={canvasEl} />
+  <div bind:this={canvasEl}></div>
 </div>
-
-<style lang="postcss">
-</style>

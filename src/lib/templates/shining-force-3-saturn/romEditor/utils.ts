@@ -591,7 +591,7 @@ export function getCharacterShifts(): { misc: number; stats: number } {
 export function getDecompressedData(
   offset: number,
   dataView: DataView,
-): Uint8Array {
+): Uint8Array<ArrayBuffer> {
   const decompressedData: number[] = [];
 
   let rewindCount = 0;

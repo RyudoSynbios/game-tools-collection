@@ -195,6 +195,3 @@
 </script>
 
 <Tabs {item} />
-
-<style lang="postcss">
-</style>

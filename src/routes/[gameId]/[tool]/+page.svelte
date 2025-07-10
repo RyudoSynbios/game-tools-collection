@@ -32,9 +32,9 @@
 
   const game = getGame($page.params["gameId"]) as Game;
 
-  let tool = $page.params["tool"];
+  let tool = "";
 
-  switch (tool) {
+  switch ($page.params["tool"]) {
     case "randomizer":
       tool = "Randomizer";
       break;
@@ -94,7 +94,7 @@
   function handleFileSave(): void {
     updateChecksums();
 
-    let buffer = $dataView.buffer;
+    let buffer = $dataView.buffer as ArrayBuffer;
 
     if (utilsExists("beforeSaving")) {
       buffer = $gameUtils.beforeSaving();

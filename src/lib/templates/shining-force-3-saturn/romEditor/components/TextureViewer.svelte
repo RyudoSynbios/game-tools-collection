@@ -62,7 +62,7 @@
 <svelte:window bind:innerWidth />
 
 <div class="gtc-textureviewer">
-  <div bind:this={canvasEl} />
+  <div bind:this={canvasEl}></div>
 </div>
 
 <style lang="postcss">

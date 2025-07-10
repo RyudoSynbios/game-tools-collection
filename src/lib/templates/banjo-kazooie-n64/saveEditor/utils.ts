@@ -10,6 +10,7 @@ import {
 import { clone, makeOperations } from "$lib/utils/format";
 
 import type {
+  DataViewABL,
   Item,
   ItemChecksum,
   ItemContainer,
@@ -227,7 +228,7 @@ export function afterSetInt(item: Item): void {
 
 export function generateChecksum(
   item: ItemChecksum,
-  dataView = new DataView(new ArrayBuffer(0)),
+  dataView: DataViewABL = new DataView(new ArrayBuffer(0)),
 ): number {
   const [, checksum2] = generateRareChecksum(item, dataView);
 

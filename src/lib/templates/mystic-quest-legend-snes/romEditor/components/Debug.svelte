@@ -133,7 +133,7 @@
       onChange={handleViewHeightChange}
     />
   </div>
-  <div bind:this={canvasEl} />
+  <div bind:this={canvasEl}></div>
 </div>
 
 <style lang="postcss">

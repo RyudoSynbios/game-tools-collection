@@ -42,6 +42,8 @@ export type DataTypeInt =
   | "uint64"
   | "float32";
 
+export type DataViewABL = DataView<ArrayBufferLike>;
+
 export type DebugOptions = {
   [key: string]: boolean;
 };
@@ -353,7 +355,7 @@ export interface ItemString {
 
 export interface ItemTab {
   id?: string;
-  name: string;
+  name?: string;
   flex?: boolean;
   disableTabIf?: ItemIntCondition | LogicalOperator<ItemIntCondition> | string;
   items: Item[];

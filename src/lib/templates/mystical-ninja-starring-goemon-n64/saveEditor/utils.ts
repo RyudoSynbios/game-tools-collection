@@ -163,18 +163,15 @@ export function afterSetInt(item: Item): void {
   }
 }
 
-export function generateChecksum(
-  item: ItemChecksum,
-  dataView = new DataView(new ArrayBuffer(0)),
-): number {
+export function generateChecksum(item: ItemChecksum): number {
   const bitMask = 0x4c11db7;
 
   let checksum = 0xffffffff;
 
   for (let i = item.control.offsetStart; i < item.control.offsetEnd; i += 0x1) {
-    let int = getInt(i, "uint8", {}, dataView);
+    let int = getInt(i, "uint8", {});
 
-    if (dataView.byteLength > 0x0 && i < item.control.offsetStart + 0x8) {
+    if (i < item.control.offsetStart + 0x8) {
       int = 0x0;
     }
 

@@ -10,6 +10,7 @@ import {
 import { clone, makeOperations } from "$lib/utils/format";
 
 import type {
+  DataViewABL,
   Item,
   ItemChecksum,
   ItemContainer,
@@ -219,7 +220,7 @@ export function overrideSetInt(item: Item, value: string): boolean {
 
 export function generateChecksum(
   item: ItemChecksum,
-  dataView = new DataView(new ArrayBuffer(0)),
+  dataView: DataViewABL = new DataView(new ArrayBuffer(0)),
 ): bigint {
   const [checksum1, checksum2] = generateRareChecksum(item, dataView);
 

@@ -5,6 +5,7 @@ import { getInt, setInt } from "$lib/utils/bytes";
 import { formatChecksum } from "$lib/utils/checksum";
 
 import type {
+  DataViewABL,
   Item,
   ItemChecksum,
   ItemInt,
@@ -126,7 +127,7 @@ export function overrideSetInt(item: Item, value: string): boolean {
 
 export function generateChecksum(
   item: ItemChecksum,
-  dataView = new DataView(new ArrayBuffer(0)),
+  dataView: DataViewABL = new DataView(new ArrayBuffer(0)),
 ): number {
   let checksum = 0x0;
 

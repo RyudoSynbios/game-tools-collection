@@ -3557,19 +3557,6 @@ export default class Script {
           break;
         case "text":
           text += `<p style="margin-left: 12px; color: green;">`;
-          parameter.value = parameter.value
-            .replace(/\\h\(«/, "«") // Europe
-            .replace(/\\h\(s/, "«") // USA
-            .replace(/\\h\(《/, "《") // Japan
-            .replace(/»\)/, "»\n") // Europe
-            .replace(/t\)/, "»\n") // USA
-            .replace(/》\)/, "》\n") // Japan
-            .replace(/c/g, "…") // USA
-            .replace(/\[/g, "“")
-            .replace(/\]/g, "”")
-            .replace(/\\n/g, "\n ")
-            .replace(/\\c/, "") // Europe
-            .replace(/\\e/, ""); // USA / Japan
           break;
       }
 
@@ -3630,6 +3617,20 @@ export default class Script {
         parameter.value.match(/\((.*?)\)/)
       ) {
         text += `[${parameter.value.match(/\((.*?)\)/)![1]}]`;
+      } else if (parameter.type === "text") {
+        text += parameter.value
+          .replace(/\\h\(«/, "«") // Europe
+          .replace(/\\h\(s/, "«") // USA
+          .replace(/\\h\(《/, "《") // Japan
+          .replace(/»\)/, "»\n") // Europe
+          .replace(/t\)/, "»\n") // USA
+          .replace(/》\)/, "》\n") // Japan
+          .replace(/c/g, "…") // USA
+          .replace(/\[/g, "“")
+          .replace(/\]/g, "”")
+          .replace(/\\n/g, "\n ")
+          .replace(/\\c/, "") // Europe
+          .replace(/\\e/, ""); // USA / Japan
       } else {
         text += parameter.value;
       }

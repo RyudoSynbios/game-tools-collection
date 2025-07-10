@@ -440,7 +440,7 @@
     class="gtc-assetviewer-canvas"
     class:gtc-assetviewer-hidden={view !== "canvas"}
   >
-    <div bind:this={canvasEl} />
+    <div bind:this={canvasEl}></div>
   </div>
   <div class:gtc-assetviewer-hidden={view !== "three"}>
     <ModelViewer {three} bind:threeEl />

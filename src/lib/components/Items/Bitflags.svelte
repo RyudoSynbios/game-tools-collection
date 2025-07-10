@@ -53,10 +53,10 @@
       [isOverrided, flags] = $gameUtils.overrideGetInt(item);
     }
 
-    let dataViewAlt: DataView;
+    let _dataViewAlt: DataView;
 
     if (isDataViewAltExists(item.dataViewAltKey || "")) {
-      dataViewAlt = $dataViewAlt[item.dataViewAltKey as string];
+      _dataViewAlt = $dataViewAlt[item.dataViewAltKey as string];
     }
 
     // prettier-ignore
@@ -67,7 +67,7 @@
             ...flag,
             checked: getBitflag(flag.offset, flag.bit, {
               reversed: item.reversed || flag.reversed,
-            }, dataViewAlt),
+            }, _dataViewAlt),
           });
 
           return flags;
@@ -103,7 +103,7 @@
             onChange={(event) => handleInputChange(flag, event)}
           />
           {#if flag.separator}
-            <p />
+            <p></p>
           {/if}
         </div>
       {/if}

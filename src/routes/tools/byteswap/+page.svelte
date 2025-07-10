@@ -8,6 +8,14 @@
   let isDragging = false;
   let fileIsLoading = false;
 
+  function handleDragLeave(): void {
+    isDragging = false;
+  }
+
+  function handleDragOver(): void {
+    isDragging = true;
+  }
+
   function handleDrop(event: DragEvent): void {
     const files = event.dataTransfer?.files;
 
@@ -18,15 +26,7 @@
     }
   }
 
-  function handleDragLeave(): void {
-    isDragging = false;
-  }
-
-  function handleDragOver(): void {
-    isDragging = true;
-  }
-
-  function handlebyteswapClick(): void {
+  function handleDropzoneClick(): void {
     if (!fileIsLoading) {
       inputEl.click();
     }
@@ -80,7 +80,7 @@
 <div class="gtc-byteswap">
   <div
     class="gtc-byteswap-inner"
-    on:click={handlebyteswapClick}
+    on:click={handleDropzoneClick}
     on:dragleave|preventDefault={handleDragLeave}
     on:dragover|preventDefault={handleDragOver}
     on:drop|preventDefault={handleDrop}

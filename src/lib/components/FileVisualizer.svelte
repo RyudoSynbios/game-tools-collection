@@ -302,7 +302,7 @@
   }
 
   $: {
-    contentHeight, search;
+    (contentHeight, search);
 
     if (contentEl) {
       handleScroll();

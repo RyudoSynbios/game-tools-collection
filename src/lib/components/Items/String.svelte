@@ -61,10 +61,10 @@
       [isOverrided, value] = $gameUtils.overrideGetInt(item);
     }
 
-    let dataViewAlt;
+    let _dataViewAlt;
 
     if (isDataViewAltExists(item.dataViewAltKey || "")) {
-      dataViewAlt = $dataViewAlt[item.dataViewAltKey as string];
+      _dataViewAlt = $dataViewAlt[item.dataViewAltKey as string];
     }
 
     // prettier-ignore
@@ -75,7 +75,7 @@
         encoding: item.encoding,
         zeroTerminated: item.zeroTerminated,
         resource: item.resource,
-      }, dataViewAlt);
+      }, _dataViewAlt);
     }
   }
 </script>
@@ -95,6 +95,3 @@
     />
   </div>
 {/if}
-
-<style lang="postcss">
-</style>

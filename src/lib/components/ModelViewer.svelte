@@ -24,7 +24,7 @@
   }
 
   $: {
-    innerWidth, innerHeight;
+    (innerWidth, innerHeight);
 
     if (three) {
       three.resize();
@@ -35,7 +35,7 @@
 <svelte:window bind:innerWidth bind:innerHeight on:keydown={handleKeyDown} />
 
 <div class="gtc-modelviewer">
-  <div bind:this={threeEl} />
+  <div bind:this={threeEl}></div>
 </div>
 
 <style lang="postcss">

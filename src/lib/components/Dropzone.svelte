@@ -24,6 +24,14 @@
   let regions: string[] = [];
   let error = "";
 
+  function handleDragLeave(): void {
+    isDragging = false;
+  }
+
+  function handleDragOver(): void {
+    isDragging = true;
+  }
+
   function handleDrop(event: DragEvent): void {
     const files = event.dataTransfer?.files;
 
@@ -32,14 +40,6 @@
 
       handleUploadedFile(file);
     }
-  }
-
-  function handleDragLeave(): void {
-    isDragging = false;
-  }
-
-  function handleDragOver(): void {
-    isDragging = true;
   }
 
   function handleDropzoneClick(): void {
