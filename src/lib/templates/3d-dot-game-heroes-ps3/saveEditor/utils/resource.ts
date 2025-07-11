@@ -1,4 +1,4 @@
-import { Resource } from "$lib/types";
+import type { Resource } from "$lib/types";
 
 export type SwordType = keyof Omit<(typeof swords)[number], "index" | "name">;
 
