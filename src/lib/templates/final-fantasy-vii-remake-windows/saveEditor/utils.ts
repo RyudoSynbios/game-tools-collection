@@ -252,6 +252,22 @@ export function overrideSetInt(item: Item, value: string): boolean {
     setInt(itemInt.offset + equippedWeapon * 0x30, "uint32", value);
 
     return true;
+  } else if ("id" in item && item.id?.match(/proficiency-/)) {
+    const itemInt = item as ItemInt;
+
+    const weaponItem = getItem(
+      item.id.replace("proficiency", "weapon"),
+    ) as ItemInt;
+
+    const weaponIndex = getInt(weaponItem.offset, "uint32");
+
+    const weapon = weaponList.find((weapon) => weapon.index === weaponIndex);
+
+    if (weapon?.proficiencyIndex !== undefined) {
+      setInt(itemInt.offset + weapon.proficiencyIndex * 0x2, "uint16", value);
+
+      return true;
+    }
   } else if ("id" in item && item.id?.match(/completionTime-/)) {
     const itemInt = item as ItemInt;
 
