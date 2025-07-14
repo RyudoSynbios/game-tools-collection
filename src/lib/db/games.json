@@ -518,6 +518,17 @@
     }
   },
   {
+    "id": "mario-kart-64-n64",
+    "name": "Mario Kart 64",
+    "consoleId": "nintendo-64",
+    "tools": {
+      "saveEditor": {
+        "createdAt": "2025-07-15",
+        "regions": ["🇪🇺", "🇺🇸", "🇯🇵"]
+      }
+    }
+  },
+  {
     "id": "mario-party-n64",
     "name": "Mario Party",
     "consoleId": "nintendo-64",
