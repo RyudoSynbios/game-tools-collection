@@ -470,22 +470,21 @@ const template: GameJson = {
                   flex: true,
                   items: [
                     {
+                      id: "machine-5",
                       name: "Machine",
                       offset: 0x110,
                       type: "variable",
                       dataType: "uint8",
                       resource: "machines",
                       autocomplete: true,
-                      hidden: true,
                     },
                     {
-                      id: "color",
+                      id: "color-5",
                       name: "Color",
                       offset: 0x118,
                       type: "variable",
                       dataType: "uint24",
                       bigEndian: true,
-                      hidden: true,
                     },
                     {
                       id: "maxSpeed",
@@ -498,6 +497,12 @@ const template: GameJson = {
                       min: 0,
                       max: 9999,
                     },
+                  ],
+                },
+                {
+                  type: "section",
+                  flex: true,
+                  items: [
                     {
                       name: "Best Lap",
                       type: "group",

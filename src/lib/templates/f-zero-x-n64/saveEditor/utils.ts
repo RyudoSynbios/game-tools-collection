@@ -40,12 +40,18 @@ export function overrideItem(item: Item): Item {
 
     const [index] = item.id.splitInt();
 
-    const offset = itemInt.offset - 0x4c - index * 0x1c;
+    const offset = getPlaceOffset(itemInt.offset, "machine", index);
 
-    const timeAttackCleared = isTimeAttackCleared(offset);
+    let isDisabled = true;
 
-    itemInt.resource = timeAttackCleared ? "machines" : "empty";
-    itemInt.disabled = !timeAttackCleared;
+    if (index === 5) {
+      isDisabled = !isMaxSpeedSet(offset);
+    } else {
+      isDisabled = !isTimeAttackCleared(offset);
+    }
+
+    itemInt.resource = isDisabled ? "empty" : "machines";
+    itemInt.disabled = isDisabled;
 
     return itemInt;
   } else if ("id" in item && item.id?.match(/color-/)) {
@@ -53,18 +59,24 @@ export function overrideItem(item: Item): Item {
 
     const [index] = item.id.splitInt();
 
-    const offset = itemInt.offset - 0x54 - index * 0x1c;
+    const offset = getPlaceOffset(itemInt.offset, "color", index);
 
-    const timeAttackCleared = isTimeAttackCleared(offset);
+    let isDisabled = true;
+
+    if (index === 5) {
+      isDisabled = !isMaxSpeedSet(offset);
+    } else {
+      isDisabled = !isTimeAttackCleared(offset);
+    }
 
     let machine = getInt(itemInt.offset - 0x8, "uint8");
 
-    if (!timeAttackCleared) {
+    if (isDisabled) {
       machine = 0x0;
     }
 
     itemInt.resource = `machine${machine}Colors`;
-    itemInt.disabled = !timeAttackCleared;
+    itemInt.disabled = isDisabled;
 
     return itemInt;
   }
@@ -88,9 +100,17 @@ export function overrideGetInt(
 
     const [index] = item.id.splitInt();
 
-    const offset = itemInt.offset - 0x4c - index * 0x1c;
+    const offset = getPlaceOffset(itemInt.offset, "machine", index);
 
-    if (!isTimeAttackCleared(offset)) {
+    let isDisabled = true;
+
+    if (index === 5) {
+      isDisabled = !isMaxSpeedSet(offset);
+    } else {
+      isDisabled = !isTimeAttackCleared(offset);
+    }
+
+    if (isDisabled) {
       return [true, 0x0];
     }
   } else if ("id" in item && item.id?.match(/color-/)) {
@@ -98,9 +118,17 @@ export function overrideGetInt(
 
     const [index] = item.id.splitInt();
 
-    const offset = itemInt.offset - 0x54 - index * 0x1c;
+    const offset = getPlaceOffset(itemInt.offset, "color", index);
 
-    if (!isTimeAttackCleared(offset)) {
+    let isDisabled = true;
+
+    if (index === 5) {
+      isDisabled = !isMaxSpeedSet(offset);
+    } else {
+      isDisabled = !isTimeAttackCleared(offset);
+    }
+
+    if (isDisabled) {
       return [true, 0x0000ff];
     }
   }
@@ -109,10 +137,19 @@ export function overrideGetInt(
 }
 
 export function afterSetInt(item: Item): void {
-  if ("id" in item && item.id?.match(/machine-/)) {
+  if ("id" in item && item.id === "maxSpeed") {
     const itemInt = item as ItemInt;
 
-    const [index] = item.id.splitInt();
+    const offset = getPlaceOffset(itemInt.offset, "maxSpeed", 0);
+
+    const color = getInt(offset, "uint24", { bigEndian: true });
+
+    // If it seems that the time is set for the first time, we apply the Blue Falcon default color
+    if (color === 0x0) {
+      setInt(offset, "uint24", 0x0000ff, { bigEndian: true });
+    }
+  } else if ("id" in item && item.id?.match(/machine-/)) {
+    const itemInt = item as ItemInt;
 
     const machine = getInt(itemInt.offset, "uint8");
 
@@ -120,39 +157,18 @@ export function afterSetInt(item: Item): void {
     const color = getObjKey(colors[0], 0);
 
     setInt(itemInt.offset + 0x8, "uint24", color, { bigEndian: true });
-
-    if (index === 0) {
-      setInt(itemInt.offset + 0xa0, "uint8", machine);
-      setInt(itemInt.offset + 0xa8, "uint24", color, { bigEndian: true });
-    }
-  } else if ("id" in item && item.id?.match(/color-/)) {
-    const itemInt = item as ItemInt;
-
-    const [index] = item.id.splitInt();
-
-    if (index === 0) {
-      const color = getInt(itemInt.offset, "uint24", {
-        bigEndian: true,
-      });
-
-      setInt(itemInt.offset + 0xa0, "uint24", color, { bigEndian: true });
-    }
   } else if ("id" in item && item.id?.match(/time-/)) {
     const itemInt = item as ItemInt;
 
     const [index] = item.id.splitInt();
 
-    const offset = itemInt.offset + 0x54 + index * 0x1c;
+    const offset = getPlaceOffset(itemInt.offset, "time", index);
 
     const color = getInt(offset, "uint24", { bigEndian: true });
 
     // If it seems that the time is set for the first time, we apply the Blue Falcon default color
     if (color === 0x0) {
       setInt(offset, "uint24", 0x0000ff, { bigEndian: true });
-
-      if (index === 0) {
-        setInt(offset + 0xa0, "uint24", 0x0000ff, { bigEndian: true });
-      }
     }
   }
 }
@@ -169,6 +185,37 @@ export function generateChecksum(item: ItemChecksum): number {
 
 export function beforeSaving(): ArrayBufferLike {
   return byteswapDataView("sra").buffer;
+}
+
+function getPlaceOffset(offset: number, type: string, index: number): number {
+  const shift = index * 0x1c;
+
+  switch (type) {
+    case "maxSpeed":
+      return offset + 0xcc;
+    case "machine":
+      if (index === 5) {
+        return offset - 0xc4;
+      }
+      return offset - shift - 0x4c;
+    case "color":
+      if (index === 5) {
+        return offset - 0xcc;
+      }
+      return offset - shift - 0x54;
+    case "time":
+      return offset + shift + 0x54;
+  }
+
+  return offset;
+}
+
+function isMaxSpeedSet(offset: number): boolean {
+  const maxSpeed = getInt(offset, "float32", {
+    bigEndian: true,
+  });
+
+  return maxSpeed !== 0;
 }
 
 function isTimeAttackCleared(offset: number): boolean {
