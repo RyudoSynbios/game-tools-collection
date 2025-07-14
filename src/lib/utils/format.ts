@@ -2,7 +2,7 @@ import moment from "moment";
 import { get } from "svelte/store";
 
 import { gameRegion, gameUtils } from "$lib/stores";
-import { dataTypeToValue } from "$lib/utils/bytes";
+import { dataTypeToLength, dataTypeToValue } from "$lib/utils/bytes";
 
 import type {
   IntOperation,
@@ -66,7 +66,10 @@ export function getIntMax(item: ItemInt): number {
       return 99999999;
     }
   } else if (item.binary) {
-    return 0xff >> (8 - item.binary.bitLength);
+    const dataTypeLength = dataTypeToLength(item.dataType);
+    const dataTypeValue = dataTypeToValue(item.dataType);
+
+    return dataTypeValue >> (dataTypeLength * 8 - item.binary.bitLength);
   } else if (
     item.dataType === "int8" ||
     item.dataType === "int16" ||

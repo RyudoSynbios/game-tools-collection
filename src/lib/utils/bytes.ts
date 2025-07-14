@@ -193,9 +193,7 @@ export function dataTypeToLength(
   }
 }
 
-export function dataTypeToValue(
-  dataType: Exclude<DataType, "bit" | "boolean" | "string">,
-): number {
+export function dataTypeToValue(dataType: Exclude<DataType, "string">): number {
   switch (dataType) {
     case "lower4":
     case "upper4":
@@ -501,13 +499,31 @@ export function setInt(
     value = parseFloat(value) || 0;
   }
 
-  if (
-    options.binary &&
-    (dataType === "int8" ||
-      dataType === "int16" ||
-      dataType === "uint8" ||
-      dataType === "uint16")
-  ) {
+  value = makeOperations(value, options.operations, true);
+
+  // prettier-ignore
+  if (isPartial(options.operations)) {
+    const oldInt = getInt(offset, dataType, {
+      bigEndian: options.bigEndian,
+      binary: options.binary,
+      binaryCodedDecimal: options.binaryCodedDecimal,
+    }, $dataView);
+
+    let oldValue = getInt(offset, dataType, {
+      bigEndian: options.bigEndian,
+      binary: options.binary,
+      binaryCodedDecimal: options.binaryCodedDecimal,
+      bit: options.bit,
+      operations: options.operations,
+    }, $dataView);
+
+    oldValue = makeOperations(oldValue, options.operations, true);
+
+
+    value = oldInt - oldValue + value;
+  }
+
+  if (options.binary) {
     const { bitStart, bitLength } = options.binary;
 
     const dataTypeLength = dataTypeToLength(dataType);
@@ -529,27 +545,6 @@ export function setInt(
     const hex = value.toString().padStart(dataTypeToLength(dataType) * 2, "0");
 
     value = parseInt(hex, 16);
-  }
-
-  value = makeOperations(value, options.operations, true);
-
-  // prettier-ignore
-  if (isPartial(options.operations)) {
-    const oldInt = getInt(offset, dataType, {
-      bigEndian: options.bigEndian,
-      binaryCodedDecimal: options.binaryCodedDecimal,
-    }, $dataView);
-
-    let oldValue = getInt(offset, dataType, {
-      bigEndian: options.bigEndian,
-      binaryCodedDecimal: options.binaryCodedDecimal,
-      bit: options.bit,
-      operations: options.operations,
-    }, $dataView);
-
-    oldValue = makeOperations(oldValue, options.operations, true);
-
-    value = oldInt - oldValue + value;
   }
 
   switch (dataType) {
