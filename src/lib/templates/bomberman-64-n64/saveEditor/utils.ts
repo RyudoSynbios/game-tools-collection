@@ -61,11 +61,13 @@ export function overrideSetInt(item: Item, value: string): boolean {
 }
 
 export function generateChecksum(item: ItemChecksum): number {
-  let checksum = 0xffff;
+  let checksum = 0x0;
 
   for (let i = item.control.offsetStart; i < item.control.offsetEnd; i += 0x1) {
-    checksum -= getInt(i, "uint8");
+    checksum += getInt(i, "uint8");
   }
+
+  checksum ^= 0xffff;
 
   return formatChecksum(checksum, item.dataType);
 }

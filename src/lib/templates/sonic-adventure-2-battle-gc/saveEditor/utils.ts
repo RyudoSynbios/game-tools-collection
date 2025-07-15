@@ -32,7 +32,7 @@ export function overrideParseItem(item: Item): Item | ItemChecksum | ItemTab {
     const itemTab = item as ItemTab;
 
     if (isChaoGarden()) {
-      itemTab.hidden = true;
+      itemTab.disabled = true;
     }
 
     return itemTab;
@@ -40,7 +40,7 @@ export function overrideParseItem(item: Item): Item | ItemChecksum | ItemTab {
     const itemTab = item as ItemTab;
 
     if (!isChaoGarden()) {
-      itemTab.hidden = true;
+      itemTab.disabled = true;
     }
 
     return itemTab;

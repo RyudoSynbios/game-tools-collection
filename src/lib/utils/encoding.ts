@@ -316,7 +316,7 @@ export function decodeNintendo64MpkFont(int: number): string {
     case 0x92: return "プ";
     case 0x93: return "ペ";
     case 0x94: return "ポ";
-    default: return "�";
+    default:   return "�";
   }
 }
 

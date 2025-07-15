@@ -7,7 +7,7 @@ import {
   generateRareChecksum,
   getHeaderShift,
 } from "$lib/utils/common/nintendo64";
-import { clone, makeOperations } from "$lib/utils/format";
+import { clone } from "$lib/utils/format";
 
 import type {
   DataViewABL,
@@ -15,7 +15,6 @@ import type {
   ItemChecksum,
   ItemContainer,
   ItemInt,
-  TimeUnit,
 } from "$lib/types";
 
 export function initHeaderShift(dataView: DataView): number {
@@ -78,53 +77,8 @@ export function overrideParseContainerItemsShifts(
   return [false, undefined];
 }
 
-function getTime(offset: number, mode: string, timeUnit: TimeUnit): number {
-  const byte1 = getInt(offset, "uint8");
-  const byte2 = getInt(offset + 0x1, "uint8");
-
-  let int = 0;
-
-  switch (mode) {
-    case "time-1":
-      int = ((byte1 << 0x8) | byte2) >> 0x6;
-      break;
-    case "time-2":
-      int = ((byte1 & 0x3f) << 0x4) | (byte2 >> 0x4);
-      break;
-    case "time-3":
-      int = ((byte1 & 0xf) << 0x6) | (byte2 >> 0x2);
-      break;
-    case "time-4":
-      int = ((byte1 & 0x3) << 0x8) | byte2;
-      break;
-  }
-
-  int = makeOperations(int, [{ convert: { from: "seconds", to: timeUnit } }]);
-
-  return int;
-}
-
 export function overrideGetInt(item: Item): [boolean, number | undefined] {
-  if ("id" in item && item.id?.match(/time-/)) {
-    const itemInt = item as ItemInt;
-
-    const int = getTime(
-      itemInt.offset,
-      item.id,
-      itemInt.max === 17 ? "minutes" : "seconds",
-    );
-
-    return [true, int];
-  } else if ("id" in item && item.id === "controlStyle") {
-    const itemInt = item as ItemInt;
-
-    const value = getInt(itemInt.offset, "uint8");
-    const ratioCinema = getInt(itemInt.offset, "bit", { bit: 3 });
-
-    if (ratioCinema) {
-      return [true, value - 0x8];
-    }
-  } else if ("id" in item && item.id === "ratio") {
+  if ("id" in item && item.id === "ratio") {
     const itemInt = item as ItemInt;
 
     const ratioCinema = getInt(itemInt.offset - 0x1, "bit", { bit: 3 });
@@ -138,64 +92,7 @@ export function overrideGetInt(item: Item): [boolean, number | undefined] {
 }
 
 export function overrideSetInt(item: Item, value: string): boolean {
-  if ("id" in item && item.id?.match(/time-/)) {
-    const itemInt = item as ItemInt;
-
-    const int = parseInt(value);
-
-    let base = 0;
-
-    if (itemInt.max === 17) {
-      base = int * 60 + getTime(itemInt.offset, item.id, "seconds");
-    } else {
-      base = getTime(itemInt.offset, item.id, "minutes") * 60 + int;
-    }
-
-    base = Math.min(base, 1023); // seconds max
-
-    let byte1 = getInt(itemInt.offset, "uint8");
-    let byte2 = getInt(itemInt.offset + 0x1, "uint8");
-
-    if (item.id === "time-1") {
-      base <<= 0x6;
-      byte2 &= 0x3f;
-
-      setInt(itemInt.offset, "uint16", base | byte2, { bigEndian: true });
-    } else if (item.id === "time-2") {
-      byte1 = (byte1 >> 0x6) << 0xe;
-      base <<= 0x4;
-      byte2 &= 0xf;
-
-      setInt(itemInt.offset, "uint16", byte1 | base | byte2, {
-        bigEndian: true,
-      });
-    } else if (item.id === "time-3") {
-      byte1 = (byte1 >> 0x4) << 0xc;
-      base <<= 0x2;
-      byte2 &= 0x3;
-
-      setInt(itemInt.offset, "uint16", byte1 | base | byte2, {
-        bigEndian: true,
-      });
-    } else if (item.id === "time-4") {
-      byte1 = (byte1 >> 0x2) << 0xa;
-
-      setInt(itemInt.offset, "uint16", byte1 | base, { bigEndian: true });
-    }
-
-    return true;
-  } else if ("id" in item && item.id === "controlStyle") {
-    const itemInt = item as ItemInt;
-
-    const int = parseInt(value);
-    const ratioCinema = getInt(itemInt.offset, "bit", { bit: 3 });
-
-    if (ratioCinema) {
-      setInt(itemInt.offset, "uint8", int + 0x8);
-
-      return true;
-    }
-  } else if ("id" in item && item.id === "ratio") {
+  if ("id" in item && item.id === "ratio") {
     const itemInt = item as ItemInt;
 
     const int = parseInt(value);
@@ -216,6 +113,43 @@ export function overrideSetInt(item: Item, value: string): boolean {
   }
 
   return false;
+}
+export function afterSetInt(item: Item): void {
+  if ("id" in item && item.id?.match(/time-/)) {
+    const itemInt = item as ItemInt;
+
+    const [index] = item.id.splitInt();
+
+    if (index === 0) {
+      return;
+    }
+
+    const timeRef = getInt(itemInt.offset, "uint16", {
+      bigEndian: true,
+      binary: itemInt.binary,
+    });
+
+    const offset = itemInt.offset - index * 0x19;
+
+    for (let i = 0x0; i < index; i += 0x1) {
+      const time = getInt(offset + i * 0x19, "uint16", {
+        bigEndian: true,
+        binary: itemInt.binary,
+      });
+
+      if (timeRef > 0x0 && time === 0x0) {
+        setInt(offset + i * 0x19, "uint16", 0x3ff, {
+          bigEndian: true,
+          binary: itemInt.binary,
+        });
+      } else if (timeRef === 0x0 && time === 0x3ff) {
+        setInt(offset + i * 0x19, "uint16", 0x0, {
+          bigEndian: true,
+          binary: itemInt.binary,
+        });
+      }
+    }
+  }
 }
 
 export function generateChecksum(

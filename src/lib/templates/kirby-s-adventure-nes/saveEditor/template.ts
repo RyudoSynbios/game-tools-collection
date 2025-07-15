@@ -57,94 +57,93 @@ const template: GameJson = {
           },
         },
         {
-          type: "section",
-          flex: true,
+          type: "tabs",
+          vertical: true,
           items: [
             {
-              name: "Completion Rate",
-              offset: 0x1905,
-              type: "variable",
-              dataType: "uint8",
-              operations: [{ "*": 1.59 }, { roundFloor: 0 }],
-              suffix: "%",
-              disabled: true,
+              name: "General",
+              flex: true,
+              items: [
+                {
+                  name: "Completion Rate",
+                  offset: 0x1905,
+                  type: "variable",
+                  dataType: "uint8",
+                  operations: [{ "*": 1.59 }, { roundFloor: 0 }],
+                  suffix: "%",
+                  disabled: true,
+                },
+                {
+                  name: "Completed Doors",
+                  offset: 0x1905,
+                  type: "variable",
+                  dataType: "uint8",
+                  hidden: true,
+                  test: true,
+                },
+                {
+                  name: "Completed Levels",
+                  offset: 0x1906,
+                  type: "variable",
+                  dataType: "uint8",
+                  hidden: true,
+                },
+                {
+                  name: "Level Animation",
+                  offset: 0x191e,
+                  type: "variable",
+                  dataType: "uint8",
+                  hidden: true,
+                },
+                {
+                  name: "???",
+                  offset: 0x191f,
+                  type: "variable",
+                  dataType: "uint8",
+                  hidden: true,
+                },
+                {
+                  id: "currentLevel",
+                  name: "Current Level",
+                  offset: 0x1921,
+                  type: "variable",
+                  dataType: "uint24",
+                  bigEndian: true,
+                  resource: "levels",
+                  autocomplete: true,
+                },
+                {
+                  name: "???",
+                  offset: 0x1924,
+                  type: "variable",
+                  dataType: "uint8",
+                  hidden: true,
+                },
+                {
+                  name: "???",
+                  offset: 0x1925,
+                  type: "variable",
+                  dataType: "uint8",
+                  hidden: true,
+                },
+                {
+                  name: "???",
+                  offset: 0x1926,
+                  type: "variable",
+                  dataType: "uint8",
+                  hidden: true,
+                },
+                {
+                  name: "???",
+                  offset: 0x1927,
+                  type: "variable",
+                  dataType: "uint8",
+                  hidden: true,
+                },
+              ],
             },
-            {
-              name: "Completed Doors",
-              offset: 0x1905,
-              type: "variable",
-              dataType: "uint8",
-              hidden: true,
-              test: true,
-            },
-            {
-              name: "Completed Levels",
-              offset: 0x1906,
-              type: "variable",
-              dataType: "uint8",
-              hidden: true,
-            },
-            {
-              name: "Level Animation",
-              offset: 0x191e,
-              type: "variable",
-              dataType: "uint8",
-              hidden: true,
-            },
-            {
-              name: "???",
-              offset: 0x191f,
-              type: "variable",
-              dataType: "uint8",
-              hidden: true,
-            },
-            {
-              id: "currentLevel",
-              name: "Current Level",
-              offset: 0x1921,
-              type: "variable",
-              dataType: "uint24",
-              bigEndian: true,
-              resource: "levels",
-              autocomplete: true,
-            },
-            {
-              name: "???",
-              offset: 0x1924,
-              type: "variable",
-              dataType: "uint8",
-              hidden: true,
-            },
-            {
-              name: "???",
-              offset: 0x1925,
-              type: "variable",
-              dataType: "uint8",
-              hidden: true,
-            },
-            {
-              name: "???",
-              offset: 0x1926,
-              type: "variable",
-              dataType: "uint8",
-              hidden: true,
-            },
-            {
-              name: "???",
-              offset: 0x1927,
-              type: "variable",
-              dataType: "uint8",
-              hidden: true,
-            },
-          ],
-        },
-        {
-          type: "section",
-          flex: true,
-          items: [
             {
               name: "Level 1",
-              type: "section",
               flex: true,
               items: [
                 {
@@ -161,7 +160,7 @@ const template: GameJson = {
                 },
                 {
                   id: "levels-14",
-                  name: "Switchs",
+                  name: "Switches",
                   type: "bitflags",
                   flags: [
                     { offset: 0x1915, bit: 0, label: "Switch 1-1", disabled: true },
@@ -174,7 +173,6 @@ const template: GameJson = {
             },
             {
               name: "Level 2",
-              type: "section",
               flex: true,
               items: [
                 {
@@ -192,7 +190,7 @@ const template: GameJson = {
                 },
                 {
                   id: "levels-13",
-                  name: "Switchs",
+                  name: "Switches",
                   type: "bitflags",
                   flags: [
                     { offset: 0x1914, bit: 0, label: "Switch 2-1", disabled: true },
@@ -206,7 +204,6 @@ const template: GameJson = {
             },
             {
               name: "Level 3",
-              type: "section",
               flex: true,
               items: [
                 {
@@ -225,7 +222,7 @@ const template: GameJson = {
                 },
                 {
                   id: "levels-12",
-                  name: "Level 3",
+                  name: "Switches",
                   type: "bitflags",
                   flags: [
                     { offset: 0x1913, bit: 0, label: "Switch 3-1" },
@@ -240,7 +237,6 @@ const template: GameJson = {
             },
             {
               name: "Level 4",
-              type: "section",
               flex: true,
               items: [
                 {
@@ -259,7 +255,7 @@ const template: GameJson = {
                 },
                 {
                   id: "levels-11",
-                  name: "Switchs",
+                  name: "Switches",
                   type: "bitflags",
                   flags: [
                     { offset: 0x1912, bit: 0, label: "Switch 4-1" },
@@ -274,7 +270,6 @@ const template: GameJson = {
             },
             {
               name: "Level 5",
-              type: "section",
               flex: true,
               items: [
                 {
@@ -293,7 +288,7 @@ const template: GameJson = {
                 },
                 {
                   id: "levels-10",
-                  name: "Switchs",
+                  name: "Switches",
                   type: "bitflags",
                   flags: [
                     { offset: 0x1911, bit: 0, label: "Switch 5-1" },
@@ -308,7 +303,6 @@ const template: GameJson = {
             },
             {
               name: "Level 6",
-              type: "section",
               flex: true,
               items: [
                 {
@@ -327,7 +321,7 @@ const template: GameJson = {
                 },
                 {
                   id: "levels-9",
-                  name: "Switchs",
+                  name: "Switches",
                   type: "bitflags",
                   flags: [
                     { offset: 0x1910, bit: 0, label: "Switch 6-1" },
@@ -342,7 +336,6 @@ const template: GameJson = {
             },
             {
               name: "Level 7",
-              type: "section",
               flex: true,
               items: [
                 {
@@ -361,7 +354,7 @@ const template: GameJson = {
                 },
                 {
                   id: "levels-8",
-                  name: "Switchs",
+                  name: "Switches",
                   type: "bitflags",
                   flags: [
                     { offset: 0x190f, bit: 0, label: "Switch 7-1" },

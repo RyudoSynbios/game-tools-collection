@@ -144,54 +144,26 @@ export function overrideGetInt(item: Item): [boolean, number | undefined] {
   } else if ("id" in item && item.id === "totalNotes") {
     const itemInt = item as ItemInt;
 
-    let int = 0;
+    let binary = "";
 
-    const binary = getNotesBinary(itemInt.offset);
+    for (let i = 0x0; i < 0x8; i += 0x4) {
+      binary += getInt(itemInt.offset + i, "uint32", {
+        bigEndian: true,
+      }).toBinary(32);
+    }
+
+    binary = binary.substring(1);
+
+    let int = 0;
 
     for (let i = 0; i < 9; i += 1) {
       int += parseInt(binary.substring(i * 7, (i + 1) * 7), 2);
     }
 
     return [true, int];
-  } else if ("id" in item && item.id?.match(/notes-/)) {
-    const itemInt = item as ItemInt;
-
-    const [index] = item.id.splitInt();
-
-    const binary = getNotesBinary(itemInt.offset);
-
-    const int = parseInt(binary.substring(index * 7, (index + 1) * 7), 2);
-
-    return [true, int];
   }
 
   return [false, undefined];
-}
-
-export function overrideSetInt(item: Item, value: string): boolean {
-  if ("id" in item && item.id?.match(/notes-/)) {
-    const itemInt = item as ItemInt;
-
-    const [index] = item.id.splitInt();
-
-    let int = parseInt(value);
-
-    let binary = getNotesBinary(itemInt.offset);
-
-    binary = `0${binary.substring(0, index * 7)}${int
-      .toBinary()
-      .substring(1)}${binary.substring((index + 1) * 7)}`;
-
-    for (let i = 0x0; i < 0x8; i += 0x1) {
-      int = parseInt(binary.substring(i * 8, (i + 1) * 8), 2);
-
-      setInt(itemInt.offset + i, "uint8", int);
-    }
-
-    return true;
-  }
-
-  return false;
 }
 
 export function afterSetInt(item: Item): void {
@@ -239,14 +211,4 @@ export function generateChecksum(
 
 export function beforeSaving(): ArrayBufferLike {
   return byteswapDataView("eep").buffer;
-}
-
-function getNotesBinary(offset: number): string {
-  let binary = "";
-
-  for (let i = 0x0; i < 0x8; i += 0x1) {
-    binary += getInt(offset + i, "uint8").toBinary();
-  }
-
-  return binary.substring(1);
 }

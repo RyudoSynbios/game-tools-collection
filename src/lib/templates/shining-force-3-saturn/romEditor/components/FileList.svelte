@@ -35,7 +35,7 @@
           index = file.index.toHex(4);
         }
 
-        text += `<p><b>${index}</b>: ${file.name}</p>`;
+        text += `<p><b>${index}:</b> ${file.name}</p>`;
       });
   }
 </script>

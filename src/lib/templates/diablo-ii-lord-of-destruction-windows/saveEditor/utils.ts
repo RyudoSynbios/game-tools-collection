@@ -102,7 +102,7 @@ export function getInventoryNames(): Resource {
       $dataViewAlt.inventory,
     );
 
-    names[index] = itemTypes[int] as string;
+    names[index] = itemTypes[int];
   });
 
   return names;

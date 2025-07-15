@@ -230,8 +230,8 @@ export interface ItemContainer {
   pointerDataType?: DataTypeInt;
   length: number;
   type: "container";
-  instances: number;
   instanceType: "section" | "tabs";
+  instances: number;
   enumeration?: string;
   disableSubinstanceIf?:
     | ItemIntCondition

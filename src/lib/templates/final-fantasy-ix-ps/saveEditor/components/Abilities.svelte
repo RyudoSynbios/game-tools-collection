@@ -56,8 +56,6 @@
           })),
         },
       ];
-
-      console.log(characterAbilities);
     }
   }
 </script>
