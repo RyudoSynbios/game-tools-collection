@@ -15,9 +15,15 @@ import {
   utilsExists,
 } from "$lib/utils/format";
 
-import type { Binary, DataType, DataTypeInt, IntOperation } from "$lib/types";
+import type {
+  Binary,
+  DataType,
+  DataTypeInt,
+  IntOperation,
+  StringEncoding,
+} from "$lib/types";
 
-import { decodeWindows31J, encodeWindows31J } from "./encoding";
+import { decodeString, encodeString } from "./encoding";
 import { getResource } from "./parser";
 
 export function getDataView(dataViewTmp?: DataView): DataView {
@@ -731,7 +737,7 @@ export function setBigInt(
 interface StringOptions {
   bigEndian?: boolean;
   letterBigEndian?: boolean;
-  encoding?: "windows31J";
+  encoding?: StringEncoding;
   zeroTerminated?: boolean;
   regex?: string;
   resource?: string;
@@ -770,11 +776,8 @@ export function getString(
       string += char !== undefined ? char : " ";
     } else if (int === 0x0) {
       string += " ";
-    } else if (
-      letterDataType === "uint16" &&
-      options.encoding === "windows31J"
-    ) {
-      string += decodeWindows31J(int);
+    } else if (options.encoding) {
+      string += decodeString(int, options.encoding);
     } else {
       string += String.fromCharCode(int);
     }
@@ -837,11 +840,8 @@ export function setString(
             int = parseInt(getObjKey(resource, index));
           }
         } else if (!options.regex || char.match(new RegExp(options.regex))) {
-          if (
-            letterDataType === "uint16" &&
-            options.encoding === "windows31J"
-          ) {
-            int = encodeWindows31J(char);
+          if (options.encoding) {
+            int = encodeString(char, options.encoding);
           } else {
             int = char.charCodeAt(0);
           }

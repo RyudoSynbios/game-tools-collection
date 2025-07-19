@@ -80,6 +80,8 @@ export type ResourceGroups = { name: string; options: number[] }[];
 
 export type ResourceLabels = { [key: number]: string };
 
+export type StringEncoding = "windows31J";
+
 export type TimeUnit =
   | "milliseconds"
   | "seconds"
@@ -339,7 +341,7 @@ export interface ItemString {
   letterDataType: "uint8" | "uint16" | "uint24" | "uint32";
   letterBigEndian?: boolean;
   fallback?: number;
-  encoding?: "windows31J";
+  encoding?: StringEncoding;
   zeroTerminated?: boolean;
   regex?: string;
   resource?: string;

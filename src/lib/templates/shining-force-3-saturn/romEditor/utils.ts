@@ -17,7 +17,7 @@ import {
   writeFile,
   type File,
 } from "$lib/utils/common/iso9660";
-import { decodeCamelotFont, decodeWindows31J } from "$lib/utils/encoding";
+import { decodeCamelotFont, decodeString } from "$lib/utils/encoding";
 import { getRegionArray } from "$lib/utils/format";
 import { getItem, updateResources } from "$lib/utils/parser";
 import { checkValidator } from "$lib/utils/validator";
@@ -784,11 +784,11 @@ export function readTxt(dataView: DataView): string {
     const code16 = getInt(i, "uint16", { bigEndian: true }, dataView);
 
     if (code8 >= 0x81) {
-      text += decodeWindows31J(code16);
+      text += decodeString(code16, "windows31J");
 
       i += 0x1;
     } else {
-      text += decodeWindows31J(code8);
+      text += decodeString(code8, "windows31J");
     }
   }
 
