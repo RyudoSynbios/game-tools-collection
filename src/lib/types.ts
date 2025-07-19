@@ -80,7 +80,7 @@ export type ResourceGroups = { name: string; options: number[] }[];
 
 export type ResourceLabels = { [key: number]: string };
 
-export type StringEncoding = "windows31J";
+export type StringEncoding = "windows31J" | "windows1252";
 
 export type TimeUnit =
   | "milliseconds"
