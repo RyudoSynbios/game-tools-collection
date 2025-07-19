@@ -408,6 +408,17 @@
     }
   },
   {
+    "id": "kingdom-hearts-chain-of-memories-gba",
+    "name": "Kingdom Hearts: Chain of Memories",
+    "consoleId": "game-boy-advance",
+    "tools": {
+      "saveEditor": {
+        "createdAt": "2025-07-20",
+        "regions": ["🇪🇺", "🇺🇸", "🇯🇵"]
+      }
+    }
+  },
+  {
     "id": "kirby-s-adventure-nes",
     "name": "Kirby's Adventure",
     "consoleId": "nintendo-entertainment-system",
