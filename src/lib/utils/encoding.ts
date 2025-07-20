@@ -433,7 +433,7 @@ const cp1252: { [key: string]: string } = {
   0x0: "\u0000\u0001\u0002\u0003\u0004\u0005\u0006\u0007\b\t\n\u000b\f\r\u000e\u000f\u0010\u0011\u0012\u0013\u0014\u0015\u0016\u0017\u0018\u0019\u001a\u001b\u001c\u001d\u001e\u001f !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~\u007F€\u0081‚ƒ„…†‡ˆ‰Š‹Œ\u008DŽ\u008F\u0090‘’“”•–—˜™š›œ\u009DžŸ ¡¢£¤¥¦§¨©ª«¬­®¯°±²³´µ¶·¸¹º»¼½¾¿ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖ×ØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõö÷øùúûüýþÿ",
 };
 
-export function decodeString(code: number, encoding: StringEncoding): string {
+export function decodeChar(code: number, encoding: StringEncoding): string {
   let table: { [key: string]: string } = {};
 
   switch (encoding) {
@@ -456,7 +456,7 @@ export function decodeString(code: number, encoding: StringEncoding): string {
   }, "�");
 }
 
-export function encodeString(char: string, encoding: StringEncoding): number {
+export function encodeChar(char: string, encoding: StringEncoding): number {
   let table: { [key: string]: string } = {};
 
   switch (encoding) {

@@ -23,7 +23,7 @@ import type {
   StringEncoding,
 } from "$lib/types";
 
-import { decodeString, encodeString } from "./encoding";
+import { decodeChar, encodeChar } from "./encoding";
 import { getResource } from "./parser";
 
 export function getDataView(dataViewTmp?: DataView): DataView {
@@ -777,7 +777,7 @@ export function getString(
     } else if (int === 0x0) {
       string += " ";
     } else if (options.encoding) {
-      string += decodeString(int, options.encoding);
+      string += decodeChar(int, options.encoding);
     } else {
       string += String.fromCharCode(int);
     }
@@ -841,7 +841,7 @@ export function setString(
           }
         } else if (!options.regex || char.match(new RegExp(options.regex))) {
           if (options.encoding) {
-            int = encodeString(char, options.encoding);
+            int = encodeChar(char, options.encoding);
           } else {
             int = char.charCodeAt(0);
           }
