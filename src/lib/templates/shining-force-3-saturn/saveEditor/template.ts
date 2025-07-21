@@ -183,7 +183,7 @@ const template: GameJson = {
                                   dataType: "string",
                                   letterDataType: "uint8",
                                   resource: "letters",
-                                  zeroTerminated: true,
+                                  endCode: 0x0,
                                   test: true,
                                 },
                                 {

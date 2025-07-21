@@ -50,7 +50,7 @@ export function readGcm(): void {
   gcm.markerCode = getString(0x4, 0x2, "uint8");
   gcm.disc = getInt(0x6, "uint8");
   gcm.version = getInt(0x7, "uint8");
-  gcm.gameName = getString(0x20, 0x40, "uint8", { zeroTerminated: true });
+  gcm.gameName = getString(0x20, 0x40, "uint8", { endCode: 0x0 });
 
   const bootSize = 0x2440;
   const apploaderSize = getInt(0x400, "uint32", { bigEndian: true });
@@ -124,7 +124,7 @@ export function readGcm(): void {
     const nameOffset = getInt(offset + 0x1, "uint24", { bigEndian: true });
 
     const entryName = getString(nameBlockOffset + nameOffset, 0x100, "uint8", {
-      zeroTerminated: true,
+      endCode: 0x0,
     });
 
     let path = entryName;

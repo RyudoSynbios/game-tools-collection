@@ -54,7 +54,7 @@ const template: GameJson = {
                           letterDataType: "uint16",
                           letterBigEndian: true,
                           fallback: 0xe70,
-                          zeroTerminated: true,
+                          endCode: 0x0,
                           resource: "letters",
                           test: true,
                         },
@@ -80,7 +80,6 @@ const template: GameJson = {
                               offset: 0x580b,
                               type: "variable",
                               dataType: "uint8",
-                              bigEndian: true,
                               leadingZeros: 1,
                               max: 59,
                               test: true,
@@ -494,7 +493,7 @@ const template: GameJson = {
                           letterDataType: "uint16",
                           letterBigEndian: true,
                           fallback: 0xe70,
-                          zeroTerminated: true,
+                          endCode: 0x0,
                           resource: "letters",
                         },
                         {
@@ -2883,7 +2882,7 @@ const template: GameJson = {
                   letterDataType: "uint16",
                   letterBigEndian: true,
                   fallback: 0xe70,
-                  zeroTerminated: true,
+                  endCode: 0x0,
                   resource: "letters",
                 },
                 {
@@ -2930,7 +2929,7 @@ const template: GameJson = {
                   letterDataType: "uint16",
                   letterBigEndian: true,
                   fallback: 0xe70,
-                  zeroTerminated: true,
+                  endCode: 0x0,
                   resource: "letters",
                 },
                 {

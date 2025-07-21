@@ -932,7 +932,7 @@ const template: GameJson = {
                           dataType: "string",
                           letterDataType: "uint8",
                           encoding: "windows1252",
-                          zeroTerminated: true,
+                          endCode: 0x0,
                         },
                         {
                           name: "CP",

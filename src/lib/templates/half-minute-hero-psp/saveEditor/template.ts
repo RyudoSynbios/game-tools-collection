@@ -32,7 +32,7 @@ const template: GameJson = {
               type: "variable",
               dataType: "string",
               letterDataType: "uint8",
-              zeroTerminated: true,
+              endCode: 0x0,
               regex: "[ 0-9A-Za-z]",
               test: true,
             },
@@ -137,7 +137,7 @@ const template: GameJson = {
                                   type: "variable",
                                   dataType: "string",
                                   letterDataType: "uint8",
-                                  zeroTerminated: true,
+                                  endCode: 0x0,
                                   regex: "[ 0-9A-Za-z]",
                                 },
                                 {
@@ -786,7 +786,7 @@ const template: GameJson = {
                                   type: "variable",
                                   dataType: "string",
                                   letterDataType: "uint8",
-                                  zeroTerminated: true,
+                                  endCode: 0x0,
                                   regex: "[ 0-9A-Za-z]",
                                 },
                                 {
@@ -972,7 +972,7 @@ const template: GameJson = {
                                   type: "variable",
                                   dataType: "string",
                                   letterDataType: "uint8",
-                                  zeroTerminated: true,
+                                  endCode: 0x0,
                                   regex: "[ 0-9A-Za-z]",
                                 },
                                 {
@@ -1184,7 +1184,7 @@ const template: GameJson = {
                                   type: "variable",
                                   dataType: "string",
                                   letterDataType: "uint8",
-                                  zeroTerminated: true,
+                                  endCode: 0x0,
                                   regex: "[ 0-9A-Za-z]",
                                 },
                                 {

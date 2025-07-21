@@ -128,7 +128,7 @@ export function generateMemoryCard(dataView: DataView): void {
 
   memoryCard.superblock = {} as Superblock;
 
-  memoryCard.superblock.magic = getString(0x0, 0x28, "uint8", { zeroTerminated: true }, dataView);
+  memoryCard.superblock.magic = getString(0x0, 0x28, "uint8", { endCode: 0x0 }, dataView);
   memoryCard.superblock.pageLength = getInt(0x28, "uint16", {}, dataView);
   memoryCard.superblock.pagesPerCluster = getInt(0x2a, "uint16", {}, dataView);
   memoryCard.superblock.pagesPerBlock = getInt(0x2c, "uint16", {}, dataView);

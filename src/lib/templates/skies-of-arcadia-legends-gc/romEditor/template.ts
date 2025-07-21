@@ -66,7 +66,7 @@ const template: GameJson = {
                               type: "variable",
                               dataType: "string",
                               letterDataType: "uint8",
-                              zeroTerminated: true,
+                              endCode: 0x0,
                             },
                             {
                               name: "Experience",
@@ -919,7 +919,7 @@ const template: GameJson = {
                               type: "variable",
                               dataType: "string",
                               letterDataType: "uint8",
-                              zeroTerminated: true,
+                              endCode: 0x0,
                             },
                             {
                               name: "Character",
@@ -1188,7 +1188,7 @@ const template: GameJson = {
                               type: "variable",
                               dataType: "string",
                               letterDataType: "uint8",
-                              zeroTerminated: true,
+                              endCode: 0x0,
                             },
                             {
                               name: "Type",
@@ -1322,7 +1322,7 @@ const template: GameJson = {
                               type: "variable",
                               dataType: "string",
                               letterDataType: "uint8",
-                              zeroTerminated: true,
+                              endCode: 0x0,
                             },
                             {
                               name: "Price",
@@ -1484,7 +1484,7 @@ const template: GameJson = {
                               type: "variable",
                               dataType: "string",
                               letterDataType: "uint8",
-                              zeroTerminated: true,
+                              endCode: 0x0,
                             },
                             {
                               name: "Price",
@@ -1646,7 +1646,7 @@ const template: GameJson = {
                               type: "variable",
                               dataType: "string",
                               letterDataType: "uint8",
-                              zeroTerminated: true,
+                              endCode: 0x0,
                             },
                             {
                               name: "Price",
@@ -1810,7 +1810,7 @@ const template: GameJson = {
                               type: "variable",
                               dataType: "string",
                               letterDataType: "uint8",
-                              zeroTerminated: true,
+                              endCode: 0x0,
                             },
                             {
                               name: "Price",
@@ -1879,7 +1879,7 @@ const template: GameJson = {
                               type: "variable",
                               dataType: "string",
                               letterDataType: "uint8",
-                              zeroTerminated: true,
+                              endCode: 0x0,
                             },
                             {
                               name: "Type",
@@ -2055,7 +2055,7 @@ const template: GameJson = {
                               type: "variable",
                               dataType: "string",
                               letterDataType: "uint8",
-                              zeroTerminated: true,
+                              endCode: 0x0,
                             },
                             {
                               name: "Price",
@@ -2219,7 +2219,7 @@ const template: GameJson = {
                               type: "variable",
                               dataType: "string",
                               letterDataType: "uint8",
-                              zeroTerminated: true,
+                              endCode: 0x0,
                             },
                             {
                               name: "Magic Attribute",
@@ -2393,7 +2393,7 @@ const template: GameJson = {
                               type: "variable",
                               dataType: "string",
                               letterDataType: "uint8",
-                              zeroTerminated: true,
+                              endCode: 0x0,
                             },
                             {
                               name: "Value",
@@ -2763,7 +2763,7 @@ const template: GameJson = {
                       type: "variable",
                       dataType: "string",
                       letterDataType: "uint8",
-                      zeroTerminated: true,
+                      endCode: 0x0,
                     },
                     {
                       name: "Type",
@@ -2885,7 +2885,7 @@ const template: GameJson = {
                       type: "variable",
                       dataType: "string",
                       letterDataType: "uint8",
-                      zeroTerminated: true,
+                      endCode: 0x0,
                     },
                     {
                       name: "Required to Next",
@@ -3403,7 +3403,7 @@ const template: GameJson = {
                                       type: "variable",
                                       dataType: "string",
                                       letterDataType: "uint8",
-                                      zeroTerminated: true,
+                                      endCode: 0x0,
                                     },
                                     {
                                       name: "HP",
@@ -3969,7 +3969,7 @@ const template: GameJson = {
                       type: "variable",
                       dataType: "string",
                       letterDataType: "uint8",
-                      zeroTerminated: true,
+                      endCode: 0x0,
                       disabled: true,
                     },
                     {
@@ -4064,7 +4064,7 @@ const template: GameJson = {
                           letterDataType: "uint16",
                           letterBigEndian: true,
                           encoding: "windows31J",
-                          zeroTerminated: true,
+                          endCode: 0x0,
                           hidden: true,
                         },
                         {

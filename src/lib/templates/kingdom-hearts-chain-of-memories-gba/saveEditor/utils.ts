@@ -338,7 +338,7 @@ export function getDeckNames(slotIndex: number): Resource {
       {
         letterBigEndian: deckItem.letterBigEndian,
         encoding: deckItem.encoding,
-        zeroTerminated: true,
+        endCode: 0x0,
       },
     );
 

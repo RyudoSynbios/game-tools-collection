@@ -198,7 +198,7 @@ export function getChaoNames(): Resource {
       item.letterDataType,
       {
         resource: item.resource,
-        zeroTerminated: item.zeroTerminated,
+        endCode: item.endCode,
       },
     );
 

@@ -33,7 +33,7 @@
           bigEndian: item.bigEndian,
           letterBigEndian: item.letterBigEndian,
           encoding: item.encoding,
-          zeroTerminated: item.zeroTerminated,
+          endCode: item.endCode,
           regex: item.regex,
           resource: item.resource,
         },
@@ -73,7 +73,7 @@
         bigEndian: item.bigEndian,
         letterBigEndian: item.letterBigEndian,
         encoding: item.encoding,
-        zeroTerminated: item.zeroTerminated,
+        endCode: item.endCode,
         resource: item.resource,
       }, _dataViewAlt);
     }

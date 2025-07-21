@@ -46,7 +46,7 @@ const template: GameJson = {
                   type: "variable",
                   dataType: "string",
                   letterDataType: "uint16",
-                  zeroTerminated: true,
+                  endCode: 0x0,
                   test: true,
                 },
                 {
@@ -5163,7 +5163,7 @@ const template: GameJson = {
                               type: "variable",
                               dataType: "string",
                               letterDataType: "uint16",
-                              zeroTerminated: true,
+                              endCode: 0x0,
                             },
                             {
                               name: "Characters",
@@ -5238,7 +5238,7 @@ const template: GameJson = {
                                   type: "variable",
                                   dataType: "string",
                                   letterDataType: "uint16",
-                                  zeroTerminated: true,
+                                  endCode: 0x0,
                                 },
                                 {
                                   id: "friendCardMessage",
@@ -5248,7 +5248,7 @@ const template: GameJson = {
                                   type: "variable",
                                   dataType: "string",
                                   letterDataType: "uint16",
-                                  zeroTerminated: true,
+                                  endCode: 0x0,
                                   size: "lg",
                                 },
                                 {
@@ -5390,7 +5390,7 @@ const template: GameJson = {
                               type: "variable",
                               dataType: "string",
                               letterDataType: "uint16",
-                              zeroTerminated: true,
+                              endCode: 0x0,
                             },
                             {
                               id: "friendCardMessage",
@@ -5400,7 +5400,7 @@ const template: GameJson = {
                               type: "variable",
                               dataType: "string",
                               letterDataType: "uint16",
-                              zeroTerminated: true,
+                              endCode: 0x0,
                               size: "lg",
                             },
                             {
@@ -5612,7 +5612,7 @@ const template: GameJson = {
                                   type: "variable",
                                   dataType: "string",
                                   letterDataType: "uint16",
-                                  zeroTerminated: true,
+                                  endCode: 0x0,
                                 },
                                 {
                                   id: "artifactName-%parent%-%index%",
@@ -5622,7 +5622,7 @@ const template: GameJson = {
                                   type: "variable",
                                   dataType: "string",
                                   letterDataType: "uint16",
-                                  zeroTerminated: true,
+                                  endCode: 0x0,
                                 },
                               ],
                             },
@@ -5726,7 +5726,7 @@ const template: GameJson = {
                               type: "variable",
                               dataType: "string",
                               letterDataType: "uint16",
-                              zeroTerminated: true,
+                              endCode: 0x0,
                             },
                           ],
                         },

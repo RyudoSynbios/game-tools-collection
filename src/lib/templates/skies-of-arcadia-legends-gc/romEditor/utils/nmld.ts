@@ -28,7 +28,7 @@ export function unpackNmld(dataView: DataView): Model {
       index: getInt(offset, "uint32", { bigEndian: true }, dataView),
       unknown: getInt(offset + 0x4, "uint16", { bigEndian: true }, dataView),
       entityId: getInt(offset + 0x6, "uint16", { bigEndian: true }, dataView),
-      name: getString(offset + 0x24, 0x10, "uint8", { zeroTerminated: true }, dataView),
+      name: getString(offset + 0x24, 0x10, "uint8", { endCode: 0x0 }, dataView),
       linkedGrndFiles: [],
       linkedNjcmFiles: [],
       linkedNjtlFiles: [],
@@ -70,7 +70,7 @@ export function unpackNmld(dataView: DataView): Model {
           if (pointer) {
             const offset = headerOffset + pointer;
 
-            const type = getString(offset, 0x4, "uint8", { zeroTerminated: true }, dataView);
+            const type = getString(offset, 0x4, "uint8", { endCode: 0x0 }, dataView);
 
             if (type === "GRND") {
               if (!model.grndFiles[offset]) {
@@ -136,10 +136,10 @@ export function unpackNmld(dataView: DataView): Model {
   for (let i = 0x0; i < assetCount; i += 0x1) {
     const offset = assetsHeaderOffset + 0x4 + i * 0x2c;
 
-    const name = getString(offset, 0x10, "uint8", { zeroTerminated: true }, dataView);
+    const name = getString(offset, 0x10, "uint8", { endCode: 0x0 }, dataView);
     const size = getInt(offset + 0x28, "uint32", { bigEndian: true }, dataView);
 
-    const assetType = getString(assetsOffset, 0x4, "uint8", { zeroTerminated: true }, dataView);
+    const assetType = getString(assetsOffset, 0x4, "uint8", { endCode: 0x0 }, dataView);
 
     const gvrDataView = new DataView(
       dataView.buffer.slice(assetsOffset, assetsOffset + size),

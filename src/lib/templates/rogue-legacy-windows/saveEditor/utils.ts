@@ -80,7 +80,7 @@ export function beforeSaving(): ArrayBufferLike {
   const $fileName = get(fileName);
 
   if ($fileName === "RogueLegacyPlayer.rcdat") {
-    const name = getString(0x0, 0x8, "uint8", { zeroTerminated: true }, $dataViewAlt.name); // prettier-ignore
+    const name = getString(0x0, 0x8, "uint8", { endCode: 0x0 }, $dataViewAlt.name); // prettier-ignore
 
     setInt(0x13, "uint8", name.length);
 

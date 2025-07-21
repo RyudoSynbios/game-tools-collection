@@ -360,7 +360,7 @@ const template: GameJson = {
                               type: "variable",
                               dataType: "string",
                               letterDataType: "uint8",
-                              zeroTerminated: true,
+                              endCode: 0x0,
                             },
                             {
                               name: "Level",
@@ -894,7 +894,7 @@ const template: GameJson = {
                       type: "variable",
                       dataType: "string",
                       letterDataType: "uint8",
-                      zeroTerminated: true,
+                      endCode: 0x0,
                       hidden: true,
                     },
                     {
@@ -2416,7 +2416,7 @@ const template: GameJson = {
                           type: "variable",
                           dataType: "string",
                           letterDataType: "uint8",
-                          zeroTerminated: true,
+                          endCode: 0x0,
                         },
                         {
                           name: "Type",

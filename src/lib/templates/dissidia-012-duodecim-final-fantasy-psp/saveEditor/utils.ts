@@ -390,17 +390,17 @@ export function afterSetInt(item: Item, flag: ItemBitflag): void {
     const length = item.id?.match(/artifactName-/) ? 0x14 : 0x18;
 
     const referenceName = getString(itemString.offset, length, "uint16", {
-      zeroTerminated: true,
+      endCode: 0x0,
     });
 
     for (let i = 0x0; i < 0x5; i += 0x1) {
       const name = getString(offset + i * 0x3c, length, "uint16", {
-        zeroTerminated: true,
+        endCode: 0x0,
       });
 
       if (name === "") {
         setString(offset + i * 0x3c, length, "uint16", referenceName, 0x0, {
-          zeroTerminated: true,
+          endCode: 0x0,
         });
       }
     }
@@ -428,9 +428,7 @@ export function afterSetInt(item: Item, flag: ItemBitflag): void {
   } else if ("id" in item && item.id?.match(/ruleName-/)) {
     const itemString = item as ItemString;
 
-    const name = getString(itemString.offset, 0x18, "uint16", {
-      zeroTerminated: true,
-    });
+    const name = getString(itemString.offset, 0x18, "uint16", { endCode: 0x0 });
 
     let timestamp = 0x0;
 
@@ -551,9 +549,7 @@ export function getArtifactNames(): Resource {
     for (let i = 0x0; i < 0x14; i += 0x1) {
       const offset = nameItem.offset + i * 0x138;
 
-      names[i] = getString(offset, 0x18, "uint16", {
-        zeroTerminated: true,
-      });
+      names[i] = getString(offset, 0x18, "uint16", { endCode: 0x0 });
     }
   }
 
@@ -582,9 +578,7 @@ export function getFriendCardNames(): Resource {
       const offset =
         nameItem.offset + i * ($gameRegion === 1 ? 0x1060 : 0x10a8);
 
-      names[i] = getString(offset, 0x18, "uint16", {
-        zeroTerminated: true,
-      });
+      names[i] = getString(offset, 0x18, "uint16", { endCode: 0x0 });
     }
   }
 
@@ -651,9 +645,7 @@ export function getItemNames(type = ""): Resource {
 
       const baseItem = getInt(offset, "uint16");
       const status = getInt(offset + 0x2, "bit", { bit: 1 });
-      const name = getString(offset + 0x5c, 0x18, "uint16", {
-        zeroTerminated: true,
-      });
+      const name = getString(offset + 0x5c, 0x18, "uint16", { endCode: 0x0 });
 
       if (baseItem !== 0xffff && status === 0x0 && name !== "") {
         const item = items.find((item) => item.index === baseItem);
@@ -726,9 +718,7 @@ export function getPartySettingsNames(): Resource {
     for (let i = 0x0; i < 0x5; i += 0x1) {
       const offset = nameItem.offset + i * 0x48;
 
-      names[i] = getString(offset, 0x18, "uint16", {
-        zeroTerminated: true,
-      });
+      names[i] = getString(offset, 0x18, "uint16", { endCode: 0x0 });
     }
   }
 
@@ -744,9 +734,7 @@ export function getRuleNames(): Resource {
     for (let i = 0x0; i < 0x5; i += 0x1) {
       const offset = nameItem.offset + i * 0x154;
 
-      names[i] = getString(offset, 0x18, "uint16", {
-        zeroTerminated: true,
-      });
+      names[i] = getString(offset, 0x18, "uint16", { endCode: 0x0 });
     }
   }
 

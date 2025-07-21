@@ -172,7 +172,7 @@ const template: GameJson = {
                       type: "variable",
                       dataType: "string",
                       letterDataType: "uint8",
-                      zeroTerminated: true,
+                      endCode: 0x0,
                       regex: "[ .A-Z]",
                       test: true,
                     },

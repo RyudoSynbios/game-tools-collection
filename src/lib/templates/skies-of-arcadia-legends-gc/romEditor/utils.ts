@@ -560,7 +560,7 @@ export function getNames(type: string, relative: string): Resource {
         {
           letterBigEndian: item.letterBigEndian,
           encoding: item.encoding,
-          zeroTerminated: item.zeroTerminated,
+          endCode: item.endCode,
         },
         $dataViewAlt[type],
       );
@@ -622,7 +622,7 @@ function getShopName(offset: number, item: ItemString): string {
     {
       letterBigEndian: item.letterBigEndian,
       encoding: item.encoding,
-      zeroTerminated: item.zeroTerminated,
+      endCode: item.endCode,
     },
     $dataViewAlt["main.dol"],
   );
@@ -733,7 +733,7 @@ export function unpackNjtl(offset: number, dataView: DataView): NjtlFile {
 
   for (let i = 0x0; i < count; i += 0x1) {
     const pointer = getInt(offset + 0x8 + i * 0xc, "uint32", { bigEndian: true }, dataView); // prettier-ignore
-    const name = getString(offset + pointer, 0x10, "uint8", { zeroTerminated: true }, dataView); // prettier-ignore
+    const name = getString(offset + pointer, 0x10, "uint8", { endCode: 0x0 }, dataView); // prettier-ignore
 
     file.textures.push(name);
   }

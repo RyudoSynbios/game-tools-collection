@@ -738,7 +738,7 @@ interface StringOptions {
   bigEndian?: boolean;
   letterBigEndian?: boolean;
   encoding?: StringEncoding;
-  zeroTerminated?: boolean;
+  endCode?: number;
   regex?: string;
   resource?: string;
 }
@@ -764,7 +764,7 @@ export function getString(
       $dataView,
     );
 
-    if (int === 0x0 && options.zeroTerminated) {
+    if (options.endCode !== undefined && options.endCode === int) {
       break;
     }
 
@@ -810,9 +810,9 @@ export function setString(
   for (let i = offset; i < offset + length; i += increment) {
     const char = value[(i - offset) / increment];
 
-    if (char === undefined && options.zeroTerminated) {
+    if (char === undefined && options.endCode !== undefined) {
       // prettier-ignore
-      setInt(i - skip, letterDataType, 0x0, {
+      setInt(i - skip, letterDataType, options.endCode, {
         bigEndian: options.letterBigEndian,
       }, dataViewAltKey);
 
@@ -853,7 +853,7 @@ export function setString(
       });
     }
 
-    if (options.zeroTerminated && int === 0x0) {
+    if (options.endCode !== undefined && options.endCode === int) {
       skip += 0x1;
     } else {
       // prettier-ignore

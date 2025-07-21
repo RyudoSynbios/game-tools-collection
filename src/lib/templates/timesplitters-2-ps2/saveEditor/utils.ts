@@ -287,7 +287,7 @@ export function getProfileNames(): Resource {
       profileCountItem.offset + 0x1 + i * 0x1f,
       0x8,
       "uint8",
-      { zeroTerminated: true },
+      { endCode: 0x0 },
     );
   }
 

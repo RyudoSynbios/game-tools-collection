@@ -76,7 +76,7 @@ const template: GameJson = {
                   type: "variable",
                   dataType: "string",
                   letterDataType: "uint8",
-                  zeroTerminated: true,
+                  endCode: 0x0,
                   disabled: true,
                   test: true,
                 },
@@ -665,7 +665,7 @@ const template: GameJson = {
                               type: "variable",
                               dataType: "string",
                               letterDataType: "uint8",
-                              zeroTerminated: true,
+                              endCode: 0x0,
                               regex: "[ !#$%&()*+\\-.0-9:;<=>?@A-Z\\[\\]_a-z]",
                             },
                             {
@@ -696,7 +696,7 @@ const template: GameJson = {
                               type: "variable",
                               dataType: "string",
                               letterDataType: "uint8",
-                              zeroTerminated: true,
+                              endCode: 0x0,
                               regex: "[ !#$%&()*+\\-.0-9:;<=>?@A-Z\\[\\]_a-z]",
                             },
                             {
@@ -787,7 +787,7 @@ const template: GameJson = {
                                   type: "variable",
                                   dataType: "string",
                                   letterDataType: "uint8",
-                                  zeroTerminated: true,
+                                  endCode: 0x0,
                                   regex:
                                     "[ !#$%&()*+\\-.0-9:;<=>?@A-Z\\[\\]_a-z]",
                                 },

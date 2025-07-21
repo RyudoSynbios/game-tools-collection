@@ -315,7 +315,7 @@ export default class Script {
         this.baseOffset +
         getInt(0xc + i * 0x14, "uint32", { bigEndian: true }, this.dataView);
 
-      const name = getString(0x10 + i * 0x14, 0x10, "uint8", { zeroTerminated: true }, this.dataView); // prettier-ignore
+      const name = getString(0x10 + i * 0x14, 0x10, "uint8", { endCode: 0x0 }, this.dataView); // prettier-ignore
 
       this.events.push({
         offset,
@@ -3107,7 +3107,7 @@ export default class Script {
 
     if (parameter === "assetName") {
       let type = "";
-      const name = getString(offset, 0x10, "uint8", { zeroTerminated: true }, this.dataView); // prettier-ignore
+      const name = getString(offset, 0x10, "uint8", { endCode: 0x0 }, this.dataView); // prettier-ignore
 
       if (name !== "") {
         if (offset < this.endOffset) {

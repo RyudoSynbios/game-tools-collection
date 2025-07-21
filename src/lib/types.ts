@@ -342,7 +342,7 @@ export interface ItemString {
   letterBigEndian?: boolean;
   fallback?: number;
   encoding?: StringEncoding;
-  zeroTerminated?: boolean;
+  endCode?: number;
   regex?: string;
   resource?: string;
   overrideShift?: {
