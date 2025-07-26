@@ -621,6 +621,17 @@
     }
   },
   {
+    "id": "pokemon-red-blue-and-yellow-gb",
+    "name": "Pokémon Red, Blue and Yellow",
+    "consoleId": "game-boy",
+    "tools": {
+      "saveEditor": {
+        "createdAt": "2025-07-26",
+        "regions": ["🇪🇺", "🇺🇸", "🇯🇵", "🇫🇷", "🇩🇪", "🇮🇹", "🇪🇸"]
+      }
+    }
+  },
+  {
     "id": "pokemon-trading-card-game-gbc",
     "name": "Pokémon Trading Card Game",
     "consoleId": "game-boy-color",
