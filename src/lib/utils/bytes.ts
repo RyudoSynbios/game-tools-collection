@@ -172,6 +172,16 @@ export function removePadding(
   return new DataView(uint8Array.buffer);
 }
 
+export function copyInt(
+  offsetSrc: number,
+  offsetDst: number,
+  length = 0x1,
+): void {
+  for (let i = 0x0; i < length; i += 0x1) {
+    setInt(offsetDst + i, "uint8", getInt(offsetSrc + i, "uint8"));
+  }
+}
+
 export function dataTypeToLength(
   dataType: Exclude<DataType, "string">,
 ): number {
