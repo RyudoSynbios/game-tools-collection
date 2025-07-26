@@ -197,8 +197,13 @@
   }
 
   $: {
-    if (item.onTabChange && tabIndex !== previousTabIndex) {
-      getUtils(item.onTabChange.format(tabIndex));
+    if (
+      item.onTabChange &&
+      ((item.id && item.id !== previousId) || tabIndex !== previousTabIndex)
+    ) {
+      getUtils(
+        item.onTabChange.format(tabIndex).replace("%itemId%", `${item.id}`),
+      );
     }
   }
 </script>
