@@ -72,19 +72,12 @@ export function overrideItem(item: Item): Item {
     }
 
     return itemInt;
-  } else if (
-    "id" in item &&
-    (item.id?.match(/item-/) || item.id?.match(/quantity-/))
-  ) {
+  } else if ("id" in item && item.id?.match(/item-/)) {
     const itemInt = item as ItemInt;
 
-    const [index] = item.id.splitInt();
+    const [index, shift] = item.id.splitInt();
 
-    let offset = itemInt.offset - 0x11d - index * 0x2;
-
-    if (item.id.match(/quantity-/)) {
-      offset -= 0x1;
-    }
+    const offset = itemInt.offset - 0x11d - index * 0x2 - shift;
 
     const int = getInt(offset, "uint8");
 
@@ -97,10 +90,7 @@ export function overrideItem(item: Item): Item {
 }
 
 export function overrideGetInt(item: Item): [boolean, number | undefined] {
-  if (
-    "id" in item &&
-    (item.id?.match(/item-/) || item.id?.match(/quantity-/))
-  ) {
+  if ("id" in item && item.id?.match(/item-/)) {
     const itemInt = item as ItemInt;
 
     if (itemInt.disabled) {

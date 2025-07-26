@@ -332,8 +332,7 @@ export function parseContainer(
   if (item.instanceType === "tabs" && item.prependSubinstance) {
     item.prependSubinstance.forEach((subitem: any) => {
       parsedItem.items.push({
-        name: subitem.name,
-        flex: subitem.flex,
+        ...subitem,
         items: subitem.items
           ? subitem.items.reduce((results: any, subitem: any) => {
               const parsedItem = parseItem(subitem, shifts, parents, options);
@@ -415,8 +414,7 @@ export function parseContainer(
   if (item.instanceType === "tabs" && item.appendSubinstance) {
     item.appendSubinstance.forEach((subitem: any) => {
       parsedItem.items.push({
-        name: subitem.name,
-        flex: subitem.flex,
+        ...subitem,
         items: subitem.items
           ? subitem.items.reduce((results: any, subitem: any) => {
               const parsedItem = parseItem(subitem, shifts, parents, options);

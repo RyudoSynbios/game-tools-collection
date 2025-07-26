@@ -517,7 +517,7 @@ const template: GameJson = {
                               flex: true,
                               items: [
                                 {
-                                  id: "book-%index%",
+                                  id: "skill-%index%-0",
                                   name: "Book",
                                   offset: 0xf135,
                                   type: "variable",
@@ -525,7 +525,7 @@ const template: GameJson = {
                                   resource: "books",
                                 },
                                 {
-                                  id: "skill-%index%",
+                                  id: "skill-%index%-1",
                                   name: "Skill",
                                   offset: 0xf136,
                                   type: "variable",

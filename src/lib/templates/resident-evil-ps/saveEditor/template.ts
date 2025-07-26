@@ -272,7 +272,7 @@ const template: GameJson = {
                       noMargin: true,
                       items: [
                         {
-                          id: "item-%index%",
+                          id: "item-%index%-0",
                           name: "Item %d",
                           offset: 0x324,
                           type: "variable",
@@ -282,7 +282,7 @@ const template: GameJson = {
                           autocomplete: true,
                         },
                         {
-                          id: "quantity-%index%",
+                          id: "item-%index%-1",
                           name: "Quantity",
                           offset: 0x325,
                           type: "variable",

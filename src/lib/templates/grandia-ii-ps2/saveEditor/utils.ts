@@ -47,16 +47,12 @@ export function overrideParseContainerItemsShifts(
 }
 
 export function overrideItem(item: Item): Item {
-  if ("id" in item && (item.id?.match(/book-/) || item.id?.match(/skill-/))) {
+  if ("id" in item && item.id?.match(/skill-/)) {
     const itemInt = item as ItemInt;
 
-    const [index] = item.id.splitInt();
+    const [index, shift] = item.id.splitInt();
 
-    let offset = itemInt.offset - 0x1 - index * 0x4;
-
-    if (item.id.match(/skill-/)) {
-      offset -= 0x1;
-    }
+    const offset = itemInt.offset - 0x1 - index * 0x4 - shift;
 
     const int = getInt(offset, "uint8");
 
@@ -98,10 +94,7 @@ export function overrideGetInt(item: Item): [boolean, number | undefined] {
     const int = getFormation(itemInt.offset, index);
 
     return [true, int];
-  } else if (
-    "id" in item &&
-    (item.id?.match(/book-/) || item.id?.match(/skill-/))
-  ) {
+  } else if ("id" in item && item.id?.match(/skill-/)) {
     const itemInt = item as ItemInt;
 
     if (itemInt.disabled) {
