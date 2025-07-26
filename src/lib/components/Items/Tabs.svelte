@@ -3,7 +3,13 @@
 
   import AccessTimeIcon from "$lib/assets/AccessTime.svelte";
   import Content from "$lib/components/Items/Content.svelte";
-  import { debugOptions, gameJson, gameUtils, isDebug } from "$lib/stores";
+  import {
+    dataView,
+    debugOptions,
+    gameJson,
+    gameUtils,
+    isDebug,
+  } from "$lib/stores";
   import {
     generateIdFromArray,
     getUtils,
@@ -118,8 +124,12 @@
     }
   }
 
-  if (utilsExists("overrideItem")) {
-    item = $gameUtils.overrideItem(item);
+  $: {
+    $dataView;
+
+    if (utilsExists("overrideItem")) {
+      item = $gameUtils.overrideItem(item);
+    }
   }
 
   $: {
