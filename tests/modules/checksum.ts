@@ -1,17 +1,13 @@
+import test, { type Page } from "@playwright/test";
+
 export async function expectChecksum(
+  page: Page,
   expectedValue: string,
   inputIndex: number,
 ): Promise<void> {
-  await page.waitForSelector(".gtc-tool-checksums");
+  await page.locator(".gtc-tool-checksums").click();
 
-  const checksumButtonEl = await page.$(".gtc-tool-checksums");
+  const checksum = page.locator("input[data-checksum=true]").nth(inputIndex);
 
-  await checksumButtonEl?.click();
-
-  const inputsEl = await page.$$("input[data-checksum=true]");
-  const inputEl = inputsEl[inputIndex];
-
-  const checksum = await page.evaluate((el) => el.value, inputEl);
-
-  expect(checksum).toBe(expectedValue);
+  test.expect(checksum).toHaveValue(expectedValue);
 }

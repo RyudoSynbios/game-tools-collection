@@ -1,16 +1,25 @@
-import { defaultTests, ejectFile, initPage, snippet } from "../";
+import test from "@playwright/test";
 
-const game = "lylat-wars-n64";
+import {
+  defaultTests,
+  ejectFile,
+  extractGameName,
+  initPage,
+  snippet,
+  type Test,
+} from "../";
 
-beforeAll(async () => initPage(`${game}/save-editor`));
+const game = extractGameName(import.meta.url);
 
-beforeEach(async () => ejectFile());
+test.beforeAll(async ({ browser }) => initPage(browser, `${game}/save-editor`));
 
-describe(game, () => {
+test.beforeEach(async () => ejectFile());
+
+test.describe(game, () => {
   defaultTests(game);
 
   // prettier-ignore
-  test.each([
+  const tests: Test[] = [
     ["should load a standard save (Europe)"       ,      "europe.eep", ["r|europe"   , "s|2", "c|0x950a", "i|PAS", "w|QAS", "c|0x954a"]],
     ["should load a standard save (USA)"          ,         "usa.eep", ["r|usa"      , "s|2", "c|0x95c2", "i|PAS", "w|QAS", "c|0x9582"]],
     ["should load a standard save (USA) (Rev 1)"  ,    "usa-rev1.eep", ["r|usa"      , "s|2", "c|0x95c2", "i|PAS", "w|QAS", "c|0x9582"]],
@@ -23,7 +32,11 @@ describe(game, () => {
     ["should load a SRM save (Japan)"             ,       "japan.srm", ["r|japan"    , "s|2", "c|0x958d", "i|PAS", "w|QAS", "c|0x95cd"]],
     ["should load a SRM save (Japan) (Rev 1)"     ,  "japan-rev1.srm", ["r|japan"    , "s|2", "c|0x958d", "i|PAS", "w|QAS", "c|0x95cd"]],
     ["should load a SRM save (Australia)"         ,   "australia.srm", ["r|australia", "s|2", "c|0x950a", "i|PAS", "w|QAS", "c|0x954a"]],
-  ])("%s", async (...args) =>
-    await snippet(`${game}/${args[1]}`, args[2]),
-  );
+  ];
+
+  tests.forEach(([title, saveFilePath, args]) => {
+    test(title, async () => {
+      await snippet(`${game}/${saveFilePath}`, args);
+    });
+  });
 });

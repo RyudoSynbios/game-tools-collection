@@ -1,20 +1,33 @@
-import { defaultTests, ejectFile, initPage, snippet } from "../";
+import test from "@playwright/test";
 
-const game = "skies-of-arcadia-legends-gc";
+import {
+  defaultTests,
+  ejectFile,
+  extractGameName,
+  initPage,
+  snippet,
+  type Test,
+} from "../";
 
-beforeAll(async () => initPage(`${game}/save-editor`));
+const game = extractGameName(import.meta.url);
 
-beforeEach(async () => ejectFile());
+test.beforeAll(async ({ browser }) => initPage(browser, `${game}/save-editor`));
 
-describe(game, () => {
+test.beforeEach(async () => ejectFile());
+
+test.describe(game, () => {
   defaultTests(game);
 
   // prettier-ignore
-  test.each([
+  const tests: Test[] = [
     ["should load a standard save (Europe)", "europe.gci", ["c|0x848bd05c", "i|37", "w|38", "c|0x848bd05f"]],
     ["should load a standard save (USA)"   ,    "usa.gci", ["c|0xab7a7687", "i|38", "w|39", "c|0xab7a7686"]],
     ["should load a standard save (Japan)" ,  "japan.gci", ["c|0x4bb75684", "i|22", "w|23", "c|0x4bb75685"]],
-  ])("%s", async (...args) =>
-    await snippet(`${game}/${args[1]}`, args[2]),
-  );
+  ];
+
+  tests.forEach(([title, saveFilePath, args]) => {
+    test(title, async () => {
+      await snippet(`${game}/${saveFilePath}`, args);
+    });
+  });
 });

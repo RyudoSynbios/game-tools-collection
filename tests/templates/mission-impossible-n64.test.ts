@@ -1,16 +1,25 @@
-import { defaultTests, ejectFile, initPage, snippet } from "../";
+import test from "@playwright/test";
 
-const game = "mission-impossible-n64";
+import {
+  defaultTests,
+  ejectFile,
+  extractGameName,
+  initPage,
+  snippet,
+  type Test,
+} from "../";
 
-beforeAll(async () => initPage(`${game}/save-editor`));
+const game = extractGameName(import.meta.url);
 
-beforeEach(async () => ejectFile());
+test.beforeAll(async ({ browser }) => initPage(browser, `${game}/save-editor`));
 
-describe(game, () => {
+test.beforeEach(async () => ejectFile());
+
+test.describe(game, () => {
   defaultTests(game);
 
   // prettier-ignore
-  test.each([
+  const tests: Test[] = [
     ["should load an empty standard save"          ,         "empty.eep", ['t|[]']],
     ["should load a deleted standard save"         ,       "deleted.eep", ['t|[]']],
     ["should load a deleted standard save (Slot 3)", "deleted-slot3.eep", ['t|["Slot 3"]', "s|3$1", "c|0x672afd31", "s|2$2", "i|14", "w|12", "c|0xded126d9"]],
@@ -28,7 +37,11 @@ describe(game, () => {
     ["should load a SRM save (Italy)"              ,         "italy.srm", ['t|["Slot 4"]', "s|4$1", "c|0xed569852", "s|2$2", "i|6" , "w|8" , "c|0x76579748"]],
     ["should load a SRM save (Spain)"              ,         "spain.srm", ['t|["Slot 3"]', "s|3$1", "c|0x672afd31", "s|2$2", "i|14", "w|12", "c|0xded126d9"]],
     ["should load a SRM save (Spain) (Rev 1)"      ,    "spain-rev1.srm", ['t|["Slot 1"]', "s|1$1", "c|0xfc2bf22b", "s|2$2", "i|0" , "w|2" , "c|0x45d029c3"]],
-  ])("%s", async (...args) =>
-    await snippet(`${game}/${args[1]}`, args[2]),
-  );
+  ];
+
+  tests.forEach(([title, saveFilePath, args]) => {
+    test(title, async () => {
+      await snippet(`${game}/${saveFilePath}`, args);
+    });
+  });
 });

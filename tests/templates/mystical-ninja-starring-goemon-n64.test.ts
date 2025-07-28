@@ -1,26 +1,30 @@
+import test from "@playwright/test";
+
 import {
   defaultTests,
   ejectFile,
+  extractGameName,
   initPage,
   saveShouldBeRejected,
   snippet,
+  type Test,
 } from "../";
 
-const game = "mystical-ninja-starring-goemon-n64";
+const game = extractGameName(import.meta.url);
 
-beforeAll(async () => initPage(`${game}/save-editor`));
+test.beforeAll(async ({ browser }) => initPage(browser, `${game}/save-editor`));
 
-beforeEach(async () => ejectFile());
+test.beforeEach(async () => ejectFile());
 
-describe(game, () => {
+test.describe(game, () => {
   defaultTests(game);
 
-  it("should not load a wrong DexDrive save", async () => {
+  test("should not load a wrong DexDrive save", async () => {
     await saveShouldBeRejected(`${game}/bad.n64`);
   });
 
   // prettier-ignore
-  test.each([
+  const tests: Test[] = [
     ["should load an empty standard save"        ,   "empty.mpk", [           't|["Option"]']],
     ["should load a deleted standard save"       , "deleted.mpk", [           't|["Option"]']],
     ["should load a filled standard save (USA)"  ,  "filled.mpk", ["r|usa"  , 't|["Slot 1","Option"]'         , "s|1$1", "c|0x6a0fa226", "i|94" , "w|95" , "c|0x86095158"]],
@@ -34,7 +38,11 @@ describe(game, () => {
     ["should load a DexDrive save (Europe)"      ,  "europe.n64", [           't|["Slot 2","Option"]'         , "s|2$1", "c|0x9550f435", "i|95" , "w|96" , "c|0x6751795d"]],
     ["should load a DexDrive save (USA)"         ,     "usa.n64", [           't|["Slot 3","Option"]'         , "s|3$1", "c|0x60b6b52a", "i|99" , "w|100", "c|0xed24563e"]],
     ["should load a DexDrive save (Japan)"       ,   "japan.n64", [           't|["Slot 1","Option"]'         , "s|1$1", "c|0xce8ec1d7", "i|100", "w|101", "c|0x228832a9"]],
-  ])("%s", async (...args) =>
-    await snippet(`${game}/${args[1]}`, args[2]),
-  );
+  ];
+
+  tests.forEach(([title, saveFilePath, args]) => {
+    test(title, async () => {
+      await snippet(`${game}/${saveFilePath}`, args);
+    });
+  });
 });

@@ -1,20 +1,33 @@
-import { defaultTests, ejectFile, initPage, snippet } from "../";
+import test from "@playwright/test";
 
-const game = "wario-land-super-mario-land-3-gb";
+import {
+  defaultTests,
+  ejectFile,
+  extractGameName,
+  initPage,
+  snippet,
+  type Test,
+} from "../";
 
-beforeAll(async () => initPage(`${game}/save-editor`));
+const game = extractGameName(import.meta.url);
 
-beforeEach(async () => ejectFile());
+test.beforeAll(async ({ browser }) => initPage(browser, `${game}/save-editor`));
 
-describe(game, () => {
+test.beforeEach(async () => ejectFile());
+
+test.describe(game, () => {
   defaultTests(game);
 
   // prettier-ignore
-  test.each([
+  const tests: Test[] = [
     ["should load an empty standard save" ,   "empty.sav", ['t|[]']],
     ["should load a deleted standard save", "deleted.sav", ['t|[]']],
     ["should load a standard save (World)",   "world.sav", ['t|["Slot 3"]', "c|0x75", "i|20$1", "i|38$2", "w|21$1", "c|0x76"]],
-  ])("%s", async (...args) =>
-    await snippet(`${game}/${args[1]}`, args[2]),
-  );
+  ];
+
+  tests.forEach(([title, saveFilePath, args]) => {
+    test(title, async () => {
+      await snippet(`${game}/${saveFilePath}`, args);
+    });
+  });
 });

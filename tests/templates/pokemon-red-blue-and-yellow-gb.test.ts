@@ -1,26 +1,30 @@
+import test from "@playwright/test";
+
 import {
   defaultTests,
   ejectFile,
+  extractGameName,
   initPage,
   saveShouldBeRejected,
   snippet,
+  type Test,
 } from "../";
 
-const game = "pokemon-red-blue-and-yellow-gb";
+const game = extractGameName(import.meta.url);
 
-beforeAll(async () => initPage(`${game}/save-editor`));
+test.beforeAll(async ({ browser }) => initPage(browser, `${game}/save-editor`));
 
-beforeEach(async () => ejectFile());
+test.beforeEach(async () => ejectFile());
 
-describe(game, () => {
+test.describe(game, () => {
   defaultTests(game);
 
-  it("should not load an empty standard save", async () => {
+  test("should not load an empty standard save", async () => {
     await saveShouldBeRejected(`${game}/empty.sav`);
   });
 
   // prettier-ignore
-  test.each([
+  const tests: Test[] = [
     ["should load a standard Blue Version save (Europe, USA)"    ,    "blue-europeusa.sav", ["c|0x5e$1", "i|PASS"   , "w|QASS"  , "c|0x0d$1", "s|2$1", "s|1$2", "s|1$3", "i|SQUIRTLE", "s|4$2", "s|2$3", "i|RATTATA"  , "s|8$2" , "s|2$3", "i|PIDGEY" , "s|3$1", "i|PIDGEY" ]],
     ["should load a standard Blue Version save (Japan)"          ,        "blue-japan.sav", ["c|0x6a$1", "i|ごうかく", "w|ざうかく", "c|0x19$1", "s|2$1", "s|1$2", "s|2$3", "i|コラッタ" , "s|2$2", "s|2$3", "i|ポッポ"    , "s|6$2" , "s|2$3", "i|ポッポ"  , "s|3$1", "i|"       ]],
     ["should load a standard Blue Version save (France)"         ,       "blue-france.sav", ["c|0xd6$1", "i|PASS"   , "w|QASS"  , "c|0x85$1", "s|2$1", "s|1$2", "s|2$3", "i|RATTATA" , "s|2$2", "s|2$3", "i|ROUCOOL"  , "s|7$2" , "s|2$3", "i|ROUCOOL", "s|3$1", "i|"       ]],
@@ -45,7 +49,11 @@ describe(game, () => {
     ["should load a standard Yellow Version save (Germany)"      ,    "yellow-germany.sav", ["c|0x3c$1", "i|PASS"   , "w|QASS"  , "c|0xeb$1", "s|2$1", "s|1$2", "s|2$3", "i|TAUBSI"  , "s|4$2", "s|2$3", "i|RATTFRATZ", "s|12$2", "s|2$3", "i|TAUBSI" , "s|3$1", "i|"       ]],
     ["should load a standard Yellow Version save (Italy)"        ,      "yellow-italy.sav", ["c|0x0e$1", "i|PASS"   , "w|QASS"  , "c|0xbd$1", "s|2$1", "s|1$2", "s|2$3", "i|PIDGEY"  , "s|4$2", "s|2$3", "i|PIDGEY"   , "s|11$2", "s|2$3", "i|PIDGEY" , "s|3$1", "i|"       ]],
     ["should load a standard Yellow Version save (Spain)"        ,      "yellow-spain.sav", ["c|0x5a$1", "i|PASS"   , "w|QASS"  , "c|0x09$1", "s|2$1", "s|1$2", "s|2$3", "i|RATTATA" , "s|2$2", "s|2$3", "i|PIDGEY"   , "s|8$2" , "s|2$3", "i|PIDGEY" , "s|3$1", "i|"       ]],
-  ])("%s", async (...args) =>
-    await snippet(`${game}/${args[1]}`, args[2]),
-  );
+  ];
+
+  tests.forEach(([title, saveFilePath, args]) => {
+    test(title, async () => {
+      await snippet(`${game}/${saveFilePath}`, args);
+    });
+  });
 });

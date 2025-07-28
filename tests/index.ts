@@ -1,11 +1,23 @@
 import fs from "fs";
+import { dirname } from "path";
+import { fileURLToPath } from "url";
+import test, { Browser, type Page } from "@playwright/test";
 
 import { expectChecksum } from "./modules/checksum";
 import { expectInput, writeInput } from "./modules/input";
 import { selectRegion } from "./modules/region";
 import { expectTabs, selectTab } from "./modules/tabs";
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
 const path = `${__dirname}/saves`;
+
+export function extractGameName(filePath: string): string {
+  const fileName = filePath.split("/").pop();
+
+  return fileName?.replace(".test.ts", "") || "";
+}
 
 export function getRandomNumber(min: number, max: number): number {
   return Math.round(Math.random() * (max - min) + min);
@@ -14,24 +26,45 @@ export function getRandomNumber(min: number, max: number): number {
 export function getRandomSave(exclude: string): string {
   const games = fs
     .readdirSync(path, { withFileTypes: true })
-    .filter((folder) => folder.isDirectory() && folder.name !== exclude);
+    .filter((dirent) => dirent.isDirectory() && dirent.name !== exclude);
   const game = games[getRandomNumber(0, games.length - 1)];
 
-  const saves = fs.readdirSync(`${path}/${game.name}`);
+  const saves = fs
+    .readdirSync(`${path}/${game.name}`, {
+      recursive: true,
+      withFileTypes: true,
+    })
+    .filter((dirent) => dirent.isFile())
+    .map((file) => {
+      const split = file.parentPath.split("/");
+
+      if (split.at(-2) === game.name) {
+        return `${split.at(-1)}/${file.name}`;
+      }
+
+      return file.name;
+    });
+
   const save = saves[getRandomNumber(0, saves.length - 1)];
 
   return `${game.name}/${save}`;
 }
 
-export async function initPage(url: string): Promise<void> {
-  await page.goto(`${URL}`, { waitUntil: "domcontentloaded" });
+let page: Page;
 
-  await page.evaluateOnNewDocument(() => {
+export async function initPage(browser: Browser, url: string): Promise<void> {
+  if (!page) {
+    page = await browser.newPage();
+  }
+
+  await page.goto("/", { waitUntil: "domcontentloaded" });
+
+  await page.addInitScript(() => {
     localStorage.setItem("debug", "true");
   });
 
-  await page.goto(`${URL}/${url}`, {
-    waitUntil: "networkidle0",
+  await page.goto(url, {
+    waitUntil: "networkidle",
   });
 }
 
@@ -39,7 +72,7 @@ export async function ejectFile(): Promise<void> {
   const contentEl = await page.$(".gtc-tool > .gtc-content");
 
   if (contentEl) {
-    await page.click(".gtc-tool-eject");
+    await page.locator(".gtc-tool-eject").click();
   }
 }
 
@@ -48,15 +81,11 @@ export async function saveShouldBeRejected(
 ): Promise<void> {
   const isFileExists = fs.existsSync(`${path}/${saveFilePath}`);
 
-  if (!isFileExists) {
-    console.log(`File doesn't exists: "${`${path}/${saveFilePath}`}"`);
-  }
+  test.expect(isFileExists).toBeTruthy();
 
-  expect(isFileExists).toBeTruthy();
-
-  const inputFileEl = await page.$('input[type="file"]');
-
-  await inputFileEl?.uploadFile(`${path}/${saveFilePath}`);
+  await page
+    .locator('input[type="file"]')
+    .setInputFiles(`${path}/${saveFilePath}`);
 
   const dropzoneErrorEl = await page.$(".gtc-dropzone-error");
 
@@ -64,52 +93,54 @@ export async function saveShouldBeRejected(
     console.log(`Tested file: "${`${path}/${saveFilePath}`}"`);
   }
 
-  expect(dropzoneErrorEl).toBeTruthy();
+  test.expect(dropzoneErrorEl).toBeTruthy();
 }
 
 export function defaultTests(game: string): void {
-  it("should not load an empty file", async () => {
+  test("should not load an empty file", async () => {
     await saveShouldBeRejected("common/empty");
   });
 
-  it("should not load a wrong save", async () => {
+  test("should not load a wrong save", async () => {
     await saveShouldBeRejected(getRandomSave(game));
   });
 
   if (game.match(/-dc$/)) {
-    it("should not load an empty standard save", async () => {
+    test("should not load an empty standard save", async () => {
       await saveShouldBeRejected("common/dreamcast/empty.bin");
     });
 
-    it("should not load a deleted standard save", async () => {
+    test("should not load a deleted standard save", async () => {
       await saveShouldBeRejected(`${game}/deleted.bin`);
     });
   } else if (game.match(/-gba$/)) {
-    it("should not load a wrong GameShark save", async () => {
+    test("should not load a wrong GameShark save", async () => {
       await saveShouldBeRejected(`${game}/bad.sps`);
     });
   } else if (game.match(/-ds$/)) {
-    it("should not load a wrong Action Replay Max DS save", async () => {
+    test("should not load a wrong Action Replay Max DS save", async () => {
       await saveShouldBeRejected(`${game}/bad.duc`);
     });
   } else if (game.match(/-ps$/)) {
-    it("should not load an empty standard save", async () => {
+    test("should not load an empty standard save", async () => {
       await saveShouldBeRejected("common/playstation/empty.mcr");
     });
 
-    it("should not load a wrong DexDrive save", async () => {
+    test("should not load a wrong DexDrive save", async () => {
       await saveShouldBeRejected(`${game}/bad.gme`);
     });
   } else if (game.match(/-ps2$/)) {
-    it("should not load an empty standard save", async () => {
+    test("should not load an empty standard save", async () => {
       await saveShouldBeRejected("common/playstation2/empty.ps2");
     });
 
-    it("should not load an unformatted standard save", async () => {
+    test("should not load an unformatted standard save", async () => {
       await saveShouldBeRejected("common/playstation2/unformated.ps2");
     });
   }
 }
+
+export type Test = [string, string, string[]];
 
 export async function snippet(
   saveFilePath: string,
@@ -117,54 +148,54 @@ export async function snippet(
 ): Promise<void> {
   const isFileExists = fs.existsSync(`${path}/${saveFilePath}`);
 
-  expect(isFileExists).toBeTruthy();
+  test.expect(isFileExists).toBeTruthy();
 
-  const inputFileEl = await page.$('input[type="file"]');
-
-  await inputFileEl?.uploadFile(`${path}/${saveFilePath}`);
+  await page
+    .locator('input[type="file"]')
+    .setInputFiles(`${path}/${saveFilePath}`);
 
   if (actions !== null) {
     await actions.reduce(async (previousAction, action) => {
       await previousAction;
 
-      expect(action).toContain("|");
+      test.expect(action).toContain("|");
 
       const [type, value, index] = action.split(/[|$]/);
 
       const elIndex = index ? parseInt(index) - 1 : 0;
 
       if (!["c", "i", "n", "r", "s", "t", "w"].includes(type)) {
-        expect(false).toBeTruthy();
+        test.expect(false).toBeTruthy();
 
         return;
       }
 
       if (type === "c") {
-        await expectChecksum(value, elIndex);
+        await expectChecksum(page, value, elIndex);
       }
 
       if (type === "i") {
-        await expectInput(value, elIndex);
+        await expectInput(page, value, elIndex);
       }
 
       if (type === "n") {
-        await expectInput(value, elIndex, false);
+        await expectInput(page, value, elIndex, false);
       }
 
       if (type === "r") {
-        await selectRegion(value);
+        await selectRegion(page, value);
       }
 
       if (type === "s") {
-        await selectTab(value, elIndex);
+        await selectTab(page, value, elIndex);
       }
 
       if (type === "t") {
-        await expectTabs(value, elIndex);
+        await expectTabs(page, value, elIndex);
       }
 
       if (type === "w") {
-        await writeInput(value, elIndex);
+        await writeInput(page, value, elIndex);
       }
     }, Promise.resolve());
   }

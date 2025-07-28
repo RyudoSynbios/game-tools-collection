@@ -1,16 +1,25 @@
-import { defaultTests, ejectFile, initPage, snippet } from "../";
+import test from "@playwright/test";
 
-const game = "rayman-ps";
+import {
+  defaultTests,
+  ejectFile,
+  extractGameName,
+  initPage,
+  snippet,
+  type Test,
+} from "../";
 
-beforeAll(async () => initPage(`${game}/save-editor`));
+const game = extractGameName(import.meta.url);
 
-beforeEach(async () => ejectFile());
+test.beforeAll(async ({ browser }) => initPage(browser, `${game}/save-editor`));
 
-describe(game, () => {
+test.beforeEach(async () => ejectFile());
+
+test.describe(game, () => {
   defaultTests(game);
 
   // prettier-ignore
-  test.each([
+  const tests: Test[] = [
     ["should load a filled standard save (Europe)" ,        "filled.mcr", ["r|europe", 't|["Slot 1","Slot 2"]', "s|2", "i|PAS"]],
     ["should load a filled standard save (Japan)"  ,        "filled.mcr", ["r|japan" , 't|["Slot 1"]'         , "s|1", "i|PAS"]],
     ["should load a deleted standard save"         ,       "deleted.mcr", [            't|[]']],
@@ -27,7 +36,11 @@ describe(game, () => {
     ["should load a DexDrive save (Europe)"        ,        "europe.gme", [            't|["Slot 1"]'         , "s|1", "i|PAS"]],
     ["should load a DexDrive save (USA)"           ,           "usa.gme", [            't|["Slot 1"]'         , "s|1", "i|PAS"]],
     ["should load a DexDrive save (Japan)"         ,         "japan.gme", [            't|["Slot 1"]'         , "s|1", "i|PAS"]],
-  ])("%s", async (...args) =>
-    await snippet(`${game}/${args[1]}`, args[2]),
-  );
+  ];
+
+  tests.forEach(([title, saveFilePath, args]) => {
+    test(title, async () => {
+      await snippet(`${game}/${saveFilePath}`, args);
+    });
+  });
 });

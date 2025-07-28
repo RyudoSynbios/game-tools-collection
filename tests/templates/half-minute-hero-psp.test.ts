@@ -1,21 +1,34 @@
-import { defaultTests, ejectFile, initPage, snippet } from "../";
+import test from "@playwright/test";
 
-const game = "half-minute-hero-psp";
+import {
+  defaultTests,
+  ejectFile,
+  extractGameName,
+  initPage,
+  snippet,
+  type Test,
+} from "../";
 
-beforeAll(async () => initPage(`${game}/save-editor`));
+const game = extractGameName(import.meta.url);
 
-beforeEach(async () => ejectFile());
+test.beforeAll(async ({ browser }) => initPage(browser, `${game}/save-editor`));
 
-describe(game, () => {
+test.beforeEach(async () => ejectFile());
+
+test.describe(game, () => {
   defaultTests(game);
 
   // prettier-ignore
-  test.each([
+  const tests: Test[] = [
     ["should not load a standard save with bad region",    "usa.bin", ["r|japan" , "n|PASS"]],
     ["should load a standard save (Europe)"           , "europe.bin", ["r|europe", "i|PASS"]],
     ["should load a standard save (USA)"              ,    "usa.bin", ["r|usa"   , "i|PASS"]],
     ["should load a standard save (Japan)"            ,  "japan.bin", ["r|japan" , "i|ＰＡＳＳ"]],
-  ])("%s", async (...args) =>
-    await snippet(`${game}/${args[1]}`, args[2]),
-  );
+  ];
+
+  tests.forEach(([title, saveFilePath, args]) => {
+    test(title, async () => {
+      await snippet(`${game}/${saveFilePath}`, args);
+    });
+  });
 });

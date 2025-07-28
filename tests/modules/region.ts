@@ -1,15 +1,15 @@
-export async function selectRegion(region: string): Promise<void> {
-  await page.waitForSelector(".gtc-regionmodal > ul");
+import test, { type Page } from "@playwright/test";
 
-  const regionsEl = await page.$$eval(".gtc-regionmodal ul li", (els) =>
-    els.map((el) => el.textContent?.trim()),
-  );
+export async function selectRegion(page: Page, region: string): Promise<void> {
+  await page.waitForSelector(".gtc-regionmodal ul");
 
-  const index = regionsEl.findIndex(
-    (item) => item?.toLocaleLowerCase() === region,
-  );
+  const lis = page.locator(".gtc-regionmodal ul li");
 
-  expect(index).toBeGreaterThan(-1);
+  const regionsTexts = await lis.allInnerTexts();
 
-  await page.click(`.gtc-regionmodal ul li:nth-child(${index + 1})`);
+  const index = regionsTexts.findIndex((item) => item.toLowerCase() === region);
+
+  test.expect(index).toBeGreaterThan(-1);
+
+  await lis.nth(index).click();
 }

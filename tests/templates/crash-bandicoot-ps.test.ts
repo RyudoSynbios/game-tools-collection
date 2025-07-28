@@ -1,16 +1,25 @@
-import { defaultTests, ejectFile, initPage, snippet } from "../";
+import test from "@playwright/test";
 
-const game = "crash-bandicoot-ps";
+import {
+  defaultTests,
+  ejectFile,
+  extractGameName,
+  initPage,
+  snippet,
+  type Test,
+} from "../";
 
-beforeAll(async () => initPage(`${game}/save-editor`));
+const game = extractGameName(import.meta.url);
 
-beforeEach(async () => ejectFile());
+test.beforeAll(async ({ browser }) => initPage(browser, `${game}/save-editor`));
 
-describe(game, () => {
+test.beforeEach(async () => ejectFile());
+
+test.describe(game, () => {
   defaultTests(game);
 
   // prettier-ignore
-  test.each([
+  const tests: Test[] = [
     ["should load a filled standard save (Europe, Australia)",          "filled.mcr", ["r|australia", 't|["Slot 1"]'         , "s|2$1", "c|0x115466eb", "i|2", "w|3", "c|0x116466eb"]],
     ["should load a filled standard save (Japan)"            ,          "filled.mcr", ["r|japan"    , 't|["Slot 1"]'         , "s|2$1", "c|0x1144870a", "i|1", "w|2", "c|0x1154870a"]],
     ["should load a deleted standard save"                   ,         "deleted.mcr", [               't|[]']],
@@ -27,7 +36,11 @@ describe(game, () => {
     ["should load a DexDrive save (Europe, Australia)"       , "europeaustralia.gme", [               't|["Slot 1"]'         , "s|2$1", "c|0x1144870a", "i|1", "w|2", "c|0x1154870a"]],
     ["should load a DexDrive save (USA)"                     ,             "usa.gme", [               't|["Slot 1","Slot 2"]', "s|2$1", "c|0x115466eb", "i|2", "w|3", "c|0x116466eb"]],
     ["should load a DexDrive save (Japan)"                   ,           "japan.gme", [               't|["Slot 1"]'         , "s|2$1", "c|0x1144870a", "i|1", "w|2", "c|0x1154870a"]],
-  ])("%s", async (...args) =>
-    await snippet(`${game}/${args[1]}`, args[2]),
-  );
+  ];
+
+  tests.forEach(([title, saveFilePath, args]) => {
+    test(title, async () => {
+      await snippet(`${game}/${saveFilePath}`, args);
+    });
+  });
 });

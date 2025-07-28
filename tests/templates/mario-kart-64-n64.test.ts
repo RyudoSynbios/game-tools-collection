@@ -1,16 +1,25 @@
-import { defaultTests, ejectFile, initPage, snippet } from "../";
+import test from "@playwright/test";
 
-const game = "mario-kart-64-n64";
+import {
+  defaultTests,
+  ejectFile,
+  extractGameName,
+  initPage,
+  snippet,
+  type Test,
+} from "../";
 
-beforeAll(async () => initPage(`${game}/save-editor`));
+const game = extractGameName(import.meta.url);
 
-beforeEach(async () => ejectFile());
+test.beforeAll(async ({ browser }) => initPage(browser, `${game}/save-editor`));
 
-describe(game, () => {
+test.beforeEach(async () => ejectFile());
+
+test.describe(game, () => {
   defaultTests(game);
 
   // prettier-ignore
-  test.each([
+  const tests: Test[] = [
     ["should load a standard save (Europe)"        ,      "europe.eep", ["s|2", "c|0xce", "i|33$1", "i|180$2", "w|190$2", "c|0xcf"]],
     ["should load a standard save (Europe) (Rev 1)", "europe-rev1.eep", ["s|2", "c|0xd7", "i|35$1", "i|590$2", "w|600$2", "c|0xd8"]],
     ["should load a standard save (USA)"           ,         "usa.eep", ["s|2", "c|0x3e", "i|13$1", "i|750$2", "w|760$2", "c|0x3f"]],
@@ -21,7 +30,11 @@ describe(game, () => {
     ["should load a SRM save (USA)"                ,         "usa.srm", ["s|2", "c|0xda", "i|06$1", "i|990$2", "w|980$2", "c|0xd9"]],
     ["should load a SRM save (Japan)"              ,       "japan.srm", ["s|2", "c|0x2b", "i|05$1", "i|950$2", "w|960$2", "c|0x2c"]],
     ["should load a SRM save (Japan) (Rev 1)"      ,  "japan-rev1.srm", ["s|2", "c|0xec", "i|02$1", "i|360$2", "w|370$2", "c|0xed"]],
-  ])("%s", async (...args) =>
-    await snippet(`${game}/${args[1]}`, args[2]),
-  );
+  ];
+
+  tests.forEach(([title, saveFilePath, args]) => {
+    test(title, async () => {
+      await snippet(`${game}/${saveFilePath}`, args);
+    });
+  });
 });

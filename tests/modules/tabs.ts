@@ -1,24 +1,29 @@
+import test, { type Page } from "@playwright/test";
+
 export async function expectTabs(
+  page: Page,
   expectedValue: string,
   inputIndex: number,
 ): Promise<void> {
   await page.waitForSelector(".gtc-tabs > ul");
 
-  const ulsEl = await page.$$(".gtc-tabs > ul");
-  const ulEl = ulsEl[inputIndex];
+  const ul = page.locator(".gtc-tabs > ul").nth(inputIndex);
+  const tabs = ul.locator(".gtc-tab:not(.gtc-tab-disabled)");
 
-  const tabs = await ulEl?.$$eval(".gtc-tab:not(.gtc-tab-disabled)", (els) =>
-    els.map((el) => el.textContent?.trim()),
-  );
+  const tabsTexts = await tabs.allInnerTexts();
 
-  expect(JSON.stringify(tabs)).toBe(expectedValue);
+  test.expect(JSON.stringify(tabsTexts)).toBe(expectedValue);
 }
 
-export async function selectTab(tab: string, tabIndex: number): Promise<void> {
+export async function selectTab(
+  page: Page,
+  tabIndex: string,
+  tabsIndex: number,
+): Promise<void> {
   await page.waitForSelector(".gtc-tabs > ul");
 
-  const tabsEl = await page.$$(".gtc-tabs > ul");
-  const tabEl = await tabsEl[tabIndex].$(`li:nth-child(${tab})`);
+  const tabs = page.locator(".gtc-tabs > ul").nth(tabsIndex);
+  const tab = tabs.locator("li").nth(parseInt(tabIndex) - 1);
 
-  await tabEl?.click();
+  await tab.click();
 }

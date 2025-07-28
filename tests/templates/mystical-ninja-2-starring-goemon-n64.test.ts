@@ -1,26 +1,30 @@
+import test from "@playwright/test";
+
 import {
   defaultTests,
   ejectFile,
+  extractGameName,
   initPage,
   saveShouldBeRejected,
   snippet,
+  type Test,
 } from "../";
 
-const game = "mystical-ninja-2-starring-goemon-n64";
+const game = extractGameName(import.meta.url);
 
-beforeAll(async () => initPage(`${game}/save-editor`));
+test.beforeAll(async ({ browser }) => initPage(browser, `${game}/save-editor`));
 
-beforeEach(async () => ejectFile());
+test.beforeEach(async () => ejectFile());
 
-describe(game, () => {
+test.describe(game, () => {
   defaultTests(game);
 
-  it("should not load a wrong DexDrive save", async () => {
+  test("should not load a wrong DexDrive save", async () => {
     await saveShouldBeRejected(`${game}/bad.n64`);
   });
 
   // prettier-ignore
-  test.each([
+  const tests: Test[] = [
     ["should load an empty standard save"         ,   "empty.mpk", [            't|["Options"]']],
     ["should load a deleted standard save"        , "deleted.mpk", [            't|["Options"]']],
     ["should load a filled standard save (Europe)",  "filled.mpk", ["r|europe", 't|["Slot 2","Options"]'         , "s|2$1", "c|0x6d9c72c4", "i|2", "s|2$2", "i|136", "w|137", "c|0x1d46dfc7"]],
@@ -33,7 +37,11 @@ describe(game, () => {
     ["should load a SRM save (Japan)"             ,   "japan.srm", [            't|["Slot 1","Slot 3","Options"]', "s|3$1", "c|0xba0d154c", "i|6", "s|2$2", "i|432", "w|433", "c|0xcad7b84f"]],
     ["should load a DexDrive save (Europe)"       ,  "europe.n64", [            't|["Slot 3","Options"]'         , "s|3$1", "c|0x447416f4", "i|1", "s|2$2", "i|118", "w|119", "c|0x34aebbf7"]],
     ["should load a DexDrive save (USA)"          ,     "usa.n64", [            't|["Slot 1","Options"]'         , "s|1$1", "c|0x7b2ef164", "i|1", "s|2$2", "i|120", "w|121", "c|0x0bf45c67"]],
-  ])("%s", async (...args) =>
-    await snippet(`${game}/${args[1]}`, args[2]),
-  );
+  ];
+
+  tests.forEach(([title, saveFilePath, args]) => {
+    test(title, async () => {
+      await snippet(`${game}/${saveFilePath}`, args);
+    });
+  });
 });

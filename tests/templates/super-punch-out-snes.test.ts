@@ -1,22 +1,35 @@
-import { defaultTests, ejectFile, initPage, snippet } from "../";
+import test from "@playwright/test";
 
-const game = "super-punch-out-snes";
+import {
+  defaultTests,
+  ejectFile,
+  extractGameName,
+  initPage,
+  snippet,
+  type Test,
+} from "../";
 
-beforeAll(async () => initPage(`${game}/save-editor`));
+const game = extractGameName(import.meta.url);
 
-beforeEach(async () => ejectFile());
+test.beforeAll(async ({ browser }) => initPage(browser, `${game}/save-editor`));
 
-describe(game, () => {
+test.beforeEach(async () => ejectFile());
+
+test.describe(game, () => {
   defaultTests(game);
 
   // prettier-ignore
-  test.each([
+  const tests: Test[] = [
     ["should load an empty standard save"          ,         "empty.sav", ['t|["Records"]']],
     ["should load a deleted standard save (Slot 2)", "deleted-slot2.sav", ['t|["Slot 2","Records"]'                  , "s|2$1", "c|0xea06", "i|PASS", "w|QASS", "c|0xea05"]],
     ["should load a standard save (Europe)"        ,        "europe.sav", ['t|["Slot 1","Slot 2","Slot 3","Records"]', "s|3$1", "c|0x2886", "i|PASS", "w|QASS", "c|0x2885"]],
     ["should load a standard save (USA)"           ,           "usa.sav", ['t|["Slot 1","Slot 2","Slot 3","Records"]', "s|1$1", "c|0xad86", "i|PASS", "w|QASS", "c|0xad85"]],
     ["should load a standard save (Japan)"         ,         "japan.sav", ['t|["Slot 1","Slot 2","Slot 3","Records"]', "s|2$1", "c|0xea06", "i|PASS", "w|QASS", "c|0xea05"]],
-  ])("%s", async (...args) =>
-    await snippet(`${game}/${args[1]}`, args[2]),
-  );
+  ];
+
+  tests.forEach(([title, saveFilePath, args]) => {
+    test(title, async () => {
+      await snippet(`${game}/${saveFilePath}`, args);
+    });
+  });
 });

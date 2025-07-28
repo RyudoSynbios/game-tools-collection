@@ -1,16 +1,25 @@
-import { defaultTests, ejectFile, initPage, snippet } from "../";
+import test from "@playwright/test";
 
-const game = "bomberman-64-n64";
+import {
+  defaultTests,
+  ejectFile,
+  extractGameName,
+  initPage,
+  snippet,
+  type Test,
+} from "../";
 
-beforeAll(async () => initPage(`${game}/save-editor`));
+const game = extractGameName(import.meta.url);
 
-beforeEach(async () => ejectFile());
+test.beforeAll(async ({ browser }) => initPage(browser, `${game}/save-editor`));
 
-describe(game, () => {
+test.beforeEach(async () => ejectFile());
+
+test.describe(game, () => {
   defaultTests(game);
 
   // prettier-ignore
-  test.each([
+  const tests: Test[] = [
     ["should load an empty standard save"             ,    "empty.eep", ["r|europe", 't|["Options"]']],
     ["should load a deleted standard save"            ,  "deleted.eep", ["r|europe", 't|["Options"]']],
     ["should not load a standard save with bad region",    "japan.eep", ["r|europe", 't|["Slot 2","Options"]', "s|3$2", "n|ごうかく"]],
@@ -20,7 +29,11 @@ describe(game, () => {
     ["should load a SRM save (Europe)"                ,   "europe.srm", ["r|europe", 't|["Slot 1","Options"]', "s|3$2", "c|0x1d$1", "c|0x64$3", "i|PASS"   , "w|QASS"  , "c|0x1d$1", "c|0x27$3"]],
     ["should load a SRM save (USA)"                   ,      "usa.srm", ["r|usa"   , 't|["Slot 2","Options"]', "s|3$2", "c|0x3f$1", "c|0x64$3", "i|PASS"   , "w|QASS"  , "c|0x3f$1", "c|0x27$3"]],
     ["should load a SRM save (Japan)"                 ,    "japan.srm", ["r|japan" , 't|["Slot 3","Options"]', "s|3$2", "c|0x3f$1", "c|0x64$3", "i|PASS"   , "w|QASS"  , "c|0x3f$1", "c|0x27$3"]],
-  ])("%s", async (...args) =>
-    await snippet(`${game}/${args[1]}`, args[2]),
-  );
+  ];
+
+  tests.forEach(([title, saveFilePath, args]) => {
+    test(title, async () => {
+      await snippet(`${game}/${saveFilePath}`, args);
+    });
+  });
 });

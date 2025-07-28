@@ -1,16 +1,25 @@
-import { defaultTests, ejectFile, initPage, snippet } from "../";
+import test from "@playwright/test";
 
-const game = "castlevania-symphony-of-the-night-ps";
+import {
+  defaultTests,
+  ejectFile,
+  extractGameName,
+  initPage,
+  snippet,
+  type Test,
+} from "../";
 
-beforeAll(async () => initPage(`${game}/save-editor`));
+const game = extractGameName(import.meta.url);
 
-beforeEach(async () => ejectFile());
+test.beforeAll(async ({ browser }) => initPage(browser, `${game}/save-editor`));
 
-describe(game, () => {
+test.beforeEach(async () => ejectFile());
+
+test.describe(game, () => {
   defaultTests(game);
 
   // prettier-ignore
-  test.each([
+  const tests: Test[] = [
     ["should load a filled standard save (Europe)" ,        "filled.mcr", ["r|europe", 't|["Slot 1","Slot 2"]'         , "s|2", "i|PASS"]],
     ["should load a filled standard save (Japan)"  ,        "filled.mcr", ["r|japan" , 't|["Slot 1"]'                  , "s|1", "i|PASS"]],
     ["should load a deleted standard save"         ,       "deleted.mcr", [            't|[]']],
@@ -39,7 +48,11 @@ describe(game, () => {
     ["should load a DexDrive save (Japan) (Rev 1)" ,    "japan-rev1.gme", [            't|["Slot 1"]'                  , "s|1", "i|PASS"]],
     ["should load a DexDrive save (Japan) (Rev 2)" ,    "japan-rev2.gme", [            't|["Slot 1","Slot 2"]'         , "s|1", "i|PASS"]],
     ["should load a DexDrive save (Asia)"          ,          "asia.gme", [            't|["Slot 1","Slot 2"]'         , "s|1", "i|PASS"]],
-  ])("%s", async (...args) =>
-    await snippet(`${game}/${args[1]}`, args[2]),
-  );
+  ];
+
+  tests.forEach(([title, saveFilePath, args]) => {
+    test(title, async () => {
+      await snippet(`${game}/${saveFilePath}`, args);
+    });
+  });
 });

@@ -1,14 +1,16 @@
+import test, { type Page } from "@playwright/test";
+
 export async function expectInput(
+  page: Page,
   expectedValue: string,
   inputIndex: number,
   shouldReturn = true,
 ): Promise<void> {
   await page.waitForSelector(".gtc-content");
 
-  const inputsEl = await page.$$("*[data-test=true]");
-  const inputEl = inputsEl[inputIndex];
+  const input = page.locator("*[data-test=true]").nth(inputIndex);
 
-  const inputValue = await page.evaluate(async (el) => {
+  const inputValue = await input.evaluate(async (el) => {
     const inputEl = el as HTMLInputElement;
 
     switch (el.tagName) {
@@ -21,30 +23,29 @@ export async function expectInput(
 
         return optionEl?.textContent?.trim() || "";
     }
-  }, inputEl);
+  });
 
   if (shouldReturn) {
-    expect(inputValue).toBe(expectedValue);
+    test.expect(inputValue).toBe(expectedValue);
   } else {
-    expect(inputValue).not.toBe(expectedValue);
+    test.expect(inputValue).not.toBe(expectedValue);
   }
 }
 
 export async function writeInput(
+  page: Page,
   valueToWrite: string,
   inputIndex: number,
 ): Promise<void> {
-  const inputsEl = await page.$$("*[data-test=true]");
-  const inputEl = inputsEl[inputIndex];
+  const input = page.locator("*[data-test=true]").nth(inputIndex);
 
-  await page.evaluate(
-    (el, value) => {
+  await input.evaluate(
+    (el, { valueToWrite }) => {
       const inputEl = el as HTMLInputElement;
 
-      inputEl.value = value;
-      inputEl.dispatchEvent(new Event("change"));
+      inputEl.value = valueToWrite;
+      el.dispatchEvent(new Event("change"));
     },
-    inputEl,
-    valueToWrite,
+    { valueToWrite },
   );
 }

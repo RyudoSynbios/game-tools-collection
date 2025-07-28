@@ -1,16 +1,25 @@
-import { defaultTests, ejectFile, initPage, snippet } from "../";
+import test from "@playwright/test";
 
-const game = "castlevania-harmony-of-dissonance-gba";
+import {
+  defaultTests,
+  ejectFile,
+  extractGameName,
+  initPage,
+  snippet,
+  type Test,
+} from "../";
 
-beforeAll(async () => initPage(`${game}/save-editor`));
+const game = extractGameName(import.meta.url);
 
-beforeEach(async () => ejectFile());
+test.beforeAll(async ({ browser }) => initPage(browser, `${game}/save-editor`));
 
-describe(game, () => {
+test.beforeEach(async () => ejectFile());
+
+test.describe(game, () => {
   defaultTests(game);
 
   // prettier-ignore
-  test.each([
+  const tests: Test[] = [
     ["should load an empty standard save"   ,   "empty.sav", ['t|["General","Boss Rush Mode"]']],
     ["should load a deleted standard save"  , "deleted.sav", ['t|["General","Boss Rush Mode"]']],
     ["should load a standard save (Europe)" ,  "europe.sav", ['t|["General","Slot 3","Boss Rush Mode"]'         , "s|4", "i|PASS"]],
@@ -19,7 +28,11 @@ describe(game, () => {
     ["should load a GameShark save (Europe)",  "europe.sps", ['t|["General","Slot 1","Slot 3","Boss Rush Mode"]', "s|2", "i|PASS"]],
     ["should load a GameShark save (USA)"   ,     "usa.sps", ['t|["General","Slot 1","Slot 2","Boss Rush Mode"]', "s|3", "i|PASS"]],
     ["should load a GameShark save (Japan)" ,   "japan.sps", ['t|["General","Slot 1","Slot 3","Boss Rush Mode"]', "s|4", "i|PASS"]],
-  ])("%s", async (...args) =>
-    await snippet(`${game}/${args[1]}`, args[2]),
-  );
+  ];
+
+  tests.forEach(([title, saveFilePath, args]) => {
+    test(title, async () => {
+      await snippet(`${game}/${saveFilePath}`, args);
+    });
+  });
 });

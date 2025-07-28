@@ -1,29 +1,37 @@
+import test from "@playwright/test";
+
 import {
   defaultTests,
   ejectFile,
+  extractGameName,
   initPage,
   saveShouldBeRejected,
   snippet,
+  type Test,
 } from "../";
 
-const game = "dead-or-alive-2-ps2";
+const game = extractGameName(import.meta.url);
 
-beforeAll(async () => initPage(`${game}/save-editor`));
+test.beforeAll(async ({ browser }) => initPage(browser, `${game}/save-editor`));
 
-beforeEach(async () => ejectFile());
+test.beforeEach(async () => ejectFile());
 
-describe(game, () => {
+test.describe(game, () => {
   defaultTests(game);
 
-  it("should not load a deleted standard save", async () => {
+  test("should not load a deleted standard save", async () => {
     await saveShouldBeRejected(`${game}/deleted.ps2`);
   });
 
   // prettier-ignore
-  test.each([
+  const tests: Test[] = [
     ["should load a filled standard save (Europe)", "filled.ps2", ["c|0x16", "i|54$1", "i|10$2" , "w|55$1", "c|0x17"]],
     ["should load a standard save (Europe)"       , "europe.ps2", ["c|0xc9", "i|21$1", "i|30$2" , "w|22$1", "c|0xca"]],
-  ])("%s", async (...args) =>
-    await snippet(`${game}/${args[1]}`, args[2]),
-  );
+  ];
+
+  tests.forEach(([title, saveFilePath, args]) => {
+    test(title, async () => {
+      await snippet(`${game}/${saveFilePath}`, args);
+    });
+  });
 });

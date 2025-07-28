@@ -1,30 +1,34 @@
+import test from "@playwright/test";
+
 import {
   defaultTests,
   ejectFile,
+  extractGameName,
   initPage,
   saveShouldBeRejected,
   snippet,
+  type Test,
 } from "../";
 
-const game = "legend-of-zelda-the-majora-s-mask-n64";
+const game = extractGameName(import.meta.url);
 
-beforeAll(async () => initPage(`${game}/save-editor`));
+test.beforeAll(async ({ browser }) => initPage(browser, `${game}/save-editor`));
 
-beforeEach(async () => ejectFile());
+test.beforeEach(async () => ejectFile());
 
-describe(game, () => {
+test.describe(game, () => {
   defaultTests(game);
 
-  it("should not load an empty standard save", async () => {
+  test("should not load an empty standard save", async () => {
     await saveShouldBeRejected(`${game}/empty.fla`);
   });
 
-  it("should not load a deleted standard save", async () => {
+  test("should not load a deleted standard save", async () => {
     await saveShouldBeRejected(`${game}/deleted.fla`);
   });
 
   // prettier-ignore
-  test.each([
+  const tests: Test[] = [
     ["should not load a standard save with bad region",    "japan-rev1.fla", ["r|europe", 't|["Slot 1","Slot 2","Slot 3"]', "n|PASS"]],
     ["should load a deleted standard save (Slot 2)"   , "deleted-slot2.fla", ["r|europe", 't|["Slot 2"]'                  , "s|2$1", "c|0x69f7", "i|PASS", "w|QASS", "s|2$3", "i|06$1", "i|00$2", "c|0x69f8"]],
     ["should load a standard save (Europe)"           ,        "europe.fla", ["r|europe", 't|["Slot 1"]'                  , "s|1$1", "c|0x6a03", "i|PASS", "w|QASS", "s|2$3", "i|06$1", "i|00$2", "c|0x6a04"]],
@@ -37,7 +41,11 @@ describe(game, () => {
     ["should load a SRM save (USA)"                   ,           "usa.srm", ["r|usa"   , 't|["Slot 2"]'                  , "s|2$1", "c|0x6801", "i|PASS", "w|QASS", "s|2$3", "i|06$1", "i|00$2", "c|0x6802"]],
     ["should load a SRM save (Japan)"                 ,         "japan.srm", ["r|japan" , 't|["Slot 1","Slot 2","Slot 3"]', "s|3$1", "c|0x7e6f", "i|PASS", "w|QASS"                             , "c|0x7e70"]],
     ["should load a SRM save (Japan) (Rev 1)"         ,    "japan-rev1.srm", ["r|japan" , 't|["Slot 1","Slot 2","Slot 3"]', "s|2$1", "c|0x7e6f", "i|PASS", "w|QASS"                             , "c|0x7e70"]],
-  ])("%s", async (...args) =>
-    await snippet(`${game}/${args[1]}`, args[2]),
-  );
+  ];
+
+  tests.forEach(([title, saveFilePath, args]) => {
+    test(title, async () => {
+      await snippet(`${game}/${saveFilePath}`, args);
+    });
+  });
 });

@@ -1,21 +1,34 @@
-import { defaultTests, ejectFile, initPage, snippet } from "../";
+import test from "@playwright/test";
 
-const game = "game-boy-camera-gb";
+import {
+  defaultTests,
+  ejectFile,
+  extractGameName,
+  initPage,
+  snippet,
+  type Test,
+} from "../";
 
-beforeAll(async () => initPage(`${game}/save-editor`));
+const game = extractGameName(import.meta.url);
 
-beforeEach(async () => ejectFile());
+test.beforeAll(async ({ browser }) => initPage(browser, `${game}/save-editor`));
 
-describe(game, () => {
+test.beforeEach(async () => ejectFile());
+
+test.describe(game, () => {
   defaultTests(game);
 
   // prettier-ignore
-  test.each([
+  const tests: Test[] = [
     ["should not load a standard save with bad region",  "europeusa.sav", ["r|japan" , "n|PASS"]],
     ["should load a standard save (Europe, USA)"      ,  "europeusa.sav", ['r|europe', "c|0xd77d$2", "i|PASS", "w|QASS", "c|0xd47e$2"]],
     ["should load a standard save (USA) (Gold)"       ,   "usa-gold.sav", ['r|usa'   , "c|0xd9fb$2", "i|PASS", "w|QASS", "c|0xdafc$2"]],
     ["should load a standard save (Japan) (Rev 1)"    , "japan-rev1.sav", ['r|japan' , "c|0xd169$2", "i|PASS", "w|QASS", "c|0xd06a$2"]],
-  ])("%s", async (...args) =>
-    await snippet(`${game}/${args[1]}`, args[2]),
-  );
+  ];
+
+  tests.forEach(([title, saveFilePath, args]) => {
+    test(title, async () => {
+      await snippet(`${game}/${saveFilePath}`, args);
+    });
+  });
 });

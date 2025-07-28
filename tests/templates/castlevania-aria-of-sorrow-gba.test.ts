@@ -1,16 +1,25 @@
-import { defaultTests, ejectFile, initPage, snippet } from "../";
+import test from "@playwright/test";
 
-const game = "castlevania-aria-of-sorrow-gba";
+import {
+  defaultTests,
+  ejectFile,
+  extractGameName,
+  initPage,
+  snippet,
+  type Test,
+} from "../";
 
-beforeAll(async () => initPage(`${game}/save-editor`));
+const game = extractGameName(import.meta.url);
 
-beforeEach(async () => ejectFile());
+test.beforeAll(async ({ browser }) => initPage(browser, `${game}/save-editor`));
 
-describe(game, () => {
+test.beforeEach(async () => ejectFile());
+
+test.describe(game, () => {
   defaultTests(game);
 
   // prettier-ignore
-  test.each([
+  const tests: Test[] = [
     ["should load an empty standard save"             ,   "empty.sav", ["r|europe", 't|["General"]'         , "i|English"]],
     ["should load a deleted standard save"            , "deleted.sav", ["r|japan" , 't|["General"]'         , "i|Japanese"]],
     ["should not load a standard save with bad region",   "empty.sav", ["r|japan" , 't|["General"]'         , "n|English"]],
@@ -20,7 +29,11 @@ describe(game, () => {
     ["should load a GameShark save (Europe)"          ,  "europe.sps", ["r|europe", 't|["General","Slot 2"]', "i|German",   "s|3", "i|PASS"]],
     ["should load a GameShark save (USA)"             ,     "usa.sps", ["r|usa"   , 't|["General","Slot 3"]', "i|English",  "s|4", "i|PASS"]],
     ["should load a GameShark save (Japan)"           ,   "japan.sps", ["r|japan" , 't|["General","Slot 1"]', "i|Japanese", "s|2", "i|PASS"]],
-  ])("%s", async (...args) =>
-    await snippet(`${game}/${args[1]}`, args[2]),
-  );
+  ];
+
+  tests.forEach(([title, saveFilePath, args]) => {
+    test(title, async () => {
+      await snippet(`${game}/${saveFilePath}`, args);
+    });
+  });
 });
