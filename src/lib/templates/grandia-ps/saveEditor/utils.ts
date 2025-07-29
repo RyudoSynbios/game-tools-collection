@@ -34,7 +34,7 @@ export function initShifts(shifts: number[]): number[] {
     shifts = [...shifts, getPsvHeaderShift()];
   }
 
-  if ($gameRegion === 1 || $gameRegion == 2) {
+  if ($gameRegion === 1 || $gameRegion === 2) {
     return [...shifts, 0x180];
   }
 

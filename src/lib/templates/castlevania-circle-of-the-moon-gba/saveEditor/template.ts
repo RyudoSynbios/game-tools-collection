@@ -60,99 +60,126 @@ const template: GameJson = {
               name: "General",
               items: [
                 {
-                  type: "section",
-                  flex: true,
+                  type: "tabs",
+                  vertical: true,
                   items: [
                     {
-                      name: "Filename",
-                      offset: 0x11,
-                      length: 0x8,
-                      type: "variable",
-                      dataType: "string",
-                      letterDataType: "uint8",
-                      resource: "letters",
-                      test: true,
-                    },
-                    {
-                      name: "Mode",
-                      offset: 0x9c,
-                      type: "variable",
-                      dataType: "uint16",
-                      resource: "modes",
-                    },
-                    {
-                      name: "Playtime",
-                      type: "group",
-                      mode: "time",
+                      name: "General",
                       items: [
                         {
-                          offset: 0xa0,
-                          type: "variable",
-                          dataType: "uint32",
-                          operations: [
-                            { "/": 60 },
-                            { convert: { from: "seconds", to: "hours" } },
+                          type: "section",
+                          flex: true,
+                          items: [
+                            {
+                              name: "Filename",
+                              offset: 0x11,
+                              length: 0x8,
+                              type: "variable",
+                              dataType: "string",
+                              letterDataType: "uint8",
+                              resource: "letters",
+                              test: true,
+                            },
+                            {
+                              name: "Mode",
+                              offset: 0x9c,
+                              type: "variable",
+                              dataType: "uint16",
+                              resource: "modes",
+                            },
+                            {
+                              name: "Playtime",
+                              type: "group",
+                              mode: "time",
+                              items: [
+                                {
+                                  offset: 0xa0,
+                                  type: "variable",
+                                  dataType: "uint32",
+                                  operations: [
+                                    { "/": 60 },
+                                    {
+                                      convert: { from: "seconds", to: "hours" },
+                                    },
+                                  ],
+                                  max: 99,
+                                },
+                                {
+                                  offset: 0xa0,
+                                  type: "variable",
+                                  dataType: "uint32",
+                                  operations: [
+                                    { "/": 60 },
+                                    {
+                                      convert: {
+                                        from: "seconds",
+                                        to: "minutes",
+                                      },
+                                    },
+                                  ],
+                                  leadingZeros: 1,
+                                  max: 59,
+                                },
+                                {
+                                  offset: 0xa0,
+                                  type: "variable",
+                                  dataType: "uint32",
+                                  operations: [
+                                    { "/": 60 },
+                                    {
+                                      convert: {
+                                        from: "seconds",
+                                        to: "seconds",
+                                      },
+                                    },
+                                  ],
+                                  leadingZeros: 1,
+                                  max: 59,
+                                },
+                              ],
+                            },
+                            {
+                              name: "Map Discovery Rate",
+                              offset: 0xbc,
+                              type: "variable",
+                              dataType: "uint16",
+                              operations: [{ "/": 9.8 }, { round: 2 }],
+                              suffix: "%",
+                              disabled: true,
+                            },
                           ],
-                          max: 99,
                         },
                         {
-                          offset: 0xa0,
-                          type: "variable",
-                          dataType: "uint32",
-                          operations: [
-                            { "/": 60 },
-                            { convert: { from: "seconds", to: "minutes" } },
+                          type: "section",
+                          flex: true,
+                          items: [
+                            {
+                              name: "Location",
+                              offset: 0xa4,
+                              type: "variable",
+                              dataType: "uint16",
+                              bigEndian: true,
+                              resource: "locations",
+                              size: "lg",
+                              autocomplete: true,
+                            },
                           ],
-                          leadingZeros: 1,
-                          max: 59,
-                        },
-                        {
-                          offset: 0xa0,
-                          type: "variable",
-                          dataType: "uint32",
-                          operations: [
-                            { "/": 60 },
-                            { convert: { from: "seconds", to: "seconds" } },
-                          ],
-                          leadingZeros: 1,
-                          max: 59,
                         },
                       ],
                     },
                     {
-                      name: "Location",
-                      offset: 0xa4,
-                      type: "variable",
-                      dataType: "uint16",
-                      bigEndian: true,
-                      resource: "locations",
-                      size: "lg",
-                      autocomplete: true,
-                    },
-                    {
-                      name: "Map Discovery Rate",
-                      offset: 0xbc,
-                      type: "variable",
-                      dataType: "uint16",
-                      operations: [{ "/": 9.8 }, { round: 2 }],
-                      suffix: "%",
-                      disabled: true,
-                    },
-                  ],
-                },
-                {
-                  type: "section",
-                  flex: true,
-                  items: [
-                    {
                       name: "Warp Rooms",
-                      type: "bitflags",
-                      flags: [
-                        { offset: 0xa6, bit: 0, label: "Audience Room (Room 1)" },
-                        { offset: 0xa7, bit: 0, label: "Audience Room (Room 2)" },
-                        { offset: 0xa8, bit: 0, label: "Eternal Corridor" },
-                        { offset: 0xa9, bit: 0, label: "Chapel Tower" },
-                        { offset: 0xaa, bit: 0, label: "Observation Tower" },
+                      items: [
+                        {
+                          type: "bitflags",
+                          flags: [
+                            { offset: 0xa6, bit: 0, label: "Audience Room (Room 1)" },
+                            { offset: 0xa7, bit: 0, label: "Audience Room (Room 2)" },
+                            { offset: 0xa8, bit: 0, label: "Eternal Corridor" },
+                            { offset: 0xa9, bit: 0, label: "Chapel Tower" },
+                            { offset: 0xaa, bit: 0, label: "Observation Tower" },
+                          ],
+                        },
                       ],
                     },
                   ],

@@ -112,13 +112,6 @@ const template: GameJson = {
                       ],
                     },
                     {
-                      name: "Gold Pieces",
-                      offset: 0x1b0,
-                      type: "variable",
-                      dataType: "uint32",
-                      max: 9999999,
-                    },
-                    {
                       id: "disc",
                       name: "Disc",
                       offset: 0x1a9,
@@ -143,6 +136,13 @@ const template: GameJson = {
                       dataType: "uint8",
                       resource: "formations",
                       autocomplete: true,
+                    },
+                    {
+                      name: "Gold Pieces",
+                      offset: 0x1b0,
+                      type: "variable",
+                      dataType: "uint32",
+                      max: 9999999,
                     },
                     {
                       name: "Location (Save Preview)",
