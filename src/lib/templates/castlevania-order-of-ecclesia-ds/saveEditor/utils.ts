@@ -1,6 +1,6 @@
 import { get } from "svelte/store";
 
-import { dataView, fileHeaderShift, gameRegion } from "$lib/stores";
+import { fileHeaderShift, gameRegion } from "$lib/stores";
 import { getInt, setInt } from "$lib/utils/bytes";
 import {
   generateBiosChecksum,
@@ -159,6 +159,7 @@ export function afterSetInt(item: Item, flag: ItemBitflag): void {
     const itemInt = item as ItemInt;
 
     const location = getInt(itemInt.offset, "uint24", { bigEndian: true });
+
     let coordinates = [514912, 716800];
     let mapType = 0x5;
 
@@ -183,11 +184,7 @@ export function afterSetInt(item: Item, flag: ItemBitflag): void {
 
     const level = getInt(itemInt.offset, "uint8");
 
-    let experience = 0;
-
-    if (level > 1) {
-      experience = 2 * level + 5 * level ** 2 + 3 * level ** 3;
-    }
+    const experience = getExperience(level);
 
     setInt(itemInt.offset + 0x5c, "uint32", experience);
   } else if ("id" in item && item.id === "maxLevel") {
@@ -199,6 +196,24 @@ export function afterSetInt(item: Item, flag: ItemBitflag): void {
     level = Math.min(level, maxLevel);
 
     setInt(itemInt.offset - 0x4ea, "uint8", level);
+  } else if ("id" in item && item.id === "experience") {
+    const itemInt = item as ItemInt;
+
+    const maxLevel = getInt(itemInt.offset + 0x48e, "uint8");
+    const experience = getInt(itemInt.offset, "uint32");
+
+    let level = maxLevel;
+
+    for (let i = 2; i <= maxLevel; i += 1) {
+      const nextExperience = getExperience(i);
+
+      if (experience < nextExperience) {
+        level = i - 1;
+        break;
+      }
+    }
+
+    setInt(itemInt.offset - 0x5c, "uint8", level);
   } else if ("id" in item && item.id?.match(/quests-/)) {
     const itemInt = item as ItemInt;
 
@@ -224,9 +239,17 @@ export function afterSetInt(item: Item, flag: ItemBitflag): void {
 }
 
 export function generateChecksum(item: ItemChecksum): number {
-  const $dataView = get(dataView);
-
   const salt = getInt(item.offset - 0x2, "uint16");
 
-  return generateBiosChecksum(item, salt, $dataView);
+  return generateBiosChecksum(item, salt);
+}
+
+function getExperience(level: number): number {
+  let experience = 0;
+
+  if (level > 1) {
+    experience = level * (level + 1) * (level * 3 + 2);
+  }
+
+  return experience;
 }

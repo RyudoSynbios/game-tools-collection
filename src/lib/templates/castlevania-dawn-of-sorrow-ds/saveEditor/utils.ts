@@ -1,6 +1,6 @@
 import { get } from "svelte/store";
 
-import { dataView, fileHeaderShift } from "$lib/stores";
+import { fileHeaderShift } from "$lib/stores";
 import { getInt, setInt } from "$lib/utils/bytes";
 import {
   generateBiosChecksum,
@@ -116,7 +116,6 @@ export function afterSetInt(item: Item, flag: ItemBitflag): void {
 }
 
 export function generateChecksum(item: ItemChecksum): number {
-  const $dataView = get(dataView);
   const $fileHeaderShift = get(fileHeaderShift);
 
   let offset = $fileHeaderShift + 0x90;
@@ -129,5 +128,5 @@ export function generateChecksum(item: ItemChecksum): number {
 
   const salt = getInt(offset, "uint16");
 
-  return generateBiosChecksum(item, salt, $dataView);
+  return generateBiosChecksum(item, salt);
 }
