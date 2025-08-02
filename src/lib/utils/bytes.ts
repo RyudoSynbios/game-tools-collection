@@ -83,6 +83,19 @@ export function byteswap(
   return new DataView(uint8Array.buffer);
 }
 
+export function byteswap16(number: number): number {
+  return ((number & 0xff) << 0x8) | (number >> 0x8);
+}
+
+export function byteswap32(number: number): number {
+  return (
+    ((number & 0xff) << 0x18) |
+    ((number & 0xff00) << 0x8) |
+    ((number >> 0x8) & 0xff00) |
+    (number >> 0x18)
+  );
+}
+
 export function addPadding(
   dataView?: DataView,
   value = 0x0,
