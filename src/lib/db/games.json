@@ -151,6 +151,17 @@
     }
   },
   {
+    "id": "castlevania-portrait-of-ruin-ds",
+    "name": "Castlevania: Portrait of Ruin",
+    "consoleId": "nintendo-ds",
+    "tools": {
+      "saveEditor": {
+        "createdAt": "2025-08-02",
+        "regions": ["🇪🇺", "🇺🇸", "🇯🇵"]
+      }
+    }
+  },
+  {
     "id": "castlevania-symphony-of-the-night-ps",
     "name": "Castlevania: Symphony of the Night",
     "consoleId": "playstation",
