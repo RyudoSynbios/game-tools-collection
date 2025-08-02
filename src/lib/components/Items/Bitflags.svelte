@@ -149,7 +149,7 @@
       }
     }
 
-    .gtc-bitflag p {
+    & .gtc-bitflag:not(:last-child) p {
       @apply mb-2;
     }
   }
