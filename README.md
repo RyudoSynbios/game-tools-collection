@@ -18,6 +18,7 @@ Link to the website: [https://game-tools-collection.com](https://game-tools-coll
 | Castlevania: Circle of the Moon           | GBA      | Save / Rom              | EUR / USA / JAP                               |
 | Castlevania: Dawn of Sorrow               | DS       | Save                    | EUR / USA / JAP                               |
 | Castlevania: Harmony of Dissonance        | GBA      | Save                    | EUR / USA / JAP                               |
+| Castlevania: Portrait of Ruin             | DS       | Save                    | EUR / USA / JAP                               |
 | Castlevania: Order of Ecclesia            | DS       | Save                    | EUR / USA / JAP / KOR                         |
 | Castlevania: Symphony of the Night        | PS       | Save                    | EUR / USA / JAP                               |
 | Crash Bandicoot                           | PS       | Save                    | EUR / USA / JAP / AUS                         |
