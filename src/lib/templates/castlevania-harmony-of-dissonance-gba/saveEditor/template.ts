@@ -2576,7 +2576,9 @@ const template: GameJson = {
                             offset: 0xf4 + Math.floor(enemy.index / 8),
                             bit: enemy.index % 8,
                             label: enemy.name,
-                            separator: (enemy.index + 1) % 10 === 0,
+                            separator:
+                              (enemy.index + 1) % 10 === 0 &&
+                              enemies.at(-1)!.index !== enemy.index,
                           })),
                         },
                         {
@@ -2586,7 +2588,9 @@ const template: GameJson = {
                             offset: 0x104 + Math.floor(enemy.index / 8),
                             bit: enemy.index % 8,
                             label: enemy.name,
-                            separator: (enemy.index + 1) % 10 === 0,
+                            separator:
+                              (enemy.index + 1) % 10 === 0 &&
+                              enemies.at(-1)!.index !== enemy.index,
                             disabled: !enemy.drops[0],
                           })),
                         },
@@ -2597,7 +2601,9 @@ const template: GameJson = {
                             offset: 0x114 + Math.floor(enemy.index / 8),
                             bit: enemy.index % 8,
                             label: enemy.name,
-                            separator: (enemy.index + 1) % 10 === 0,
+                            separator:
+                              (enemy.index + 1) % 10 === 0 &&
+                              enemies.at(-1)!.index !== enemy.index,
                             disabled: !enemy.drops[1],
                           })),
                         },
