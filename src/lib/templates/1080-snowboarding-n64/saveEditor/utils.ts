@@ -61,7 +61,7 @@ export function afterSetInt(item: Item): void {
 
     const offset = itemInt.offset - (index - 1) * 0x4;
 
-    for (let i = 0; i < 5; i += 1) {
+    for (let i = 0x0; i < 0x5; i += 0x1) {
       int += getInt(offset + i * 0x4, "uint32", { bigEndian: true });
     }
 

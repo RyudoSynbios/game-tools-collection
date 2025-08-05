@@ -265,7 +265,7 @@ const template: GameJson = {
                       hidden: true,
                     },
                     {
-                      name: "Lifes",
+                      name: "Lives",
                       offset: 0x17b,
                       type: "variable",
                       dataType: "uint8",

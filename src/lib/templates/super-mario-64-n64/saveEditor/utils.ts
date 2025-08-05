@@ -50,6 +50,34 @@ export function overrideItem(item: Item): Item {
   return item;
 }
 
+export function overrideGetInt(item: Item): [boolean, number | undefined] {
+  if ("id" in item && item.id === "totalStars") {
+    const itemInt = item as ItemInt;
+
+    let count = 0;
+
+    count += getInt(itemInt.offset, "uint8", {
+      binary: { bitStart: 0, bitLength: 5 },
+    }).toBitCount();
+
+    for (let i = 0x0; i < 0xf; i += 0x1) {
+      count += getInt(itemInt.offset + 0x4 + i, "uint8", {
+        binary: { bitStart: 0, bitLength: 7 },
+      }).toBitCount();
+    }
+
+    for (let i = 0x0; i < 0x9; i += 0x1) {
+      count += getInt(itemInt.offset + 0x13 + i, "bit", { bit: 0 });
+    }
+
+    count += getInt(itemInt.offset + 0x16, "bit", { bit: 1 });
+
+    return [true, count];
+  }
+
+  return [false, undefined];
+}
+
 export function generateChecksum(item: ItemChecksum): number {
   let checksum = 0x0;
 

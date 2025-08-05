@@ -254,7 +254,7 @@ const template: GameJson = {
                       flex: true,
                       items: [
                         {
-                          name: "Lifes",
+                          name: "Lives",
                           offset: 0x289d,
                           type: "variable",
                           dataType: "uint8",

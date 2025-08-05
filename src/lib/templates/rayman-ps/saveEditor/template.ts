@@ -80,7 +80,7 @@ const template: GameJson = {
                       max: 99,
                     },
                     {
-                      name: "Lifes",
+                      name: "Lives",
                       offset: 0x400,
                       type: "variable",
                       dataType: "uint8",
