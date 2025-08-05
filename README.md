@@ -74,6 +74,7 @@ Link to the website: [https://game-tools-collection.com](https://game-tools-coll
 | Sonic Adventure 2: Battle                 | GC       | Save                    | EUR / USA / JAP                               |
 | Super Mario 64                            | N64      | Save                    | EUR / USA / JAP                               |
 | Super Mario Kart                          | SNES     | Save                    | EUR / USA / JAP                               |
+| Super Mario Sunshine                      | GC       | Save                    | EUR / USA / JAP / CAN / KOR                   |
 | Super Punch Out!!                         | SNES     | Save                    | EUR / USA / JAP                               |
 | Super Smash Bros.                         | N64      | Save                    | EUR / USA / JAP / AUS                         |
 | Super Smash Bros. Melee                   | GC       | Save                    | EUR / USA / JAP                               |

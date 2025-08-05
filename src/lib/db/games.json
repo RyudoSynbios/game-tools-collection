@@ -780,6 +780,17 @@
     }
   },
   {
+    "id": "super-mario-sunshine-gc",
+    "name": "Super Mario Sunshine",
+    "consoleId": "gamecube",
+    "tools": {
+      "saveEditor": {
+        "createdAt": "2025-08-05",
+        "regions": ["🇪🇺", "🇺🇸", "🇯🇵", "🇨🇦", "🇰🇷"]
+      }
+    }
+  },
+  {
     "id": "super-punch-out-snes",
     "name": "Super Punch Out!!",
     "consoleId": "super-nintendo",
