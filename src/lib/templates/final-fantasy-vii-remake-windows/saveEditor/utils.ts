@@ -103,7 +103,7 @@ export function overrideItem(item: Item): Item {
 
     const materia = materiaList.find((materia) => materia.index === index);
 
-    itemInt.max = materia ? materia.level : 1;
+    itemInt.max = materia ? materia.ap.length : 1;
   } else if ("id" in item && item.id === "materiaAp") {
     const itemInt = item as ItemInt;
 
@@ -111,7 +111,7 @@ export function overrideItem(item: Item): Item {
 
     const materia = materiaList.find((materia) => materia.index === index);
 
-    itemInt.max = materia ? materia.ap : 0;
+    itemInt.max = materia ? materia.ap.at(-1) : 0;
   } else if ("id" in item && item.id?.match(/proficiency-/)) {
     const itemInt = item as ItemInt;
 
@@ -333,6 +333,43 @@ export function afterSetInt(item: Item, flag: ItemBitflag): void {
     setInt(itemInt.offset + 0x14, "uint32", value);
 
     updateResources("inventoryMateriaNames");
+  } else if ("id" in item && item.id === "materiaLevel") {
+    const itemInt = item as ItemInt;
+
+    const index = getInt(itemInt.offset + 0x4, "uint32");
+    const level = getInt(itemInt.offset, "uint8");
+
+    const materia = materiaList.find((materia) => materia.index === index);
+
+    let ap = 0;
+
+    if (materia) {
+      ap = materia.ap[level - 1];
+    }
+
+    setInt(itemInt.offset + 0x8, "uint32", ap);
+  } else if ("id" in item && item.id === "materiaAp") {
+    const itemInt = item as ItemInt;
+
+    const index = getInt(itemInt.offset - 0x4, "uint32");
+    const ap = getInt(itemInt.offset, "uint32");
+
+    const materia = materiaList.find((materia) => materia.index === index);
+
+    let level = 1;
+
+    if (materia) {
+      for (let i = 0; i < materia.ap.length; i += 1) {
+        if (
+          ap >= materia.ap[i] &&
+          (!materia.ap[i + 1] || ap < materia.ap[i + 1])
+        ) {
+          level = i + 1;
+        }
+      }
+    }
+
+    setInt(itemInt.offset - 0x8, "uint8", level);
   } else if ("id" in item && item.id === "equippedBy") {
     updateResources("inventoryMateriaNames");
   } else if ("id" in item && item.id?.match(/weapon-/)) {
