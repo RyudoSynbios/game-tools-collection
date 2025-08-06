@@ -182,147 +182,6 @@ export function decodeCamelotFont(int: number): string {
 }
 
 // prettier-ignore
-export function decodeNintendo64MpkFont(int: number): string {
-  switch (int) {
-    case 0xf:  return " ";
-    case 0x10: return "0";
-    case 0x11: return "1";
-    case 0x12: return "2";
-    case 0x13: return "3";
-    case 0x14: return "4";
-    case 0x15: return "5";
-    case 0x16: return "6";
-    case 0x17: return "7";
-    case 0x18: return "8";
-    case 0x19: return "9";
-    case 0x1a: return "A";
-    case 0x1b: return "B";
-    case 0x1c: return "C";
-    case 0x1d: return "D";
-    case 0x1e: return "E";
-    case 0x1f: return "F";
-    case 0x20: return "G";
-    case 0x21: return "H";
-    case 0x22: return "I";
-    case 0x23: return "J";
-    case 0x24: return "K";
-    case 0x25: return "L";
-    case 0x26: return "M";
-    case 0x27: return "N";
-    case 0x28: return "O";
-    case 0x29: return "P";
-    case 0x2a: return "Q";
-    case 0x2b: return "R";
-    case 0x2c: return "S";
-    case 0x2d: return "T";
-    case 0x2e: return "U";
-    case 0x2f: return "V";
-    case 0x30: return "W";
-    case 0x31: return "X";
-    case 0x32: return "Y";
-    case 0x33: return "Z";
-    case 0x34: return "!";
-    case 0x35: return '"';
-    case 0x36: return "#";
-    case 0x37: return "'";
-    case 0x38: return "*";
-    case 0x39: return "+";
-    case 0x3a: return ",";
-    case 0x3b: return "-";
-    case 0x3c: return ".";
-    case 0x3d: return "/";
-    case 0x3e: return ":";
-    case 0x3f: return "=";
-    case 0x40: return "?";
-    case 0x41: return "@";
-    case 0x42: return "。";
-    case 0x43: return "゛";
-    case 0x44: return "゜";
-    case 0x45: return "ァ";
-    case 0x46: return "ィ";
-    case 0x47: return "ゥ";
-    case 0x48: return "ェ";
-    case 0x49: return "ォ";
-    case 0x4a: return "ッ";
-    case 0x4b: return "ャ";
-    case 0x4c: return "ュ";
-    case 0x4d: return "ョ";
-    case 0x4e: return "ヲ";
-    case 0x4f: return "ン";
-    case 0x50: return "ア";
-    case 0x51: return "イ";
-    case 0x52: return "ウ";
-    case 0x53: return "エ";
-    case 0x54: return "オ";
-    case 0x55: return "カ";
-    case 0x56: return "キ";
-    case 0x57: return "ク";
-    case 0x58: return "ケ";
-    case 0x59: return "コ";
-    case 0x5a: return "サ";
-    case 0x5b: return "シ";
-    case 0x5c: return "ス";
-    case 0x5d: return "セ";
-    case 0x5e: return "ソ";
-    case 0x5f: return "タ";
-    case 0x60: return "チ";
-    case 0x61: return "ツ";
-    case 0x62: return "テ";
-    case 0x63: return "ト";
-    case 0x64: return "ナ";
-    case 0x65: return "ニ";
-    case 0x66: return "ヌ";
-    case 0x67: return "ネ";
-    case 0x68: return "ノ";
-    case 0x69: return "ハ";
-    case 0x6a: return "ヒ";
-    case 0x6b: return "フ";
-    case 0x6c: return "ヘ";
-    case 0x6d: return "ホ";
-    case 0x6e: return "マ";
-    case 0x6f: return "ミ";
-    case 0x70: return "ム";
-    case 0x71: return "メ";
-    case 0x72: return "モ";
-    case 0x73: return "ヤ";
-    case 0x74: return "ユ";
-    case 0x75: return "ヨ";
-    case 0x76: return "ラ";
-    case 0x77: return "リ";
-    case 0x78: return "ル";
-    case 0x79: return "レ";
-    case 0x7a: return "ロ";
-    case 0x7b: return "ワ";
-    case 0x7c: return "ガ";
-    case 0x7d: return "ギ";
-    case 0x7e: return "グ";
-    case 0x7f: return "ゲ";
-    case 0x80: return "ゴ";
-    case 0x81: return "ザ";
-    case 0x82: return "ジ";
-    case 0x83: return "ズ";
-    case 0x84: return "ゼ";
-    case 0x85: return "ゾ";
-    case 0x86: return "ダ";
-    case 0x87: return "ヂ";
-    case 0x88: return "ヅ";
-    case 0x89: return "デ";
-    case 0x8a: return "ド";
-    case 0x8b: return "バ";
-    case 0x8c: return "ビ";
-    case 0x8d: return "ブ";
-    case 0x8e: return "ベ";
-    case 0x8f: return "ボ";
-    case 0x90: return "パ";
-    case 0x91: return "ピ";
-    case 0x92: return "プ";
-    case 0x93: return "ペ";
-    case 0x94: return "ポ";
-    default:   return "�";
-  }
-}
-
-// prettier-ignore
 // Adapted from https://github.com/kawanet/iconv-cp932/blob/master/mappings/cp932.json
 const cp932: { [key: string]: string } = {
   0x0: "\u0000\u0001\u0002\u0003\u0004\u0005\u0006\u0007\b\t\n\u000b\f\r\u000e\u000f\u0010\u0011\u0012\u0013\u0014\u0015\u0016\u0017\u0018\u0019\u001a\u001b\u001c\u001d\u001e\u001f !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~\u007F",
@@ -433,10 +292,17 @@ const cp1252: { [key: string]: string } = {
   0x0: "\u0000\u0001\u0002\u0003\u0004\u0005\u0006\u0007\b\t\n\u000b\f\r\u000e\u000f\u0010\u0011\u0012\u0013\u0014\u0015\u0016\u0017\u0018\u0019\u001a\u001b\u001c\u001d\u001e\u001f !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~\u007F€\u0081‚ƒ„…†‡ˆ‰Š‹Œ\u008DŽ\u008F\u0090‘’“”•–—˜™š›œ\u009DžŸ ¡¢£¤¥¦§¨©ª«¬­®¯°±²³´µ¶·¸¹º»¼½¾¿ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖ×ØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõö÷øùúûüýþÿ",
 };
 
+const nintendo64Mpk: { [key: string]: string } = {
+  0xf: " 0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ!\"#'*+,-./:=?@。゛゜ァィゥェォッャュョヲンアイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワガギグゲゴザジズゼゾダヂヅデドバビブベボパピプペポ",
+};
+
 export function decodeChar(code: number, encoding: StringEncoding): string {
   let table: { [key: string]: string } = {};
 
   switch (encoding) {
+    case "nintendo64Mpk":
+      table = nintendo64Mpk;
+      break;
     case "windows31J":
       table = cp932;
       break;
@@ -460,6 +326,9 @@ export function encodeChar(char: string, encoding: StringEncoding): number {
   let table: { [key: string]: string } = {};
 
   switch (encoding) {
+    case "nintendo64Mpk":
+      table = nintendo64Mpk;
+      break;
     case "windows31J":
       table = cp932;
       break;

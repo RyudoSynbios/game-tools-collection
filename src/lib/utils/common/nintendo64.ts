@@ -12,8 +12,6 @@ import { checkValidator } from "$lib/utils/validator";
 
 import type { DataViewABL, ItemChecksum, Validator } from "$lib/types";
 
-import { decodeNintendo64MpkFont } from "../encoding";
-
 interface Mpk {
   pageLength: number;
   allocOffset: number;
@@ -165,15 +163,7 @@ function pushNote(dataView: DataView, offset: number): void {
     return pushNote(dataView, offset + 0x20);
   }
 
-  const name = [...Array(0x10).keys()].reduce((string, index) => {
-    const char = getInt(offset + 0x10 + index, "uint8", {}, dataView);
-
-    if (char === 0x0) {
-      return string;
-    }
-
-    return (string += decodeNintendo64MpkFont(char));
-  }, "");
+  const name = getString(offset + 0x10, 0x10, "uint8", { encoding: "nintendo64Mpk", endCode: 0x0 }, dataView); // prettier-ignore
 
   const clusters = [clusterIndex];
 
