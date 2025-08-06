@@ -17,6 +17,7 @@ import {
 } from "$lib/types";
 
 import {
+  characterLevels,
   itemCategories,
   itemList,
   materiaList,
@@ -282,7 +283,39 @@ export function overrideSetInt(item: Item, value: string): boolean {
 }
 
 export function afterSetInt(item: Item, flag: ItemBitflag): void {
-  if ("id" in item && item.id?.match(/materia-/)) {
+  if ("id" in item && item.id?.match(/characterLevel/)) {
+    const itemInt = item as ItemInt;
+
+    const [characterIndex] = item.id.splitInt();
+
+    const characterCurve = characterLevels[characterIndex];
+
+    const level = getInt(itemInt.offset, "uint8");
+    const experience = characterCurve[level - 2] || 0;
+
+    setInt(itemInt.offset + 0x20, "uint32", experience);
+  } else if ("id" in item && item.id?.match(/characterExperience/)) {
+    const itemInt = item as ItemInt;
+
+    const [characterIndex] = item.id.splitInt();
+
+    const characterCurve = characterLevels[characterIndex];
+
+    const experience = getInt(itemInt.offset, "uint32");
+
+    let level = 1;
+
+    for (let i = 0; i < Object.values(characterCurve).length; i += 1) {
+      if (
+        experience >= characterCurve[i] &&
+        (!characterCurve[i + 1] || experience < characterCurve[i + 1])
+      ) {
+        level += i + 1;
+      }
+    }
+
+    setInt(itemInt.offset - 0x20, "uint8", level);
+  } else if ("id" in item && item.id?.match(/materia-/)) {
     const itemInt = item as ItemInt;
 
     const [index] = item.id.splitInt();

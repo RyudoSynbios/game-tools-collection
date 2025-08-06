@@ -295,6 +295,7 @@ const template: GameJson = {
                               hidden: true,
                             },
                             {
+                              id: "characterLevel-%index%",
                               name: "Level",
                               offset: 0x30,
                               type: "variable",
@@ -303,6 +304,7 @@ const template: GameJson = {
                               max: 50,
                             },
                             {
+                              id: "characterExperience-%index%",
                               name: "Experience",
                               offset: 0x50,
                               type: "variable",
