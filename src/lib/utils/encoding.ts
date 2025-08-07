@@ -182,7 +182,7 @@ export function encodeChar(char: string, encoding: StringEncoding): number {
     if (value.includes(char)) {
       const index = value.split("").findIndex((value) => value === char);
 
-      int = parseInt(key, 16) + index;
+      int = parseInt(key, 10) + index;
     }
 
     return int;
