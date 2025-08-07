@@ -33,6 +33,17 @@
     }
   },
   {
+    "id": "actraiser-snes",
+    "name": "ActRaiser",
+    "consoleId": "super-nintendo",
+    "tools": {
+      "saveEditor": {
+        "createdAt": "2025-08-07",
+        "regions": ["🇪🇺", "🇺🇸", "🇯🇵", "🇫🇷", "🇩🇪"]
+      }
+    }
+  },
+  {
     "id": "akumajou-dracula-x-chi-no-rondo-pcecd",
     "name": "Akumajou Dracula X: Chi no Rondo",
     "consoleId": "pc-engine-cd",
