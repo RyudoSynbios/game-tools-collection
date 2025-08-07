@@ -2,7 +2,7 @@ import { get } from "svelte/store";
 
 import { gameRegion } from "$lib/stores";
 import { getInt, setInt } from "$lib/utils/bytes";
-import { decodeCamelotFont } from "$lib/utils/encoding";
+import { decodeChar } from "$lib/utils/encoding";
 import { getRegionArray } from "$lib/utils/format";
 import { applyPalette } from "$lib/utils/graphics";
 import { getResource, updateResources } from "$lib/utils/parser";
@@ -503,14 +503,14 @@ function decodeText(index: number): string {
 
           if (int < 0x20) {
             text += `{${int.toHex(2)}}`;
-          } else if ($gameRegion !== 1 || int < 0x80) {
+          } else if ($gameRegion !== 1) {
             text += String.fromCharCode(int);
           } else {
             if ([0xde, 0xdf].includes(int)) {
               text = text.slice(0, -1);
-              text += decodeCamelotFont((treeIndex << 0x8) + int);
+              text += decodeChar((int << 0x8) + treeIndex, "shiftJis");
             } else {
-              text += decodeCamelotFont(int);
+              text += decodeChar(int, "shiftJis");
             }
           }
 

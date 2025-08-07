@@ -780,12 +780,8 @@ export function getString(
   let string = "";
 
   for (let i = offset; i < offset + length; i += increment) {
-    const int = getInt(
-      i,
-      letterDataType,
-      { bigEndian: options.letterBigEndian },
-      $dataView,
-    );
+    const int = getInt(i, letterDataType, { bigEndian: options.letterBigEndian }, $dataView); // prettier-ignore
+    const nextInt = getInt(i + 0x1, "uint8", {}, $dataView);
 
     if (options.endCode !== undefined && options.endCode === int) {
       break;
@@ -799,6 +795,13 @@ export function getString(
       string += char !== undefined ? char : " ";
     } else if (int === 0x0) {
       string += " ";
+    } else if (
+      options.encoding === "shiftJis" &&
+      [0xde, 0xdf].includes(nextInt)
+    ) {
+      string += decodeChar((nextInt << 0x8) + int, "shiftJis");
+      i += 0x1;
+      length += 0x1;
     } else if (options.encoding) {
       string += decodeChar(int, options.encoding);
     } else {
@@ -876,10 +879,17 @@ export function setString(
       });
     }
 
+    // prettier-ignore
     if (options.endCode !== undefined && options.endCode === int) {
       skip += 0x1;
+    } else if (options.encoding === "shiftJis" && int > 0xff) {
+      setInt(i - skip, 'uint16', int, {
+        bigEndian: options.letterBigEndian,
+      }, dataViewAltKey);
+
+      length += 0x1;
+      skip -= 0x1;
     } else {
-      // prettier-ignore
       setInt(i - skip, letterDataType, int, {
         bigEndian: options.letterBigEndian,
       }, dataViewAltKey);

@@ -17,7 +17,7 @@ import {
   writeFile,
   type File,
 } from "$lib/utils/common/iso9660";
-import { decodeCamelotFont, decodeChar } from "$lib/utils/encoding";
+import { decodeChar } from "$lib/utils/encoding";
 import { getRegionArray } from "$lib/utils/format";
 import { getItem, updateResources } from "$lib/utils/parser";
 import { checkValidator } from "$lib/utils/validator";
@@ -945,16 +945,16 @@ function decodeText(index: number, dataView: DataView): string {
 
       if (letter < 0x20) {
         text += `{${letter.toHex(2)}}`;
-      } else if ($gameRegion === 0 || letter < 0x80) {
+      } else if ($gameRegion === 0) {
         text += String.fromCharCode(letter);
       } else {
         if (letter >= 0x100) {
           text += decodeKanji(scenario, letter);
         } else if ([0xde, 0xdf].includes(letter)) {
           text = text.slice(0, -1);
-          text += decodeCamelotFont((lastLetter << 0x8) | letter);
+          text += decodeChar((letter << 0x8) | lastLetter, "shiftJis");
         } else {
-          text += decodeCamelotFont(letter);
+          text += decodeChar(letter, "shiftJis");
         }
       }
 
