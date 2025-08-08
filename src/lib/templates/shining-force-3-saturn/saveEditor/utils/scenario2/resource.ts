@@ -118,7 +118,7 @@ export const classes = {
 
 export const itemTypes = {
   0x1: "Items",
-  0xa: "Knifes",
+  0xa: "Knives",
   0xb: "Swords",
   0xc: "Rapiers",
   0xd: "Blades",

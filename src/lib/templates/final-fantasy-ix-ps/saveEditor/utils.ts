@@ -85,7 +85,7 @@ export function overrideParseContainerItemsShifts(
   index: number,
 ): [boolean, number[] | undefined] {
   if (item.id === "slots") {
-    return getSlotShifts("correspondance", shifts, index, 1);
+    return getSlotShifts("correspondance", shifts, index, { leadingZeros: 1 });
   }
 
   return [false, undefined];
@@ -414,7 +414,7 @@ export function getCharacterNames(slotIndex: number): Resource {
       itemString.offset + index * 0x90,
     );
 
-    names[index] = name.trim() || "???";
+    names[index] = name.trim();
   });
 
   names[0x9] = "-";

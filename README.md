@@ -32,6 +32,7 @@ Link to the website: [https://game-tools-collection.com](https://game-tools-coll
 | F-Zero X                                  | N64      | Save                    | EUR / USA / JAP                               |
 | Final Fantasy                             | NES      | Save                    | USA / JAP                                     |
 | Final Fantasy IX                          | PS       | Save                    | EUR / USA / JAP / FRA / GER / ITA / SPA       |
+| Final Fantasy Tactics                     | PS       | Save                    | USA / JAP                                     |
 | Final Fantasy VII Rebirth                 | WIN      | Save                    | WORLD                                         |
 | Final Fantasy VII Remake                  | WIN      | Save                    | WORLD                                         |
 | Final Fight One                           | GBA      | Save                    | EUR / USA / JAP                               |
