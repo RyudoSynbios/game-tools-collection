@@ -65,7 +65,7 @@
 
         if (groups.length > 0) {
           groupIndex = groups.findIndex((group) =>
-            group.options.includes(parseInt(option.key)),
+            group?.options.includes(parseInt(option.key)),
           );
 
           if (groupIndex !== -1) {
