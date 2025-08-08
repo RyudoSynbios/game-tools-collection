@@ -140,16 +140,10 @@ const template: GameJson = {
                   items: [
                     {
                       name: "Half Magic Consumption",
-                      type: "section",
-                      background: true,
-                      items: [
-                        {
-                          name: "Acquired",
-                          offset: 0x37b,
-                          type: "variable",
-                          dataType: "boolean",
-                        },
-                      ],
+                      offset: 0x37b,
+                      type: "variable",
+                      dataType: "uint8",
+                      resource: "booleanAcquired",
                     },
                     {
                       name: "Rupees in Pond",
@@ -170,13 +164,13 @@ const template: GameJson = {
                       type: "bitflags",
                       flags: [
                         { offset: 0x379, bit: 0, label: "???", hidden: true },
-                        { offset: 0x379, bit: 1, label: "???" },
-                        { offset: 0x379, bit: 2, label: "???" },
-                        { offset: 0x379, bit: 3, label: "???" },
-                        { offset: 0x379, bit: 4, label: "???" },
-                        { offset: 0x379, bit: 5, label: "???" },
-                        { offset: 0x379, bit: 6, label: "???" },
-                        { offset: 0x379, bit: 7, label: "???" },
+                        { offset: 0x379, bit: 1, label: "Swim" },
+                        { offset: 0x379, bit: 2, label: "Run" },
+                        { offset: 0x379, bit: 3, label: "Pull" },
+                        { offset: 0x379, bit: 4, label: "???", hidden: true },
+                        { offset: 0x379, bit: 5, label: "Talk" },
+                        { offset: 0x379, bit: 6, label: "Read (Lift)" },
+                        { offset: 0x379, bit: 7, label: "Lift", hidden: true },
                       ],
                     },
                     {
@@ -290,6 +284,7 @@ const template: GameJson = {
                           flex: true,
                           items: [
                             {
+                              id: "items",
                               type: "bitflags",
                               flags: [
                                 { offset: 0x342, bit: 0, label: "Hook Shot" },
@@ -1001,6 +996,10 @@ const template: GameJson = {
       0x5: "Cure-All Medicine",
       0x6: "Faerie",
       0x7: "Bee",
+    },
+    booleanAcquired: {
+      0x0: "-",
+      0x1: "Acquired",
     },
     bows: {
       0x0: "-",

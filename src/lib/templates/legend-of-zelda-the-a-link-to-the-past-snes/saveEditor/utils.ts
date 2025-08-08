@@ -8,6 +8,8 @@ import { clone } from "$lib/utils/format";
 import type {
   DataViewABL,
   Item,
+  ItemBitflag,
+  ItemBitflags,
   ItemChecksum,
   ItemContainer,
   ItemInt,
@@ -117,7 +119,7 @@ export function overrideSetInt(item: Item, value: string): boolean {
   return false;
 }
 
-export function afterSetInt(item: Item): void {
+export function afterSetInt(item: Item, flag: ItemBitflag): void {
   const $gameTemplate = get(gameTemplate);
 
   if ("id" in item && item.id === "maxHealth") {
@@ -129,6 +131,16 @@ export function afterSetInt(item: Item): void {
     health = Math.min(health, maxHealth);
 
     setInt(itemInt.offset + 0x1, "uint8", health);
+  } else if ("id" in item && item.id === "items") {
+    const itemBitflags = item as ItemBitflags;
+
+    const checked = getInt(flag.offset, "bit", { bit: flag.bit });
+
+    if (itemBitflags.flags[14].offset === flag.offset) {
+      setInt(flag.offset + 0x24, "bit", checked ? 1 : 0, { bit: 2 });
+    } else if (itemBitflags.flags[15].offset === flag.offset) {
+      setInt(flag.offset + 0x23, "bit", checked ? 1 : 0, { bit: 1 });
+    }
   } else if ("id" in item && item.id === "maxBombs") {
     const itemInt = item as ItemInt;
 
