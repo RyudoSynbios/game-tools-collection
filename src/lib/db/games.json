@@ -305,6 +305,17 @@
     }
   },
   {
+    "id": "final-fantasy-tactics-ps",
+    "name": "Final Fantasy Tactics",
+    "consoleId": "playstation",
+    "tools": {
+      "saveEditor": {
+        "createdAt": "2025-08-12",
+        "regions": ["🇺🇸", "🇯🇵"]
+      }
+    }
+  },
+  {
     "id": "final-fantasy-vii-remake-windows",
     "name": "Final Fantasy VII Remake",
     "consoleId": "windows",
