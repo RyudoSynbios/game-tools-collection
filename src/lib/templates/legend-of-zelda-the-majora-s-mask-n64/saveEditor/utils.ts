@@ -59,7 +59,7 @@ export function overrideParseItem(item: Item): Item | ItemTab {
     return itemBoolean;
   } else if (
     "id" in item &&
-    (item.id === "hideoutCode" || item.id === "coloredMasks") &&
+    item.id?.match(/hideoutCode|coloredMasks/) &&
     $gameRegion === 2
   ) {
     const itemString = item as ItemString;

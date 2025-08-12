@@ -48,7 +48,7 @@ export function overrideGetInt(
     return [true, int];
   } else if (
     "id" in item &&
-    (item.id?.match(/princess30Time-/) || item.id?.match(/princess30MedFees-/))
+    item.id?.match(/princess30Time-|princess30MedFees-/)
   ) {
     const itemInt = item as ItemInt;
 
@@ -131,9 +131,7 @@ export function overrideSetInt(item: Item, value: string): boolean {
     return true;
   } else if (
     "id" in item &&
-    (item.id?.match(/princess30Time-/) ||
-      item.id?.match(/princess30Rank-/) ||
-      item.id?.match(/princess30MedFees-/))
+    item.id?.match(/princess30Time-|princess30Rank-|princess30MedFees-/)
   ) {
     const itemInt = item as ItemInt;
 

@@ -414,7 +414,7 @@ export function getCharacterNames(slotIndex: number): Resource {
       itemString.offset + index * 0x90,
     );
 
-    names[index] = name.trim() || "???";
+    names[index] = name.trim();
   });
 
   names[0x9] = "-";

@@ -253,8 +253,6 @@ export function getMonsterGroupNames(): Resource {
 
     if (monsterIndex !== 0xff) {
       names[index] = getText(offset + (monsterIndex & 0x7f) * length, length);
-    } else {
-      names[index] = "???";
     }
   });
 

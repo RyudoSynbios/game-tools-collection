@@ -300,7 +300,7 @@ export function getCharacterNames(slotIndex: number): Resource {
       },
     );
 
-    names[index] = name.trim() || "???";
+    names[index] = name.trim();
   });
 
   return names;

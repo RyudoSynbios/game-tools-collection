@@ -69,6 +69,7 @@ export function afterSetInt(item: Item): void {
   }
 }
 
+// prettier-ignore
 export function generateChecksum(
   item: ItemChecksum,
   dataView: DataViewABL = new DataView(new ArrayBuffer(0)),
@@ -80,25 +81,11 @@ export function generateChecksum(
     const offsets = [0x188, 0x1f0, 0x210, 0x228];
 
     offsets.forEach((offset) => {
-      checksum1 += getInt(
-        item.offset + offset,
-        "uint32",
-        { bigEndian: true },
-        dataView,
-      );
-      checksum1 += getInt(
-        item.offset + offset + 0x4,
-        "uint32",
-        { bigEndian: true },
-        dataView,
-      );
+      checksum1 += getInt(item.offset + offset, "uint32", { bigEndian: true }, dataView);
+      checksum1 += getInt(item.offset + offset + 0x4, "uint32", { bigEndian: true }, dataView);
     });
   } else {
-    for (
-      let i = item.control.offsetStart;
-      i < item.control.offsetEnd;
-      i += 0x4
-    ) {
+    for (let i = item.control.offsetStart; i < item.control.offsetEnd; i += 0x4) {
       checksum1 += getInt(i, "uint32", { bigEndian: true }, dataView);
     }
   }

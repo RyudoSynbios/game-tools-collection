@@ -157,7 +157,7 @@ export function overrideItem(item: Item): Item {
     return itemTabs;
   } else if (
     "id" in item &&
-    (item.id?.match(/name-pokemon/) || item.id?.match(/name-originalTrainer/))
+    item.id?.match(/name-pokemon|name-originalTrainer/)
   ) {
     const itemString = item as ItemString;
 
@@ -344,10 +344,7 @@ export function overrideGetInt(
 }
 
 export function overrideSetInt(item: Item, value: string): boolean {
-  if (
-    "id" in item &&
-    (item.id?.match(/^pokemon-/) || item.id?.match(/pokemonPreview-daycare-/))
-  ) {
+  if ("id" in item && item.id?.match(/^pokemon-|pokemonPreview-daycare-/)) {
     const itemInt = item as ItemInt;
 
     const [, type] = item.id.split("-");

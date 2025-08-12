@@ -249,7 +249,7 @@ export function afterSetInt(item: Item): void {
     setInt(offset - 0x668 + index * 0x4, "uint32", int, { bigEndian: true });
   } else if (
     "id" in item &&
-    (item.id?.match(/10ManMelee-[0-9]/) || item.id?.match(/100ManMelee-[0-9]/))
+    item.id?.match(/10ManMelee-[0-9]|100ManMelee-[0-9]/)
   ) {
     const itemInt = item as ItemInt;
 

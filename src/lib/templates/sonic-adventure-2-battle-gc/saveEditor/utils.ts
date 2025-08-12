@@ -50,10 +50,7 @@ export function overrideParseItem(item: Item): Item | ItemChecksum | ItemTab {
 }
 
 export function overrideItem(item: Item): Item {
-  if (
-    "id" in item &&
-    (item.id?.match(/heldItem-/) || item.id?.match(/bmItem-/))
-  ) {
+  if ("id" in item && item.id?.match(/heldItem-|bmItem-/)) {
     const itemInt = item as ItemInt;
 
     const [index] = item.id.splitInt();
@@ -79,10 +76,7 @@ export function overrideItem(item: Item): Item {
 }
 
 export function overrideGetInt(item: Item): [boolean, number | undefined] {
-  if (
-    "id" in item &&
-    (item.id?.match(/heldItem-/) || item.id?.match(/bmItem-/))
-  ) {
+  if ("id" in item && item.id?.match(/heldItem-|bmItem-/)) {
     const itemInt = item as ItemInt;
 
     if (itemInt.disabled) {

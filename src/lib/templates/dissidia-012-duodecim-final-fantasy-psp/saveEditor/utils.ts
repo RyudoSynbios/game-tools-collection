@@ -260,8 +260,7 @@ export function afterSetInt(item: Item, flag: ItemBitflag): void {
 
   if (
     "id" in item &&
-    (item.id?.match(/artifactItem-/) ||
-      item.id?.match(/artifactName-/) ||
+    (item.id?.match(/artifactItem-|artifactName-/) ||
       item.id === "artifactStatus")
   ) {
     updateResources("armgears");
@@ -380,7 +379,7 @@ export function afterSetInt(item: Item, flag: ItemBitflag): void {
     setInt(artifaceCountOffset, "uint32", count);
   } else if (
     "id" in item &&
-    (item.id?.match(/artifactHeritorName-/) || item.id?.match(/artifactName-/))
+    item.id?.match(/artifactHeritorName-|artifactName-/)
   ) {
     const itemString = item as ItemString;
 

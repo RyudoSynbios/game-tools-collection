@@ -46,7 +46,7 @@ export function overrideParseItem(item: Item): Item {
   } else if (
     "id" in item &&
     item.id === "time" &&
-    ($gameRegion === 1 || $gameRegion === 2)
+    [1, 2].includes($gameRegion)
   ) {
     const itemInt = item as ItemInt;
 

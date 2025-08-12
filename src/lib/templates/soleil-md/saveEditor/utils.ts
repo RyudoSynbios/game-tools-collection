@@ -31,11 +31,7 @@ export function beforeInitDataView(dataView: DataView): DataView {
 export function overrideParseItem(item: Item): Item {
   const $gameRegion = get(gameRegion);
 
-  if (
-    "id" in item &&
-    item.id === "name" &&
-    ($gameRegion === 1 || $gameRegion === 5)
-  ) {
+  if ("id" in item && item.id === "name" && [1, 5].includes($gameRegion)) {
     const itemString = item as ItemString;
 
     itemString.letterDataType = "uint16";

@@ -18,11 +18,7 @@ export function beforeInitDataView(dataView: DataView): DataView {
 export function overrideParseItem(item: Item): Item {
   const $gameRegion = get(gameRegion);
 
-  if (
-    "id" in item &&
-    item.id?.match(/time-/) &&
-    ($gameRegion === 1 || $gameRegion === 2)
-  ) {
+  if ("id" in item && item.id?.match(/time-/) && $gameRegion !== 0) {
     const itemInt = item as ItemInt;
 
     const [, type] = item.id.split("-");

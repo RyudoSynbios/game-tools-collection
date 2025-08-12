@@ -26,8 +26,7 @@ export function overrideShift(item: Item, shifts: number[]): number[] {
   if (
     "id" in item &&
     (item.id === "checksumSection2" ||
-      item.id?.match(/playtimeSection2-/) ||
-      item.id?.match(/position-/))
+      item.id?.match(/playtimeSection2-|position-/))
   ) {
     const itemInt = item as ItemInt;
 
@@ -346,7 +345,7 @@ export function getCharacterNames(slotIndex: number): Resource {
       },
     );
 
-    names[index] = name.trim() || "???";
+    names[index] = name.trim();
   });
 
   return names;

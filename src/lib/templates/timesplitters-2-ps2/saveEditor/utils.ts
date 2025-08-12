@@ -74,11 +74,7 @@ export function overrideParseItem(item: Item): Item {
     }
 
     itemContainer.instances = instances;
-  } else if (
-    "id" in item &&
-    item.id === "time" &&
-    ($gameRegion === 1 || $gameRegion === 2)
-  ) {
+  } else if ("id" in item && item.id === "time" && $gameRegion !== 0) {
     const itemInt = item as ItemInt;
 
     itemInt.operations![0] = { "/": 60 };

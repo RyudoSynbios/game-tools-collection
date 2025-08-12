@@ -214,7 +214,7 @@ export function getCharacterNames(): Resource {
       },
     );
 
-    names[index] = name.trim() || "???";
+    names[index] = name.trim();
   });
 
   names[0xff] = "-";
