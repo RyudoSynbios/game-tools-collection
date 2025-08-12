@@ -85,7 +85,7 @@ export function overrideParseContainerItemsShifts(
   index: number,
 ): [boolean, number[] | undefined] {
   if (item.id === "slots") {
-    return getSlotShifts("correspondance", shifts, index, 1);
+    return getSlotShifts("correspondance", shifts, index, { leadingZeros: 1 });
   }
 
   return [false, undefined];

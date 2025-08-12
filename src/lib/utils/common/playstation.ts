@@ -88,15 +88,22 @@ export function customGetRegions(dataView: DataView, shift: number): string[] {
   return getRegions(dataView, shift, overridedRegions);
 }
 
+interface SlotShiftsOptions {
+  leadingZeros?: number;
+  overrideIndex?: number[];
+}
+
 export function getSlotShifts(
   order: "correspondance" | "memory",
   shifts: number[],
   index: number,
-  leadingZeros = 0,
+  options: SlotShiftsOptions = {},
 ): [boolean, number[] | undefined] {
   const $fileHeaderShift = get(fileHeaderShift);
   const $gameRegion = get(gameRegion);
   const $gameTemplate = get(gameTemplate);
+
+  const leadingZeros = options.leadingZeros || 0;
 
   const region = $gameTemplate.validator.regions[
     getObjKey($gameTemplate.validator.regions, $gameRegion)
@@ -105,11 +112,15 @@ export function getSlotShifts(
   let validator = region[0];
 
   if (order === "correspondance") {
-    if (index > 9 || leadingZeros > 0) {
-      validator = [...validator, 0x30 + Math.floor(index / 10)];
-    }
+    if (options.overrideIndex) {
+      validator = [...validator, ...options.overrideIndex];
+    } else {
+      if (index > 9 || leadingZeros > 0) {
+        validator = [...validator, 0x30 + Math.floor(index / 10)];
+      }
 
-    validator = [...validator, 0x30 + (index % 10)];
+      validator = [...validator, 0x30 + (index % 10)];
+    }
   }
 
   if (isPsvHeader()) {
