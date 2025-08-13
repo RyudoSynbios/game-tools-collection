@@ -87,13 +87,15 @@ export function getGames(options: GameOptions = {}): Game[] {
     return results;
   }, []);
 
-  games.sort((a, b) => {
-    if (options.order && options.order === "createdAt") {
-      return moment(b.createdAt).unix() - moment(a.createdAt).unix();
-    }
+  if (options.order) {
+    games.sort((a, b) => {
+      if (options.order === "createdAt") {
+        return moment(b.createdAt).unix() - moment(a.createdAt).unix();
+      }
 
-    return a.name.localeCompare(b.name);
-  });
+      return a.name.localeCompare(b.name);
+    });
+  }
 
   return games;
 }

@@ -31,10 +31,10 @@ Link to the website: [https://game-tools-collection.com](https://game-tools-coll
 | Donkey Kong Land                          | GB       | Save                    | EUR / USA / JAP                               |
 | F-Zero X                                  | N64      | Save                    | EUR / USA / JAP                               |
 | Final Fantasy                             | NES      | Save                    | USA / JAP                                     |
-| Final Fantasy IX                          | PS       | Save                    | EUR / USA / JAP / FRA / GER / ITA / SPA       |
-| Final Fantasy Tactics                     | PS       | Save                    | USA / JAP                                     |
 | Final Fantasy VII Rebirth                 | WIN      | Save                    | WORLD                                         |
 | Final Fantasy VII Remake                  | WIN      | Save                    | WORLD                                         |
+| Final Fantasy IX                          | PS       | Save                    | EUR / USA / JAP / FRA / GER / ITA / SPA       |
+| Final Fantasy Tactics                     | PS       | Save                    | USA / JAP                                     |
 | Final Fight One                           | GBA      | Save                    | EUR / USA / JAP                               |
 | Game & Watch Gallery 3                    | GBC      | Save                    | EUR / USA / JAP / AUS                         |
 | Game Boy Camera                           | GB       | Save                    | EUR / USA / JAP                               |
@@ -62,8 +62,8 @@ Link to the website: [https://game-tools-collection.com](https://game-tools-coll
 | Mission: Impossible                       | N64      | Save                    | EUR / USA / FRA / GER / ITA / SPA             |
 | Muramasa: The Demon Blade                 | WII      | Save                    | EUR / USA / JAP                               |
 | Mystic Quest Legend                       | SNES     | Save / Rom              | EUR / USA / JAP / FRA / GER                   |
-| Mystical Ninja 2 Starring Goemon          | N64      | Save                    | EUR / USA / JAP                               |
 | Mystical Ninja Starring Goemon            | N64      | Save                    | EUR / USA / JAP                               |
+| Mystical Ninja 2 Starring Goemon          | N64      | Save                    | EUR / USA / JAP                               |
 | Pokémon Red, Blue and Yellow              | GB       | Save                    | EUR / USA / JAP / FRA / GER / ITA / SPA       |
 | Pokémon Trading Card Game                 | GBC      | Save                    | EUR / USA / JAP / AUS                         |
 | Rayman                                    | PS       | Save                    | EUR / USA / JAP                               |
@@ -83,8 +83,8 @@ Link to the website: [https://game-tools-collection.com](https://game-tools-coll
 | Super Street Fighter II Turbo Revival     | GBA      | Save                    | EUR / USA / JAP                               |
 | Theatrhythm Final Fantasy: Curtain Call   | 3DS      | Save                    | EUR / USA / JAP                               |
 | TimeSplitters 2                           | PS2      | Save                    | EUR / USA / JAP                               |
-| Wario Land 3                              | GBC      | Save                    | WORLD                                         |
 | Wario Land: Super Mario Land 3            | GB       | Save                    | WORLD                                         |
+| Wario Land 3                              | GBC      | Save                    | WORLD                                         |
 
 ---
 

@@ -283,17 +283,6 @@
     }
   },
   {
-    "id": "final-fantasy-ix-ps",
-    "name": "Final Fantasy IX",
-    "consoleId": "playstation",
-    "tools": {
-      "saveEditor": {
-        "createdAt": "2024-11-14",
-        "regions": ["🇪🇺", "🇺🇸", "🇯🇵", "🇫🇷", "🇩🇪", "🇮🇹", "🇪🇸"]
-      }
-    }
-  },
-  {
     "id": "final-fantasy-vii-rebirth-windows",
     "name": "Final Fantasy VII Rebirth",
     "consoleId": "windows",
@@ -305,17 +294,6 @@
     }
   },
   {
-    "id": "final-fantasy-tactics-ps",
-    "name": "Final Fantasy Tactics",
-    "consoleId": "playstation",
-    "tools": {
-      "saveEditor": {
-        "createdAt": "2025-08-12",
-        "regions": ["🇺🇸", "🇯🇵"]
-      }
-    }
-  },
-  {
     "id": "final-fantasy-vii-remake-windows",
     "name": "Final Fantasy VII Remake",
     "consoleId": "windows",
@@ -323,6 +301,28 @@
       "saveEditor": {
         "createdAt": "2025-01-05",
         "regions": ["🏳️"]
+      }
+    }
+  },
+  {
+    "id": "final-fantasy-ix-ps",
+    "name": "Final Fantasy IX",
+    "consoleId": "playstation",
+    "tools": {
+      "saveEditor": {
+        "createdAt": "2024-11-14",
+        "regions": ["🇪🇺", "🇺🇸", "🇯🇵", "🇫🇷", "🇩🇪", "🇮🇹", "🇪🇸"]
+      }
+    }
+  },
+  {
+    "id": "final-fantasy-tactics-ps",
+    "name": "Final Fantasy Tactics",
+    "consoleId": "playstation",
+    "tools": {
+      "saveEditor": {
+        "createdAt": "2025-08-12",
+        "regions": ["🇺🇸", "🇯🇵"]
       }
     }
   },
@@ -632,23 +632,23 @@
     }
   },
   {
-    "id": "mystical-ninja-2-starring-goemon-n64",
-    "name": "Mystical Ninja 2 Starring Goemon",
-    "consoleId": "nintendo-64",
-    "tools": {
-      "saveEditor": {
-        "createdAt": "2024-01-28",
-        "regions": ["🇪🇺", "🇺🇸", "🇯🇵"]
-      }
-    }
-  },
-  {
     "id": "mystical-ninja-starring-goemon-n64",
     "name": "Mystical Ninja Starring Goemon",
     "consoleId": "nintendo-64",
     "tools": {
       "saveEditor": {
         "createdAt": "2024-12-19",
+        "regions": ["🇪🇺", "🇺🇸", "🇯🇵"]
+      }
+    }
+  },
+  {
+    "id": "mystical-ninja-2-starring-goemon-n64",
+    "name": "Mystical Ninja 2 Starring Goemon",
+    "consoleId": "nintendo-64",
+    "tools": {
+      "saveEditor": {
+        "createdAt": "2024-01-28",
         "regions": ["🇪🇺", "🇺🇸", "🇯🇵"]
       }
     }
@@ -879,23 +879,23 @@
     }
   },
   {
-    "id": "wario-land-3-gbc",
-    "name": "Wario Land 3",
-    "consoleId": "game-boy-color",
-    "tools": {
-      "saveEditor": {
-        "createdAt": "2024-11-01",
-        "regions": ["🏳️"]
-      }
-    }
-  },
-  {
     "id": "wario-land-super-mario-land-3-gb",
     "name": "Wario Land: Super Mario Land 3",
     "consoleId": "game-boy",
     "tools": {
       "saveEditor": {
         "createdAt": "2023-12-16",
+        "regions": ["🏳️"]
+      }
+    }
+  },
+  {
+    "id": "wario-land-3-gbc",
+    "name": "Wario Land 3",
+    "consoleId": "game-boy-color",
+    "tools": {
+      "saveEditor": {
+        "createdAt": "2024-11-01",
         "regions": ["🏳️"]
       }
     }
