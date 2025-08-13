@@ -28,10 +28,6 @@ import {
 } from "./utils/japan";
 import { moveList, pokemonList } from "./utils/resource";
 
-export function initShifts(shifts: number[]): number[] {
-  return japanInitShiftAdaptater(shifts);
-}
-
 export function overrideGetRegions(dataView: DataView): string[] {
   const $gameTemplate = get(gameTemplate);
 
@@ -59,6 +55,10 @@ export function overrideGetRegions(dataView: DataView): string[] {
   }
 
   return [];
+}
+
+export function initShifts(shifts: number[]): number[] {
+  return japanInitShiftAdaptater(shifts);
 }
 
 export function overrideParseItem(item: Item): Item {

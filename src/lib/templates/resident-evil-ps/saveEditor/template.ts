@@ -149,10 +149,11 @@ const template: GameJson = {
                     },
                     {
                       name: "Condition",
-                      type: "bitflags",
-                      flags: [
-                        { offset: 0x232, bit: 1, label: "Poisoned" },
-                      ],
+                      offset: 0x232,
+                      type: "variable",
+                      dataType: "bit",
+                      bit: 1,
+                      resource: "conditions",
                     },
                     {
                       name: "Equipped Item",
@@ -2438,6 +2439,10 @@ const template: GameJson = {
     characters: {
       0x0: "Chris Redfield",
       0x1: "Jill Valentine",
+    },
+    conditions: {
+      0x0: "-",
+      0x1: "Poisoned",
     },
     items: {
       0x0: "-",
