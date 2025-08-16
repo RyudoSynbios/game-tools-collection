@@ -103,6 +103,17 @@
     }
   },
   {
+    "id": "castlevania-n64",
+    "name": "Castlevania",
+    "consoleId": "nintendo-64",
+    "tools": {
+      "saveEditor": {
+        "createdAt": "2025-08-16",
+        "regions": ["🇪🇺", "🇺🇸", "🇯🇵"]
+      }
+    }
+  },
+  {
     "id": "castlevania-aria-of-sorrow-gba",
     "name": "Castlevania: Aria of Sorrow",
     "consoleId": "game-boy-advance",
