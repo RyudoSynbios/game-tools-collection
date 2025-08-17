@@ -1177,12 +1177,11 @@ const template: GameJson = {
                               type: "container",
                               instanceType: "section",
                               instances: 15,
-                              enumeration: "Slot %d",
                               flex: true,
                               items: [
                                 {
                                   id: "item",
-                                  name: "Item",
+                                  name: "Item %d",
                                   offset: 0x608,
                                   type: "variable",
                                   dataType: "uint8",
@@ -1190,11 +1189,12 @@ const template: GameJson = {
                                   autocomplete: true,
                                 },
                                 {
-                                  name: "Equipped",
-                                  type: "bitflags",
-                                  flags: [
-                                    { offset: 0x609, bit: 1, label: "Is Equipped" },
-                                  ],
+                                  name: "Status",
+                                  offset: 0x609,
+                                  type: "variable",
+                                  dataType: "bit",
+                                  bit: 1,
+                                  resource: "booleanEquipped",
                                 },
                                 {
                                   name: "???",
@@ -1296,6 +1296,10 @@ const template: GameJson = {
     },
   ],
   resources: {
+    booleanEquipped: {
+      0x0: "-",
+      0x1: "Equipped",
+    },
     bounds: {
       0x0: "-",
       0x40: "Bound to item",

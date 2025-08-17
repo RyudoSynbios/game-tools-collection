@@ -417,20 +417,20 @@ function readFile(
 
 // Adapted from https://github.com/ps2dev/mymc/blob/db5d9e1c141cbbc4ba4e374f73a0518a8d75b7ef/ps2mc_ecc.py
 function generateEcc(table: Uint8Array): number[] {
-  let column_parity = 0x77;
-  let line_parity_0 = 0x7f;
-  let line_parity_1 = 0x7f;
+  let columnParity = 0x77;
+  let lineParity0 = 0x7f;
+  let lineParity1 = 0x7f;
 
   table.forEach((int, index) => {
-    column_parity ^= columnParityMasks[int];
+    columnParity ^= columnParityMasks[int];
 
     if (parityTable[int]) {
-      line_parity_0 ^= ~index;
-      line_parity_1 ^= index;
+      lineParity0 ^= ~index;
+      lineParity1 ^= index;
     }
   });
 
-  return [column_parity, line_parity_0 & 0x7f, line_parity_1];
+  return [columnParity, lineParity0 & 0x7f, lineParity1];
 }
 
 function writeFile(file: File, blob: ArrayBuffer): void {
@@ -657,7 +657,9 @@ export function generateFilteredSaves(): void {
 
   filteredSaves = saves
     .filter((save) => save.directory.name.includes(validatorStringified))
-    .sort((a, b) => a.directory.name.localeCompare(b.directory.name));
+    .sort((a, b) =>
+      a.directory.name.localeCompare(b.directory.name, "en", { numeric: true }),
+    );
 }
 
 export function getSaves(): Save[] {

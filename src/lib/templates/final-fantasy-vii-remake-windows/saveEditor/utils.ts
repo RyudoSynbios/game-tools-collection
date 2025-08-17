@@ -283,7 +283,7 @@ export function overrideSetInt(item: Item, value: string): boolean {
 }
 
 export function afterSetInt(item: Item, flag: ItemBitflag): void {
-  if ("id" in item && item.id?.match(/characterLevel/)) {
+  if ("id" in item && item.id?.match(/characterLevel-/)) {
     const itemInt = item as ItemInt;
 
     const [characterIndex] = item.id.splitInt();
@@ -294,7 +294,7 @@ export function afterSetInt(item: Item, flag: ItemBitflag): void {
     const experience = characterCurve[level - 2] || 0;
 
     setInt(itemInt.offset + 0x20, "uint32", experience);
-  } else if ("id" in item && item.id?.match(/characterExperience/)) {
+  } else if ("id" in item && item.id?.match(/characterExperience-/)) {
     const itemInt = item as ItemInt;
 
     const [characterIndex] = item.id.splitInt();
@@ -305,7 +305,7 @@ export function afterSetInt(item: Item, flag: ItemBitflag): void {
 
     let level = 1;
 
-    for (let i = 0; i < Object.values(characterCurve).length; i += 1) {
+    for (let i = 0; i < characterCurve.length; i += 1) {
       if (
         experience >= characterCurve[i] &&
         (!characterCurve[i + 1] || experience < characterCurve[i + 1])

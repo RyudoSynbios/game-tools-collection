@@ -38,7 +38,7 @@ export function overrideGetInt(item: Item): [boolean, number | undefined] {
 
     let level = 1;
 
-    for (let i = 0; i < Object.values(levels).length; i += 1) {
+    for (let i = 0; i < levels.length; i += 1) {
       if (
         experience >= levels[i] &&
         (!levels[i + 1] || experience < levels[i + 1])

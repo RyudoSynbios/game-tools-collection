@@ -118,7 +118,7 @@ export function overrideGetInt(item: Item): [boolean, number | undefined] {
 
     let level = 1;
 
-    for (let i = 0; i < Object.values(partyLevels).length; i += 1) {
+    for (let i = 0; i < partyLevels.length; i += 1) {
       if (
         experience >= partyLevels[i] &&
         (!partyLevels[i + 1] || experience < partyLevels[i + 1])
@@ -150,7 +150,7 @@ export function overrideGetInt(item: Item): [boolean, number | undefined] {
 
     let level = 1;
 
-    for (let i = 0; i < Object.values(craftmanshipLevels).length; i += 1) {
+    for (let i = 0; i < craftmanshipLevels.length; i += 1) {
       if (
         experience >= craftmanshipLevels[i] &&
         (!craftmanshipLevels[i + 1] || experience < craftmanshipLevels[i + 1])
@@ -184,7 +184,7 @@ export function overrideGetInt(item: Item): [boolean, number | undefined] {
 
     let rank = 1;
 
-    for (let i = 0; i < Object.values(scores).length; i += 1) {
+    for (let i = 0; i < scores.length; i += 1) {
       if (score >= scores[i] && (!scores[i + 1] || score < scores[i + 1])) {
         rank += i;
       }
@@ -292,7 +292,7 @@ export function afterSetInt(item: Item, flag: ItemBitflag): void {
 
     let level = 15;
 
-    for (let i = 0; i < Object.values(characterLevels).length; i += 1) {
+    for (let i = 0; i < characterLevels.length; i += 1) {
       if (
         experience >= characterLevels[i] &&
         (!characterLevels[i + 1] || experience < characterLevels[i + 1])

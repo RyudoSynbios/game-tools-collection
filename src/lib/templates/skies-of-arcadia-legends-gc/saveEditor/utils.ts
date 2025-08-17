@@ -210,7 +210,7 @@ export function getCharacterNames(): Resource {
       itemString.letterDataType,
       {
         letterBigEndian: itemString.letterBigEndian,
-        endCode: 0x0,
+        endCode: itemString.endCode,
       },
     );
 

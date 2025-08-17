@@ -577,7 +577,7 @@ const template: GameJson = {
                       dataType: "string",
                       letterDataType: "uint8",
                       endCode: 0x0,
-                      regex: "[ !',-.0-9A-Z]",
+                      regex: "[ !',\-\.0-9A-Z]",
                       test: true,
                     },
                     {

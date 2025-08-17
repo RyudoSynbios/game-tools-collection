@@ -666,7 +666,7 @@ const template: GameJson = {
                               dataType: "string",
                               letterDataType: "uint8",
                               endCode: 0x0,
-                              regex: "[ !#$%&()*+\\-.0-9:;<=>?@A-Z\\[\\]_a-z]",
+                              regex: "[ !#$%&()\*\+\\-\.0-9:;<=>\?@A-Z\\[\\]_a-z]",
                             },
                             {
                               name: "Score",
@@ -697,7 +697,7 @@ const template: GameJson = {
                               dataType: "string",
                               letterDataType: "uint8",
                               endCode: 0x0,
-                              regex: "[ !#$%&()*+\\-.0-9:;<=>?@A-Z\\[\\]_a-z]",
+                              regex: "[ !#$%&()\*\+\\-\.0-9:;<=>\?@A-Z\\[\\]_a-z]",
                             },
                             {
                               name: "Best Time",
@@ -789,7 +789,7 @@ const template: GameJson = {
                                   letterDataType: "uint8",
                                   endCode: 0x0,
                                   regex:
-                                    "[ !#$%&()*+\\-.0-9:;<=>?@A-Z\\[\\]_a-z]",
+                                    "[ !#$%&()\*\+\\-\.0-9:;<=>\?@A-Z\\[\\]_a-z]",
                                 },
                                 {
                                   name: "Score",

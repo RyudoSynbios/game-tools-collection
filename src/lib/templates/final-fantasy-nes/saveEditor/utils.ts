@@ -76,7 +76,7 @@ export function generateChecksum(
 export function getCharacterNames(): Resource {
   const names: Resource = {};
 
-  const itemString = getItem(`name-0`) as ItemString;
+  const itemString = getItem("name-0") as ItemString;
 
   [...Array(4).keys()].forEach((index) => {
     const name = getString(
