@@ -313,7 +313,7 @@ function readDirectory(
         content: [],
       } as Directory;
 
-      if (page.entryCluster > 0) {
+      if (page.entryCluster > 0 && page.entryCluster !== 0xffffffff) {
         readDirectory(
           dataView,
           page.entryCluster,
