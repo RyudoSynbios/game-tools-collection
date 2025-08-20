@@ -169,7 +169,7 @@ export function parseItem(
   }
 
   if (utilsExists("overrideShift")) {
-    shifts = $gameUtils.overrideShift(item, shifts);
+    shifts = $gameUtils.overrideShift(item, shifts, instanceIndex);
   }
 
   if (newItem.offset !== undefined) {
