@@ -88,6 +88,7 @@ interface Extras {
 interface Save {
   directory: Directory;
   offset: number;
+  fileOffsets: { name: string; offset: number }[];
 }
 
 // ECC constants
@@ -549,6 +550,8 @@ export function unpackMemoryCard(dataView: DataView): DataView {
 
           let offsetTmp = memoryCard.superblock.pageLength;
 
+          const fileOffsets: { name: string; offset: number }[] = [];
+
           directory.content.forEach((entry) => {
             const header = getHeader(dataView, entry);
 
@@ -559,13 +562,18 @@ export function unpackMemoryCard(dataView: DataView): DataView {
             if (entry.type === "file") {
               const file = readFile(dataView, entry, true);
 
+              fileOffsets.push({
+                name: entry.name,
+                offset: offset + offsetTmp,
+              });
+
               uint8Arrays.push(file);
 
               offsetTmp += uint8Arrays[uint8Arrays.length - 1].byteLength;
             }
           });
 
-          saves.push({ directory, offset });
+          saves.push({ directory, offset, fileOffsets });
 
           offset += offsetTmp;
         }
@@ -670,12 +678,20 @@ export function getSaves(): Save[] {
   return filteredSaves;
 }
 
-export function getSlotShifts(index: number): [boolean, number[] | undefined] {
+export function getFileOffset(index: number, name = ""): number {
   const saves = getSaves();
 
   if (saves[index]) {
-    return [true, [saves[index].offset]];
+    if (!name) {
+      name = saves[index].directory.name;
+    }
+
+    const file = saves[index].fileOffsets.find((file) => file.name === name);
+
+    if (file) {
+      return file.offset;
+    }
   }
 
-  return [true, [-1]];
+  return 0x0;
 }

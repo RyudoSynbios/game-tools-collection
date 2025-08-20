@@ -1,8 +1,8 @@
 import { getInt, setInt } from "$lib/utils/bytes";
 import {
   customGetRegions,
+  getFileOffset,
   getSaves,
-  getSlotShifts,
   repackMemoryCard,
   resetMemoryCard,
   unpackMemoryCard,
@@ -40,7 +40,7 @@ export function overrideParseContainerItemsShifts(
   index: number,
 ): [boolean, number[] | undefined] {
   if (item.id === "slots") {
-    return getSlotShifts(index);
+    return [true, [getFileOffset(index)]];
   }
 
   return [false, undefined];

@@ -1,6 +1,6 @@
 import {
   customGetRegions,
-  getSaves,
+  getFileOffset,
   repackMemoryCard,
   resetMemoryCard,
   unpackMemoryCard,
@@ -19,11 +19,7 @@ export function onInitFailed(): void {
 }
 
 export function initShifts(shifts: number[]): number[] {
-  const saves = getSaves();
-
-  shifts = [...shifts, saves[0].offset];
-
-  return shifts;
+  return [...shifts, getFileOffset(0, "Savegame")];
 }
 
 export function beforeSaving(): ArrayBufferLike {

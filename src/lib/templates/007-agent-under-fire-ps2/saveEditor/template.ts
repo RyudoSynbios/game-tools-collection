@@ -35,14 +35,14 @@ const template: GameJson = {
       disableSubinstanceIf: {
         $or: [
           {
-            offset: 0x14610,
+            offset: 0x10,
             type: "variable",
             dataType: "uint8",
             operator: "=",
             value: 0x5b,
           },
           {
-            offset: 0x14611,
+            offset: 0x11,
             type: "variable",
             dataType: "uint8",
             operator: "=",
@@ -60,7 +60,7 @@ const template: GameJson = {
               items: [
                 {
                   name: "Difficulty",
-                  offset: 0x15bf4,
+                  offset: 0x15f4,
                   type: "variable",
                   dataType: "uint8",
                   resource: "difficulties",
@@ -73,14 +73,14 @@ const template: GameJson = {
               items: [
                 {
                   name: "Controller Setup",
-                  offset: 0x15be4,
+                  offset: 0x15e4,
                   type: "variable",
                   dataType: "uint8",
                   resource: "controllerSetups",
                 },
                 {
                   name: "Invert Pitch",
-                  offset: 0x15bec,
+                  offset: 0x15ec,
                   type: "variable",
                   dataType: "bit",
                   bit: 0,
@@ -88,7 +88,7 @@ const template: GameJson = {
                 },
                 {
                   name: "Vibration",
-                  offset: 0x15bec,
+                  offset: 0x15ec,
                   type: "variable",
                   dataType: "bit",
                   bit: 1,
@@ -102,7 +102,7 @@ const template: GameJson = {
               items: [
                 {
                   name: "HUD Always Visible",
-                  offset: 0x15bec,
+                  offset: 0x15ec,
                   type: "variable",
                   dataType: "bit",
                   bit: 2,
@@ -110,7 +110,7 @@ const template: GameJson = {
                 },
                 {
                   name: "Cross Hair",
-                  offset: 0x15bec,
+                  offset: 0x15ec,
                   type: "variable",
                   dataType: "bit",
                   bit: 1,
@@ -124,7 +124,7 @@ const template: GameJson = {
               items: [
                 {
                   name: "Gold Rewards",
-                  offset: 0x15bec,
+                  offset: 0x15ec,
                   type: "variable",
                   dataType: "bit",
                   bit: 4,
@@ -138,13 +138,13 @@ const template: GameJson = {
               items: [
                 {
                   name: "Music",
-                  offset: 0x15bd8,
+                  offset: 0x15d8,
                   type: "variable",
                   dataType: "uint32",
                 },
                 {
                   name: "Sound Effects",
-                  offset: 0x15bdc,
+                  offset: 0x15dc,
                   type: "variable",
                   dataType: "uint32",
                   max: 128,
@@ -167,7 +167,7 @@ const template: GameJson = {
                   items: [
                     {
                       name: "Filename",
-                      offset: 0x14610,
+                      offset: 0x10,
                       length: 0x9,
                       type: "variable",
                       dataType: "string",
@@ -178,7 +178,7 @@ const template: GameJson = {
                     },
                     {
                       name: "Current Mission",
-                      offset: 0x14624,
+                      offset: 0x24,
                       type: "variable",
                       dataType: "uint8",
                       resource: "missions",
@@ -194,36 +194,36 @@ const template: GameJson = {
                       name: "Gold Rewards",
                       type: "bitflags",
                       flags: [
-                        { offset: 0x146b8, bit: 0, label: "Golden Gun" },
-                        { offset: 0x146bc, bit: 0, label: "Golden CH-6" },
-                        { offset: 0x146c0, bit: 0, label: "Unlimited Missiles" },
-                        { offset: 0x146c4, bit: 0, label: "Golden Accuracy" },
-                        { offset: 0x146c8, bit: 0, label: "Golden Clip" },
-                        { offset: 0x146cc, bit: 0, label: "Golden Grenades" },
-                        { offset: 0x146d0, bit: 0, label: "Lotus Esprit" },
-                        { offset: 0x146d4, bit: 0, label: "Rapid Fire" },
-                        { offset: 0x146d8, bit: 0, label: "Golden Armor" },
-                        { offset: 0x146dc, bit: 0, label: "Golden Bullets" },
-                        { offset: 0x146e0, bit: 0, label: "Regenerative Armor" },
-                        { offset: 0x146e4, bit: 0, label: "Unlimited Ammo" },
+                        { offset: 0xb8, bit: 0, label: "Golden Gun" },
+                        { offset: 0xbc, bit: 0, label: "Golden CH-6" },
+                        { offset: 0xc0, bit: 0, label: "Unlimited Missiles" },
+                        { offset: 0xc4, bit: 0, label: "Golden Accuracy" },
+                        { offset: 0xc8, bit: 0, label: "Golden Clip" },
+                        { offset: 0xcc, bit: 0, label: "Golden Grenades" },
+                        { offset: 0xd0, bit: 0, label: "Lotus Esprit" },
+                        { offset: 0xd4, bit: 0, label: "Rapid Fire" },
+                        { offset: 0xd8, bit: 0, label: "Golden Armor" },
+                        { offset: 0xdc, bit: 0, label: "Golden Bullets" },
+                        { offset: 0xe0, bit: 0, label: "Regenerative Armor" },
+                        { offset: 0xe4, bit: 0, label: "Unlimited Ammo" },
                       ],
                     },
                     {
                       name: "Platinum Rewards",
                       type: "bitflags",
                       flags: [
-                        { offset: 0x14688, bit: 0, label: "MP Map - Rocket Manor" },
-                        { offset: 0x1468c, bit: 0, label: "MP Game Mode - Golden Gun" },
-                        { offset: 0x14690, bit: 0, label: "MP Model - Stealth Bond" },
-                        { offset: 0x14694, bit: 0, label: "MP Powerup - Gravity Boots" },
-                        { offset: 0x14698, bit: 0, label: "MP Model - Guard" },
-                        { offset: 0x1469c, bit: 0, label: "MP Weapon - Viper" },
-                        { offset: 0x146a0, bit: 0, label: "MP Model - Alpine Guard" },
-                        { offset: 0x146a4, bit: 0, label: "MP Weapon - Calypso" },
-                        { offset: 0x146a8, bit: 0, label: "MP Modifier - Full Arsenal" },
-                        { offset: 0x146ac, bit: 0, label: "MP Model - Cyclops Oil Guard" },
-                        { offset: 0x146b0, bit: 0, label: "MP Model - Poseidon Guard" },
-                        { offset: 0x146b4, bit: 0, label: "MP Model - Carrier Guard" },
+                        { offset: 0x88, bit: 0, label: "MP Map - Rocket Manor" },
+                        { offset: 0x8c, bit: 0, label: "MP Game Mode - Golden Gun" },
+                        { offset: 0x90, bit: 0, label: "MP Model - Stealth Bond" },
+                        { offset: 0x94, bit: 0, label: "MP Powerup - Gravity Boots" },
+                        { offset: 0x98, bit: 0, label: "MP Model - Guard" },
+                        { offset: 0x9c, bit: 0, label: "MP Weapon - Viper" },
+                        { offset: 0xa0, bit: 0, label: "MP Model - Alpine Guard" },
+                        { offset: 0xa4, bit: 0, label: "MP Weapon - Calypso" },
+                        { offset: 0xa8, bit: 0, label: "MP Modifier - Full Arsenal" },
+                        { offset: 0xac, bit: 0, label: "MP Model - Cyclops Oil Guard" },
+                        { offset: 0xb0, bit: 0, label: "MP Model - Poseidon Guard" },
+                        { offset: 0xb4, bit: 0, label: "MP Model - Carrier Guard" },
                       ],
                     },
                   ],
@@ -243,14 +243,14 @@ const template: GameJson = {
                   items: [
                     {
                       name: "High Score",
-                      offset: 0x14628,
+                      offset: 0x28,
                       type: "variable",
                       dataType: "uint32",
                       max: 999999999,
                     },
                     {
                       name: "Medal",
-                      offset: 0x14678,
+                      offset: 0x78,
                       type: "variable",
                       dataType: "uint8",
                       resource: "medals",

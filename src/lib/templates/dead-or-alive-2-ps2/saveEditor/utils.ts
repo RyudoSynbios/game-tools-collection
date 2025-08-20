@@ -5,6 +5,7 @@ import { getInt, setBitflag, setInt } from "$lib/utils/bytes";
 import { formatChecksum } from "$lib/utils/checksum";
 import {
   customGetRegions,
+  getFileOffset,
   repackMemoryCard,
   resetMemoryCard,
   unpackMemoryCard,
@@ -32,6 +33,10 @@ export function overrideGetRegions(): string[] {
 
 export function onInitFailed(): void {
   resetMemoryCard();
+}
+
+export function initShifts(shifts: number[]): number[] {
+  return [...shifts, getFileOffset(0)];
 }
 
 export function overrideParseItem(item: Item): Item | ItemTab {

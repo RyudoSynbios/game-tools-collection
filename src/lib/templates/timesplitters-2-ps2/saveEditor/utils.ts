@@ -11,7 +11,7 @@ import {
 import { formatChecksum, generateCrcCcitt } from "$lib/utils/checksum";
 import {
   customGetRegions,
-  getSaves,
+  getFileOffset,
   repackMemoryCard,
   resetMemoryCard,
   unpackMemoryCard,
@@ -42,11 +42,7 @@ export function onInitFailed(): void {
 }
 
 export function initShifts(shifts: number[]): number[] {
-  const saves = getSaves();
-
-  shifts = [...shifts, saves[0].offset];
-
-  return shifts;
+  return [...shifts, getFileOffset(0)];
 }
 
 export function overrideParseItem(item: Item): Item {
@@ -57,15 +53,13 @@ export function overrideParseItem(item: Item): Item {
 
     const profileCountItem = getItem("profileCount") as ItemInt;
 
-    const saves = getSaves();
-
-    let instances = getInt(profileCountItem.offset + saves[0].offset, "uint8");
+    let instances = getInt(profileCountItem.offset + getFileOffset(0), "uint8");
 
     if (instances === 0) {
       instances = 1;
 
       itemContainer.disableSubinstanceIf = {
-        offset: 0x1c404,
+        offset: 0x4,
         type: "variable",
         dataType: "uint8",
         operator: "=",

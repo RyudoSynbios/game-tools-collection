@@ -4,8 +4,8 @@ import { gameRegion } from "$lib/stores";
 import { getInt, getString, setInt } from "$lib/utils/bytes";
 import {
   customGetRegions,
+  getFileOffset,
   getSaves,
-  getSlotShifts,
   repackMemoryCard,
   resetMemoryCard,
   unpackMemoryCard,
@@ -43,14 +43,12 @@ export function overrideParseItem(item: Item): Item {
     const saves = getSaves();
 
     itemContainer.instances = saves.length;
-  } else if (
-    "id" in item &&
-    item.id === "time" &&
-    [1, 2].includes($gameRegion)
-  ) {
+  } else if ("id" in item && item.id?.match(/time/)) {
     const itemInt = item as ItemInt;
 
-    itemInt.operations![0] = { "/": 60 };
+    if ([1, 2].includes($gameRegion)) {
+      itemInt.operations![0] = { "/": 60 };
+    }
 
     return itemInt;
   } else if ("id" in item && item.id === "name" && $gameRegion === 2) {
@@ -86,13 +84,25 @@ export function overrideParseItem(item: Item): Item {
   return item;
 }
 
+export function overrideShift(
+  item: Item,
+  shifts: number[],
+  instanceIndex: number,
+): number[] {
+  if ("id" in item && item.id === "time-playtime") {
+    return [...shifts.slice(0, -1), getFileOffset(instanceIndex, "system.bin")];
+  }
+
+  return shifts;
+}
+
 export function overrideParseContainerItemsShifts(
   item: ItemContainer,
   shifts: number[],
   index: number,
 ): [boolean, number[] | undefined] {
   if (item.id === "slots") {
-    return getSlotShifts(index);
+    return [true, [getFileOffset(index)]];
   }
 
   return [false, undefined];

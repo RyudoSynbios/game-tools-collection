@@ -5,7 +5,7 @@ import { getBitflags, getInt, setInt } from "$lib/utils/bytes";
 import { formatChecksum } from "$lib/utils/checksum";
 import {
   customGetRegions,
-  getSaves,
+  getFileOffset,
   repackMemoryCard,
   resetMemoryCard,
   unpackMemoryCard,
@@ -34,11 +34,7 @@ export function onInitFailed(): void {
 }
 
 export function initShifts(shifts: number[]): number[] {
-  const saves = getSaves();
-
-  shifts = [...shifts, saves[0].offset];
-
-  return shifts;
+  return [...shifts, getFileOffset(0)];
 }
 
 export function overrideParseItem(item: Item): Item {
