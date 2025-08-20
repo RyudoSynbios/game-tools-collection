@@ -272,6 +272,17 @@
     }
   },
   {
+    "id": "dragon-quest-the-journey-of-the-cursed-king-ps2",
+    "name": "Dragon Quest: The Journey of the Cursed King",
+    "consoleId": "playstation-2",
+    "tools": {
+      "saveEditor": {
+        "createdAt": "2025-08-20",
+        "regions": ["🇪🇺", "🇺🇸", "🇯🇵"]
+      }
+    }
+  },
+  {
     "id": "f-zero-x-n64",
     "name": "F-Zero X",
     "consoleId": "nintendo-64",
