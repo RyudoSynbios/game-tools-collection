@@ -232,19 +232,22 @@ function writeNote(note: Note, blob: ArrayBuffer): void {
 }
 
 export function isMpk(dataView: DataView, shift = 0x0): boolean {
-  const validator1 = [0x81, 0x1, 0x2, 0x3];
-  const validator2 = [0x1, 0x1, 0xfe, 0xf1];
+  let checksum = 0x0;
 
-  if (
-    isDexDriveHeader(dataView) ||
-    (dataView.byteLength >= 0x20000 &&
-      (checkValidator(validator1, shift, dataView) ||
-        checkValidator(validator2, shift + 0x3c, dataView)))
-  ) {
-    return true;
+  const offset = shift + 0x20;
+
+  for (let i = 0x0; i < 0x1c; i += 0x2) {
+    checksum += getInt(offset + i, "uint16", { bigEndian: true }, dataView);
   }
 
-  return false;
+  checksum &= 0xffff;
+
+  checksum = (checksum << 0x10) | (0xfff2 - checksum);
+
+  return (
+    isDexDriveHeader(dataView) ||
+    checksum === getInt(offset + 0x1c, "uint32", { bigEndian: true }, dataView)
+  );
 }
 
 export function isUnpackedMpk(): boolean {
