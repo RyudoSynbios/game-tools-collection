@@ -129,15 +129,7 @@ function pushFile(dataView: DataView, clusterIndex: number): void {
 
   const size = getInt(offset + 0x20, "uint16", { bigEndian: true }, dataView);
 
-  const name = [...Array(0xc).keys()].reduce((string, index) => {
-    const char = getInt(offset + 0x4 + index, "uint8", {}, dataView);
-
-    if (char === 0x0) {
-      return string;
-    }
-
-    return (string += String.fromCharCode(char));
-  }, "");
+  const name = getString(offset + 0x4, 0xc, "uint8", { endCode: 0x0 }, dataView); // prettier-ignore
 
   const clusters = [clusterIndex];
 

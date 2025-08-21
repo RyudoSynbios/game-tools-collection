@@ -468,6 +468,12 @@ const template: GameJson = {
                                   dataType: "uint16",
                                   max: 999,
                                 },
+                              ],
+                            },
+                            {
+                              type: "section",
+                              flex: true,
+                              items: [
                                 {
                                   name: "Attributes",
                                   type: "section",
