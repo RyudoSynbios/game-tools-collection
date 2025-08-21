@@ -92,7 +92,7 @@
         .vmp (<i>PlayStation Classic</i>), .gme (<i>DexDrive</i>)
       </li>
       <li>
-        <strong>PlayStation 2: </strong>.ps2, .psu
+        <strong>PlayStation 2: </strong>.ps2, .psu, .psv (<i>PlayStation 3</i>),
       </li>
       <li>
         <strong>PlayStation Portable: </strong>Mostly .bin

@@ -14,6 +14,7 @@ import {
   unpackMemoryCard,
 } from "./memoryCard";
 import { isPsu, unpackPsu } from "./psu";
+import { isPsv, unpackPsv } from "./psv";
 
 export type Entry = Directory | File;
 
@@ -135,6 +136,8 @@ export function getPage(offset: number, dataView: DataView): Page {
 export function unpackFile(dataView: DataView): DataView {
   if (isMemoryCard(dataView)) {
     return unpackMemoryCard(dataView);
+  } else if (isPsv(dataView)) {
+    return unpackPsv(dataView);
   } else if (isPsu(dataView)) {
     return unpackPsu(dataView);
   }
