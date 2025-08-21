@@ -3,15 +3,15 @@ import {
   customGetRegions,
   getFileOffset,
   getSaves,
-  repackMemoryCard,
-  resetMemoryCard,
-  unpackMemoryCard,
+  repackFile,
+  resetState,
+  unpackFile,
 } from "$lib/utils/common/playstation2";
 
 import type { Item, ItemContainer, ItemInt, Resource } from "$lib/types";
 
 export function beforeInitDataView(dataView: DataView): DataView {
-  return unpackMemoryCard(dataView);
+  return unpackFile(dataView);
 }
 
 export function overrideGetRegions(): string[] {
@@ -19,7 +19,7 @@ export function overrideGetRegions(): string[] {
 }
 
 export function onInitFailed(): void {
-  resetMemoryCard();
+  resetState();
 }
 
 export function overrideParseItem(item: Item): Item {
@@ -130,11 +130,11 @@ export function overrideSetInt(item: Item, value: string): boolean {
 }
 
 export function beforeSaving(): ArrayBufferLike {
-  return repackMemoryCard();
+  return repackFile();
 }
 
 export function onReset(): void {
-  resetMemoryCard();
+  resetState();
 }
 
 export function getSlotNames(): Resource {

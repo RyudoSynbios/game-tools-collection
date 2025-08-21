@@ -35,6 +35,13 @@ test.describe(game, () => {
     ["should load a standard save (Germany)"                 ,         "germany.ps2", [               't|["Slot 21"]'           , "s|1$1", "i|33$1", "i|30$2" , "s|6$2", "s|2$3", "i|PASS"]],
     ["should load a standard save (Italy)"                   ,           "italy.ps2", [               't|["Slot 3","Slot 5"]'   , "s|1$1", "i|33$1", "i|22$2" , "s|6$2", "s|2$3", "i|PASS"]],
     ["should load a standard save (Spain)"                   ,           "spain.ps2", [               't|["Slot 1"]'            , "s|1$1", "i|30$1", "i|45$2" , "s|6$2", "s|2$3", "i|PASS"]],
+    ["should load a PSU save (Europe, Australia)"            , "europeaustralia.psu", [               't|["Slot 13"]'           , "s|1$1", "i|30$1", "i|45$2" , "s|6$2", "s|2$3", "i|PASS"]],
+    ["should load a PSU save (USA)"                          ,             "usa.psu", [               't|["Slot 37"]'           , "s|1$1", "i|35$1", "i|37$2" , "s|6$2", "s|2$3", "i|PASS"]],
+    ["should load a PSU save (Japan)"                        ,           "japan.psu", [               't|["Slot 1"]'            , "s|1$1", "i|27$1", "i|10$2" , "s|6$2", "s|2$3", "i|PASS"]],
+    ["should load a PSU save (France)"                       ,          "france.psu", [               't|["Slot 94"]'           , "s|1$1", "i|30$1", "i|35$2" , "s|6$2", "s|2$3", "i|PASS"]],
+    ["should load a PSU save (Germany)"                      ,         "germany.psu", [               't|["Slot 21"]'           , "s|1$1", "i|33$1", "i|30$2" , "s|6$2", "s|2$3", "i|PASS"]],
+    ["should load a PSU save (Italy)"                        ,           "italy.psu", [               't|["Slot 3"]'            , "s|1$1", "i|33$1", "i|22$2" , "s|6$2", "s|2$3", "i|PASS"]],
+    ["should load a PSU save (Spain)"                        ,           "spain.psu", [               't|["Slot 1"]'            , "s|1$1", "i|30$1", "i|45$2" , "s|6$2", "s|2$3", "i|PASS"]],
    ];
 
   tests.forEach(([title, saveFilePath, args]) => {

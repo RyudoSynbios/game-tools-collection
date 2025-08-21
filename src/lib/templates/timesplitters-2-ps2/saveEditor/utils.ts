@@ -12,9 +12,9 @@ import { formatChecksum, generateCrcCcitt } from "$lib/utils/checksum";
 import {
   customGetRegions,
   getFileOffset,
-  repackMemoryCard,
-  resetMemoryCard,
-  unpackMemoryCard,
+  repackFile,
+  resetState,
+  unpackFile,
 } from "$lib/utils/common/playstation2";
 import { round } from "$lib/utils/format";
 import { getItem } from "$lib/utils/parser";
@@ -30,7 +30,7 @@ import type {
 } from "$lib/types";
 
 export function beforeInitDataView(dataView: DataView): DataView {
-  return unpackMemoryCard(dataView);
+  return unpackFile(dataView);
 }
 
 export function overrideGetRegions(): string[] {
@@ -38,7 +38,7 @@ export function overrideGetRegions(): string[] {
 }
 
 export function onInitFailed(): void {
-  resetMemoryCard();
+  resetState();
 }
 
 export function initShifts(shifts: number[]): number[] {
@@ -260,11 +260,11 @@ export function generateChecksum(item: ItemChecksum): number {
 }
 
 export function beforeSaving(): ArrayBufferLike {
-  return repackMemoryCard();
+  return repackFile();
 }
 
 export function onReset(): void {
-  resetMemoryCard();
+  resetState();
 }
 
 export function getProfileNames(): Resource {

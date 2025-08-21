@@ -1,33 +1,23 @@
 import { get } from "svelte/store";
 
-import { dataView, gameRegion, gameTemplate } from "$lib/stores";
+import { dataView, gameTemplate } from "$lib/stores";
 import { getInt, getString } from "$lib/utils/bytes";
+import { mergeUint8Arrays, numberArrayToString } from "$lib/utils/format";
+import { checkValidator } from "$lib/utils/validator";
+
+import type { DataViewABL } from "$lib/types";
+
 import {
-  getObjKey,
-  mergeUint8Arrays,
-  numberArrayToString,
-} from "$lib/utils/format";
-
-import type { DataViewABL, Validator } from "$lib/types";
-
-import { checkValidator } from "../validator";
-
-type Entry = Directory | File;
-
-interface Directory {
-  type: "directory";
-  name: string;
-  headerOffset: number;
-  content: Entry[];
-}
-
-interface File {
-  type: "file";
-  name: string;
-  headerOffset: number;
-  size: number;
-  startCluster: number;
-}
+  getEntryType,
+  getFile,
+  getPage,
+  saves,
+  type Directory,
+  type Entry,
+  type File,
+  type FileOffset,
+  type Page,
+} from ".";
 
 interface MemoryCard {
   superblock: Superblock;
@@ -53,31 +43,6 @@ interface Superblock {
   cardFlags: number;
 }
 
-interface Page {
-  entryMode: number;
-  entryLength: number;
-  entryCreated: {
-    seconds: number;
-    minutes: number;
-    hours: number;
-    day: number;
-    month: number;
-    year: number;
-  };
-  entryCluster: number;
-  entryDirEntry: number;
-  entryModified: {
-    seconds: number;
-    minutes: number;
-    hours: number;
-    day: number;
-    month: number;
-    year: number;
-  };
-  entryAttr: number;
-  entryName: string;
-}
-
 interface Extras {
   eccEnabled: boolean;
   eccLength: number;
@@ -85,11 +50,10 @@ interface Extras {
   clusterLength: number;
 }
 
-interface Save {
-  directory: Directory;
-  offset: number;
-  fileOffsets: { name: string; offset: number }[];
-}
+// Global objects
+
+let memoryCard = {} as MemoryCard;
+let memoryCardRaw: DataViewABL = new DataView(new ArrayBuffer(0));
 
 // ECC constants
 
@@ -114,12 +78,23 @@ const columnParityMasks = [...Array(256).keys()];
   });
 });
 
-// Global objects
+// Adapted from https://github.com/ps2dev/mymc/blob/db5d9e1c141cbbc4ba4e374f73a0518a8d75b7ef/ps2mc_ecc.py
+function generateEcc(table: Uint8Array): number[] {
+  let columnParity = 0x77;
+  let lineParity0 = 0x7f;
+  let lineParity1 = 0x7f;
 
-let memoryCard = {} as MemoryCard;
-let memoryCardRaw: DataViewABL = new DataView(new ArrayBuffer(0));
-let saves: Save[] = [];
-let filteredSaves: Save[] = [];
+  table.forEach((int, index) => {
+    columnParity ^= columnParityMasks[int];
+
+    if (parityTable[int]) {
+      lineParity0 ^= ~index;
+      lineParity1 ^= index;
+    }
+  });
+
+  return [columnParity, lineParity0 & 0x7f, lineParity1];
+}
 
 // Source from http://www.csclub.uwaterloo.ca:11068/mymc/ps2mcfs.html
 export function generateMemoryCard(dataView: DataView): void {
@@ -129,6 +104,7 @@ export function generateMemoryCard(dataView: DataView): void {
 
   memoryCard.superblock = {} as Superblock;
 
+  // prettier-ignore
   memoryCard.superblock.magic = getString(0x0, 0x28, "uint8", { endCode: 0x0 }, dataView);
   memoryCard.superblock.pageLength = getInt(0x28, "uint16", {}, dataView);
   memoryCard.superblock.pagesPerCluster = getInt(0x2a, "uint16", {}, dataView);
@@ -185,43 +161,7 @@ export function generateMemoryCard(dataView: DataView): void {
         j * memoryCard.superblock.pageLength +
         j * memoryCard.extras.eccLength;
 
-      const page = {} as Page;
-
-      page.entryMode = getInt(pageOffset, "uint16", {}, dataView);
-      page.entryLength = getInt(pageOffset + 0x4, "uint32", {}, dataView);
-
-      page.entryCreated = {
-        seconds: getInt(pageOffset + 0x8 + 0x1, "uint8", {}, dataView),
-        minutes: getInt(pageOffset + 0x8 + 0x2, "uint8", {}, dataView),
-        hours: getInt(pageOffset + 0x8 + 0x3, "uint8", {}, dataView),
-        day: getInt(pageOffset + 0x8 + 0x4, "uint8", {}, dataView),
-        month: getInt(pageOffset + 0x8 + 0x5, "uint8", {}, dataView),
-        year: getInt(pageOffset + 0x8 + 0x6, "uint16", {}, dataView),
-      };
-
-      page.entryCluster = getInt(pageOffset + 0x10, "uint32", {}, dataView);
-      page.entryDirEntry = getInt(pageOffset + 0x14, "uint32", {}, dataView);
-
-      page.entryModified = {
-        seconds: getInt(pageOffset + 0x18 + 0x1, "uint8", {}, dataView),
-        minutes: getInt(pageOffset + 0x18 + 0x2, "uint8", {}, dataView),
-        hours: getInt(pageOffset + 0x18 + 0x3, "uint8", {}, dataView),
-        day: getInt(pageOffset + 0x18 + 0x4, "uint8", {}, dataView),
-        month: getInt(pageOffset + 0x18 + 0x5, "uint8", {}, dataView),
-        year: getInt(pageOffset + 0x18 + 0x6, "uint16", {}, dataView),
-      };
-
-      page.entryAttr = getInt(pageOffset + 0x20, "uint32", {}, dataView);
-
-      page.entryName = [...Array(0x20).keys()].reduce((string, index) => {
-        const char = getInt(pageOffset + 0x40 + index, "uint8", {}, dataView);
-
-        if (char === 0x0) {
-          return string;
-        }
-
-        return (string += String.fromCharCode(char));
-      }, "");
+      const page = getPage(pageOffset, dataView);
 
       if (j === 0x0) {
         memoryCard.clusters.push([page]);
@@ -241,8 +181,6 @@ export function generateMemoryCard(dataView: DataView): void {
 export function resetMemoryCard(): void {
   memoryCard = {} as MemoryCard;
   memoryCardRaw = new DataView(new ArrayBuffer(0));
-  saves = [];
-  filteredSaves = [];
 }
 
 function getDirectories(name: string, isPartial = false): Directory[] {
@@ -250,16 +188,6 @@ function getDirectories(name: string, isPartial = false): Directory[] {
     (directory) =>
       directory.name === name || (isPartial && directory.name.includes(name)),
   );
-}
-
-function getFile(
-  directory: Directory,
-  name: string,
-  isPartial = false,
-): File | undefined {
-  return directory.content.find(
-    (file) => file.name === name || (isPartial && file.name.includes(name)),
-  ) as File;
 }
 
 function getNextClusterIndex(dataView: DataView, clusterIndex: number): number {
@@ -302,11 +230,9 @@ function readDirectory(
       length = page.entryLength;
     }
 
-    const isFile = page.entryMode & 0x10;
-    const isDirectory = page.entryMode & 0x20;
-    // const isUsed = page.entryMode & 0x8000;
+    const entryType = getEntryType(page.entryMode);
 
-    if (isDirectory) {
+    if (entryType === "directory") {
       const directory = {
         type: "directory",
         name: page.entryName,
@@ -324,7 +250,7 @@ function readDirectory(
       }
 
       parentDirectory.push(directory);
-    } else if (isFile) {
+    } else if (entryType === "file") {
       const file = {
         type: "file",
         name: page.entryName,
@@ -414,24 +340,6 @@ function readFile(
   }
 
   return mergeUint8Arrays(...uint8Arrays);
-}
-
-// Adapted from https://github.com/ps2dev/mymc/blob/db5d9e1c141cbbc4ba4e374f73a0518a8d75b7ef/ps2mc_ecc.py
-function generateEcc(table: Uint8Array): number[] {
-  let columnParity = 0x77;
-  let lineParity0 = 0x7f;
-  let lineParity1 = 0x7f;
-
-  table.forEach((int, index) => {
-    columnParity ^= columnParityMasks[int];
-
-    if (parityTable[int]) {
-      lineParity0 ^= ~index;
-      lineParity1 ^= index;
-    }
-  });
-
-  return [columnParity, lineParity0 & 0x7f, lineParity1];
 }
 
 function writeFile(file: File, blob: ArrayBuffer): void {
@@ -550,7 +458,7 @@ export function unpackMemoryCard(dataView: DataView): DataView {
 
           let offsetTmp = memoryCard.superblock.pageLength;
 
-          const fileOffsets: { name: string; offset: number }[] = [];
+          const fileOffsets: FileOffset[] = [];
 
           directory.content.forEach((entry) => {
             const header = getHeader(dataView, entry);
@@ -623,75 +531,4 @@ export function repackMemoryCard(): ArrayBufferLike {
   }
 
   return $dataView.buffer;
-}
-
-export function customGetRegions(): string[] {
-  const $gameTemplate = get(gameTemplate);
-
-  const regions: string[] = [];
-
-  Object.entries($gameTemplate.validator.regions).forEach(
-    ([region, condition]) => {
-      const validator = Object.values(condition)[0] as number[];
-
-      if (isUnpackedMemoryCard()) {
-        const validatorStringified = numberArrayToString(validator);
-
-        if (
-          saves.some((save) =>
-            save.directory.name.includes(validatorStringified),
-          )
-        ) {
-          regions.push(region);
-        }
-      }
-    },
-  );
-
-  return regions;
-}
-
-export function generateFilteredSaves(): void {
-  const $gameRegion = get(gameRegion);
-  const $gameTemplate = get(gameTemplate);
-
-  const region = $gameTemplate.validator.regions[
-    getObjKey($gameTemplate.validator.regions, $gameRegion)
-  ] as Validator;
-
-  const validator = region[0];
-
-  const validatorStringified = numberArrayToString(validator);
-
-  filteredSaves = saves
-    .filter((save) => save.directory.name.includes(validatorStringified))
-    .sort((a, b) =>
-      a.directory.name.localeCompare(b.directory.name, "en", { numeric: true }),
-    );
-}
-
-export function getSaves(): Save[] {
-  if (filteredSaves.length === 0) {
-    generateFilteredSaves();
-  }
-
-  return filteredSaves;
-}
-
-export function getFileOffset(index: number, name = ""): number {
-  const saves = getSaves();
-
-  if (saves[index]) {
-    if (!name) {
-      name = saves[index].directory.name;
-    }
-
-    const file = saves[index].fileOffsets.find((file) => file.name === name);
-
-    if (file) {
-      return file.offset;
-    }
-  }
-
-  return 0x0;
 }
