@@ -1653,12 +1653,31 @@ const template: GameJson = {
               ],
             },
             {
-              name: "Events",
+              name: "Sidequests",
               items: [
                 {
                   type: "tabs",
                   vertical: true,
                   items: [
+                    {
+                      name: "Friendly Monsters",
+                      items: [
+                        {
+                          type: "bitflags",
+                          flags: [
+                            { offset: 0x282, bit: 0, label: "Mu" },
+                            { offset: 0x282, bit: 1, label: "Ghost" },
+                            { offset: 0x282, bit: 2, label: "Ladybird" },
+                            { offset: 0x282, bit: 3, label: "Yeti" },
+                            { offset: 0x282, bit: 4, label: "Nymph" },
+                            { offset: 0x282, bit: 5, label: "Feather Circle" },
+                            { offset: 0x282, bit: 6, label: "Jabberwock" },
+                            { offset: 0x282, bit: 7, label: "Garuda" },
+                            { offset: 0x286, bit: 0, label: "Yan" },
+                          ],
+                        },
+                      ],
+                    },
                     {
                       name: "Mognet",
                       items: [
@@ -1900,6 +1919,58 @@ const template: GameJson = {
                       ],
                     },
                     {
+                      name: "Ragtime Mouse",
+                      items: [
+                        {
+                          type: "section",
+                          flex: true,
+                          noMargin: true,
+                          items: [
+                            {
+                              name: "Progression",
+                              offset: 0x289,
+                              type: "variable",
+                              dataType: "uint8",
+                              resource: "ragtimeMouseProgressions",
+                            },
+                            {
+                              name: "Good Answers",
+                              offset: 0x286,
+                              type: "variable",
+                              dataType: "uint16",
+                              binary: {
+                                bitStart: 3,
+                                bitLength: 5,
+                              },
+                              max: 16,
+                            },
+                          ],
+                        },
+                        {
+                          name: "Asked Questions",
+                          type: "bitflags",
+                          flags: [
+                            { offset: 0x283, bit: 0, label: "The 15th Lindblum War started in 1600" },
+                            { offset: 0x283, bit: 1, label: "Chocobo Forest is located between Lindblum and South Gate" },
+                            { offset: 0x283, bit: 2, label: "The Theater Ship Prima Vista was built in Artania Shipyards" },
+                            { offset: 0x283, bit: 3, label: '"I Want to Be Your Canary" was written by Lord Afon' },
+                            { offset: 0x283, bit: 4, label: "Some Mus are friendly and Don't attack" },
+                            { offset: 0x283, bit: 5, label: "Lindblum's air cabs operate around the clock" },
+                            { offset: 0x283, bit: 6, label: "Lindblum Castle is larger than Alexandria Castle" },
+                            { offset: 0x283, bit: 7, label: "Fossil Roo is a tunnel that connects Treno and Alexandria" },
+                            { offset: 0x284, bit: 0, label: "Theater Ship Prima Vista uses Mist as its source of energy" },
+                            { offset: 0x284, bit: 1, label: "Berkmea Cable Cars have been running for 8 years" },
+                            { offset: 0x284, bit: 2, label: "Conde Petie is a village of goblins" },
+                            { offset: 0x284, bit: 3, label: "Bobo bird is a bird that brings you fortune" },
+                            { offset: 0x284, bit: 4, label: "Treno's cafe, Card Carta, is members-only" },
+                            { offset: 0x284, bit: 5, label: "Prima Vista means love at first sight" },
+                            { offset: 0x284, bit: 6, label: "Only one desert exists in the entire world" },
+                            { offset: 0x284, bit: 7, label: "You can defeat Ragtime Mouse" },
+                          ],
+                        },
+                      ],
+                    },
+                    {
                       name: "Stiltzkin",
                       items: [
                         {
@@ -1963,6 +2034,17 @@ const template: GameJson = {
                         },
                       ],
                     },
+                  ],
+                },
+              ],
+            },
+            {
+              name: "Events",
+              items: [
+                {
+                  type: "tabs",
+                  vertical: true,
+                  items: [
                     {
                       name: "World Map",
                       flex: true,
@@ -5579,6 +5661,12 @@ const template: GameJson = {
     optionBoolean: {
       0x0: "ON",
       0x1: "OFF",
+    },
+    ragtimeMouseProgressions: {
+      0x0: "-",
+      0x1: "Pending",
+      0x3: "Last question answered",
+      0x7: "End of the test",
     },
     sounds: {
       0x0: "Stereo",
