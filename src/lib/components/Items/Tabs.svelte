@@ -4,6 +4,7 @@
   import AccessTimeIcon from "$lib/assets/AccessTime.svelte";
   import Content from "$lib/components/Items/Content.svelte";
   import {
+    dataJson,
     dataView,
     debugOptions,
     gameJson,
@@ -125,7 +126,7 @@
   }
 
   $: {
-    $dataView;
+    ($dataJson, $dataView);
 
     if (utilsExists("overrideItem")) {
       item = $gameUtils.overrideItem(item);

@@ -3,6 +3,7 @@
   import Input from "$lib/components/Input.svelte";
   import Select from "$lib/components/Select.svelte";
   import {
+    dataJson,
     dataView,
     dataViewAlt,
     gameJson,
@@ -92,7 +93,7 @@
   let labels: ResourceLabels;
 
   $: {
-    $dataView;
+    ($dataJson, $dataView);
 
     let isOverrided = false;
 

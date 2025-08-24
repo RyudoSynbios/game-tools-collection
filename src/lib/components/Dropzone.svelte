@@ -55,7 +55,7 @@
     handleUploadedFile(file);
   }
 
-  function handleUploadedFile(file: File): void {
+  async function handleUploadedFile(file: File): Promise<void> {
     if (!file || file.size === 0) {
       error = $gameTemplate.validator.error;
       return;
@@ -66,7 +66,7 @@
 
     const fileReader = new FileReader();
 
-    fileReader.onload = (event: ProgressEvent<FileReader>) => {
+    fileReader.onload = async (event: ProgressEvent<FileReader>) => {
       dataViewTmp = new DataView(event.target?.result as ArrayBufferLike);
       fileNameTmp = file.name;
       fileHeaderShiftTmp = 0x0;
@@ -76,7 +76,7 @@
       }
 
       if (utilsExists("beforeInitDataView")) {
-        dataViewTmp = $gameUtils.beforeInitDataView(
+        dataViewTmp = await $gameUtils.beforeInitDataView(
           dataViewTmp,
           fileHeaderShiftTmp,
         );

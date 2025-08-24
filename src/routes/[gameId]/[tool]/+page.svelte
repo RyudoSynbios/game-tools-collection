@@ -91,13 +91,13 @@
     reset();
   }
 
-  function handleFileSave(): void {
+  async function handleFileSave(): Promise<void> {
     updateChecksums();
 
     let buffer = $dataView.buffer as ArrayBuffer;
 
     if (utilsExists("beforeSaving")) {
-      buffer = $gameUtils.beforeSaving();
+      buffer = await $gameUtils.beforeSaving();
     }
 
     const blob = new Blob([buffer], {

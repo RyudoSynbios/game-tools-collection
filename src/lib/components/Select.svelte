@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { dataView, debugOptions, isDebug } from "$lib/stores";
+  import { dataJson, dataView, debugOptions, isDebug } from "$lib/stores";
 
   export let label = "";
   export let type: "number" | "string" = "string";
@@ -16,7 +16,7 @@
   export let selectEl: HTMLSelectElement | undefined = undefined;
 
   $: {
-    $dataView;
+    ($dataJson, $dataView);
 
     if (selectEl) {
       selectEl.value = value.toString();

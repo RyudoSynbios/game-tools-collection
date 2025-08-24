@@ -10,6 +10,7 @@ import {
 import debug from "$lib/utils/debug";
 import {
   getObjKey,
+  getPartialValue,
   isPartial,
   makeOperations,
   utilsExists,
@@ -532,24 +533,13 @@ export function setInt(
 
   // prettier-ignore
   if (isPartial(options.operations)) {
-    const oldInt = getInt(offset, dataType, {
+    const oldValue = getInt(offset, dataType, {
       bigEndian: options.bigEndian,
       binary: options.binary,
       binaryCodedDecimal: options.binaryCodedDecimal,
     }, $dataView);
 
-    let oldValue = getInt(offset, dataType, {
-      bigEndian: options.bigEndian,
-      binary: options.binary,
-      binaryCodedDecimal: options.binaryCodedDecimal,
-      bit: options.bit,
-      operations: options.operations,
-    }, $dataView);
-
-    oldValue = makeOperations(oldValue, options.operations, true);
-
-
-    value = oldInt - oldValue + value;
+    value = getPartialValue(oldValue, value, options.operations!);
   }
 
   if (options.binary) {

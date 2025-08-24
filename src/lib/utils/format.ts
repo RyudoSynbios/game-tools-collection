@@ -20,6 +20,10 @@ export function capitalize(string: string): string {
   return string[0].toUpperCase() + string.slice(1);
 }
 
+export function lowerize(string: string): string {
+  return string[0].toLowerCase() + string.slice(1);
+}
+
 export function clone<T>(obj: T): T {
   return JSON.parse(JSON.stringify(obj));
 }
@@ -122,6 +126,20 @@ export function isPartial(operations: IntOperation[] = []): boolean {
   return operations.some((operation) =>
     ["convert", "date"].includes(getObjKey(operation, 0)),
   );
+}
+
+export function getPartialValue(
+  oldValue: number,
+  newValue: number,
+  operations: IntOperation[],
+): number {
+  const calcValue = makeOperations(
+    makeOperations(oldValue, operations),
+    operations,
+    true,
+  );
+
+  return oldValue - calcValue + newValue;
 }
 
 export function makeOperations(

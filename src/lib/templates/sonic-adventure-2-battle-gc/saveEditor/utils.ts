@@ -31,17 +31,13 @@ export function overrideParseItem(item: Item): Item | ItemChecksum | ItemTab {
   } else if ("id" in item && item.id === "main") {
     const itemTab = item as ItemTab;
 
-    if (isChaoGarden()) {
-      itemTab.disabled = true;
-    }
+    itemTab.disabled = isChaoGarden();
 
     return itemTab;
   } else if ("id" in item && item.id === "chaoGarden") {
     const itemTab = item as ItemTab;
 
-    if (!isChaoGarden()) {
-      itemTab.disabled = true;
-    }
+    itemTab.disabled = !isChaoGarden();
 
     return itemTab;
   }
