@@ -218,6 +218,26 @@ const template: GameJson = {
                             },
                           ],
                         },
+                        {
+                          type: "section",
+                          flex: true,
+                          items: [
+                            {
+                              name: "Successful Steals",
+                              offset: 0xeee,
+                              type: "variable",
+                              dataType: "uint16",
+                              max: 9999,
+                            },
+                            {
+                              name: "Slayed Dragons",
+                              offset: 0xef0,
+                              type: "variable",
+                              dataType: "uint16",
+                              max: 9999,
+                            },
+                          ],
+                        },
                       ],
                     },
                     {
