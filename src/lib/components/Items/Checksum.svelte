@@ -1,6 +1,6 @@
 <script lang="ts">
   import Input from "$lib/components/Input.svelte";
-  import { dataView } from "$lib/stores";
+  import { dataJson, dataView } from "$lib/stores";
   import { dataTypeToLength, getBigInt, getInt } from "$lib/utils/bytes";
 
   import type { ItemChecksum } from "$lib/types";
@@ -10,7 +10,7 @@
   let value: string;
 
   $: {
-    $dataView;
+    ($dataJson, $dataView);
 
     const dataTypeLength = dataTypeToLength(item.dataType) * 2;
 

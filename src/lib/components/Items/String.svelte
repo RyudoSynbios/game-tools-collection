@@ -1,6 +1,12 @@
 <script lang="ts">
   import Input from "$lib/components/Input.svelte";
-  import { dataView, dataViewAlt, gameUtils, isDebug } from "$lib/stores";
+  import {
+    dataJson,
+    dataView,
+    dataViewAlt,
+    gameUtils,
+    isDebug,
+  } from "$lib/stores";
   import {
     dataTypeToLength,
     getString,
@@ -49,7 +55,7 @@
   let value: string;
 
   $: {
-    $dataView;
+    ($dataJson, $dataView);
 
     let isOverrided = false;
 

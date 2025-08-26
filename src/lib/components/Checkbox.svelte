@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { dataView } from "$lib/stores";
+  import { dataJson, dataView } from "$lib/stores";
 
   export let label = "";
   export let checked: boolean;
@@ -10,7 +10,7 @@
   export let inputEl: HTMLInputElement | undefined = undefined;
 
   $: {
-    $dataView;
+    ($dataJson, $dataView);
 
     if (inputEl) {
       inputEl.checked = checked;

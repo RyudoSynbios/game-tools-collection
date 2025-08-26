@@ -11,6 +11,7 @@ import { getLocalStorage } from "./utils/format";
 
 const lsDebugOptions = JSON.parse(getLocalStorage("debugOptions") || "{}");
 
+export const dataJson = writable<any>();
 export const dataView = writable<DataViewABL>(new DataView(new ArrayBuffer(0)));
 export const dataViewAlt = writable<{ [key: string]: DataViewABL }>({});
 export const dataViewAltMetas = writable<{

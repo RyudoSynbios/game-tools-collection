@@ -1,6 +1,12 @@
 <script lang="ts">
   import Checkbox from "$lib/components/Checkbox.svelte";
-  import { dataView, dataViewAlt, gameUtils, isDebug } from "$lib/stores";
+  import {
+    dataJson,
+    dataView,
+    dataViewAlt,
+    gameUtils,
+    isDebug,
+  } from "$lib/stores";
   import {
     getBitflag,
     isDataViewAltExists,
@@ -41,7 +47,7 @@
   let flags: (ItemBitflag & { checked: boolean })[];
 
   $: {
-    $dataView;
+    ($dataJson, $dataView);
 
     let isOverrided = false;
 

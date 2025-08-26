@@ -1,6 +1,7 @@
 import { get } from "svelte/store";
 
 import {
+  dataJson,
   dataView,
   dataViewAlt,
   dataViewAltMetas,
@@ -24,6 +25,7 @@ export function reset(): void {
     $gameUtils.onReset();
   }
 
+  dataJson.set(undefined);
   dataView.set(new DataView(new ArrayBuffer(0)));
   dataViewAlt.set({});
   dataViewAltMetas.set({});
