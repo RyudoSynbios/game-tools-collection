@@ -145,7 +145,7 @@ const template: GameJson = {
                             { offset: 0xb, bit: 0, label: "???", hidden: true },
                             { offset: 0xb, bit: 1, label: "???", hidden: true },
                             { offset: 0xb, bit: 2, label: "???", hidden: true },
-                            { offset: 0xb, bit: 3, label: "Jingo Playable in Multiplayer" },
+                            { offset: 0xb, bit: 3, label: "Jinjo Playable in Multiplayer" },
                           ],
                         },
                       ],
