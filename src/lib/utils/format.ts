@@ -128,6 +128,20 @@ export function isPartial(operations: IntOperation[] = []): boolean {
   );
 }
 
+export function getPartialValue(
+  oldValue: number,
+  newValue: number,
+  operations: IntOperation[],
+): number {
+  const calcValue = makeOperations(
+    makeOperations(oldValue, operations),
+    operations,
+    true,
+  );
+
+  return oldValue - calcValue + newValue;
+}
+
 export function makeOperations(
   value: number,
   operations: IntOperation[] = [],
