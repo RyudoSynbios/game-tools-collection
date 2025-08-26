@@ -305,6 +305,17 @@
     }
   },
   {
+    "id": "final-fantasy-iv-pixel-remaster-windows",
+    "name": "Final Fantasy IV Pixel Remaster",
+    "consoleId": "windows",
+    "tools": {
+      "saveEditor": {
+        "createdAt": "2025-08-26",
+        "regions": ["🏳️"]
+      }
+    }
+  },
+  {
     "id": "final-fantasy-vii-rebirth-windows",
     "name": "Final Fantasy VII Rebirth",
     "consoleId": "windows",
