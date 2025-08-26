@@ -175,13 +175,13 @@
 
 <style lang="postcss">
   .gtc-dropzone {
-    @apply select-none rounded bg-primary-900 p-2;
+    @apply flex select-none rounded bg-primary-900 p-2;
 
     width: 600px;
-    height: 400px;
+    min-height: 400px;
 
     & .gtc-dropzone-inner {
-      @apply flex h-full w-full cursor-pointer flex-col items-center justify-center border-2 border-dashed border-primary-500 p-4 text-white;
+      @apply flex w-full cursor-pointer flex-col items-center justify-center border-2 border-dashed border-primary-500 p-4 text-white;
 
       & .gtc-dropzone-hint {
         @apply whitespace-pre-line text-center text-primary-400;
