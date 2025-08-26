@@ -20,6 +20,10 @@ export function capitalize(string: string): string {
   return string[0].toUpperCase() + string.slice(1);
 }
 
+export function lowerize(string: string): string {
+  return string[0].toLowerCase() + string.slice(1);
+}
+
 export function clone<T>(obj: T): T {
   return JSON.parse(JSON.stringify(obj));
 }
