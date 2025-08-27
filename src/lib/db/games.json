@@ -261,6 +261,17 @@
     }
   },
   {
+    "id": "donkey-kong-country-snes",
+    "name": "Donkey Kong Country",
+    "consoleId": "super-nintendo",
+    "tools": {
+      "saveEditor": {
+        "createdAt": "2025-08-27",
+        "regions": ["🇪🇺", "🇺🇸", "🇯🇵"]
+      }
+    }
+  },
+  {
     "id": "donkey-kong-land-gb",
     "name": "Donkey Kong Land",
     "consoleId": "game-boy",
