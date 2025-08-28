@@ -94,7 +94,7 @@
   }
 </script>
 
-{#if !item.hidden || $isDebug}
+{#if !item.hidden || ($isDebug && $debugOptions.showHiddenItems)}
   <div class="gtc-string">
     <Input
       {label}

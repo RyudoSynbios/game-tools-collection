@@ -1,10 +1,12 @@
 <script lang="ts">
   import { onMount } from "svelte";
 
-  import { isDirty } from "$lib/stores";
+  import { isDebug, isDirty } from "$lib/stores";
   import "$lib/utils/prototype";
 
   import "../app.css";
+
+  import DebugBar from "$lib/components/DebugBar.svelte";
 
   function handleBeforeUnload(event: Event): string | void {
     if ($isDirty) {
@@ -49,6 +51,9 @@
       <slot />
     </div>
   </div>
+  {#if $isDebug}
+    <DebugBar />
+  {/if}
 </div>
 
 <style lang="postcss">

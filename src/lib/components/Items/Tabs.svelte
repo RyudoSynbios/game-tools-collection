@@ -227,7 +227,7 @@
 
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
-{#if !item.hidden || $isDebug}
+{#if !item.hidden || ($isDebug && $debugOptions.showHiddenItems)}
   <div
     class="gtc-tabs"
     class:gtc-tabs-vertical={item.vertical}
@@ -235,7 +235,7 @@
   >
     <ul bind:this={ulEl} on:click={handleFocusOn}>
       {#each tabs as tab, index}
-        {#if !tab.hidden || $isDebug}
+        {#if !tab.hidden || ($isDebug && $debugOptions.showHiddenItems)}
           <li
             class="gtc-tab"
             class:gtc-tab-debug={item.hidden || tab.hidden}

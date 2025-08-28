@@ -1,6 +1,12 @@
 <script lang="ts">
   import Int from "$lib/components/Items/Int.svelte";
-  import { dataJson, dataView, gameUtils, isDebug } from "$lib/stores";
+  import {
+    dataJson,
+    dataView,
+    debugOptions,
+    gameUtils,
+    isDebug,
+  } from "$lib/stores";
   import { utilsExists } from "$lib/utils/format";
 
   import type { ItemGroup } from "$lib/types";
@@ -16,7 +22,7 @@
   }
 </script>
 
-{#if !item.hidden || $isDebug}
+{#if !item.hidden || ($isDebug && $debugOptions.showHiddenItems)}
   <div class="gtc-group" class:gtc-group-debug={item.hidden}>
     {#if item.name}
       <div class="gtc-group-label">

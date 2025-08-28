@@ -1,6 +1,12 @@
 <script lang="ts">
   import Content from "$lib/components/Items/Content.svelte";
-  import { dataJson, dataView, gameUtils, isDebug } from "$lib/stores";
+  import {
+    dataJson,
+    dataView,
+    debugOptions,
+    gameUtils,
+    isDebug,
+  } from "$lib/stores";
   import { utilsExists } from "$lib/utils/format";
 
   import type { ItemSection } from "$lib/types";
@@ -16,7 +22,7 @@
   }
 </script>
 
-{#if !item.hidden || $isDebug}
+{#if !item.hidden || ($isDebug && $debugOptions.showHiddenItems)}
   <div
     class="gtc-section"
     class:gtc-section-background={item.background}

@@ -85,7 +85,7 @@
   }
 </script>
 
-{#if !item.hidden || $isDebug}
+{#if !item.hidden || ($isDebug && $debugOptions.showHiddenItems)}
   <div
     class="gtc-bitflags"
     class:gtc-bitflags-debug={item.hidden}
@@ -101,7 +101,7 @@
       </div>
     {/if}
     {#each flags as flag}
-      {#if !flag.hidden || $isDebug}
+      {#if !flag.hidden || ($isDebug && $debugOptions.showHiddenItems)}
         {@const label = `${$isDebug && $debugOptions.showInputOffsets ? `[0x${flag.offset.toHex()}] [${flag.bit}] ` : ""}${flag.label}`}
         <div class="gtc-bitflag" class:gtc-bitflag-debug={flag.hidden}>
           <Checkbox

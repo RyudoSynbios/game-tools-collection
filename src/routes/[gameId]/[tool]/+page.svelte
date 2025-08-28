@@ -3,18 +3,14 @@
   import { onDestroy } from "svelte";
 
   import { page } from "$app/stores";
-  import ChecksumsIcon from "$lib/assets/Checksums.svelte";
   import EjectIcon from "$lib/assets/Eject.svelte";
-  import ManageSearchIcon from "$lib/assets/ManageSearch.svelte";
   import PatchIcon from "$lib/assets/Patch.svelte";
   import SaveIcon from "$lib/assets/Save.svelte";
-  import SettingsIcon from "$lib/assets/Settings.svelte";
   import Dropzone from "$lib/components/Dropzone.svelte";
   import FileVisualizer from "$lib/components/FileVisualizer.svelte";
   import Content from "$lib/components/Items/Content.svelte";
   import {
     dataView,
-    debugOptions,
     fileName,
     gameJson,
     gameTemplate,
@@ -48,7 +44,6 @@
 
   let logoClickCount = 0;
   let logoClickTimer: NodeJS.Timeout;
-  let debugToolbarOpen = false;
 
   let patchInputEl: HTMLInputElement;
   let patchToolbarOpen = false;
@@ -57,24 +52,9 @@
   let patchSuccess = false;
 
   function handleClick(): void {
-    debugToolbarOpen = false;
     patchToolbarOpen = false;
 
     resetPatchStatus();
-  }
-
-  function handleDebugToolbarToggle(): void {
-    debugToolbarOpen = !debugToolbarOpen;
-  }
-
-  function handleExitDebugMode(): void {
-    debugToolbarOpen = false;
-    $isDebug = false;
-    setLocalStorage("debug", "false");
-  }
-
-  function handleFileChecksum(): void {
-    updateChecksums();
   }
 
   function handleFileEject(): void {
@@ -107,10 +87,6 @@
     FileSaver.saveAs(blob, $fileName);
 
     $isDirty = false;
-  }
-
-  function handleFileVisualizerOpen(): void {
-    $isFileVisualizerOpen = true;
   }
 
   function handleLogoClick(): void {
@@ -198,18 +174,6 @@
     resetPatchStatus();
   }
 
-  function handleShowInputOffsetsToggle(): void {
-    window.debugGTC.toggleTool("showInputOffsets");
-  }
-
-  function handleShowInputValuesToggle(): void {
-    window.debugGTC.toggleTool("showInputValues");
-  }
-
-  function handleShowTabIndexesToggle(): void {
-    window.debugGTC.toggleTool("showTabIndexes");
-  }
-
   function resetPatchStatus(): void {
     patchError = false;
     patchSuccess = false;
@@ -251,59 +215,6 @@
         on:click={handleLogoClick}
       />
       <div>
-        {#if $isDebug}
-          <div class="gtc-tool-debugtoolbar" on:click|stopPropagation>
-            <button
-              type="button"
-              class:gtc-tool-debugtoolbar-focus={debugToolbarOpen}
-              on:click={handleDebugToolbarToggle}
-            >
-              <SettingsIcon />
-            </button>
-            {#if debugToolbarOpen}
-              <ul class="gtc-tool-toolbar">
-                <li on:click={handleShowTabIndexesToggle}>
-                  Show tab indexes
-                  <input
-                    type="checkbox"
-                    checked={$debugOptions.showTabIndexes}
-                  />
-                </li>
-                <li on:click={handleShowInputOffsetsToggle}>
-                  Show input offsets
-                  <input
-                    type="checkbox"
-                    checked={$debugOptions.showInputOffsets}
-                  />
-                </li>
-                <li on:click={handleShowInputValuesToggle}>
-                  Show input values
-                  <input
-                    type="checkbox"
-                    checked={$debugOptions.showInputValues}
-                  />
-                </li>
-                <li on:click={handleExitDebugMode}>Exit debug mode</li>
-              </ul>
-            {/if}
-          </div>
-          <button
-            type="button"
-            class="gtc-tool-filevisualizer"
-            on:click={handleFileVisualizerOpen}
-          >
-            <ManageSearchIcon /> File Visualizer
-          </button>
-          {#if $gameJson.checksums && $gameJson.checksums.length > 0}
-            <button
-              type="button"
-              class="gtc-tool-checksums"
-              on:click={handleFileChecksum}
-            >
-              <ChecksumsIcon /> Checksums
-            </button>
-          {/if}
-        {/if}
         {#if utilsExists("importPatch") || utilsExists("generatePatch")}
           <div class="gtc-tool-patchtoolbar" on:click|stopPropagation>
             <button
@@ -377,27 +288,11 @@
         & button {
           @apply ml-2 flex;
 
-          &.gtc-tool-checksums {
-            @apply bg-blue-900 text-blue-100;
-
-            &:hover {
-              @apply bg-blue-700;
-            }
-          }
-
           &.gtc-tool-eject {
             @apply bg-red-900 text-red-100;
 
             &:hover {
               @apply bg-red-700;
-            }
-          }
-
-          &.gtc-tool-filevisualizer {
-            @apply bg-indigo-900 text-indigo-100;
-
-            &:hover {
-              @apply bg-indigo-700;
             }
           }
 
@@ -411,22 +306,6 @@
 
           & :global(svg) {
             @apply -ml-1 mr-2 h-5 w-5;
-          }
-        }
-
-        &.gtc-tool-debugtoolbar {
-          @apply relative;
-
-          & .gtc-tool-debugtoolbar-focus {
-            @apply bg-primary-300 text-white;
-          }
-
-          & button {
-            @apply px-2;
-          }
-
-          & :global(svg) {
-            @apply mx-0;
           }
         }
 
@@ -474,10 +353,6 @@
 
             &:hover {
               @apply bg-primary-400;
-            }
-
-            & input[type="checkbox"] {
-              @apply ml-2 w-2.5 cursor-pointer accent-primary-400;
             }
           }
         }

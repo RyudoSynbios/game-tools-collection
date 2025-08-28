@@ -189,7 +189,7 @@
   }
 </script>
 
-{#if !item.hidden || $isDebug}
+{#if !item.hidden || ($isDebug && $debugOptions.showHiddenItems)}
   <div class="gtc-int" class:gtc-int-button={item.button}>
     {#if options.length === 0}
       <Input
