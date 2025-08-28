@@ -4,6 +4,7 @@
     dataJson,
     dataView,
     dataViewAlt,
+    debugOptions,
     gameUtils,
     isDebug,
   } from "$lib/stores";
@@ -52,10 +53,17 @@
     }
   }
 
+  let label: string;
   let value: string;
 
   $: {
     ($dataJson, $dataView);
+
+    label = item.name || "";
+
+    if ($isDebug && $debugOptions.showInputOffsets) {
+      label = `[0x${item.offset.toHex()}] ${label}`;
+    }
 
     let isOverrided = false;
 
@@ -89,7 +97,7 @@
 {#if !item.hidden || $isDebug}
   <div class="gtc-string">
     <Input
-      label={item.name}
+      {label}
       type="text"
       maxlength={item.length / dataTypeToLength(item.letterDataType)}
       {value}

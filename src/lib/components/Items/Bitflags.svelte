@@ -4,6 +4,7 @@
     dataJson,
     dataView,
     dataViewAlt,
+    debugOptions,
     gameUtils,
     isDebug,
   } from "$lib/stores";
@@ -101,9 +102,10 @@
     {/if}
     {#each flags as flag}
       {#if !flag.hidden || $isDebug}
+        {@const label = `${$isDebug && $debugOptions.showInputOffsets ? `[0x${flag.offset.toHex()}] [${flag.bit}] ` : ""}${flag.label}`}
         <div class="gtc-bitflag" class:gtc-bitflag-debug={flag.hidden}>
           <Checkbox
-            label={flag.label}
+            {label}
             checked={flag.checked}
             disabled={flag.disabled || item.disabled}
             onChange={(event) => handleInputChange(flag, event)}

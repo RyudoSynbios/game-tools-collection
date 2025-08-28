@@ -6,6 +6,7 @@
     dataJson,
     dataView,
     dataViewAlt,
+    debugOptions,
     gameJson,
     gameUtils,
     isDebug,
@@ -84,6 +85,7 @@
     }
   }
 
+  let label: string;
   let min: number;
   let max: number;
   let maxlength: number;
@@ -94,6 +96,12 @@
 
   $: {
     ($dataJson, $dataView);
+
+    label = item.name || "";
+
+    if ($isDebug && $debugOptions.showInputOffsets) {
+      label = `[0x${item.offset.toHex()}] ${label}`;
+    }
 
     let isOverrided = false;
 
@@ -185,7 +193,7 @@
   <div class="gtc-int" class:gtc-int-button={item.button}>
     {#if options.length === 0}
       <Input
-        label={item.name}
+        {label}
         type={item.hex ? "text" : "number"}
         {min}
         {max}
@@ -205,7 +213,7 @@
       />
     {:else if item.autocomplete}
       <Autocomplete
-        label={item.name}
+        {label}
         {value}
         {options}
         {groups}
@@ -219,7 +227,7 @@
       />
     {:else}
       <Select
-        label={item.name}
+        {label}
         type="number"
         {value}
         {options}

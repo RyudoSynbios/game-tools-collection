@@ -198,6 +198,10 @@
     resetPatchStatus();
   }
 
+  function handleShowInputOffsetsToggle(): void {
+    window.debugGTC.toggleTool("showInputOffsets");
+  }
+
   function handleShowInputValuesToggle(): void {
     window.debugGTC.toggleTool("showInputValues");
   }
@@ -263,6 +267,13 @@
                   <input
                     type="checkbox"
                     checked={$debugOptions.showTabIndexes}
+                  />
+                </li>
+                <li on:click={handleShowInputOffsetsToggle}>
+                  Show input offsets
+                  <input
+                    type="checkbox"
+                    checked={$debugOptions.showInputOffsets}
                   />
                 </li>
                 <li on:click={handleShowInputValuesToggle}>

@@ -1,16 +1,23 @@
 <script lang="ts">
   import Input from "$lib/components/Input.svelte";
-  import { dataJson, dataView } from "$lib/stores";
+  import { dataJson, dataView, debugOptions, isDebug } from "$lib/stores";
   import { dataTypeToLength, getBigInt, getInt } from "$lib/utils/bytes";
 
   import type { ItemChecksum } from "$lib/types";
 
   export let item: ItemChecksum;
 
+  let label: string;
   let value: string;
 
   $: {
     ($dataJson, $dataView);
+
+    label = item.name || "";
+
+    if ($isDebug && $debugOptions.showInputOffsets) {
+      label = `[0x${item.offset.toHex()}] ${label}`;
+    }
 
     const dataTypeLength = dataTypeToLength(item.dataType) * 2;
 
@@ -30,7 +37,7 @@
 
 <div class="gtc-checksum">
   <Input
-    label={item.name}
+    {label}
     type="text"
     {value}
     debug
