@@ -10,7 +10,7 @@ declare global {
   }
 
   interface BigInt {
-    toHex: (length?: number) => string;
+    toHex: (length?: number, prefix?: boolean) => string;
   }
 
   interface DataView {
@@ -30,7 +30,7 @@ declare global {
     toBinary: (length?: number) => string;
     toBitCount: () => number;
     toEuler: () => number;
-    toHex: (length?: number) => string;
+    toHex: (length?: number, prefix?: boolean) => string;
   }
 
   interface String {

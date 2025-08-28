@@ -96,7 +96,7 @@ DataView.prototype.setInt24 = function (offset, value, littleEndian) {
   this.setUint24(offset, value < 0 ? value | 0x1000000 : value, littleEndian);
 };
 
-BigInt.prototype.toHex = function (length = 0) {
+BigInt.prototype.toHex = function (length = 0, prefix = false) {
   let hex = decToHex(this.toString(), { prefix: false }) as string;
 
   if (length) {
@@ -105,6 +105,10 @@ BigInt.prototype.toHex = function (length = 0) {
     } else {
       hex = hex.padStart(length, "0");
     }
+  }
+
+  if (prefix) {
+    hex = `0x${hex}`;
   }
 
   return hex;
@@ -126,7 +130,7 @@ Number.prototype.toEuler = function () {
   return this.valueOf() / (0x8000 / Math.PI);
 };
 
-Number.prototype.toHex = function (length = 0) {
+Number.prototype.toHex = function (length = 0, prefix = false) {
   let hex = this.toString(16);
 
   if (length) {
@@ -135,6 +139,10 @@ Number.prototype.toHex = function (length = 0) {
     } else {
       hex = hex.padStart(length, "0");
     }
+  }
+
+  if (prefix) {
+    hex = `0x${hex}`;
   }
 
   return hex;
