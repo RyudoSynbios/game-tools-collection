@@ -147,7 +147,9 @@
   }
 
   function handleExport(): void {
-    const blob = new Blob([selectedDataView], {
+    const buffer = selectedDataView.buffer as ArrayBuffer;
+
+    const blob = new Blob([buffer], {
       type: "application/octet-stream",
     });
 

@@ -52,11 +52,9 @@
     fileReader.onload = (event: ProgressEvent<FileReader>) => {
       const dataView = new DataView(event.target?.result as ArrayBufferLike);
 
-      const dataViewByteswapped = byteswap(dataView);
+      const buffer = byteswap(dataView).buffer as ArrayBuffer;
 
-      const data = new Uint8Array(dataViewByteswapped.buffer);
-
-      const blob = new Blob([data], {
+      const blob = new Blob([buffer], {
         type: "application/octet-stream",
       });
 
