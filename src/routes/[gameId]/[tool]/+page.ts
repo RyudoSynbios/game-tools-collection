@@ -1,6 +1,6 @@
 import { error, redirect } from "@sveltejs/kit";
 
-import { gameTemplate, gameUtils } from "$lib/stores.js";
+import { gameTemplate, gameUtils } from "$lib/stores";
 import { getGame, type Tool } from "$lib/utils/db.js";
 import debug from "$lib/utils/debug";
 

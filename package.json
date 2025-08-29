@@ -28,7 +28,8 @@
     "moment": "^2.30.1",
     "pako": "^2.1.0",
     "rijndael-js": "^2.0.0",
-    "three": "^0.178.0"
+    "three": "^0.178.0",
+    "throttle-debounce": "^5.0.2"
   },
   "devDependencies": {
     "@ianvs/prettier-plugin-sort-imports": "^4.4.2",
@@ -43,6 +44,7 @@
     "@types/pako": "^2.0.4",
     "@types/rijndael-js": "^1.0.2",
     "@types/three": "^0.178.1",
+    "@types/throttle-debounce": "^5.0.2",
     "@typescript-eslint/parser": "^8.36.0",
     "autoprefixer": "^10.4.21",
     "eslint": "^9.30.1",

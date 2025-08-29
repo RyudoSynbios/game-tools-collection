@@ -5,6 +5,10 @@ export default {
   content: ["./src/**/*.{html,js,svelte,ts}"],
   theme: {
     extend: {
+      animation: {
+        char: "char 1250ms infinite",
+        hex: "hex 1250ms infinite",
+      },
       colors: {
         primary: {
           // 100: "",
@@ -16,6 +20,24 @@ export default {
           700: "#2a3441",
           800: "#1f2937",
           900: "#192231",
+        },
+      },
+      keyframes: {
+        char: {
+          ["0%, 49%"]: {
+            boxShadow: `inset 0 0 0 20px var(--animate-color)`,
+          },
+          ["50%,100%"]: {
+            boxShadow: "none",
+          },
+        },
+        hex: {
+          ["0%, 49%"]: {
+            boxShadow: `inset 0 -4px 0 -2px var(--animate-color)`,
+          },
+          ["50%,100%"]: {
+            boxShadow: "none",
+          },
         },
       },
       screens: {
