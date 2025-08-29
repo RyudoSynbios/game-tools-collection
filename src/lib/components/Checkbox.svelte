@@ -2,9 +2,9 @@
   import { dataJson, dataView } from "$lib/stores";
 
   export let label = "";
-  export let checked: boolean;
+  export let checked = false;
   export let disabled = false;
-  export let onChange: (event: Event) => void;
+  export let onChange: (event: Event) => void = () => {};
 
   // We export input element to allow prop binding
   export let inputEl: HTMLInputElement | undefined = undefined;

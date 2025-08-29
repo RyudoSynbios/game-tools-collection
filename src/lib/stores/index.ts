@@ -7,7 +7,7 @@ import type {
   GameJson,
 } from "$lib/types";
 
-import { getLocalStorage } from "./utils/format";
+import { getLocalStorage } from "../utils/format";
 
 const lsDebugOptions = JSON.parse(getLocalStorage("debugOptions") || "{}");
 
@@ -20,8 +20,6 @@ export const dataViewAltMetas = writable<{
 export const debugOptions = writable<DebugOptions>(lsDebugOptions);
 export const fileHeaderShift = writable(0x0);
 export const fileName = writable("");
-export const fileVisualizerAddress = writable(0x0);
-export const fileVisualizerDataViewKey = writable("main");
 export const gameJson = writable({} as GameJson);
 export const gameRegion = writable(-1);
 export const gameTemplate = writable({} as GameJson);

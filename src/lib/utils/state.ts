@@ -7,13 +7,22 @@ import {
   dataViewAltMetas,
   fileHeaderShift,
   fileName,
-  fileVisualizerAddress,
-  fileVisualizerDataViewKey,
   gameJson,
   gameRegion,
   gameUtils,
   isDirty,
 } from "$lib/stores";
+import {
+  dataViewKey,
+  editedOffsets,
+  highlightsTemplate,
+  rowsOffset,
+  search,
+  searchBigEndian,
+  searchType,
+  selectedOffset,
+  selectedView,
+} from "$lib/stores/fileVisualizer";
 import { utilsExists } from "$lib/utils/format";
 
 import type { GameJson } from "$lib/types";
@@ -25,15 +34,25 @@ export function reset(): void {
     $gameUtils.onReset();
   }
 
+  // Main
   dataJson.set(undefined);
   dataView.set(new DataView(new ArrayBuffer(0)));
   dataViewAlt.set({});
   dataViewAltMetas.set({});
   fileHeaderShift.set(0x0);
   fileName.set("");
-  fileVisualizerAddress.set(0x0);
-  fileVisualizerDataViewKey.set("main");
   gameJson.set({} as GameJson);
   gameRegion.set(-1);
   isDirty.set(false);
+
+  // File Visualizer
+  dataViewKey.set(undefined);
+  editedOffsets.set([]);
+  highlightsTemplate.set({});
+  rowsOffset.set(0x0);
+  search.set("");
+  searchBigEndian.set(false);
+  searchType.set("uint8");
+  selectedOffset.set(0x0);
+  selectedView.set("hexview");
 }

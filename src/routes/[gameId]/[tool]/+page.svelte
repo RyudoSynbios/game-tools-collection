@@ -7,7 +7,7 @@
   import PatchIcon from "$lib/assets/Patch.svelte";
   import SaveIcon from "$lib/assets/Save.svelte";
   import Dropzone from "$lib/components/Dropzone.svelte";
-  import FileVisualizer from "$lib/components/FileVisualizer.svelte";
+  import FileVisualizer from "$lib/components/FileVisualizer/FileVisualizer.svelte";
   import Content from "$lib/components/Items/Content.svelte";
   import {
     dataView,

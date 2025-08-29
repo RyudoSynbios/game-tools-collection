@@ -1,6 +1,15 @@
-import { dataTypeToLength } from "$lib/utils/bytes";
+import { get } from "svelte/store";
 
-import type {
+import { gameJson } from "$lib/stores";
+import {
+  dataViewKey,
+  highlightsTemplate,
+  rows,
+  rowsOffset,
+  selectedDataView,
+} from "$lib/stores/fileVisualizer";
+
+import {
   ContentType,
   DataType,
   Item,
@@ -8,48 +17,94 @@ import type {
   ItemIntCondition,
 } from "$lib/types";
 
+import { dataTypeToLength } from "./bytes";
+
 export interface HighlightedOffset {
   offset: number;
   text: string;
-  type: ContentType | "search";
+  type: ContentType;
   dataType?: DataType;
 }
 
-export interface HighlightedOffsets {
-  [dataView: string]: {
-    [offset: number]: HighlightedOffset;
-  };
+export function getCellsNumber(): number {
+  const $rows = get(rows);
+  const $selectedDataView = get(selectedDataView);
+
+  return Math.min(Math.ceil($rows) * 0x10, $selectedDataView.byteLength);
+}
+
+export function getHighlight(offset: number): HighlightedOffset | undefined {
+  const $dataViewKey = get(dataViewKey);
+  const $highlightsTemplate = get(highlightsTemplate);
+
+  const key = $dataViewKey !== undefined ? $dataViewKey : "main";
+
+  return $highlightsTemplate[key]?.[offset];
+}
+
+export function getMaxRows(): number {
+  const $selectedDataView = get(selectedDataView);
+
+  return Math.ceil($selectedDataView.byteLength / 0x10);
+}
+
+export function scrollDataView(value: number): void {
+  const $rows = get(rows);
+  const $rowsOffset = get(rowsOffset);
+
+  const rowsFloor = Math.floor($rows);
+  const maxRows = getMaxRows();
+
+  let newRowsOffset = $rowsOffset + value;
+
+  if (rowsFloor + newRowsOffset > maxRows) {
+    newRowsOffset = maxRows - rowsFloor;
+  }
+
+  newRowsOffset = Math.max(0, newRowsOffset);
+
+  if ($rowsOffset !== newRowsOffset) {
+    rowsOffset.set(newRowsOffset);
+  }
+}
+
+export function parseGameJson(): void {
+  const $gameJson = get(gameJson);
+
+  Object.values($gameJson.items).forEach((item) => {
+    parseItem(item);
+  });
+
+  // We force the update of highlightsTemplate
+  highlightsTemplate.set(get(highlightsTemplate));
 }
 
 export function addItem(
   dataView: string,
-  highlightedOffsets: HighlightedOffsets,
   offset: number,
   text: string,
   type: ContentType,
   dataType?: DataType,
 ): void {
-  if (!highlightedOffsets[dataView]) {
-    highlightedOffsets[dataView] = {};
+  const $highlightsTemplate = get(highlightsTemplate);
+
+  if (!$highlightsTemplate[dataView]) {
+    $highlightsTemplate[dataView] = {};
   }
 
-  if (!highlightedOffsets[dataView][offset]) {
-    highlightedOffsets[dataView][offset] = {
+  if (!$highlightsTemplate[dataView][offset]) {
+    $highlightsTemplate[dataView][offset] = {
       offset,
       text,
       type,
       dataType,
     };
   } else {
-    highlightedOffsets[dataView][offset].text += `\n${text}`;
+    $highlightsTemplate[dataView][offset].text += `\n${text}`;
   }
 }
 
-export function parseItem(
-  highlightedOffsets: HighlightedOffsets,
-  item: Item,
-  name = "",
-): void {
+export function parseItem(item: Item, name = ""): void {
   let dataView = "main";
 
   if ("uncontrolled" in item && item.uncontrolled) {
@@ -65,7 +120,6 @@ export function parseItem(
       if ("offset" in flag) {
         addItem(
           dataView,
-          highlightedOffsets,
           flag.offset,
           `[${flag.bit}]: ${item.name || ""} ${flag.label || name}`,
           item.type,
@@ -91,7 +145,6 @@ export function parseItem(
 
         addItem(
           dataView,
-          highlightedOffsets,
           item.offset + i,
           `${isPartial ? `${item.dataType}: ` : ""}${item.name || name}`,
           item.type,
@@ -101,7 +154,7 @@ export function parseItem(
     }
   } else if (item.type === "group" || item.type === "section") {
     item.items.forEach((subitem) => {
-      parseItem(highlightedOffsets, subitem, item.name);
+      parseItem(subitem, item.name);
     });
   } else if (item.type === "tabs") {
     item.items.forEach((group) => {
@@ -112,7 +165,7 @@ export function parseItem(
         !("$and" in group.disableTabIf) &&
         !("$or" in group.disableTabIf)
       ) {
-        parseItem(highlightedOffsets, {
+        parseItem({
           ...(group.disableTabIf as ItemInt),
           name: `disableTabIf value === ${(
             group.disableTabIf as ItemIntCondition
@@ -122,7 +175,7 @@ export function parseItem(
 
       if (!group.disabled) {
         group.items.forEach((subitem) => {
-          parseItem(highlightedOffsets, subitem);
+          parseItem(subitem);
         });
       }
     });
