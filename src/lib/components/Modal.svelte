@@ -16,8 +16,8 @@
 
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <!-- svelte-ignore a11y-no-static-element-interactions -->
-<div class="gtc-modal-backdrop" on:click={onClose}>
-  <div class="gtc-modal" on:click|stopPropagation>
+<div class="gtc-modal-backdrop" on:mousedown={onClose}>
+  <div class="gtc-modal" on:mousedown|stopPropagation>
     <slot />
   </div>
 </div>
