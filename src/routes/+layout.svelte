@@ -46,7 +46,7 @@
       </div>
     </div>
   </div>
-  <div class="gtc-body">
+  <div class="gtc-body" class:gtc-body-debug={$isDebug}>
     <div class="gtc-body-inner">
       <slot />
     </div>
@@ -92,6 +92,10 @@
       @apply flex flex-1 flex-col p-4;
 
       padding-top: 72px;
+
+      &.gtc-body-debug {
+        @apply pb-12;
+      }
 
       & .gtc-body-inner {
         @apply mx-auto flex w-full max-w-7xl flex-1 flex-col;

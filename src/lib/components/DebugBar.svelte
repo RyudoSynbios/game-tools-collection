@@ -77,7 +77,7 @@
 
 <style lang="postcss">
   .gtc-debugbar {
-    @apply fixed inset-x-0 bottom-0 z-10 flex h-12 justify-between bg-black/20 p-2;
+    @apply fixed inset-x-0 bottom-0 z-10 flex h-12 justify-between bg-primary-900/50 p-2;
 
     & > div {
       @apply flex;
