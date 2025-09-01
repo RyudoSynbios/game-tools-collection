@@ -2,7 +2,7 @@
   import FileSaver from "file-saver";
   import { onDestroy } from "svelte";
 
-  import { page } from "$app/stores";
+  import { page } from "$app/state";
   import EjectIcon from "$lib/assets/Eject.svelte";
   import PatchIcon from "$lib/assets/Patch.svelte";
   import SaveIcon from "$lib/assets/Save.svelte";
@@ -26,11 +26,11 @@
 
   import type { Game, GameJson, Patch } from "$lib/types";
 
-  const game = getGame($page.params["gameId"]) as Game;
+  const game = getGame(page.params["gameId"]!) as Game;
 
   let tool = "";
 
-  switch ($page.params["tool"]) {
+  switch (page.params["tool"]) {
     case "randomizer":
       tool = "Randomizer";
       break;
@@ -136,7 +136,7 @@
       try {
         const patch: Patch<unknown> = JSON.parse(`${event.target?.result}`);
 
-        if (patch.identifier !== $page.params["gameId"]) {
+        if (patch.identifier !== page.params["gameId"]) {
           patchIsLoading = false;
           patchError = true;
           return;
@@ -191,7 +191,7 @@
 <svelte:head>
   <title>{game.name} - {game.console.name} - {tool} | Game Tools Collection</title>
   <meta property="og:title" content="{game.name} - {game.console.name} - {tool}" />
-  <meta property="og:image" content="{$page.url.origin}/img/games/{game.id}/logo.png" />
+  <meta property="og:image" content="{page.url.origin}/img/games/{game.id}/logo.png" />
 </svelte:head>
 
 <svelte:window on:click={handleClick} />

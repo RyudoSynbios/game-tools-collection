@@ -1,11 +1,11 @@
 <script lang="ts">
-  import { page } from "$app/stores";
+  import { page } from "$app/state";
 </script>
 
 <svelte:head>
   <title>About | Game Tools Collection</title>
   <meta property="og:title" content="About" />
-  <meta property="og:image" content="{$page.url.origin}/img/icon.png" />
+  <meta property="og:image" content="{page.url.origin}/img/icon.png" />
 </svelte:head>
 
 <div class="gtc-about">

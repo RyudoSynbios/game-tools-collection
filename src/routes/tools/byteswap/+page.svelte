@@ -1,7 +1,7 @@
 <script lang="ts">
   import FileSaver from "file-saver";
 
-  import { page } from "$app/stores";
+  import { page } from "$app/state";
   import { byteswap } from "$lib/utils/bytes";
 
   let inputEl: HTMLInputElement;
@@ -70,7 +70,7 @@
 <svelte:head>
   <title>Byteswap | Game Tools Collection</title>
   <meta property="og:title" content="Byteswap" />
-  <meta property="og:image" content="{$page.url.origin}/img/icon.png" />
+  <meta property="og:image" content="{page.url.origin}/img/icon.png" />
 </svelte:head>
 
 <!-- svelte-ignore a11y-click-events-have-key-events -->
