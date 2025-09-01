@@ -192,12 +192,12 @@ const template: GameJson = {
                 },
                 {
                   name: "Character Outfits",
-                  flex: true,
                   items: [
                     {
                       id: "mainStoryOnly",
                       type: "section",
                       flex: true,
+                      noMargin: true,
                       items: [
                         {
                           id: "outfit",
@@ -225,6 +225,40 @@ const template: GameJson = {
                           dataType: "bit",
                           bit: 6,
                           resource: "mainStoryOutfits",
+                        },
+                      ],
+                    },
+                    {
+                      id: "mainStoryOnly",
+                      type: "section",
+                      flex: true,
+                      items: [
+                        {
+                          name: "Obtained Dresses",
+                          type: "bitflags",
+                          flags: [
+                            { offset: 0x42792, bit: 6, label: "Cloud's Dress 1" },
+                            { offset: 0x42793, bit: 1, label: "Cloud's Dress 2" },
+                            { offset: 0x42793, bit: 4, label: "Cloud's Dress 3" },
+                          ],
+                        },
+                        {
+                          name: "Obtained Dresses",
+                          type: "bitflags",
+                          flags: [
+                            { offset: 0x42792, bit: 7, label: "Tifa's Dress 1" },
+                            { offset: 0x42793, bit: 2, label: "Tifa's Dress 2" },
+                            { offset: 0x42793, bit: 5, label: "Tifa's Dress 3" },
+                          ],
+                        },
+                        {
+                          name: "Obtained Dresses",
+                          type: "bitflags",
+                          flags: [
+                            { offset: 0x42793, bit: 0, label: "Aerith's Dress 1" },
+                            { offset: 0x42793, bit: 3, label: "Aerith's Dress 2" },
+                            { offset: 0x42793, bit: 6, label: "Aerith's Dress 3" },
+                          ],
                         },
                       ],
                     },
