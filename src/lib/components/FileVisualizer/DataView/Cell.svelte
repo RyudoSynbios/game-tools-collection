@@ -149,7 +149,7 @@
     }
   }
 
-  :global(.gtc-filevisualizer-hexview) {
+  :global(.gtc-filevisualizer-cellsgrid-hexview) {
     & .gtc-filevisualizer-cell:nth-child(2n),
     & .gtc-filevisualizer-cell:hover:nth-child(2n) {
       @apply text-gray-600;
@@ -160,12 +160,12 @@
     }
   }
 
-  :global(.gtc-filevisualizer-hexview.gtc-filevisualizer-selected)
+  :global(.gtc-filevisualizer-cellsgrid-hexview.gtc-filevisualizer-selected)
     .gtc-filevisualizer-cell-selected {
     @apply animate-hex;
   }
 
-  :global(.gtc-filevisualizer-charview.gtc-filevisualizer-selected)
+  :global(.gtc-filevisualizer-cellsgrid-charview.gtc-filevisualizer-selected)
     .gtc-filevisualizer-cell-selected {
     @apply animate-char;
   }

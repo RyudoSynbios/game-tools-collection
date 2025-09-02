@@ -31,7 +31,7 @@
 
 <style lang="postcss">
   .gtc-filevisualizer-offsets {
-    @apply bg-primary-500 px-2 text-center text-sm text-gray-500;
+    @apply bg-primary-500 px-2 text-center text-sm uppercase text-gray-500;
 
     width: 95px;
 

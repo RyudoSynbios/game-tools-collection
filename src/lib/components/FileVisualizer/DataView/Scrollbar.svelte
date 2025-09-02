@@ -124,7 +124,7 @@
   $: scrollThumbContainerHeight && updateScrollThumb();
 </script>
 
-<svelte:window on:mousemove={handleMouseMove} on:mouseup={handleMouseUp} />
+<svelte:window on:mousemove={handleMouseMove} on:pointerup={handleMouseUp} />
 
 <!-- svelte-ignore a11y-no-static-element-interactions -->
 <div class="gtc-filevisualizer-scrollbar">
