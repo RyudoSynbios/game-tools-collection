@@ -65,7 +65,11 @@
       </button>
     {/if}
     {#if $gameJson.checksums && $gameJson.checksums.length > 0}
-      <button type="button" on:click={handleFileChecksum}>
+      <button
+        class="gtc-debugbar-checksums"
+        type="button"
+        on:click={handleFileChecksum}
+      >
         <ChecksumsIcon /> Checksums
       </button>
     {/if}

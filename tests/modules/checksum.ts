@@ -5,7 +5,7 @@ export async function expectChecksum(
   expectedValue: string,
   inputIndex: number,
 ): Promise<void> {
-  await page.locator(".gtc-tool-checksums").click();
+  await page.locator(".gtc-debugbar-checksums").click();
 
   const checksum = page.locator("input[data-checksum=true]").nth(inputIndex);
 
