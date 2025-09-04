@@ -1173,10 +1173,12 @@ const template: GameJson = {
                               autocomplete: true,
                             },
                             {
+                              id: "quantity",
                               name: "Quantity",
                               offset: 0xf21,
                               type: "variable",
                               dataType: "uint8",
+                              min: 1,
                               max: 99,
                             },
                           ],

@@ -106,6 +106,15 @@ export function overrideItem(item: Item): Item {
     itemInt.resource = `disc${disc}Locations`;
 
     return itemInt;
+  } else if ("id" in item && item.id === "quantity") {
+    const itemInt = item as ItemInt;
+
+    const itemIndex = getInt(itemInt.offset - 0x1, "uint8");
+    const quantity = getInt(itemInt.offset, "uint8");
+
+    itemInt.disabled = itemIndex === 0xff || quantity === 0x0;
+
+    return itemInt;
   }
 
   return item;
