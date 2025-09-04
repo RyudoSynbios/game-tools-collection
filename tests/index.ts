@@ -61,6 +61,7 @@ export async function initPage(browser: Browser, url: string): Promise<void> {
 
   await page.addInitScript(() => {
     localStorage.setItem("debug", "true");
+    localStorage.setItem("debugOptions", '{"showHiddenItems":true}');
   });
 
   await page.goto(url, {
