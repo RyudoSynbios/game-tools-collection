@@ -195,6 +195,17 @@
     }
   },
   {
+    "id": "chrono-trigger-snes",
+    "name": "Chrono Trigger",
+    "consoleId": "super-nintendo",
+    "tools": {
+      "saveEditor": {
+        "createdAt": "2025-09-04",
+        "regions": ["🇺🇸", "🇯🇵"]
+      }
+    }
+  },
+  {
     "id": "crash-bandicoot-ps",
     "name": "Crash Bandicoot",
     "consoleId": "playstation",
