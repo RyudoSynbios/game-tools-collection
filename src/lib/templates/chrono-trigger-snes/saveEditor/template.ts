@@ -1233,6 +1233,8 @@ const template: GameJson = {
         0xeb: "?",
         0xec: "ォ",
         0xed: "/",
+        0xfd: "魔",
+        0xfe: "王",
         0xff: " ",
       },
     ],
