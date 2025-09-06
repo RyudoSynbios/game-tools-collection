@@ -31,78 +31,89 @@
 </script>
 
 <div class="gtc-debugbar">
-  <div>
-    <button
-      type="button"
-      on:click={() => handleOptionToggle("showHiddenItems")}
-    >
-      Hidden Items
-      <input type="checkbox" checked={$debugOptions.showHiddenItems} />
-    </button>
-    <button
-      type="button"
-      on:click={() => handleOptionToggle("showInputOffsets")}
-    >
-      Input Offsets
-      <input type="checkbox" checked={$debugOptions.showInputOffsets} />
-    </button>
-    <button
-      type="button"
-      on:click={() => handleOptionToggle("showInputValues")}
-    >
-      Input Values
-      <input type="checkbox" checked={$debugOptions.showInputValues} />
-    </button>
-    <button type="button" on:click={() => handleOptionToggle("showTabIndexes")}>
-      Tab Indexes
-      <input type="checkbox" checked={$debugOptions.showTabIndexes} />
-    </button>
-  </div>
-  <div>
-    {#if $dataView.byteLength > 0}
-      <button type="button" on:click={handleFileVisualizerOpen}>
-        <ManageSearchIcon /> File Visualizer
-      </button>
-    {/if}
-    {#if $gameJson.checksums && $gameJson.checksums.length > 0}
+  <div class="gtc-debugbar-inner">
+    <div>
       <button
-        class="gtc-debugbar-checksums"
         type="button"
-        on:click={handleFileChecksum}
+        on:click={() => handleOptionToggle("showHiddenItems")}
       >
-        <ChecksumsIcon /> Checksums
+        Hidden Items
+        <input type="checkbox" checked={$debugOptions.showHiddenItems} />
       </button>
-    {/if}
-    <button type="button" on:click={handleExitDebugMode}>
-      <CloseIcon />
-    </button>
+      <button
+        type="button"
+        on:click={() => handleOptionToggle("showInputOffsets")}
+      >
+        Input Offsets
+        <input type="checkbox" checked={$debugOptions.showInputOffsets} />
+      </button>
+      <button
+        type="button"
+        on:click={() => handleOptionToggle("showInputValues")}
+      >
+        Input Values
+        <input type="checkbox" checked={$debugOptions.showInputValues} />
+      </button>
+      <button
+        type="button"
+        on:click={() => handleOptionToggle("showTabIndexes")}
+      >
+        Tab Indexes
+        <input type="checkbox" checked={$debugOptions.showTabIndexes} />
+      </button>
+    </div>
+    <div>
+      {#if $dataView.byteLength > 0}
+        <button type="button" on:click={handleFileVisualizerOpen}>
+          <ManageSearchIcon /> File Visualizer
+        </button>
+      {/if}
+      {#if $gameJson.checksums && $gameJson.checksums.length > 0}
+        <button
+          class="gtc-debugbar-checksums"
+          type="button"
+          on:click={handleFileChecksum}
+        >
+          <ChecksumsIcon /> Checksums
+        </button>
+      {/if}
+      <button type="button" on:click={handleExitDebugMode}>
+        <CloseIcon />
+      </button>
+    </div>
   </div>
 </div>
 
 <style lang="postcss">
   .gtc-debugbar {
-    @apply fixed inset-x-0 bottom-0 z-10 flex h-12 justify-between bg-primary-900/50 p-2;
+    @apply fixed inset-x-0 bottom-0 z-10 h-12 bg-primary-900/50 p-2;
 
-    & > div {
-      @apply flex;
+    & .gtc-debugbar-inner {
+      @apply mx-auto flex justify-between;
 
-      &:first-child button:first-child {
-        @apply ml-0;
-      }
+      max-width: 90rem;
 
-      &:last-child button:last-child :global(svg) {
-        @apply mr-0;
-      }
+      & > div {
+        @apply flex;
 
-      & button {
-        @apply ml-2 flex items-center px-3 py-1.5 text-xs;
-
-        & input[type="checkbox"] {
-          @apply ml-2 cursor-pointer accent-primary-400;
+        &:first-child button:first-child {
+          @apply ml-0;
         }
 
-        & :global(svg) {
-          @apply mr-1 h-5;
+        &:last-child button:last-child :global(svg) {
+          @apply mr-0;
+        }
+
+        & button {
+          @apply ml-2 flex items-center px-3 py-1.5 text-xs;
+
+          & input[type="checkbox"] {
+            @apply ml-2 cursor-pointer accent-primary-400;
+          }
+
+          & :global(svg) {
+            @apply mr-1 h-5;
+          }
         }
       }
     }

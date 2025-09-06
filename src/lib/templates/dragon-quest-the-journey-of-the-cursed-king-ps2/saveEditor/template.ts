@@ -90,7 +90,7 @@ const template: GameJson = {
                               fallback: 0x20,
                               endCode: 0x0,
                               regex:
-                                "[ !\-\?A-Za-zÀ-ÂÄÇ-ÏÑ-ÔÖÙ-Üà-âäç-ïñ-ôöù-üẞ]",
+                                "[ !\-?A-Za-zÀ-ÂÄÇ-ÏÑ-ÔÖÙ-Üà-âäç-ïñ-ôöù-üẞ]",
                               test: true,
                             },
                             {
@@ -983,7 +983,7 @@ const template: GameJson = {
                       letterDataType: "uint8",
                       fallback: 0x20,
                       endCode: 0x0,
-                      regex: "[ !\-\?A-Za-zÀ-ÂÄÇ-ÏÑ-ÔÖÙ-Üà-âäç-ïñ-ôöù-üẞ]",
+                      regex: "[ !\-?A-Za-zÀ-ÂÄÇ-ÏÑ-ÔÖÙ-Üà-âäç-ïñ-ôöù-üẞ]",
                     },
                     {
                       id: "monsterTeam-0",
@@ -1029,7 +1029,7 @@ const template: GameJson = {
                       letterDataType: "uint8",
                       fallback: 0x20,
                       endCode: 0x0,
-                      regex: "[ !\-\?A-Za-zÀ-ÂÄÇ-ÏÑ-ÔÖÙ-Üà-âäç-ïñ-ôöù-üẞ]",
+                      regex: "[ !\-?A-Za-zÀ-ÂÄÇ-ÏÑ-ÔÖÙ-Üà-âäç-ïñ-ôöù-üẞ]",
                     },
                     {
                       id: "monsterTeam-3",

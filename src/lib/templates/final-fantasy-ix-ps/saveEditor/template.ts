@@ -1928,7 +1928,7 @@ const template: GameJson = {
                             { offset: 0x5e6, bit: 2, label: "???", hidden: true },
                             { offset: 0x5e6, bit: 1, label: "???", hidden: true },
                             { offset: 0x5e6, bit: 0, label: "???", hidden: true },
-                            { offset: 0x5e7, bit: 7, label: "Explainations about Mognet heard" },
+                            { offset: 0x5e7, bit: 7, label: "Explanations about Mognet heard" },
                             { offset: 0x5e7, bit: 6, label: "Moorock about not knowing Mognet" },
                             { offset: 0x5e7, bit: 5, label: "???", hidden: true },
                             { offset: 0x5e7, bit: 4, label: "???", hidden: true },

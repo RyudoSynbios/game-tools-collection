@@ -40,7 +40,7 @@ const template: GameJson = {
                   dataType: "string",
                   letterDataType: "uint8",
                   encoding: "shiftJis",
-                  regex: "[\.0-9A-Za-z]",
+                  regex: "[.0-9A-Za-z]",
                   endCode: 0x0,
                   test: true,
                 },

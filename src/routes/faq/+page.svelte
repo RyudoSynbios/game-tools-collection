@@ -51,54 +51,54 @@
   <Spoiler title="What files are supported by Save Editors?">
     <ul>
       <li>
-        <strong>Game Boy: </strong>.sav, .srm
+        <strong>Game Boy:</strong> .sav, .srm
       </li>
       <li>
-        <strong>Game Boy Color: </strong>.sav, .srm
+        <strong>Game Boy Color:</strong> .sav, .srm
       </li>
       <li>
-        <strong>Game Boy Advance: </strong>.sav, .srm, .sps (<i>GameShark</i>)
+        <strong>Game Boy Advance:</strong> .sav, .srm, .sps (<i>GameShark</i>)
       </li>
       <li>
-        <strong>Nintendo DS: </strong>.dsv, .sav, .dss, .dst, .duc (<i
+        <strong>Nintendo DS:</strong> .dsv, .sav, .dss, .dst, .duc (<i
           >Action Replay Max DS</i
         >)
       </li>
       <li>
-        <strong>Nintendo Entertainment System: </strong>.sav, .srm
+        <strong>Nintendo Entertainment System:</strong> .sav, .srm
       </li>
       <li>
-        <strong>Super Nintendo: </strong>.sav, .srm
+        <strong>Super Nintendo:</strong> .sav, .srm
       </li>
       <li>
-        <strong>Nintendo 64: </strong>.eep, .fla, .sra, .srm, .n64 (<i
+        <strong>Nintendo 64:</strong> .eep, .fla, .sra, .srm, .n64 (<i
           >DexDrive</i
         >)
       </li>
       <li>
-        <strong>GameCube: </strong>.gci
+        <strong>GameCube:</strong> .gci
       </li>
       <li>
-        <strong>Dreamcast: </strong>.bin (<i>VMU raw dump</i>), .cdi
+        <strong>Dreamcast:</strong> .bin (<i>VMU raw dump</i>), .cdi
       </li>
       <li>
-        <strong>Mega Drive: </strong>.sav, .srm
+        <strong>Mega Drive:</strong> .sav, .srm
       </li>
       <li>
-        <strong>Saturn: </strong>.bcr, .bkr, .bin
+        <strong>Saturn:</strong> .bcr, .bkr, .bin
       </li>
       <li>
-        <strong>PlayStation: </strong>.mcr, .srm, .psv (<i>PlayStation 3</i>),
+        <strong>PlayStation:</strong> .mcr, .srm, .psv (<i>PlayStation 3</i>),
         .vmp (<i>PlayStation Classic</i>), .gme (<i>DexDrive</i>)
       </li>
       <li>
-        <strong>PlayStation 2: </strong>.ps2, .psu, .psv (<i>PlayStation 3</i>),
+        <strong>PlayStation 2:</strong> .ps2, .psu, .psv (<i>PlayStation 3</i>),
       </li>
       <li>
-        <strong>PlayStation Portable: </strong>Mostly .bin
+        <strong>PlayStation Portable:</strong> Mostly .bin
       </li>
       <li>
-        <strong>PC-Engine CD: </strong>.sav, .srm
+        <strong>PC-Engine CD:</strong> .sav, .srm
       </li>
     </ul>
   </Spoiler>

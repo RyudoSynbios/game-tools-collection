@@ -254,6 +254,7 @@ export const itemsGroups: ResourceGroups = itemTypes.map((type) => ({
   name: type.name,
   options: [],
 }));
+
 export const weaponsGroups: ResourceGroups = itemTypes
   .filter((type) => type.index <= 0x6)
   .map((type) => ({
