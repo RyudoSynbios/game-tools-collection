@@ -841,8 +841,15 @@ export function setString(
 
     if (char !== undefined) {
       const charCase = char === char.toLowerCase() ? "lower" : "upper";
-      const charAltCase =
+
+      let charAltCase =
         charCase === "lower" ? char.toUpperCase() : char.toLowerCase();
+
+      if (char.match(/[0-9]/)) {
+        charAltCase = String.fromCharCode(char.charCodeAt(0) + 0xfee0);
+      } else if (char.match(/[\uff10-\uff19]/)) {
+        charAltCase = String.fromCharCode(char.charCodeAt(0) - 0xfee0);
+      }
 
       const chars = [char, charAltCase];
 
