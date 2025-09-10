@@ -709,6 +709,17 @@
     }
   },
   {
+    "id": "paper-mario-the-thousand-year-door-gc",
+    "name": "Paper Mario: The Thousand-Year Door",
+    "consoleId": "gamecube",
+    "tools": {
+      "saveEditor": {
+        "createdAt": "2025-09-10",
+        "regions": ["🇪🇺", "🇺🇸", "🇯🇵"]
+      }
+    }
+  },
+  {
     "id": "pokemon-red-blue-and-yellow-gb",
     "name": "Pokémon Red, Blue and Yellow",
     "consoleId": "game-boy",
