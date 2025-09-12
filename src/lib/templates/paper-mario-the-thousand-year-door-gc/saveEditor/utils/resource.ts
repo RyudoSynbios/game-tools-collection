@@ -3,7 +3,7 @@ import type { Resource, ResourceGroups } from "$lib/types";
 export const itemTypes = [
   { index: 0x0, name: "Important Things" },
   { index: 0x1, name: "Items" },
-  { index: 0x2, name: "Zess Dishes" },
+  { index: 0x2, name: "Zess T. Dishes" },
   { index: 0x3, name: "Badges" },
 ];
 
@@ -395,7 +395,7 @@ export const locationList = [
   { id: "mri_01", coordinates: [324, 0, -16], zone: 0x5, name: "The Great Tree (Entrance)" },
   { id: "mri_06", coordinates: [-250, -310, -90], zone: 0x5, name: "The Great Tree (near Jabbi Hive Fortresses)" },
   { id: "mri_13", coordinates: [-154, -310, 6], zone: 0x5, name: "The Great Tree (near Emerald Star)" },
-  { id: "tou_01", coordinates: [-226, 10, -236], zone: 0x6, name: "Glitzville (Plaza)" },
+  { id: "tou_01", coordinates: [-226, 10, -236], zone: 0x6, name: "Glitzville (Entrance)" },
   { id: "tou_04", coordinates: [-516, 0, -110], zone: 0x6, name: "Glitzville (Glitz Pit)" },
   { id: "usu_00", coordinates: [358, 0, -56], zone: 0x7, name: "Twilight Town" },
   { id: "gra_06", coordinates: [-130, 0, 230], zone: 0x7, name: "Creepy Steeple (Entrance)" },
