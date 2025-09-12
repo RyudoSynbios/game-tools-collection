@@ -329,6 +329,18 @@ export function afterSetInt(item: Item): void {
     } else if (equipped !== 0x0) {
       setInt(itemInt.offset + 0x190, "uint16", badge, { bigEndian: true });
     }
+  } else if ("id" in item && item.id === "starPieces") {
+    const itemBitflags = item as ItemBitflags;
+
+    let count = 0;
+
+    const offset = itemBitflags.flags[0].offset + 0x16e;
+
+    itemBitflags.flags.forEach((flag) => {
+      count += getInt(flag.offset, "bit", { bit: flag.bit });
+    });
+
+    setInt(offset, "uint8", count);
   }
 }
 
