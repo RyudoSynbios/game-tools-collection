@@ -294,6 +294,17 @@
     }
   },
   {
+    "id": "dragon-ball-z-budokai-tenkaichi-2-ps2",
+    "name": "Dragon Ball Z: Budokai Tenkaichi 2",
+    "consoleId": "playstation-2",
+    "tools": {
+      "saveEditor": {
+        "createdAt": "2025-09-14",
+        "regions": ["🇪🇺", "🇺🇸", "🇯🇵", "🇰🇷"]
+      }
+    }
+  },
+  {
     "id": "dragon-quest-the-journey-of-the-cursed-king-ps2",
     "name": "Dragon Quest: The Journey of the Cursed King",
     "consoleId": "playstation-2",
