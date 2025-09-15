@@ -86,24 +86,12 @@ export function japanParseItemAdaptater(item: Item): Item {
   }
 
   if ("id" in item && item.id?.match(/japanShift/)) {
-    if ("flags" in item) {
-      const itemBitflags = item as ItemBitflags;
-
-      itemBitflags.flags = itemBitflags.flags.reduce(
-        (flags: ItemBitflag[], flag) => {
-          flags.push({
-            ...flag,
-            offset: flag.offset + 0x5,
-          });
-
-          return flags;
-        },
-        [],
-      );
-    } else {
-      const itemInt = item as ItemInt;
-
-      itemInt.offset += 0x5;
+    if (item.type === "bitflags") {
+      item.flags.forEach((flag) => {
+        flag.offset += 0x5;
+      });
+    } else if ("offset" in item) {
+      item.offset += 0x5;
     }
   }
 
