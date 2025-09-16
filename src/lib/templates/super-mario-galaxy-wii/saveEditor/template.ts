@@ -1,6 +1,6 @@
 import type { GameJson, ItemTab } from "$lib/types";
 
-import { galaxies } from "./utils/resource";
+import { portals } from "./utils/resource";
 
 const template: GameJson = {
   validator: {
@@ -154,70 +154,177 @@ const template: GameJson = {
                           bigEndian: true,
                           max: 9999,
                         },
+                        {
+                          id: "characterSection-%parent%-%index%-PCE1",
+                          name: "Hungry Luma (Sweet Sweet Galaxy)",
+                          offset: 0x1c,
+                          type: "variable",
+                          dataType: "uint16",
+                          bigEndian: true,
+                          hidden: true,
+                        },
                       ],
                     },
                   ],
                 },
-                ...galaxies.map((galaxy) => {
-                  const offset = galaxy.index * 0x14;
+                ...portals.map(
+                  (portal) =>
+                    ({
+                      name: portal.name,
+                      items: [
+                        {
+                          type: "tabs",
+                          vertical: true,
+                          items: portal.galaxies.map((galaxy) => {
+                            const offset = galaxy.index * 0x14;
 
-                  return {
-                    name: galaxy.name,
-                    items: [
-                      {
-                        type: "section",
-                        flex: true,
-                        items: [
-                          {
-                            id: "characterSection-%parent%-%index%-GALA-powerStars",
-                            name: "Power Stars",
-                            type: "bitflags",
-                            flags: [
-                              { offset: offset + 0x24, bit: 0, label: galaxy.missions[0] || "???", hidden: !galaxy.missions[0] },
-                              { offset: offset + 0x24, bit: 1, label: galaxy.missions[1] || "???", hidden: !galaxy.missions[1] },
-                              { offset: offset + 0x24, bit: 2, label: galaxy.missions[2] || "???", hidden: !galaxy.missions[2] },
-                              { offset: offset + 0x24, bit: 3, label: galaxy.missions[3] || "???", hidden: !galaxy.missions[3] },
-                              { offset: offset + 0x24, bit: 4, label: galaxy.missions[4] || "???", hidden: !galaxy.missions[4] },
-                              { offset: offset + 0x24, bit: 5, label: galaxy.missions[5] || "???", hidden: !galaxy.missions[5] },
-                              { offset: offset + 0x24, bit: 6, label: galaxy.missions[6] || "???", hidden: !galaxy.missions[6] },
-                              { offset: offset + 0x24, bit: 7, label: galaxy.missions[7] || "???", hidden: !galaxy.missions[7] },
-                            ],
-                          },
-                          {
-                            id: "characterSection-%parent%-%index%-GALA",
-                            name: "Power Stars?",
-                            type: "bitflags",
-                            hidden: true,
-                            flags: [
-                              { offset: offset + 0x25, bit: 0, label: galaxy.missions[0] || "???", hidden: !galaxy.missions[0] },
-                              { offset: offset + 0x25, bit: 1, label: galaxy.missions[1] || "???", hidden: !galaxy.missions[1] },
-                              { offset: offset + 0x25, bit: 2, label: galaxy.missions[2] || "???", hidden: !galaxy.missions[2] },
-                              { offset: offset + 0x25, bit: 3, label: galaxy.missions[3] || "???", hidden: !galaxy.missions[3] },
-                              { offset: offset + 0x25, bit: 4, label: galaxy.missions[4] || "???", hidden: !galaxy.missions[4] },
-                              { offset: offset + 0x25, bit: 5, label: galaxy.missions[5] || "???", hidden: !galaxy.missions[5] },
-                              { offset: offset + 0x25, bit: 6, label: galaxy.missions[6] || "???", hidden: !galaxy.missions[6] },
-                              { offset: offset + 0x25, bit: 7, label: galaxy.missions[7] || "???", hidden: !galaxy.missions[7] },
-                            ],
-                          },
-                        ],
-                      },
-                      {
-                        name: "Best Score",
-                        type: "section",
-                        flex: true,
-                        items: galaxy.missions.map((mission, index) => ({
-                          id: "characterSection-%parent%-%index%-GALA",
-                          name: mission,
-                          offset: offset + 0x26 + index * 0x2,
-                          type: "variable",
-                          dataType: "uint16",
-                          bigEndian: true,
-                          max: 999,
-                        })),
-                      },
-                    ],
-                  } as ItemTab;
-                }),
+                            return {
+                              name: galaxy.name,
+                              items: [
+                                {
+                                  type: "section",
+                                  flex: true,
+                                  items: [
+                                    {
+                                      id: "characterSection-%parent%-%index%-GALA-powerStars",
+                                      name: "Power Stars",
+                                      type: "bitflags",
+                                      flags: [...Array(8).keys()].map(
+                                        (index) => ({
+                                          offset: offset + 0x24,
+                                          bit: index,
+                                          label:
+                                            galaxy.missions[index]?.name ||
+                                            "???",
+                                          hidden: !galaxy.missions[index],
+                                        }),
+                                      ),
+                                    },
+                                    {
+                                      id: "characterSection-%parent%-%index%-GALA",
+                                      name: "Power Stars?",
+                                      type: "bitflags",
+                                      hidden: true,
+                                      flags: [...Array(8).keys()].map(
+                                        (index) => ({
+                                          offset: offset + 0x25,
+                                          bit: index,
+                                          label:
+                                            galaxy.missions[index]?.name ||
+                                            "???",
+                                          hidden: !galaxy.missions[index],
+                                        }),
+                                      ),
+                                    },
+                                  ],
+                                },
+                                {
+                                  name: "Best Score",
+                                  type: "section",
+                                  flex: true,
+                                  items: galaxy.missions.map(
+                                    (mission, index) => ({
+                                      id: "characterSection-%parent%-%index%-GALA",
+                                      name: mission.name,
+                                      offset: offset + 0x26 + index * 0x2,
+                                      type: "variable",
+                                      dataType: "uint16",
+                                      bigEndian: true,
+                                      max: 999,
+                                    }),
+                                  ),
+                                },
+                                ...(galaxy.missions.find(
+                                  (mission) => mission.raceIndex !== undefined,
+                                )
+                                  ? [
+                                      {
+                                        name: "Best Race Times",
+                                        type: "section",
+                                        flex: true,
+                                        items: galaxy.missions
+                                          .filter(
+                                            (mission) =>
+                                              mission.raceIndex !== undefined,
+                                          )
+                                          .map((mission) => {
+                                            const offset =
+                                              0x12 + mission.raceIndex * 0x8;
+
+                                            return {
+                                              name: mission.name,
+                                              type: "group",
+                                              mode: "time",
+                                              items: [
+                                                {
+                                                  id: "characterSection-%parent%-%index%-VLE1",
+                                                  offset,
+                                                  type: "variable",
+                                                  dataType: "uint16",
+                                                  bigEndian: true,
+                                                  operations: [
+                                                    { "/": 60 },
+                                                    {
+                                                      convert: {
+                                                        from: "seconds",
+                                                        to: "minutes",
+                                                      },
+                                                    },
+                                                  ],
+                                                  leadingZeros: 1,
+                                                  max: 17,
+                                                },
+                                                {
+                                                  id: "characterSection-%parent%-%index%-VLE1",
+                                                  offset,
+                                                  type: "variable",
+                                                  dataType: "uint16",
+                                                  bigEndian: true,
+                                                  operations: [
+                                                    { "/": 60 },
+                                                    {
+                                                      convert: {
+                                                        from: "seconds",
+                                                        to: "seconds",
+                                                      },
+                                                    },
+                                                  ],
+                                                  leadingZeros: 1,
+                                                  max: 59,
+                                                },
+                                                {
+                                                  id: "characterSection-%parent%-%index%-VLE1",
+                                                  offset,
+                                                  type: "variable",
+                                                  dataType: "uint16",
+                                                  bigEndian: true,
+                                                  operations: [
+                                                    { "/": 60 },
+                                                    {
+                                                      convert: {
+                                                        from: "seconds",
+                                                        to: "milliseconds",
+                                                      },
+                                                    },
+                                                    { round: 0 },
+                                                  ],
+                                                  leadingZeros: 2,
+                                                  max: 999,
+                                                  step: 100,
+                                                },
+                                              ],
+                                            };
+                                          }),
+                                      },
+                                    ]
+                                  : []),
+                              ],
+                            };
+                          }),
+                        },
+                      ],
+                    }) as ItemTab,
+                ),
               ],
             },
           ],
@@ -232,7 +339,7 @@ const template: GameJson = {
     },
     progression: {
       0x69: "-",
-      0xe9: "Game Cleared",
+      0xe9: "Game Complete",
     },
   },
 };

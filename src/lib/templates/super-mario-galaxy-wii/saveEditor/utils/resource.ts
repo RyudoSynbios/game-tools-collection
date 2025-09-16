@@ -1,299 +1,421 @@
-export const galaxies = [
+// prettier-ignore
+export const portals = [
   {
-    index: 0x0,
-    name: "Gateway Galaxy",
-    missions: ["Grand Star Rescue", "Gateway's Purple Coins"],
-  },
-  {
-    index: 0x1,
-    name: "Good Egg Galaxy",
-    missions: [
-      "Dino Piranha",
-      "A Snack of Cosmic Proportions",
-      "King Kaliente's Battle Fleet",
-      "Dino Piranha Speed Run",
-      "Purple Coin Omelet",
-      "Luigi on the Roof",
+    name: "Gate",
+    galaxies: [
+      {
+        index: 0x0,
+        name: "Gateway Galaxy",
+        missions: [
+          { name: "Grand Star Rescue" },
+          { name: "Gateway's Purple Coins" },
+        ],
+      },
+      {
+        index: 0x12,
+        name: "Boo's Boneyard Galaxy",
+        missions: [
+          { name: "Racing the Spooky Speedster", raceIndex: 0x2 }
+        ],
+      },
     ],
   },
   {
-    index: 0x2,
-    name: "Honeyhive Galaxy",
-    missions: [
-      "Bee Mario Takes Flight",
-      "Trouble on the Tower",
-      "Big Bad Bugaboom",
-      "Honeyhive Cosmic Mario Race",
-      "The Honeyhive's Purple Coins",
-      "Luigi in the Honeyhive Kingdom",
-    ],
-  },
-  { index: 0x3, name: "Loopdeeloop Galaxy", missions: ["Surfing 101"] },
-  {
-    index: 0x4,
-    name: "Flipswitch Galaxy",
-    missions: ["Painting the Planet Yellow"],
-  },
-  { index: 0x5, name: "Sweet Sweet Galaxy", missions: ["Rocky Road"] },
-  {
-    index: 0x6,
-    name: "Bowser Jr.'s Robot Reactor",
-    missions: ["Megaleg's Moon"],
-  },
-  {
-    index: 0x7,
-    name: "Space Junk Galaxy",
-    missions: [
-      "Pull Star Path",
-      "Kamella's Airship Attack",
-      "Tarantox's Tangled Web",
-      "Pull Star Path Speed Run",
-      "Purple Coin Spacewalk",
-      "Yoshi's Unexpected Appearance",
-    ],
-  },
-  {
-    index: 0x8,
-    name: "Rolling Green Galaxy",
-    missions: ["Rolling in the Clouds"],
-  },
-  {
-    index: 0x9,
-    name: "Battlerock Galaxy",
-    missions: [
-      "Battlerock Barrage",
-      "Breaking into the Battlerock",
-      "Topmaniac and the Topman Tribe",
-      "Topmaniac's Daredevil Run",
-      "Purple Coins on the Battlerock",
-      "Battlerock's Garbage Dump",
-      "Luigi under the Saucer",
-    ],
-  },
-  {
-    index: 0xa,
-    name: "Hurry-Scurry Galaxy",
-    missions: ["Shrinking Satellite"],
-  },
-  {
-    index: 0xb,
-    name: "Sling Pod Galaxy",
-    missions: ["A Very Sticky Situation"],
-  },
-  {
-    index: 0xc,
-    name: "Bowser's Star Reactor",
-    missions: ["The Fiery Stronghold"],
-  },
-  {
-    index: 0xd,
-    name: "Beach Bowl Galaxy",
-    missions: [
-      "Sunken Treasure",
-      "Passing the Swim Test",
-      "The Secret Undersea Cavern",
-      "Fast Foes on the Cyclone Stone",
-      "Beachcombing for Purple Coins",
-      "Wall Kicking up Waterfalls",
+    name: "Terrace",
+    galaxies: [
+      {
+        index: 0x1,
+        name: "Good Egg Galaxy",
+        missions: [
+          { name: "Dino Piranha" },
+          { name: "A Snack of Cosmic Proportions" },
+          { name: "King Kaliente's Battle Fleet" },
+          { name: "Dino Piranha Speed Run" },
+          { name: "Purple Coin Omelet" },
+          { name: "Luigi on the Roof" },
+        ],
+      },
+      {
+        index: 0x2,
+        name: "Honeyhive Galaxy",
+        missions: [
+          { name: "Bee Mario Takes Flight" },
+          { name: "Trouble on the Tower" },
+          { name: "Big Bad Bugaboom" },
+          { name: "Honeyhive Cosmic Mario Race" },
+          { name: "The Honeyhive's Purple Coins" },
+          { name: "Luigi in the Honeyhive Kingdom" },
+        ],
+      },
+      {
+        index: 0x3,
+        name: "Loopdeeloop Galaxy",
+        missions: [
+          { name: "Surfing 101", raceIndex: 0x3 }
+        ],
+      },
+      {
+        index: 0x4,
+        name: "Flipswitch Galaxy",
+        missions: [
+          { name: "Painting the Planet Yellow" }
+        ],
+      },
+      {
+        index: 0x5,
+        name: "Sweet Sweet Galaxy",
+        missions: [
+          { name: "Rocky Road" }
+        ],
+      },
+      {
+        index: 0x6,
+        name: "Bowser Jr.'s Robot Reactor",
+        missions: [
+          { name: "Megaleg's Moon" }
+        ],
+      },
     ],
   },
   {
-    index: 0xe,
-    name: "Bubble Breeze Galaxy",
-    missions: ["Through the Poison Swamp"],
-  },
-  {
-    index: 0xf,
-    name: "Ghostly Galaxy",
-    missions: [
-      "Luigi and the Haunted Mansion",
-      "A Very Spooky Sprint",
-      "Beware of Bouldergeist",
-      "Bouldergeist's Daredevil Run",
-      "Purple Coins in the Bone Pen",
-      "Matter Splatter Mansion",
+    name: "Fountain",
+    galaxies: [
+      {
+        index: 0x7,
+        name: "Space Junk Galaxy",
+        missions: [
+          { name: "Pull Star Path" },
+          { name: "Kamella's Airship Attack" },
+          { name: "Tarantox's Tangled Web" },
+          { name: "Pull Star Path Speed Run" },
+          { name: "Purple Coin Spacewalk" },
+          { name: "Yoshi's Unexpected Appearance" },
+        ],
+      },
+      {
+        index: 0x9,
+        name: "Battlerock Galaxy",
+        missions: [
+          { name: "Battlerock Barrage" },
+          { name: "Breaking into the Battlerock" },
+          { name: "Topmaniac and the Topman Tribe" },
+          { name: "Topmaniac's Daredevil Run" },
+          { name: "Purple Coins on the Battlerock" },
+          { name: "Battlerock's Garbage Dump" },
+          { name: "Luigi under the Saucer" },
+        ],
+      },
+      {
+        index: 0x8,
+        name: "Rolling Green Galaxy",
+        missions: [
+          { name: "Rolling in the Clouds" }
+        ],
+      },
+      {
+        index: 0xa,
+        name: "Hurry-Scurry Galaxy",
+        missions: [
+          { name: "Shrinking Satellite" }
+        ],
+      },
+      {
+        index: 0xb,
+        name: "Sling Pod Galaxy",
+        missions: [
+          { name: "A Very Sticky Situation" }
+        ],
+      },
+      {
+        index: 0xc,
+        name: "Bowser's Star Reactor",
+        missions: [
+          { name: "The Fiery Stronghold" }
+        ],
+      },
     ],
   },
   {
-    index: 0x10,
-    name: "Buoy Base Galaxy",
-    missions: ["The Floating Fortress", "The Secret of Buoy Base"],
-  },
-  { index: 0x11, name: "Drip Drop Galaxy", missions: ["Giant Eel Outbreak"] },
-  {
-    index: 0x12,
-    name: "Boo's Boneyard Galaxy",
-    missions: ["Racing the Spooky Speedster"],
-  },
-  {
-    index: 0x13,
-    name: "Bowser Jr.'s Airship Armada",
-    missions: ["Sinking the Airships"],
-  },
-  {
-    index: 0x14,
-    name: "Gusty Garden Galaxy",
-    missions: [
-      "Bunnies in the Wind",
-      "The Dirty Tricks of Major Burrows",
-      "Gusty Garden's Gravity Scramble",
-      "Major Burrows's Daredevil Run",
-      "Purple Coins on the Puzzle Cube",
-      "The Golden Chomp",
+    name: "Kitchen",
+    galaxies: [
+      {
+        index: 0xd,
+        name: "Beach Bowl Galaxy",
+        missions: [
+          { name: "Sunken Treasure" },
+          { name: "Passing the Swim Test" },
+          { name: "The Secret Undersea Cavern" },
+          { name: "Fast Foes on the Cyclone Stone" },
+          { name: "Beachcombing for Purple Coins" },
+          { name: "Wall Kicking up Waterfalls" },
+        ],
+      },
+      {
+        index: 0xf,
+        name: "Ghostly Galaxy",
+        missions: [
+          { name: "Luigi and the Haunted Mansion" },
+          { name: "A Very Spooky Sprint", raceIndex: 0x1 },
+          { name: "Beware of Bouldergeist" },
+          { name: "Bouldergeist's Daredevil Run" },
+          { name: "Purple Coins in the Bone Pen" },
+          { name: "Matter Splatter Mansion" },
+        ],
+      },
+      {
+        index: 0xe,
+        name: "Bubble Breeze Galaxy",
+        missions: [
+          { name: "Through the Poison Swamp" }
+        ],
+      },
+      {
+        index: 0x10,
+        name: "Buoy Base Galaxy",
+        missions: [
+          { name: "The Floating Fortress" },
+          { name: "The Secret of Buoy Base" },
+        ],
+      },
+      {
+        index: 0x11,
+        name: "Drip Drop Galaxy",
+        missions: [
+          { name: "Giant Eel Outbreak" }
+        ],
+      },
+      {
+        index: 0x13,
+        name: "Bowser Jr.'s Airship Armada",
+        missions: [
+          { name: "Sinking the Airships" }
+        ],
+      },
     ],
   },
   {
-    index: 0x15,
-    name: "Freezeflame Galaxy",
-    missions: [
-      "The Frozen Peak of Baron Brrr",
-      "Freezeflame's Blistering Core",
-      "Hot and Cold Collide",
-      "Frosty Cosmic Mario Race",
-      "Purple Coins on the Summit",
-      "Conquering the Summit",
+    name: "Bedroom",
+    galaxies: [
+      {
+        index: 0x14,
+        name: "Gusty Garden Galaxy",
+        missions: [
+          { name: "Bunnies in the Wind" },
+          { name: "The Dirty Tricks of Major Burrows" },
+          { name: "Gusty Garden's Gravity Scramble" },
+          { name: "Major Burrows's Daredevil Run" },
+          { name: "Purple Coins on the Puzzle Cube" },
+          { name: "The Golden Chomp" },
+        ],
+      },
+      {
+        index: 0x15,
+        name: "Freezeflame Galaxy",
+        missions: [
+          { name: "The Frozen Peak of Baron Brrr" },
+          { name: "Freezeflame's Blistering Core" },
+          { name: "Hot and Cold Collide" },
+          { name: "Frosty Cosmic Mario Race" },
+          { name: "Purple Coins on the Summit" },
+          { name: "Conquering the Summit" },
+        ],
+      },
+      {
+        index: 0x17,
+        name: "Dusty Dune Galaxy",
+        missions: [
+          { name: "Soaring on the Desert Winds" },
+          { name: "Blasting through the Sand" },
+          { name: "Sunbaked Sand Castle" },
+          { name: "Sandblast Speed Run" },
+          { name: "Purple Coins in the Desert" },
+          { name: "Bullet Bill on Your Back" },
+          { name: "Treasure of the Pyramid" },
+        ],
+      },
+      {
+        index: 0x16,
+        name: "Honeyclimb Galaxy",
+        missions: [
+          { name: "Scaling the Sticky Wall" }
+        ],
+      },
+      {
+        index: 0x24,
+        name: "Bigmouth Galaxy",
+        missions: [
+          { name: "Bigmouth's Gold Bait" }
+        ],
+      },
+      {
+        index: 0x19,
+        name: "Bowser's Dark Matter Plant",
+        missions: [
+          { name: "Darkness on the Horizon" }
+        ],
+      },
     ],
   },
   {
-    index: 0x16,
-    name: "Honeyclimb Galaxy",
-    missions: ["Scaling the Sticky Wall"],
-  },
-  {
-    index: 0x17,
-    name: "Dusty Dune Galaxy",
-    missions: [
-      "Soaring on the Desert Winds",
-      "Blasting through the Sand",
-      "Sunbaked Sand Castle",
-      "Sandblast Speed Run",
-      "Purple Coins in the Desert",
-      "Bullet Bill on Your Back",
-      "Treasure of the Pyramid",
+    name: "Engine Room",
+    galaxies: [
+      {
+        index: 0x1a,
+        name: "Gold Leaf Galaxy",
+        missions: [
+          { name: "Star Bunnies on the Hunt" },
+          { name: "Cataquack to the Skies" },
+          { name: "When It Rains, It Pours" },
+          { name: "Cosmic Mario Forest Race" },
+          { name: "Purple Coins in the Woods" },
+          { name: "The Bell on the Big Tree" },
+        ],
+      },
+      {
+        index: 0x1b,
+        name: "Sea Slide Galaxy",
+        missions: [
+          { name: "Going after Guppy" },
+          { name: "Faster Than a Speeding Penguin", raceIndex: 0x0 },
+          { name: "The Silver Stars of Sea Slide" },
+          { name: "Underwater Cosmic Mario Race" },
+          { name: "Purple Coins by the Seaside" },
+          { name: "Hurry, He's Hungry" },
+        ],
+      },
+      {
+        index: 0x1d,
+        name: "Toy Time Galaxy",
+        missions: [
+          { name: "Heavy Metal Mecha-Bowser" },
+          { name: "Mario Meets Mario" },
+          { name: "Bouncing Down Cake Lane" },
+          { name: "Fast Foes of Toy Time" },
+          { name: "Luigi's Purple Coins" },
+          { name: "The Flipswitch Chain" },
+        ],
+      },
+      {
+        index: 0x1c,
+        name: "Bonefin Galaxy",
+        missions: [
+          { name: "Kingfin's Fearsome Waters" }
+        ],
+      },
+      {
+        index: 0x1e,
+        name: "Sand Spiral Galaxy",
+        missions: [
+          { name: "Choosing a Favorite Snack" }
+        ],
+      },
+      {
+        index: 0x1f,
+        name: "Bowser Jr.'s Lava Reactor",
+        missions: [
+          { name: "King Kaliente's Spicy Return" }
+        ],
+      },
     ],
   },
   {
-    index: 0x18,
-    name: "Snow Cap Galaxy",
-    missions: ["Star Bunnies in the Snow"],
-  },
-  {
-    index: 0x19,
-    name: "Bowser's Dark Matter Plant",
-    missions: ["Darkness on the Horizon"],
-  },
-  {
-    index: 0x1a,
-    name: "Gold Leaf Galaxy",
-    missions: [
-      "Star Bunnies on the Hunt",
-      "Cataquack to the Skies",
-      "When It Rains, It Pours",
-      "Cosmic Mario Forest Race",
-      "Purple Coins in the Woods",
-      "The Bell on the Big Tree",
+    name: "Garden",
+    galaxies: [
+      {
+        index: 0x20,
+        name: "Deep Dark Galaxy",
+        missions: [
+          { name: "The Underground Ghost Ship" },
+          { name: "Bubble Blastoff" },
+          { name: "Guppy and the Underground Lake" },
+          { name: "Ghost Ship Daredevil Run" },
+          { name: "Plunder the Purple Coins" },
+          { name: "Boo in a Box" },
+        ],
+      },
+      {
+        index: 0x21,
+        name: "Dreadnought Galaxy",
+        missions: [
+          { name: "Infiltrating the Dreadnought" },
+          { name: "Dreadnought's Colossal Cannons" },
+          { name: "Revenge of the Topman Tribe" },
+          { name: "Topman Tribe Speed Run" },
+          { name: "Battlestation's Purple Coins" },
+          { name: "Dreadnought's Garbage Dump" },
+        ],
+      },
+      {
+        index: 0x22,
+        name: "Matter Splatter Galaxy",
+        missions: [
+          { name: "Watch Your Step" }
+        ],
+      },
+      {
+        index: 0x23,
+        name: "Melty Molten Galaxy",
+        missions: [
+          { name: "The Sinking Lava Spire" },
+          { name: "Through the Meteor Storm" },
+          { name: "Fiery Dino Piranha" },
+          { name: "Lava Spire Daredevil Run" },
+          { name: "Red-Hot Purple Coins" },
+          { name: "Burning Tide" },
+        ],
+      },
+      {
+        index: 0x18,
+        name: "Snow Cap Galaxy",
+        missions: [
+          { name: "Star Bunnies in the Snow" }
+        ],
+      },
     ],
   },
   {
-    index: 0x1b,
-    name: "Sea Slide Galaxy",
-    missions: [
-      "Going after Guppy",
-      "Faster Than a Speeding Penguin",
-      "The Silver Stars of Sea Slide",
-      "Underwater Cosmic Mario Race",
-      "Purple Coins by the Seaside",
-      "Hurry, He's Hungry",
+    name: "Planet of Trials",
+    galaxies: [
+      {
+        index: 0x26,
+        name: "Rolling Gizmo Galaxy",
+        missions: [
+          { name: "Gizmos, Gears, and Gadgets" }
+        ],
+      },
+      {
+        index: 0x28,
+        name: "Bubble Blast Galaxy",
+        missions: [
+          { name: "The Electric Labyrinth" }
+        ],
+      },
+      {
+        index: 0x27,
+        name: "Loopdeeswoop Galaxy",
+        missions: [
+          { name: "The Galaxy's Greatest Wave", raceIndex: 0x4 }
+        ],
+      },
+      {
+        index: 0x29,
+        name: "Grand Finale",
+        missions: [
+          { name: "The Star Festival" }
+        ],
+      },
     ],
   },
   {
-    index: 0x1c,
-    name: "Bonefin Galaxy",
-    missions: ["Kingfin's Fearsome Waters"],
-  },
-  {
-    index: 0x1d,
-    name: "Toy Time Galaxy",
-    missions: [
-      "Heavy Metal Mecha-Bowser",
-      "Mario Meets Mario",
-      "Bouncing Down Cake Lane",
-      "Fast Foes of Toy Time",
-      "Luigi's Purple Coins",
-      "The Flipswitch Chain",
+    name: "Center of the Universe",
+    galaxies: [
+      {
+        index: 0x25,
+        name: "Bowser Galaxy Reactor",
+        missions: [
+          { name: "The Fate of the Universe" }
+        ],
+      },
     ],
   },
-  {
-    index: 0x1e,
-    name: "Sand Spiral Galaxy",
-    missions: ["Choosing a Favorite Snack"],
-  },
-  {
-    index: 0x1f,
-    name: "Bowser Jr.'s Lava Reactor",
-    missions: ["King Kaliente's Spicy Return"],
-  },
-  {
-    index: 0x20,
-    name: "Deep Dark Galaxy",
-    missions: [
-      "The Underground Ghost Ship",
-      "Bubble Blastoff",
-      "Guppy and the Underground Lake",
-      "Ghost Ship Daredevil Run",
-      "Plunder the Purple Coins",
-      "Boo in a Box",
-    ],
-  },
-  {
-    index: 0x21,
-    name: "Dreadnought Galaxy",
-    missions: [
-      "Infiltrating the Dreadnought",
-      "Dreadnought's Colossal Cannons",
-      "Revenge of the Topman Tribe",
-      "Topman Tribe Speed Run",
-      "Battlestation's Purple Coins",
-      "Dreadnought's Garbage Dump",
-    ],
-  },
-  {
-    index: 0x22,
-    name: "Matter Splatter Galaxy",
-    missions: ["Watch Your Step"],
-  },
-  {
-    index: 0x23,
-    name: "Melty Molten Galaxy",
-    missions: [
-      "The Sinking Lava Spire",
-      "Through the Meteor Storm",
-      "Fiery Dino Piranha",
-      "Lava Spire Daredevil Run",
-      "Red-Hot Purple Coins",
-      "Burning Tide",
-    ],
-  },
-  { index: 0x24, name: "Bigmouth Galaxy", missions: ["Bigmouth's Gold Bait"] },
-  {
-    index: 0x25,
-    name: "Bowser Galaxy Reactor",
-    missions: ["The Fate of the Universe"],
-  },
-  {
-    index: 0x26,
-    name: "Rolling Gizmo Galaxy",
-    missions: ["Gizmos, Gears, and Gadgets"],
-  },
-  {
-    index: 0x27,
-    name: "Loopdeeswoop Galaxy",
-    missions: ["The Galaxy's Greatest Wave"],
-  },
-  {
-    index: 0x28,
-    name: "Bubble Blast Galaxy",
-    missions: ["The Electric Labyrinth"],
-  },
-  { index: 0x29, name: "Grand Finale", missions: ["The Star Festival"] },
 ];
