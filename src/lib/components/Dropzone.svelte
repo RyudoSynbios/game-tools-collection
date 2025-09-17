@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { page } from "$app/state";
   import RegionModal from "$lib/components/RegionModal.svelte";
   import {
     dataView,
@@ -7,6 +8,7 @@
     gameRegion,
     gameTemplate,
     gameUtils,
+    isDebug,
   } from "$lib/stores";
   import { utilsExists } from "$lib/utils/format";
   import { enrichGameJson } from "$lib/utils/parser";
@@ -57,7 +59,7 @@
 
   function handleUploadedFile(file: File): void {
     if (!file || file.size === 0) {
-      error = $gameTemplate.validator.error;
+      uploadFailed("file size is 0");
       return;
     }
 
@@ -111,7 +113,7 @@
           $gameUtils.onInitFailed();
         }
 
-        error = $gameTemplate.validator.error;
+        uploadFailed("invalid save");
       }
 
       fileIsLoading = false;
@@ -131,14 +133,36 @@
 
       enrichGameJson();
 
-      error = "";
+      uploadSuccess();
     } else {
       regions = [];
-      error = $gameTemplate.validator.error;
+      uploadFailed("region not found");
     }
 
     dataViewTmp = undefined;
     fileNameTmp = "";
+  }
+
+  function uploadFailed(reason: string): void {
+    error = $gameTemplate.validator.error;
+
+    if (!$isDebug) {
+      fetch(`${page.url.pathname}/failed`, {
+        method: "POST",
+        body: JSON.stringify({ reason }),
+      });
+    }
+  }
+
+  function uploadSuccess(): void {
+    error = "";
+
+    if (!$isDebug) {
+      fetch(`${page.url.pathname}/success`, {
+        method: "POST",
+        body: JSON.stringify({}),
+      });
+    }
   }
 </script>
 
