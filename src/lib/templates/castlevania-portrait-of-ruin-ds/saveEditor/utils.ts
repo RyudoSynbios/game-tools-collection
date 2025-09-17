@@ -1,10 +1,19 @@
 import { get } from "svelte/store";
 
-import { fileHeaderShift, gameRegion } from "$lib/stores";
+import { dataView, fileHeaderShift, gameRegion } from "$lib/stores";
 import { byteswap32, getInt, setInt } from "$lib/utils/bytes";
 import { formatChecksum } from "$lib/utils/checksum";
+import {
+  customGetRegions,
+  extractCastlevaniaCollectionSaves,
+  getShifts,
+  injectCastlevaniaCollectionSaves,
+  isCastlevaniaCollectionSave,
+  resetState,
+} from "$lib/utils/common/castlevania";
 import { getHeaderShift } from "$lib/utils/common/nintendoDs";
 import { clone } from "$lib/utils/format";
+import { getShift } from "$lib/utils/parser";
 
 import type {
   Item,
@@ -15,12 +24,47 @@ import type {
   ItemTabs,
 } from "$lib/types";
 
+const GAME = "por";
+
 export function initHeaderShift(dataView: DataView): number {
   return getHeaderShift(dataView);
 }
 
+export function beforeInitDataView(dataView: DataView): DataView {
+  if (isCastlevaniaCollectionSave(GAME, dataView)) {
+    dataView = extractCastlevaniaCollectionSaves(GAME, dataView);
+  }
+
+  return dataView;
+}
+
+export function overrideGetRegions(
+  dataView: DataView,
+  shift: number,
+): string[] {
+  return customGetRegions(dataView, shift);
+}
+
+export function initShifts(shifts: number[]): number[] {
+  return getShifts(shifts);
+}
+
 export function overrideParseItem(item: Item): Item {
   const $gameRegion = get(gameRegion);
+
+  if (isCastlevaniaCollectionSave(GAME)) {
+    if (item.type === "bitflags") {
+      item.flags.forEach((flag) => {
+        if (flag.offset > 0x3a49) {
+          flag.offset += 0x3;
+        }
+      });
+    } else if ("offset" in item) {
+      if (item.offset > 0x3a49) {
+        item.offset += 0x3;
+      }
+    }
+  }
 
   if ("id" in item && item.id === "language") {
     const itemInt = item as ItemInt;
@@ -44,7 +88,13 @@ export function overrideItem(item: Item): Item {
         return item;
       }
 
-      const int = getInt($fileHeaderShift + 0x8 + (index - 1), "uint8");
+      let offset = $fileHeaderShift + 0x8 + (index - 1);
+
+      if (isCastlevaniaCollectionSave(GAME)) {
+        offset += getShift(getShifts());
+      }
+
+      const int = getInt(offset, "uint8");
 
       item.disabled = !Boolean(int);
     });
@@ -128,7 +178,13 @@ export function afterSetInt(item: Item, flag: ItemBitflag): void {
 
     const difficulty = getInt(itemInt.offset, "uint8");
 
-    setInt(itemInt.offset - index * 0x17d8 - 0x3f23, "uint8", difficulty);
+    let offset = itemInt.offset - index * 0x17d8 - 0x3f23;
+
+    if (isCastlevaniaCollectionSave(GAME)) {
+      offset -= 0x3;
+    }
+
+    setInt(offset, "uint8", difficulty);
   } else if ("id" in item && item.id?.match(/location-/)) {
     const itemInt = item as ItemInt;
 
@@ -176,7 +232,13 @@ export function afterSetInt(item: Item, flag: ItemBitflag): void {
 
     const gold = getInt(itemInt.offset, "uint32");
 
-    setInt(itemInt.offset - index * 0x17d8 - 0x3f7d, "uint32", gold);
+    let offset = itemInt.offset - index * 0x17d8 - 0x3f7d;
+
+    if (isCastlevaniaCollectionSave(GAME)) {
+      offset -= 0x3;
+    }
+
+    setInt(offset, "uint32", gold);
   } else if ("id" in item && item.id === "rooms") {
     const int = getInt(flag.offset, "bit", { bit: flag.bit });
 
@@ -190,23 +252,39 @@ export function afterSetInt(item: Item, flag: ItemBitflag): void {
 
     const experience = getExperience(level);
 
+    let offset = itemInt.offset - index * 0x17d8 - 0x3f2f;
+
+    if (isCastlevaniaCollectionSave(GAME)) {
+      offset -= 0x3;
+    }
+
     setInt(itemInt.offset + 0x58, "uint32", experience);
-    setInt(itemInt.offset - index * 0x17d8 - 0x3f2f, "uint8", level);
+    setInt(offset, "uint8", level);
   } else if ("id" in item && item.id?.match(/maxLevel-/)) {
     const itemInt = item as ItemInt;
 
     const [index] = item.id.splitInt();
 
-    let level = getInt(itemInt.offset + 0x11, "uint8");
+    const previousLevel = getInt(itemInt.offset + 0x11, "uint8");
     const maxLevel = getInt(itemInt.offset, "uint8");
 
-    level = Math.min(level, maxLevel);
+    const level = Math.min(previousLevel, maxLevel);
 
-    const offset = itemInt.offset + index * 0x17d8 - 0x3f1e;
+    let offset = itemInt.offset - index * 0x17d8 - 0x3f1e;
+
+    if (isCastlevaniaCollectionSave(GAME)) {
+      offset -= 0x3;
+    }
 
     setInt(itemInt.offset + 0x11, "uint8", level);
     setInt(offset, "uint8", level);
     setInt(offset + 0x4, "uint8", maxLevel);
+
+    if (level < previousLevel) {
+      const experience = getExperience(level);
+
+      setInt(itemInt.offset + 0x69, "uint32", experience);
+    }
   } else if ("id" in item && item.id?.match(/experience-/)) {
     const itemInt = item as ItemInt;
 
@@ -226,8 +304,14 @@ export function afterSetInt(item: Item, flag: ItemBitflag): void {
       }
     }
 
+    let offset = itemInt.offset - index * 0x17d8 - 0x3f87;
+
+    if (isCastlevaniaCollectionSave(GAME)) {
+      offset -= 0x3;
+    }
+
     setInt(itemInt.offset - 0x58, "uint32", level);
-    setInt(itemInt.offset - index * 0x17d8 - 0x3f87, "uint8", level);
+    setInt(offset, "uint8", level);
   } else if ("id" in item && item.id === "skillPoints") {
     const itemInt = item as ItemInt;
 
@@ -243,6 +327,10 @@ let buffer = new Uint32Array(0x100);
 // It seems to be a SHA-1 hash generator
 export function generateChecksum(item: ItemChecksum): number {
   const [index] = item.id!.splitInt();
+
+  if (isCastlevaniaCollectionSave(GAME)) {
+    return 0x0;
+  }
 
   if (index !== 0) {
     return formatChecksum(checksums[index], item.dataType);
@@ -274,6 +362,20 @@ export function generateChecksum(item: ItemChecksum): number {
   hash(0x0, 0x40, buffer);
 
   return formatChecksum(checksums[0], item.dataType);
+}
+
+export function beforeSaving(): ArrayBufferLike {
+  const $dataView = get(dataView);
+
+  if (isCastlevaniaCollectionSave(GAME)) {
+    return injectCastlevaniaCollectionSaves(GAME);
+  }
+
+  return $dataView.buffer;
+}
+
+export function onReset(): void {
+  resetState();
 }
 
 // prettier-ignore

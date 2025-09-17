@@ -1,10 +1,42 @@
+import { get } from "svelte/store";
+
+import { dataView } from "$lib/stores";
 import { getBitflag, getInt, setBitflag, setInt } from "$lib/utils/bytes";
+import {
+  customGetRegions,
+  extractCastlevaniaCollectionSaves,
+  getShifts,
+  injectCastlevaniaCollectionSaves,
+  isCastlevaniaCollectionSave,
+  resetState,
+} from "$lib/utils/common/castlevania";
 import { getHeaderShift } from "$lib/utils/common/gameBoyAdvance";
 
 import type { Item, ItemBitflag, ItemBitflags, ItemInt } from "$lib/types";
 
+const GAME = "hod";
+
 export function initHeaderShift(dataView: DataView): number {
   return getHeaderShift(dataView);
+}
+
+export function beforeInitDataView(dataView: DataView): DataView {
+  if (isCastlevaniaCollectionSave(GAME, dataView)) {
+    dataView = extractCastlevaniaCollectionSaves(GAME, dataView);
+  }
+
+  return dataView;
+}
+
+export function overrideGetRegions(
+  dataView: DataView,
+  shift: number,
+): string[] {
+  return customGetRegions(dataView, shift);
+}
+
+export function initShifts(shifts: number[]): number[] {
+  return getShifts(shifts);
 }
 
 export function overrideGetInt(
@@ -223,4 +255,18 @@ export function afterSetInt(item: Item): void {
       setInt(itemInt.offset + 0x111, "uint8", value);
     }
   }
+}
+
+export function beforeSaving(): ArrayBufferLike {
+  const $dataView = get(dataView);
+
+  if (isCastlevaniaCollectionSave(GAME)) {
+    return injectCastlevaniaCollectionSaves(GAME);
+  }
+
+  return $dataView.buffer;
+}
+
+export function onReset(): void {
+  resetState();
 }

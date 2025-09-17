@@ -3,11 +3,18 @@ import type { GameJson } from "$lib/types";
 const template: GameJson = {
   validator: {
     regions: {
-      europe_usa_japan: {
+      europe: {
+        0x0: [0x44, 0x52, 0x41, 0x43, 0x55, 0x4c, 0x41, 0x20, 0x41, 0x47, 0x42], // "DRACULA AGB"
+      },
+      usa: {
+        0x0: [0x44, 0x52, 0x41, 0x43, 0x55, 0x4c, 0x41, 0x20, 0x41, 0x47, 0x42], // "DRACULA AGB"
+      },
+      japan: {
         0x0: [0x44, 0x52, 0x41, 0x43, 0x55, 0x4c, 0x41, 0x20, 0x41, 0x47, 0x42], // "DRACULA AGB"
       },
     },
     text: "Drag 'n' drop here or click to add a save file.",
+    hint: "Compatible with Castlevania Advance Collection.",
     error: "Not a valid save file.",
   },
   items: [
@@ -359,9 +366,11 @@ const template: GameJson = {
                   vertical: true,
                   items: [
                     {
-                      name: "DSS Action",
+                      name: "DSS",
+                      flex: true,
                       items: [
                         {
+                          name: "DSS Action",
                           type: "bitflags",
                           flags: [
                             { offset: 0x326, bit: 0, label: "Mercury" },
@@ -376,12 +385,8 @@ const template: GameJson = {
                             { offset: 0x32f, bit: 0, label: "Pluto" },
                           ],
                         },
-                      ],
-                    },
-                    {
-                      name: "DSS Attribute",
-                      items: [
                         {
+                          name: "DSS Attribute",
                           type: "bitflags",
                           flags: [
                             { offset: 0x31c, bit: 0, label: "Salamander" },

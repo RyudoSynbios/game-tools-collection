@@ -25,6 +25,7 @@ const template: GameJson = {
       },
     },
     text: "Drag 'n' drop here or click to add a save file.",
+    hint: "Compatible with Castlevania Advance Collection.",
     error: "Not a valid save file.",
   },
   items: [
@@ -279,12 +280,20 @@ const template: GameJson = {
                               disabled: true,
                             },
                             {
+                              id: "level",
                               name: "Level",
                               offset: 0x2d,
                               type: "variable",
                               dataType: "uint8",
                               min: 1,
                               max: 99,
+                            },
+                            {
+                              name: "Level (Save Preview)",
+                              offset: 0x1ac,
+                              type: "variable",
+                              dataType: "uint8",
+                              hidden: true,
                             },
                             {
                               name: "Experience",

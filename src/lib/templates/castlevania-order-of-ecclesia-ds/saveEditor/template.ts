@@ -42,6 +42,7 @@ const template: GameJson = {
       },
     },
     text: "Drag 'n' drop here or click to add a save file.",
+    hint: "Compatible with Castlevania Dominus Collection.",
     error: "Not a valid save file.",
   },
   items: [

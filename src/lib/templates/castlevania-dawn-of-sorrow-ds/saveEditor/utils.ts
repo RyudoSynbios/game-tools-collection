@@ -1,7 +1,15 @@
 import { get } from "svelte/store";
 
-import { fileHeaderShift } from "$lib/stores";
+import { dataView, fileHeaderShift } from "$lib/stores";
 import { getInt, setInt } from "$lib/utils/bytes";
+import {
+  customGetRegions,
+  extractCastlevaniaCollectionSaves,
+  getShifts,
+  injectCastlevaniaCollectionSaves,
+  isCastlevaniaCollectionSave,
+  resetState,
+} from "$lib/utils/common/castlevania";
 import {
   generateBiosChecksum,
   getHeaderShift,
@@ -16,8 +24,29 @@ import type {
   ItemInt,
 } from "$lib/types";
 
+const GAME = "dos";
+
 export function initHeaderShift(dataView: DataView): number {
   return getHeaderShift(dataView);
+}
+
+export function beforeInitDataView(dataView: DataView): DataView {
+  if (isCastlevaniaCollectionSave(GAME, dataView)) {
+    dataView = extractCastlevaniaCollectionSaves(GAME, dataView);
+  }
+
+  return dataView;
+}
+
+export function overrideGetRegions(
+  dataView: DataView,
+  shift: number,
+): string[] {
+  return customGetRegions(dataView, shift);
+}
+
+export function initShifts(shifts: number[]): number[] {
+  return getShifts(shifts);
 }
 
 export function overrideGetInt(
@@ -118,6 +147,10 @@ export function afterSetInt(item: Item, flag: ItemBitflag): void {
 export function generateChecksum(item: ItemChecksum): number {
   const $fileHeaderShift = get(fileHeaderShift);
 
+  if (isCastlevaniaCollectionSave(GAME)) {
+    return 0x0;
+  }
+
   let offset = $fileHeaderShift + 0x90;
 
   if (item.id?.match(/checksumSlot-/)) {
@@ -129,4 +162,18 @@ export function generateChecksum(item: ItemChecksum): number {
   const salt = getInt(offset, "uint16");
 
   return generateBiosChecksum(item, salt);
+}
+
+export function beforeSaving(): ArrayBufferLike {
+  const $dataView = get(dataView);
+
+  if (isCastlevaniaCollectionSave(GAME)) {
+    return injectCastlevaniaCollectionSaves(GAME);
+  }
+
+  return $dataView.buffer;
+}
+
+export function onReset(): void {
+  resetState();
 }

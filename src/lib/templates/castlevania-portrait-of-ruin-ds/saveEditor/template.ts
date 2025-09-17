@@ -31,11 +31,15 @@ const template: GameJson = {
       europe: {
         0x0: [0x64, 0x75, 0xa3, 0x08],
       },
-      usa_japan: {
+      usa: {
+        0x0: [0x64, 0x75, 0xa3, 0x08],
+      },
+      japan: {
         0x0: [0x64, 0x75, 0xa3, 0x08],
       },
     },
     text: "Drag 'n' drop here or click to add a save file.",
+    hint: "Compatible with Castlevania Dominus Collection.",
     error: "Not a valid save file.",
   },
   items: [

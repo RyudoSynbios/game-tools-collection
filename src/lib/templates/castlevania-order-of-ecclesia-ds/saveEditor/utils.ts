@@ -1,12 +1,20 @@
 import { get } from "svelte/store";
 
-import { fileHeaderShift, gameRegion } from "$lib/stores";
+import { dataView, fileHeaderShift, gameRegion } from "$lib/stores";
 import { getInt, setInt } from "$lib/utils/bytes";
+import {
+  customGetRegions,
+  extractCastlevaniaCollectionSaves,
+  getShifts,
+  injectCastlevaniaCollectionSaves,
+  isCastlevaniaCollectionSave,
+  resetState,
+} from "$lib/utils/common/castlevania";
 import {
   generateBiosChecksum,
   getHeaderShift,
 } from "$lib/utils/common/nintendoDs";
-import { getItem } from "$lib/utils/parser";
+import { getItem, getShift } from "$lib/utils/parser";
 
 import type {
   Item,
@@ -17,8 +25,29 @@ import type {
   ItemTabs,
 } from "$lib/types";
 
+const GAME = "ooe";
+
 export function initHeaderShift(dataView: DataView): number {
   return getHeaderShift(dataView);
+}
+
+export function beforeInitDataView(dataView: DataView): DataView {
+  if (isCastlevaniaCollectionSave(GAME, dataView)) {
+    dataView = extractCastlevaniaCollectionSaves(GAME, dataView);
+  }
+
+  return dataView;
+}
+
+export function overrideGetRegions(
+  dataView: DataView,
+  shift: number,
+): string[] {
+  return customGetRegions(dataView, shift);
+}
+
+export function initShifts(shifts: number[]): number[] {
+  return getShifts(shifts);
 }
 
 export function overrideParseItem(item: Item): Item {
@@ -54,7 +83,13 @@ export function overrideItem(item: Item): Item {
         return item;
       }
 
-      const int = getInt($fileHeaderShift + 0x10, "bit", { bit: index - 1 });
+      let offset = $fileHeaderShift + 0x10;
+
+      if (isCastlevaniaCollectionSave(GAME)) {
+        offset += getShift(getShifts());
+      }
+
+      const int = getInt(offset, "bit", { bit: index - 1 });
 
       item.disabled = !Boolean(int);
     });
@@ -190,12 +225,18 @@ export function afterSetInt(item: Item, flag: ItemBitflag): void {
   } else if ("id" in item && item.id === "maxLevel") {
     const itemInt = item as ItemInt;
 
-    let level = getInt(itemInt.offset - 0x4ea, "uint8");
+    const previousLevel = getInt(itemInt.offset - 0x4ea, "uint8");
     const maxLevel = getInt(itemInt.offset, "uint8");
 
-    level = Math.min(level, maxLevel);
+    const level = Math.min(previousLevel, maxLevel);
 
     setInt(itemInt.offset - 0x4ea, "uint8", level);
+
+    if (level < previousLevel) {
+      const experience = getExperience(level);
+
+      setInt(itemInt.offset - 0x48e, "uint32", experience);
+    }
   } else if ("id" in item && item.id === "experience") {
     const itemInt = item as ItemInt;
 
@@ -241,7 +282,25 @@ export function afterSetInt(item: Item, flag: ItemBitflag): void {
 export function generateChecksum(item: ItemChecksum): number {
   const salt = getInt(item.offset - 0x2, "uint16");
 
+  if (isCastlevaniaCollectionSave(GAME)) {
+    return 0x0;
+  }
+
   return generateBiosChecksum(item, salt);
+}
+
+export function beforeSaving(): ArrayBufferLike {
+  const $dataView = get(dataView);
+
+  if (isCastlevaniaCollectionSave(GAME)) {
+    return injectCastlevaniaCollectionSaves(GAME);
+  }
+
+  return $dataView.buffer;
+}
+
+export function onReset(): void {
+  resetState();
 }
 
 function getExperience(level: number): number {
