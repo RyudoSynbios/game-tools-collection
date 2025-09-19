@@ -369,7 +369,7 @@ export function getUtils(value = "", ...params: any[]): any {
         if (param.match(/^[0-9]+$/)) {
           params.push(parseInt(param));
         } else {
-          params.push(param.replaceAll("'", ""));
+          params.push(param.trim().replaceAll("'", ""));
         }
       });
 

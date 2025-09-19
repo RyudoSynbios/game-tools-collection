@@ -6284,7 +6284,7 @@ const template: GameJson = {
       0x1: "Hellhound",
       0x2: "Midgar Infantry",
     },
-    summons: "getInventoryMateriaNames(true,'summons')",
+    summons: "getInventoryMateriaNames(true, 'summons')",
     tifaOutfits: {
       0x0: "Pride of Seventh Heaven",
       0x1: "Majestic Glamour",

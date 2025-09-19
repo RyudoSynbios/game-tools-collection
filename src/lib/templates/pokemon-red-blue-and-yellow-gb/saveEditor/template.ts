@@ -311,7 +311,7 @@ const template: GameJson = {
                       instances: 6,
                       resource: "pokemonNames",
                       vertical: true,
-                      onTabChange: "onPokemonChange(%d,'%itemId%')",
+                      onTabChange: "onPokemonChange(%d, '%itemId%')",
                       items: [
                         pokemonStatsFragment("party", 0x307e, 0x2f34, 0x303c, 0x2f2d),
                       ],
@@ -355,7 +355,7 @@ const template: GameJson = {
                   instances: 20,
                   resource: "pokemonNames",
                   vertical: true,
-                  onTabChange: "onPokemonChange(%d,'%itemId%')",
+                  onTabChange: "onPokemonChange(%d, '%itemId%')",
                   items: [
                     pokemonStatsFragment("box%parent%", 0x4386, 0x4016, 0x42aa, 0x4001),
                   ],

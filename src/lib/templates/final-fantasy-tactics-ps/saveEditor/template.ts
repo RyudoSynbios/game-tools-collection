@@ -375,7 +375,7 @@ const template: GameJson = {
                   instances: 20,
                   resource: "unitNames",
                   vertical: true,
-                  onTabChange: "onUnitChange(%d,'%itemId%')",
+                  onTabChange: "onUnitChange(%d, '%itemId%')",
                   items: [
                     {
                       type: "tabs",
