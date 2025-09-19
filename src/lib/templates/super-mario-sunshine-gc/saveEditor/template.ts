@@ -38,7 +38,7 @@ const template: GameJson = {
               bigEndian: true,
               control: {
                 offsetStart: 0x40,
-                offsetEnd: 0x2040,
+                offsetEnd: 0x203c,
               },
             },
             {
@@ -97,7 +97,7 @@ const template: GameJson = {
               bigEndian: true,
               control: {
                 offsetStart: 0x0,
-                offsetEnd: 0x2000,
+                offsetEnd: 0x1ffc,
               },
             },
             {

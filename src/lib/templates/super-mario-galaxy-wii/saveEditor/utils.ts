@@ -60,7 +60,7 @@ export function afterSetInt(item: Item, flag: ItemBitflag): void {
 
 export function generateChecksum(item: ItemChecksum): number {
   let checksum1 = 0x0;
-  let checksum2 = 0x2;
+  let checksum2 = 0x0;
 
   for (let i = item.control.offsetStart; i < item.control.offsetEnd; i += 0x2) {
     checksum1 += getInt(i, "uint16", { bigEndian: true });

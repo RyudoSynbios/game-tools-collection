@@ -104,7 +104,7 @@ export function overrideParseContainerItemsShifts(
     for (let i = 0; i < item.instances + 1; i += 1) {
       const offset = 0x100 + i * item.length;
 
-      const magic = getString($fileHeaderShift + offset + 0x0, 0x4, "uint8");
+      const magic = getString($fileHeaderShift + offset, 0x4, "uint8");
       const saveIndex = getInt($fileHeaderShift + offset + 0xa, "uint8");
 
       if (magic === "KHJC" && saveIndex === index + 1) {

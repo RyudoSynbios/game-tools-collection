@@ -38,6 +38,7 @@ export function afterSetInt(item: Item, flag: ItemBitflag): void {
     updateResources("characterNames");
   } else if ("id" in item && item.id === "hiddenEvents") {
     const itemBitflags = item as ItemBitflags;
+
     const checked = getInt(flag.offset, "bit", { bit: flag.bit });
 
     const index = itemBitflags.flags.findIndex(

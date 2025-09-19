@@ -22,7 +22,7 @@ const template: GameJson = {
       dataType: "uint32",
       bigEndian: true,
       control: {
-        offsetStart: 0x0,
+        offsetStart: 0x4,
         offsetEnd: 0xbe00,
       },
     },
