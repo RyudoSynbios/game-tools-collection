@@ -60,6 +60,7 @@ Link to the website: [https://game-tools-collection.com](https://game-tools-coll
 | Legend of Zelda, The: Ocarina of Time        | N64      | Save                    | EUR / USA / JAP                               |
 | Legend of Zelda, The: Oracle of Ages         | GBC      | Save                    | EUR / USA / JAP / AUS                         |
 | Legend of Zelda, The: Oracle of Seasons      | GBC      | Save                    | EUR / USA / JAP / AUS                         |
+| Legend of Zelda, The: The Minish Cap         | GBA      | Save                    | EUR / USA / JAP                               |
 | Luigi's Mansion                              | GC       | Save                    | EUR / USA / JAP                               |
 | Lylat Wars                                   | N64      | Save                    | EUR / USA / JAP / AUS                         |
 | Mario Kart 64                                | N64      | Save                    | EUR / USA / JAP                               |

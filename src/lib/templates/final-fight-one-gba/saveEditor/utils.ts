@@ -22,7 +22,7 @@ export function beforeInitDataView(
 export function initShifts(shifts: number[]): number[] {
   const shift = getShift(shifts);
 
-  const section1Saves = getInt(shift + 0x0, "uint16");
+  const section1Saves = getInt(shift, "uint16");
   const section2Saves = getInt(shift + 0x100, "uint16");
 
   if (section2Saves !== 0xffff && section2Saves > section1Saves) {
