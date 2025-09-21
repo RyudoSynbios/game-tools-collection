@@ -84,6 +84,10 @@ export function overrideParseItem(item: Item): Item {
       item.offset = offset;
       item.bit = bit;
     }
+  } else if ($gameRegion === 1 && "id" in item && item.id?.match(/^extra/)) {
+    if ("offset" in item && item.offset >= 0xf && item.offset < 0x3b) {
+      item.offset -= 0x2;
+    }
   }
 
   return item;
