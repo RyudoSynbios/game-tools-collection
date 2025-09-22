@@ -606,6 +606,17 @@
     }
   },
   {
+    "id": "legend-of-zelda-the-the-minish-cap-gba",
+    "name": "Legend of Zelda, The: The Minish Cap",
+    "consoleId": "game-boy-advance",
+    "tools": {
+      "saveEditor": {
+        "createdAt": "2025-09-22",
+        "regions": ["🇪🇺", "🇺🇸", "🇯🇵"]
+      }
+    }
+  },
+  {
     "id": "luigi-s-mansion-gc",
     "name": "Luigi's Mansion",
     "consoleId": "gamecube",
