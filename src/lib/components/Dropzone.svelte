@@ -113,7 +113,7 @@
           $gameUtils.onInitFailed();
         }
 
-        uploadFailed("invalid save");
+        uploadFailed("invalid file");
       }
 
       fileIsLoading = false;
