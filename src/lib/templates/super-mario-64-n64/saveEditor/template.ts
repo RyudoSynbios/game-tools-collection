@@ -42,12 +42,19 @@ const template: GameJson = {
       ],
     },
     {
-      id: "slots",
       length: 0x70,
       type: "container",
       instanceType: "tabs",
       instances: 4,
       enumeration: "Mario %s",
+      disableSubinstanceIf: {
+        offset: 0xb,
+        type: "variable",
+        dataType: "bit",
+        bit: 0,
+        operator: "=",
+        value: 0x0,
+      },
       appendSubinstance: [
         {
           name: "Score",
@@ -91,14 +98,6 @@ const template: GameJson = {
           ],
         },
       ],
-      disableSubinstanceIf: {
-        offset: 0xb,
-        type: "variable",
-        dataType: "bit",
-        bit: 0,
-        operator: "=",
-        value: 0x0,
-      },
       items: [
         {
           name: "Checksum",

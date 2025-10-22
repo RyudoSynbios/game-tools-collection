@@ -15,9 +15,9 @@ export function overrideItem(item: Item): Item {
   ) {
     const itemInt = item as ItemInt;
 
-    const maxQuantities = getInt(itemInt.offset + 0x2a, "uint8");
+    const max = getInt(itemInt.offset + 0x2a, "uint8");
 
-    itemInt.max = maxQuantities;
+    itemInt.max = max;
   } else if ("id" in item && item.id === "arrows") {
     const itemInt = item as ItemInt;
 
@@ -45,12 +45,12 @@ export function afterSetInt(item: Item): void {
   ) {
     const itemInt = item as ItemInt;
 
-    let quantities = getInt(itemInt.offset - 0x2a, "uint8");
-    const maxQuantities = getInt(itemInt.offset, "uint8");
+    let value = getInt(itemInt.offset - 0x2a, "uint8");
+    const max = getInt(itemInt.offset, "uint8");
 
-    quantities = Math.min(quantities, maxQuantities);
+    value = Math.min(value, max);
 
-    setInt(itemInt.offset - 0x2a, "uint8", quantities);
+    setInt(itemInt.offset - 0x2a, "uint8", value);
   } else if ("id" in item && item.id === "maxArrows") {
     const itemInt = item as ItemInt;
 

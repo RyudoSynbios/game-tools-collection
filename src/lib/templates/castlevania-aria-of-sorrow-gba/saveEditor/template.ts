@@ -2274,7 +2274,7 @@ const template: GameJson = {
               items: [
                 {
                   id: "abilities",
-                  name: "Abilities",
+                  name: "Obtained",
                   type: "bitflags",
                   flags: [
                     { offset: 0x146, bit: 0, label: "Grave Keeper" },
@@ -2286,7 +2286,7 @@ const template: GameJson = {
                   ],
                 },
                 {
-                  name: "Equipped Abilities",
+                  name: "Equipped",
                   type: "bitflags",
                   flags: [
                     { offset: 0x14a, bit: 0, label: "Grave Keeper" },
