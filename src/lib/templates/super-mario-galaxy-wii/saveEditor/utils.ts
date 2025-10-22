@@ -1,5 +1,6 @@
 import { copyInt, getInt, getString } from "$lib/utils/bytes";
 import { formatChecksum } from "$lib/utils/checksum";
+import { capitalize } from "$lib/utils/format";
 
 import { Item, ItemBitflag, ItemChecksum, ItemContainer } from "$lib/types";
 
@@ -14,19 +15,23 @@ export function overrideParseItem(item: Item): Item {
     const [, , , type] = item.id.split("-");
     const [slotIndex, characterIndex] = item.id.splitInt();
 
-    let block = `${slotIndex + 1}`;
+    let character = "mario";
 
-    if (characterIndex === 0) {
-      block = `mario${block}`;
-    } else {
-      block = `luigi${block}`;
+    if (characterIndex === 1) {
+      character = "luigi";
     }
+
+    const block = `${character}${slotIndex + 1}`;
 
     if (item.type === "bitflags") {
       item.flags.forEach((flag) => {
         flag.offset += saveBlocks[block][type];
+        flag.label = flag.label.replace("{character}", capitalize(character));
       });
     } else if ("offset" in item) {
+      if (item.name) {
+        item.name = item.name.replace("{character}", capitalize(character));
+      }
       item.offset += saveBlocks[block][type];
     }
 
