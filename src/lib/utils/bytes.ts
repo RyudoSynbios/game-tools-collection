@@ -268,11 +268,29 @@ export function extractBinary(
 ): number {
   const dataLength = Math.ceil((bitStart + bitLength) / 0x8);
 
-  const mask =
-    (Math.pow(0x100, dataLength) - 0x1) >>
-    (dataLength * 0x8 - (bitStart + bitLength));
+  const base = Math.pow(0x100, dataLength) - 0x1;
+  const shift = dataLength * 0x8 - (bitStart + bitLength);
+
+  const mask = base >>> shift;
 
   return (number & mask) >> bitStart;
+}
+
+export function injectBinary(
+  number: number,
+  valueToInject: number,
+  dataType: Exclude<DataType, "boolean" | "int64" | "uint64" | "string">,
+  bitStart: number,
+  bitLength: number,
+): number {
+  const dataTypeLength = dataTypeToLength(dataType);
+  const dataTypeValue = dataTypeToValue(dataType);
+
+  const base = dataTypeValue >>> (dataTypeLength * 8 - bitLength);
+
+  const mask = (dataTypeValue ^ (base << bitStart)) >>> 0x0;
+
+  return (valueToInject << bitStart) | (number & mask);
 }
 
 interface BooleanOptions {
@@ -529,7 +547,9 @@ export function setInt(
     value = parseFloat(value) || 0;
   }
 
-  value = makeOperations(value, options.operations, true);
+  if (options.operations) {
+    value = makeOperations(value, options.operations, true);
+  }
 
   // prettier-ignore
   if (isPartial(options.operations)) {
@@ -545,19 +565,12 @@ export function setInt(
   if (options.binary) {
     const { bitStart, bitLength } = options.binary;
 
-    const dataTypeLength = dataTypeToLength(dataType);
-    const dataTypeValue = dataTypeToValue(dataType);
-
-    const mask =
-      dataTypeValue ^
-      ((dataTypeValue >> (dataTypeLength * 8 - bitLength)) << bitStart);
-
     // prettier-ignore
     const int = getInt(offset, dataType, {
       bigEndian: options.bigEndian,
     }, $dataView);
 
-    value = (value << bitStart) | (int & mask);
+    value = injectBinary(int, value, dataType, bitStart, bitLength);
   }
 
   if (options.binaryCodedDecimal) {

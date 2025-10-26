@@ -73,7 +73,7 @@ export function getIntMax(item: ItemInt): number {
     const dataTypeLength = dataTypeToLength(item.dataType);
     const dataTypeValue = dataTypeToValue(item.dataType);
 
-    return dataTypeValue >> (dataTypeLength * 8 - item.binary.bitLength);
+    return dataTypeValue >>> (dataTypeLength * 8 - item.binary.bitLength);
   } else if (
     item.dataType === "int8" ||
     item.dataType === "int16" ||
