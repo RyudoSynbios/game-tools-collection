@@ -30,46 +30,6 @@ const template: GameJson = {
         operator: "=",
         value: 0x0,
       },
-      appendSubinstance: [
-        {
-          name: "Options",
-          items: [
-            {
-              name: "Checksum Options",
-              offset: 0x4,
-              type: "checksum",
-              dataType: "uint32",
-              control: {
-                offsetStart: 0x0,
-                offsetEnd: 0x10,
-              },
-              bigEndian: true,
-            },
-            {
-              type: "section",
-              flex: true,
-              items: [
-                {
-                  id: "language",
-                  name: "Language",
-                  offset: 0x8,
-                  type: "variable",
-                  dataType: "uint8",
-                  resource: "languages",
-                  test: true,
-                },
-                {
-                  name: "Sound",
-                  offset: 0x9,
-                  type: "variable",
-                  dataType: "uint8",
-                  resource: "sounds",
-                },
-              ],
-            },
-          ],
-        },
-      ],
       items: [
         {
           name: "Checksum",
@@ -1643,6 +1603,46 @@ const template: GameJson = {
                       hidden: true,
                     },
                   ],
+                },
+              ],
+            },
+          ],
+        },
+      ],
+      appendSubinstance: [
+        {
+          name: "Options",
+          items: [
+            {
+              name: "Checksum Options",
+              offset: 0x4,
+              type: "checksum",
+              dataType: "uint32",
+              control: {
+                offsetStart: 0x0,
+                offsetEnd: 0x10,
+              },
+              bigEndian: true,
+            },
+            {
+              type: "section",
+              flex: true,
+              items: [
+                {
+                  id: "language",
+                  name: "Language",
+                  offset: 0x8,
+                  type: "variable",
+                  dataType: "uint8",
+                  resource: "languages",
+                  test: true,
+                },
+                {
+                  name: "Sound",
+                  offset: 0x9,
+                  type: "variable",
+                  dataType: "uint8",
+                  resource: "sounds",
                 },
               ],
             },

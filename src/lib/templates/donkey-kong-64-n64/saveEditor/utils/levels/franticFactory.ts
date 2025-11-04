@@ -21,7 +21,7 @@ export default {
                 { offset: 0x11, bit: 7, label: "<b>2.</b> Lobby" },
                 { offset: 0x12, bit: 0, label: "<b>2.</b> R&D", separator: true },
                 { offset: 0x12, bit: 1, label: "<b>3.</b> Lobby" },
-                { offset: 0x12, bit: 2, label: "<b>3.</b> Snade's HQ", separator: true },
+                { offset: 0x12, bit: 2, label: "<b>3.</b> Snide's HQ", separator: true },
                 { offset: 0x12, bit: 4, label: "<b>4.</b> Production Room Base" },
                 { offset: 0x12, bit: 3, label: "<b>4.</b> Production Room Top", separator: true },
                 { offset: 0x12, bit: 5, label: "<b>5.</b> Funky's Store" },

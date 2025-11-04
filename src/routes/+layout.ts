@@ -3,6 +3,8 @@ import { get } from "svelte/store";
 import { debugOptions } from "$lib/stores";
 import { setLocalStorage } from "$lib/utils/format";
 
+import "$lib/utils/prototype";
+
 const isBrowser = typeof window !== "undefined";
 
 if (isBrowser) {

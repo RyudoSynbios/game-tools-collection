@@ -29,21 +29,6 @@ const template: GameJson = {
       instanceType: "tabs",
       instances: 3,
       enumeration: "Slot %d",
-      appendSubinstance: [
-        {
-          name: "Options",
-          items: [
-            {
-              id: "language",
-              name: "Language",
-              offset: 0x0,
-              type: "variable",
-              dataType: "uint8",
-              resource: "languages",
-            },
-          ],
-        },
-      ],
       disableSubinstanceIf: {
         offset: 0xc,
         type: "variable",
@@ -1137,6 +1122,21 @@ const template: GameJson = {
                   ],
                 },
               ],
+            },
+          ],
+        },
+      ],
+      appendSubinstance: [
+        {
+          name: "Options",
+          items: [
+            {
+              id: "language",
+              name: "Language",
+              offset: 0x0,
+              type: "variable",
+              dataType: "uint8",
+              resource: "languages",
             },
           ],
         },

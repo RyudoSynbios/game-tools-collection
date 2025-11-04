@@ -50,110 +50,6 @@ const template: GameJson = {
           },
         ],
       },
-      appendSubinstance: [
-        {
-          name: "Options",
-          items: [
-            {
-              type: "section",
-              flex: true,
-              items: [
-                {
-                  name: "Difficulty",
-                  offset: 0x15f4,
-                  type: "variable",
-                  dataType: "uint8",
-                  resource: "difficulties",
-                },
-              ],
-            },
-            {
-              type: "section",
-              flex: true,
-              items: [
-                {
-                  name: "Controller Setup",
-                  offset: 0x15e4,
-                  type: "variable",
-                  dataType: "uint8",
-                  resource: "controllerSetups",
-                },
-                {
-                  name: "Invert Pitch",
-                  offset: 0x15ec,
-                  type: "variable",
-                  dataType: "bit",
-                  bit: 0,
-                  resource: "optionBoolean",
-                },
-                {
-                  name: "Vibration",
-                  offset: 0x15ec,
-                  type: "variable",
-                  dataType: "bit",
-                  bit: 1,
-                  resource: "optionBoolean",
-                },
-              ],
-            },
-            {
-              type: "section",
-              flex: true,
-              items: [
-                {
-                  name: "HUD Always Visible",
-                  offset: 0x15ec,
-                  type: "variable",
-                  dataType: "bit",
-                  bit: 2,
-                  resource: "optionBoolean",
-                },
-                {
-                  name: "Cross Hair",
-                  offset: 0x15ec,
-                  type: "variable",
-                  dataType: "bit",
-                  bit: 1,
-                  resource: "optionBoolean",
-                },
-              ],
-            },
-            {
-              type: "section",
-              flex: true,
-              items: [
-                {
-                  name: "Gold Rewards",
-                  offset: 0x15ec,
-                  type: "variable",
-                  dataType: "bit",
-                  bit: 4,
-                  resource: "optionBoolean",
-                },
-              ],
-            },
-            {
-              type: "section",
-              flex: true,
-              items: [
-                {
-                  name: "Music",
-                  offset: 0x15d8,
-                  type: "variable",
-                  dataType: "uint32",
-                },
-                {
-                  name: "Sound Effects",
-                  offset: 0x15dc,
-                  type: "variable",
-                  dataType: "uint32",
-                  max: 128,
-                },
-              ],
-            },
-          ],
-        },
-      ],
       items: [
         {
           type: "tabs",
@@ -260,6 +156,110 @@ const template: GameJson = {
                       },
                     },
                   ],
+                },
+              ],
+            },
+          ],
+        },
+      ],
+      appendSubinstance: [
+        {
+          name: "Options",
+          items: [
+            {
+              type: "section",
+              flex: true,
+              items: [
+                {
+                  name: "Difficulty",
+                  offset: 0x15f4,
+                  type: "variable",
+                  dataType: "uint8",
+                  resource: "difficulties",
+                },
+              ],
+            },
+            {
+              type: "section",
+              flex: true,
+              items: [
+                {
+                  name: "Controller Setup",
+                  offset: 0x15e4,
+                  type: "variable",
+                  dataType: "uint8",
+                  resource: "controllerSetups",
+                },
+                {
+                  name: "Invert Pitch",
+                  offset: 0x15ec,
+                  type: "variable",
+                  dataType: "bit",
+                  bit: 0,
+                  resource: "optionBoolean",
+                },
+                {
+                  name: "Vibration",
+                  offset: 0x15ec,
+                  type: "variable",
+                  dataType: "bit",
+                  bit: 1,
+                  resource: "optionBoolean",
+                },
+              ],
+            },
+            {
+              type: "section",
+              flex: true,
+              items: [
+                {
+                  name: "HUD Always Visible",
+                  offset: 0x15ec,
+                  type: "variable",
+                  dataType: "bit",
+                  bit: 2,
+                  resource: "optionBoolean",
+                },
+                {
+                  name: "Cross Hair",
+                  offset: 0x15ec,
+                  type: "variable",
+                  dataType: "bit",
+                  bit: 1,
+                  resource: "optionBoolean",
+                },
+              ],
+            },
+            {
+              type: "section",
+              flex: true,
+              items: [
+                {
+                  name: "Gold Rewards",
+                  offset: 0x15ec,
+                  type: "variable",
+                  dataType: "bit",
+                  bit: 4,
+                  resource: "optionBoolean",
+                },
+              ],
+            },
+            {
+              type: "section",
+              flex: true,
+              items: [
+                {
+                  name: "Music",
+                  offset: 0x15d8,
+                  type: "variable",
+                  dataType: "uint32",
+                },
+                {
+                  name: "Sound Effects",
+                  offset: 0x15dc,
+                  type: "variable",
+                  dataType: "uint32",
+                  max: 128,
                 },
               ],
             },

@@ -19,7 +19,7 @@ export default {
                 { offset: 0x4, bit: 0, label: "<b>1.</b> Entrance" },
                 { offset: 0x4, bit: 1, label: "<b>1.</b> Cliff Area", separator: true },
                 { offset: 0x4, bit: 3, label: "<b>2.</b> Cliff Area" },
-                { offset: 0x4, bit: 2, label: "<b>2.</b> Snade's HQ", separator: true },
+                { offset: 0x4, bit: 2, label: "<b>2.</b> Snide's HQ", separator: true },
                 { offset: 0x4, bit: 4, label: "<b>3.</b> Minecart exit" },
                 { offset: 0x4, bit: 5, label: "<b>3.</b> X Cave entrance", separator: true },
                 { offset: 0x5, bit: 0, label: "<b>4.</b> Cliff Area" },
@@ -250,7 +250,7 @@ export default {
                       flags: [
                         { offset: 0x3, bit: 1, label: "Inside the giant boulder" },
                         { offset: 0x1, bit: 4, label: "Inside the X cave" },
-                        { offset: 0x2, bit: 6, label: "Inside a cell near Snade's HQ" },
+                        { offset: 0x2, bit: 6, label: "Inside a cell near Snide's HQ" },
                         { offset: 0x3, bit: 4, label: "Minecart Mayhem! cleared" },
                         { offset: 0x40, bit: 1, label: "Green blueprint given to Snide" },
                       ],

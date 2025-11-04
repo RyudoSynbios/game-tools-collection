@@ -55,49 +55,6 @@ const template: GameJson = {
         operator: "=",
         value: 0x0,
       },
-      appendSubinstance: [
-        {
-          name: "Score",
-          items: Object.values(courses).map((course, courseIndex) => ({
-            name: course,
-            type: "section",
-            flex: true,
-            items: [...Array(4).keys()].map((index) => ({
-              name: `Mario ${"%s".format(index + 1)}`,
-              offset:
-                0x1c0 + index * 0x4 + (0x3 - Math.floor(courseIndex / 0x4)),
-              type: "variable",
-              dataType: "uint8",
-              binary: {
-                bitStart: (courseIndex % 0x4) * 2,
-                bitLength: 2,
-              },
-              resource: "rankings",
-            })),
-          })),
-        },
-        {
-          name: "Option",
-          flex: true,
-          items: [
-            {
-              name: "Sound",
-              offset: 0x1d1,
-              type: "variable",
-              dataType: "uint8",
-              resource: "sounds",
-            },
-            {
-              id: "language",
-              name: "Language",
-              offset: 0x1d3,
-              type: "variable",
-              dataType: "uint8",
-              resource: "languages",
-            },
-          ],
-        },
-      ],
       items: [
         {
           name: "Checksum",
@@ -762,6 +719,49 @@ const template: GameJson = {
                   ],
                 },
               ],
+            },
+          ],
+        },
+      ],
+      appendSubinstance: [
+        {
+          name: "Score",
+          items: Object.values(courses).map((course, courseIndex) => ({
+            name: course,
+            type: "section",
+            flex: true,
+            items: [...Array(4).keys()].map((index) => ({
+              name: `Mario ${"%s".format(index + 1)}`,
+              offset:
+                0x1c0 + index * 0x4 + (0x3 - Math.floor(courseIndex / 0x4)),
+              type: "variable",
+              dataType: "uint8",
+              binary: {
+                bitStart: (courseIndex % 0x4) * 2,
+                bitLength: 2,
+              },
+              resource: "rankings",
+            })),
+          })),
+        },
+        {
+          name: "Option",
+          flex: true,
+          items: [
+            {
+              name: "Sound",
+              offset: 0x1d1,
+              type: "variable",
+              dataType: "uint8",
+              resource: "sounds",
+            },
+            {
+              id: "language",
+              name: "Language",
+              offset: 0x1d3,
+              type: "variable",
+              dataType: "uint8",
+              resource: "languages",
             },
           ],
         },

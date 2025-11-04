@@ -2,7 +2,6 @@
   import { onMount } from "svelte";
 
   import { isDebug, isDirty } from "$lib/stores";
-  import "$lib/utils/prototype";
 
   import "../app.css";
 

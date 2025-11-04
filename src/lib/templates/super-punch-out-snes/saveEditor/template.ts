@@ -25,6 +25,244 @@ const template: GameJson = {
         operator: "=",
         value: 0x0,
       },
+      items: [
+        {
+          name: "Checksum",
+          offset: 0x101,
+          type: "checksum",
+          dataType: "uint16",
+          control: {
+            offsetStart: 0x104,
+            offsetEnd: 0x180,
+          },
+        },
+        {
+          type: "tabs",
+          items: [
+            {
+              name: "General",
+              items: [
+                {
+                  type: "section",
+                  flex: true,
+                  items: [
+                    {
+                      id: "name-%index%",
+                      name: "Name",
+                      offset: 0x108,
+                      length: 0x8,
+                      type: "variable",
+                      dataType: "string",
+                      letterDataType: "uint8",
+                      fallback: 0xef,
+                      resource: "letters",
+                      test: true,
+                    },
+                    {
+                      name: "Championship Progression",
+                      offset: 0x104,
+                      type: "variable",
+                      dataType: "uint8",
+                      hidden: true,
+                    },
+                    {
+                      name: "Beaten Opponents",
+                      offset: 0x105,
+                      type: "variable",
+                      dataType: "uint8",
+                      hidden: true,
+                    },
+                    {
+                      id: "wins",
+                      name: "Wins",
+                      offset: 0x17e,
+                      type: "variable",
+                      dataType: "uint8",
+                    },
+                    {
+                      name: "Losses",
+                      offset: 0x17f,
+                      type: "variable",
+                      dataType: "uint8",
+                    },
+                    {
+                      type: "section",
+                      flex: true,
+                      items: [
+                        {
+                          id: "opponents-0",
+                          name: "Minor Circuit",
+                          type: "bitflags",
+                          flags: [
+                            { offset: 0x105, bit: 0, label: "Gabby Jay" },
+                            { offset: 0x105, bit: 1, label: "Bear Hugger" },
+                            { offset: 0x105, bit: 2, label: "Piston Hurricane" },
+                            { offset: 0x105, bit: 3, label: "Bald Bull" },
+                          ],
+                        },
+                        {
+                          id: "opponents-1",
+                          name: "Major Circuit",
+                          type: "bitflags",
+                          flags: [
+                            { offset: 0x105, bit: 0, label: "Bob Charlie" },
+                            { offset: 0x105, bit: 1, label: "Dragon Chan" },
+                            { offset: 0x105, bit: 2, label: "Masked Muscle" },
+                            { offset: 0x105, bit: 3, label: "Mr.Sandman" },
+                          ],
+                        },
+                        {
+                          id: "opponents-2",
+                          name: "World Circuit",
+                          type: "bitflags",
+                          flags: [
+                            { offset: 0x105, bit: 0, label: "Aran Ryan" },
+                            { offset: 0x105, bit: 1, label: "Heike Kagero" },
+                            { offset: 0x105, bit: 2, label: "Mad Clown" },
+                            { offset: 0x105, bit: 3, label: "Super Machoman" },
+                          ],
+                        },
+                        {
+                          id: "opponents-3",
+                          name: "Special Circuit",
+                          type: "bitflags",
+                          flags: [
+                            { offset: 0x105, bit: 0, label: "Narcis Prince" },
+                            { offset: 0x105, bit: 1, label: "Hoy Quarlow" },
+                            { offset: 0x105, bit: 2, label: "Rick Bruiser" },
+                            { offset: 0x105, bit: 3, label: "Nick Bruiser" },
+                          ],
+                        },
+                      ],
+                    },
+                  ],
+                },
+              ],
+            },
+            {
+              name: "Championship",
+              items: [
+                {
+                  type: "tabs",
+                  vertical: true,
+                  items: circuits.map(
+                    (circuit, circuitIndex) =>
+                      ({
+                        name: circuit.name,
+                        items: [
+                          {
+                            type: "section",
+                            flex: true,
+                            items: [
+                              ...circuit.opponents.map((opponent, index) => {
+                                const shift = circuitIndex * 0x14 + index * 0x5;
+
+                                return {
+                                  name: opponent,
+                                  type: "group",
+                                  mode: "time",
+                                  items: [
+                                    {
+                                      id: `circuitProgression-${circuitIndex}-minutes-${index}`,
+                                      offset: 0x118 + shift,
+                                      type: "variable",
+                                      dataType: "uint8",
+                                      max: 9,
+                                    },
+                                    {
+                                      id: `circuitProgression-${circuitIndex}-seconds-${index}-number-1`,
+                                      offset: 0x116 + shift,
+                                      type: "variable",
+                                      dataType: "uint16",
+                                      leadingZeros: 1,
+                                      max: 59,
+                                    },
+                                    {
+                                      id: `circuitProgression-${circuitIndex}-milliseconds-${index}-number-1`,
+                                      offset: 0x114 + shift,
+                                      type: "variable",
+                                      dataType: "uint16",
+                                      leadingZeros: 1,
+                                      max: 99,
+                                    },
+                                  ],
+                                };
+                              }),
+                            ],
+                          },
+                          {
+                            type: "section",
+                            flex: true,
+                            items: [
+                              {
+                                name: "Wins",
+                                offset: 0x110 + circuitIndex,
+                                type: "variable",
+                                dataType: "upper4",
+                                disabled: true,
+                              },
+                              {
+                                id: `circuitProgression-${circuitIndex}-losses`,
+                                name: "Losses",
+                                offset: 0x110 + circuitIndex,
+                                type: "variable",
+                                dataType: "lower4",
+                                max: 3,
+                              },
+                              {
+                                id: `circuitProgression-${circuitIndex}-score-0-number-5`,
+                                name: "Score",
+                                offset: 0x164 + circuitIndex * 0x6,
+                                type: "variable",
+                                dataType: "uint32",
+                                max: 999990,
+                                step: 10,
+                              },
+                            ],
+                          },
+                        ],
+                      }) as ItemTab,
+                  ),
+                },
+              ],
+            },
+            {
+              name: "Button Setting",
+              flex: true,
+              items: [
+                {
+                  name: "Right Punch",
+                  offset: 0x106,
+                  type: "variable",
+                  dataType: "lower4",
+                  resource: "buttons",
+                },
+                {
+                  name: "Left Punch",
+                  offset: 0x106,
+                  type: "variable",
+                  dataType: "upper4",
+                  resource: "buttons",
+                },
+                {
+                  name: "Knockout Punch",
+                  offset: 0x107,
+                  type: "variable",
+                  dataType: "lower4",
+                  resource: "buttons",
+                },
+                {
+                  name: "Power Up",
+                  offset: 0x107,
+                  type: "variable",
+                  dataType: "upper4",
+                  resource: "buttons",
+                },
+              ],
+            },
+          ],
+        },
+      ],
       appendSubinstance: [
         {
           name: "Records",
@@ -326,244 +564,6 @@ const template: GameJson = {
                   ],
                 } as ItemTab;
               }),
-            },
-          ],
-        },
-      ],
-      items: [
-        {
-          name: "Checksum",
-          offset: 0x101,
-          type: "checksum",
-          dataType: "uint16",
-          control: {
-            offsetStart: 0x104,
-            offsetEnd: 0x180,
-          },
-        },
-        {
-          type: "tabs",
-          items: [
-            {
-              name: "General",
-              items: [
-                {
-                  type: "section",
-                  flex: true,
-                  items: [
-                    {
-                      id: "name-%index%",
-                      name: "Name",
-                      offset: 0x108,
-                      length: 0x8,
-                      type: "variable",
-                      dataType: "string",
-                      letterDataType: "uint8",
-                      fallback: 0xef,
-                      resource: "letters",
-                      test: true,
-                    },
-                    {
-                      name: "Championship Progression",
-                      offset: 0x104,
-                      type: "variable",
-                      dataType: "uint8",
-                      hidden: true,
-                    },
-                    {
-                      name: "Beaten Opponents",
-                      offset: 0x105,
-                      type: "variable",
-                      dataType: "uint8",
-                      hidden: true,
-                    },
-                    {
-                      id: "wins",
-                      name: "Wins",
-                      offset: 0x17e,
-                      type: "variable",
-                      dataType: "uint8",
-                    },
-                    {
-                      name: "Losses",
-                      offset: 0x17f,
-                      type: "variable",
-                      dataType: "uint8",
-                    },
-                    {
-                      type: "section",
-                      flex: true,
-                      items: [
-                        {
-                          id: "opponents-0",
-                          name: "Minor Circuit",
-                          type: "bitflags",
-                          flags: [
-                            { offset: 0x105, bit: 0, label: "Gabby Jay" },
-                            { offset: 0x105, bit: 1, label: "Bear Hugger" },
-                            { offset: 0x105, bit: 2, label: "Piston Hurricane" },
-                            { offset: 0x105, bit: 3, label: "Bald Bull" },
-                          ],
-                        },
-                        {
-                          id: "opponents-1",
-                          name: "Major Circuit",
-                          type: "bitflags",
-                          flags: [
-                            { offset: 0x105, bit: 0, label: "Bob Charlie" },
-                            { offset: 0x105, bit: 1, label: "Dragon Chan" },
-                            { offset: 0x105, bit: 2, label: "Masked Muscle" },
-                            { offset: 0x105, bit: 3, label: "Mr.Sandman" },
-                          ],
-                        },
-                        {
-                          id: "opponents-2",
-                          name: "World Circuit",
-                          type: "bitflags",
-                          flags: [
-                            { offset: 0x105, bit: 0, label: "Aran Ryan" },
-                            { offset: 0x105, bit: 1, label: "Heike Kagero" },
-                            { offset: 0x105, bit: 2, label: "Mad Clown" },
-                            { offset: 0x105, bit: 3, label: "Super Machoman" },
-                          ],
-                        },
-                        {
-                          id: "opponents-3",
-                          name: "Special Circuit",
-                          type: "bitflags",
-                          flags: [
-                            { offset: 0x105, bit: 0, label: "Narcis Prince" },
-                            { offset: 0x105, bit: 1, label: "Hoy Quarlow" },
-                            { offset: 0x105, bit: 2, label: "Rick Bruiser" },
-                            { offset: 0x105, bit: 3, label: "Nick Bruiser" },
-                          ],
-                        },
-                      ],
-                    },
-                  ],
-                },
-              ],
-            },
-            {
-              name: "Championship",
-              items: [
-                {
-                  type: "tabs",
-                  vertical: true,
-                  items: circuits.map(
-                    (circuit, circuitIndex) =>
-                      ({
-                        name: circuit.name,
-                        items: [
-                          {
-                            type: "section",
-                            flex: true,
-                            items: [
-                              ...circuit.opponents.map((opponent, index) => {
-                                const shift = circuitIndex * 0x14 + index * 0x5;
-
-                                return {
-                                  name: opponent,
-                                  type: "group",
-                                  mode: "time",
-                                  items: [
-                                    {
-                                      id: `circuitProgression-${circuitIndex}-minutes-${index}`,
-                                      offset: 0x118 + shift,
-                                      type: "variable",
-                                      dataType: "uint8",
-                                      max: 9,
-                                    },
-                                    {
-                                      id: `circuitProgression-${circuitIndex}-seconds-${index}-number-1`,
-                                      offset: 0x116 + shift,
-                                      type: "variable",
-                                      dataType: "uint16",
-                                      leadingZeros: 1,
-                                      max: 59,
-                                    },
-                                    {
-                                      id: `circuitProgression-${circuitIndex}-milliseconds-${index}-number-1`,
-                                      offset: 0x114 + shift,
-                                      type: "variable",
-                                      dataType: "uint16",
-                                      leadingZeros: 1,
-                                      max: 99,
-                                    },
-                                  ],
-                                };
-                              }),
-                            ],
-                          },
-                          {
-                            type: "section",
-                            flex: true,
-                            items: [
-                              {
-                                name: "Wins",
-                                offset: 0x110 + circuitIndex,
-                                type: "variable",
-                                dataType: "upper4",
-                                disabled: true,
-                              },
-                              {
-                                id: `circuitProgression-${circuitIndex}-losses`,
-                                name: "Losses",
-                                offset: 0x110 + circuitIndex,
-                                type: "variable",
-                                dataType: "lower4",
-                                max: 3,
-                              },
-                              {
-                                id: `circuitProgression-${circuitIndex}-score-0-number-5`,
-                                name: "Score",
-                                offset: 0x164 + circuitIndex * 0x6,
-                                type: "variable",
-                                dataType: "uint32",
-                                max: 999990,
-                                step: 10,
-                              },
-                            ],
-                          },
-                        ],
-                      }) as ItemTab,
-                  ),
-                },
-              ],
-            },
-            {
-              name: "Button Setting",
-              flex: true,
-              items: [
-                {
-                  name: "Right Punch",
-                  offset: 0x106,
-                  type: "variable",
-                  dataType: "lower4",
-                  resource: "buttons",
-                },
-                {
-                  name: "Left Punch",
-                  offset: 0x106,
-                  type: "variable",
-                  dataType: "upper4",
-                  resource: "buttons",
-                },
-                {
-                  name: "Knockout Punch",
-                  offset: 0x107,
-                  type: "variable",
-                  dataType: "lower4",
-                  resource: "buttons",
-                },
-                {
-                  name: "Power Up",
-                  offset: 0x107,
-                  type: "variable",
-                  dataType: "upper4",
-                  resource: "buttons",
-                },
-              ],
             },
           ],
         },

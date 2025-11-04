@@ -32,45 +32,6 @@ const template: GameJson = {
         operator: "=",
         value: 0x0,
       },
-      appendSubinstance: [
-        {
-          name: "Option",
-          items: [
-            {
-              name: "Checksum Option",
-              offset: 0x0,
-              type: "checksum",
-              dataType: "uint32",
-              bigEndian: true,
-              control: {
-                offsetStart: 0x4,
-                offsetEnd: 0x10,
-              },
-            },
-            {
-              type: "section",
-              flex: true,
-              items: [
-                {
-                  name: "Unlocked Modes",
-                  type: "bitflags",
-                  flags: [
-                    { offset: 0x7, bit: 0, label: "Consecutive Fighting! Large Boss Mode" },
-                  ],
-                },
-                {
-                  name: "Unlocked BGM",
-                  type: "bitflags",
-                  flags: [
-                    { offset: 0xb, bit: 0, label: "I am Impact!" },
-                    { offset: 0xf, bit: 0, label: "Gorgeous my stage" },
-                  ],
-                },
-              ],
-            },
-          ],
-        },
-      ],
       items: [
         {
           name: "Checksum",
@@ -1104,6 +1065,45 @@ const template: GameJson = {
                         },
                       ],
                     },
+                  ],
+                },
+              ],
+            },
+          ],
+        },
+      ],
+      appendSubinstance: [
+        {
+          name: "Option",
+          items: [
+            {
+              name: "Checksum Option",
+              offset: 0x0,
+              type: "checksum",
+              dataType: "uint32",
+              bigEndian: true,
+              control: {
+                offsetStart: 0x4,
+                offsetEnd: 0x10,
+              },
+            },
+            {
+              type: "section",
+              flex: true,
+              items: [
+                {
+                  name: "Unlocked Modes",
+                  type: "bitflags",
+                  flags: [
+                    { offset: 0x7, bit: 0, label: "Consecutive Fighting! Large Boss Mode" },
+                  ],
+                },
+                {
+                  name: "Unlocked BGM",
+                  type: "bitflags",
+                  flags: [
+                    { offset: 0xb, bit: 0, label: "I am Impact!" },
+                    { offset: 0xf, bit: 0, label: "Gorgeous my stage" },
                   ],
                 },
               ],

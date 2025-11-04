@@ -27,7 +27,7 @@ export default {
                     { offset: 0xa, bit: 4, label: "<b>3.</b> Totem Area", separator: true },
                     { offset: 0xa, bit: 6, label: "<b>4.</b> Totem Area" },
                     { offset: 0xa, bit: 5, label: "<b>4.</b> Funky's Store", separator: true },
-                    { offset: 0xa, bit: 7, label: "<b>5.</b> Snade's HQ" },
+                    { offset: 0xa, bit: 7, label: "<b>5.</b> Snide's HQ" },
                     { offset: 0x7, bit: 6, label: "<b>5.</b> Stealthy Snoop!", disabled: true },
                   ],
                 },

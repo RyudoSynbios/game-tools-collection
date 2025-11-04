@@ -50,43 +50,6 @@ const template: GameJson = {
         operator: "=",
         value: 0x0,
       },
-      appendSubinstance: [
-        {
-          name: "Options",
-          flex: true,
-          items: [
-            {
-              name: "Sound",
-              offset: 0x2b5c,
-              type: "variable",
-              dataType: "uint8",
-              resource: "sounds",
-            },
-            {
-              name: "Rumble",
-              offset: 0x2b5d,
-              type: "variable",
-              dataType: "uint8",
-              resource: "optionBoolean",
-            },
-            {
-              name: "Controls",
-              offset: 0x2b5e,
-              type: "variable",
-              dataType: "uint8",
-              resource: "controls",
-            },
-            {
-              id: "language",
-              name: "Language",
-              offset: 0x2b5f,
-              type: "variable",
-              dataType: "uint8",
-              resource: "languages",
-            },
-          ],
-        },
-      ],
       items: [
         {
           type: "tabs",
@@ -607,7 +570,7 @@ const template: GameJson = {
                             { offset: 0x23bf, bit: 1, label: "UnderBoo" },
                             { offset: 0x23bf, bit: 2, label: "Boomerang" },
                             { offset: 0x23bf, bit: 3, label: "Little Boo Peep" },
-                            { offset: 0x23b0, bit: 0, label: "Boolossus", disabled: true, separator: true },
+                            { offset: 0x23b0, bit: 0, label: "Boolossus", separator: true, disabled: true },
                             { offset: 0x23c0, bit: 1, label: "Booffant" },
                             { offset: 0x23c0, bit: 2, label: "Boo B. Hatch" },
                             { offset: 0x23bf, bit: 7, label: "Boolderdash" },
@@ -3556,6 +3519,43 @@ const template: GameJson = {
                   ],
                 },
               ],
+            },
+          ],
+        },
+      ],
+      appendSubinstance: [
+        {
+          name: "Options",
+          flex: true,
+          items: [
+            {
+              name: "Sound",
+              offset: 0x2b5c,
+              type: "variable",
+              dataType: "uint8",
+              resource: "sounds",
+            },
+            {
+              name: "Rumble",
+              offset: 0x2b5d,
+              type: "variable",
+              dataType: "uint8",
+              resource: "optionBoolean",
+            },
+            {
+              name: "Controls",
+              offset: 0x2b5e,
+              type: "variable",
+              dataType: "uint8",
+              resource: "controls",
+            },
+            {
+              id: "language",
+              name: "Language",
+              offset: 0x2b5f,
+              type: "variable",
+              dataType: "uint8",
+              resource: "languages",
             },
           ],
         },

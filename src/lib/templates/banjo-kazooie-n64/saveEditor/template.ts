@@ -35,56 +35,6 @@ const template: GameJson = {
           },
         ],
       },
-      appendSubinstance: [
-        {
-          name: "Stop 'n' Swop",
-          items: [
-            {
-              name: "Checksum",
-              offset: 0x1fc,
-              type: "checksum",
-              dataType: "uint32",
-              bigEndian: true,
-              control: {
-                offsetStart: 0x1e0,
-                offsetEnd: 0x1fc,
-              },
-            },
-            {
-              type: "section",
-              flex: true,
-              items: [
-                {
-                  name: "Unlocked",
-                  type: "bitflags",
-                  flags: [
-                    { offset: 0x1e0, bit: 1, label: "Ice Key" },
-                    { offset: 0x1e0, bit: 2, label: "Cyan Mystery Egg" },
-                    { offset: 0x1e0, bit: 3, label: "Pink Mystery Egg" },
-                    { offset: 0x1e0, bit: 4, label: "Blue Mystery Egg" },
-                    { offset: 0x1e0, bit: 5, label: "Green Mystery Egg" },
-                    { offset: 0x1e0, bit: 6, label: "Red Mystery Egg" },
-                    { offset: 0x1e0, bit: 7, label: "Yellow Mystery Egg" },
-                  ],
-                },
-                {
-                  name: "Obtained",
-                  type: "bitflags",
-                  flags: [
-                    { offset: 0x1e1, bit: 2, label: "Ice Key" },
-                    { offset: 0x1e1, bit: 3, label: "Cyan Mystery Egg" },
-                    { offset: 0x1e1, bit: 4, label: "Pink Mystery Egg" },
-                    { offset: 0x1e1, bit: 5, label: "Blue Mystery Egg" },
-                    { offset: 0x1e1, bit: 6, label: "Green Mystery Egg" },
-                    { offset: 0x1e1, bit: 7, label: "Red Mystery Egg" },
-                    { offset: 0x1e0, bit: 0, label: "Yellow Mystery Egg" },
-                  ],
-                },
-              ],
-            },
-          ],
-        },
-      ],
       items: [
         {
           name: "Checksum",
@@ -2303,6 +2253,56 @@ const template: GameJson = {
                     { offset: 0x5f, bit: 5, label: "???", hidden: true },
                     { offset: 0x5f, bit: 6, label: "???", hidden: true },
                     { offset: 0x5f, bit: 7, label: "???", hidden: true },
+                  ],
+                },
+              ],
+            },
+          ],
+        },
+      ],
+      appendSubinstance: [
+        {
+          name: "Stop 'n' Swop",
+          items: [
+            {
+              name: "Checksum",
+              offset: 0x1fc,
+              type: "checksum",
+              dataType: "uint32",
+              bigEndian: true,
+              control: {
+                offsetStart: 0x1e0,
+                offsetEnd: 0x1fc,
+              },
+            },
+            {
+              type: "section",
+              flex: true,
+              items: [
+                {
+                  name: "Unlocked",
+                  type: "bitflags",
+                  flags: [
+                    { offset: 0x1e0, bit: 1, label: "Ice Key" },
+                    { offset: 0x1e0, bit: 2, label: "Cyan Mystery Egg" },
+                    { offset: 0x1e0, bit: 3, label: "Pink Mystery Egg" },
+                    { offset: 0x1e0, bit: 4, label: "Blue Mystery Egg" },
+                    { offset: 0x1e0, bit: 5, label: "Green Mystery Egg" },
+                    { offset: 0x1e0, bit: 6, label: "Red Mystery Egg" },
+                    { offset: 0x1e0, bit: 7, label: "Yellow Mystery Egg" },
+                  ],
+                },
+                {
+                  name: "Obtained",
+                  type: "bitflags",
+                  flags: [
+                    { offset: 0x1e1, bit: 2, label: "Ice Key" },
+                    { offset: 0x1e1, bit: 3, label: "Cyan Mystery Egg" },
+                    { offset: 0x1e1, bit: 4, label: "Pink Mystery Egg" },
+                    { offset: 0x1e1, bit: 5, label: "Blue Mystery Egg" },
+                    { offset: 0x1e1, bit: 6, label: "Green Mystery Egg" },
+                    { offset: 0x1e1, bit: 7, label: "Red Mystery Egg" },
+                    { offset: 0x1e0, bit: 0, label: "Yellow Mystery Egg" },
                   ],
                 },
               ],

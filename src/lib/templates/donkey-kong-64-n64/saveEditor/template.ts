@@ -10,7 +10,6 @@ import fungiForest from "./utils/levels/fungiForest";
 import gloomyGalleon from "./utils/levels/gloomyGalleon";
 import hideoutHelm from "./utils/levels/hideoutHelm";
 import jungleJapes from "./utils/levels/jungleJapes";
-import { ranks } from "./utils/resource";
 
 const template: GameJson = {
   validator: {
@@ -50,356 +49,6 @@ const template: GameJson = {
         operator: "=",
         value: 0x0,
       },
-      appendSubinstance: [
-        {
-          name: "Mystery",
-          items: [
-            {
-              type: "tabs",
-              items: [
-                {
-                  name: "General",
-                  items: [
-                    {
-                      type: "section",
-                      flex: true,
-                      items: [
-                        {
-                          name: "Mystery",
-                          offset: 0x6b0,
-                          type: "variable",
-                          dataType: "bit",
-                          bit: 0,
-                          resource: "booleanUnlocked",
-                          test: true,
-                        },
-                        {
-                          name: "Cheats",
-                          offset: 0x6b4,
-                          type: "variable",
-                          dataType: "bit",
-                          bit: 2,
-                          resource: "booleanUnlocked",
-                        },
-                      ],
-                    },
-                    {
-                      type: "section",
-                      flex: true,
-                      items: [
-                        {
-                          type: "section",
-                          items: [
-                            {
-                              name: "DK Theatre",
-                              offset: 0x6b0,
-                              type: "variable",
-                              dataType: "bit",
-                              bit: 1,
-                              resource: "booleanUnlocked",
-                            },
-                            {
-                              type: "bitflags",
-                              flags: [
-                                { offset: 0x6b0, bit: 2, label: "Jungle Intro" },
-                                { offset: 0x6b0, bit: 3, label: "Aztec Intro" },
-                                { offset: 0x6b0, bit: 4, label: "Factory Intro" },
-                                { offset: 0x6b0, bit: 5, label: "Galleon Intro" },
-                                { offset: 0x6b0, bit: 6, label: "Forest Intro" },
-                                { offset: 0x6b0, bit: 7, label: "Caves Intro" },
-                                { offset: 0x6b1, bit: 0, label: "Castle Intro" },
-                                { offset: 0x6b1, bit: 1, label: "Enter Hideout" },
-                                { offset: 0x6b1, bit: 2, label: "K.Rool Press Button" },
-                                { offset: 0x6b1, bit: 3, label: "K.Rool Takeoff" },
-                                { offset: 0x6b1, bit: 4, label: "Game Over" },
-                                { offset: 0x6b1, bit: 5, label: "End Sequence" },
-                              ],
-                            },
-                          ],
-                        },
-                        {
-                          type: "section",
-                          items: [
-                            {
-                              name: "DK Bonus",
-                              offset: 0x6b1,
-                              type: "variable",
-                              dataType: "bit",
-                              bit: 6,
-                              resource: "booleanUnlocked",
-                            },
-                            {
-                              type: "bitflags",
-                              flags: [
-                                { offset: 0x6b1, bit: 7, label: "Rambi Arena" },
-                                { offset: 0x6b2, bit: 0, label: "Enguarde Arena unlocked" },
-                                { offset: 0x6b2, bit: 1, label: "DK Arcade" },
-                                { offset: 0x6b2, bit: 2, label: "Jetpac" },
-                              ],
-                            },
-                          ],
-                        },
-                        {
-                          type: "section",
-                          items: [
-                            {
-                              name: "Bosses",
-                              offset: 0x6b2,
-                              type: "variable",
-                              dataType: "bit",
-                              bit: 3,
-                              resource: "booleanUnlocked",
-                            },
-                            {
-                              type: "bitflags",
-                              flags: [
-                                { offset: 0x6b2, bit: 4, label: "Jungle Boss" },
-                                { offset: 0x6b2, bit: 5, label: "Aztec Boss" },
-                                { offset: 0x6b2, bit: 6, label: "Factory Boss" },
-                                { offset: 0x6b2, bit: 7, label: "Galleon Boss" },
-                                { offset: 0x6b3, bit: 0, label: "Forest Boss" },
-                                { offset: 0x6b3, bit: 1, label: "Caves Boss" },
-                                { offset: 0x6b3, bit: 2, label: "Castle Boss" },
-                                { offset: 0x6b3, bit: 3, label: "The Main Event" },
-                              ],
-                            },
-                          ],
-                        },
-                        {
-                          type: "section",
-                          items: [
-                            {
-                              name: "Kong Battle",
-                              offset: 0x6b3,
-                              type: "variable",
-                              dataType: "bit",
-                              bit: 4,
-                              resource: "booleanUnlocked",
-                            },
-                            {
-                              type: "bitflags",
-                              flags: [
-                                { offset: 0x6b3, bit: 5, label: "Diddy Kong" },
-                                { offset: 0x6b3, bit: 6, label: "Lanky Kong" },
-                                { offset: 0x6b3, bit: 7, label: "Tiny Kong" },
-                                { offset: 0x6b4, bit: 0, label: "Chunky Kong", separator: true },
-                                { offset: 0x6b4, bit: 1, label: "Krusha" },
-                              ],
-                            },
-                          ],
-                        },
-                      ],
-                    },
-                  ],
-                },
-                {
-                  name: "High Scores",
-                  items: [
-                    {
-                      type: "tabs",
-                      vertical: true,
-                      items: [
-                        {
-                          name: "Rambi Arena",
-                          items: [...Array(5).keys()].map((index) => ({
-                            name: ranks[index],
-                            type: "section",
-                            flex: true,
-                            items: [
-                              {
-                                id: "japanShift",
-                                name: "Score",
-                                offset: shiftOffset(
-                                  0x6d4,
-                                  Math.floor((2 + index * 9) / 8),
-                                ),
-                                type: "variable",
-                                dataType: "uint16",
-                                bigEndian: true,
-                                binary: {
-                                  bitStart: (2 + index * 9) % 8,
-                                  bitLength: 9,
-                                },
-                                max: 511,
-                              },
-                              {
-                                id: `name-${(7 + index * 5) % 8}`,
-                                name: "Name",
-                                offset: shiftOffset(
-                                  0x6ce,
-                                  Math.floor((7 + index * 5) / 8),
-                                ),
-                                length: 0x3,
-                                type: "variable",
-                                dataType: "string",
-                                letterDataType: "uint8",
-                                fallback: 0x1c,
-                                resource: "letters",
-                              },
-                            ],
-                          })),
-                        },
-                        {
-                          name: "Enguarde Arena",
-                          items: [...Array(5).keys()].map((index) => ({
-                            name: ranks[index],
-                            type: "section",
-                            flex: true,
-                            items: [
-                              {
-                                id: "japanShift",
-                                name: "Score",
-                                offset: shiftOffset(
-                                  0x6e5,
-                                  Math.floor((2 + index * 9) / 8),
-                                ),
-                                type: "variable",
-                                dataType: "uint16",
-                                bigEndian: true,
-                                binary: {
-                                  bitStart: (2 + index * 9) % 8,
-                                  bitLength: 9,
-                                },
-                                max: 511,
-                              },
-                              {
-                                id: `name-${(7 + index * 5) % 8}`,
-                                name: "Name",
-                                offset: shiftOffset(
-                                  0x6df,
-                                  Math.floor((7 + index * 5) / 8),
-                                ),
-                                length: 0x3,
-                                type: "variable",
-                                dataType: "string",
-                                letterDataType: "uint8",
-                                fallback: 0x1c,
-                                resource: "letters",
-                              },
-                            ],
-                          })),
-                        },
-                        {
-                          name: "DK Arcade",
-                          items: [...Array(5).keys()].map((index) => ({
-                            name: ranks[index],
-                            type: "section",
-                            flex: true,
-                            items: [
-                              {
-                                id: "japanShift",
-                                name: "Score",
-                                offset: shiftOffset(
-                                  0x6c6,
-                                  Math.floor((4 + index * 15) / 8),
-                                ),
-                                type: "variable",
-                                dataType: "uint24",
-                                bigEndian: true,
-                                binary: {
-                                  bitStart: (4 + index * 15) % 8,
-                                  bitLength: 15,
-                                },
-                                operations: [{ "*": 50 }],
-                                max: 999950,
-                                step: 50,
-                              },
-                              {
-                                id: `name-${(1 + index * 5) % 8}`,
-                                name: "Name",
-                                offset: shiftOffset(
-                                  0x6b8,
-                                  Math.floor((1 + index * 5) / 8),
-                                ),
-                                length: 0x3,
-                                type: "variable",
-                                dataType: "string",
-                                letterDataType: "uint8",
-                                fallback: 0x1c,
-                                resource: "letters",
-                              },
-                            ],
-                          })),
-                        },
-                        {
-                          name: "Jetpac",
-                          items: [
-                            {
-                              name: "High Score",
-                              offset: 0x6b9,
-                              type: "variable",
-                              dataType: "uint24",
-                              bigEndian: true,
-                              binary: {
-                                bitStart: 0,
-                                bitLength: 18,
-                              },
-                              operations: [{ "*": 5 }],
-                              max: 999995,
-                              step: 5,
-                            },
-                          ],
-                        },
-                      ],
-                    },
-                  ],
-                },
-              ],
-            },
-          ],
-        },
-        {
-          name: "Options",
-          items: [
-            {
-              type: "section",
-              flex: true,
-              items: [
-                {
-                  id: "japanShift",
-                  name: "Sound Mode",
-                  offset: 0x6e8,
-                  type: "variable",
-                  dataType: "uint16",
-                  bigEndian: true,
-                  binary: {
-                    bitStart: 7,
-                    bitLength: 2,
-                  },
-                  resource: "soundModes",
-                },
-              ],
-            },
-            {
-              type: "section",
-              flex: true,
-              items: [
-                {
-                  id: "japanShift-language",
-                  name: "Language",
-                  offset: 0x6e8,
-                  type: "variable",
-                  dataType: "uint8",
-                  binary: {
-                    bitStart: 1,
-                    bitLength: 2,
-                  },
-                  resource: "languages",
-                },
-                {
-                  id: "japanShift",
-                  name: "Chimpy Cam",
-                  offset: 0x6e8,
-                  type: "variable",
-                  dataType: "bit",
-                  bit: 4,
-                  resource: "chimpyCams",
-                },
-              ],
-            },
-          ],
-        },
-      ],
       items: [
         {
           name: "Checksum",
@@ -899,6 +548,356 @@ const template: GameJson = {
                     creepyCastle,
                     hideoutHelm,
                   ],
+                },
+              ],
+            },
+          ],
+        },
+      ],
+      appendSubinstance: [
+        {
+          name: "Mystery",
+          items: [
+            {
+              type: "tabs",
+              items: [
+                {
+                  name: "General",
+                  items: [
+                    {
+                      type: "section",
+                      flex: true,
+                      items: [
+                        {
+                          name: "Mystery",
+                          offset: 0x6b0,
+                          type: "variable",
+                          dataType: "bit",
+                          bit: 0,
+                          resource: "booleanUnlocked",
+                          test: true,
+                        },
+                        {
+                          name: "Cheats",
+                          offset: 0x6b4,
+                          type: "variable",
+                          dataType: "bit",
+                          bit: 2,
+                          resource: "booleanUnlocked",
+                        },
+                      ],
+                    },
+                    {
+                      type: "section",
+                      flex: true,
+                      items: [
+                        {
+                          type: "section",
+                          items: [
+                            {
+                              name: "DK Theatre",
+                              offset: 0x6b0,
+                              type: "variable",
+                              dataType: "bit",
+                              bit: 1,
+                              resource: "booleanUnlocked",
+                            },
+                            {
+                              type: "bitflags",
+                              flags: [
+                                { offset: 0x6b0, bit: 2, label: "Jungle Intro" },
+                                { offset: 0x6b0, bit: 3, label: "Aztec Intro" },
+                                { offset: 0x6b0, bit: 4, label: "Factory Intro" },
+                                { offset: 0x6b0, bit: 5, label: "Galleon Intro" },
+                                { offset: 0x6b0, bit: 6, label: "Forest Intro" },
+                                { offset: 0x6b0, bit: 7, label: "Caves Intro" },
+                                { offset: 0x6b1, bit: 0, label: "Castle Intro" },
+                                { offset: 0x6b1, bit: 1, label: "Enter Hideout" },
+                                { offset: 0x6b1, bit: 2, label: "K.Rool Press Button" },
+                                { offset: 0x6b1, bit: 3, label: "K.Rool Takeoff" },
+                                { offset: 0x6b1, bit: 4, label: "Game Over" },
+                                { offset: 0x6b1, bit: 5, label: "End Sequence" },
+                              ],
+                            },
+                          ],
+                        },
+                        {
+                          type: "section",
+                          items: [
+                            {
+                              name: "DK Bonus",
+                              offset: 0x6b1,
+                              type: "variable",
+                              dataType: "bit",
+                              bit: 6,
+                              resource: "booleanUnlocked",
+                            },
+                            {
+                              type: "bitflags",
+                              flags: [
+                                { offset: 0x6b1, bit: 7, label: "Rambi Arena" },
+                                { offset: 0x6b2, bit: 0, label: "Enguarde Arena unlocked" },
+                                { offset: 0x6b2, bit: 1, label: "DK Arcade" },
+                                { offset: 0x6b2, bit: 2, label: "Jetpac" },
+                              ],
+                            },
+                          ],
+                        },
+                        {
+                          type: "section",
+                          items: [
+                            {
+                              name: "Bosses",
+                              offset: 0x6b2,
+                              type: "variable",
+                              dataType: "bit",
+                              bit: 3,
+                              resource: "booleanUnlocked",
+                            },
+                            {
+                              type: "bitflags",
+                              flags: [
+                                { offset: 0x6b2, bit: 4, label: "Jungle Boss" },
+                                { offset: 0x6b2, bit: 5, label: "Aztec Boss" },
+                                { offset: 0x6b2, bit: 6, label: "Factory Boss" },
+                                { offset: 0x6b2, bit: 7, label: "Galleon Boss" },
+                                { offset: 0x6b3, bit: 0, label: "Forest Boss" },
+                                { offset: 0x6b3, bit: 1, label: "Caves Boss" },
+                                { offset: 0x6b3, bit: 2, label: "Castle Boss" },
+                                { offset: 0x6b3, bit: 3, label: "The Main Event" },
+                              ],
+                            },
+                          ],
+                        },
+                        {
+                          type: "section",
+                          items: [
+                            {
+                              name: "Kong Battle",
+                              offset: 0x6b3,
+                              type: "variable",
+                              dataType: "bit",
+                              bit: 4,
+                              resource: "booleanUnlocked",
+                            },
+                            {
+                              type: "bitflags",
+                              flags: [
+                                { offset: 0x6b3, bit: 5, label: "Diddy Kong" },
+                                { offset: 0x6b3, bit: 6, label: "Lanky Kong" },
+                                { offset: 0x6b3, bit: 7, label: "Tiny Kong" },
+                                { offset: 0x6b4, bit: 0, label: "Chunky Kong", separator: true },
+                                { offset: 0x6b4, bit: 1, label: "Krusha" },
+                              ],
+                            },
+                          ],
+                        },
+                      ],
+                    },
+                  ],
+                },
+                {
+                  name: "High Scores",
+                  items: [
+                    {
+                      type: "tabs",
+                      vertical: true,
+                      items: [
+                        {
+                          name: "Rambi Arena",
+                          items: [...Array(5).keys()].map((index) => ({
+                            name: "%o Place".format(index + 1),
+                            type: "section",
+                            flex: true,
+                            items: [
+                              {
+                                id: "japanShift",
+                                name: "Score",
+                                offset: shiftOffset(
+                                  0x6d4,
+                                  Math.floor((2 + index * 9) / 8),
+                                ),
+                                type: "variable",
+                                dataType: "uint16",
+                                bigEndian: true,
+                                binary: {
+                                  bitStart: (2 + index * 9) % 8,
+                                  bitLength: 9,
+                                },
+                                max: 511,
+                              },
+                              {
+                                id: `name-${(7 + index * 5) % 8}`,
+                                name: "Name",
+                                offset: shiftOffset(
+                                  0x6ce,
+                                  Math.floor((7 + index * 5) / 8),
+                                ),
+                                length: 0x3,
+                                type: "variable",
+                                dataType: "string",
+                                letterDataType: "uint8",
+                                fallback: 0x1c,
+                                resource: "letters",
+                              },
+                            ],
+                          })),
+                        },
+                        {
+                          name: "Enguarde Arena",
+                          items: [...Array(5).keys()].map((index) => ({
+                            name: "%o Place".format(index + 1),
+                            type: "section",
+                            flex: true,
+                            items: [
+                              {
+                                id: "japanShift",
+                                name: "Score",
+                                offset: shiftOffset(
+                                  0x6e5,
+                                  Math.floor((2 + index * 9) / 8),
+                                ),
+                                type: "variable",
+                                dataType: "uint16",
+                                bigEndian: true,
+                                binary: {
+                                  bitStart: (2 + index * 9) % 8,
+                                  bitLength: 9,
+                                },
+                                max: 511,
+                              },
+                              {
+                                id: `name-${(7 + index * 5) % 8}`,
+                                name: "Name",
+                                offset: shiftOffset(
+                                  0x6df,
+                                  Math.floor((7 + index * 5) / 8),
+                                ),
+                                length: 0x3,
+                                type: "variable",
+                                dataType: "string",
+                                letterDataType: "uint8",
+                                fallback: 0x1c,
+                                resource: "letters",
+                              },
+                            ],
+                          })),
+                        },
+                        {
+                          name: "DK Arcade",
+                          items: [...Array(5).keys()].map((index) => ({
+                            name: "%o Place".format(index + 1),
+                            type: "section",
+                            flex: true,
+                            items: [
+                              {
+                                id: "japanShift",
+                                name: "Score",
+                                offset: shiftOffset(
+                                  0x6c6,
+                                  Math.floor((4 + index * 15) / 8),
+                                ),
+                                type: "variable",
+                                dataType: "uint24",
+                                bigEndian: true,
+                                binary: {
+                                  bitStart: (4 + index * 15) % 8,
+                                  bitLength: 15,
+                                },
+                                operations: [{ "*": 50 }],
+                                max: 999950,
+                                step: 50,
+                              },
+                              {
+                                id: `name-${(1 + index * 5) % 8}`,
+                                name: "Name",
+                                offset: shiftOffset(
+                                  0x6b8,
+                                  Math.floor((1 + index * 5) / 8),
+                                ),
+                                length: 0x3,
+                                type: "variable",
+                                dataType: "string",
+                                letterDataType: "uint8",
+                                fallback: 0x1c,
+                                resource: "letters",
+                              },
+                            ],
+                          })),
+                        },
+                        {
+                          name: "Jetpac",
+                          items: [
+                            {
+                              name: "High Score",
+                              offset: 0x6b9,
+                              type: "variable",
+                              dataType: "uint24",
+                              bigEndian: true,
+                              binary: {
+                                bitStart: 0,
+                                bitLength: 18,
+                              },
+                              operations: [{ "*": 5 }],
+                              max: 999995,
+                              step: 5,
+                            },
+                          ],
+                        },
+                      ],
+                    },
+                  ],
+                },
+              ],
+            },
+          ],
+        },
+        {
+          name: "Options",
+          items: [
+            {
+              type: "section",
+              flex: true,
+              items: [
+                {
+                  id: "japanShift",
+                  name: "Sound Mode",
+                  offset: 0x6e8,
+                  type: "variable",
+                  dataType: "uint16",
+                  bigEndian: true,
+                  binary: {
+                    bitStart: 7,
+                    bitLength: 2,
+                  },
+                  resource: "soundModes",
+                },
+              ],
+            },
+            {
+              type: "section",
+              flex: true,
+              items: [
+                {
+                  id: "japanShift-language",
+                  name: "Language",
+                  offset: 0x6e8,
+                  type: "variable",
+                  dataType: "uint8",
+                  binary: {
+                    bitStart: 1,
+                    bitLength: 2,
+                  },
+                  resource: "languages",
+                },
+                {
+                  id: "japanShift",
+                  name: "Chimpy Cam",
+                  offset: 0x6e8,
+                  type: "variable",
+                  dataType: "bit",
+                  bit: 4,
+                  resource: "chimpyCams",
                 },
               ],
             },

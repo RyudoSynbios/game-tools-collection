@@ -59,35 +59,6 @@ const template: GameJson = {
           ],
         },
       ],
-      appendSubinstance: [
-        {
-          name: "Sound Config",
-          flex: true,
-          items: [
-            {
-              name: "Music",
-              offset: 0x67,
-              type: "variable",
-              dataType: "uint8",
-              max: 127,
-            },
-            {
-              name: "Voice",
-              offset: 0x68,
-              type: "variable",
-              dataType: "uint8",
-              max: 127,
-            },
-            {
-              name: "Sound Effect",
-              offset: 0x69,
-              type: "variable",
-              dataType: "uint8",
-              max: 127,
-            },
-          ],
-        },
-      ],
       items: [
         {
           type: "section",
@@ -3229,6 +3200,35 @@ const template: GameJson = {
                   resource: "buttons",
                 },
               ],
+            },
+          ],
+        },
+      ],
+      appendSubinstance: [
+        {
+          name: "Sound Config",
+          flex: true,
+          items: [
+            {
+              name: "Music",
+              offset: 0x67,
+              type: "variable",
+              dataType: "uint8",
+              max: 127,
+            },
+            {
+              name: "Voice",
+              offset: 0x68,
+              type: "variable",
+              dataType: "uint8",
+              max: 127,
+            },
+            {
+              name: "Sound Effect",
+              offset: 0x69,
+              type: "variable",
+              dataType: "uint8",
+              max: 127,
             },
           ],
         },

@@ -28,7 +28,7 @@ export default {
                     { offset: 0x29, bit: 5, label: "<b>4.</b> Entrance" },
                     { offset: 0x29, bit: 6, label: "<b>4.</b> Greenhouse", separator: true },
                     { offset: 0x29, bit: 7, label: "<b>5.</b> Entrance" },
-                    { offset: 0x2a, bit: 0, label: "<b>5.</b> Snade's HQ", separator: true },
+                    { offset: 0x2a, bit: 0, label: "<b>5.</b> Snide's HQ", separator: true },
                   ],
                 },
                 {

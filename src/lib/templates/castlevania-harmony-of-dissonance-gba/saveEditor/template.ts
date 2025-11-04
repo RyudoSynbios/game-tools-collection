@@ -65,940 +65,6 @@ const template: GameJson = {
           ],
         },
       ],
-      appendSubinstance: [
-        {
-          name: "Boss Rush Mode",
-          items: [
-            {
-              type: "tabs",
-              vertical: true,
-              items: [
-                {
-                  name: "General",
-                  items: [
-                    {
-                      name: "Unlocked Difficulties",
-                      offset: 0xbf8,
-                      type: "variable",
-                      dataType: "uint8",
-                      hidden: true,
-                    },
-                    {
-                      id: "unlockedDifficulties",
-                      name: "Unlocked Difficulties",
-                      type: "bitflags",
-                      flags: [
-                        { offset: 0xbf8, bit: 6, label: "Normal" },
-                        { offset: 0xbf8, bit: 7, label: "Hard" },
-                      ],
-                    },
-                  ],
-                },
-                {
-                  name: "Easy",
-                  items: [
-                    {
-                      name: "1st Place",
-                      type: "section",
-                      flex: true,
-                      items: [
-                        {
-                          name: "Boss Count",
-                          offset: 0xbf9,
-                          type: "variable",
-                          dataType: "uint8",
-                          resource: "bossCountsEasy",
-                        },
-                        {
-                          name: "Time",
-                          type: "group",
-                          mode: "time",
-                          items: [
-                            {
-                              offset: 0xc08,
-                              type: "variable",
-                              dataType: "uint32",
-                              operations: [
-                                { "/": 60 },
-                                { convert: { from: "seconds", to: "minutes" } },
-                              ],
-                              max: 99,
-                            },
-                            {
-                              offset: 0xc08,
-                              type: "variable",
-                              dataType: "uint32",
-                              operations: [
-                                { "/": 60 },
-                                { convert: { from: "seconds", to: "seconds" } },
-                              ],
-                              leadingZeros: 1,
-                              max: 59,
-                            },
-                            {
-                              offset: 0xc08,
-                              type: "variable",
-                              dataType: "uint32",
-                              operations: [
-                                { "/": 60 },
-                                {
-                                  convert: {
-                                    from: "seconds",
-                                    to: "milliseconds",
-                                  },
-                                },
-                              ],
-                              leadingZeros: 2,
-                              max: 999,
-                              step: 100,
-                            },
-                          ],
-                        },
-                      ],
-                    },
-                    {
-                      name: "2nd Place",
-                      type: "section",
-                      flex: true,
-                      items: [
-                        {
-                          name: "Boss Count",
-                          offset: 0xbfa,
-                          type: "variable",
-                          dataType: "uint8",
-                          resource: "bossCountsEasy",
-                        },
-                        {
-                          name: "Time",
-                          type: "group",
-                          mode: "time",
-                          items: [
-                            {
-                              offset: 0xc0c,
-                              type: "variable",
-                              dataType: "uint32",
-                              operations: [
-                                { "/": 60 },
-                                { convert: { from: "seconds", to: "minutes" } },
-                              ],
-                              max: 99,
-                            },
-                            {
-                              offset: 0xc0c,
-                              type: "variable",
-                              dataType: "uint32",
-                              operations: [
-                                { "/": 60 },
-                                { convert: { from: "seconds", to: "seconds" } },
-                              ],
-                              leadingZeros: 1,
-                              max: 59,
-                            },
-                            {
-                              offset: 0xc0c,
-                              type: "variable",
-                              dataType: "uint32",
-                              operations: [
-                                { "/": 60 },
-                                {
-                                  convert: {
-                                    from: "seconds",
-                                    to: "milliseconds",
-                                  },
-                                },
-                              ],
-                              leadingZeros: 2,
-                              max: 999,
-                              step: 100,
-                            },
-                          ],
-                        },
-                      ],
-                    },
-                    {
-                      name: "3rd Place",
-                      type: "section",
-                      flex: true,
-                      items: [
-                        {
-                          name: "Boss Count",
-                          offset: 0xbfb,
-                          type: "variable",
-                          dataType: "uint8",
-                          resource: "bossCountsEasy",
-                        },
-                        {
-                          name: "Time",
-                          type: "group",
-                          mode: "time",
-                          items: [
-                            {
-                              offset: 0xc10,
-                              type: "variable",
-                              dataType: "uint32",
-                              operations: [
-                                { "/": 60 },
-                                { convert: { from: "seconds", to: "minutes" } },
-                              ],
-                              max: 99,
-                            },
-                            {
-                              offset: 0xc10,
-                              type: "variable",
-                              dataType: "uint32",
-                              operations: [
-                                { "/": 60 },
-                                { convert: { from: "seconds", to: "seconds" } },
-                              ],
-                              leadingZeros: 1,
-                              max: 59,
-                            },
-                            {
-                              offset: 0xc10,
-                              type: "variable",
-                              dataType: "uint32",
-                              operations: [
-                                { "/": 60 },
-                                {
-                                  convert: {
-                                    from: "seconds",
-                                    to: "milliseconds",
-                                  },
-                                },
-                              ],
-                              leadingZeros: 2,
-                              max: 999,
-                              step: 100,
-                            },
-                          ],
-                        },
-                      ],
-                    },
-                    {
-                      name: "4th Place",
-                      type: "section",
-                      flex: true,
-                      items: [
-                        {
-                          name: "Boss Count",
-                          offset: 0xbfc,
-                          type: "variable",
-                          dataType: "uint8",
-                          resource: "bossCountsEasy",
-                        },
-                        {
-                          name: "Time",
-                          type: "group",
-                          mode: "time",
-                          items: [
-                            {
-                              offset: 0xc14,
-                              type: "variable",
-                              dataType: "uint32",
-                              operations: [
-                                { "/": 60 },
-                                { convert: { from: "seconds", to: "minutes" } },
-                              ],
-                              max: 99,
-                            },
-                            {
-                              offset: 0xc14,
-                              type: "variable",
-                              dataType: "uint32",
-                              operations: [
-                                { "/": 60 },
-                                { convert: { from: "seconds", to: "seconds" } },
-                              ],
-                              leadingZeros: 1,
-                              max: 59,
-                            },
-                            {
-                              offset: 0xc14,
-                              type: "variable",
-                              dataType: "uint32",
-                              operations: [
-                                { "/": 60 },
-                                {
-                                  convert: {
-                                    from: "seconds",
-                                    to: "milliseconds",
-                                  },
-                                },
-                              ],
-                              leadingZeros: 2,
-                              max: 999,
-                              step: 100,
-                            },
-                          ],
-                        },
-                      ],
-                    },
-                    {
-                      name: "5th Place",
-                      type: "section",
-                      flex: true,
-                      items: [
-                        {
-                          name: "Boss Count",
-                          offset: 0xbfd,
-                          type: "variable",
-                          dataType: "uint8",
-                          resource: "bossCountsEasy",
-                        },
-                        {
-                          name: "Time",
-                          type: "group",
-                          mode: "time",
-                          items: [
-                            {
-                              offset: 0xc18,
-                              type: "variable",
-                              dataType: "uint32",
-                              operations: [
-                                { "/": 60 },
-                                { convert: { from: "seconds", to: "minutes" } },
-                              ],
-                              max: 99,
-                            },
-                            {
-                              offset: 0xc18,
-                              type: "variable",
-                              dataType: "uint32",
-                              operations: [
-                                { "/": 60 },
-                                { convert: { from: "seconds", to: "seconds" } },
-                              ],
-                              leadingZeros: 1,
-                              max: 59,
-                            },
-                            {
-                              offset: 0xc18,
-                              type: "variable",
-                              dataType: "uint32",
-                              operations: [
-                                { "/": 60 },
-                                {
-                                  convert: {
-                                    from: "seconds",
-                                    to: "milliseconds",
-                                  },
-                                },
-                              ],
-                              leadingZeros: 2,
-                              max: 999,
-                              step: 100,
-                            },
-                          ],
-                        },
-                      ],
-                    },
-                  ],
-                },
-                {
-                  name: "Normal",
-                  items: [
-                    {
-                      name: "1st Place",
-                      type: "section",
-                      flex: true,
-                      items: [
-                        {
-                          name: "Boss Count",
-                          offset: 0xbfe,
-                          type: "variable",
-                          dataType: "uint8",
-                          resource: "bossCountsNormal",
-                        },
-                        {
-                          name: "Time",
-                          type: "group",
-                          mode: "time",
-                          items: [
-                            {
-                              offset: 0xc1c,
-                              type: "variable",
-                              dataType: "uint32",
-                              operations: [
-                                { "/": 60 },
-                                { convert: { from: "seconds", to: "minutes" } },
-                              ],
-                              max: 99,
-                            },
-                            {
-                              offset: 0xc1c,
-                              type: "variable",
-                              dataType: "uint32",
-                              operations: [
-                                { "/": 60 },
-                                { convert: { from: "seconds", to: "seconds" } },
-                              ],
-                              leadingZeros: 1,
-                              max: 59,
-                            },
-                            {
-                              offset: 0xc1c,
-                              type: "variable",
-                              dataType: "uint32",
-                              operations: [
-                                { "/": 60 },
-                                {
-                                  convert: {
-                                    from: "seconds",
-                                    to: "milliseconds",
-                                  },
-                                },
-                              ],
-                              leadingZeros: 2,
-                              max: 999,
-                              step: 100,
-                            },
-                          ],
-                        },
-                      ],
-                    },
-                    {
-                      name: "2nd Place",
-                      type: "section",
-                      flex: true,
-                      items: [
-                        {
-                          name: "Boss Count",
-                          offset: 0xbff,
-                          type: "variable",
-                          dataType: "uint8",
-                          resource: "bossCountsNormal",
-                        },
-                        {
-                          name: "Time",
-                          type: "group",
-                          mode: "time",
-                          items: [
-                            {
-                              offset: 0xc20,
-                              type: "variable",
-                              dataType: "uint32",
-                              operations: [
-                                { "/": 60 },
-                                { convert: { from: "seconds", to: "minutes" } },
-                              ],
-                              max: 99,
-                            },
-                            {
-                              offset: 0xc20,
-                              type: "variable",
-                              dataType: "uint32",
-                              operations: [
-                                { "/": 60 },
-                                { convert: { from: "seconds", to: "seconds" } },
-                              ],
-                              leadingZeros: 1,
-                              max: 59,
-                            },
-                            {
-                              offset: 0xc20,
-                              type: "variable",
-                              dataType: "uint32",
-                              operations: [
-                                { "/": 60 },
-                                {
-                                  convert: {
-                                    from: "seconds",
-                                    to: "milliseconds",
-                                  },
-                                },
-                              ],
-                              leadingZeros: 2,
-                              max: 999,
-                              step: 100,
-                            },
-                          ],
-                        },
-                      ],
-                    },
-                    {
-                      name: "3rd Place",
-                      type: "section",
-                      flex: true,
-                      items: [
-                        {
-                          name: "Boss Count",
-                          offset: 0xc00,
-                          type: "variable",
-                          dataType: "uint8",
-                          resource: "bossCountsNormal",
-                        },
-                        {
-                          name: "Time",
-                          type: "group",
-                          mode: "time",
-                          items: [
-                            {
-                              offset: 0xc24,
-                              type: "variable",
-                              dataType: "uint32",
-                              operations: [
-                                { "/": 60 },
-                                { convert: { from: "seconds", to: "minutes" } },
-                              ],
-                              max: 99,
-                            },
-                            {
-                              offset: 0xc24,
-                              type: "variable",
-                              dataType: "uint32",
-                              operations: [
-                                { "/": 60 },
-                                { convert: { from: "seconds", to: "seconds" } },
-                              ],
-                              leadingZeros: 1,
-                              max: 59,
-                            },
-                            {
-                              offset: 0xc24,
-                              type: "variable",
-                              dataType: "uint32",
-                              operations: [
-                                { "/": 60 },
-                                {
-                                  convert: {
-                                    from: "seconds",
-                                    to: "milliseconds",
-                                  },
-                                },
-                              ],
-                              leadingZeros: 2,
-                              max: 999,
-                              step: 100,
-                            },
-                          ],
-                        },
-                      ],
-                    },
-                    {
-                      name: "4th Place",
-                      type: "section",
-                      flex: true,
-                      items: [
-                        {
-                          name: "Boss Count",
-                          offset: 0xc01,
-                          type: "variable",
-                          dataType: "uint8",
-                          resource: "bossCountsNormal",
-                        },
-                        {
-                          name: "Time",
-                          type: "group",
-                          mode: "time",
-                          items: [
-                            {
-                              offset: 0xc28,
-                              type: "variable",
-                              dataType: "uint32",
-                              operations: [
-                                { "/": 60 },
-                                { convert: { from: "seconds", to: "minutes" } },
-                              ],
-                              max: 99,
-                            },
-                            {
-                              offset: 0xc28,
-                              type: "variable",
-                              dataType: "uint32",
-                              operations: [
-                                { "/": 60 },
-                                { convert: { from: "seconds", to: "seconds" } },
-                              ],
-                              leadingZeros: 1,
-                              max: 59,
-                            },
-                            {
-                              offset: 0xc28,
-                              type: "variable",
-                              dataType: "uint32",
-                              operations: [
-                                { "/": 60 },
-                                {
-                                  convert: {
-                                    from: "seconds",
-                                    to: "milliseconds",
-                                  },
-                                },
-                              ],
-                              leadingZeros: 2,
-                              max: 999,
-                              step: 100,
-                            },
-                          ],
-                        },
-                      ],
-                    },
-                    {
-                      name: "5th Place",
-                      type: "section",
-                      flex: true,
-                      items: [
-                        {
-                          name: "Boss Count",
-                          offset: 0xc02,
-                          type: "variable",
-                          dataType: "uint8",
-                          resource: "bossCountsNormal",
-                        },
-                        {
-                          name: "Time",
-                          type: "group",
-                          mode: "time",
-                          items: [
-                            {
-                              offset: 0xc2c,
-                              type: "variable",
-                              dataType: "uint32",
-                              operations: [
-                                { "/": 60 },
-                                { convert: { from: "seconds", to: "minutes" } },
-                              ],
-                              max: 99,
-                            },
-                            {
-                              offset: 0xc2c,
-                              type: "variable",
-                              dataType: "uint32",
-                              operations: [
-                                { "/": 60 },
-                                { convert: { from: "seconds", to: "seconds" } },
-                              ],
-                              leadingZeros: 1,
-                              max: 59,
-                            },
-                            {
-                              offset: 0xc2c,
-                              type: "variable",
-                              dataType: "uint32",
-                              operations: [
-                                { "/": 60 },
-                                {
-                                  convert: {
-                                    from: "seconds",
-                                    to: "milliseconds",
-                                  },
-                                },
-                              ],
-                              leadingZeros: 2,
-                              max: 999,
-                              step: 100,
-                            },
-                          ],
-                        },
-                      ],
-                    },
-                  ],
-                },
-                {
-                  name: "Hard",
-                  items: [
-                    {
-                      name: "1st Place",
-                      type: "section",
-                      flex: true,
-                      items: [
-                        {
-                          name: "Boss Count",
-                          offset: 0xc03,
-                          type: "variable",
-                          dataType: "uint8",
-                          resource: "bossCountsHard",
-                        },
-                        {
-                          name: "Time",
-                          type: "group",
-                          mode: "time",
-                          items: [
-                            {
-                              offset: 0xc30,
-                              type: "variable",
-                              dataType: "uint32",
-                              operations: [
-                                { "/": 60 },
-                                { convert: { from: "seconds", to: "minutes" } },
-                              ],
-                              max: 99,
-                            },
-                            {
-                              offset: 0xc30,
-                              type: "variable",
-                              dataType: "uint32",
-                              operations: [
-                                { "/": 60 },
-                                { convert: { from: "seconds", to: "seconds" } },
-                              ],
-                              leadingZeros: 1,
-                              max: 59,
-                            },
-                            {
-                              offset: 0xc30,
-                              type: "variable",
-                              dataType: "uint32",
-                              operations: [
-                                { "/": 60 },
-                                {
-                                  convert: {
-                                    from: "seconds",
-                                    to: "milliseconds",
-                                  },
-                                },
-                              ],
-                              leadingZeros: 2,
-                              max: 999,
-                              step: 100,
-                            },
-                          ],
-                        },
-                      ],
-                    },
-                    {
-                      name: "2nd Place",
-                      type: "section",
-                      flex: true,
-                      items: [
-                        {
-                          name: "Boss Count",
-                          offset: 0xc04,
-                          type: "variable",
-                          dataType: "uint8",
-                          resource: "bossCountsHard",
-                        },
-                        {
-                          name: "Time",
-                          type: "group",
-                          mode: "time",
-                          items: [
-                            {
-                              offset: 0xc34,
-                              type: "variable",
-                              dataType: "uint32",
-                              operations: [
-                                { "/": 60 },
-                                { convert: { from: "seconds", to: "minutes" } },
-                              ],
-                              max: 99,
-                            },
-                            {
-                              offset: 0xc34,
-                              type: "variable",
-                              dataType: "uint32",
-                              operations: [
-                                { "/": 60 },
-                                { convert: { from: "seconds", to: "seconds" } },
-                              ],
-                              leadingZeros: 1,
-                              max: 59,
-                            },
-                            {
-                              offset: 0xc34,
-                              type: "variable",
-                              dataType: "uint32",
-                              operations: [
-                                { "/": 60 },
-                                {
-                                  convert: {
-                                    from: "seconds",
-                                    to: "milliseconds",
-                                  },
-                                },
-                              ],
-                              leadingZeros: 2,
-                              max: 999,
-                              step: 100,
-                            },
-                          ],
-                        },
-                      ],
-                    },
-                    {
-                      name: "3rd Place",
-                      type: "section",
-                      flex: true,
-                      items: [
-                        {
-                          name: "Boss Count",
-                          offset: 0xc05,
-                          type: "variable",
-                          dataType: "uint8",
-                          resource: "bossCountsHard",
-                        },
-                        {
-                          name: "Time",
-                          type: "group",
-                          mode: "time",
-                          items: [
-                            {
-                              offset: 0xc38,
-                              type: "variable",
-                              dataType: "uint32",
-                              operations: [
-                                { "/": 60 },
-                                { convert: { from: "seconds", to: "minutes" } },
-                              ],
-                              max: 99,
-                            },
-                            {
-                              offset: 0xc38,
-                              type: "variable",
-                              dataType: "uint32",
-                              operations: [
-                                { "/": 60 },
-                                { convert: { from: "seconds", to: "seconds" } },
-                              ],
-                              leadingZeros: 1,
-                              max: 59,
-                            },
-                            {
-                              offset: 0xc38,
-                              type: "variable",
-                              dataType: "uint32",
-                              operations: [
-                                { "/": 60 },
-                                {
-                                  convert: {
-                                    from: "seconds",
-                                    to: "milliseconds",
-                                  },
-                                },
-                              ],
-                              leadingZeros: 2,
-                              max: 999,
-                              step: 100,
-                            },
-                          ],
-                        },
-                      ],
-                    },
-                    {
-                      name: "4th Place",
-                      type: "section",
-                      flex: true,
-                      items: [
-                        {
-                          name: "Boss Count",
-                          offset: 0xc06,
-                          type: "variable",
-                          dataType: "uint8",
-                          resource: "bossCountsHard",
-                        },
-                        {
-                          name: "Time",
-                          type: "group",
-                          mode: "time",
-                          items: [
-                            {
-                              offset: 0xc3c,
-                              type: "variable",
-                              dataType: "uint32",
-                              operations: [
-                                { "/": 60 },
-                                { convert: { from: "seconds", to: "minutes" } },
-                              ],
-                              max: 99,
-                            },
-                            {
-                              offset: 0xc3c,
-                              type: "variable",
-                              dataType: "uint32",
-                              operations: [
-                                { "/": 60 },
-                                { convert: { from: "seconds", to: "seconds" } },
-                              ],
-                              leadingZeros: 1,
-                              max: 59,
-                            },
-                            {
-                              offset: 0xc3c,
-                              type: "variable",
-                              dataType: "uint32",
-                              operations: [
-                                { "/": 60 },
-                                {
-                                  convert: {
-                                    from: "seconds",
-                                    to: "milliseconds",
-                                  },
-                                },
-                              ],
-                              leadingZeros: 2,
-                              max: 999,
-                              step: 100,
-                            },
-                          ],
-                        },
-                      ],
-                    },
-                    {
-                      name: "5th Place",
-                      type: "section",
-                      flex: true,
-                      items: [
-                        {
-                          name: "Boss Count",
-                          offset: 0xc07,
-                          type: "variable",
-                          dataType: "uint8",
-                          resource: "bossCountsHard",
-                        },
-                        {
-                          name: "Time",
-                          type: "group",
-                          mode: "time",
-                          items: [
-                            {
-                              offset: 0xc40,
-                              type: "variable",
-                              dataType: "uint32",
-                              operations: [
-                                { "/": 60 },
-                                { convert: { from: "seconds", to: "minutes" } },
-                              ],
-                              max: 99,
-                            },
-                            {
-                              offset: 0xc40,
-                              type: "variable",
-                              dataType: "uint32",
-                              operations: [
-                                { "/": 60 },
-                                { convert: { from: "seconds", to: "seconds" } },
-                              ],
-                              leadingZeros: 1,
-                              max: 59,
-                            },
-                            {
-                              offset: 0xc40,
-                              type: "variable",
-                              dataType: "uint32",
-                              operations: [
-                                { "/": 60 },
-                                {
-                                  convert: {
-                                    from: "seconds",
-                                    to: "milliseconds",
-                                  },
-                                },
-                              ],
-                              leadingZeros: 2,
-                              max: 999,
-                              step: 100,
-                            },
-                          ],
-                        },
-                      ],
-                    },
-                  ],
-                },
-              ],
-            },
-          ],
-        },
-      ],
       items: [
         {
           type: "tabs",
@@ -2741,6 +1807,940 @@ const template: GameJson = {
                   type: "variable",
                   dataType: "uint16",
                   resource: "buttons",
+                },
+              ],
+            },
+          ],
+        },
+      ],
+      appendSubinstance: [
+        {
+          name: "Boss Rush Mode",
+          items: [
+            {
+              type: "tabs",
+              vertical: true,
+              items: [
+                {
+                  name: "General",
+                  items: [
+                    {
+                      name: "Unlocked Difficulties",
+                      offset: 0xbf8,
+                      type: "variable",
+                      dataType: "uint8",
+                      hidden: true,
+                    },
+                    {
+                      id: "unlockedDifficulties",
+                      name: "Unlocked Difficulties",
+                      type: "bitflags",
+                      flags: [
+                        { offset: 0xbf8, bit: 6, label: "Normal" },
+                        { offset: 0xbf8, bit: 7, label: "Hard" },
+                      ],
+                    },
+                  ],
+                },
+                {
+                  name: "Easy",
+                  items: [
+                    {
+                      name: "1st Place",
+                      type: "section",
+                      flex: true,
+                      items: [
+                        {
+                          name: "Boss Count",
+                          offset: 0xbf9,
+                          type: "variable",
+                          dataType: "uint8",
+                          resource: "bossCountsEasy",
+                        },
+                        {
+                          name: "Time",
+                          type: "group",
+                          mode: "time",
+                          items: [
+                            {
+                              offset: 0xc08,
+                              type: "variable",
+                              dataType: "uint32",
+                              operations: [
+                                { "/": 60 },
+                                { convert: { from: "seconds", to: "minutes" } },
+                              ],
+                              max: 99,
+                            },
+                            {
+                              offset: 0xc08,
+                              type: "variable",
+                              dataType: "uint32",
+                              operations: [
+                                { "/": 60 },
+                                { convert: { from: "seconds", to: "seconds" } },
+                              ],
+                              leadingZeros: 1,
+                              max: 59,
+                            },
+                            {
+                              offset: 0xc08,
+                              type: "variable",
+                              dataType: "uint32",
+                              operations: [
+                                { "/": 60 },
+                                {
+                                  convert: {
+                                    from: "seconds",
+                                    to: "milliseconds",
+                                  },
+                                },
+                              ],
+                              leadingZeros: 2,
+                              max: 999,
+                              step: 100,
+                            },
+                          ],
+                        },
+                      ],
+                    },
+                    {
+                      name: "2nd Place",
+                      type: "section",
+                      flex: true,
+                      items: [
+                        {
+                          name: "Boss Count",
+                          offset: 0xbfa,
+                          type: "variable",
+                          dataType: "uint8",
+                          resource: "bossCountsEasy",
+                        },
+                        {
+                          name: "Time",
+                          type: "group",
+                          mode: "time",
+                          items: [
+                            {
+                              offset: 0xc0c,
+                              type: "variable",
+                              dataType: "uint32",
+                              operations: [
+                                { "/": 60 },
+                                { convert: { from: "seconds", to: "minutes" } },
+                              ],
+                              max: 99,
+                            },
+                            {
+                              offset: 0xc0c,
+                              type: "variable",
+                              dataType: "uint32",
+                              operations: [
+                                { "/": 60 },
+                                { convert: { from: "seconds", to: "seconds" } },
+                              ],
+                              leadingZeros: 1,
+                              max: 59,
+                            },
+                            {
+                              offset: 0xc0c,
+                              type: "variable",
+                              dataType: "uint32",
+                              operations: [
+                                { "/": 60 },
+                                {
+                                  convert: {
+                                    from: "seconds",
+                                    to: "milliseconds",
+                                  },
+                                },
+                              ],
+                              leadingZeros: 2,
+                              max: 999,
+                              step: 100,
+                            },
+                          ],
+                        },
+                      ],
+                    },
+                    {
+                      name: "3rd Place",
+                      type: "section",
+                      flex: true,
+                      items: [
+                        {
+                          name: "Boss Count",
+                          offset: 0xbfb,
+                          type: "variable",
+                          dataType: "uint8",
+                          resource: "bossCountsEasy",
+                        },
+                        {
+                          name: "Time",
+                          type: "group",
+                          mode: "time",
+                          items: [
+                            {
+                              offset: 0xc10,
+                              type: "variable",
+                              dataType: "uint32",
+                              operations: [
+                                { "/": 60 },
+                                { convert: { from: "seconds", to: "minutes" } },
+                              ],
+                              max: 99,
+                            },
+                            {
+                              offset: 0xc10,
+                              type: "variable",
+                              dataType: "uint32",
+                              operations: [
+                                { "/": 60 },
+                                { convert: { from: "seconds", to: "seconds" } },
+                              ],
+                              leadingZeros: 1,
+                              max: 59,
+                            },
+                            {
+                              offset: 0xc10,
+                              type: "variable",
+                              dataType: "uint32",
+                              operations: [
+                                { "/": 60 },
+                                {
+                                  convert: {
+                                    from: "seconds",
+                                    to: "milliseconds",
+                                  },
+                                },
+                              ],
+                              leadingZeros: 2,
+                              max: 999,
+                              step: 100,
+                            },
+                          ],
+                        },
+                      ],
+                    },
+                    {
+                      name: "4th Place",
+                      type: "section",
+                      flex: true,
+                      items: [
+                        {
+                          name: "Boss Count",
+                          offset: 0xbfc,
+                          type: "variable",
+                          dataType: "uint8",
+                          resource: "bossCountsEasy",
+                        },
+                        {
+                          name: "Time",
+                          type: "group",
+                          mode: "time",
+                          items: [
+                            {
+                              offset: 0xc14,
+                              type: "variable",
+                              dataType: "uint32",
+                              operations: [
+                                { "/": 60 },
+                                { convert: { from: "seconds", to: "minutes" } },
+                              ],
+                              max: 99,
+                            },
+                            {
+                              offset: 0xc14,
+                              type: "variable",
+                              dataType: "uint32",
+                              operations: [
+                                { "/": 60 },
+                                { convert: { from: "seconds", to: "seconds" } },
+                              ],
+                              leadingZeros: 1,
+                              max: 59,
+                            },
+                            {
+                              offset: 0xc14,
+                              type: "variable",
+                              dataType: "uint32",
+                              operations: [
+                                { "/": 60 },
+                                {
+                                  convert: {
+                                    from: "seconds",
+                                    to: "milliseconds",
+                                  },
+                                },
+                              ],
+                              leadingZeros: 2,
+                              max: 999,
+                              step: 100,
+                            },
+                          ],
+                        },
+                      ],
+                    },
+                    {
+                      name: "5th Place",
+                      type: "section",
+                      flex: true,
+                      items: [
+                        {
+                          name: "Boss Count",
+                          offset: 0xbfd,
+                          type: "variable",
+                          dataType: "uint8",
+                          resource: "bossCountsEasy",
+                        },
+                        {
+                          name: "Time",
+                          type: "group",
+                          mode: "time",
+                          items: [
+                            {
+                              offset: 0xc18,
+                              type: "variable",
+                              dataType: "uint32",
+                              operations: [
+                                { "/": 60 },
+                                { convert: { from: "seconds", to: "minutes" } },
+                              ],
+                              max: 99,
+                            },
+                            {
+                              offset: 0xc18,
+                              type: "variable",
+                              dataType: "uint32",
+                              operations: [
+                                { "/": 60 },
+                                { convert: { from: "seconds", to: "seconds" } },
+                              ],
+                              leadingZeros: 1,
+                              max: 59,
+                            },
+                            {
+                              offset: 0xc18,
+                              type: "variable",
+                              dataType: "uint32",
+                              operations: [
+                                { "/": 60 },
+                                {
+                                  convert: {
+                                    from: "seconds",
+                                    to: "milliseconds",
+                                  },
+                                },
+                              ],
+                              leadingZeros: 2,
+                              max: 999,
+                              step: 100,
+                            },
+                          ],
+                        },
+                      ],
+                    },
+                  ],
+                },
+                {
+                  name: "Normal",
+                  items: [
+                    {
+                      name: "1st Place",
+                      type: "section",
+                      flex: true,
+                      items: [
+                        {
+                          name: "Boss Count",
+                          offset: 0xbfe,
+                          type: "variable",
+                          dataType: "uint8",
+                          resource: "bossCountsNormal",
+                        },
+                        {
+                          name: "Time",
+                          type: "group",
+                          mode: "time",
+                          items: [
+                            {
+                              offset: 0xc1c,
+                              type: "variable",
+                              dataType: "uint32",
+                              operations: [
+                                { "/": 60 },
+                                { convert: { from: "seconds", to: "minutes" } },
+                              ],
+                              max: 99,
+                            },
+                            {
+                              offset: 0xc1c,
+                              type: "variable",
+                              dataType: "uint32",
+                              operations: [
+                                { "/": 60 },
+                                { convert: { from: "seconds", to: "seconds" } },
+                              ],
+                              leadingZeros: 1,
+                              max: 59,
+                            },
+                            {
+                              offset: 0xc1c,
+                              type: "variable",
+                              dataType: "uint32",
+                              operations: [
+                                { "/": 60 },
+                                {
+                                  convert: {
+                                    from: "seconds",
+                                    to: "milliseconds",
+                                  },
+                                },
+                              ],
+                              leadingZeros: 2,
+                              max: 999,
+                              step: 100,
+                            },
+                          ],
+                        },
+                      ],
+                    },
+                    {
+                      name: "2nd Place",
+                      type: "section",
+                      flex: true,
+                      items: [
+                        {
+                          name: "Boss Count",
+                          offset: 0xbff,
+                          type: "variable",
+                          dataType: "uint8",
+                          resource: "bossCountsNormal",
+                        },
+                        {
+                          name: "Time",
+                          type: "group",
+                          mode: "time",
+                          items: [
+                            {
+                              offset: 0xc20,
+                              type: "variable",
+                              dataType: "uint32",
+                              operations: [
+                                { "/": 60 },
+                                { convert: { from: "seconds", to: "minutes" } },
+                              ],
+                              max: 99,
+                            },
+                            {
+                              offset: 0xc20,
+                              type: "variable",
+                              dataType: "uint32",
+                              operations: [
+                                { "/": 60 },
+                                { convert: { from: "seconds", to: "seconds" } },
+                              ],
+                              leadingZeros: 1,
+                              max: 59,
+                            },
+                            {
+                              offset: 0xc20,
+                              type: "variable",
+                              dataType: "uint32",
+                              operations: [
+                                { "/": 60 },
+                                {
+                                  convert: {
+                                    from: "seconds",
+                                    to: "milliseconds",
+                                  },
+                                },
+                              ],
+                              leadingZeros: 2,
+                              max: 999,
+                              step: 100,
+                            },
+                          ],
+                        },
+                      ],
+                    },
+                    {
+                      name: "3rd Place",
+                      type: "section",
+                      flex: true,
+                      items: [
+                        {
+                          name: "Boss Count",
+                          offset: 0xc00,
+                          type: "variable",
+                          dataType: "uint8",
+                          resource: "bossCountsNormal",
+                        },
+                        {
+                          name: "Time",
+                          type: "group",
+                          mode: "time",
+                          items: [
+                            {
+                              offset: 0xc24,
+                              type: "variable",
+                              dataType: "uint32",
+                              operations: [
+                                { "/": 60 },
+                                { convert: { from: "seconds", to: "minutes" } },
+                              ],
+                              max: 99,
+                            },
+                            {
+                              offset: 0xc24,
+                              type: "variable",
+                              dataType: "uint32",
+                              operations: [
+                                { "/": 60 },
+                                { convert: { from: "seconds", to: "seconds" } },
+                              ],
+                              leadingZeros: 1,
+                              max: 59,
+                            },
+                            {
+                              offset: 0xc24,
+                              type: "variable",
+                              dataType: "uint32",
+                              operations: [
+                                { "/": 60 },
+                                {
+                                  convert: {
+                                    from: "seconds",
+                                    to: "milliseconds",
+                                  },
+                                },
+                              ],
+                              leadingZeros: 2,
+                              max: 999,
+                              step: 100,
+                            },
+                          ],
+                        },
+                      ],
+                    },
+                    {
+                      name: "4th Place",
+                      type: "section",
+                      flex: true,
+                      items: [
+                        {
+                          name: "Boss Count",
+                          offset: 0xc01,
+                          type: "variable",
+                          dataType: "uint8",
+                          resource: "bossCountsNormal",
+                        },
+                        {
+                          name: "Time",
+                          type: "group",
+                          mode: "time",
+                          items: [
+                            {
+                              offset: 0xc28,
+                              type: "variable",
+                              dataType: "uint32",
+                              operations: [
+                                { "/": 60 },
+                                { convert: { from: "seconds", to: "minutes" } },
+                              ],
+                              max: 99,
+                            },
+                            {
+                              offset: 0xc28,
+                              type: "variable",
+                              dataType: "uint32",
+                              operations: [
+                                { "/": 60 },
+                                { convert: { from: "seconds", to: "seconds" } },
+                              ],
+                              leadingZeros: 1,
+                              max: 59,
+                            },
+                            {
+                              offset: 0xc28,
+                              type: "variable",
+                              dataType: "uint32",
+                              operations: [
+                                { "/": 60 },
+                                {
+                                  convert: {
+                                    from: "seconds",
+                                    to: "milliseconds",
+                                  },
+                                },
+                              ],
+                              leadingZeros: 2,
+                              max: 999,
+                              step: 100,
+                            },
+                          ],
+                        },
+                      ],
+                    },
+                    {
+                      name: "5th Place",
+                      type: "section",
+                      flex: true,
+                      items: [
+                        {
+                          name: "Boss Count",
+                          offset: 0xc02,
+                          type: "variable",
+                          dataType: "uint8",
+                          resource: "bossCountsNormal",
+                        },
+                        {
+                          name: "Time",
+                          type: "group",
+                          mode: "time",
+                          items: [
+                            {
+                              offset: 0xc2c,
+                              type: "variable",
+                              dataType: "uint32",
+                              operations: [
+                                { "/": 60 },
+                                { convert: { from: "seconds", to: "minutes" } },
+                              ],
+                              max: 99,
+                            },
+                            {
+                              offset: 0xc2c,
+                              type: "variable",
+                              dataType: "uint32",
+                              operations: [
+                                { "/": 60 },
+                                { convert: { from: "seconds", to: "seconds" } },
+                              ],
+                              leadingZeros: 1,
+                              max: 59,
+                            },
+                            {
+                              offset: 0xc2c,
+                              type: "variable",
+                              dataType: "uint32",
+                              operations: [
+                                { "/": 60 },
+                                {
+                                  convert: {
+                                    from: "seconds",
+                                    to: "milliseconds",
+                                  },
+                                },
+                              ],
+                              leadingZeros: 2,
+                              max: 999,
+                              step: 100,
+                            },
+                          ],
+                        },
+                      ],
+                    },
+                  ],
+                },
+                {
+                  name: "Hard",
+                  items: [
+                    {
+                      name: "1st Place",
+                      type: "section",
+                      flex: true,
+                      items: [
+                        {
+                          name: "Boss Count",
+                          offset: 0xc03,
+                          type: "variable",
+                          dataType: "uint8",
+                          resource: "bossCountsHard",
+                        },
+                        {
+                          name: "Time",
+                          type: "group",
+                          mode: "time",
+                          items: [
+                            {
+                              offset: 0xc30,
+                              type: "variable",
+                              dataType: "uint32",
+                              operations: [
+                                { "/": 60 },
+                                { convert: { from: "seconds", to: "minutes" } },
+                              ],
+                              max: 99,
+                            },
+                            {
+                              offset: 0xc30,
+                              type: "variable",
+                              dataType: "uint32",
+                              operations: [
+                                { "/": 60 },
+                                { convert: { from: "seconds", to: "seconds" } },
+                              ],
+                              leadingZeros: 1,
+                              max: 59,
+                            },
+                            {
+                              offset: 0xc30,
+                              type: "variable",
+                              dataType: "uint32",
+                              operations: [
+                                { "/": 60 },
+                                {
+                                  convert: {
+                                    from: "seconds",
+                                    to: "milliseconds",
+                                  },
+                                },
+                              ],
+                              leadingZeros: 2,
+                              max: 999,
+                              step: 100,
+                            },
+                          ],
+                        },
+                      ],
+                    },
+                    {
+                      name: "2nd Place",
+                      type: "section",
+                      flex: true,
+                      items: [
+                        {
+                          name: "Boss Count",
+                          offset: 0xc04,
+                          type: "variable",
+                          dataType: "uint8",
+                          resource: "bossCountsHard",
+                        },
+                        {
+                          name: "Time",
+                          type: "group",
+                          mode: "time",
+                          items: [
+                            {
+                              offset: 0xc34,
+                              type: "variable",
+                              dataType: "uint32",
+                              operations: [
+                                { "/": 60 },
+                                { convert: { from: "seconds", to: "minutes" } },
+                              ],
+                              max: 99,
+                            },
+                            {
+                              offset: 0xc34,
+                              type: "variable",
+                              dataType: "uint32",
+                              operations: [
+                                { "/": 60 },
+                                { convert: { from: "seconds", to: "seconds" } },
+                              ],
+                              leadingZeros: 1,
+                              max: 59,
+                            },
+                            {
+                              offset: 0xc34,
+                              type: "variable",
+                              dataType: "uint32",
+                              operations: [
+                                { "/": 60 },
+                                {
+                                  convert: {
+                                    from: "seconds",
+                                    to: "milliseconds",
+                                  },
+                                },
+                              ],
+                              leadingZeros: 2,
+                              max: 999,
+                              step: 100,
+                            },
+                          ],
+                        },
+                      ],
+                    },
+                    {
+                      name: "3rd Place",
+                      type: "section",
+                      flex: true,
+                      items: [
+                        {
+                          name: "Boss Count",
+                          offset: 0xc05,
+                          type: "variable",
+                          dataType: "uint8",
+                          resource: "bossCountsHard",
+                        },
+                        {
+                          name: "Time",
+                          type: "group",
+                          mode: "time",
+                          items: [
+                            {
+                              offset: 0xc38,
+                              type: "variable",
+                              dataType: "uint32",
+                              operations: [
+                                { "/": 60 },
+                                { convert: { from: "seconds", to: "minutes" } },
+                              ],
+                              max: 99,
+                            },
+                            {
+                              offset: 0xc38,
+                              type: "variable",
+                              dataType: "uint32",
+                              operations: [
+                                { "/": 60 },
+                                { convert: { from: "seconds", to: "seconds" } },
+                              ],
+                              leadingZeros: 1,
+                              max: 59,
+                            },
+                            {
+                              offset: 0xc38,
+                              type: "variable",
+                              dataType: "uint32",
+                              operations: [
+                                { "/": 60 },
+                                {
+                                  convert: {
+                                    from: "seconds",
+                                    to: "milliseconds",
+                                  },
+                                },
+                              ],
+                              leadingZeros: 2,
+                              max: 999,
+                              step: 100,
+                            },
+                          ],
+                        },
+                      ],
+                    },
+                    {
+                      name: "4th Place",
+                      type: "section",
+                      flex: true,
+                      items: [
+                        {
+                          name: "Boss Count",
+                          offset: 0xc06,
+                          type: "variable",
+                          dataType: "uint8",
+                          resource: "bossCountsHard",
+                        },
+                        {
+                          name: "Time",
+                          type: "group",
+                          mode: "time",
+                          items: [
+                            {
+                              offset: 0xc3c,
+                              type: "variable",
+                              dataType: "uint32",
+                              operations: [
+                                { "/": 60 },
+                                { convert: { from: "seconds", to: "minutes" } },
+                              ],
+                              max: 99,
+                            },
+                            {
+                              offset: 0xc3c,
+                              type: "variable",
+                              dataType: "uint32",
+                              operations: [
+                                { "/": 60 },
+                                { convert: { from: "seconds", to: "seconds" } },
+                              ],
+                              leadingZeros: 1,
+                              max: 59,
+                            },
+                            {
+                              offset: 0xc3c,
+                              type: "variable",
+                              dataType: "uint32",
+                              operations: [
+                                { "/": 60 },
+                                {
+                                  convert: {
+                                    from: "seconds",
+                                    to: "milliseconds",
+                                  },
+                                },
+                              ],
+                              leadingZeros: 2,
+                              max: 999,
+                              step: 100,
+                            },
+                          ],
+                        },
+                      ],
+                    },
+                    {
+                      name: "5th Place",
+                      type: "section",
+                      flex: true,
+                      items: [
+                        {
+                          name: "Boss Count",
+                          offset: 0xc07,
+                          type: "variable",
+                          dataType: "uint8",
+                          resource: "bossCountsHard",
+                        },
+                        {
+                          name: "Time",
+                          type: "group",
+                          mode: "time",
+                          items: [
+                            {
+                              offset: 0xc40,
+                              type: "variable",
+                              dataType: "uint32",
+                              operations: [
+                                { "/": 60 },
+                                { convert: { from: "seconds", to: "minutes" } },
+                              ],
+                              max: 99,
+                            },
+                            {
+                              offset: 0xc40,
+                              type: "variable",
+                              dataType: "uint32",
+                              operations: [
+                                { "/": 60 },
+                                { convert: { from: "seconds", to: "seconds" } },
+                              ],
+                              leadingZeros: 1,
+                              max: 59,
+                            },
+                            {
+                              offset: 0xc40,
+                              type: "variable",
+                              dataType: "uint32",
+                              operations: [
+                                { "/": 60 },
+                                {
+                                  convert: {
+                                    from: "seconds",
+                                    to: "milliseconds",
+                                  },
+                                },
+                              ],
+                              leadingZeros: 2,
+                              max: 999,
+                              step: 100,
+                            },
+                          ],
+                        },
+                      ],
+                    },
+                  ],
                 },
               ],
             },

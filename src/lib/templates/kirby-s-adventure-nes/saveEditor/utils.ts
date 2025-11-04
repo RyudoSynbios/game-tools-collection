@@ -82,7 +82,7 @@ export function overrideGetInt(
 
     const flags = itemBitflags.flags.reduce(
       (flags: (ItemBitflag & { checked: boolean })[], flag) => {
-        let checked = Boolean(getInt(flag.offset, "bit", { bit: flag.bit }));
+        let checked = getInt(flag.offset, "bit", { bit: flag.bit }) === 1;
 
         if (flag.bit === 7) {
           checked = getInt(flag.offset - 0x11, "uint8") >= 0x8;

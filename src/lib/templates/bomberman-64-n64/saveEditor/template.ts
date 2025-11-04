@@ -24,27 +24,6 @@ const template: GameJson = {
         operator: "=",
         value: 0x0,
       },
-      appendSubinstance: [
-        {
-          name: "Options",
-          items: [
-            {
-              name: "Unlocked Options",
-              type: "bitflags",
-              flags: [
-                { offset: 0x4, bit: 0, label: "???", hidden: true },
-                { offset: 0x4, bit: 1, label: "???", hidden: true },
-                { offset: 0x4, bit: 2, label: "???", hidden: true },
-                { offset: 0x4, bit: 3, label: "???", hidden: true },
-                { offset: 0x4, bit: 4, label: "???", hidden: true },
-                { offset: 0x4, bit: 5, label: "Music" },
-                { offset: 0x4, bit: 6, label: "Full Power" },
-                { offset: 0x4, bit: 7, label: "View Credits" },
-              ],
-            },
-          ],
-        },
-      ],
       items: [
         {
           type: "section",
@@ -992,6 +971,27 @@ const template: GameJson = {
                     },
                   ],
                 },
+              ],
+            },
+          ],
+        },
+      ],
+      appendSubinstance: [
+        {
+          name: "Options",
+          items: [
+            {
+              name: "Unlocked Options",
+              type: "bitflags",
+              flags: [
+                { offset: 0x4, bit: 0, label: "???", hidden: true },
+                { offset: 0x4, bit: 1, label: "???", hidden: true },
+                { offset: 0x4, bit: 2, label: "???", hidden: true },
+                { offset: 0x4, bit: 3, label: "???", hidden: true },
+                { offset: 0x4, bit: 4, label: "???", hidden: true },
+                { offset: 0x4, bit: 5, label: "Music" },
+                { offset: 0x4, bit: 6, label: "Full Power" },
+                { offset: 0x4, bit: 7, label: "View Credits" },
               ],
             },
           ],

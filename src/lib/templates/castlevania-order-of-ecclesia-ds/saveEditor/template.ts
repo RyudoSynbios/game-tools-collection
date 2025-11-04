@@ -298,234 +298,6 @@ const template: GameJson = {
           ],
         },
       ],
-      appendSubinstance: [
-        {
-          name: "Records",
-          items: [
-            {
-              type: "tabs",
-              vertical: true,
-              items: [
-                {
-                  name: "Boss Rush Mode",
-                  items: [
-                    {
-                      length: 0x30,
-                      type: "container",
-                      instanceType: "tabs",
-                      instances: 2,
-                      enumeration: "Course %d",
-                      items: [
-                        {
-                          length: 0x10,
-                          type: "container",
-                          instanceType: "section",
-                          instances: 3,
-                          enumeration: "%o Place",
-                          flex: true,
-                          items: [
-                            {
-                              name: "Filename",
-                              offset: 0x20,
-                              length: 0x8,
-                              type: "variable",
-                              dataType: "string",
-                              letterDataType: "uint8",
-                              resource: "letters",
-                            },
-                            {
-                              name: "Best Time",
-                              type: "group",
-                              mode: "chrono",
-                              items: [
-                                {
-                                  offset: 0x28,
-                                  type: "variable",
-                                  dataType: "uint32",
-                                  operations: [
-                                    {
-                                      convert: {
-                                        from: "seconds",
-                                        to: "hours",
-                                      },
-                                    },
-                                  ],
-                                  leadingZeros: 1,
-                                  max: 59,
-                                },
-                                {
-                                  offset: 0x28,
-                                  type: "variable",
-                                  dataType: "uint32",
-                                  operations: [
-                                    {
-                                      convert: {
-                                        from: "seconds",
-                                        to: "minutes",
-                                      },
-                                    },
-                                  ],
-                                  leadingZeros: 1,
-                                  max: 59,
-                                },
-                                {
-                                  offset: 0x28,
-                                  type: "variable",
-                                  dataType: "uint32",
-                                  operations: [
-                                    {
-                                      convert: {
-                                        from: "seconds",
-                                        to: "seconds",
-                                      },
-                                    },
-                                    { "*": 16.93 },
-                                    { round: 0 },
-                                  ],
-                                  leadingZeros: 2,
-                                  max: 999,
-                                  step: 100,
-                                },
-                              ],
-                            },
-                            {
-                              name: "???",
-                              offset: 0x2c,
-                              type: "variable",
-                              dataType: "uint32",
-                              hidden: true,
-                            },
-                          ],
-                        },
-                      ],
-                    },
-                  ],
-                },
-                {
-                  name: "Practice Mode",
-                  items: [
-                    {
-                      length: 0x24,
-                      type: "container",
-                      instanceType: "tabs",
-                      instances: 3,
-                      enumeration: "Course %d",
-                      items: [
-                        {
-                          length: 0xc,
-                          type: "container",
-                          instanceType: "section",
-                          instances: 3,
-                          enumeration: "%o Place",
-                          flex: true,
-                          items: [
-                            {
-                              name: "Filename",
-                              offset: 0x80,
-                              length: 0x8,
-                              type: "variable",
-                              dataType: "string",
-                              letterDataType: "uint8",
-                              resource: "letters",
-                            },
-                            {
-                              name: "Best Score",
-                              offset: 0x88,
-                              type: "variable",
-                              dataType: "uint32",
-                              max: 99999999,
-                            },
-                          ],
-                        },
-                      ],
-                    },
-                  ],
-                },
-                {
-                  name: "Nintendo WFC Race",
-                  items: [
-                    {
-                      length: 0x24,
-                      type: "container",
-                      instanceType: "tabs",
-                      instances: 3,
-                      enumeration: "Course %d",
-                      items: [
-                        {
-                          length: 0xc,
-                          type: "container",
-                          instanceType: "section",
-                          instances: 3,
-                          enumeration: "%o Place",
-                          flex: true,
-                          items: [
-                            {
-                              name: "Filename",
-                              offset: 0x158,
-                              length: 0x8,
-                              type: "variable",
-                              dataType: "string",
-                              letterDataType: "uint8",
-                              resource: "letters",
-                            },
-                            {
-                              name: "Best Score",
-                              offset: 0x160,
-                              type: "variable",
-                              dataType: "uint32",
-                              max: 99999999,
-                            },
-                          ],
-                        },
-                      ],
-                    },
-                  ],
-                },
-                {
-                  name: "Wireless Race",
-                  items: [
-                    {
-                      length: 0x24,
-                      type: "container",
-                      instanceType: "tabs",
-                      instances: 3,
-                      enumeration: "Course %d",
-                      items: [
-                        {
-                          length: 0xc,
-                          type: "container",
-                          instanceType: "section",
-                          instances: 3,
-                          enumeration: "%o Place",
-                          flex: true,
-                          items: [
-                            {
-                              name: "Filename",
-                              offset: 0xec,
-                              length: 0x8,
-                              type: "variable",
-                              dataType: "string",
-                              letterDataType: "uint8",
-                              resource: "letters",
-                            },
-                            {
-                              name: "Best Score",
-                              offset: 0xf4,
-                              type: "variable",
-                              dataType: "uint32",
-                              max: 99999999,
-                            },
-                          ],
-                        },
-                      ],
-                    },
-                  ],
-                },
-              ],
-            },
-          ],
-        },
-      ],
       items: [
         {
           type: "section",
@@ -5763,6 +5535,234 @@ const template: GameJson = {
                       type: "variable",
                       dataType: "uint16",
                       hidden: true,
+                    },
+                  ],
+                },
+              ],
+            },
+          ],
+        },
+      ],
+      appendSubinstance: [
+        {
+          name: "Records",
+          items: [
+            {
+              type: "tabs",
+              vertical: true,
+              items: [
+                {
+                  name: "Boss Rush Mode",
+                  items: [
+                    {
+                      length: 0x30,
+                      type: "container",
+                      instanceType: "tabs",
+                      instances: 2,
+                      enumeration: "Course %d",
+                      items: [
+                        {
+                          length: 0x10,
+                          type: "container",
+                          instanceType: "section",
+                          instances: 3,
+                          enumeration: "%o Place",
+                          flex: true,
+                          items: [
+                            {
+                              name: "Filename",
+                              offset: 0x20,
+                              length: 0x8,
+                              type: "variable",
+                              dataType: "string",
+                              letterDataType: "uint8",
+                              resource: "letters",
+                            },
+                            {
+                              name: "Best Time",
+                              type: "group",
+                              mode: "chrono",
+                              items: [
+                                {
+                                  offset: 0x28,
+                                  type: "variable",
+                                  dataType: "uint32",
+                                  operations: [
+                                    {
+                                      convert: {
+                                        from: "seconds",
+                                        to: "hours",
+                                      },
+                                    },
+                                  ],
+                                  leadingZeros: 1,
+                                  max: 59,
+                                },
+                                {
+                                  offset: 0x28,
+                                  type: "variable",
+                                  dataType: "uint32",
+                                  operations: [
+                                    {
+                                      convert: {
+                                        from: "seconds",
+                                        to: "minutes",
+                                      },
+                                    },
+                                  ],
+                                  leadingZeros: 1,
+                                  max: 59,
+                                },
+                                {
+                                  offset: 0x28,
+                                  type: "variable",
+                                  dataType: "uint32",
+                                  operations: [
+                                    {
+                                      convert: {
+                                        from: "seconds",
+                                        to: "seconds",
+                                      },
+                                    },
+                                    { "*": 16.93 },
+                                    { round: 0 },
+                                  ],
+                                  leadingZeros: 2,
+                                  max: 999,
+                                  step: 100,
+                                },
+                              ],
+                            },
+                            {
+                              name: "???",
+                              offset: 0x2c,
+                              type: "variable",
+                              dataType: "uint32",
+                              hidden: true,
+                            },
+                          ],
+                        },
+                      ],
+                    },
+                  ],
+                },
+                {
+                  name: "Practice Mode",
+                  items: [
+                    {
+                      length: 0x24,
+                      type: "container",
+                      instanceType: "tabs",
+                      instances: 3,
+                      enumeration: "Course %d",
+                      items: [
+                        {
+                          length: 0xc,
+                          type: "container",
+                          instanceType: "section",
+                          instances: 3,
+                          enumeration: "%o Place",
+                          flex: true,
+                          items: [
+                            {
+                              name: "Filename",
+                              offset: 0x80,
+                              length: 0x8,
+                              type: "variable",
+                              dataType: "string",
+                              letterDataType: "uint8",
+                              resource: "letters",
+                            },
+                            {
+                              name: "Best Score",
+                              offset: 0x88,
+                              type: "variable",
+                              dataType: "uint32",
+                              max: 99999999,
+                            },
+                          ],
+                        },
+                      ],
+                    },
+                  ],
+                },
+                {
+                  name: "Nintendo WFC Race",
+                  items: [
+                    {
+                      length: 0x24,
+                      type: "container",
+                      instanceType: "tabs",
+                      instances: 3,
+                      enumeration: "Course %d",
+                      items: [
+                        {
+                          length: 0xc,
+                          type: "container",
+                          instanceType: "section",
+                          instances: 3,
+                          enumeration: "%o Place",
+                          flex: true,
+                          items: [
+                            {
+                              name: "Filename",
+                              offset: 0x158,
+                              length: 0x8,
+                              type: "variable",
+                              dataType: "string",
+                              letterDataType: "uint8",
+                              resource: "letters",
+                            },
+                            {
+                              name: "Best Score",
+                              offset: 0x160,
+                              type: "variable",
+                              dataType: "uint32",
+                              max: 99999999,
+                            },
+                          ],
+                        },
+                      ],
+                    },
+                  ],
+                },
+                {
+                  name: "Wireless Race",
+                  items: [
+                    {
+                      length: 0x24,
+                      type: "container",
+                      instanceType: "tabs",
+                      instances: 3,
+                      enumeration: "Course %d",
+                      items: [
+                        {
+                          length: 0xc,
+                          type: "container",
+                          instanceType: "section",
+                          instances: 3,
+                          enumeration: "%o Place",
+                          flex: true,
+                          items: [
+                            {
+                              name: "Filename",
+                              offset: 0xec,
+                              length: 0x8,
+                              type: "variable",
+                              dataType: "string",
+                              letterDataType: "uint8",
+                              resource: "letters",
+                            },
+                            {
+                              name: "Best Score",
+                              offset: 0xf4,
+                              type: "variable",
+                              dataType: "uint32",
+                              max: 99999999,
+                            },
+                          ],
+                        },
+                      ],
                     },
                   ],
                 },

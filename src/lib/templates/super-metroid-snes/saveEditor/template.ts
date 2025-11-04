@@ -53,47 +53,6 @@ const template: GameJson = {
         operator: "=",
         value: 0x0,
       },
-      appendSubinstance: [
-        {
-          name: "Miscellaneous",
-          hidden: true,
-          items: [
-            {
-              type: "section",
-              flex: true,
-              items: [
-                {
-                  name: "Game Cleared Once",
-                  offset: 0x1fe0,
-                  length: 0xc,
-                  type: "variable",
-                  dataType: "string",
-                  letterDataType: "uint8",
-                },
-              ],
-            },
-            {
-              type: "section",
-              flex: true,
-              items: [
-                {
-                  name: "Last Slot Loaded",
-                  offset: 0x1fec,
-                  type: "variable",
-                  dataType: "uint16",
-                },
-                {
-                  name: "Last Slot Checksum",
-                  offset: 0x1fee,
-                  type: "variable",
-                  dataType: "uint16",
-                  hex: true,
-                },
-              ],
-            },
-          ],
-        },
-      ],
       items: [
         {
           type: "section",
@@ -1073,6 +1032,47 @@ const template: GameJson = {
                       resource: "optionBoolean",
                     },
                   ],
+                },
+              ],
+            },
+          ],
+        },
+      ],
+      appendSubinstance: [
+        {
+          name: "Miscellaneous",
+          hidden: true,
+          items: [
+            {
+              type: "section",
+              flex: true,
+              items: [
+                {
+                  name: "Game Cleared Once",
+                  offset: 0x1fe0,
+                  length: 0xc,
+                  type: "variable",
+                  dataType: "string",
+                  letterDataType: "uint8",
+                },
+              ],
+            },
+            {
+              type: "section",
+              flex: true,
+              items: [
+                {
+                  name: "Last Slot Loaded",
+                  offset: 0x1fec,
+                  type: "variable",
+                  dataType: "uint16",
+                },
+                {
+                  name: "Last Slot Checksum",
+                  offset: 0x1fee,
+                  type: "variable",
+                  dataType: "uint16",
+                  hex: true,
                 },
               ],
             },

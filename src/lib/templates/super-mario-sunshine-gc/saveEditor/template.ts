@@ -26,64 +26,6 @@ const template: GameJson = {
         operator: "=",
         value: 0x0,
       },
-      appendSubinstance: [
-        {
-          name: "Options",
-          items: [
-            {
-              name: "Checksum",
-              offset: 0x203c,
-              type: "checksum",
-              dataType: "uint32",
-              bigEndian: true,
-              control: {
-                offsetStart: 0x40,
-                offsetEnd: 0x203c,
-              },
-            },
-            {
-              type: "section",
-              flex: true,
-              items: [
-                {
-                  name: "Rumble",
-                  offset: 0x1888,
-                  type: "variable",
-                  dataType: "bit",
-                  resource: "optionBoolean",
-                  bit: 0,
-                },
-                {
-                  id: "sound",
-                  name: "Sound",
-                  offset: 0x1887,
-                  type: "variable",
-                  dataType: "uint16",
-                  bigEndian: true,
-                  resource: "sounds",
-                },
-                {
-                  id: "subtitles",
-                  name: "Subtitles",
-                  offset: 0x1888,
-                  type: "variable",
-                  dataType: "bit",
-                  bit: 2,
-                  resource: "optionBoolean",
-                },
-                {
-                  id: "language",
-                  name: "Language",
-                  offset: 0x188c,
-                  type: "variable",
-                  dataType: "uint8",
-                  resource: "languages",
-                },
-              ],
-            },
-          ],
-        },
-      ],
       items: [
         {
           type: "section",
@@ -954,6 +896,64 @@ const template: GameJson = {
                       ],
                     },
                   ],
+                },
+              ],
+            },
+          ],
+        },
+      ],
+      appendSubinstance: [
+        {
+          name: "Options",
+          items: [
+            {
+              name: "Checksum",
+              offset: 0x203c,
+              type: "checksum",
+              dataType: "uint32",
+              bigEndian: true,
+              control: {
+                offsetStart: 0x40,
+                offsetEnd: 0x203c,
+              },
+            },
+            {
+              type: "section",
+              flex: true,
+              items: [
+                {
+                  name: "Rumble",
+                  offset: 0x1888,
+                  type: "variable",
+                  dataType: "bit",
+                  resource: "optionBoolean",
+                  bit: 0,
+                },
+                {
+                  id: "sound",
+                  name: "Sound",
+                  offset: 0x1887,
+                  type: "variable",
+                  dataType: "uint16",
+                  bigEndian: true,
+                  resource: "sounds",
+                },
+                {
+                  id: "subtitles",
+                  name: "Subtitles",
+                  offset: 0x1888,
+                  type: "variable",
+                  dataType: "bit",
+                  bit: 2,
+                  resource: "optionBoolean",
+                },
+                {
+                  id: "language",
+                  name: "Language",
+                  offset: 0x188c,
+                  type: "variable",
+                  dataType: "uint8",
+                  resource: "languages",
                 },
               ],
             },

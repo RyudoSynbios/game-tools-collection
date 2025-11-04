@@ -147,313 +147,6 @@ const template: GameJson = {
           ],
         },
       ],
-      appendSubinstance: [
-        {
-          name: "Ranking",
-          items: [
-            {
-              type: "tabs",
-              vertical: true,
-              items: [
-                {
-                  name: "Local",
-                  items: [
-                    {
-                      length: 0x30,
-                      type: "container",
-                      instanceType: "tabs",
-                      instances: 3,
-                      enumeration: "Course %d",
-                      items: [
-                        {
-                          length: 0x10,
-                          type: "container",
-                          instanceType: "section",
-                          instances: 3,
-                          enumeration: "%o Place",
-                          flex: true,
-                          items: [
-                            {
-                              name: "Filename",
-                              offset: 0x174,
-                              length: 0x8,
-                              type: "variable",
-                              dataType: "string",
-                              letterDataType: "uint8",
-                              resource: "letters",
-                            },
-                            {
-                              name: "Best Time",
-                              type: "group",
-                              mode: "chrono",
-                              items: [
-                                {
-                                  offset: 0x180,
-                                  type: "variable",
-                                  dataType: "uint32",
-                                  operations: [
-                                    {
-                                      convert: {
-                                        from: "seconds",
-                                        to: "hours",
-                                      },
-                                    },
-                                  ],
-                                  leadingZeros: 1,
-                                  max: 59,
-                                },
-                                {
-                                  offset: 0x180,
-                                  type: "variable",
-                                  dataType: "uint32",
-                                  operations: [
-                                    {
-                                      convert: {
-                                        from: "seconds",
-                                        to: "minutes",
-                                      },
-                                    },
-                                  ],
-                                  leadingZeros: 1,
-                                  max: 59,
-                                },
-                                {
-                                  offset: 0x180,
-                                  type: "variable",
-                                  dataType: "uint32",
-                                  operations: [
-                                    {
-                                      convert: {
-                                        from: "seconds",
-                                        to: "seconds",
-                                      },
-                                    },
-                                    { "*": 16.93 },
-                                    { round: 0 },
-                                  ],
-                                  leadingZeros: 2,
-                                  max: 999,
-                                  step: 100,
-                                },
-                              ],
-                            },
-                            {
-                              name: "???",
-                              offset: 0x17c,
-                              type: "variable",
-                              dataType: "uint32",
-                              hidden: true,
-                            },
-                          ],
-                        },
-                      ],
-                    },
-                  ],
-                },
-                {
-                  name: "Wireless",
-                  items: [
-                    {
-                      length: 0x48,
-                      type: "container",
-                      instanceType: "tabs",
-                      instances: 3,
-                      enumeration: "Course %d",
-                      items: [
-                        {
-                          length: 0x18,
-                          type: "container",
-                          instanceType: "section",
-                          instances: 3,
-                          enumeration: "%o Place",
-                          flex: true,
-                          items: [
-                            {
-                              name: "Filename",
-                              offset: 0x204,
-                              length: 0x8,
-                              type: "variable",
-                              dataType: "string",
-                              letterDataType: "uint8",
-                              resource: "letters",
-                            },
-                            {
-                              name: "Partner",
-                              offset: 0x20c,
-                              length: 0x8,
-                              type: "variable",
-                              dataType: "string",
-                              letterDataType: "uint8",
-                              resource: "letters",
-                            },
-                            {
-                              name: "Best Time",
-                              type: "group",
-                              mode: "chrono",
-                              items: [
-                                {
-                                  offset: 0x218,
-                                  type: "variable",
-                                  dataType: "uint32",
-                                  operations: [
-                                    {
-                                      convert: {
-                                        from: "seconds",
-                                        to: "hours",
-                                      },
-                                    },
-                                  ],
-                                  leadingZeros: 1,
-                                  max: 59,
-                                },
-                                {
-                                  offset: 0x218,
-                                  type: "variable",
-                                  dataType: "uint32",
-                                  operations: [
-                                    {
-                                      convert: {
-                                        from: "seconds",
-                                        to: "minutes",
-                                      },
-                                    },
-                                  ],
-                                  leadingZeros: 1,
-                                  max: 59,
-                                },
-                                {
-                                  offset: 0x218,
-                                  type: "variable",
-                                  dataType: "uint32",
-                                  operations: [
-                                    {
-                                      convert: {
-                                        from: "seconds",
-                                        to: "seconds",
-                                      },
-                                    },
-                                    { "*": 16.93 },
-                                    { round: 0 },
-                                  ],
-                                  leadingZeros: 2,
-                                  max: 999,
-                                  step: 100,
-                                },
-                              ],
-                            },
-                            {
-                              name: "???",
-                              offset: 0x214,
-                              type: "variable",
-                              dataType: "uint32",
-                              hidden: true,
-                            },
-                          ],
-                        },
-                      ],
-                    },
-                  ],
-                },
-                {
-                  name: "Nintendo WFC",
-                  items: [
-                    {
-                      length: 0x18,
-                      type: "container",
-                      instanceType: "section",
-                      instances: 3,
-                      enumeration: "%o Place",
-                      flex: true,
-                      items: [
-                        {
-                          name: "Filename",
-                          offset: 0x12c,
-                          length: 0x8,
-                          type: "variable",
-                          dataType: "string",
-                          letterDataType: "uint8",
-                          resource: "letters",
-                        },
-                        {
-                          name: "Partner",
-                          offset: 0x134,
-                          length: 0x8,
-                          type: "variable",
-                          dataType: "string",
-                          letterDataType: "uint8",
-                          resource: "letters",
-                        },
-                        {
-                          name: "Best Time",
-                          type: "group",
-                          mode: "chrono",
-                          items: [
-                            {
-                              offset: 0x140,
-                              type: "variable",
-                              dataType: "uint32",
-                              operations: [
-                                {
-                                  convert: {
-                                    from: "seconds",
-                                    to: "hours",
-                                  },
-                                },
-                              ],
-                              leadingZeros: 1,
-                              max: 59,
-                            },
-                            {
-                              offset: 0x140,
-                              type: "variable",
-                              dataType: "uint32",
-                              operations: [
-                                {
-                                  convert: {
-                                    from: "seconds",
-                                    to: "minutes",
-                                  },
-                                },
-                              ],
-                              leadingZeros: 1,
-                              max: 59,
-                            },
-                            {
-                              offset: 0x140,
-                              type: "variable",
-                              dataType: "uint32",
-                              operations: [
-                                {
-                                  convert: {
-                                    from: "seconds",
-                                    to: "seconds",
-                                  },
-                                },
-                                { "*": 16.93 },
-                                { round: 0 },
-                              ],
-                              leadingZeros: 2,
-                              max: 999,
-                              step: 100,
-                            },
-                          ],
-                        },
-                        {
-                          name: "???",
-                          offset: 0x13c,
-                          type: "variable",
-                          dataType: "uint32",
-                          hidden: true,
-                        },
-                      ],
-                    },
-                  ],
-                },
-              ],
-            },
-          ],
-        },
-      ],
       items: [
         {
           type: "section",
@@ -1725,6 +1418,313 @@ const template: GameJson = {
                       type: "variable",
                       dataType: "uint8",
                       max: 100,
+                    },
+                  ],
+                },
+              ],
+            },
+          ],
+        },
+      ],
+      appendSubinstance: [
+        {
+          name: "Ranking",
+          items: [
+            {
+              type: "tabs",
+              vertical: true,
+              items: [
+                {
+                  name: "Local",
+                  items: [
+                    {
+                      length: 0x30,
+                      type: "container",
+                      instanceType: "tabs",
+                      instances: 3,
+                      enumeration: "Course %d",
+                      items: [
+                        {
+                          length: 0x10,
+                          type: "container",
+                          instanceType: "section",
+                          instances: 3,
+                          enumeration: "%o Place",
+                          flex: true,
+                          items: [
+                            {
+                              name: "Filename",
+                              offset: 0x174,
+                              length: 0x8,
+                              type: "variable",
+                              dataType: "string",
+                              letterDataType: "uint8",
+                              resource: "letters",
+                            },
+                            {
+                              name: "Best Time",
+                              type: "group",
+                              mode: "chrono",
+                              items: [
+                                {
+                                  offset: 0x180,
+                                  type: "variable",
+                                  dataType: "uint32",
+                                  operations: [
+                                    {
+                                      convert: {
+                                        from: "seconds",
+                                        to: "hours",
+                                      },
+                                    },
+                                  ],
+                                  leadingZeros: 1,
+                                  max: 59,
+                                },
+                                {
+                                  offset: 0x180,
+                                  type: "variable",
+                                  dataType: "uint32",
+                                  operations: [
+                                    {
+                                      convert: {
+                                        from: "seconds",
+                                        to: "minutes",
+                                      },
+                                    },
+                                  ],
+                                  leadingZeros: 1,
+                                  max: 59,
+                                },
+                                {
+                                  offset: 0x180,
+                                  type: "variable",
+                                  dataType: "uint32",
+                                  operations: [
+                                    {
+                                      convert: {
+                                        from: "seconds",
+                                        to: "seconds",
+                                      },
+                                    },
+                                    { "*": 16.93 },
+                                    { round: 0 },
+                                  ],
+                                  leadingZeros: 2,
+                                  max: 999,
+                                  step: 100,
+                                },
+                              ],
+                            },
+                            {
+                              name: "???",
+                              offset: 0x17c,
+                              type: "variable",
+                              dataType: "uint32",
+                              hidden: true,
+                            },
+                          ],
+                        },
+                      ],
+                    },
+                  ],
+                },
+                {
+                  name: "Wireless",
+                  items: [
+                    {
+                      length: 0x48,
+                      type: "container",
+                      instanceType: "tabs",
+                      instances: 3,
+                      enumeration: "Course %d",
+                      items: [
+                        {
+                          length: 0x18,
+                          type: "container",
+                          instanceType: "section",
+                          instances: 3,
+                          enumeration: "%o Place",
+                          flex: true,
+                          items: [
+                            {
+                              name: "Filename",
+                              offset: 0x204,
+                              length: 0x8,
+                              type: "variable",
+                              dataType: "string",
+                              letterDataType: "uint8",
+                              resource: "letters",
+                            },
+                            {
+                              name: "Partner",
+                              offset: 0x20c,
+                              length: 0x8,
+                              type: "variable",
+                              dataType: "string",
+                              letterDataType: "uint8",
+                              resource: "letters",
+                            },
+                            {
+                              name: "Best Time",
+                              type: "group",
+                              mode: "chrono",
+                              items: [
+                                {
+                                  offset: 0x218,
+                                  type: "variable",
+                                  dataType: "uint32",
+                                  operations: [
+                                    {
+                                      convert: {
+                                        from: "seconds",
+                                        to: "hours",
+                                      },
+                                    },
+                                  ],
+                                  leadingZeros: 1,
+                                  max: 59,
+                                },
+                                {
+                                  offset: 0x218,
+                                  type: "variable",
+                                  dataType: "uint32",
+                                  operations: [
+                                    {
+                                      convert: {
+                                        from: "seconds",
+                                        to: "minutes",
+                                      },
+                                    },
+                                  ],
+                                  leadingZeros: 1,
+                                  max: 59,
+                                },
+                                {
+                                  offset: 0x218,
+                                  type: "variable",
+                                  dataType: "uint32",
+                                  operations: [
+                                    {
+                                      convert: {
+                                        from: "seconds",
+                                        to: "seconds",
+                                      },
+                                    },
+                                    { "*": 16.93 },
+                                    { round: 0 },
+                                  ],
+                                  leadingZeros: 2,
+                                  max: 999,
+                                  step: 100,
+                                },
+                              ],
+                            },
+                            {
+                              name: "???",
+                              offset: 0x214,
+                              type: "variable",
+                              dataType: "uint32",
+                              hidden: true,
+                            },
+                          ],
+                        },
+                      ],
+                    },
+                  ],
+                },
+                {
+                  name: "Nintendo WFC",
+                  items: [
+                    {
+                      length: 0x18,
+                      type: "container",
+                      instanceType: "section",
+                      instances: 3,
+                      enumeration: "%o Place",
+                      flex: true,
+                      items: [
+                        {
+                          name: "Filename",
+                          offset: 0x12c,
+                          length: 0x8,
+                          type: "variable",
+                          dataType: "string",
+                          letterDataType: "uint8",
+                          resource: "letters",
+                        },
+                        {
+                          name: "Partner",
+                          offset: 0x134,
+                          length: 0x8,
+                          type: "variable",
+                          dataType: "string",
+                          letterDataType: "uint8",
+                          resource: "letters",
+                        },
+                        {
+                          name: "Best Time",
+                          type: "group",
+                          mode: "chrono",
+                          items: [
+                            {
+                              offset: 0x140,
+                              type: "variable",
+                              dataType: "uint32",
+                              operations: [
+                                {
+                                  convert: {
+                                    from: "seconds",
+                                    to: "hours",
+                                  },
+                                },
+                              ],
+                              leadingZeros: 1,
+                              max: 59,
+                            },
+                            {
+                              offset: 0x140,
+                              type: "variable",
+                              dataType: "uint32",
+                              operations: [
+                                {
+                                  convert: {
+                                    from: "seconds",
+                                    to: "minutes",
+                                  },
+                                },
+                              ],
+                              leadingZeros: 1,
+                              max: 59,
+                            },
+                            {
+                              offset: 0x140,
+                              type: "variable",
+                              dataType: "uint32",
+                              operations: [
+                                {
+                                  convert: {
+                                    from: "seconds",
+                                    to: "seconds",
+                                  },
+                                },
+                                { "*": 16.93 },
+                                { round: 0 },
+                              ],
+                              leadingZeros: 2,
+                              max: 999,
+                              step: 100,
+                            },
+                          ],
+                        },
+                        {
+                          name: "???",
+                          offset: 0x13c,
+                          type: "variable",
+                          dataType: "uint32",
+                          hidden: true,
+                        },
+                      ],
                     },
                   ],
                 },

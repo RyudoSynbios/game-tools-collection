@@ -239,12 +239,6 @@ export interface ItemContainer {
   instanceType: "section" | "tabs";
   instances: number;
   enumeration?: string;
-  disableSubinstanceIf?:
-    | ItemIntCondition
-    | LogicalOperator<ItemIntCondition>
-    | string;
-  prependSubinstance?: ItemTab[];
-  appendSubinstance?: ItemTab[];
   resource?: string;
   resourceOrder?: boolean;
   defaultIndex?: number;
@@ -252,13 +246,19 @@ export interface ItemContainer {
   onTabChange?: string;
   flex?: boolean;
   noMargin?: boolean;
-  items: Item[];
   hidden?: boolean;
+  disableSubinstanceIf?:
+    | ItemIntCondition
+    | LogicalOperator<ItemIntCondition>
+    | string;
+  prependSubinstance?: ItemTab[];
+  items: Item[];
+  appendSubinstance?: ItemTab[];
 }
 
 export interface ItemContent {
-  items: Item[];
   hidden?: boolean;
+  items: Item[];
 }
 
 export interface ItemGroup {
@@ -266,9 +266,9 @@ export interface ItemGroup {
   name?: string;
   type: "group";
   mode?: "chrono" | "date" | "fraction" | "time";
-  items: ItemInt[];
   hint?: string;
   hidden?: boolean;
+  items: ItemInt[];
 }
 
 export interface ItemInt {
@@ -329,8 +329,8 @@ export interface ItemSection {
   flex?: boolean;
   flex1?: boolean;
   noMargin?: boolean;
-  items: Item[];
   hidden?: boolean;
+  items: Item[];
 }
 
 export interface ItemString {
@@ -364,10 +364,10 @@ export interface ItemTab {
   name?: string;
   flex?: boolean;
   disableTabIf?: ItemIntCondition | LogicalOperator<ItemIntCondition> | string;
-  items: Item[];
   disabled?: boolean;
   hidden?: boolean;
   planned?: boolean;
+  items: Item[];
 }
 
 export interface ItemTabs {
@@ -380,8 +380,8 @@ export interface ItemTabs {
   indexes?: boolean;
   vertical?: boolean;
   onTabChange?: string;
-  items: ItemTab[];
   hidden?: boolean;
+  items: ItemTab[];
 }
 
 export interface LogicalOperator<T> {

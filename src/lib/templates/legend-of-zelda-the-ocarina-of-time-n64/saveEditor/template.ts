@@ -32,36 +32,6 @@ const template: GameJson = {
         operator: "!=",
         value: 0x5a,
       },
-      appendSubinstance: [
-        {
-          name: "Options",
-          flex: true,
-          items: [
-            {
-              name: "Sound",
-              offset: 0x0,
-              type: "variable",
-              dataType: "uint8",
-              resource: "sounds",
-            },
-            {
-              name: "Z Targeting",
-              offset: 0x1,
-              type: "variable",
-              dataType: "uint8",
-              resource: "zTargetings",
-            },
-            {
-              id: "language",
-              name: "Language",
-              offset: 0x2,
-              type: "variable",
-              dataType: "uint8",
-              resource: "languages",
-            },
-          ],
-        },
-      ],
       items: [
         {
           name: "Checksum",
@@ -1780,6 +1750,36 @@ const template: GameJson = {
                   ],
                 },
               ],
+            },
+          ],
+        },
+      ],
+      appendSubinstance: [
+        {
+          name: "Options",
+          flex: true,
+          items: [
+            {
+              name: "Sound",
+              offset: 0x0,
+              type: "variable",
+              dataType: "uint8",
+              resource: "sounds",
+            },
+            {
+              name: "Z Targeting",
+              offset: 0x1,
+              type: "variable",
+              dataType: "uint8",
+              resource: "zTargetings",
+            },
+            {
+              id: "language",
+              name: "Language",
+              offset: 0x2,
+              type: "variable",
+              dataType: "uint8",
+              resource: "languages",
             },
           ],
         },

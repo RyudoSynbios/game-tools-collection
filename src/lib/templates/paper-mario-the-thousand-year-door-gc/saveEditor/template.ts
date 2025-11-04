@@ -36,43 +36,6 @@ const template: GameJson = {
         operator: "=",
         value: 0x1,
       },
-      // appendSubinstance: [
-      //   {
-      //     name: "Options",
-      //     flex: true,
-      //     items: [
-      //       {
-      //         name: "Sound",
-      //         offset: 0x12b5c,
-      //         type: "variable",
-      //         dataType: "uint8",
-      //         resource: "sounds",
-      //       },
-      //       {
-      //         name: "Rumble",
-      //         offset: 0x12b5d,
-      //         type: "variable",
-      //         dataType: "uint8",
-      //         resource: "optionBoolean",
-      //       },
-      //       {
-      //         name: "Controls",
-      //         offset: 0x12b5e,
-      //         type: "variable",
-      //         dataType: "uint8",
-      //         resource: "controls",
-      //       },
-      //       {
-      //         id: "language",
-      //         name: "Language",
-      //         offset: 0x12b5f,
-      //         type: "variable",
-      //         dataType: "uint8",
-      //         resource: "languages",
-      //       },
-      //     ],
-      //   },
-      // ],
       items: [
         {
           type: "section",
@@ -1647,6 +1610,43 @@ const template: GameJson = {
           ],
         },
       ],
+      // appendSubinstance: [
+      //   {
+      //     name: "Options",
+      //     flex: true,
+      //     items: [
+      //       {
+      //         name: "Sound",
+      //         offset: 0x12b5c,
+      //         type: "variable",
+      //         dataType: "uint8",
+      //         resource: "sounds",
+      //       },
+      //       {
+      //         name: "Rumble",
+      //         offset: 0x12b5d,
+      //         type: "variable",
+      //         dataType: "uint8",
+      //         resource: "optionBoolean",
+      //       },
+      //       {
+      //         name: "Controls",
+      //         offset: 0x12b5e,
+      //         type: "variable",
+      //         dataType: "uint8",
+      //         resource: "controls",
+      //       },
+      //       {
+      //         id: "language",
+      //         name: "Language",
+      //         offset: 0x12b5f,
+      //         type: "variable",
+      //         dataType: "uint8",
+      //         resource: "languages",
+      //       },
+      //     ],
+      //   },
+      // ],
     },
   ],
   resources: {

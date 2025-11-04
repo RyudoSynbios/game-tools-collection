@@ -53,23 +53,6 @@ const template: GameJson = {
           },
         ],
       },
-      // appendSubinstance: [
-      //   {
-      //     name: "Options",
-      //     items: [
-      //       {
-      //         name: "Language",
-      //         offset: 0x18001,
-      //         type: "variable",
-      //         dataType: "uint8",
-      //         resource: "languages",
-      //       },
-      //       // 0x18000 > Sound >> 00 Stereo / Mono / Headset / Surround
-      //       // 0x18001 > Language >> 00 Japanese / English / German / French / Spanish
-      //       // 0x18006 > Z Targeting > 00 Switch / Hold
-      //     ],
-      //   },
-      // ],
       items: [
         {
           id: "checksum",
@@ -2576,6 +2559,23 @@ const template: GameJson = {
           ],
         },
       ],
+      // appendSubinstance: [
+      //   {
+      //     name: "Options",
+      //     items: [
+      //       {
+      //         name: "Language",
+      //         offset: 0x18001,
+      //         type: "variable",
+      //         dataType: "uint8",
+      //         resource: "languages",
+      //       },
+      //       // 0x18000 > Sound >> 00 Stereo / Mono / Headset / Surround
+      //       // 0x18001 > Language >> 00 Japanese / English / German / French / Spanish
+      //       // 0x18006 > Z Targeting > 00 Switch / Hold
+      //     ],
+      //   },
+      // ],
     },
   ],
   resources: {
