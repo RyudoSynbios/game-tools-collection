@@ -272,6 +272,17 @@
     }
   },
   {
+    "id": "donkey-kong-64-n64",
+    "name": "Donkey Kong 64",
+    "consoleId": "nintendo-64",
+    "tools": {
+      "saveEditor": {
+        "createdAt": "2025-11-04",
+        "regions": ["🇪🇺", "🇺🇸", "🇯🇵"]
+      }
+    }
+  },
+  {
     "id": "donkey-kong-country-snes",
     "name": "Donkey Kong Country",
     "consoleId": "super-nintendo",
