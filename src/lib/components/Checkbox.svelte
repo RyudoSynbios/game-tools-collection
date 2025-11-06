@@ -27,10 +27,13 @@
 
 <style lang="postcss">
   .gtc-checkbox {
-    display: block;
+    display: flex;
 
     & span {
-      @apply text-sm;
+      @apply pl-1.5 text-sm;
+
+      padding-top: 1px;
+      padding-bottom: 1px;
     }
 
     & input:disabled + span {
