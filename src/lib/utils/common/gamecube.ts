@@ -223,10 +223,9 @@ export function rebuildGcm(): void {
       datas.push(...intToArray(names.length, "uint24", true));
 
       if (entry.index !== 0) {
-        entry.name.split("").forEach((char) => {
-          names.push(char.charCodeAt(0));
-        });
-
+        for (let i = 0; i < entry.name.length; i += 1) {
+          names.push(entry.name.charCodeAt(i));
+        }
         names.push(0x0);
       }
 

@@ -819,6 +819,7 @@ const template: GameJson = {
                             {
                               type: "section",
                               flex: true,
+                              hidden: true,
                               items: [
                                 {
                                   name: "Character ID",
@@ -1685,6 +1686,7 @@ const template: GameJson = {
                       name: "Friendly Monsters",
                       items: [
                         {
+                          name: "Satisfied Monsters",
                           type: "bitflags",
                           flags: [
                             { offset: 0x282, bit: 0, label: "Mu" },
@@ -1996,18 +1998,12 @@ const template: GameJson = {
                       name: "Stiltzkin",
                       items: [
                         {
-                          type: "section",
-                          flex: true,
-                          items: [
-                            {
-                              id: "slot-%index%-stiltzkinItemSetsTotal",
-                              name: "Item Sets Bought",
-                              offset: 0x3bd,
-                              type: "variable",
-                              dataType: "uint8",
-                              disabled: true,
-                            },
-                          ],
+                          id: "slot-%index%-stiltzkinItemSetsTotal",
+                          name: "Item Sets Bought",
+                          offset: 0x3bd,
+                          type: "variable",
+                          dataType: "uint8",
+                          disabled: true,
                         },
                         {
                           type: "section",
