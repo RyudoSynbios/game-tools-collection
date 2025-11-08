@@ -2829,6 +2829,66 @@ const template: GameJson = {
                   ],
                 },
                 {
+                  name: "Hamachou Hermit",
+                  items: [
+                    {
+                      type: "section",
+                      flex: true,
+                      items: [
+                        {
+                          name: "Battle Victories",
+                          offset: 0x17d4,
+                          type: "variable",
+                          dataType: "int16",
+                          bigEndian: true,
+                          min: 0,
+                          max: 30000,
+                        },
+                        {
+                          name: "Times Fled",
+                          offset: 0x17d6,
+                          type: "variable",
+                          dataType: "int16",
+                          bigEndian: true,
+                          min: 0,
+                          max: 30000,
+                        },
+                        {
+                          name: "Defeated Enemies",
+                          offset: 0x17e0,
+                          type: "variable",
+                          dataType: "int32",
+                          bigEndian: true,
+                          min: 0,
+                          max: 32767,
+                        },
+                      ],
+                    },
+                    {
+                      type: "section",
+                      flex: true,
+                      items: [
+                        {
+                          name: "Fish Caught",
+                          offset: 0x4596,
+                          type: "variable",
+                          dataType: "int32",
+                          min: 0,
+                          max: 99999999,
+                        },
+                        {
+                          name: "Fish Total Value",
+                          offset: 0x459a,
+                          type: "variable",
+                          dataType: "int32",
+                          min: 0,
+                          max: 99999999,
+                        },
+                      ],
+                    },
+                  ],
+                },
+                {
                   name: "Miscellaneous",
                   hidden: true,
                   items: [
