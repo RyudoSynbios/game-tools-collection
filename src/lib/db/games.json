@@ -1000,6 +1000,17 @@
     }
   },
   {
+    "id": "tomb-raider-ii-starring-lara-croft-ps",
+    "name": "Tomb Raider II: Starring Lara Croft",
+    "consoleId": "playstation",
+    "tools": {
+      "saveEditor": {
+        "createdAt": "2025-11-08",
+        "regions": ["🇪🇺", "🇺🇸", "🇯🇵", "🇫🇷", "🇩🇪", "🇮🇹"]
+      }
+    }
+  },
+  {
     "id": "wario-land-super-mario-land-3-gb",
     "name": "Wario Land: Super Mario Land 3",
     "consoleId": "game-boy",
