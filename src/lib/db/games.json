@@ -742,6 +742,17 @@
     }
   },
   {
+    "id": "octopath-traveler-windows",
+    "name": "Octopath Traveler",
+    "consoleId": "windows",
+    "tools": {
+      "saveEditor": {
+        "createdAt": "2025-11-15",
+        "regions": ["🏳️"]
+      }
+    }
+  },
+  {
     "id": "paper-mario-the-thousand-year-door-gc",
     "name": "Paper Mario: The Thousand-Year Door",
     "consoleId": "gamecube",

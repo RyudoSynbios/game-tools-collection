@@ -72,6 +72,7 @@ Link to the website: [https://game-tools-collection.com](https://game-tools-coll
 | Mystic Quest Legend                          | SNES     | Save / Rom              | EUR / USA / JAP / FRA / GER                   |
 | Mystical Ninja Starring Goemon               | N64      | Save                    | EUR / USA / JAP                               |
 | Mystical Ninja 2 Starring Goemon             | N64      | Save                    | EUR / USA / JAP                               |
+| Octopath Traveler                            | WIN      | Save                    | WORLD                                         |
 | Paper Mario: The Thousand-Year Door          | GC       | Save                    | EUR / USA / JAP                               |
 | Pokémon Red, Blue and Yellow                 | GB       | Save                    | EUR / USA / JAP / FRA / GER / ITA / SPA       |
 | Pokémon Trading Card Game                    | GBC      | Save                    | EUR / USA / JAP / AUS                         |
