@@ -175,7 +175,9 @@ export interface ItemBitflags {
   id?: string;
   name?: string;
   dataViewAltKey?: string;
+  jsonPath?: string;
   type: "bitflags";
+  jsonType?: "boolean" | "boolean[]" | "number" | "number[]";
   flags: ItemBitflag[];
   hint?: string;
   maxWidth?: boolean;
@@ -190,6 +192,7 @@ export interface ItemBoolean {
   name?: string;
   dataViewAltKey?: string;
   offset: number;
+  jsonPath?: string;
   type: "variable";
   dataType: "boolean";
   on?: number;
@@ -276,6 +279,7 @@ export interface ItemInt {
   name?: string;
   dataViewAltKey?: string;
   offset: number;
+  jsonPath?: string;
   type: "variable";
   dataType: Exclude<DataType, "boolean" | "string">;
   bigEndian?: boolean;
@@ -338,6 +342,7 @@ export interface ItemString {
   name?: string;
   dataViewAltKey?: string;
   offset: number;
+  jsonPath?: string;
   length: number;
   type: "variable";
   dataType: "string";

@@ -15,6 +15,7 @@
     setString,
   } from "$lib/utils/bytes";
   import { utilsExists } from "$lib/utils/format";
+  import { getJsonString, setJsonString } from "$lib/utils/json";
 
   import type { ItemString } from "$lib/types";
 
@@ -30,22 +31,28 @@
     }
 
     if (!isOverrided) {
-      setString(
-        item.offset,
-        item.length,
-        item.letterDataType,
-        target.value,
-        item.fallback,
-        {
-          bigEndian: item.bigEndian,
-          letterBigEndian: item.letterBigEndian,
-          encoding: item.encoding,
-          endCode: item.endCode,
+      if (item.jsonPath) {
+        setJsonString(item.jsonPath, item.length, target.value, {
           regex: item.regex,
-          resource: item.resource,
-        },
-        item.dataViewAltKey,
-      );
+        });
+      } else {
+        setString(
+          item.offset,
+          item.length,
+          item.letterDataType,
+          target.value,
+          item.fallback,
+          {
+            bigEndian: item.bigEndian,
+            letterBigEndian: item.letterBigEndian,
+            encoding: item.encoding,
+            endCode: item.endCode,
+            regex: item.regex,
+            resource: item.resource,
+          },
+          item.dataViewAltKey,
+        );
+      }
     }
 
     if (utilsExists("afterSetInt")) {
@@ -83,13 +90,17 @@
 
     // prettier-ignore
     if (!isOverrided) {
-      value = getString(item.offset, item.length, item.letterDataType, {
-        bigEndian: item.bigEndian,
-        letterBigEndian: item.letterBigEndian,
-        encoding: item.encoding,
-        endCode: item.endCode,
-        resource: item.resource,
-      }, _dataViewAlt);
+      if (item.jsonPath) {
+        value = getJsonString(item.jsonPath);
+      } else {
+        value = getString(item.offset, item.length, item.letterDataType, {
+          bigEndian: item.bigEndian,
+          letterBigEndian: item.letterBigEndian,
+          encoding: item.encoding,
+          endCode: item.endCode,
+          resource: item.resource,
+        }, _dataViewAlt);
+      }
     }
   }
 </script>

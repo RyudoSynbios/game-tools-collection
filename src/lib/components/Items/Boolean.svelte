@@ -14,6 +14,7 @@
     setBoolean,
   } from "$lib/utils/bytes";
   import { utilsExists } from "$lib/utils/format";
+  import { getJsonBoolean, setJsonBoolean } from "$lib/utils/json";
 
   import type { ItemBoolean } from "$lib/types";
 
@@ -30,11 +31,15 @@
 
     // prettier-ignore
     if (!isOverrided) {
-      setBoolean(item.offset, target.checked, {
-        on: item.on,
-        off: item.off,
-        resource: item.resource,
-      }, item.dataViewAltKey);
+      if (item.jsonPath) {
+        setJsonBoolean(item.jsonPath, target.checked);
+      } else {
+        setBoolean(item.offset, target.checked, {
+          on: item.on,
+          off: item.off,
+          resource: item.resource,
+        }, item.dataViewAltKey);
+      }
     }
 
     if (utilsExists("afterSetInt")) {
@@ -72,11 +77,15 @@
 
     // prettier-ignore
     if (!isOverrided) {
-      checked = getBoolean(item.offset, {
-        on: item.on,
-        off: item.off,
-        resource: item.resource,
-      }, _dataViewAlt);
+      if (item.jsonPath) {
+        checked = getJsonBoolean(item.jsonPath);
+      } else {
+        checked = getBoolean(item.offset, {
+          on: item.on,
+          off: item.off,
+          resource: item.resource,
+        }, _dataViewAlt);
+      }
     }
   }
 </script>

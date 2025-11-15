@@ -122,6 +122,10 @@ export function getRegionArray<T>(array: T[]): T {
   return array[$gameRegion];
 }
 
+export function isObjIsEmpty(obj: { [key: string]: any }): boolean {
+  return !obj || Object.keys(obj).length === 0;
+}
+
 export function isPartial(operations: IntOperation[] = []): boolean {
   return operations.some((operation) =>
     ["convert", "date"].includes(getObjKey(operation, 0)),

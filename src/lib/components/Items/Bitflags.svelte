@@ -14,30 +14,42 @@
     setBitflag,
   } from "$lib/utils/bytes";
   import { utilsExists } from "$lib/utils/format";
+  import { getJsonBitflag, setJsonBitflag } from "$lib/utils/json";
 
   import type { ItemBitflag, ItemBitflags } from "$lib/types";
 
   export let item: ItemBitflags;
 
   function handleInputChange(flag: ItemBitflag, event: Event): void {
+    const target = event.target as HTMLInputElement;
+
     let isOverrided = false;
 
     if (utilsExists("overrideSetInt")) {
-      isOverrided = $gameUtils.overrideSetInt(
-        item,
-        (event.target as HTMLInputElement).checked,
-        flag,
-      );
+      isOverrided = $gameUtils.overrideSetInt(item, target.checked, flag);
     }
 
     if (!isOverrided) {
-      setBitflag(
-        flag.offset,
-        flag.bit,
-        (event.target as HTMLInputElement).checked,
-        { reversed: item.reversed || flag.reversed },
-        item.dataViewAltKey,
-      );
+      if (item.jsonPath) {
+        setJsonBitflag(
+          item.jsonPath,
+          item.jsonType,
+          flag.offset,
+          flag.bit,
+          target.checked,
+          {
+            reversed: item.reversed || flag.reversed,
+          },
+        );
+      } else {
+        setBitflag(
+          flag.offset,
+          flag.bit,
+          target.checked,
+          { reversed: item.reversed || flag.reversed },
+          item.dataViewAltKey,
+        );
+      }
     }
 
     if (utilsExists("afterSetInt")) {
@@ -70,11 +82,21 @@
     if (!isOverrided) {
       flags = item.flags.reduce(
         (flags: (ItemBitflag & { checked: boolean })[], flag) => {
+          let checked = false;
+
+          if (item.jsonPath) {
+             checked = getJsonBitflag(item.jsonPath, item.jsonType, flag.offset, flag.bit, {
+              reversed: item.reversed || flag.reversed,
+            });
+          } else {
+            checked = getBitflag(flag.offset, flag.bit, {
+              reversed: item.reversed || flag.reversed,
+            }, _dataViewAlt);
+          }
+
           flags.push({
             ...flag,
-            checked: getBitflag(flag.offset, flag.bit, {
-              reversed: item.reversed || flag.reversed,
-            }, _dataViewAlt),
+            checked,
           });
 
           return flags;

@@ -261,6 +261,16 @@ export function extractBit(number: number, bit: number): boolean {
   return (number & (0x1 << bit)) !== 0x0;
 }
 
+export function injectBit(number: number, bit: number, value: boolean): number {
+  if (value) {
+    number |= 0x1 << bit;
+  } else {
+    number &= ~(0x1 << bit);
+  }
+
+  return number;
+}
+
 export function extractBinary(
   number: number,
   bitStart: number,
@@ -507,7 +517,9 @@ export function getInt(
     int = parseInt(hex);
   }
 
-  int = makeOperations(int, options.operations);
+  if (options.operations) {
+    int = makeOperations(int, options.operations);
+  }
 
   return int;
 }
@@ -1014,6 +1026,30 @@ export function intToArray(
     const b3 = (int >> order[3]) & 0xff;
 
     array.push(b0, b1, b2, b3);
+  }
+
+  return array;
+}
+
+export function float32ToInt(float: number): number {
+  const tmp = new DataView(new ArrayBuffer(0x4));
+  tmp.setFloat32(0x0, float);
+
+  return tmp.getUint32(0x0);
+}
+
+export function stringToArray(
+  string: string,
+  endCode: number | undefined = undefined,
+): number[] {
+  const array = [];
+
+  for (let i = 0; i < string.length; i += 1) {
+    array.push(string.charCodeAt(i));
+  }
+
+  if (endCode !== undefined) {
+    array.push(endCode);
   }
 
   return array;

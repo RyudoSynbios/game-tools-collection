@@ -26,6 +26,7 @@
     round,
     utilsExists,
   } from "$lib/utils/format";
+  import { getJsonInt, setJsonInt } from "$lib/utils/json";
   import { getResource } from "$lib/utils/parser";
 
   import type {
@@ -65,7 +66,11 @@
 
     // prettier-ignore
     if (!isOverrided) {
-      if (item.dataType !== "int64" && item.dataType !== "uint64") {
+      if (item.jsonPath) {
+        setJsonInt(item.jsonPath, item.dataType, newValue, {
+          operations: item.operations,
+        });
+      } else if (item.dataType !== "int64" && item.dataType !== "uint64") {
         setInt(item.offset, item.dataType, newValue, {
           bigEndian: item.bigEndian,
           binaryCodedDecimal: item.binaryCodedDecimal,
@@ -131,7 +136,9 @@
 
       // prettier-ignore
       if (!isOverrided) {
-        if (item.dataType !== "int64" && item.dataType !== "uint64") {
+        if (item.jsonPath) {
+          value = getJsonInt(item.jsonPath, { operations: item.operations });
+        } else if (item.dataType !== "int64" && item.dataType !== "uint64") {
           int = getInt(item.offset, item.dataType, {
             bigEndian: item.bigEndian,
           }, _dataViewAlt);
