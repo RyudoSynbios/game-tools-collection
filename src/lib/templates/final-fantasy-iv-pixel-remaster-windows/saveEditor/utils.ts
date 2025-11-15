@@ -1,9 +1,15 @@
 import { get } from "svelte/store";
 
-import { dataJson } from "$lib/stores";
+import { dataJson, gameTemplate } from "$lib/stores";
 import { extractBit, getString } from "$lib/utils/bytes";
-import { getPartialValue, lowerize, makeOperations } from "$lib/utils/format";
-import { getObjValue, setObjValue } from "$lib/utils/json";
+import { getObjKey, lowerize } from "$lib/utils/format";
+import {
+  getJsonInt,
+  getJsonString,
+  setJsonBoolean,
+  setJsonInt,
+  setJsonValue,
+} from "$lib/utils/json";
 import { updateResources } from "$lib/utils/parser";
 import { checkValidator } from "$lib/utils/validator";
 
@@ -12,9 +18,12 @@ import type {
   ItemBitflag,
   ItemBitflags,
   ItemInt,
+  ItemSection,
+  ItemString,
   ItemTab,
   ItemTabs,
   Resource,
+  Validator,
 } from "$lib/types";
 
 import { decrypt, encrypt } from "./utils/crypto";
@@ -51,11 +60,17 @@ interface UserItem {
 export async function beforeInitDataView(
   dataView: DataView,
 ): Promise<DataView> {
-  const encodedData = getString(0x3, dataView.byteLength, "uint8", { endCode: 0xd }, dataView); // prettier-ignore
+  const $gameTemplate = get(gameTemplate);
 
-  if (!checkValidator([0xef, 0xbb, 0xbf], 0x0, dataView)) {
+  const regionValidator = $gameTemplate.validator.regions.world as Validator;
+  const key = parseInt(getObjKey(regionValidator, 0));
+  const validator = regionValidator[key];
+
+  if (!checkValidator(validator, key, dataView)) {
     return dataView;
   }
+
+  const encodedData = getString(0x3, dataView.byteLength, "uint8", { endCode: 0xd }, dataView); // prettier-ignore
 
   try {
     const json = await decrypt(encodedData);
@@ -79,20 +94,24 @@ export function overrideGetRegions(): string[] {
 export function overrideParseItem(item: Item): Item | ItemTab {
   const $dataJson = get(dataJson);
 
+  if (!$dataJson) {
+    return item;
+  }
+
   if ("id" in item && item.id === "slot") {
     const itemTab = item as ItemTab;
 
     itemTab.disabled = !isSlot();
 
     return itemTab;
-  } else if ("id" in item && item.id?.match(/transporation-/)) {
-    const itemTab = item as ItemTab;
+  } else if ("id" in item && item.id?.match(/vehicle-/)) {
+    const itemSection = item as ItemSection;
 
     const [index] = item.id.splitInt();
 
-    itemTab.hidden = index === 0;
+    itemSection.hidden = index === 0;
 
-    return itemTab;
+    return itemSection;
   } else if ("id" in item && item.id === "party") {
     const itemTabs = item as ItemTabs;
 
@@ -137,22 +156,25 @@ export function overrideParseItem(item: Item): Item | ItemTab {
 }
 
 export function overrideItem(item: Item): Item {
+  const $dataJson = get(dataJson);
+
+  if (!$dataJson) {
+    return item;
+  }
+
   if ("id" in item && item.id?.match(/ownedTransportationList/)) {
     const itemInt = item as ItemInt;
 
-    const vehicleIndex = parseInt(item.id.match(/\[(\d+)\]/)![1]);
+    const [vehicleIndex] = item.id.splitInt();
 
     itemInt.disabled = !isTransporationEnabled(vehicleIndex);
 
     return itemInt;
-  } else if ("id" in item && item.id?.match(/currentExp|addtional/)) {
+  } else if ("id" in item && item.id?.match(/stats-/)) {
     const itemInt = item as ItemInt;
 
-    let [, type] = item.id.split(/addtional/);
-
-    if (item.id?.match(/currentExp/)) {
-      type = "currentExp";
-    }
+    let [, , type] = item.id.split("-");
+    let [characterIndex] = item.id.splitInt();
 
     type = lowerize(type);
 
@@ -170,8 +192,6 @@ export function overrideItem(item: Item): Item {
       return itemInt;
     }
 
-    const characterIndex = parseInt(item.id.match(/\[(\d+)\]/)![1]);
-
     const characterStatsIndex = getCharacter(characterIndex).characterStatusId;
 
     const characterStatus = charactersStatus[characterStatsIndex - 1];
@@ -185,13 +205,10 @@ export function overrideItem(item: Item): Item {
     itemInt.min = base;
 
     return itemInt;
-  } else if ("id" in item && item.id?.match(/equipmentList/)) {
+  } else if ("id" in item && item.id?.match(/equipment-/)) {
     const itemInt = item as ItemInt;
 
-    const indexes = [...item.id.matchAll(/\[(\d+)\]/g)];
-
-    const characterIndex = parseInt(indexes[0][1]);
-    const equipmentIndex = parseInt(indexes[1][1]);
+    const [characterIndex, equipmentIndex] = item.id.splitInt();
 
     const characterStatsIndex = getCharacter(characterIndex).characterStatusId;
 
@@ -250,12 +267,14 @@ export function overrideGetInt(
 ] {
   const $dataJson = get(dataJson);
 
-  if ($dataJson === undefined) {
+  if (!$dataJson) {
     return [false, 0x0];
   }
 
-  if ("id" in item && item.id?.match(/currentArea/)) {
-    const value = getObjValue<string>(item.id, "");
+  if ("id" in item && item.id === "location") {
+    const itemString = item as ItemString;
+
+    const value = getJsonString(itemString.jsonPath!);
 
     const location = locations[value] || "";
 
@@ -337,20 +356,6 @@ export function overrideGetInt(
     }
 
     return [true, count];
-  } else if ("id" in item && item.id?.match(/\./)) {
-    if ("dataType" in item && item.dataType === "boolean") {
-      const value = getObjValue<boolean>(item.id, false);
-
-      return [true, value];
-    }
-
-    let value = getObjValue<number>(item.id, 0x0);
-
-    if ("operations" in item) {
-      value = makeOperations(value, item.operations);
-    }
-
-    return [true, value];
   }
 
   return [false, undefined];
@@ -358,7 +363,7 @@ export function overrideGetInt(
 
 export function overrideSetInt(
   item: Item,
-  value: boolean | string,
+  value: string,
   flag: ItemBitflag,
 ): boolean {
   const $dataJson = get(dataJson);
@@ -374,30 +379,34 @@ export function overrideSetInt(
     dataJson.set($dataJson);
 
     return true;
-  } else if ("id" in item && item.id?.match(/corpsList/)) {
-    const int = parseInt(value as string);
+  } else if ("id" in item && item.id?.match("formation")) {
+    const itemInt = item as ItemInt;
 
-    const previous = getObjValue<number>(item.id, 0x0);
+    const int = parseInt(value);
+
+    const previous = getJsonInt(itemInt.jsonPath!);
 
     if (previous !== 0) {
-      setObjValue<boolean>(
+      setJsonBoolean(
         `userData.ownedCharacterList.target[${previous - 1}].isEnableCorps`,
         false,
       );
     }
 
     if (int !== 0) {
-      setObjValue<boolean>(
+      setJsonBoolean(
         `userData.ownedCharacterList.target[${int - 1}].isEnableCorps`,
         true,
       );
     }
 
-    setObjValue<number>(item.id, int);
+    setJsonInt(itemInt.jsonPath!, "uint8", int);
 
     return true;
-  } else if ("id" in item && item.id?.match(/equipmentList/)) {
-    const int = parseInt(value as string);
+  } else if ("id" in item && item.id?.match(/equipment-/)) {
+    const itemInt = item as ItemInt;
+
+    const int = parseInt(value);
 
     const items: UserItem[] = $dataJson.userData.normalOwnedItemList.target;
 
@@ -424,7 +433,10 @@ export function overrideSetInt(
     }
 
     if (userItem) {
-      setObjValue<UserItem>(item.id.replace(".contentId", ""), userItem);
+      setJsonValue<UserItem>(
+        itemInt.jsonPath!.replace(".contentId", ""),
+        userItem,
+      );
     }
 
     dataJson.set($dataJson);
@@ -462,7 +474,7 @@ export function overrideSetInt(
     const [, type] = item.id.split("-");
     const [itemIndex] = item.id.splitInt();
 
-    const int = parseInt(value as string);
+    const int = parseInt(value);
 
     let items: UserItem[];
 
@@ -494,7 +506,7 @@ export function overrideSetInt(
   } else if ("id" in item && item.id?.match(/monsterDefeats-/)) {
     const [enemyIndex] = item.id.splitInt();
 
-    const int = parseInt(value as string);
+    const int = parseInt(value);
 
     const keys = $dataJson.monsterDefeats.keys as number[];
     const values = $dataJson.monsterDefeats.values as number[];
@@ -516,34 +528,13 @@ export function overrideSetInt(
     dataJson.set($dataJson);
 
     return true;
-  } else if ("id" in item && item.id?.match(/\./)) {
-    if ("dataType" in item && item.dataType === "boolean") {
-      setObjValue<boolean>(item.id, value as boolean);
-
-      return true;
-    } else if ("letterDataType" in item) {
-      setObjValue<string>(item.id, value as string);
-    } else {
-      let int = parseInt(value as string);
-
-      if ("operations" in item) {
-        const oldInt = getObjValue<number>(item.id, 0x0);
-
-        int = makeOperations(int, item.operations, true);
-        int = getPartialValue(oldInt, int, item.operations!);
-      }
-
-      setObjValue<number>(item.id, int);
-    }
-
-    return true;
   }
 
   return false;
 }
 
 export function afterSetInt(item: Item): void {
-  if ("id" in item && item.id?.match(/\.name/)) {
+  if ("id" in item && item.id === "name") {
     updateResources("characterEnum");
     updateResources("characterNames");
   }
@@ -569,13 +560,13 @@ export async function beforeSaving(): Promise<ArrayBufferLike> {
 function isBestiary(): boolean {
   const $dataJson = get(dataJson);
 
-  return $dataJson.totalSubjugationCount !== undefined;
+  return $dataJson?.totalSubjugationCount !== undefined;
 }
 
 function isSlot(): boolean {
   const $dataJson = get(dataJson);
 
-  return $dataJson.pictureData;
+  return $dataJson?.pictureData;
 }
 
 function isTransporationEnabled(index: number): boolean {
