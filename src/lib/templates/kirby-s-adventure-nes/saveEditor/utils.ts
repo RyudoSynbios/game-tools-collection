@@ -9,6 +9,7 @@ import type {
   DataViewABL,
   Item,
   ItemBitflag,
+  ItemBitflagChecked,
   ItemBitflags,
   ItemChecksum,
   ItemInt,
@@ -76,12 +77,12 @@ export function initShifts(shifts: number[]): number[] {
 
 export function overrideGetInt(
   item: Item,
-): [boolean, (ItemBitflag & { checked: boolean })[] | undefined] {
+): [boolean, ItemBitflagChecked[] | undefined] {
   if ("id" in item && item.id === "levels-0") {
     const itemBitflags = item as ItemBitflags;
 
     const flags = itemBitflags.flags.reduce(
-      (flags: (ItemBitflag & { checked: boolean })[], flag) => {
+      (flags: ItemBitflagChecked[], flag) => {
         let checked = getInt(flag.offset, "bit", { bit: flag.bit }) === 1;
 
         if (flag.bit === 7) {

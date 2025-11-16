@@ -2,7 +2,7 @@
   import { onDestroy, onMount } from "svelte";
 
   import Modal from "$lib/components/Modal.svelte";
-  import { isFileVisualizerOpen } from "$lib/stores";
+  import { dataJson, isFileVisualizerOpen } from "$lib/stores";
   import { highlightsTemplate } from "$lib/stores/fileVisualizer";
   import { parseGameJson } from "$lib/utils/fileVisualizer";
 
@@ -14,6 +14,10 @@
   }
 
   onMount(() => {
+    if ($dataJson) {
+      console.log($dataJson);
+    }
+
     parseGameJson();
   });
 

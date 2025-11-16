@@ -22,6 +22,7 @@ import { getItem } from "$lib/utils/parser";
 import type {
   Item,
   ItemBitflag,
+  ItemBitflagChecked,
   ItemBitflags,
   ItemChecksum,
   ItemContainer,
@@ -81,14 +82,14 @@ export function overrideParseItem(item: Item): Item {
 
 export function overrideGetInt(
   item: Item,
-): [boolean, number | (ItemBitflag & { checked: boolean })[] | undefined] {
+): [boolean, number | ItemBitflagChecked[] | undefined] {
   if ("id" in item && item.id?.match(/unlockables-/)) {
     const itemBitflags = item as ItemBitflags;
 
     const [, type] = item.id.split("-");
 
     const flags = itemBitflags.flags.reduce(
-      (flags: (ItemBitflag & { checked: boolean })[], flag) => {
+      (flags: ItemBitflagChecked[], flag) => {
         let isChecked = getBitflag(flag.offset, flag.bit);
 
         let range = { start: -1, end: -1 };

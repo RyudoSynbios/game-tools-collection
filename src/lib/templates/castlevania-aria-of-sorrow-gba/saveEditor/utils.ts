@@ -12,7 +12,13 @@ import {
 } from "$lib/utils/common/castlevania";
 import { getHeaderShift } from "$lib/utils/common/gameBoyAdvance";
 
-import type { Item, ItemBitflag, ItemBitflags, ItemInt } from "$lib/types";
+import type {
+  Item,
+  ItemBitflag,
+  ItemBitflagChecked,
+  ItemBitflags,
+  ItemInt,
+} from "$lib/types";
 
 const GAME = "aos";
 
@@ -55,12 +61,12 @@ export function overrideParseItem(item: Item): Item {
 
 export function overrideGetInt(
   item: Item,
-): [boolean, (ItemBitflag & { checked: boolean })[] | undefined] {
+): [boolean, ItemBitflagChecked[] | undefined] {
   if ("id" in item && item.id === "abilities") {
     const itemBitflags = item as ItemBitflags;
 
     const flags = itemBitflags.flags.reduce(
-      (flags: (ItemBitflag & { checked: boolean })[], flag) => {
+      (flags: ItemBitflagChecked[], flag) => {
         flags.push({
           ...flag,
           checked:

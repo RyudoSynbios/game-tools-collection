@@ -10,6 +10,7 @@ import type {
   DataViewABL,
   Item,
   ItemBitflag,
+  ItemBitflagChecked,
   ItemBitflags,
   ItemChecksum,
   ItemContainer,
@@ -242,16 +243,13 @@ export function overrideItem(item: Item): Item {
 
 export function overrideGetInt(
   item: Item,
-): [
-  boolean,
-  number | string | (ItemBitflag & { checked: boolean })[] | undefined,
-] {
+): [boolean, number | string | ItemBitflagChecked[] | undefined] {
   if ("id" in item && item.id?.match(/pokemonUnset/)) {
     if ("flags" in item) {
       const itemBitflags = item as ItemBitflags;
 
       const flags = itemBitflags.flags.reduce(
-        (flags: (ItemBitflag & { checked: boolean })[], flag) => {
+        (flags: ItemBitflagChecked[], flag) => {
           flags.push({ ...flag, checked: false, disabled: true });
 
           return flags;

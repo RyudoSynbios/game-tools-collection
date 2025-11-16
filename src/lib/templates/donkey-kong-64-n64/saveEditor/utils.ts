@@ -22,6 +22,7 @@ import type {
   DataViewABL,
   Item,
   ItemBitflag,
+  ItemBitflagChecked,
   ItemBitflags,
   ItemChecksum,
   ItemContainer,
@@ -116,10 +117,7 @@ export function overrideParseContainerItemsShifts(
 
 export function overrideGetInt(
   item: Item,
-): [
-  boolean,
-  number | string | (ItemBitflag & { checked: boolean })[] | undefined,
-] {
+): [boolean, number | string | ItemBitflagChecked[] | undefined] {
   if ("binary" in item && item.dataType !== "uint8") {
     const itemInt = item as ItemInt;
 
@@ -244,7 +242,7 @@ export function overrideGetInt(
     const itemBitflags = item as ItemBitflags;
 
     const flags = itemBitflags.flags.reduce(
-      (flags: (ItemBitflag & { checked: boolean })[], flag, index) => {
+      (flags: ItemBitflagChecked[], flag, index) => {
         let checked = Boolean(getInt(flag.offset, "bit", { bit: flag.bit }));
 
         if ([0, 1, 2, 3, 4, 5, 9, 10].includes(index)) {
@@ -274,7 +272,7 @@ export function overrideGetInt(
     const itemBitflags = item as ItemBitflags;
 
     const flags = itemBitflags.flags.reduce(
-      (flags: (ItemBitflag & { checked: boolean })[], flag, index) => {
+      (flags: ItemBitflagChecked[], flag, index) => {
         let checked = getInt(flag.offset, "bit", { bit: flag.bit }) === 1;
 
         if (index === 0) {

@@ -12,7 +12,13 @@ import {
 } from "$lib/utils/common/castlevania";
 import { getHeaderShift } from "$lib/utils/common/gameBoyAdvance";
 
-import type { Item, ItemBitflag, ItemBitflags, ItemInt } from "$lib/types";
+import type {
+  Item,
+  ItemBitflag,
+  ItemBitflagChecked,
+  ItemBitflags,
+  ItemInt,
+} from "$lib/types";
 
 const GAME = "hod";
 
@@ -41,12 +47,12 @@ export function initShifts(shifts: number[]): number[] {
 
 export function overrideGetInt(
   item: Item,
-): [boolean, number | (ItemBitflag & { checked: boolean })[] | undefined] {
+): [boolean, number | ItemBitflagChecked[] | undefined] {
   if ("id" in item && item.id === "unlockedModes") {
     const itemBitflags = item as ItemBitflags;
 
     const flags = itemBitflags.flags.reduce(
-      (flags: (ItemBitflag & { checked: boolean })[], flag) => {
+      (flags: ItemBitflagChecked[], flag) => {
         flags.push({
           ...flag,
           checked: getBitflag(flag.offset, flag.bit),
@@ -66,7 +72,7 @@ export function overrideGetInt(
     const itemBitflags = item as ItemBitflags;
 
     const flags = itemBitflags.flags.reduce(
-      (flags: (ItemBitflag & { checked: boolean })[], flag) => {
+      (flags: ItemBitflagChecked[], flag) => {
         flags.push({
           ...flag,
           checked: getBitflag(flag.offset, flag.bit),

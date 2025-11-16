@@ -12,6 +12,7 @@ import { getItem, getShift } from "$lib/utils/parser";
 import type {
   Item,
   ItemBitflag,
+  ItemBitflagChecked,
   ItemBitflags,
   ItemChecksum,
   ItemContainer,
@@ -69,7 +70,7 @@ export function overrideParseContainerItemsShifts(
 
 export function overrideGetInt(
   item: Item,
-): [boolean, number | (ItemBitflag & { checked: boolean })[] | undefined] {
+): [boolean, number | ItemBitflagChecked[] | undefined] {
   if ("id" in item && item.id?.match(/completionRate-/)) {
     const itemInt = item as ItemInt;
 
@@ -94,7 +95,7 @@ export function overrideGetInt(
     const int = getInt(itemBitflags.flags[0].offset, "uint8");
 
     const flags = itemBitflags.flags.reduce(
-      (flags: (ItemBitflag & { checked: boolean })[], flag, index) => {
+      (flags: ItemBitflagChecked[], flag, index) => {
         let checked = index < int - 1;
 
         if (flag.bit !== 0) {

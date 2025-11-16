@@ -19,6 +19,7 @@ import { getItem } from "$lib/utils/parser";
 import type {
   Item,
   ItemBitflag,
+  ItemBitflagChecked,
   ItemBitflags,
   ItemChecksum,
   ItemInt,
@@ -51,12 +52,12 @@ export function initShifts(shifts: number[]): number[] {
 
 export function overrideGetInt(
   item: Item,
-): [boolean, (ItemBitflag & { checked: boolean })[] | undefined] {
+): [boolean, ItemBitflagChecked[] | undefined] {
   if ("id" in item && item.id === "abilities") {
     const itemBitflags = item as ItemBitflags;
 
     const flags = itemBitflags.flags.reduce(
-      (flags: (ItemBitflag & { checked: boolean })[], flag) => {
+      (flags: ItemBitflagChecked[], flag) => {
         flags.push({
           ...flag,
           checked:

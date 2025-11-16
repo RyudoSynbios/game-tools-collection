@@ -16,7 +16,11 @@
   import { utilsExists } from "$lib/utils/format";
   import { getJsonBitflag, setJsonBitflag } from "$lib/utils/json";
 
-  import type { ItemBitflag, ItemBitflags } from "$lib/types";
+  import type {
+    ItemBitflag,
+    ItemBitflagChecked,
+    ItemBitflags,
+  } from "$lib/types";
 
   export let item: ItemBitflags;
 
@@ -57,7 +61,7 @@
     }
   }
 
-  let flags: (ItemBitflag & { checked: boolean })[];
+  let flags: ItemBitflagChecked[];
 
   $: {
     ($dataJson, $dataView);
@@ -81,7 +85,7 @@
     // prettier-ignore
     if (!isOverrided) {
       flags = item.flags.reduce(
-        (flags: (ItemBitflag & { checked: boolean })[], flag) => {
+        (flags: ItemBitflagChecked[], flag) => {
           let checked = false;
 
           if (item.jsonPath) {

@@ -15,6 +15,7 @@ import { getPartialValue, makeOperations } from "$lib/utils/format";
 import {
   Item,
   ItemBitflag,
+  ItemBitflagChecked,
   ItemBitflags,
   ItemChecksum,
   ItemInt,
@@ -95,7 +96,7 @@ export function overrideItem(item: Item): Item {
 
 export function overrideGetInt(
   item: Item,
-): [boolean, number | (ItemBitflag & { checked: boolean })[] | undefined] {
+): [boolean, number | ItemBitflagChecked[] | undefined] {
   if ("id" in item && item.id === "playtime") {
     const itemInt = item as ItemInt;
 
@@ -152,7 +153,7 @@ export function overrideGetInt(
     }
 
     const flags = itemBitflags.flags.reduce(
-      (flags: (ItemBitflag & { checked: boolean })[], flag) => {
+      (flags: ItemBitflagChecked[], flag) => {
         flags.push({
           ...flag,
           checked: hasImportantThing(flag.offset, itemIndex + flag.bit),

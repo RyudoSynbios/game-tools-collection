@@ -16,6 +16,7 @@ import { checkValidator } from "$lib/utils/validator";
 import type {
   Item,
   ItemBitflag,
+  ItemBitflagChecked,
   ItemBitflags,
   ItemInt,
   ItemSection,
@@ -255,16 +256,7 @@ export function overrideItem(item: Item): Item {
 
 export function overrideGetInt(
   item: Item,
-): [
-  boolean,
-  (
-    | boolean
-    | number
-    | string
-    | (ItemBitflag & { checked: boolean })[]
-    | undefined
-  ),
-] {
+): [boolean, boolean | number | string | ItemBitflagChecked[] | undefined] {
   const $dataJson = get(dataJson);
 
   if (!$dataJson) {
@@ -297,7 +289,7 @@ export function overrideGetInt(
     )!;
 
     const flags = itemBitflags.flags.reduce(
-      (flags: (ItemBitflag & { checked: boolean })[], flag, index) => {
+      (flags: ItemBitflagChecked[], flag, index) => {
         const checked = Boolean(
           abilityList.find(
             (ability) =>

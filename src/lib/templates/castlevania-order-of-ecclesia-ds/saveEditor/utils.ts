@@ -19,6 +19,7 @@ import { getItem, getShift } from "$lib/utils/parser";
 import type {
   Item,
   ItemBitflag,
+  ItemBitflagChecked,
   ItemBitflags,
   ItemChecksum,
   ItemInt,
@@ -108,12 +109,12 @@ export function overrideItem(item: Item): Item {
 
 export function overrideGetInt(
   item: Item,
-): [boolean, (ItemBitflag & { checked: boolean })[] | undefined] {
+): [boolean, ItemBitflagChecked[] | undefined] {
   if ("id" in item && item.id === "unlockedModes") {
     const itemBitflags = item as ItemBitflags;
 
     const flags = itemBitflags.flags.reduce(
-      (flags: (ItemBitflag & { checked: boolean })[], flag) => {
+      (flags: ItemBitflagChecked[], flag) => {
         const int = getInt(flag.offset, "uint8", {
           binary: { bitStart: flag.bit, bitLength: 3 },
         });
@@ -133,7 +134,7 @@ export function overrideGetInt(
     const itemBitflags = item as ItemBitflags;
 
     const flags = itemBitflags.flags.reduce(
-      (flags: (ItemBitflag & { checked: boolean })[], flag) => {
+      (flags: ItemBitflagChecked[], flag) => {
         flags.push({
           ...flag,
           checked: getInt(flag.offset, "lower4") > 0,

@@ -171,6 +171,10 @@ export interface ItemBitflag {
   hidden?: boolean;
 }
 
+export interface ItemBitflagChecked extends ItemBitflag {
+  checked: boolean;
+}
+
 export interface ItemBitflags {
   id?: string;
   name?: string;

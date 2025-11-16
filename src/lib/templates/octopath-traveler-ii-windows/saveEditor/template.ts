@@ -265,7 +265,7 @@ const template: GameJson = {
                         { offset: 0x4, bit: 18, label: "<b>Leaflands:</b> Wellgrove" },
                         { offset: 0x4, bit: 21, label: "<b>Leaflands:</b> Timberain", separator: true },
                         { offset: 0x2, bit: 21, label: "<b>Wildlands:</b> Crackridge Harbor" },
-                        { offset: 0x3, bit: 3, label: "<b>Wildlands:</b> Crackridge" },
+                        { offset: 0x3, bit: 5, label: "<b>Wildlands:</b> Crackridge" },
                         { offset: 0x3, bit: 4, label: "<b>Wildlands:</b> Oresrush" },
                         { offset: 0x3, bit: 8, label: "<b>Wildlands:</b> Gravell", separator: true },
                         { offset: 0x0, bit: 28, label: "<b>Hinoeuma:</b> Ryu" },

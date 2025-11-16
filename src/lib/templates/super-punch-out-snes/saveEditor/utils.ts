@@ -10,6 +10,7 @@ import type {
   DataViewABL,
   Item,
   ItemBitflag,
+  ItemBitflagChecked,
   ItemBitflags,
   ItemChecksum,
   ItemContainer,
@@ -95,7 +96,7 @@ export function overrideItem(item: Item): Item {
 
 export function overrideGetInt(
   item: Item,
-): [boolean, number | (ItemBitflag & { checked: boolean })[] | undefined] {
+): [boolean, number | ItemBitflagChecked[] | undefined] {
   if ("id" in item && item.id?.match(/circuitProgression-/)) {
     const itemInt = item as ItemInt;
 
@@ -125,7 +126,7 @@ export function overrideGetInt(
     const wins = getInt(offset + 0x79, "uint8");
 
     const flags = itemBitflags.flags.reduce(
-      (flags: (ItemBitflag & { checked: boolean })[], flag) => {
+      (flags: ItemBitflagChecked[], flag) => {
         flags.push({
           ...flag,
           checked: wins > 0 && circuit * 0x4 + flag.bit <= int,
