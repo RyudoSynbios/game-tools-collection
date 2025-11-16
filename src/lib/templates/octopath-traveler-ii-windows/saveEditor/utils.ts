@@ -1,12 +1,19 @@
 import { get } from "svelte/store";
 
 import { dataJson, gameTemplate } from "$lib/stores";
-import Gvas, { PropertyType } from "$lib/utils/gvas";
 import { getObjKey } from "$lib/utils/format";
+import Gvas, { PropertyType } from "$lib/utils/gvas";
 import { getJsonInt } from "$lib/utils/json";
 import { checkValidator } from "$lib/utils/validator";
 
-import type { Item, ItemInt, Validator } from "$lib/types";
+import type {
+  Item,
+  ItemBitflag,
+  ItemBitflagChecked,
+  ItemBitflags,
+  ItemInt,
+  Validator,
+} from "$lib/types";
 
 import type { BackpackItem } from "./utils/resource";
 
@@ -55,31 +62,45 @@ export function onReady(): void {
   }
 }
 
-export function overrideGetInt(item: Item): [boolean, number | undefined] {
+export function overrideGetInt(
+  item: Item,
+): [boolean, number | ItemBitflagChecked[] | undefined] {
   const $dataJson = get(dataJson);
 
   if (!$dataJson) {
     return [false, 0x0];
   }
 
-  if ("id" in item && item.id === "equippedSupportSkill") {
+  if ("id" in item && item.id === "jobs") {
+    const itemBitflags = item as ItemBitflags;
+
+    const flags = itemBitflags.flags.reduce(
+      (flags: ItemBitflagChecked[], flag, index) => {
+        const checked = getBackpackItem(0x278b + index) !== undefined;
+
+        flags.push({
+          ...flag,
+          checked,
+        });
+
+        return flags;
+      },
+      [],
+    );
+
+    return [true, flags];
+  } else if ("id" in item && item.id === "equippedSupportSkill") {
     const itemInt = item as ItemInt;
 
     if (getJsonInt(itemInt.jsonPath!) === 0) {
       return [true, -1];
     }
   } else if ("id" in item && item.id?.match(/inventory-/)) {
-    const [itemIndex] = item.id.splitInt();
+    const [itemId] = item.id.splitInt();
 
-    const items = $dataJson.PlayerBackpack.ItemList as BackpackItem[];
+    const backpackItem = getBackpackItem(itemId);
 
-    const index = items.findIndex((item) => item.ItemId === itemIndex);
-
-    let count = 0;
-
-    if (index !== -1) {
-      count = items[index].Num;
-    }
+    const count = backpackItem?.Num || 0;
 
     return [true, count];
   }
@@ -87,33 +108,21 @@ export function overrideGetInt(item: Item): [boolean, number | undefined] {
   return [false, undefined];
 }
 
-export function overrideSetInt(item: Item, value: string): boolean {
-  const $dataJson = get(dataJson);
+export function overrideSetInt(
+  item: Item,
+  value: string,
+  flag: ItemBitflag,
+): boolean {
+  if ("id" in item && item.id === "jobs") {
+    const itemId = 0x278b + flag.bit;
 
-  if ("id" in item && item.id?.match(/inventory-/)) {
-    const [itemIndex] = item.id.splitInt();
+    updateBackpackItem(itemId, "set", value ? 0x1 : 0x0);
 
-    const int = parseInt(value as string);
+    return true;
+  } else if ("id" in item && item.id?.match(/inventory-/)) {
+    const [itemId] = item.id.splitInt();
 
-    const items = $dataJson.PlayerBackpack.ItemList as BackpackItem[];
-
-    const index = items.findIndex((item) => item.ItemId === itemIndex);
-
-    if (index !== -1) {
-      if (int === 0) {
-        items.splice(index, 1);
-        items.push({ ItemId: 0, Num: 0 });
-      } else {
-        items[index].Num = int;
-      }
-    } else {
-      const index = items.findIndex((item) => item.ItemId === 0);
-
-      items[index].ItemId = itemIndex;
-      items[index].Num = int;
-    }
-
-    dataJson.set($dataJson);
+    updateBackpackItem(itemId, "set", parseInt(value));
 
     return true;
   }
@@ -127,4 +136,60 @@ export function beforeSaving(): ArrayBufferLike {
   gvas.updateJson($dataJson);
 
   return gvas.writeToBuffer();
+}
+
+function getBackpackItemIndex(itemId: number): number {
+  const $dataJson = get(dataJson);
+
+  const items = $dataJson.PlayerBackpack.ItemList as BackpackItem[];
+
+  return items.findIndex((item) => item.ItemId === itemId);
+}
+
+function getBackpackItem(itemId: number): BackpackItem {
+  const $dataJson = get(dataJson);
+
+  const items = $dataJson.PlayerBackpack.ItemList as BackpackItem[];
+
+  const index = getBackpackItemIndex(itemId);
+
+  return items[index];
+}
+
+function updateBackpackItem(
+  itemId: number,
+  action: "add" | "remove" | "set",
+  value: number,
+): void {
+  const $dataJson = get(dataJson);
+
+  const items = $dataJson.PlayerBackpack.ItemList as BackpackItem[];
+
+  const index = getBackpackItemIndex(itemId);
+
+  if (action !== "set" && index !== -1) {
+    if (action === "add") {
+      value = Math.min(items[index].Num + value, 99);
+    } else if (action === "remove") {
+      value = Math.max(0, items[index].Num - value);
+    }
+  } else if (action === "remove") {
+    value = 0;
+  }
+
+  if (index !== -1) {
+    if (value === 0) {
+      items.splice(index, 1);
+      items.push({ ItemId: 0, Num: 0 });
+    } else {
+      items[index].Num = value;
+    }
+  } else {
+    const index = items.findIndex((item) => item.ItemId === 0);
+
+    items[index].ItemId = itemId;
+    items[index].Num = value;
+  }
+
+  dataJson.set($dataJson);
 }

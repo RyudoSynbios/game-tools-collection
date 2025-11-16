@@ -124,6 +124,16 @@ const template: GameJson = {
                         },
                       ],
                     },
+                    {
+                      name: "Unlocked Menus",
+                      jsonPath: "BitFlag",
+                      type: "bitflags",
+                      jsonType: "number[]",
+                      flags: [
+                        { offset: 0xc, bit: 27, label: "Jobs" },
+                        { offset: 0xc, bit: 28, label: "Skills" },
+                      ],
+                    },
                   ],
                 },
                 {
@@ -250,6 +260,20 @@ const template: GameJson = {
                           autocomplete: true,
                         },
                       ],
+                    },
+                  ],
+                },
+                {
+                  name: "Jobs",
+                  items: [
+                    {
+                      id: "jobs",
+                      type: "bitflags",
+                      flags: [...Array(12).keys()].map((index) => ({
+                        offset: 0x0,
+                        bit: index,
+                        label: jobs[index],
+                      })),
                     },
                   ],
                 },
