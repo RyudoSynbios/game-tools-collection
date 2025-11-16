@@ -29,6 +29,10 @@ export function updateChecksums(): void {
   const $gameJson = get(gameJson);
   const $gameUtils = get(gameUtils) as any;
 
+  if (utilsExists("beforeChecksum")) {
+    $gameUtils.beforeChecksum();
+  }
+
   $gameJson.checksums
     ?.sort((a, b) => (a.order || 9999) - (b.order || 9999))
     .forEach((item) => {
