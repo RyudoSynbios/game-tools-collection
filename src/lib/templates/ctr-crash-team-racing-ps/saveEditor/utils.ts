@@ -65,7 +65,7 @@ export function overrideGetInt(
 
     let name = "";
 
-    for (let i = 0x0; i < itemString.length * 2; i += 0x1) {
+    for (let i = 0x0; i < itemString.length * 0x2; i += 0x1) {
       const int = getInt(itemString.offset + i, "uint8");
 
       if (int === 0x0) {

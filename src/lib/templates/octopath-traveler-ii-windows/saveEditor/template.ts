@@ -52,12 +52,12 @@ const template: GameJson = {
                       flex: true,
                       items: [
                         {
-                          name: "Selected Character",
+                          name: "Main Character",
                           offset: 0x0,
                           jsonPath: "FirstSelectCharacterID",
                           type: "variable",
                           dataType: "uint32",
-                          resource: "selectedCharacters",
+                          resource: "mainCharacters",
                         },
                         {
                           name: "Playtime",
@@ -892,11 +892,7 @@ const template: GameJson = {
       ...jobs,
       "-1": "-",
     },
-    polearms: {
-      ...polearms,
-      "-1": "-",
-    },
-    selectedCharacters: {
+    mainCharacters: {
       0x1: "Hikari",
       0x2: "Ochette",
       0x3: "Castti",
@@ -905,6 +901,10 @@ const template: GameJson = {
       0x6: "Osvald",
       0x7: "Throné",
       0x8: "Agnea",
+    },
+    polearms: {
+      ...polearms,
+      "-1": "-",
     },
     shields: {
       ...shields,

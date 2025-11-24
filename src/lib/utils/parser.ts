@@ -95,18 +95,20 @@ function getOverridedShift(
   shift: number,
   shiftIndex: number,
 ): number {
+  if (parent === -1) {
+    return shiftIndex * shift;
+  }
+
   const parentIndex = shifts.length - parent;
 
   return shifts.reduce((total, value, index) => {
-    let newTotal = total;
-
     if (index < parentIndex) {
-      newTotal += value;
+      total += value;
     } else if (index === parentIndex) {
-      newTotal += shiftIndex * shift;
+      total += shiftIndex * shift;
     }
 
-    return newTotal;
+    return total;
   }, 0);
 }
 
@@ -129,31 +131,25 @@ export function parseItem(
 
   let newItem = clone(item) as any;
 
-  let instanceIndex = 0;
-
-  if (parents.length > 0) {
-    instanceIndex = parents[parents.length - 1].index;
-  }
+  const parentIndex = parents[parents.length - 2]?.index || 0;
+  const instanceIndex = parents[parents.length - 1]?.index || 0;
 
   if (newItem.id !== undefined) {
-    let parentIndex = 0;
-
-    if (newItem.id.match(/%parent%/)) {
-      if (parents.length > 0) {
-        parentIndex = parents[parents.length - 2].index;
-      }
-    }
-
     newItem.id = newItem.id
       .replace("%parent%", parentIndex)
       .replace("%index%", instanceIndex);
   }
 
+  if (newItem.dataViewAltKey !== undefined) {
+    newItem.dataViewAltKey = newItem.dataViewAltKey
+      .replace("%parent%", parentIndex)
+      .replace("%index%", instanceIndex);
+  }
+
   if (newItem.button?.action !== undefined) {
-    newItem.button.action = newItem.button.action.replace(
-      "%index%",
-      instanceIndex,
-    );
+    newItem.button.action = newItem.button.action
+      .replace("%parent%", parentIndex)
+      .replace("%index%", instanceIndex);
   }
 
   if ("uncontrolled" in item && item.id === undefined) {

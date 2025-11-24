@@ -1,6 +1,6 @@
 import type { GameJson } from "$lib/types";
 
-import { getItemLength } from "./utils";
+import { getItemLength } from "./utils/compression";
 
 const template: GameJson = {
   validator: {

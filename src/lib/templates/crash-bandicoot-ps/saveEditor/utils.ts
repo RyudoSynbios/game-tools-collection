@@ -44,7 +44,7 @@ export function overrideParseContainerItemsShifts(
   index: number,
 ): [boolean, number[] | undefined] {
   if (item.id === "slots") {
-    const slot = getSlotShifts("memory", shifts, index);
+    const slotShifts = getSlotShifts("memory", shifts, index);
 
     if (isPsvHeader() && index === 0) {
       const shift = getShift(shifts);
@@ -54,7 +54,7 @@ export function overrideParseContainerItemsShifts(
       return [true, [...shifts, (iconFrames - 1) * 0x80]];
     }
 
-    const shift = getShift(slot[1] as number[]);
+    const shift = getShift(slotShifts[1] as number[]);
 
     if (shift !== -1) {
       const iconFrames = getInt(shift + 0x2, "lower4");
@@ -62,7 +62,7 @@ export function overrideParseContainerItemsShifts(
       return [true, [shift, (iconFrames - 1) * 0x80]];
     }
 
-    return slot;
+    return slotShifts;
   }
 
   return [false, undefined];
