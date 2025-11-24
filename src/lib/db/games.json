@@ -195,6 +195,17 @@
     }
   },
   {
+    "id": "chrono-cross-ps",
+    "name": "Chrono Cross",
+    "consoleId": "playstation",
+    "tools": {
+      "saveEditor": {
+        "createdAt": "2025-11-24",
+        "regions": ["🇺🇸", "🇯🇵"]
+      }
+    }
+  },
+  {
     "id": "chrono-trigger-snes",
     "name": "Chrono Trigger",
     "consoleId": "super-nintendo",
