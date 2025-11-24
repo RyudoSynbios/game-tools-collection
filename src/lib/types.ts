@@ -183,6 +183,10 @@ export interface ItemBitflags {
   jsonPath?: string;
   type: "bitflags";
   jsonType?: "boolean" | "boolean[]" | "number" | "number[]";
+  overrideShift?: {
+    parent: number;
+    shift: number;
+  };
   flags: ItemBitflag[];
   hint?: string;
   maxWidth?: boolean;

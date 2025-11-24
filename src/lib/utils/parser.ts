@@ -183,7 +183,7 @@ export function parseItem(
   }
 
   if (newItem.type === "bitflags") {
-    return parseBitflags(newItem, shifts);
+    return parseBitflags(newItem, shifts, instanceIndex);
   } else if (newItem.type === "checksum") {
     if (newItem.control !== undefined) {
       newItem.control.offsetStart += getShift(shifts);
@@ -225,9 +225,20 @@ export function parseItem(
 export function parseBitflags(
   item: ItemBitflags,
   shifts: number[],
+  instanceIndex: number,
 ): ItemBitflags {
+  let offsetShift = 0x0;
+
+  if (item.overrideShift) {
+    const { parent, shift } = item.overrideShift;
+
+    offsetShift += getOverridedShift(shifts, parent, shift, instanceIndex);
+  } else {
+    offsetShift += getShift(shifts);
+  }
+
   const flags = item.flags.reduce((flags: ItemBitflag[], flag) => {
-    flag.offset += getShift(shifts);
+    flag.offset += offsetShift;
 
     flags.push(flag);
 
