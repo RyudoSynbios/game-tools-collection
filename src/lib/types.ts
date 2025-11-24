@@ -116,6 +116,7 @@ export interface Console {
 export interface DataViewAltMetas {
   isDirty?: boolean;
   patch?: { [offset: number]: bigint | number };
+  [key: string]: any;
 }
 
 export interface Game {
