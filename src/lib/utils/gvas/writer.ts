@@ -43,7 +43,7 @@ export default class Writer {
       return;
     }
 
-    this.buffer = new Uint8Array(0x800000);
+    this.buffer = new Uint8Array(0x1000000);
 
     const header = new Uint8Array(this.dataView.buffer.slice(0x0, this.offset));
 

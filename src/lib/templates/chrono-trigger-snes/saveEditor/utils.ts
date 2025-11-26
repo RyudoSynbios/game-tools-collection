@@ -38,7 +38,7 @@ export function overrideParseItem(item: Item): Item {
     const calculate = getInt(itemInt.offset, dataType);
     const base = getInt(itemInt.offset + shift, dataType);
 
-    itemInt.min = Math.max(1, calculate - base);
+    itemInt.min = Math.max(0, calculate - base);
 
     return itemInt;
   } else if ("id" in item && item.id?.match(/tech-/)) {
