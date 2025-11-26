@@ -407,7 +407,7 @@ export function afterSetInt(item: Item, flag: ItemBitflag): void {
     const type = itemList.find((item) => item.index === itemIndex)?.type;
 
     setInt(itemInt.offset + 0x4, "uint32", quantity);
-    setInt(itemInt.offset - 0x6, "uint8", type || 0xff);
+    setInt(itemInt.offset - 0x6, "uint8", type !== undefined ? type : 0xff);
 
     updateResources("accessories");
     updateResources("armors");
