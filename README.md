@@ -26,6 +26,7 @@ Link to the website: [https://game-tools-collection.com](https://game-tools-coll
 | Chrono Cross                                 | PS       | Save                    | USA / JAP                                     |
 | Chrono Trigger                               | SNES     | Save                    | USA / JAP                                     |
 | Crash Bandicoot                              | PS       | Save                    | EUR / USA / JAP / AUS                         |
+| Crisis Core -Final Fantasy VII- Reunion      | WIN      | Save                    | WORLD                                         |
 | CTR: Crash Team Racing                       | PS       | Save                    | EUR / USA / JAP                               |
 | Dead or Alive 2                              | PS2      | Save                    | EUR                                           |
 | Diablo II: Lord of Destruction               | WIN      | Save                    | WORLD                                         |

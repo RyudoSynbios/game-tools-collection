@@ -228,6 +228,17 @@
     }
   },
   {
+    "id": "crisis-core-final-fantasy-vii-reunion-windows",
+    "name": "Crisis Core -Final Fantasy VII- Reunion",
+    "consoleId": "windows",
+    "tools": {
+      "saveEditor": {
+        "createdAt": "2025-11-29",
+        "regions": ["🏳️"]
+      }
+    }
+  },
+  {
     "id": "ctr-crash-team-racing-ps",
     "name": "CTR: Crash Team Racing",
     "consoleId": "playstation",
