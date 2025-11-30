@@ -46,7 +46,23 @@ export function overrideParseItem(item: Item): Item | ItemChecksum | ItemTab {
 }
 
 export function overrideItem(item: Item): Item {
-  if ("id" in item && item.id?.match(/heldItem-|bmItem-/)) {
+  if ("id" in item && item.id === "chaoColor") {
+    const itemInt = item as ItemInt;
+
+    const int = getInt(itemInt.offset + 0x2, "uint8");
+
+    itemInt.disabled = int !== 0x0;
+
+    return itemInt;
+  } else if ("id" in item && item.id === "chaoTexture") {
+    const itemInt = item as ItemInt;
+
+    const int = getInt(itemInt.offset - 0x2, "uint8");
+
+    itemInt.disabled = int !== 0x0;
+
+    return itemInt;
+  } else if ("id" in item && item.id?.match(/heldItem-|bmItem-/)) {
     const itemInt = item as ItemInt;
 
     const [index] = item.id.splitInt();
@@ -157,6 +173,16 @@ export function afterSetInt(item: Item): void {
     updateEmblems();
   } else if ("id" in item && item.id?.match(/chaoName-/)) {
     updateResources("chaoNames");
+  } else if ("id" in item && item.id === "chaoColor") {
+    const itemInt = item as ItemInt;
+
+    const int = getInt(itemInt.offset, "uint8");
+
+    if (int === 0x0) {
+      setInt(itemInt.offset + 0x1, "uint8", 0x0);
+    } else {
+      setInt(itemInt.offset + 0x1, "uint8", 0x1);
+    }
   } else if ("id" in item && item.id?.match(/chaoKarateCount-/)) {
     const itemInt = item as ItemInt;
 
