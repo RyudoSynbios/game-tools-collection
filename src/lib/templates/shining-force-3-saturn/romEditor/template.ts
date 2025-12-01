@@ -1832,7 +1832,7 @@ const template: GameJson = {
                               type: "variable",
                               dataType: "string",
                               letterDataType: "uint8",
-                              size: "lg",
+                              size: "xl",
                               disabled: true,
                             },
                             {

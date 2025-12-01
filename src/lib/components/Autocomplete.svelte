@@ -10,7 +10,7 @@
   export let options: { key: string; value: string }[];
   export let groups: ResourceGroups = [];
   export let labels: ResourceLabels = {};
-  export let size: "md" | "lg" = "md";
+  export let size: "md" | "lg" | "xl" = "md";
   export let hint = "";
   export let debug = false;
   export let disabled = false;
@@ -312,6 +312,7 @@
   <div
     class="gtc-autocomplete-input"
     class:gtc-autocomplete-input-lg={size === "lg"}
+    class:gtc-autocomplete-input-xl={size === "xl"}
     on:click={handleDropdownOpen}
   >
     <input
@@ -410,6 +411,10 @@
 
       &.gtc-autocomplete-input-lg input {
         width: 244px;
+      }
+
+      &.gtc-autocomplete-input-xl input {
+        width: 376px;
       }
     }
 

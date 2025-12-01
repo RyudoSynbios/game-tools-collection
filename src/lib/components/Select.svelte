@@ -5,7 +5,7 @@
   export let type: "number" | "string" = "string";
   export let value: bigint | number | string;
   export let options: { key: string; value: string }[];
-  export let size: "md" | "lg" = "md";
+  export let size: "md" | "lg" | "xl" = "md";
   export let hint = "";
   export let debug = false;
   export let disabled = false;
@@ -37,6 +37,7 @@
   class:gtc-select-debug={debug}
   class:gtc-select-disabled={disabled}
   class:gtc-select-lg={size === "lg"}
+  class:gtc-select-xl={size === "xl"}
 >
   {#if label}
     <div class="gtc-select-label">
@@ -78,6 +79,10 @@
 
     &.gtc-select-lg select {
       width: 260px;
+    }
+
+    &.gtc-select-xl select {
+      width: 392px;
     }
 
     & .gtc-select-label {

@@ -306,7 +306,7 @@ export interface ItemInt {
     parent: number;
     shift: number;
   };
-  size?: "md" | "lg";
+  size?: "md" | "lg" | "xl";
   autocomplete?: boolean;
   button?: {
     label: string;
@@ -367,7 +367,8 @@ export interface ItemString {
     parent: number;
     shift: number;
   };
-  size?: "md" | "lg";
+  size?: "md" | "lg" | "xl";
+  hint?: string;
   disabled?: boolean;
   hidden?: boolean;
   test?: boolean;

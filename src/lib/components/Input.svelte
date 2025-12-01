@@ -13,7 +13,7 @@
   export let leadingZeros = 0;
   export let hex = false;
   export let value: bigint | number | string;
-  export let size: "md" | "lg" = "md";
+  export let size: "md" | "lg" | "xl" = "md";
   export let hint = "";
   export let prefix = "";
   export let suffix = "";
@@ -92,6 +92,7 @@
   class:gtc-input-debug={debug}
   class:gtc-input-disabled={disabled}
   class:gtc-input-lg={size === "lg"}
+  class:gtc-input-xl={size === "xl"}
   class:gtc-input-prefix={prefix}
   class:gtc-input-suffix={suffix}
 >
@@ -151,6 +152,10 @@
 
     &.gtc-input-lg input {
       width: 260px;
+    }
+
+    &.gtc-input-xl input {
+      width: 392px;
     }
 
     &.gtc-input-prefix input,
