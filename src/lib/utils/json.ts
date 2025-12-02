@@ -242,7 +242,7 @@ export function getJsonValue<T>(
 
 export function setJsonValue<T>(
   pathname: string,
-  value: T | undefined = undefined,
+  value?: T,
   obj: { [key: string]: any } = {},
 ): void {
   const $dataJson = get(dataJson);

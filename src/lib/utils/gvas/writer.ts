@@ -61,7 +61,7 @@ export default class Writer {
   private setInt(
     int: number,
     dataType: "int8" | "uint8" | "int32" | "uint32",
-    offset: number | undefined = undefined,
+    offset?: number,
   ): void {
     if (dataType === "int8" || dataType === "uint8") {
       this.buffer.set([int], this.offset);

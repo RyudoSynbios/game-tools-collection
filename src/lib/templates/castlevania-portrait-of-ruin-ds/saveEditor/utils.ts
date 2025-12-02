@@ -383,7 +383,7 @@ export function onReset(): void {
 function hash(
   offset: number,
   length: number,
-  buffer: Uint32Array | undefined = undefined,
+  buffer?: Uint32Array,
 ): void {
   const constants = [0x5a827999, 0x6ed9eba1, 0x8f1bbcdc, 0xca62c1d6];
   const mask = 0x00ff00ff;

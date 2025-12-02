@@ -371,7 +371,7 @@ export function overrideSetInt(
     dataJson.set($dataJson);
 
     return true;
-  } else if ("id" in item && item.id?.match("formation")) {
+  } else if ("id" in item && item.id === "formation") {
     const itemInt = item as ItemInt;
 
     const int = parseInt(value);

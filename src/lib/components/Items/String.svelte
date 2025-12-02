@@ -113,6 +113,7 @@
       maxlength={item.length / dataTypeToLength(item.letterDataType)}
       {value}
       size={item.size}
+      hint={item.hint}
       debug={item.hidden}
       disabled={item.disabled}
       test={item.test}

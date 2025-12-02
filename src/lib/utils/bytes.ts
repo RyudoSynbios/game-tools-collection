@@ -1038,10 +1038,7 @@ export function float32ToInt(float: number): number {
   return tmp.getUint32(0x0);
 }
 
-export function stringToArray(
-  string: string,
-  endCode: number | undefined = undefined,
-): number[] {
+export function stringToArray(string: string, endCode?: number): number[] {
   const array = [];
 
   for (let i = 0; i < string.length; i += 1) {

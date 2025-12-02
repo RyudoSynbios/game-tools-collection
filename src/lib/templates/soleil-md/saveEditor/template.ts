@@ -404,7 +404,7 @@ const template: GameJson = {
     },
     letters: [...Array(7).keys()].map((index) => {
       if (index === 1 || index === 5) {
-        // Korea
+        // Japan / Korea
         return {
           0x0: " ",
           0x8: "?",

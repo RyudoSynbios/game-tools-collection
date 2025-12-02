@@ -508,7 +508,7 @@ function decodeText(index: number): string {
           } else {
             if ([0xde, 0xdf].includes(int)) {
               text = text.slice(0, -1);
-              text += decodeChar((int << 0x8) + treeIndex, "shiftJis");
+              text += decodeChar((int << 0x8) | treeIndex, "shiftJis");
             } else {
               text += decodeChar(int, "shiftJis");
             }

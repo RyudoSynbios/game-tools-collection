@@ -785,7 +785,6 @@ export function readTxt(dataView: DataView): string {
 
     if (code8 >= 0x81) {
       text += decodeChar(code16, "windows31J");
-
       i += 0x1;
     } else {
       text += decodeChar(code8, "windows31J");

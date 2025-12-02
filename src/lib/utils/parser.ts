@@ -527,10 +527,7 @@ export function checkMissingFields(item: Item): void {
   }
 }
 
-export function getItem(
-  id: string,
-  items: Item[] | undefined = undefined,
-): Item | undefined {
+export function getItem(id: string, items?: Item[]): Item | undefined {
   const $gameJson = get(gameJson);
   const $gameTemplate = get(gameTemplate);
 
