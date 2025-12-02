@@ -414,15 +414,31 @@ export const shipItemEffects: Resource = {
   0xff: "-",
 };
 
-export const mainDolModels = {
+export interface Model {
+  count: number;
+  length: number;
+  shifts: number[];
+  hasDescription: boolean;
+  isInventory: boolean;
+  europe: {
+    length: number;
+    namePointer: number;
+    descriptionPointer: number;
+    operations: { start: number; end: number; offset: number }[];
+  };
+}
+
+export const mainDolModels: { [key: string]: Model } = {
   weaponColors: {
     count: 6,
     length: 0xc,
     shifts: [0x159c8, 0x17b48, 0x17598],
+    hasDescription: false,
     isInventory: false,
     europe: {
       length: 0xc,
-      textPointer: 0x0,
+      namePointer: 0x0,
+      descriptionPointer: 0x0,
       operations: [{ start: 0x0, end: 0xc, offset: 0x0 }],
     },
   },
@@ -430,10 +446,12 @@ export const mainDolModels = {
     count: 6,
     length: 0x98,
     shifts: [0x2f2c0],
+    hasDescription: false,
     isInventory: false,
     europe: {
       length: 0x98,
-      textPointer: 0x0,
+      namePointer: 0x0,
+      descriptionPointer: 0x0,
       operations: [{ start: 0x0, end: 0x98, offset: 0x0 }],
     },
   },
@@ -441,10 +459,12 @@ export const mainDolModels = {
     count: 62,
     length: 0x30,
     shifts: [],
+    hasDescription: true,
     isInventory: false,
     europe: {
       length: 0x24,
-      textPointer: 0xf60,
+      namePointer: 0xf60,
+      descriptionPointer: 0xcf0,
       operations: [
         { start: 0x4, end: 0x5, offset: 0x11 },
         { start: 0x6, end: 0x24, offset: 0x12 },
@@ -455,10 +475,12 @@ export const mainDolModels = {
     count: 80,
     length: 0x20,
     shifts: [],
+    hasDescription: true,
     isInventory: true,
     europe: {
       length: 0x14,
-      textPointer: 0xf90,
+      namePointer: 0xf90,
+      descriptionPointer: 0xd20,
       operations: [
         { start: 0x4, end: 0x9, offset: 0x11 },
         { start: 0xa, end: 0x14, offset: 0x16 },
@@ -469,10 +491,12 @@ export const mainDolModels = {
     count: 80,
     length: 0x28,
     shifts: [],
+    hasDescription: true,
     isInventory: true,
     europe: {
       length: 0x1c,
-      textPointer: 0xfc0,
+      namePointer: 0xfc0,
+      descriptionPointer: 0xd50,
       operations: [
         { start: 0x4, end: 0x8, offset: 0x11 },
         { start: 0x8, end: 0x1a, offset: 0x16 },
@@ -483,10 +507,12 @@ export const mainDolModels = {
     count: 80,
     length: 0x28,
     shifts: [-0x2f9c0],
+    hasDescription: true,
     isInventory: true,
     europe: {
       length: 0x1c,
-      textPointer: 0xff0,
+      namePointer: 0xff0,
+      descriptionPointer: 0xd80,
       operations: [
         { start: 0x4, end: 0x8, offset: 0x11 },
         { start: 0x8, end: 0x1a, offset: 0x16 },
@@ -497,10 +523,12 @@ export const mainDolModels = {
     count: 21,
     length: 0x14,
     shifts: [0x30280],
+    hasDescription: false,
     isInventory: false,
     europe: {
       length: 0x14,
-      textPointer: 0x0,
+      namePointer: 0x0,
+      descriptionPointer: 0x0,
       operations: [{ start: 0x0, end: 0x14, offset: 0x0 }],
     },
   },
@@ -508,10 +536,12 @@ export const mainDolModels = {
     count: 80,
     length: 0x24,
     shifts: [],
+    hasDescription: true,
     isInventory: true,
     europe: {
       length: 0x18,
-      textPointer: 0x1020,
+      namePointer: 0x1020,
+      descriptionPointer: 0xdb0,
       operations: [
         { start: 0x4, end: 0xb, offset: 0x11 },
         { start: 0xc, end: 0x18, offset: 0x18 },
@@ -522,10 +552,12 @@ export const mainDolModels = {
     count: 80,
     length: 0x16,
     shifts: [],
+    hasDescription: true,
     isInventory: true,
     europe: {
       length: 0xc,
-      textPointer: 0x1050,
+      namePointer: 0x1050,
+      descriptionPointer: 0xde0,
       operations: [
         { start: 0x4, end: 0x7, offset: 0x11 },
         { start: 0x8, end: 0xa, offset: 0x14 },
@@ -536,10 +568,12 @@ export const mainDolModels = {
     count: 24,
     length: 0x22,
     shifts: [-0x303c8],
+    hasDescription: false,
     isInventory: false,
     europe: {
       length: 0x10,
-      textPointer: 0x1080,
+      namePointer: 0x1080,
+      descriptionPointer: 0x0,
       operations: [
         { start: 0x4, end: 0x5, offset: 0x19 },
         { start: 0x6, end: 0xe, offset: 0x1a },
@@ -550,10 +584,12 @@ export const mainDolModels = {
     count: 6,
     length: 0xc6,
     shifts: [0xcb70, 0xc864, 0xd054],
+    hasDescription: false,
     isInventory: false,
     europe: {
       length: 0xc6,
-      textPointer: 0,
+      namePointer: 0x0,
+      descriptionPointer: 0x0,
       operations: [{ start: 0x0, end: 0xc6, offset: 0x0 }],
     },
   },
@@ -561,10 +597,12 @@ export const mainDolModels = {
     count: 119,
     length: 0x8,
     shifts: [0x25560, 0xd58, 0xcb0],
+    hasDescription: false,
     isInventory: false,
     europe: {
       length: 0x8,
-      textPointer: 0,
+      namePointer: 0x0,
+      descriptionPointer: 0x0,
       operations: [{ start: 0x0, end: 0x8, offset: 0x0 }],
     },
   },
@@ -572,10 +610,12 @@ export const mainDolModels = {
     count: 5,
     length: 0x64,
     shifts: [],
+    hasDescription: false,
     isInventory: false,
     europe: {
       length: 0x54,
-      textPointer: 0x10e0,
+      namePointer: 0x10e0,
+      descriptionPointer: 0x0,
       operations: [{ start: 0x4, end: 0x54, offset: 0x14 }],
     },
   },
@@ -583,10 +623,12 @@ export const mainDolModels = {
     count: 45,
     length: 0x78,
     shifts: [],
+    hasDescription: false,
     isInventory: false,
     europe: {
       length: 0x68,
-      textPointer: 0x1110,
+      namePointer: 0x1110,
+      descriptionPointer: 0x0,
       operations: [{ start: 0x4, end: 0x68, offset: 0x14 }],
     },
   },
@@ -594,10 +636,12 @@ export const mainDolModels = {
     count: 40,
     length: 0x24,
     shifts: [],
+    hasDescription: true,
     isInventory: true,
     europe: {
       length: 0x18,
-      textPointer: 0x1140,
+      namePointer: 0x1140,
+      descriptionPointer: 0xe10,
       operations: [
         { start: 0x4, end: 0x7, offset: 0x11 },
         { start: 0x8, end: 0x18, offset: 0x14 },
@@ -608,10 +652,12 @@ export const mainDolModels = {
     count: 40,
     length: 0x28,
     shifts: [],
+    hasDescription: true,
     isInventory: true,
     europe: {
       length: 0x1c,
-      textPointer: 0x1170,
+      namePointer: 0x1170,
+      descriptionPointer: 0xe40,
       operations: [
         { start: 0x4, end: 0x5, offset: 0x11 },
         { start: 0x6, end: 0x1c, offset: 0x12 },
@@ -622,10 +668,12 @@ export const mainDolModels = {
     count: 30,
     length: 0x24,
     shifts: [],
+    hasDescription: true,
     isInventory: true,
     europe: {
       length: 0x18,
-      textPointer: 0x11a0,
+      namePointer: 0x11a0,
+      descriptionPointer: 0xe70,
       operations: [
         { start: 0x4, end: 0x8, offset: 0x11 },
         { start: 0x8, end: 0xe, offset: 0x16 },
@@ -637,10 +685,12 @@ export const mainDolModels = {
     count: 22,
     length: 0x24,
     shifts: [-0x10c78, 0x1323c, 0x13264],
+    hasDescription: true,
     isInventory: false,
     europe: {
       length: 0x18,
-      textPointer: 0x11d0,
+      namePointer: 0x11d0,
+      descriptionPointer: 0xed0,
       operations: [
         { start: 0x4, end: 0x5, offset: 0x11 },
         { start: 0x6, end: 0x18, offset: 0x12 },
@@ -651,10 +701,12 @@ export const mainDolModels = {
     count: 43,
     length: 0x68,
     shifts: [],
+    hasDescription: false,
     isInventory: false,
     europe: {
       length: 0x68,
-      textPointer: 0x0,
+      namePointer: 0x0,
+      descriptionPointer: 0x0,
       operations: [{ start: 0x0, end: 0x68, offset: 0x0 }],
     },
   },

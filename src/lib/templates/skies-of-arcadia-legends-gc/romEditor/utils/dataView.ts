@@ -17,13 +17,13 @@ import {
 } from "$lib/utils/common/gamecube";
 import { getRegionArray, mergeUint8Arrays } from "$lib/utils/format";
 
-import { offsetToMainDolStart } from "../template";
+import { offsetToDescriptionPointers, offsetToMainDolStart } from "../template";
 import {
   getCompressedData,
   getDecompressedData,
   getEnemyGroupDetails,
 } from "../utils";
-import { mainDolModels } from "./resource";
+import { mainDolModels, Model } from "./resource";
 
 function getEnemyGroupFiles(): File[] {
   return getFiles().filter(
@@ -65,14 +65,14 @@ export function initDataViewAlt(): void {
     const data = new Uint8Array(model.count * model.length);
 
     if ($gameRegion === 0) {
-      let textOffset = model.europe.textPointer
-        ? getInt(model.europe.textPointer, "uint32", {}, localeDataView)
+      let textOffset = model.europe.namePointer
+        ? getInt(model.europe.namePointer, "uint32", {}, localeDataView)
         : 0x0;
 
       for (let i = 0; i < model.count; i += 1) {
         const offset = partyOffset + i * model.europe.length;
 
-        if (model.europe.textPointer) {
+        if (model.europe.namePointer) {
           const part = [];
 
           for (let j = 0x0; j < 0x100; j += 0x1) {
@@ -110,13 +110,15 @@ export function initDataViewAlt(): void {
 
     $dataViewAlt[name] = new DataView(data.buffer);
 
+    if (model.hasDescription) {
+      generateDescriptions(name, model, localeDataView);
+    }
+
     const shift = getRegionArray(model.shifts);
 
-    if ($gameRegion === 0) {
-      partyOffset += shift || model.count * model.europe.length;
-    } else {
-      partyOffset += shift || model.count * model.length;
-    }
+    const length = $gameRegion === 0 ? model.europe.length : model.length;
+
+    partyOffset += shift || model.count * length;
   });
 
   // Enemies
@@ -240,6 +242,10 @@ export function exportDataViewAlt(): ArrayBufferLike {
 
         data.set(new Uint8Array(part), partyOffset + i * model.length);
       }
+    }
+
+    if (model.hasDescription) {
+      updateDescriptions(name, model, data);
     }
 
     const shift = getRegionArray(model.shifts);
@@ -376,4 +382,133 @@ export function exportDataViewAlt(): ArrayBufferLike {
   rebuildGcm();
 
   return get(dataView).buffer;
+}
+
+function generateDescriptions(
+  name: string,
+  model: Model,
+  localeDataView?: DataView,
+): void {
+  const $dataViewAlt = get(dataViewAlt);
+  const $gameRegion = get(gameRegion);
+
+  const descriptions = new Uint8Array(model.count * 0x65);
+
+  let descriptionOffset = 0x0;
+
+  if ($gameRegion === 0) {
+    descriptionOffset = getInt(model.europe.descriptionPointer, "uint32", {}, localeDataView); // prettier-ignore
+  } else {
+    descriptionOffset = getRegionArray(offsetToDescriptionPointers);
+
+    Object.entries(mainDolModels).some(([key, model]) => {
+      if (key === name) {
+        return true;
+      } else if (model.hasDescription) {
+        descriptionOffset += model.count * 0x4;
+      }
+    });
+  }
+
+  for (let i = 0; i < model.count; i += 1) {
+    let offset = 0x0;
+
+    if ($gameRegion === 0) {
+      offset = getInt(descriptionOffset, "uint32", {}, localeDataView);
+    } else {
+      offset = getInt(descriptionOffset, "uint32", { bigEndian: true }, $dataViewAlt["main.dol"]) - 0x80003000; // prettier-ignore
+    }
+
+    let length = 0x0;
+
+    while (length < 0x64) {
+      let code = 0x0;
+
+      if ($gameRegion === 0) {
+        code = getInt(descriptionOffset + length, "uint8", {}, localeDataView);
+      } else {
+        code = getInt(offset, "uint8", {}, $dataViewAlt["main.dol"]);
+      }
+
+      if (code === 0x0) {
+        break;
+      } else if (code === 0xa) {
+        descriptions[i * 0x65 + length] = 0x5c;
+        descriptions[i * 0x65 + length + 0x1] = 0x6e;
+        length += 0x2;
+      } else {
+        descriptions[i * 0x65 + length] = code;
+        length += 0x1;
+      }
+
+      offset += 0x1;
+    }
+
+    descriptions[i * 0x65 + 0x64] = length;
+
+    if ($gameRegion === 0) {
+      descriptionOffset += length + 0x1;
+    } else {
+      descriptionOffset += 0x4;
+    }
+  }
+
+  $dataViewAlt[`${name}Descriptions`] = new DataView(descriptions.buffer);
+}
+
+function updateDescriptions(
+  name: string,
+  model: Model,
+  data: Uint8Array,
+): void {
+  const $dataViewAlt = get(dataViewAlt);
+  const $gameRegion = get(gameRegion);
+
+  if ($gameRegion === 0) {
+    return;
+  }
+
+  let descriptionOffset = getRegionArray(offsetToDescriptionPointers);
+
+  Object.entries(mainDolModels).some(([key, model]) => {
+    if (key === name) {
+      return true;
+    } else if (model.hasDescription) {
+      descriptionOffset += model.count * 0x4;
+    }
+  });
+
+  // prettier-ignore
+  for (let i = 0; i < model.count; i += 1) {
+    let offset = getInt(descriptionOffset, "uint32", { bigEndian: true }, $dataViewAlt["main.dol"]) - 0x80003000;
+
+    let length = 0x0;
+
+    while (length < 0x64) {
+      let code8 = getInt(i * 0x65 + length, "uint8", {}, $dataViewAlt[`${name}Descriptions`]);
+      let code16 = getInt(i * 0x65 + length, "uint16", { bigEndian: true }, $dataViewAlt[`${name}Descriptions`]);
+
+      if (code8 === 0x0) {
+        break;
+      } else if (code16 === 0x5c6e) {
+        code8 = 0xa;
+        length += 0x1;
+      }
+
+      data[offset] = code8;
+
+      length += 0x1;
+      offset += 0x1;
+    }
+
+    const maxLength = getInt(i * 0x65 + 0x64, "uint8", {}, $dataViewAlt[`${name}Descriptions`]);
+
+    while (length < maxLength) {
+      data[offset] = 0x20;
+      length += 0x1;
+      offset += 0x1;
+    }
+
+    descriptionOffset += 0x4;
+  }
 }

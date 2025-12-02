@@ -31,15 +31,23 @@ export function beforeItemsParsing(): void {
 }
 
 export function overrideParseItem(item: Item): Item {
+  const $dataViewAlt = get(dataViewAlt);
   const $gameRegion = get(gameRegion);
 
-  if ("id" in item && item.id?.match(/-name-/)) {
+  if ("id" in item && item.id?.match(/-(name|description)-/)) {
     const itemString = item as ItemString;
+
+    const [index] = item.id.splitInt();
 
     if ($gameRegion === 0 && !item.id.match(/party-name-/)) {
       itemString.disabled = true;
     } else if ($gameRegion === 2) {
       itemString.encoding = "windows31J";
+    }
+
+    // prettier-ignore
+    if (item.id.match(/description/)) {
+      itemString.length = getInt(itemString.offset + index * 0x65 + 0x64, "uint8", {}, $dataViewAlt[itemString.dataViewAltKey!]);
     }
 
     return itemString;
