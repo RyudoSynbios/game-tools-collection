@@ -3,7 +3,7 @@ import { get } from "svelte/store";
 import { gameRegion } from "$lib/stores";
 import { getInt, getString } from "$lib/utils/bytes";
 import debug from "$lib/utils/debug";
-import { decodeChar } from "$lib/utils/encoding";
+import { decodeChar, isCharUint16 } from "$lib/utils/encoding";
 import { capitalize } from "$lib/utils/format";
 import { getResource } from "$lib/utils/parser";
 
@@ -3970,7 +3970,7 @@ export default class Script {
         const code8 = getInt(offset, "uint8", {}, this.dataView);
         const code16 = getInt(offset, "uint16", { bigEndian: true }, this.dataView); // prettier-ignore
 
-        if (code8 >= 0x81) {
+        if (isCharUint16(code16, "windows31J")) {
           text += decodeChar(code16, "windows31J");
           offset += 0x1;
         } else if (code8 === 0x0) {

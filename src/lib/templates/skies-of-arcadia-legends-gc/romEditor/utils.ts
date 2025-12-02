@@ -39,8 +39,6 @@ export function overrideParseItem(item: Item): Item {
     if ($gameRegion === 0 && !item.id.match(/party-name-/)) {
       itemString.disabled = true;
     } else if ($gameRegion === 2) {
-      itemString.letterDataType = "uint16";
-      itemString.letterBigEndian = true;
       itemString.encoding = "windows31J";
     }
 
@@ -558,7 +556,6 @@ export function getNames(type: string, relative: string): Resource {
         item.length,
         item.letterDataType,
         {
-          letterBigEndian: item.letterBigEndian,
           encoding: item.encoding,
           endCode: item.endCode,
         },

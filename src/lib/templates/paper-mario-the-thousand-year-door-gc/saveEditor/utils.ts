@@ -32,8 +32,6 @@ export function overrideParseItem(item: Item): Item {
     const itemString = item as ItemString;
 
     itemString.length = 0x10;
-    itemString.letterDataType = "uint16";
-    itemString.letterBigEndian = true;
     itemString.encoding = "windows31J";
     itemString.regex =
       "[ !.?~\u3041-\u308d\u308f\u3092-\u3094\u30a1-\u30ed\u30ef\u30f2-\u30f4\u30fb\u30fc\uff10-\uff19]";

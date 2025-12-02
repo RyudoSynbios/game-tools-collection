@@ -23,8 +23,7 @@ export function overrideParseItem(item: Item): Item {
   ) {
     const itemString = item as ItemString;
 
-    itemString.letterDataType = "uint16";
-    itemString.letterBigEndian = true;
+    itemString.encoding = "windows31J";
 
     return itemString;
   } else if ("id" in item && item.id?.match(/superMove-/)) {
@@ -209,7 +208,7 @@ export function getCharacterNames(): Resource {
       itemString.length,
       itemString.letterDataType,
       {
-        letterBigEndian: itemString.letterBigEndian,
+        encoding: "windows31J",
         endCode: itemString.endCode,
       },
     );

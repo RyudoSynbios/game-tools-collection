@@ -10,8 +10,7 @@ import {
   getSlotShifts,
   isPsvHeader,
 } from "$lib/utils/common/playstation";
-import { getObjKey } from "$lib/utils/format";
-import { getItem, getResource, updateResources } from "$lib/utils/parser";
+import { getItem, updateResources } from "$lib/utils/parser";
 
 import type {
   Item,
@@ -155,16 +154,6 @@ export function overrideItem(item: Item): Item {
 export function overrideGetInt(
   item: Item,
 ): [boolean, number | string | undefined] {
-  const $gameRegion = get(gameRegion);
-
-  if ("id" in item && item.id?.match(/name|Name/) && $gameRegion === 1) {
-    const itemString = item as ItemString;
-
-    const string = getJapanString(itemString.offset, itemString.length);
-
-    return [true, string];
-  }
-
   if ("id" in item && item.id?.match(/birthday-/)) {
     const itemInt = item as ItemInt;
 
@@ -204,49 +193,6 @@ export function overrideGetInt(
 }
 
 export function overrideSetInt(item: Item, value: string): boolean {
-  const $gameRegion = get(gameRegion);
-
-  if ("id" in item && item.id?.match(/name|Name/) && $gameRegion === 1) {
-    const itemString = item as ItemString;
-
-    const letters = getResource("letters") as Resource;
-
-    let count = 0x0;
-
-    for (let i = 0x0; i < itemString.length * 2; i += 0x1, count += 0x1) {
-      const offset = itemString.offset + i;
-
-      if (value[count] === undefined) {
-        setInt(offset, "uint8", 0xfe);
-
-        return true;
-      }
-
-      const index = Object.values(letters).findIndex(
-        (letter) => letter === value[count],
-      );
-
-      let int = itemString.fallback as number;
-      let letterDataType: "uint8" | "uint16" = "uint8";
-
-      if (index !== -1) {
-        int = parseInt(getObjKey(letters, index));
-
-        if (int > 0xff) {
-          letterDataType = "uint16";
-
-          i += 0x1;
-        }
-      } else {
-        int = itemString.fallback as number;
-      }
-
-      setInt(offset, letterDataType, int, { bigEndian: true });
-    }
-
-    return true;
-  }
-
   if ("id" in item && item.id?.match(/birthday-/)) {
     const itemInt = item as ItemInt;
 
@@ -505,31 +451,6 @@ export function getPropositionNames(slotIndex: number): Resource {
   return names;
 }
 
-function getJapanString(offset: number, length: number): string {
-  const letters = getResource("letters") as Resource;
-
-  let string = "";
-
-  for (let i = 0x0; i < length; i += 0x1) {
-    const code8 = getInt(offset, "uint8");
-    const code16 = getInt(offset, "uint16", { bigEndian: true });
-
-    if (code8 === 0xfe) {
-      break;
-    } else if (code8 >> 0x4 === 0xd) {
-      string += letters[code16];
-      i -= 0x1;
-      offset += 0x1;
-    } else {
-      string += letters[code8];
-    }
-
-    offset += 0x1;
-  }
-
-  return string;
-}
-
 export function getUnitNames(slotIndex: number): Resource {
   const $gameRegion = get(gameRegion);
 
@@ -544,17 +465,13 @@ export function getUnitNames(slotIndex: number): Resource {
   [...Array(20).keys()].forEach((index) => {
     const offset = itemString.offset + index * 0xe0;
 
+    // prettier-ignore
     if (getInt(offset - 0xbd, "uint8") !== 0xff) {
-      let name = "";
-
-      if ($gameRegion === 1) {
-        name = getJapanString(offset, itemString.length);
-      } else {
-        name = getString(offset, itemString.length, itemString.letterDataType, {
-          endCode: itemString.endCode,
-          resource: "letters",
-        });
-      }
+      const name = getString(offset, itemString.length, itemString.letterDataType, {
+        letterIsAdaptive: itemString.letterIsAdaptive,
+        endCode: itemString.endCode,
+        resource: "letters",
+      });
 
       names[index] = name.trim();
 

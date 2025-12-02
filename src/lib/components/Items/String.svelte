@@ -45,6 +45,7 @@
           {
             bigEndian: item.bigEndian,
             letterBigEndian: item.letterBigEndian,
+            letterIsAdaptive: item.letterIsAdaptive,
             encoding: item.encoding,
             endCode: item.endCode,
             regex: item.regex,
@@ -61,12 +62,19 @@
   }
 
   let label: string;
+  let length: number;
   let value: string;
 
   $: {
     ($dataJson, $dataView);
 
     label = item.name || "";
+
+    if (item.encoding && ["windows31J"].includes(item.encoding)) {
+      length = item.length / 0x2;
+    } else {
+      length = item.length / dataTypeToLength(item.letterDataType);
+    }
 
     if ($isDebug && $debugOptions.showInputOffsets) {
       label = `[0x${item.offset.toHex()}] ${label}`;
@@ -96,6 +104,7 @@
         value = getString(item.offset, item.length, item.letterDataType, {
           bigEndian: item.bigEndian,
           letterBigEndian: item.letterBigEndian,
+          letterIsAdaptive: item.letterIsAdaptive,
           encoding: item.encoding,
           endCode: item.endCode,
           resource: item.resource,
@@ -110,7 +119,7 @@
     <Input
       {label}
       type="text"
-      maxlength={item.length / dataTypeToLength(item.letterDataType)}
+      maxlength={length}
       {value}
       size={item.size}
       hint={item.hint}

@@ -15,13 +15,8 @@ import {
   getSlotShifts,
   isPsvHeader,
 } from "$lib/utils/common/playstation";
-import { clone, getObjKey } from "$lib/utils/format";
-import {
-  getItem,
-  getResource,
-  getShift,
-  updateResources,
-} from "$lib/utils/parser";
+import { clone } from "$lib/utils/format";
+import { getItem, getShift, updateResources } from "$lib/utils/parser";
 
 import type {
   Item,
@@ -217,37 +212,9 @@ export function overrideGetInt(
     }
 
     return [true, progression - 1];
-  } else if (
-    "id" in item &&
-    item.id?.match(/characterName-/) &&
-    $gameRegion === 1
-  ) {
-    const itemString = item as ItemString;
-
-    const [slotIndex] = item.id.splitInt();
-
-    const name = getCharacterName(slotIndex, itemString.offset);
-
-    return [true, name];
   }
 
   return [false, undefined];
-}
-
-export function overrideSetInt(item: Item, value: string): boolean {
-  const $gameRegion = get(gameRegion);
-
-  if ("id" in item && item.id?.match(/characterName-/) && $gameRegion === 1) {
-    const itemString = item as ItemString;
-
-    const [slotIndex] = item.id.splitInt();
-
-    updateCharacterName(slotIndex, itemString, value);
-
-    return true;
-  }
-
-  return false;
 }
 
 export function afterSetInt(item: Item): void {
@@ -383,37 +350,9 @@ export function generateChecksum(item: ItemChecksum): number {
   return formatChecksum(checksum, item.dataType);
 }
 
-// prettier-ignore
-export function getCharacterName(slotIndex: number, offset: number): string {
+export function getCharacterNames(slotIndex: number): Resource {
   const $dataViewAlt = get(dataViewAlt);
 
-  let name = "";
-
-  for (let i = 0x0; i < 0xc; i += 0x1) {
-    const int = getInt(offset + i, "uint8", {}, $dataViewAlt[`slot${slotIndex}`]);
-
-    if (int === 0x0) {
-      break;
-    }
-
-    if (int === 0xf8) {
-      name += getString(offset + i, 0x1, "uint16", {
-        letterBigEndian: true,
-        resource: "letters",
-      }, $dataViewAlt[`slot${slotIndex}`]);
-
-      i += 0x1;
-    } else {
-      name += getString(offset + i, 0x1, "uint8", {
-        resource: "letters",
-      }, $dataViewAlt[`slot${slotIndex}`]);
-    }
-  }
-
-  return name;
-}
-
-export function getCharacterNames(slotIndex: number): Resource {
   if (typeof slotIndex === "string") {
     return {};
   }
@@ -423,9 +362,16 @@ export function getCharacterNames(slotIndex: number): Resource {
   const itemString = getItem(`slot-${slotIndex}-characterName-0`) as ItemString;
 
   [...Array(44).keys()].forEach((index) => {
-    names[index] = getCharacterName(
-      slotIndex,
+    names[index] = getString(
       itemString.offset + index * 0x10,
+      itemString.length,
+      "uint8",
+      {
+        letterIsAdaptive: itemString.letterIsAdaptive,
+        endCode: itemString.endCode,
+        resource: itemString.resource,
+      },
+      $dataViewAlt[`slot${slotIndex}`],
     );
   });
 
@@ -436,45 +382,6 @@ export function getCharacterNames(slotIndex: number): Resource {
 
 export function onSlotChange(slotIndex: number): void {
   updateCharacterNames(slotIndex);
-}
-
-export function updateCharacterName(
-  slotIndex: number,
-  item: ItemString,
-  value: string,
-): void {
-  const letters = getResource("letters") as Resource;
-
-  let count = 0x0;
-
-  for (let i = 0x0; i < 0xc; i += 0x1, count += 0x1) {
-    const offset = item.offset + i;
-
-    if (value[count] === undefined) {
-      setInt(offset, "uint8", 0x0);
-
-      return;
-    }
-
-    const index = Object.values(letters).findIndex(
-      (letter) => letter === value[count],
-    );
-
-    let int = item.fallback as number;
-    let letterDataType: "uint8" | "uint16" = "uint8";
-
-    if (index !== -1) {
-      int = parseInt(getObjKey(letters, index));
-
-      if (int >> 0x8 === 0xf8) {
-        letterDataType = "uint16";
-
-        i += 0x1;
-      }
-    }
-
-    setInt(offset, letterDataType, int, { bigEndian: true }, `slot${slotIndex}`); // prettier-ignore
-  }
 }
 
 export function updateCharacterNames(slotIndex: number): void {

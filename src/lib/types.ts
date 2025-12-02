@@ -358,6 +358,7 @@ export interface ItemString {
   bigEndian?: boolean;
   letterDataType: "uint8" | "uint16" | "uint24" | "uint32";
   letterBigEndian?: boolean;
+  letterIsAdaptive?: boolean;
   fallback?: number;
   encoding?: StringEncoding;
   endCode?: number;

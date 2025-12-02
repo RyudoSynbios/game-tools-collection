@@ -131,6 +131,25 @@ const shiftJis: { [key: string]: string } = {
   0xdfea: "ぱぴぷぺぽ",
 };
 
+export function isCharBigEndian(encoding?: StringEncoding): boolean {
+  if (encoding === "windows31J") {
+    return true;
+  }
+
+  return false;
+}
+
+export function isCharUint16(code: number, encoding: StringEncoding): boolean {
+  if (
+    (encoding === "shiftJis" && [0xde, 0xdf].includes(code >> 0x8)) ||
+    (encoding === "windows31J" && code >> 0x8 >= 0x80)
+  ) {
+    return true;
+  }
+
+  return false;
+}
+
 export function decodeChar(code: number, encoding: StringEncoding): string {
   let table: { [key: string]: string } = {};
 

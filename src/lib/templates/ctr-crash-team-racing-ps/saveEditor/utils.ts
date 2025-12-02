@@ -1,7 +1,7 @@
 import { get } from "svelte/store";
 
 import { gameRegion } from "$lib/stores";
-import { getInt, getString, setInt } from "$lib/utils/bytes";
+import { getInt, setInt } from "$lib/utils/bytes";
 import { formatChecksum } from "$lib/utils/checksum";
 import {
   customGetRegions,
@@ -10,8 +10,7 @@ import {
   getSlotShifts,
   isPsvHeader,
 } from "$lib/utils/common/playstation";
-import { getObjKey } from "$lib/utils/format";
-import { getItem, getResource } from "$lib/utils/parser";
+import { getItem } from "$lib/utils/parser";
 
 import type {
   Item,
@@ -20,8 +19,6 @@ import type {
   ItemChecksum,
   ItemContainer,
   ItemInt,
-  ItemString,
-  Resource,
 } from "$lib/types";
 
 export function initHeaderShift(dataView: DataView): number {
@@ -60,37 +57,7 @@ export function overrideGetInt(
 ): [boolean, number | string | undefined] {
   const $gameRegion = get(gameRegion);
 
-  if ("id" in item && item.id?.match(/name/) && $gameRegion === 2) {
-    const itemString = item as ItemString;
-
-    let name = "";
-
-    for (let i = 0x0; i < itemString.length * 0x2; i += 0x1) {
-      const int = getInt(itemString.offset + i, "uint8");
-
-      if (int === 0x0) {
-        break;
-      }
-
-      if ([0x1, 0x2].includes(int)) {
-        name += getString(itemString.offset + i, 0x1, "uint16", {
-          letterBigEndian: true,
-          resource: itemString.resource,
-        });
-
-        i += 0x1;
-      } else {
-        name += getString(
-          itemString.offset + i,
-          0x1,
-          itemString.letterDataType,
-          { resource: itemString.resource },
-        );
-      }
-    }
-
-    return [true, name];
-  } else if ("id" in item && item.id?.match(/stats-/)) {
+  if ("id" in item && item.id?.match(/stats-/)) {
     const type = item.id.split("-")[1];
 
     const nameItem = getItem(
@@ -138,45 +105,6 @@ export function overrideGetInt(
   }
 
   return [false, undefined];
-}
-
-export function overrideSetInt(item: Item, value: string): boolean {
-  const $gameRegion = get(gameRegion);
-
-  if ("id" in item && item.id?.match(/name/) && $gameRegion === 2) {
-    const itemString = item as ItemString;
-
-    const letters = getResource("letters") as Resource;
-
-    let count = 0x0;
-
-    for (let i = 0x0; i < itemString.length * 2; i += 0x1, count += 0x1) {
-      const offset = itemString.offset + i;
-
-      const index = Object.values(letters).findIndex(
-        (letter) => letter === value[count],
-      );
-
-      let int = itemString.fallback as number;
-      let letterDataType: "uint8" | "uint16" = "uint8";
-
-      if (index !== -1) {
-        int = parseInt(getObjKey(letters, index));
-
-        if (int > 0xff) {
-          letterDataType = "uint16";
-
-          i += 0x1;
-        }
-      }
-
-      setInt(offset, letterDataType, int, { bigEndian: true });
-    }
-
-    return true;
-  }
-
-  return false;
 }
 
 export function afterSetInt(item: Item, flag: ItemBitflag): void {

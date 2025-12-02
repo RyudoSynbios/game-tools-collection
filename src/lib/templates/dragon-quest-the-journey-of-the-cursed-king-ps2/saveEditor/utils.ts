@@ -55,8 +55,6 @@ export function overrideParseItem(item: Item): Item {
   } else if ("id" in item && item.id?.match(/name/) && $gameRegion === 2) {
     const itemString = item as ItemString;
 
-    itemString.letterDataType = "uint16";
-    itemString.letterBigEndian = true;
     itemString.encoding = "windows31J";
     itemString.regex =
       "[ !.?\u2026\u3041-\u308d\u308f\u3092-\u3094\u30a1-\u30ed\u30ef\u30f2-\u30f4\u30f7\u30fa\u30fc]";
@@ -390,7 +388,6 @@ export function getCharacterNames(slotIndex: number): Resource {
     itemString.length,
     itemString.letterDataType,
     {
-      letterBigEndian: itemString.letterBigEndian,
       encoding: itemString.encoding,
       endCode: itemString.endCode,
     },

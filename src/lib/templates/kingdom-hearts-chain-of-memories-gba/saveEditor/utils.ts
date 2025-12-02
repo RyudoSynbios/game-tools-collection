@@ -110,8 +110,6 @@ export function overrideParseItem(item: Item): Item | ItemTab {
         break;
       case 2:
         itemString.length = 0x10;
-        itemString.letterDataType = "uint16";
-        itemString.letterBigEndian = true;
         itemString.encoding = "windows31J";
         break;
     }

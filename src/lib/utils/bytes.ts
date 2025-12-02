@@ -24,7 +24,12 @@ import type {
   StringEncoding,
 } from "$lib/types";
 
-import { decodeChar, encodeChar } from "./encoding";
+import {
+  decodeChar,
+  encodeChar,
+  isCharBigEndian,
+  isCharUint16,
+} from "./encoding";
 import { getResource } from "./parser";
 
 export function getDataView(dataViewTmp?: DataView): DataView {
@@ -775,6 +780,7 @@ export function setBigInt(
 interface StringOptions {
   bigEndian?: boolean;
   letterBigEndian?: boolean;
+  letterIsAdaptive?: boolean;
   encoding?: StringEncoding;
   endCode?: number;
   regex?: string;
@@ -795,32 +801,42 @@ export function getString(
   let string = "";
 
   for (let i = offset; i < offset + length; i += increment) {
-    const int = getInt(i, letterDataType, { bigEndian: options.letterBigEndian }, $dataView); // prettier-ignore
-    const nextInt = getInt(i + 0x1, "uint8", {}, $dataView);
+    const code = getInt(i, letterDataType, { bigEndian: options.letterBigEndian }, $dataView); // prettier-ignore
 
-    if (options.endCode !== undefined && options.endCode === int) {
+    if (options.endCode !== undefined && options.endCode === code) {
       break;
     }
 
     const resource = getResource(options.resource);
 
     if (resource) {
-      const char = resource[int];
+      let char = resource[code];
+
+      if (options.letterIsAdaptive) {
+        const code16 = getInt(i, "uint16", { bigEndian: true }, $dataView); // prettier-ignore
+
+        if (resource[code16]) {
+          char = resource[code16];
+          i += 0x1;
+          length += 0x1;
+        }
+      }
 
       string += char !== undefined ? char : " ";
-    } else if (int === 0x0) {
+    } else if (code === 0x0) {
       string += " ";
-    } else if (
-      options.encoding === "shiftJis" &&
-      [0xde, 0xdf].includes(nextInt)
-    ) {
-      string += decodeChar((nextInt << 0x8) + int, "shiftJis");
-      i += 0x1;
-      length += 0x1;
     } else if (options.encoding) {
-      string += decodeChar(int, options.encoding);
+      const code16 = getInt(i, "uint16", { bigEndian: isCharBigEndian(options.encoding) }, $dataView); // prettier-ignore
+
+      if (isCharUint16(code16, options.encoding)) {
+        string += decodeChar(code16, options.encoding);
+        i += 0x1;
+        length += 0x1;
+      } else {
+        string += decodeChar(code, options.encoding);
+      }
     } else {
-      string += String.fromCharCode(int);
+      string += String.fromCharCode(code);
     }
   }
 
@@ -862,7 +878,7 @@ export function setString(
 
     const resource = getResource(options.resource);
 
-    let int = fallback;
+    let code = fallback;
 
     if (char !== undefined) {
       const charCase = char === char.toLowerCase() ? "lower" : "upper";
@@ -885,34 +901,41 @@ export function setString(
           const index = characters.findIndex((character) => character === char);
 
           if (index !== -1) {
-            int = parseInt(getObjKey(resource, index));
+            code = parseInt(getObjKey(resource, index));
           }
         } else if (!options.regex || char.match(new RegExp(options.regex))) {
           if (options.encoding) {
-            int = encodeChar(char, options.encoding);
+            code = encodeChar(char, options.encoding);
           } else {
-            int = char.charCodeAt(0);
+            code = char.charCodeAt(0);
           }
         }
 
-        if (int !== fallback) {
+        if (code !== fallback) {
           return true;
         }
       });
     }
 
     // prettier-ignore
-    if (options.endCode !== undefined && options.endCode === int) {
+    if (options.endCode !== undefined && options.endCode === code) {
       skip += 0x1;
-    } else if (options.encoding === "shiftJis" && int > 0xff) {
-      setInt(i - skip, 'uint16', int, {
-        bigEndian: options.letterBigEndian,
+    } else if (options.letterIsAdaptive && code > 0xff) {
+      setInt(i - skip, 'uint16', code, {
+        bigEndian: true,
+      }, dataViewAltKey);
+
+      length += 0x1;
+      skip -= 0x1;
+    } else if (options.encoding && isCharUint16(code, options.encoding)) {
+      setInt(i - skip, 'uint16', code, {
+        bigEndian: isCharBigEndian(options.encoding),
       }, dataViewAltKey);
 
       length += 0x1;
       skip -= 0x1;
     } else {
-      setInt(i - skip, letterDataType, int, {
+      setInt(i - skip, letterDataType, code, {
         bigEndian: options.letterBigEndian,
       }, dataViewAltKey);
     }

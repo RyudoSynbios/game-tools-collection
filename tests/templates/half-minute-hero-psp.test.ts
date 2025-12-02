@@ -20,7 +20,7 @@ test.describe(game, () => {
 
   // prettier-ignore
   const tests: Test[] = [
-    ["should not load a standard save with bad region",    "usa.bin", ["r|japan" , "n|PASS"]],
+    ["should not load a standard save with bad region",  "japan.bin", ["r|usa"   , "n|PASS"]],
     ["should load a standard save (Europe)"           , "europe.bin", ["r|europe", "i|PASS"]],
     ["should load a standard save (USA)"              ,    "usa.bin", ["r|usa"   , "i|PASS"]],
     ["should load a standard save (Japan)"            ,  "japan.bin", ["r|japan" , "i|ＰＡＳＳ"]],

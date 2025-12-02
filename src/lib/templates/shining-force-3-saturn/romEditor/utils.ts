@@ -17,7 +17,7 @@ import {
   writeFile,
   type File,
 } from "$lib/utils/common/iso9660";
-import { decodeChar } from "$lib/utils/encoding";
+import { decodeChar, isCharUint16 } from "$lib/utils/encoding";
 import { getRegionArray } from "$lib/utils/format";
 import { getItem, updateResources } from "$lib/utils/parser";
 import { checkValidator } from "$lib/utils/validator";
@@ -783,7 +783,7 @@ export function readTxt(dataView: DataView): string {
     const code8 = getInt(i, "uint8", {}, dataView);
     const code16 = getInt(i, "uint16", { bigEndian: true }, dataView);
 
-    if (code8 >= 0x81) {
+    if (isCharUint16(code16, "windows31J")) {
       text += decodeChar(code16, "windows31J");
       i += 0x1;
     } else {
