@@ -4,8 +4,6 @@ import { gameRegion } from "$lib/stores";
 
 import type {
   Item,
-  ItemBitflag,
-  ItemBitflags,
   ItemChecksum,
   ItemContainer,
   ItemInt,
@@ -28,44 +26,6 @@ export function japanInitShiftAdaptater(shifts: number[]): number[] {
   }
 
   return [...shifts, -0xa];
-}
-
-export function japanParseContainerAdaptater(
-  item: ItemContainer,
-  shifts: number[],
-  index: number,
-): [boolean, number[] | undefined] {
-  const $gameRegion = get(gameRegion);
-
-  if ($gameRegion !== 1) {
-    return [false, undefined];
-  }
-
-  if (item.id === "boxes") {
-    if (index === getCurrentBox()) {
-      return [true, [...shifts, -0xfbf]];
-    } else if (index >= 4) {
-      return [true, [...shifts, 0x2000 + item.length * (index - 0x4)]];
-    }
-  } else if (item.id === "bagItems") {
-    return [true, [...shifts, 0x5, index * item.length]];
-  } else if (item.id === "pokemonTabs-party") {
-    return [true, [...shifts, -0x4d, index * item.length]];
-  } else if (item.id?.match(/pokemonTabs-box/)) {
-    const [, type] = item.id.split("-");
-
-    const boxIndex = parseInt(type.replace("box", ""));
-
-    if (boxIndex !== getCurrentBox()) {
-      return [true, [...shifts, 0x14, index * item.length]];
-    }
-  } else if (item.id === "pokemonSection-daycare") {
-    return [true, [...shifts, -0x4d]];
-  } else if (item.id === "hallOfFameSections") {
-    return [true, [...shifts, 0xa, index * item.length]];
-  }
-
-  return [false, undefined];
 }
 
 export function japanParseItemAdaptater(item: Item): Item {
@@ -208,4 +168,42 @@ export function japanParseItemAdaptater(item: Item): Item {
   }
 
   return item;
+}
+
+export function japanParseContainerAdaptater(
+  item: ItemContainer,
+  shifts: number[],
+  index: number,
+): [boolean, number[] | undefined] {
+  const $gameRegion = get(gameRegion);
+
+  if ($gameRegion !== 1) {
+    return [false, undefined];
+  }
+
+  if (item.id === "boxes") {
+    if (index === getCurrentBox()) {
+      return [true, [...shifts, -0xfbf]];
+    } else if (index >= 4) {
+      return [true, [...shifts, 0x2000 + item.length * (index - 0x4)]];
+    }
+  } else if (item.id === "bagItems") {
+    return [true, [...shifts, 0x5, index * item.length]];
+  } else if (item.id === "pokemonTabs-party") {
+    return [true, [...shifts, -0x4d, index * item.length]];
+  } else if (item.id?.match(/pokemonTabs-box/)) {
+    const [, type] = item.id.split("-");
+
+    const boxIndex = parseInt(type.replace("box", ""));
+
+    if (boxIndex !== getCurrentBox()) {
+      return [true, [...shifts, 0x14, index * item.length]];
+    }
+  } else if (item.id === "pokemonSection-daycare") {
+    return [true, [...shifts, -0x4d]];
+  } else if (item.id === "hallOfFameSections") {
+    return [true, [...shifts, 0xa, index * item.length]];
+  }
+
+  return [false, undefined];
 }

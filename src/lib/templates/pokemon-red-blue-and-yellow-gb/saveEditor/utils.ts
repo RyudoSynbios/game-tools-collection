@@ -9,7 +9,6 @@ import { getItem, updateResources } from "$lib/utils/parser";
 import type {
   DataViewABL,
   Item,
-  ItemBitflag,
   ItemBitflagChecked,
   ItemBitflags,
   ItemChecksum,

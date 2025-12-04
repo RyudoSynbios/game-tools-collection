@@ -333,9 +333,11 @@ export function getCharacterNames(slotIndex: number): Resource {
 }
 
 export function onSlotChange(slotIndex: number): void {
-  if (slotIndex !== 0) {
-    slotIndex -= 1;
+  if (slotIndex === 0) {
+    return;
   }
+
+  slotIndex -= 1;
 
   updateCharacterNames(slotIndex);
 }
