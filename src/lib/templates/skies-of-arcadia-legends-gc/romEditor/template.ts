@@ -936,7 +936,7 @@ const template: GameJson = {
                               letterDataType: "uint8",
                               endCode: 0x0,
                               overrideShift: {
-                                parent: -1,
+                                parent: 1,
                                 shift: 0x65,
                               },
                               size: "xl",
@@ -1227,7 +1227,7 @@ const template: GameJson = {
                               letterDataType: "uint8",
                               endCode: 0x0,
                               overrideShift: {
-                                parent: -1,
+                                parent: 1,
                                 shift: 0x65,
                               },
                               size: "xl",
@@ -1377,7 +1377,7 @@ const template: GameJson = {
                               letterDataType: "uint8",
                               endCode: 0x0,
                               overrideShift: {
-                                parent: -1,
+                                parent: 1,
                                 shift: 0x65,
                               },
                               size: "xl",
@@ -1561,7 +1561,7 @@ const template: GameJson = {
                               letterDataType: "uint8",
                               endCode: 0x0,
                               overrideShift: {
-                                parent: -1,
+                                parent: 1,
                                 shift: 0x65,
                               },
                               size: "xl",
@@ -1745,7 +1745,7 @@ const template: GameJson = {
                               letterDataType: "uint8",
                               endCode: 0x0,
                               overrideShift: {
-                                parent: -1,
+                                parent: 1,
                                 shift: 0x65,
                               },
                               size: "xl",
@@ -1931,7 +1931,7 @@ const template: GameJson = {
                               letterDataType: "uint8",
                               endCode: 0x0,
                               overrideShift: {
-                                parent: -1,
+                                parent: 1,
                                 shift: 0x65,
                               },
                               size: "xl",
@@ -2022,7 +2022,7 @@ const template: GameJson = {
                               letterDataType: "uint8",
                               endCode: 0x0,
                               overrideShift: {
-                                parent: -1,
+                                parent: 1,
                                 shift: 0x65,
                               },
                               size: "xl",
@@ -2214,7 +2214,7 @@ const template: GameJson = {
                               letterDataType: "uint8",
                               endCode: 0x0,
                               overrideShift: {
-                                parent: -1,
+                                parent: 1,
                                 shift: 0x65,
                               },
                               size: "xl",
@@ -2400,7 +2400,7 @@ const template: GameJson = {
                               letterDataType: "uint8",
                               endCode: 0x0,
                               overrideShift: {
-                                parent: -1,
+                                parent: 1,
                                 shift: 0x65,
                               },
                               size: "xl",
