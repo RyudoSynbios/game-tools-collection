@@ -102,12 +102,6 @@
   $: {
     ($dataJson, $dataView);
 
-    label = item.name || "";
-
-    if ($isDebug && $debugOptions.showInputOffsets) {
-      label = `[0x${item.offset.toHex()}] ${label}`;
-    }
-
     let isOverrided = false;
 
     let int = 0;
@@ -118,6 +112,12 @@
 
     if (utilsExists("overrideItem")) {
       item = $gameUtils.overrideItem(item);
+    }
+
+    label = item.name || "";
+
+    if ($isDebug && $debugOptions.showInputOffsets) {
+      label = `[0x${item.offset.toHex()}] ${label}`;
     }
 
     min = getIntMin(item);
