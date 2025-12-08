@@ -60,6 +60,7 @@ export type Item =
   | ItemContainer
   | ItemGroup
   | ItemInt
+  | ItemMessage
   | ItemSection
   | ItemString
   | ItemTabs;
@@ -332,6 +333,13 @@ export interface ItemIntCondition {
   bit?: number;
   operator: "=" | "!=" | ">" | ">=" | "<" | "<=";
   value: number;
+}
+
+export interface ItemMessage {
+  id?: string;
+  type: "message";
+  message: string;
+  hidden?: boolean;
 }
 
 export interface ItemSection {

@@ -500,6 +500,10 @@ export function checkMissingFields(item: Item): void {
     errors.push("instanceType");
   }
 
+  if (item.type === "message" && item.message === undefined) {
+    errors.push("message");
+  }
+
   if (
     item.type === "variable" &&
     item.dataType === "string" &&

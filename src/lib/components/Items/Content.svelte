@@ -12,6 +12,8 @@
 
   import type { Item } from "$lib/types";
 
+  import Message from "./Message.svelte";
+
   export let items: Item[];
   export let flex = false;
 </script>
@@ -26,6 +28,8 @@
       <Component {item} />
     {:else if item.type === "group"}
       <Group {item} />
+    {:else if item.type === "message"}
+      <Message {item} />
     {:else if item.type === "section"}
       <Section {item} />
     {:else if item.type === "tabs"}
