@@ -437,6 +437,17 @@
     }
   },
   {
+    "id": "fire-emblem-gba",
+    "name": "Fire Emblem",
+    "consoleId": "game-boy-advance",
+    "tools": {
+      "saveEditor": {
+        "createdAt": "2025-12-08",
+        "regions": ["🇪🇺", "🇺🇸", "🇯🇵"]
+      }
+    }
+  },
+  {
     "id": "game-and-watch-gallery-3-gbc",
     "name": "Game & Watch Gallery 3",
     "consoleId": "game-boy-color",

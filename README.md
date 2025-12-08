@@ -45,6 +45,7 @@ Link to the website: [https://game-tools-collection.com](https://game-tools-coll
 | Final Fantasy IX                             | PS       | Save                    | EUR / USA / JAP / FRA / GER / ITA / SPA       |
 | Final Fantasy Tactics                        | PS       | Save                    | USA / JAP                                     |
 | Final Fight One                              | GBA      | Save                    | EUR / USA / JAP                               |
+| Fire Emblem                                  | GBA      | Save                    | EUR / USA / JAP                               |
 | Game & Watch Gallery 3                       | GBC      | Save                    | EUR / USA / JAP / AUS                         |
 | Game Boy Camera                              | GB       | Save                    | EUR / USA / JAP                               |
 | Golden Sun                                   | GBA      | Save / Rom              | EUR / USA / JAP / FRA / GER / ITA / SPA       |
