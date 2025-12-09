@@ -68,22 +68,22 @@
   $: {
     ($dataJson, $dataView);
 
-    label = item.name || "";
+    let isOverrided = false;
 
-    if (item.encoding && ["windows31J"].includes(item.encoding)) {
-      length = item.length / 0x2;
-    } else {
-      length = item.length / dataTypeToLength(item.letterDataType);
+    if (utilsExists("overrideItem")) {
+      item = $gameUtils.overrideItem(item);
     }
+
+    label = item.name || "";
 
     if ($isDebug && $debugOptions.showInputOffsets) {
       label = `[0x${item.offset.toHex()}] ${label}`;
     }
 
-    let isOverrided = false;
-
-    if (utilsExists("overrideItem")) {
-      item = $gameUtils.overrideItem(item);
+    if (item.encoding && ["windows31J"].includes(item.encoding)) {
+      length = item.length / 0x2;
+    } else {
+      length = item.length / dataTypeToLength(item.letterDataType);
     }
 
     if (utilsExists("overrideGetInt")) {

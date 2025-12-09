@@ -53,16 +53,16 @@
   $: {
     ($dataJson, $dataView);
 
-    label = item.name || "";
-
-    if ($isDebug && $debugOptions.showInputOffsets) {
-      label = `[0x${item.offset.toHex()}] ${label}`;
-    }
-
     let isOverrided = false;
 
     if (utilsExists("overrideItem")) {
       item = $gameUtils.overrideItem(item);
+    }
+
+    label = item.name || "";
+
+    if ($isDebug && $debugOptions.showInputOffsets) {
+      label = `[0x${item.offset.toHex()}] ${label}`;
     }
 
     if (utilsExists("overrideGetInt")) {
