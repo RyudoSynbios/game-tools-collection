@@ -11,6 +11,7 @@ import {
   gameRegion,
   gameUtils,
   isDirty,
+  locale,
 } from "$lib/stores";
 import {
   dataViewKey,
@@ -44,6 +45,7 @@ export function reset(): void {
   gameJson.set({} as GameJson);
   gameRegion.set(-1);
   isDirty.set(false);
+  locale.set("");
 
   // File Visualizer
   dataViewKey.set(undefined);

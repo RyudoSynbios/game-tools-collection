@@ -7,6 +7,7 @@
     debugOptions,
     gameUtils,
     isDebug,
+    locale,
   } from "$lib/stores";
   import {
     dataTypeToLength,
@@ -66,7 +67,7 @@
   let value: string;
 
   $: {
-    ($dataJson, $dataView);
+    ($dataJson, $dataView, $locale);
 
     let isOverrided = false;
 

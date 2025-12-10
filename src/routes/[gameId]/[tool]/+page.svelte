@@ -6,6 +6,7 @@
   import EjectIcon from "$lib/assets/Eject.svelte";
   import PatchIcon from "$lib/assets/Patch.svelte";
   import SaveIcon from "$lib/assets/Save.svelte";
+  import TranslateIcon from "$lib/assets/Translate.svelte";
   import Dropzone from "$lib/components/Dropzone.svelte";
   import FileVisualizer from "$lib/components/FileVisualizer/FileVisualizer.svelte";
   import Content from "$lib/components/Items/Content.svelte";
@@ -13,15 +14,17 @@
     dataView,
     fileName,
     gameJson,
+    gameRegion,
     gameTemplate,
     gameUtils,
     isDebug,
     isDirty,
     isFileVisualizerOpen,
+    locale,
   } from "$lib/stores";
   import { updateChecksums } from "$lib/utils/checksum";
   import { getGame } from "$lib/utils/db.js";
-  import { setLocalStorage, utilsExists } from "$lib/utils/format";
+  import { capitalize, setLocalStorage, utilsExists } from "$lib/utils/format";
   import { reset } from "$lib/utils/state";
 
   import type { Game, GameJson, Patch } from "$lib/types";
@@ -87,6 +90,12 @@
     FileSaver.saveAs(blob, $fileName);
 
     $isDirty = false;
+  }
+
+  function handleLocaleChange(event: Event): void {
+    const target = event.target as HTMLInputElement;
+
+    $locale = target.value;
   }
 
   function handleLogoClick(): void {
@@ -174,6 +183,24 @@
     resetPatchStatus();
   }
 
+  function isLocalized(): boolean {
+    if (!$gameTemplate.localization) {
+      return false;
+    }
+
+    const regions = Object.keys($gameTemplate.validator.regions);
+
+    const isLocalized = $gameTemplate.localization.regions.includes(
+      regions[$gameRegion],
+    );
+
+    if (isLocalized && $locale === "") {
+      $locale = $gameTemplate.localization.languages[0];
+    }
+
+    return isLocalized;
+  }
+
   function resetPatchStatus(): void {
     patchError = false;
     patchSuccess = false;
@@ -215,6 +242,16 @@
         on:click={handleLogoClick}
       />
       <div>
+        {#if $gameTemplate.localization && isLocalized()}
+          <div class="gtc-tool-locale">
+            <TranslateIcon />
+            <select on:change={handleLocaleChange}>
+              {#each $gameTemplate.localization.languages as language}
+                <option value={language}>{capitalize(language)}</option>
+              {/each}
+            </select>
+          </div>
+        {/if}
         {#if utilsExists("importPatch") || utilsExists("generatePatch")}
           <div class="gtc-tool-patchtoolbar" on:click|stopPropagation>
             <button
@@ -306,6 +343,14 @@
 
           & :global(svg) {
             @apply -ml-1 mr-2 h-5 w-5;
+          }
+        }
+
+        &.gtc-tool-locale {
+          @apply flex items-center rounded bg-primary-600 px-2;
+
+          & select {
+            @apply w-20 rounded bg-primary-600 text-xs text-white;
           }
         }
 

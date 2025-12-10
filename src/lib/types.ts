@@ -149,6 +149,10 @@ export interface GameJson {
     hint?: string;
     error: string;
   };
+  localization?: {
+    regions: string[];
+    languages: string[];
+  };
   checksums?: ItemChecksum[];
   items: Item[];
   resources?: Resources;
