@@ -418,6 +418,7 @@ export interface Model {
   count: number;
   length: number;
   shifts: number[];
+  hasName: boolean;
   hasDescription: boolean;
   isInventory: boolean;
   europe: {
@@ -433,6 +434,7 @@ export const mainDolModels: { [key: string]: Model } = {
     count: 6,
     length: 0xc,
     shifts: [0x159c8, 0x17b48, 0x17598],
+    hasName: false,
     hasDescription: false,
     isInventory: false,
     europe: {
@@ -446,6 +448,7 @@ export const mainDolModels: { [key: string]: Model } = {
     count: 6,
     length: 0x98,
     shifts: [0x2f2c0],
+    hasName: false,
     hasDescription: false,
     isInventory: false,
     europe: {
@@ -459,6 +462,7 @@ export const mainDolModels: { [key: string]: Model } = {
     count: 62,
     length: 0x30,
     shifts: [],
+    hasName: true,
     hasDescription: true,
     isInventory: false,
     europe: {
@@ -475,6 +479,7 @@ export const mainDolModels: { [key: string]: Model } = {
     count: 80,
     length: 0x20,
     shifts: [],
+    hasName: true,
     hasDescription: true,
     isInventory: true,
     europe: {
@@ -491,6 +496,7 @@ export const mainDolModels: { [key: string]: Model } = {
     count: 80,
     length: 0x28,
     shifts: [],
+    hasName: true,
     hasDescription: true,
     isInventory: true,
     europe: {
@@ -507,6 +513,7 @@ export const mainDolModels: { [key: string]: Model } = {
     count: 80,
     length: 0x28,
     shifts: [-0x2f9c0],
+    hasName: true,
     hasDescription: true,
     isInventory: true,
     europe: {
@@ -523,6 +530,7 @@ export const mainDolModels: { [key: string]: Model } = {
     count: 21,
     length: 0x14,
     shifts: [0x30280],
+    hasName: false,
     hasDescription: false,
     isInventory: false,
     europe: {
@@ -536,6 +544,7 @@ export const mainDolModels: { [key: string]: Model } = {
     count: 80,
     length: 0x24,
     shifts: [],
+    hasName: true,
     hasDescription: true,
     isInventory: true,
     europe: {
@@ -552,6 +561,7 @@ export const mainDolModels: { [key: string]: Model } = {
     count: 80,
     length: 0x16,
     shifts: [],
+    hasName: true,
     hasDescription: true,
     isInventory: true,
     europe: {
@@ -568,6 +578,7 @@ export const mainDolModels: { [key: string]: Model } = {
     count: 24,
     length: 0x22,
     shifts: [-0x303c8],
+    hasName: true,
     hasDescription: false,
     isInventory: false,
     europe: {
@@ -584,6 +595,7 @@ export const mainDolModels: { [key: string]: Model } = {
     count: 6,
     length: 0xc6,
     shifts: [0xcb70, 0xc864, 0xd054],
+    hasName: false,
     hasDescription: false,
     isInventory: false,
     europe: {
@@ -597,6 +609,7 @@ export const mainDolModels: { [key: string]: Model } = {
     count: 119,
     length: 0x8,
     shifts: [0x25560, 0xd58, 0xcb0],
+    hasName: false,
     hasDescription: false,
     isInventory: false,
     europe: {
@@ -610,6 +623,7 @@ export const mainDolModels: { [key: string]: Model } = {
     count: 5,
     length: 0x64,
     shifts: [],
+    hasName: true,
     hasDescription: false,
     isInventory: false,
     europe: {
@@ -623,6 +637,7 @@ export const mainDolModels: { [key: string]: Model } = {
     count: 45,
     length: 0x78,
     shifts: [],
+    hasName: true,
     hasDescription: false,
     isInventory: false,
     europe: {
@@ -636,6 +651,7 @@ export const mainDolModels: { [key: string]: Model } = {
     count: 40,
     length: 0x24,
     shifts: [],
+    hasName: true,
     hasDescription: true,
     isInventory: true,
     europe: {
@@ -652,6 +668,7 @@ export const mainDolModels: { [key: string]: Model } = {
     count: 40,
     length: 0x28,
     shifts: [],
+    hasName: true,
     hasDescription: true,
     isInventory: true,
     europe: {
@@ -668,6 +685,7 @@ export const mainDolModels: { [key: string]: Model } = {
     count: 30,
     length: 0x24,
     shifts: [],
+    hasName: true,
     hasDescription: true,
     isInventory: true,
     europe: {
@@ -685,6 +703,7 @@ export const mainDolModels: { [key: string]: Model } = {
     count: 22,
     length: 0x24,
     shifts: [-0x10c78, 0x1323c, 0x13264],
+    hasName: true,
     hasDescription: true,
     isInventory: false,
     europe: {
@@ -701,6 +720,7 @@ export const mainDolModels: { [key: string]: Model } = {
     count: 43,
     length: 0x68,
     shifts: [],
+    hasName: false,
     hasDescription: false,
     isInventory: false,
     europe: {

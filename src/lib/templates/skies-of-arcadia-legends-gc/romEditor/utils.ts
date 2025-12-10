@@ -1,7 +1,13 @@
 import LZString from "lz-string";
 import { get } from "svelte/store";
 
-import { dataViewAlt, dataViewAltMetas, gameRegion } from "$lib/stores";
+import {
+  dataViewAlt,
+  dataViewAltMetas,
+  gameRegion,
+  gameTemplate,
+  locale,
+} from "$lib/stores";
 import { getInt, getString, setInt } from "$lib/utils/bytes";
 import { File, getFile, getFiles, resetGcm } from "$lib/utils/common/gamecube";
 import { getRegionArray, mergeUint8Arrays } from "$lib/utils/format";
@@ -23,6 +29,12 @@ import ScriptViewer from "./components/ScriptViewer.svelte";
 import Texture from "./components/Texture.svelte";
 import { offsetToRandomEncounterRate } from "./template";
 import { exportDataViewAlt, initDataViewAlt } from "./utils/dataView";
+import {
+  DESCRIPTION_LENGTH_OFFSET,
+  LOCALE_LENGTH,
+  NAME_LENGTH,
+  NAME_LENGTH_OFFSET,
+} from "./utils/locales";
 import { NjcmFile } from "./utils/njcm";
 import { abilityTypes, mainDolModels } from "./utils/resource";
 
@@ -31,23 +43,13 @@ export function beforeItemsParsing(): void {
 }
 
 export function overrideParseItem(item: Item): Item {
-  const $dataViewAlt = get(dataViewAlt);
   const $gameRegion = get(gameRegion);
 
   if ("id" in item && item.id?.match(/-(name|description)-/)) {
     const itemString = item as ItemString;
 
-    const [index] = item.id.splitInt();
-
-    if ($gameRegion === 0 && !item.id.match(/party-name-/)) {
-      itemString.disabled = true;
-    } else if ($gameRegion === 2) {
+    if ($gameRegion === 2) {
       itemString.encoding = "windows31J";
-    }
-
-    // prettier-ignore
-    if (item.id.match(/description/)) {
-      itemString.length = getInt(itemString.offset + index * 0x65 + 0x64, "uint8", {}, $dataViewAlt[itemString.dataViewAltKey!]);
     }
 
     return itemString;
@@ -74,8 +76,54 @@ export function overrideParseItem(item: Item): Item {
 
 export function overrideItem(item: Item): Item {
   const $dataViewAlt = get(dataViewAlt);
+  const $gameRegion = get(gameRegion);
+  const $gameTemplate = get(gameTemplate);
+  const $locale = get(locale);
 
-  if ("id" in item && item.id?.match(/crewDisabled-/)) {
+  if ("id" in item && item.id?.match(/-(name|description)-/)) {
+    const itemString = item as ItemString;
+
+    let [modelName] = item.id.split("-");
+    const [, type] = item.id.split("-");
+    let [index] = item.id.splitInt();
+
+    if ($gameRegion !== 0 && item.id.match(/description/)) {
+      itemString.length = getLocaleStringLength(itemString.offset, itemString.dataViewAltKey!, type); // prettier-ignore
+    }
+
+    if ($gameRegion !== 0 || !itemString.dataViewAltKey?.match(/Locales$/)) {
+      return itemString;
+    }
+
+    if (["magic", "superMoves", "crewSuperMoves"].includes(modelName)) {
+      switch (modelName) {
+        case "superMoves":
+          index += abilityTypes[0].count;
+          break;
+        case "crewSuperMoves":
+          index += abilityTypes[0].count + abilityTypes[1].count;
+          break;
+      }
+
+      modelName = "abilities";
+    }
+
+    const model = mainDolModels[modelName];
+
+    const localeIndex = $gameTemplate.localization!.languages.findIndex(
+      (region) => region === $locale,
+    );
+
+    index += localeIndex * model.count;
+
+    if (type === "name") {
+      itemString.offset = index * LOCALE_LENGTH;
+    } else if (type === "description") {
+      itemString.offset = index * LOCALE_LENGTH + NAME_LENGTH;
+    }
+
+    return itemString;
+  } else if ("id" in item && item.id?.match(/crewDisabled-/)) {
     const itemInt = item as ItemInt;
 
     const [shift] = item.id.splitInt();
@@ -243,9 +291,15 @@ export function overrideSetInt(item: Item, value: string): boolean {
 
 export function afterSetInt(item: Item): void {
   const $dataViewAlt = get(dataViewAlt);
+  const $gameRegion = get(gameRegion);
+  const $locale = get(locale);
 
   if ("id" in item && item.id?.match(/-name-/)) {
     const [type] = item.id.split("-");
+
+    if ($gameRegion === 0 && $locale !== "english") {
+      return;
+    }
 
     const resources: { [key: string]: string } = {
       accessories: "accessoryNames",
@@ -517,6 +571,30 @@ export function getFilteredFiles(type: string): File[] {
   });
 }
 
+function getLocaleStringLength(
+  offset: number,
+  dataViewAltKey: string,
+  type: string,
+): number {
+  const $dataViewAlt = get(dataViewAlt);
+
+  if (type === "name" && !dataViewAltKey.match(/Descriptions|Locales/)) {
+    if (dataViewAltKey.match(/ranks/)) {
+      return 0x18;
+    } else {
+      return 0x10;
+    }
+  }
+
+  if (type === "name") {
+    offset += NAME_LENGTH_OFFSET;
+  } else if (type === "description") {
+    offset += DESCRIPTION_LENGTH_OFFSET;
+  }
+
+  return getInt(offset, "uint8", {}, $dataViewAlt[dataViewAltKey]);
+}
+
 export function getMapFiles(index: number): File[] {
   const files = getFilteredFiles("map");
   const file = files[index];
@@ -542,8 +620,11 @@ export function getNames(type: string, relative: string): Resource {
       (abilityType) => abilityType.id === type,
     );
 
+    if (abilityType) {
+      abilityCount = abilityType.count;
+    }
+
     type = "abilities";
-    abilityCount = abilityType?.count || 0;
   }
 
   const modelObj = Object.entries(mainDolModels).find(([name, model]) => {
@@ -556,19 +637,19 @@ export function getNames(type: string, relative: string): Resource {
 
   if (modelObj) {
     const count = abilityCount || modelObj[1].count;
-    const length = modelObj[1].length;
 
-    for (let i = 0; i < count; i += 1) {
-      const name = getString(
-        item.offset + i * length,
-        item.length,
-        item.letterDataType,
-        {
-          encoding: item.encoding,
-          endCode: item.endCode,
-        },
-        $dataViewAlt[type],
-      );
+    let length = modelObj[1].length;
+
+    if (item.dataViewAltKey?.match(/Locales$/)) {
+      length = LOCALE_LENGTH;
+    }
+
+    // prettier-ignore
+    for (let i = 0x0; i < count; i += 0x1) {
+      const name = getString(item.offset + i * length, NAME_LENGTH, item.letterDataType, {
+        encoding: item.encoding,
+        endCode: item.endCode,
+      }, $dataViewAlt[item.dataViewAltKey!]);
 
       names[base + i] = name;
     }

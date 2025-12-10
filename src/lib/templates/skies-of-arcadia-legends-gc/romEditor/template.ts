@@ -1,6 +1,11 @@
 import type { GameJson } from "$lib/types";
 
 import {
+  DESCRIPTION_LENGTH,
+  LOCALE_LENGTH,
+  NAME_LENGTH,
+} from "./utils/locales";
+import {
   abilityEffects,
   abilityTypes,
   enemyBosses,
@@ -31,6 +36,10 @@ const template: GameJson = {
     text: "Drag 'n' drop here or click to add a rom file.",
     hint: "Only works with .gcm and .iso files.\n.rvz files are not supported but can easily be converted.",
     error: "Not a valid rom file.",
+  },
+  localization: {
+    regions: ["europe"],
+    languages: ["english", "french", "german", "spanish"],
   },
   items: [
     {
@@ -881,21 +890,16 @@ const template: GameJson = {
                 const isCrewSuperMove = abilityType.id === "crewSuperMoves";
 
                 let offset = 0x0;
-                let descriptionOffset = 0x0;
+                let nameOffset = 0x0;
+                let descriptionOffset = NAME_LENGTH;
                 let expOffset = 0x0;
 
-                if (index >= 1) {
-                  offset +=
-                    abilityTypes[0].count * mainDolModels.abilities.length;
-                  descriptionOffset += abilityTypes[0].count * 0x65;
-                  expOffset += abilityTypes[0].count * 0x2;
-                }
-
-                if (index === 2) {
-                  offset +=
-                    abilityTypes[1].count * mainDolModels.abilities.length;
-                  descriptionOffset += abilityTypes[1].count * 0x65;
-                  expOffset += abilityTypes[1].count * 0x2;
+                // prettier-ignore
+                for (let i = 1; i <= index; i += 1) {
+                  offset += abilityTypes[i - 1].count * mainDolModels.abilities.length;
+                  nameOffset += abilityTypes[i - 1].count * LOCALE_LENGTH;
+                  descriptionOffset += abilityTypes[i - 1].count * LOCALE_LENGTH + NAME_LENGTH;
+                  expOffset += abilityTypes[i - 1].count * 0x2;
                 }
 
                 return {
@@ -917,27 +921,31 @@ const template: GameJson = {
                             {
                               id: `${abilityType.id}-name-%index%`,
                               name: "Name",
-                              dataViewAltKey: "abilities",
-                              offset,
+                              dataViewAltKey: "abilitiesLocales",
+                              offset: nameOffset,
                               length: 0x10,
-                              type: "variable",
-                              dataType: "string",
-                              letterDataType: "uint8",
-                              endCode: 0x0,
-                            },
-                            {
-                              id: `${abilityType.id}-description-%index%`,
-                              name: "Description",
-                              dataViewAltKey: "abilitiesDescriptions",
-                              offset: descriptionOffset,
-                              length: 0x64,
                               type: "variable",
                               dataType: "string",
                               letterDataType: "uint8",
                               endCode: 0x0,
                               overrideShift: {
                                 parent: 1,
-                                shift: 0x65,
+                                shift: LOCALE_LENGTH,
+                              },
+                            },
+                            {
+                              id: `${abilityType.id}-description-%index%`,
+                              name: "Description",
+                              dataViewAltKey: "abilitiesLocales",
+                              offset: descriptionOffset,
+                              length: DESCRIPTION_LENGTH - 0x1,
+                              type: "variable",
+                              dataType: "string",
+                              letterDataType: "uint8",
+                              endCode: 0x0,
+                              overrideShift: {
+                                parent: 1,
+                                shift: LOCALE_LENGTH,
                               },
                               size: "xl",
                             },
@@ -1208,27 +1216,31 @@ const template: GameJson = {
                             {
                               id: "weapons-name-%index%",
                               name: "Name",
-                              dataViewAltKey: "weapons",
+                              dataViewAltKey: "weaponsLocales",
                               offset: 0x0,
                               length: 0x10,
                               type: "variable",
                               dataType: "string",
                               letterDataType: "uint8",
                               endCode: 0x0,
+                              overrideShift: {
+                                parent: 1,
+                                shift: LOCALE_LENGTH,
+                              },
                             },
                             {
                               id: "weapons-description-%index%",
                               name: "Description",
-                              dataViewAltKey: "weaponsDescriptions",
-                              offset: 0x0,
-                              length: 0x64,
+                              dataViewAltKey: "weaponsLocales",
+                              offset: NAME_LENGTH,
+                              length: DESCRIPTION_LENGTH - 0x1,
                               type: "variable",
                               dataType: "string",
                               letterDataType: "uint8",
                               endCode: 0x0,
                               overrideShift: {
                                 parent: 1,
-                                shift: 0x65,
+                                shift: LOCALE_LENGTH,
                               },
                               size: "xl",
                             },
@@ -1358,27 +1370,31 @@ const template: GameJson = {
                             {
                               id: "armors-name-%index%",
                               name: "Name",
-                              dataViewAltKey: "armors",
+                              dataViewAltKey: "armorsLocales",
                               offset: 0x0,
                               length: 0x10,
                               type: "variable",
                               dataType: "string",
                               letterDataType: "uint8",
                               endCode: 0x0,
+                              overrideShift: {
+                                parent: 1,
+                                shift: LOCALE_LENGTH,
+                              },
                             },
                             {
                               id: "armors-description-%index%",
                               name: "Description",
-                              dataViewAltKey: "armorsDescriptions",
-                              offset: 0x0,
-                              length: 0x64,
+                              dataViewAltKey: "armorsLocales",
+                              offset: NAME_LENGTH,
+                              length: DESCRIPTION_LENGTH - 0x1,
                               type: "variable",
                               dataType: "string",
                               letterDataType: "uint8",
                               endCode: 0x0,
                               overrideShift: {
                                 parent: 1,
-                                shift: 0x65,
+                                shift: LOCALE_LENGTH,
                               },
                               size: "xl",
                             },
@@ -1542,27 +1558,31 @@ const template: GameJson = {
                             {
                               id: "accessories-name-%index%",
                               name: "Name",
-                              dataViewAltKey: "accessories",
+                              dataViewAltKey: "accessoriesLocales",
                               offset: 0x0,
                               length: 0x10,
                               type: "variable",
                               dataType: "string",
                               letterDataType: "uint8",
                               endCode: 0x0,
+                              overrideShift: {
+                                parent: 1,
+                                shift: LOCALE_LENGTH,
+                              },
                             },
                             {
                               id: "accessories-description-%index%",
                               name: "Description",
-                              dataViewAltKey: "accessoriesDescriptions",
-                              offset: 0x0,
-                              length: 0x64,
+                              dataViewAltKey: "accessoriesLocales",
+                              offset: NAME_LENGTH,
+                              length: DESCRIPTION_LENGTH - 0x1,
                               type: "variable",
                               dataType: "string",
                               letterDataType: "uint8",
                               endCode: 0x0,
                               overrideShift: {
                                 parent: 1,
-                                shift: 0x65,
+                                shift: LOCALE_LENGTH,
                               },
                               size: "xl",
                             },
@@ -1726,27 +1746,31 @@ const template: GameJson = {
                             {
                               id: "items-name-%index%",
                               name: "Name",
-                              dataViewAltKey: "items",
+                              dataViewAltKey: "itemsLocales",
                               offset: 0x0,
                               length: 0x10,
                               type: "variable",
                               dataType: "string",
                               letterDataType: "uint8",
                               endCode: 0x0,
+                              overrideShift: {
+                                parent: 1,
+                                shift: LOCALE_LENGTH,
+                              },
                             },
                             {
-                              id: "itemsweapons-description-%index%",
+                              id: "items-description-%index%",
                               name: "Description",
-                              dataViewAltKey: "itemsDescriptions",
-                              offset: 0x0,
-                              length: 0x64,
+                              dataViewAltKey: "itemsLocales",
+                              offset: NAME_LENGTH,
+                              length: DESCRIPTION_LENGTH - 0x1,
                               type: "variable",
                               dataType: "string",
                               letterDataType: "uint8",
                               endCode: 0x0,
                               overrideShift: {
                                 parent: 1,
-                                shift: 0x65,
+                                shift: LOCALE_LENGTH,
                               },
                               size: "xl",
                             },
@@ -1912,27 +1936,31 @@ const template: GameJson = {
                             {
                               id: "keyItems-name-%index%",
                               name: "Name",
-                              dataViewAltKey: "keyItems",
+                              dataViewAltKey: "keyItemsLocales",
                               offset: 0x0,
                               length: 0x10,
                               type: "variable",
                               dataType: "string",
                               letterDataType: "uint8",
                               endCode: 0x0,
+                              overrideShift: {
+                                parent: 1,
+                                shift: LOCALE_LENGTH,
+                              },
                             },
                             {
                               id: "keyItems-description-%index%",
                               name: "Description",
-                              dataViewAltKey: "keyItemsDescriptions",
-                              offset: 0x0,
-                              length: 0x64,
+                              dataViewAltKey: "keyItemsLocales",
+                              offset: NAME_LENGTH,
+                              length: DESCRIPTION_LENGTH - 0x1,
                               type: "variable",
                               dataType: "string",
                               letterDataType: "uint8",
                               endCode: 0x0,
                               overrideShift: {
                                 parent: 1,
-                                shift: 0x65,
+                                shift: LOCALE_LENGTH,
                               },
                               size: "xl",
                             },
@@ -2003,27 +2031,31 @@ const template: GameJson = {
                             {
                               id: "shipWeapons-name-%index%",
                               name: "Name",
-                              dataViewAltKey: "shipWeapons",
+                              dataViewAltKey: "shipWeaponsLocales",
                               offset: 0x0,
                               length: 0x10,
                               type: "variable",
                               dataType: "string",
                               letterDataType: "uint8",
                               endCode: 0x0,
+                              overrideShift: {
+                                parent: 1,
+                                shift: LOCALE_LENGTH,
+                              },
                             },
                             {
                               id: "shipWeapons-description-%index%",
                               name: "Description",
-                              dataViewAltKey: "shipWeaponsDescriptions",
-                              offset: 0x0,
-                              length: 0x64,
+                              dataViewAltKey: "shipWeaponsLocales",
+                              offset: NAME_LENGTH,
+                              length: DESCRIPTION_LENGTH - 0x1,
                               type: "variable",
                               dataType: "string",
                               letterDataType: "uint8",
                               endCode: 0x0,
                               overrideShift: {
                                 parent: 1,
-                                shift: 0x65,
+                                shift: LOCALE_LENGTH,
                               },
                               size: "xl",
                             },
@@ -2195,27 +2227,31 @@ const template: GameJson = {
                             {
                               id: "shipAccessories-name-%index%",
                               name: "Name",
-                              dataViewAltKey: "shipAccessories",
+                              dataViewAltKey: "shipAccessoriesLocales",
                               offset: 0x0,
                               length: 0x10,
                               type: "variable",
                               dataType: "string",
                               letterDataType: "uint8",
                               endCode: 0x0,
+                              overrideShift: {
+                                parent: 1,
+                                shift: LOCALE_LENGTH,
+                              },
                             },
                             {
                               id: "shipAccessories-description-%index%",
                               name: "Description",
-                              dataViewAltKey: "shipAccessoriesDescriptions",
-                              offset: 0x0,
-                              length: 0x64,
+                              dataViewAltKey: "shipAccessoriesLocales",
+                              offset: NAME_LENGTH,
+                              length: DESCRIPTION_LENGTH - 0x1,
                               type: "variable",
                               dataType: "string",
                               letterDataType: "uint8",
                               endCode: 0x0,
                               overrideShift: {
                                 parent: 1,
-                                shift: 0x65,
+                                shift: LOCALE_LENGTH,
                               },
                               size: "xl",
                             },
@@ -2381,27 +2417,31 @@ const template: GameJson = {
                             {
                               id: "shipItems-name-%index%",
                               name: "Name",
-                              dataViewAltKey: "shipItems",
+                              dataViewAltKey: "shipItemsLocales",
                               offset: 0x0,
                               length: 0x10,
                               type: "variable",
                               dataType: "string",
                               letterDataType: "uint8",
                               endCode: 0x0,
+                              overrideShift: {
+                                parent: 1,
+                                shift: LOCALE_LENGTH,
+                              },
                             },
                             {
                               id: "shipItems-description-%index%",
                               name: "Description",
-                              dataViewAltKey: "shipItemsDescriptions",
-                              offset: 0x0,
-                              length: 0x64,
+                              dataViewAltKey: "shipItemsLocales",
+                              offset: NAME_LENGTH,
+                              length: DESCRIPTION_LENGTH - 0x1,
                               type: "variable",
                               dataType: "string",
                               letterDataType: "uint8",
                               endCode: 0x0,
                               overrideShift: {
                                 parent: 1,
-                                shift: 0x65,
+                                shift: LOCALE_LENGTH,
                               },
                               size: "xl",
                             },
@@ -2577,13 +2617,17 @@ const template: GameJson = {
                             {
                               id: "ships-name-%index%",
                               name: "Name",
-                              dataViewAltKey: "ships",
+                              dataViewAltKey: "shipsLocales",
                               offset: 0x0,
                               length: 0x10,
                               type: "variable",
                               dataType: "string",
                               letterDataType: "uint8",
                               endCode: 0x0,
+                              overrideShift: {
+                                parent: 1,
+                                shift: LOCALE_LENGTH,
+                              },
                             },
                             {
                               name: "Value",
@@ -2947,14 +2991,40 @@ const template: GameJson = {
                     {
                       id: "crew-name-%index%",
                       name: "Name",
-                      dataViewAltKey: "crew",
+                      dataViewAltKey: "crewLocales",
                       offset: 0x0,
                       length: 0x10,
                       type: "variable",
                       dataType: "string",
                       letterDataType: "uint8",
                       endCode: 0x0,
+                      overrideShift: {
+                        parent: 1,
+                        shift: LOCALE_LENGTH,
+                      },
                     },
+                    {
+                      id: "crew-description-%index%",
+                      name: "Description",
+                      dataViewAltKey: "crewLocales",
+                      offset: NAME_LENGTH,
+                      length: DESCRIPTION_LENGTH - 0x1,
+                      type: "variable",
+                      dataType: "string",
+                      letterDataType: "uint8",
+                      endCode: 0x0,
+                      overrideShift: {
+                        parent: 1,
+                        shift: LOCALE_LENGTH,
+                      },
+                      size: "xl",
+                    },
+                  ],
+                },
+                {
+                  type: "section",
+                  flex: true,
+                  items: [
                     {
                       name: "Type",
                       dataViewAltKey: "crew",
@@ -2964,12 +3034,6 @@ const template: GameJson = {
                       resource: "crewTypes",
                       autocomplete: true,
                     },
-                  ],
-                },
-                {
-                  type: "section",
-                  flex: true,
-                  items: [
                     {
                       name: "Crew Command",
                       dataViewAltKey: "crew",
@@ -3069,13 +3133,17 @@ const template: GameJson = {
                     {
                       id: "ranks-name-%index%",
                       name: "Name",
-                      dataViewAltKey: "ranks",
+                      dataViewAltKey: "ranksLocales",
                       offset: 0x0,
                       length: 0x18,
                       type: "variable",
                       dataType: "string",
                       letterDataType: "uint8",
                       endCode: 0x0,
+                      overrideShift: {
+                        parent: 1,
+                        shift: LOCALE_LENGTH,
+                      },
                     },
                     {
                       name: "Required to Next",
@@ -3587,13 +3655,17 @@ const template: GameJson = {
                                     {
                                       id: "enemyShips-name-%index%",
                                       name: "Name",
-                                      dataViewAltKey: "enemyShips",
+                                      dataViewAltKey: "enemyShipsLocales",
                                       offset: 0x0,
                                       length: 0x10,
                                       type: "variable",
                                       dataType: "string",
                                       letterDataType: "uint8",
                                       endCode: 0x0,
+                                      overrideShift: {
+                                        parent: 1,
+                                        shift: LOCALE_LENGTH,
+                                      },
                                     },
                                     {
                                       name: "HP",
@@ -4733,6 +4805,12 @@ const template: GameJson = {
     itemEffects,
     itemNames: "getNames('items')",
     keyItemNames: "getNames('keyItems')",
+    locales: {
+      0x0: "English",
+      0x1: "French",
+      0x2: "German",
+      0x3: "Spanish",
+    },
     magicAttributes: {
       0x0: "Green",
       0x1: "Red",
