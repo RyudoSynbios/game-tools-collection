@@ -6,7 +6,7 @@ const template: GameJson = {
   validator: {
     fileNames: ["GameData.bin"],
     regions: {
-      europe_usa_japan_australia: {
+      europe_usa_japan_australia_korea: {
         0x10: [0x6d, 0x61, 0x72, 0x69, 0x6f, 0x31],
       }, // "mario1"
     },
@@ -115,8 +115,9 @@ const template: GameJson = {
                           name: "Progression",
                           offset: 0x7a,
                           type: "variable",
-                          dataType: "uint8",
-                          resource: "progression",
+                          dataType: "bit",
+                          bit: 7,
+                          resource: "progressions",
                         },
                         {
                           id: "characterSection-%parent%-%index%-PLAY",
@@ -138,7 +139,7 @@ const template: GameJson = {
                         },
                         {
                           id: "characterSection-%parent%-%index%-PLAY",
-                          name: "Star Bit",
+                          name: "Star Bits",
                           offset: 0xf,
                           type: "variable",
                           dataType: "uint16",
@@ -189,14 +190,11 @@ const template: GameJson = {
                                       id: "characterSection-%parent%-%index%-GALA-powerStars",
                                       name: "Power Stars",
                                       type: "bitflags",
-                                      flags: [...Array(8).keys()].map(
-                                        (index) => ({
+                                      flags: galaxy.missions.map(
+                                        (mission, index) => ({
                                           offset: offset + 0x24,
                                           bit: index,
-                                          label:
-                                            galaxy.missions[index]?.name ||
-                                            "???",
-                                          hidden: !galaxy.missions[index],
+                                          label: mission.name || "???",
                                         }),
                                       ),
                                     },
@@ -205,14 +203,11 @@ const template: GameJson = {
                                       name: "Power Stars?",
                                       type: "bitflags",
                                       hidden: true,
-                                      flags: [...Array(8).keys()].map(
-                                        (index) => ({
+                                      flags: galaxy.missions.map(
+                                        (mission, index) => ({
                                           offset: offset + 0x25,
                                           bit: index,
-                                          label:
-                                            galaxy.missions[index]?.name ||
-                                            "???",
-                                          hidden: !galaxy.missions[index],
+                                          label: mission.name || "???",
                                         }),
                                       ),
                                     },
@@ -337,9 +332,9 @@ const template: GameJson = {
       0x0: "Mario",
       0x1: "Luigi",
     },
-    progression: {
-      0x69: "-",
-      0xe9: "Game Complete",
+    progressions: {
+      0x0: "-",
+      0x1: "Game Complete",
     },
   },
 };
