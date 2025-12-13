@@ -216,8 +216,8 @@
 
 <!-- prettier-ignore -->
 <svelte:head>
-  <title>{game.name} - {game.console.name} - {tool} | Game Tools Collection</title>
-  <meta property="og:title" content="{game.name} - {game.console.name} - {tool}" />
+  <title>{game.metaName} - {game.console.name} - {tool} | Game Tools Collection</title>
+  <meta property="og:title" content="{game.metaName} - {game.console.name} - {tool}" />
   <meta property="og:image" content="{page.url.origin}/img/games/{game.id}/logo.png" />
 </svelte:head>
 
@@ -231,14 +231,14 @@
     <div class="gtc-tool-dropzone">
       <Dropzone
         logo="/img/games/{game.id}/logo.png"
-        name="{game.name} ({game.console.name})"
+        name="{game.metaName} ({game.console.name})"
       />
     </div>
   {:else}
     <div class="gtc-tool-banner">
       <img
         src="/img/games/{game.id}/logo.png"
-        alt="{game.name} ({game.console.name})"
+        alt="{game.metaName} ({game.console.name})"
         on:click={handleLogoClick}
       />
       <div>

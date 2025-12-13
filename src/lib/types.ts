@@ -123,6 +123,7 @@ export interface DataViewAltMetas {
 export interface Game {
   id: string;
   name: string;
+  metaName: string;
   console: {
     id: string;
     name: string;

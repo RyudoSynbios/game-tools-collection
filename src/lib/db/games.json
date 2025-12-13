@@ -439,6 +439,7 @@
   {
     "id": "fire-emblem-gba",
     "name": "Fire Emblem",
+    "metaName": "Fire Emblem (The Blazing Blade)",
     "consoleId": "game-boy-advance",
     "tools": {
       "saveEditor": {
@@ -674,6 +675,7 @@
   {
     "id": "lylat-wars-n64",
     "name": "Lylat Wars",
+    "metaName": "Lylat Wars (Star Fox 64)",
     "consoleId": "nintendo-64",
     "tools": {
       "saveEditor": {
@@ -740,6 +742,7 @@
   {
     "id": "mystic-quest-legend-snes",
     "name": "Mystic Quest Legend",
+    "metaName": "Mystic Quest Legend (Final Fantasy Mystic Quest)",
     "consoleId": "super-nintendo",
     "tools": {
       "saveEditor": {
@@ -766,6 +769,7 @@
   {
     "id": "mystical-ninja-2-starring-goemon-n64",
     "name": "Mystical Ninja 2 Starring Goemon",
+    "metaName": "Mystical Ninja 2 Starring Goemon (Goemon's Great Adventure)",
     "consoleId": "nintendo-64",
     "tools": {
       "saveEditor": {
@@ -899,6 +903,7 @@
   {
     "id": "soleil-md",
     "name": "Soleil",
+    "metaName": "Soleil (Crusader of Centy)",
     "consoleId": "mega-drive",
     "tools": {
       "saveEditor": {

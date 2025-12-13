@@ -74,6 +74,7 @@ export function getGames(options: GameOptions = {}): Game[] {
       results.push({
         id: game.id,
         name: game.name,
+        metaName: game.metaName || game.name,
         console,
         createdAt,
         tools: {
