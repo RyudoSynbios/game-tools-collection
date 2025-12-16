@@ -1,13 +1,14 @@
 import { get } from "svelte/store";
 
 import {
+  dataViewAlt,
   fileHeaderShift,
   gameJson,
   gameTemplate,
   gameUtils,
   isDebug,
 } from "$lib/stores";
-import { getInt } from "$lib/utils/bytes";
+import { getDataView, getInt } from "$lib/utils/bytes";
 import {
   clone,
   generateUUID,
@@ -305,6 +306,7 @@ export function parseContainer(
   parents: ItemParent[],
   options: ParseItemOptions,
 ): any {
+  const $dataViewAlt = get(dataViewAlt);
   const $gameTemplate = get(gameTemplate);
   const $gameUtils = get(gameUtils) as any;
 
@@ -332,7 +334,15 @@ export function parseContainer(
     if (utilsExists("pointerToOffset")) {
       shifts = [$gameUtils.pointerToOffset(pointer)];
     } else {
-      shifts = [getInt(pointer as number, (item as any).pointerDataType)];
+      let dataView: DataView | undefined = undefined;
+
+      if (item.pointerDataViewAltKey) {
+        dataView = $dataViewAlt[item.pointerDataViewAltKey];
+      }
+
+      shifts = [
+        getInt(pointer as number, (item as any).pointerDataType, {}, dataView),
+      ];
     }
   }
 

@@ -251,6 +251,7 @@ export interface ItemContainer {
   id?: string;
   instanceId?: string;
   pointer?: number | number[];
+  pointerDataViewAltKey?: string;
   pointerDataType?: DataTypeInt;
   length: number;
   type: "container";
