@@ -422,5 +422,6 @@ export interface LogicalOperator<T> {
 export interface Patch<T> {
   identifier: string;
   version: string;
+  regions?: string[];
   data: T;
 }

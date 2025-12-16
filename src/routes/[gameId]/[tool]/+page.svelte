@@ -26,6 +26,7 @@
   import { getGame } from "$lib/utils/db.js";
   import { capitalize, setLocalStorage, utilsExists } from "$lib/utils/format";
   import { reset } from "$lib/utils/state";
+  import { getRegionName } from "$lib/utils/validator";
 
   import type { Game, GameJson, Patch } from "$lib/types";
 
@@ -51,7 +52,7 @@
   let patchInputEl: HTMLInputElement;
   let patchToolbarOpen = false;
   let patchIsLoading = false;
-  let patchError = false;
+  let patchError = "";
   let patchSuccess = false;
 
   function handleClick(): void {
@@ -133,7 +134,7 @@
     resetPatchStatus();
 
     if (!file || file.size === 0) {
-      patchError = true;
+      patchError = "not a .gtc file";
       return;
     }
 
@@ -147,16 +148,22 @@
 
         if (patch.identifier !== page.params["gameId"]) {
           patchIsLoading = false;
-          patchError = true;
+          patchError = "bad identifier";
+          return;
+        }
+
+        if (patch.regions && !patch.regions.includes(getRegionName())) {
+          patchIsLoading = false;
+          patchError = "bad region";
           return;
         }
 
         $gameUtils.importPatch(patch);
 
-        patchError = false;
+        patchError = "";
         patchSuccess = true;
       } catch {
-        patchError = true;
+        patchError = "not a .gtc file";
       }
 
       patchIsLoading = false;
@@ -202,7 +209,7 @@
   }
 
   function resetPatchStatus(): void {
-    patchError = false;
+    patchError = "";
     patchSuccess = false;
   }
 
@@ -274,7 +281,7 @@
                     {#if patchIsLoading}
                       <span>(loading...)</span>
                     {:else if patchError}
-                      <span>(file is invalid)</span>
+                      <span>({patchError})</span>
                     {:else if patchSuccess}
                       <span>(patch applied)</span>
                     {/if}

@@ -20,9 +20,14 @@ import {
 import { decodeChar, isCharUint16 } from "$lib/utils/encoding";
 import { getRegionArray } from "$lib/utils/format";
 import { getItem, updateResources } from "$lib/utils/parser";
-import { checkValidator } from "$lib/utils/validator";
+import {
+  generateDataViewAltPatch,
+  importDataViewAltPatch,
+  type PatchData,
+} from "$lib/utils/patch";
+import { checkValidator, getRegionName } from "$lib/utils/validator";
 
-import type { Item, ItemContainer, ItemInt, Resource } from "$lib/types";
+import type { Item, ItemContainer, ItemInt, Patch, Resource } from "$lib/types";
 
 import FileList from "./components/FileList.svelte";
 import ImageViewer from "./components/ImageViewer.svelte";
@@ -353,6 +358,16 @@ export function onReset(): void {
   };
 
   resetIso9660();
+}
+
+export function importPatch(patch: Patch<PatchData>): void {
+  importDataViewAltPatch(patch);
+}
+
+export function generatePatch(): Patch<PatchData> {
+  const regions = [getRegionName()];
+
+  return generateDataViewAltPatch("shining-force-3-saturn", "1.0", regions);
 }
 
 export function getAssetNames(type: string): Resource {

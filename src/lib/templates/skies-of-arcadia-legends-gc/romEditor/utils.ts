@@ -1,20 +1,18 @@
-import LZString from "lz-string";
 import { get } from "svelte/store";
 
-import {
-  dataViewAlt,
-  dataViewAltMetas,
-  gameRegion,
-  gameTemplate,
-  locale,
-} from "$lib/stores";
+import { dataViewAlt, gameRegion, gameTemplate, locale } from "$lib/stores";
 import { getInt, getString, setInt } from "$lib/utils/bytes";
 import { File, getFile, getFiles, resetGcm } from "$lib/utils/common/gamecube";
 import { getRegionArray, mergeUint8Arrays } from "$lib/utils/format";
 import Lzss from "$lib/utils/lzss";
 import { getItem, getResource, updateResources } from "$lib/utils/parser";
-
 import {
+  generateDataViewAltPatch,
+  importDataViewAltPatch,
+  type PatchData,
+} from "$lib/utils/patch";
+
+import type {
   Item,
   ItemContainer,
   ItemInt,
@@ -361,59 +359,20 @@ export function getComponent(
   }
 }
 
-interface PatchData {
-  dataViews: { [key: string]: string };
-}
-
-export function importPatch(patch: Patch<PatchData>): void {
-  const dataViews = patch.data.dataViews;
-
-  if (dataViews) {
-    Object.entries(dataViews).forEach(([key, dataView]) => {
-      const decompressedJson = LZString.decompress(dataView);
-
-      const addresses = JSON.parse(decompressedJson);
-
-      Object.entries(addresses).forEach(([address, value]) => {
-        setInt(parseInt(address), "uint8", value as number, {}, key);
-      });
-    });
-  }
-
-  updateResources();
-}
-
-export function generatePatch(): Patch<PatchData> {
-  const $dataViewAlt = get(dataViewAlt);
-  const $dataViewAltMetas = get(dataViewAltMetas);
-
-  const dataViews: { [key: string]: string } = {};
-
-  Object.keys($dataViewAlt).forEach((key) => {
-    if ($dataViewAltMetas[key]?.isDirty) {
-      dataViews[key] = LZString.compress(
-        JSON.stringify($dataViewAltMetas[key].patch),
-      );
-    }
-  });
-
-  const patch: Patch<PatchData> = {
-    identifier: "skies-of-arcadia-legends-gc",
-    version: "1.0",
-    data: {
-      dataViews,
-    },
-  };
-
-  return patch;
-}
-
 export function beforeSaving(): ArrayBufferLike {
   return exportDataViewAlt();
 }
 
 export function onReset(): void {
   resetGcm();
+}
+
+export function importPatch(patch: Patch<PatchData>): void {
+  importDataViewAltPatch(patch);
+}
+
+export function generatePatch(): Patch<PatchData> {
+  return generateDataViewAltPatch("skies-of-arcadia-legends-gc", "1.0");
 }
 
 export function getAssetNames(type: string): Resource {
