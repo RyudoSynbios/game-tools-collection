@@ -311,6 +311,25 @@ export function repackMpk(): ArrayBufferLike {
   return $dataView.buffer;
 }
 
+export function getSaves(): Save[] {
+  const $gameRegion = get(gameRegion);
+  const $gameTemplate = get(gameTemplate);
+
+  const region = $gameTemplate.validator.regions[
+    getObjKey($gameTemplate.validator.regions, $gameRegion)
+  ] as Validator;
+
+  const validator = region[0];
+
+  const validatorStringified = numberArrayToString(validator);
+
+  const filteredSaves = saves.filter(
+    (save) => save.note.serial === validatorStringified,
+  );
+
+  return filteredSaves;
+}
+
 export function getRegionsFromMpk(): string[] {
   const $gameTemplate = get(gameTemplate);
 
