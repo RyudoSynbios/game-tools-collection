@@ -9,6 +9,8 @@ import debug from "../debug";
 import { getObjKey } from "../format";
 import { checkValidator, getRegions, reduceConditions } from "../validator";
 
+type Entry = Directory | File;
+
 interface Iso {
   hasSectors: boolean;
   sectorHeaderSize: number;
@@ -37,7 +39,7 @@ interface Volume {
   optionalPathLBATableLE: number;
   pathLBATableBE: number;
   optionalPathLBATableBE: number;
-  rootDirectory: RootDirectory;
+  root: Entry[];
   volumeSetIdentifier: string;
   publisherIdentifier: string;
   dataPreparerIdentifier: string;
@@ -52,18 +54,23 @@ interface Volume {
   fileStructureVersion: number;
 }
 
-interface RootDirectory {
-  sectorLE: number;
-  sizeLE: number;
-  files: File[];
+export interface Directory {
+  index: number;
+  type: "directory";
+  path: string;
+  name: string;
+  content: Entry[];
 }
 
 export interface File {
   index: number;
+  type: "file";
+  path: string;
   name: string;
-  isDirectory: boolean;
   offset: number;
   size: number;
+  dataView: DataView;
+  isDirty: boolean;
 }
 
 // ECC constant
@@ -191,11 +198,8 @@ export function readIso9660(): void {
   iso.volume.pathLBATableBE = getInt(offset + 0x94, "uint32", { bigEndian: true }); // prettier-ignore
   iso.volume.optionalPathLBATableBE = getInt(offset + 0x98, "uint32", { bigEndian: true }); // prettier-ignore
 
-  // TODO: To complete
-  iso.volume.rootDirectory = {} as RootDirectory;
-
-  iso.volume.rootDirectory.sectorLE = getInt(offset + 0x9e, "uint32");
-  iso.volume.rootDirectory.sizeLE = getInt(offset + 0xa6, "uint32");
+  const sectorLE = getInt(offset + 0x9e, "uint32");
+  const sizeLE = getInt(offset + 0xa6, "uint32");
 
   iso.volume.volumeSetIdentifier = getString(offset + 0xbe, 0x80, "uint8").trim(); // prettier-ignore
   iso.volume.publisherIdentifier = getString(offset + 0x13e, 0x80, "uint8").trim(); // prettier-ignore
@@ -219,14 +223,23 @@ export function readIso9660(): void {
       iso.sectorHeaderSize + iso.volume.logicalBlockSizeLE + iso.eccSize;
   }
 
-  iso.volume.rootDirectory.files = [];
+  iso.volume.root = [];
 
-  offset = iso.volume.rootDirectory.sectorLE * iso.volume.logicalBlockSizeLE;
-
-  let offsetEnd = getAbsoluteOffset(
-    iso.volume.rootDirectory.sectorLE * iso.volume.logicalBlockSizeLE +
-      iso.volume.rootDirectory.sizeLE,
+  readDirectory(
+    sectorLE * iso.volume.logicalBlockSizeLE,
+    sizeLE,
+    "",
+    iso.volume.root,
   );
+}
+
+function readDirectory(
+  offset: number,
+  length: number,
+  parentPath: string,
+  parentDirectory: Entry[],
+): void {
+  let offsetEnd = getAbsoluteOffset(offset + length);
 
   if (iso.hasSectors) {
     offset = getAbsoluteOffset(offset);
@@ -282,9 +295,15 @@ export function readIso9660(): void {
       }
     }
 
+    let path = name;
+
+    if (parentPath) {
+      path = `${parentPath}/${path}`;
+    }
+
     // Flags
     // 0: Existence
-    // 1: Directory
+    const isDirectory = extractBit(flags, 1);
     // 2: AssociatedFile
     // 3: Record
     // 4: Protection
@@ -292,18 +311,53 @@ export function readIso9660(): void {
     // 6: Reserved
     // 7: Multi-extent
 
-    iso.volume.rootDirectory.files.push({
-      index: iso.volume.rootDirectory.files.length,
-      name,
-      isDirectory: extractBit(flags, 1),
-      offset: getAbsoluteOffset(sectorLE * iso.volume.logicalBlockSizeLE),
-      size: fileSizeLE,
-    });
+    const entryOffset = getAbsoluteOffset(
+      sectorLE * iso.volume.logicalBlockSizeLE,
+    );
+
+    if (isDirectory) {
+      const directory: Directory = {
+        index: parentDirectory.length,
+        type: "directory",
+        path,
+        name,
+        content: [],
+      };
+
+      if (![".", ".."].includes(name)) {
+        readDirectory(entryOffset, fileSizeLE, path, directory.content);
+      }
+
+      parentDirectory.push(directory);
+    } else {
+      parentDirectory.push({
+        index: parentDirectory.length,
+        type: "file",
+        path,
+        name,
+        offset: entryOffset,
+        size: fileSizeLE,
+        dataView: new DataView(new ArrayBuffer(0)),
+        isDirty: false,
+      });
+    }
 
     offset += headerSize;
   }
 
-  iso.volume.rootDirectory.files.sort((a, b) => a.offset - b.offset);
+  parentDirectory.sort((a, b) => {
+    if (a.type === "directory" && b.type === "file") {
+      return -1;
+    } else if (a.type === "directory" && b.type === "directory") {
+      return a.path.localeCompare(b.path);
+    } else if (a.type === "file" && b.type === "directory") {
+      return 1;
+    } else if (a.type === "file" && b.type === "file") {
+      return a.offset - b.offset;
+    }
+
+    return 0;
+  });
 }
 
 export function resetIso9660(): void {
@@ -311,11 +365,9 @@ export function resetIso9660(): void {
 }
 
 export function getFile(
-  name: string,
+  path: string,
 ): (File & { dataView: DataView }) | undefined {
-  const file = iso.volume.rootDirectory.files.find(
-    (file) => file.name === name,
-  );
+  const file = getFiles().find((file) => file.path === path);
 
   if (file) {
     const data = [];
@@ -339,8 +391,16 @@ export function getFile(
   }
 }
 
-export function getFiles(): File[] {
-  return iso.volume.rootDirectory.files;
+export function getFiles(directory = iso.volume.root): File[] {
+  return directory.reduce((files: File[], entry) => {
+    if (entry.type === "directory") {
+      files.push(...getFiles(entry.content));
+    } else {
+      files.push(entry);
+    }
+
+    return files;
+  }, []);
 }
 
 function edcComputeBlock(sectorData: Uint8Array): number[] {

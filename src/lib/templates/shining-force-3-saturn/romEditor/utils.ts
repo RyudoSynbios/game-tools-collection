@@ -659,7 +659,9 @@ export function getFileData(type: string, index: number): DataView {
 }
 
 export function getFilteredFiles(type: string): File[] {
-  const files = getFiles().filter((file) => {
+  const files = getFiles();
+
+  return files.filter((file) => {
     if (file.name.match(/.CPK$/)) {
       return type === "video";
     } else if (file.name.match(/.CHP$/) || file.name.match(/.CHR$/)) {
@@ -692,12 +694,10 @@ export function getFilteredFiles(type: string): File[] {
       return type === "text";
     } else if (file.name.match(/^X8PC(.*?).BIN$/)) {
       return type === "battleCharacter";
-    } else if (!file.isDirectory) {
+    } else {
       return type === "asset";
     }
   });
-
-  return files;
 }
 
 export function getFileOffset(
