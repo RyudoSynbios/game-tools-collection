@@ -1,6 +1,6 @@
 import { get } from "svelte/store";
 
-import { dataViewAlt, gameTemplate } from "$lib/stores";
+import { dataViewAlt, gameRegion, gameTemplate } from "$lib/stores";
 import { getBigInt, getInt, isDataViewAltExists } from "$lib/utils/bytes";
 import { getObjKey } from "$lib/utils/format";
 
@@ -106,6 +106,17 @@ export function getRegionIndex(region: string): number {
   );
 
   return regionIndex;
+}
+
+export function getRegionName(regionIndex?: number): string {
+  const $gameRegion = get(gameRegion);
+  const $gameTemplate = get(gameTemplate);
+
+  if (regionIndex === undefined) {
+    regionIndex = $gameRegion;
+  }
+
+  return getObjKey($gameTemplate.validator.regions, regionIndex);
 }
 
 export function getRegions(
