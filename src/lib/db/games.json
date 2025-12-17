@@ -545,6 +545,18 @@
     }
   },
   {
+    "id": "holy-magic-century-n64",
+    "name": "Holy Magic Century",
+    "metaName": "Holy Magic Century (Quest 64)",
+    "consoleId": "nintendo-64",
+    "tools": {
+      "saveEditor": {
+        "createdAt": "2025-12-17",
+        "regions": ["🇪🇺", "🇺🇸", "🇯🇵", "🇫🇷", "🇩🇪"]
+      }
+    }
+  },
+  {
     "id": "kingdom-hearts-ps2",
     "name": "Kingdom Hearts",
     "consoleId": "playstation-2",
