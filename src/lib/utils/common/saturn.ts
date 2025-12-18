@@ -1,12 +1,12 @@
 import { get } from "svelte/store";
 
-import { dataView, gameRegion, gameTemplate } from "$lib/stores";
+import { dataView, gameTemplate } from "$lib/stores";
 
-import type { DataViewABL, Validator } from "$lib/types";
+import type { DataViewABL } from "$lib/types";
 
 import { addPadding, getInt, getString, removePadding } from "../bytes";
-import { getObjKey, mergeUint8Arrays, numberArrayToString } from "../format";
-import { checkValidator } from "../validator";
+import { mergeUint8Arrays, numberArrayToString } from "../format";
+import { checkValidator, getRegionValidator } from "../validator";
 
 interface File {
   name: string;
@@ -347,15 +347,7 @@ export function customGetRegions(): string[] {
 }
 
 export function generateFilteredSaves(): void {
-  const $gameRegion = get(gameRegion);
-  const $gameTemplate = get(gameTemplate);
-
-  const region = $gameTemplate.validator.regions[
-    getObjKey($gameTemplate.validator.regions, $gameRegion)
-  ] as Validator;
-
-  const validator = region[0];
-
+  const validator = getRegionValidator(0x0);
   const validatorStringified = numberArrayToString(validator);
 
   filteredSaves = saves

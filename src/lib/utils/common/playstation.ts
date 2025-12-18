@@ -1,11 +1,14 @@
 import { get } from "svelte/store";
 
-import { fileHeaderShift, gameRegion, gameTemplate } from "$lib/stores";
+import { fileHeaderShift, gameTemplate } from "$lib/stores";
 import { getInt } from "$lib/utils/bytes";
-import { getObjKey } from "$lib/utils/format";
-import { checkValidator, getRegions } from "$lib/utils/validator";
+import {
+  checkValidator,
+  getRegions,
+  getRegionValidator,
+} from "$lib/utils/validator";
 
-import type { RegionValidator, Validator } from "$lib/types";
+import type { RegionValidator } from "$lib/types";
 
 export function isMemoryCard(dataView: DataView, shift = 0x0): boolean {
   const validator = [0x4d, 0x43]; // "MC"
@@ -100,16 +103,10 @@ export function getSlotShifts(
   options: SlotShiftsOptions = {},
 ): [boolean, number[] | undefined] {
   const $fileHeaderShift = get(fileHeaderShift);
-  const $gameRegion = get(gameRegion);
-  const $gameTemplate = get(gameTemplate);
 
   const leadingZeros = options.leadingZeros || 0;
 
-  const region = $gameTemplate.validator.regions[
-    getObjKey($gameTemplate.validator.regions, $gameRegion)
-  ] as Validator;
-
-  let validator = region[0];
+  let validator = getRegionValidator(0x0);
 
   if (order === "correspondance") {
     if (options.overrideIndex) {

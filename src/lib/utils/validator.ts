@@ -8,6 +8,7 @@ import type {
   ItemIntCondition,
   LogicalOperator,
   RegionValidator,
+  Validator,
 } from "$lib/types";
 
 export function checkConditions(conditions: any, callback: any): boolean {
@@ -117,6 +118,19 @@ export function getRegionName(regionIndex?: number): string {
   }
 
   return getObjKey($gameTemplate.validator.regions, regionIndex);
+}
+
+export function getRegionValidator(
+  offset: number,
+  regionIndex?: number,
+): number[] {
+  const $gameTemplate = get(gameTemplate);
+
+  const region = getRegionName(regionIndex);
+
+  const validator = $gameTemplate.validator.regions[region] as Validator;
+
+  return validator[offset];
 }
 
 export function getRegions(

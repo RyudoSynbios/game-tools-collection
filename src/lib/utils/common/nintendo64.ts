@@ -1,16 +1,12 @@
 import Long from "long";
 import { get } from "svelte/store";
 
-import { dataView, gameRegion, gameTemplate } from "$lib/stores";
+import { dataView, gameTemplate } from "$lib/stores";
 import { byteswap, getDataView, getInt, getString } from "$lib/utils/bytes";
-import {
-  getObjKey,
-  mergeUint8Arrays,
-  numberArrayToString,
-} from "$lib/utils/format";
-import { checkValidator } from "$lib/utils/validator";
+import { mergeUint8Arrays, numberArrayToString } from "$lib/utils/format";
+import { checkValidator, getRegionValidator } from "$lib/utils/validator";
 
-import type { DataViewABL, ItemChecksum, Validator } from "$lib/types";
+import type { DataViewABL, ItemChecksum } from "$lib/types";
 
 interface Mpk {
   pageLength: number;
@@ -311,16 +307,12 @@ export function repackMpk(): ArrayBufferLike {
   return $dataView.buffer;
 }
 
+export function getMpkNotes(): Note[] {
+  return mpk.notes;
+}
+
 export function getSaves(): Save[] {
-  const $gameRegion = get(gameRegion);
-  const $gameTemplate = get(gameTemplate);
-
-  const region = $gameTemplate.validator.regions[
-    getObjKey($gameTemplate.validator.regions, $gameRegion)
-  ] as Validator;
-
-  const validator = region[0];
-
+  const validator = getRegionValidator(0x0);
   const validatorStringified = numberArrayToString(validator);
 
   const filteredSaves = saves.filter(
@@ -351,15 +343,7 @@ export function getRegionsFromMpk(): string[] {
 }
 
 export function getMpkNoteShift(): number[] {
-  const $gameRegion = get(gameRegion);
-  const $gameTemplate = get(gameTemplate);
-
-  const region = $gameTemplate.validator.regions[
-    getObjKey($gameTemplate.validator.regions, $gameRegion)
-  ] as Validator;
-
-  const validator = region[0];
-
+  const validator = getRegionValidator(0x0);
   const validatorStringified = numberArrayToString(validator);
 
   const save = saves.find((save) =>

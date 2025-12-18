@@ -1,10 +1,9 @@
 import { get } from "svelte/store";
 
-import { dataView, gameRegion, gameTemplate } from "$lib/stores";
+import { dataView, gameTemplate } from "$lib/stores";
 import { getInt, getString } from "$lib/utils/bytes";
-import { getObjKey, numberArrayToString } from "$lib/utils/format";
-
-import type { Validator } from "$lib/types";
+import { numberArrayToString } from "$lib/utils/format";
+import { getRegionValidator } from "$lib/utils/validator";
 
 import {
   isMemoryCard,
@@ -182,15 +181,7 @@ export function customGetRegions(): string[] {
 }
 
 export function generateFilteredSaves(): void {
-  const $gameRegion = get(gameRegion);
-  const $gameTemplate = get(gameTemplate);
-
-  const region = $gameTemplate.validator.regions[
-    getObjKey($gameTemplate.validator.regions, $gameRegion)
-  ] as Validator;
-
-  const validator = region[0];
-
+  const validator = getRegionValidator(0x0);
   const validatorStringified = numberArrayToString(validator);
 
   filteredSaves = saves
