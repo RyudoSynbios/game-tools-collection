@@ -142,6 +142,20 @@ const template: GameJson = {
                             },
                           ],
                         },
+                        {
+                          type: "section",
+                          flex: true,
+                          items: [
+                            {
+                              name: "SOLDIER Materia Set DLC",
+                              dataViewAltKey: "save",
+                              offset: 0xde6,
+                              type: "variable",
+                              dataType: "uint8",
+                              resource: "booleanUnlocked",
+                            },
+                          ],
+                        },
                       ],
                     },
                     {
