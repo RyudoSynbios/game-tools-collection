@@ -10,8 +10,10 @@
   import Dropzone from "$lib/components/Dropzone.svelte";
   import FileVisualizer from "$lib/components/FileVisualizer/FileVisualizer.svelte";
   import Content from "$lib/components/Items/Content.svelte";
+  import RegionModal from "$lib/components/RegionModal.svelte";
   import {
     dataView,
+    fileHeaderShift,
     fileName,
     gameJson,
     gameRegion,
@@ -25,8 +27,13 @@
   import { updateChecksums } from "$lib/utils/checksum";
   import { getGame } from "$lib/utils/db.js";
   import { capitalize, setLocalStorage, utilsExists } from "$lib/utils/format";
+  import { enrichGameJson } from "$lib/utils/parser";
   import { reset } from "$lib/utils/state";
-  import { getRegionName } from "$lib/utils/validator";
+  import {
+    getRegionIndex,
+    getRegionName,
+    getRegions,
+  } from "$lib/utils/validator";
 
   import type { Game, GameJson, Patch } from "$lib/types";
 
@@ -48,6 +55,12 @@
 
   let logoClickCount = 0;
   let logoClickTimer: NodeJS.Timeout;
+
+  let dataViewTmp: DataView | undefined;
+  let fileHeaderShiftTmp = 0x0;
+  let fileNameTmp = "";
+  let regions: string[] = [];
+  let error = "";
 
   let patchInputEl: HTMLInputElement;
   let patchToolbarOpen = false;
@@ -71,6 +84,8 @@
         return;
       }
     }
+
+    regions = [];
 
     reset();
   }
@@ -116,6 +131,121 @@
       }
     }
   }
+
+  function isLocalized(): boolean {
+    if (!$gameTemplate.localization) {
+      return false;
+    }
+
+    const regions = Object.keys($gameTemplate.validator.regions);
+
+    const isLocalized = $gameTemplate.localization.regions.includes(
+      regions[$gameRegion],
+    );
+
+    if (isLocalized && $locale === "") {
+      $locale = $gameTemplate.localization.languages[0];
+    }
+
+    return isLocalized;
+  }
+
+  // Tool
+
+  function initTool(region: string): void {
+    const regionIndex = getRegionIndex(region);
+
+    if (regionIndex !== -1) {
+      $dataView = dataViewTmp as DataView;
+      $fileHeaderShift = fileHeaderShiftTmp;
+      $fileName = fileNameTmp;
+      $gameRegion = regionIndex;
+
+      enrichGameJson();
+
+      uploadSuccess();
+    } else {
+      regions = [];
+      uploadFailed("region not found");
+    }
+
+    dataViewTmp = undefined;
+    fileNameTmp = "";
+  }
+
+  function onFileFailed(): void {
+    uploadFailed("file size is 0");
+  }
+
+  async function onFileUploaded(file: File, dataView: DataView): Promise<void> {
+    dataViewTmp = dataView;
+    fileNameTmp = file.name;
+    fileHeaderShiftTmp = 0x0;
+
+    if (utilsExists("initHeaderShift")) {
+      fileHeaderShiftTmp = $gameUtils.initHeaderShift(dataViewTmp);
+    }
+
+    if (utilsExists("beforeInitDataView")) {
+      dataViewTmp = await $gameUtils.beforeInitDataView(
+        dataViewTmp,
+        fileHeaderShiftTmp,
+      );
+    }
+
+    if (utilsExists("overrideGetRegions")) {
+      regions = $gameUtils.overrideGetRegions(dataViewTmp, fileHeaderShiftTmp);
+    } else {
+      regions = getRegions(dataViewTmp as DataView, fileHeaderShiftTmp);
+    }
+
+    if (
+      $gameTemplate.validator.fileNames &&
+      !$gameTemplate.validator.fileNames.find((fileName) => {
+        if (typeof fileName === "object") {
+          return file.name.match(fileName);
+        } else if (typeof fileName === "string") {
+          return fileName === file.name;
+        }
+      })
+    ) {
+      regions = [];
+    }
+
+    if (regions.length === 1) {
+      initTool(regions[0]);
+    } else if (regions.length === 0) {
+      if (utilsExists("onInitFailed")) {
+        $gameUtils.onInitFailed();
+      }
+
+      uploadFailed("invalid file");
+    }
+  }
+
+  function uploadFailed(reason: string): void {
+    error = $gameTemplate.validator.error;
+
+    if (!$isDebug) {
+      fetch(`${page.url.pathname}/failed`, {
+        method: "POST",
+        body: JSON.stringify({ reason }),
+      });
+    }
+  }
+
+  function uploadSuccess(): void {
+    error = "";
+
+    if (!$isDebug) {
+      fetch(`${page.url.pathname}/success`, {
+        method: "POST",
+        body: JSON.stringify({}),
+      });
+    }
+  }
+
+  // Patch
 
   function handlePatchImportClick(): void {
     if (!patchIsLoading) {
@@ -190,24 +320,6 @@
     resetPatchStatus();
   }
 
-  function isLocalized(): boolean {
-    if (!$gameTemplate.localization) {
-      return false;
-    }
-
-    const regions = Object.keys($gameTemplate.validator.regions);
-
-    const isLocalized = $gameTemplate.localization.regions.includes(
-      regions[$gameRegion],
-    );
-
-    if (isLocalized && $locale === "") {
-      $locale = $gameTemplate.localization.languages[0];
-    }
-
-    return isLocalized;
-  }
-
   function resetPatchStatus(): void {
     patchError = "";
     patchSuccess = false;
@@ -235,12 +347,32 @@
 <!-- svelte-ignore a11y-no-static-element-interactions -->
 <div class="gtc-tool">
   {#if $dataView.byteLength === 0}
-    <div class="gtc-tool-dropzone">
-      <Dropzone
-        logo="/img/games/{game.id}/logo.png"
-        name="{game.metaName} ({game.console.name})"
-      />
-    </div>
+    <Dropzone {onFileFailed} {onFileUploaded}>
+      <svelte:fragment slot="dropzone" let:isDragging let:isFileLoading>
+        <img
+          src="/img/games/{game.id}/logo.png"
+          alt="{game.metaName} ({game.console.name})"
+        />
+        {#if isDragging}
+          <p>Drop the file here.</p>
+        {:else if !isFileLoading}
+          <p>{$gameTemplate.validator?.text || ""}</p>
+        {:else}
+          <p>Loading...</p>
+        {/if}
+        {#if $gameTemplate?.validator?.hint}
+          <p class="gtc-tool-hint">{@html $gameTemplate.validator.hint}</p>
+        {/if}
+        {#if error}
+          <p class="gtc-tool-error">
+            {@html $gameTemplate.validator.error}
+          </p>
+        {/if}
+      </svelte:fragment>
+    </Dropzone>
+    {#if regions.length > 1}
+      <RegionModal {regions} onSubmit={(region) => initTool(region)} />
+    {/if}
   {:else}
     <div class="gtc-tool-banner">
       <img
@@ -318,6 +450,14 @@
 <style lang="postcss">
   .gtc-tool {
     @apply flex flex-1 flex-col;
+
+    .gtc-tool-hint {
+      @apply whitespace-pre-line text-center text-primary-400;
+    }
+
+    .gtc-tool-error {
+      @apply text-center text-primary-300;
+    }
 
     .gtc-tool-banner {
       @apply mb-4 flex h-10 items-center justify-between;
@@ -409,10 +549,6 @@
           }
         }
       }
-    }
-
-    & .gtc-tool-dropzone {
-      @apply flex flex-1 items-center justify-center;
     }
   }
 </style>

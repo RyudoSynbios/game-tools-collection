@@ -88,7 +88,7 @@ export async function saveShouldBeRejected(
     .locator('input[type="file"]')
     .setInputFiles(`${path}/${saveFilePath}`);
 
-  const dropzoneErrorEl = await page.$(".gtc-dropzone-error");
+  const dropzoneErrorEl = await page.$(".gtc-tool-error");
 
   if (!dropzoneErrorEl) {
     console.log(`Tested file: "${`${path}/${saveFilePath}`}"`);

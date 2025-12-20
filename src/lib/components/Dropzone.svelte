@@ -1,30 +1,14 @@
 <script lang="ts">
-  import { page } from "$app/state";
-  import RegionModal from "$lib/components/RegionModal.svelte";
-  import {
-    dataView,
-    fileHeaderShift,
-    fileName,
-    gameRegion,
-    gameTemplate,
-    gameUtils,
-    isDebug,
-  } from "$lib/stores";
-  import { utilsExists } from "$lib/utils/format";
-  import { enrichGameJson } from "$lib/utils/parser";
-  import { getRegionIndex, getRegions } from "$lib/utils/validator";
-
-  export let logo = "";
-  export let name = "";
+  export let onFileFailed: (file: File) => void = () => {};
+  export let onFileUploaded: (
+    file: File,
+    dataView: DataView,
+  ) => void | Promise<void>;
 
   let inputEl: HTMLInputElement;
+
   let isDragging = false;
-  let dataViewTmp: DataView | undefined;
-  let fileHeaderShiftTmp = 0x0;
-  let fileIsLoading = false;
-  let fileNameTmp = "";
-  let regions: string[] = [];
-  let error = "";
+  let isFileLoading = false;
 
   function handleDragLeave(): void {
     isDragging = false;
@@ -35,6 +19,8 @@
   }
 
   function handleDrop(event: DragEvent): void {
+    isDragging = false;
+
     const files = event.dataTransfer?.files;
 
     if (files) {
@@ -45,7 +31,7 @@
   }
 
   function handleDropzoneClick(): void {
-    if (!fileIsLoading) {
+    if (!isFileLoading) {
       inputEl.click();
     }
   }
@@ -59,110 +45,26 @@
 
   function handleUploadedFile(file: File): void {
     if (!file || file.size === 0) {
-      uploadFailed("file size is 0");
+      if (typeof onFileFailed === "function") {
+        onFileFailed(file);
+      }
+
       return;
     }
 
-    isDragging = false;
-    fileIsLoading = true;
+    isFileLoading = true;
 
     const fileReader = new FileReader();
 
     fileReader.onload = async (event: ProgressEvent<FileReader>) => {
-      dataViewTmp = new DataView(event.target?.result as ArrayBufferLike);
-      fileNameTmp = file.name;
-      fileHeaderShiftTmp = 0x0;
+      const dataView = new DataView(event.target?.result as ArrayBufferLike);
 
-      if (utilsExists("initHeaderShift")) {
-        fileHeaderShiftTmp = $gameUtils.initHeaderShift(dataViewTmp);
-      }
+      await onFileUploaded(file, dataView);
 
-      if (utilsExists("beforeInitDataView")) {
-        dataViewTmp = await $gameUtils.beforeInitDataView(
-          dataViewTmp,
-          fileHeaderShiftTmp,
-        );
-      }
-
-      if (utilsExists("overrideGetRegions")) {
-        regions = $gameUtils.overrideGetRegions(
-          dataViewTmp,
-          fileHeaderShiftTmp,
-        );
-      } else {
-        regions = getRegions(dataViewTmp as DataView, fileHeaderShiftTmp);
-      }
-
-      if (
-        $gameTemplate.validator.fileNames &&
-        !$gameTemplate.validator.fileNames.find((fileName) => {
-          if (typeof fileName === "object") {
-            return file.name.match(fileName);
-          } else if (typeof fileName === "string") {
-            return fileName === file.name;
-          }
-        })
-      ) {
-        regions = [];
-      }
-
-      if (regions.length === 1) {
-        initTool(regions[0]);
-      } else if (regions.length === 0) {
-        if (utilsExists("onInitFailed")) {
-          $gameUtils.onInitFailed();
-        }
-
-        uploadFailed("invalid file");
-      }
-
-      fileIsLoading = false;
+      isFileLoading = false;
     };
 
     fileReader.readAsArrayBuffer(file);
-  }
-
-  function initTool(region: string): void {
-    const regionIndex = getRegionIndex(region);
-
-    if (regionIndex !== -1) {
-      $dataView = dataViewTmp as DataView;
-      $fileHeaderShift = fileHeaderShiftTmp;
-      $fileName = fileNameTmp;
-      $gameRegion = regionIndex;
-
-      enrichGameJson();
-
-      uploadSuccess();
-    } else {
-      regions = [];
-      uploadFailed("region not found");
-    }
-
-    dataViewTmp = undefined;
-    fileNameTmp = "";
-  }
-
-  function uploadFailed(reason: string): void {
-    error = $gameTemplate.validator.error;
-
-    if (!$isDebug) {
-      fetch(`${page.url.pathname}/failed`, {
-        method: "POST",
-        body: JSON.stringify({ reason }),
-      });
-    }
-  }
-
-  function uploadSuccess(): void {
-    error = "";
-
-    if (!$isDebug) {
-      fetch(`${page.url.pathname}/success`, {
-        method: "POST",
-        body: JSON.stringify({}),
-      });
-    }
   }
 </script>
 
@@ -176,46 +78,22 @@
     on:dragover|preventDefault={handleDragOver}
     on:drop|preventDefault={handleDrop}
   >
-    <img src={logo} alt={name} />
-    {#if isDragging}
-      <p>Drop the file here.</p>
-    {:else if !fileIsLoading}
-      <p>{$gameTemplate.validator?.text || ""}</p>
-    {:else}
-      <p>Loading...</p>
-    {/if}
-    {#if $gameTemplate?.validator?.hint}
-      <p class="gtc-dropzone-hint">{@html $gameTemplate.validator.hint}</p>
-    {/if}
-    {#if error}
-      <p class="gtc-dropzone-error">{@html $gameTemplate.validator.error}</p>
-    {/if}
+    <slot name="dropzone" {isDragging} {isFileLoading} />
     <input type="file" bind:this={inputEl} on:change={handleInputChange} />
   </div>
-  {#if regions.length > 1}
-    <RegionModal {regions} onSubmit={(region) => initTool(region)} />
-  {/if}
 </div>
 
 <style lang="postcss">
   .gtc-dropzone {
-    @apply flex select-none rounded bg-primary-900 p-2;
+    @apply m-auto select-none rounded bg-primary-900 p-2;
 
     width: 600px;
     min-height: 400px;
 
     & .gtc-dropzone-inner {
-      @apply flex w-full cursor-pointer flex-col items-center justify-center border-2 border-dashed border-primary-500 p-4 text-white;
+      @apply flex h-full w-full cursor-pointer flex-col items-center justify-center border-2 border-dashed border-primary-500 p-4 text-white;
 
-      & .gtc-dropzone-hint {
-        @apply whitespace-pre-line text-center text-primary-400;
-      }
-
-      & .gtc-dropzone-error {
-        @apply text-center text-primary-300;
-      }
-
-      & input {
+      & input[type="file"] {
         @apply hidden;
       }
     }
