@@ -63,6 +63,7 @@ export interface File {
   path: string;
   name: string;
   sector: number;
+  offset: number;
   size: number;
   dataView: DataView;
   isDirty: boolean;
@@ -269,6 +270,7 @@ export default class Iso9660 {
             path,
             name,
             sector: sectorLE,
+            offset: this.getSectorOffset(sectorLE),
             size: fileSizeLE,
             dataView: new DataView(new ArrayBuffer(0)),
             isDirty: false,
