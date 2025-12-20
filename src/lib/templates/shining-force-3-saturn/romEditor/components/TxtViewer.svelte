@@ -1,5 +1,7 @@
 <script lang="ts">
-  import { getFileData, readTxt } from "../utils";
+  import { getString } from "$lib/utils/bytes";
+
+  import { getFileData } from "../utils";
 
   export let assetIndex: number;
 
@@ -8,7 +10,10 @@
   $: {
     const dataView = getFileData("txt", assetIndex);
 
-    text = readTxt(dataView);
+    // prettier-ignore
+    text = getString(0x0, -1, "uint8", {
+      encoding: "windows31J",
+    }, dataView);
   }
 </script>
 

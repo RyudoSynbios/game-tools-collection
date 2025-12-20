@@ -791,24 +791,6 @@ function isPatched(): boolean {
   return checkValidator(validator, offset);
 }
 
-export function readTxt(dataView: DataView): string {
-  let text = "";
-
-  for (let i = 0x0; i < dataView.byteLength - 1; i += 0x1) {
-    const code8 = getInt(i, "uint8", {}, dataView);
-    const code16 = getInt(i, "uint16", { bigEndian: true }, dataView);
-
-    if (isCharUint16(code16, "windows31J")) {
-      text += decodeChar(code16, "windows31J");
-      i += 0x1;
-    } else {
-      text += decodeChar(code8, "windows31J");
-    }
-  }
-
-  return text;
-}
-
 export function getText(
   index: number,
   format = true,
