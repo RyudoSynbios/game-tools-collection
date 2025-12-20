@@ -798,9 +798,19 @@ export function getString(
 
   const increment = dataTypeToLength(letterDataType);
 
+  const lengthMax = $dataView.byteLength;
+
+  if (length === -1) {
+    length = lengthMax;
+  }
+
   let string = "";
 
-  for (let i = offset; i < offset + length; i += increment) {
+  for (
+    let i = offset;
+    i < Math.min(offset + length, lengthMax);
+    i += increment
+  ) {
     const code = getInt(i, letterDataType, { bigEndian: options.letterBigEndian }, $dataView); // prettier-ignore
 
     if (options.endCode !== undefined && options.endCode === code) {
