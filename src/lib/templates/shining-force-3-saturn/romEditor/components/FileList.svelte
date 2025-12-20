@@ -1,7 +1,8 @@
 <script lang="ts">
   import Input from "$lib/components/Input.svelte";
   import Select from "$lib/components/Select.svelte";
-  import { getFiles } from "$lib/utils/common/iso9660";
+
+  import { iso } from "../utils";
 
   let search = "";
   let indexFormat = "hexadecimal";
@@ -18,7 +19,7 @@
   $: {
     text = "";
 
-    const files = getFiles();
+    const files = iso.getFiles();
 
     files
       .filter((file) => {

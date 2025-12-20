@@ -1,5 +1,4 @@
 import { getInt, getIntFromArray, intToArray } from "$lib/utils/bytes";
-import { getFile } from "$lib/utils/common/iso9660";
 import { applyPalette, getColor, getPalette } from "$lib/utils/graphics";
 import { checkValidator } from "$lib/utils/validator";
 
@@ -10,6 +9,7 @@ import {
   getFilteredFiles,
   getScenario,
   isDummy,
+  iso,
 } from "../utils";
 
 interface Image {
@@ -54,7 +54,7 @@ export function getImagesCanvas(
   type: "image" | "sprite",
 ): ImagesCanvas {
   const files = getFilteredFiles(type);
-  const file = getFile(files[index].name);
+  const file = iso.getFile(files[index].name);
 
   const imagesCanvas: ImagesCanvas = {
     width: 0,

@@ -8,13 +8,7 @@ import {
   gameTemplate,
 } from "$lib/stores";
 import { getInt, getString, setInt } from "$lib/utils/bytes";
-import {
-  customGetRegions,
-  getFile,
-  readIso9660,
-  resetIso9660,
-  writeFile,
-} from "$lib/utils/common/iso9660";
+import Iso9660, { customGetRegions } from "$lib/utils/common/iso9660";
 import { getRegionArray } from "$lib/utils/format";
 import { getItem, getResource } from "$lib/utils/parser";
 import {
@@ -42,18 +36,21 @@ export function overrideGetRegions(
   return customGetRegions(dataView, shift);
 }
 
+let iso: Iso9660;
+
 const dataViews = [
   { name: "dra", fileName: "DRA.BIN" }, // Main
   { name: "lib", fileName: "ST/LIB/LIB.BIN" }, // Library
 ];
 
 export function beforeItemsParsing(): void {
+  const $dataView = get(dataView);
   const $dataViewAlt = get(dataViewAlt);
 
-  readIso9660();
+  iso = new Iso9660($dataView);
 
   dataViews.forEach((dataView) => {
-    const file = getFile(dataView.fileName);
+    const file = iso.getFile(dataView.fileName);
 
     if (file) {
       $dataViewAlt[dataView.name] = file.dataView;
@@ -136,21 +133,16 @@ export function overrideSetInt(item: Item, value: string): boolean {
 }
 
 export function beforeSaving(): ArrayBufferLike {
-  const $dataView = get(dataView);
   const $dataViewAlt = get(dataViewAlt);
   const $dataViewAltMetas = get(dataViewAltMetas);
 
   dataViews.forEach((dataView) => {
     if ($dataViewAltMetas[dataView.name]?.isDirty) {
-      writeFile(dataView.fileName, $dataViewAlt[dataView.name]);
+      iso.writeFile(dataView.fileName, $dataViewAlt[dataView.name]);
     }
   });
 
-  return $dataView.buffer;
-}
-
-export function onReset(): void {
-  resetIso9660();
+  return iso.getBuffer();
 }
 
 export function importPatch(patch: Patch<PatchData>): void {

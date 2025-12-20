@@ -7,14 +7,9 @@ import {
   gameRegion,
 } from "$lib/stores";
 import { getInt, setInt } from "$lib/utils/bytes";
-import {
+import Iso9660, {
   customGetRegions,
-  getFile,
-  getFiles,
   hasSectors,
-  readIso9660,
-  resetIso9660,
-  writeFile,
   type File,
 } from "$lib/utils/common/iso9660";
 import { decodeChar, isCharUint16 } from "$lib/utils/encoding";
@@ -61,6 +56,8 @@ export function overrideGetRegions(
   return customGetRegions(dataView, shift);
 }
 
+export let iso: Iso9660;
+
 const dataViews = [
   { name: "x002", fileName: "X002.BIN" }, // Items
   { name: "x019", fileName: "X019.BIN" }, // Enemies
@@ -69,12 +66,13 @@ const dataViews = [
 ];
 
 export function beforeItemsParsing(): void {
+  const $dataView = get(dataView);
   const $dataViewAlt = get(dataViewAlt);
 
-  readIso9660();
+  iso = new Iso9660($dataView);
 
   dataViews.forEach((dataView) => {
-    const file = getFile(dataView.fileName);
+    const file = iso.getFile(dataView.fileName);
 
     if (file) {
       $dataViewAlt[dataView.name] = file.dataView;
@@ -334,17 +332,16 @@ export function getComponent(
 }
 
 export function beforeSaving(): ArrayBufferLike {
-  const $dataView = get(dataView);
   const $dataViewAlt = get(dataViewAlt);
   const $dataViewAltMetas = get(dataViewAltMetas);
 
   dataViews.forEach((dataView) => {
     if ($dataViewAltMetas[dataView.name]?.isDirty) {
-      writeFile(dataView.fileName, $dataViewAlt[dataView.name]);
+      iso.writeFile(dataView.fileName, $dataViewAlt[dataView.name]);
     }
   });
 
-  return $dataView.buffer;
+  return iso.getBuffer();
 }
 
 export function onReset(): void {
@@ -356,8 +353,6 @@ export function onReset(): void {
     dummyTextFile: new DataView(new ArrayBuffer(0)),
     texts: [],
   };
-
-  resetIso9660();
 }
 
 export function importPatch(patch: Patch<PatchData>): void {
@@ -664,7 +659,7 @@ export function getDecompressedData(
 
 export function getFileData(type: string, index: number): DataView {
   const files = getFilteredFiles(type);
-  const file = getFile(files[index].name);
+  const file = iso.getFile(files[index].name);
 
   if (file) {
     return file.dataView;
@@ -674,7 +669,7 @@ export function getFileData(type: string, index: number): DataView {
 }
 
 export function getFilteredFiles(type: string): File[] {
-  const files = getFiles();
+  const files = iso.getFiles();
 
   return files.filter((file) => {
     if (file.name.match(/.CPK$/)) {
@@ -802,7 +797,7 @@ export function getText(
     const files = getFilteredFiles("text");
 
     if (files.length > 0) {
-      const file = getFile("X5SHOP_T.BIN");
+      const file = iso.getFile("X5SHOP_T.BIN");
 
       if (file) {
         cache.dummyTextFile = file.dataView;
