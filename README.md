@@ -55,7 +55,7 @@ Link to the website: [https://game-tools-collection.com](https://game-tools-coll
 | Golden Sun                                   | GBA      | Save / Rom              | EUR / USA / JAP / FRA / GER / ITA / SPA       |
 | Golden Sun: The Lost Age                     | GBA      | Save                    | EUR / USA / JAP / FRA / GER / ITA / SPA       |
 | GoldenEye 007                                | N64      | Save                    | EUR / USA / JAP                               |
-| Grandia                                      | PS       | Save                    | EUR / USA / JAP / FRA / GER                   |
+| Grandia                                      | PS       | Save / Rom              | EUR / USA / JAP / FRA / GER                   |
 | Grandia II                                   | PS2      | Save                    | EUR / USA / JAP                               |
 | Half-Minute Hero                             | PSP      | Save                    | EUR / USA / JAP                               |
 | Holy Magic Century                           | N64      | Save                    | EUR / USA / JAP / FRA / GER                   |
