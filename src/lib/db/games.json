@@ -353,6 +353,17 @@
     }
   },
   {
+    "id": "f-zero-snes",
+    "name": "F-Zero",
+    "consoleId": "super-nintendo",
+    "tools": {
+      "saveEditor": {
+        "createdAt": "2025-12-22",
+        "regions": ["🇪🇺", "🇺🇸", "🇯🇵"]
+      }
+    }
+  },
+  {
     "id": "f-zero-x-n64",
     "name": "F-Zero X",
     "consoleId": "nintendo-64",
