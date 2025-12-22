@@ -137,7 +137,7 @@ const template: GameJson = {
                               ],
                             },
                             {
-                              name: "Fire Stringray",
+                              name: "Fire Stingray",
                               type: "bitflags",
                               flags: [
                                 { offset: 0x7f93, bit: 0, label: "Jack Cup" },

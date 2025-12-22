@@ -147,6 +147,12 @@ export function parseItem(
       .replace("%index%", instanceIndex);
   }
 
+  if (newItem.resource !== undefined) {
+    newItem.resource = newItem.resource
+      .replace("%parent%", parentIndex)
+      .replace("%index%", instanceIndex);
+  }
+
   if (newItem.button?.action !== undefined) {
     newItem.button.action = newItem.button.action
       .replace("%parent%", parentIndex)
