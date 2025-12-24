@@ -1,0 +1,2817 @@
+import type { GameJson, ItemSection } from "$lib/types";
+
+import {
+  angeloAbilities,
+  angeloAbilityList,
+  characterAbilities,
+  characterList,
+  characters,
+  commandAbilities,
+  commonCards,
+  disc1Locations,
+  disc1LocationsGroups,
+  disc1LocationsOrder,
+  disc2Locations,
+  disc2LocationsGroups,
+  disc2LocationsOrder,
+  disc3Locations,
+  disc3LocationsGroups,
+  disc3LocationsOrder,
+  disc4Locations,
+  disc4LocationsGroups,
+  disc4LocationsOrder,
+  gfAbilities,
+  gfAbilityList,
+  uniqueCards,
+} from "./utils/resource";
+
+const template: GameJson = {
+  validator: {
+    regions: {
+      europe: {
+        0x0: [
+          0x42, 0x45, 0x53, 0x4c, 0x45, 0x53, 0x50, 0x30, 0x32, 0x30, 0x38,
+          0x30, 0x30, 0x35, 0x32, 0x30,
+        ], // "BESLESP020800520"
+      },
+      usa: {
+        0x0: [
+          0x42, 0x41, 0x53, 0x4c, 0x55, 0x53, 0x50, 0x30, 0x30, 0x38, 0x39,
+          0x32, 0x30, 0x34, 0x32, 0x36,
+        ], // "BASLUSP008920426"
+      },
+      japan: {
+        0x0: [
+          0x42, 0x49, 0x53, 0x4c, 0x50, 0x53, 0x50, 0x30, 0x31, 0x38, 0x38,
+          0x30, 0x46, 0x46, 0x30, 0x38,
+        ], // "BISLPSP01880FF08"
+      },
+      france: {
+        0x0: [
+          0x42, 0x45, 0x53, 0x4c, 0x45, 0x53, 0x50, 0x30, 0x32, 0x30, 0x38,
+          0x31, 0x30, 0x35, 0x32, 0x30,
+        ], // "BESLESP020810520"
+      },
+      germany: {
+        0x0: [
+          0x42, 0x45, 0x53, 0x4c, 0x45, 0x53, 0x50, 0x30, 0x32, 0x30, 0x38,
+          0x32, 0x30, 0x35, 0x32, 0x30,
+        ], // "BESLESP020820520"
+      },
+      italy: {
+        0x0: [
+          0x42, 0x45, 0x53, 0x4c, 0x45, 0x53, 0x50, 0x30, 0x32, 0x30, 0x38,
+          0x33, 0x30, 0x35, 0x32, 0x30,
+        ], // "BESLESP020830520"
+      },
+      spain: {
+        0x0: [
+          0x42, 0x45, 0x53, 0x4c, 0x45, 0x53, 0x50, 0x30, 0x32, 0x30, 0x38,
+          0x34, 0x30, 0x35, 0x32, 0x30,
+        ], // "BESLESP020840520"
+      },
+    },
+    text: "Drag 'n' drop here or click to add a save file.",
+    error: "Not a valid save file.",
+  },
+  items: [
+    {
+      id: "slots",
+      instanceId: "slots",
+      length: 0x2000,
+      type: "container",
+      instanceType: "tabs",
+      instances: 15,
+      enumeration: "Slot %d",
+      onTabChange: "onSlotChange(%d)",
+      items: [
+        {
+          type: "section",
+          flex: true,
+          hidden: true,
+          items: [
+            {
+              name: "Checksum",
+              offset: 0x180,
+              type: "checksum",
+              dataType: "uint16",
+              control: {
+                offsetStart: 0x1d0,
+                offsetEnd: 0x1520,
+              },
+            },
+            {
+              name: "Checksum",
+              offset: 0x1520,
+              type: "checksum",
+              dataType: "uint16",
+              control: {
+                offsetStart: 0x1d0,
+                offsetEnd: 0x1520,
+              },
+            },
+          ],
+        },
+        {
+          type: "tabs",
+          items: [
+            {
+              name: "General",
+              items: [
+                {
+                  type: "tabs",
+                  vertical: true,
+                  items: [
+                    {
+                      name: "General",
+                      items: [
+                        {
+                          type: "section",
+                          flex: true,
+                          items: [
+                            {
+                              name: "Save Count",
+                              offset: 0x18a,
+                              type: "variable",
+                              dataType: "uint16",
+                              hidden: true,
+                            },
+                            {
+                              name: "Progression",
+                              offset: 0xfe0,
+                              type: "variable",
+                              dataType: "uint16",
+                              max: 4050,
+                              hint: "Changing this value may softlock your save. Note the current value before changing it if you want to restore your progression.\n\nDisc 1: 14->388\nDisc 2: 395->895\nDisc 3: 901->3810\nDisc 4: 3860->4050",
+                            },
+                            {
+                              id: "disc",
+                              name: "Disc",
+                              offset: 0xfac,
+                              type: "variable",
+                              dataType: "uint8",
+                              resource: "discs",
+                              hint: "Be aware that your current scenario progression will be lost and adapted to the choosen disc.",
+                            },
+                            {
+                              name: "Playtime",
+                              type: "group",
+                              mode: "time",
+                              items: [
+                                {
+                                  id: "time-playtime",
+                                  offset: 0xe50,
+                                  type: "variable",
+                                  dataType: "uint32",
+                                  operations: [
+                                    { "*": 1.2 },
+                                    {
+                                      convert: { from: "seconds", to: "hours" },
+                                    },
+                                  ],
+                                  max: 599,
+                                },
+                                {
+                                  id: "time-playtime",
+                                  offset: 0xe50,
+                                  type: "variable",
+                                  dataType: "uint32",
+                                  operations: [
+                                    { "*": 1.2 },
+                                    {
+                                      convert: {
+                                        from: "seconds",
+                                        to: "minutes",
+                                      },
+                                    },
+                                  ],
+                                  leadingZeros: 1,
+                                  max: 59,
+                                },
+                                {
+                                  id: "time-playtime",
+                                  offset: 0xe50,
+                                  type: "variable",
+                                  dataType: "uint32",
+                                  operations: [
+                                    { "*": 1.2 },
+                                    {
+                                      convert: {
+                                        from: "seconds",
+                                        to: "seconds",
+                                      },
+                                    },
+                                  ],
+                                  leadingZeros: 1,
+                                  max: 59,
+                                },
+                              ],
+                            },
+                          ],
+                        },
+                        {
+                          type: "section",
+                          flex: true,
+                          items: [
+                            {
+                              id: "timeline",
+                              name: "Time",
+                              offset: 0xea2,
+                              type: "variable",
+                              dataType: "bit",
+                              bit: 0,
+                              resource: "times",
+                            },
+                            {
+                              name: "Location Type",
+                              offset: 0xec0,
+                              type: "variable",
+                              dataType: "uint16",
+                              resource: "locationTypes",
+                              hidden: true,
+                            },
+                            {
+                              id: "location",
+                              name: "Location",
+                              offset: 0xec2,
+                              type: "variable",
+                              dataType: "uint16",
+                              size: "lg",
+                              autocomplete: true,
+                            },
+                            {
+                              name: "Previous Location",
+                              offset: 0xec4,
+                              type: "variable",
+                              dataType: "uint16",
+                              hidden: true,
+                            },
+                            {
+                              name: "Location Position X",
+                              offset: 0xec6,
+                              type: "variable",
+                              dataType: "int16",
+                              hidden: true,
+                            },
+                            {
+                              name: "Location Position Y",
+                              offset: 0xed2,
+                              type: "variable",
+                              dataType: "int16",
+                              hidden: true,
+                            },
+                            {
+                              name: "Location Position Z",
+                              offset: 0xecc,
+                              type: "variable",
+                              dataType: "int16",
+                              hidden: true,
+                            },
+                            {
+                              name: "World Map Position X",
+                              offset: 0x13e0,
+                              type: "variable",
+                              dataType: "int32",
+                              hidden: true,
+                            },
+                            {
+                              name: "World Map Position Y",
+                              offset: 0x13e8,
+                              type: "variable",
+                              dataType: "int32",
+                              hidden: true,
+                            },
+                            {
+                              name: "World Map Position Z",
+                              offset: 0x13e4,
+                              type: "variable",
+                              dataType: "int32",
+                              hidden: true,
+                            },
+                            {
+                              id: "gil-0",
+                              name: "Gil (Squall)",
+                              offset: 0xc8c,
+                              type: "variable",
+                              dataType: "uint32",
+                              max: 99999999,
+                            },
+                            {
+                              id: "gil-1",
+                              name: "Gil (Laguna)",
+                              offset: 0xc90,
+                              type: "variable",
+                              dataType: "uint32",
+                              max: 99999999,
+                            },
+                          ],
+                        },
+                        {
+                          type: "section",
+                          flex: true,
+                          hidden: true,
+                          items: [
+                            {
+                              name: "Playtime (Save Preview)",
+                              offset: 0x190,
+                              type: "variable",
+                              dataType: "uint32",
+                              hidden: true,
+                            },
+                            {
+                              name: "Disc (Save Preview)",
+                              offset: 0x1c8,
+                              type: "variable",
+                              dataType: "uint8",
+                              hidden: true,
+                            },
+                            {
+                              name: "Location (Save Preview)",
+                              offset: 0x184,
+                              type: "variable",
+                              dataType: "uint16",
+                              hidden: true,
+                            },
+                            {
+                              name: "Gil (Save Preview)",
+                              offset: 0x18c,
+                              type: "variable",
+                              dataType: "uint32",
+                              hidden: true,
+                            },
+                            {
+                              name: "Level (Save Preview)",
+                              offset: 0x194,
+                              type: "variable",
+                              dataType: "uint8",
+                              hidden: true,
+                            },
+                            {
+                              name: "HP (Save Preview)",
+                              offset: 0x186,
+                              type: "variable",
+                              dataType: "uint16",
+                              hidden: true,
+                            },
+                            {
+                              name: "Max HP (Save Preview)",
+                              offset: 0x188,
+                              type: "variable",
+                              dataType: "uint16",
+                              hidden: true,
+                            },
+                          ],
+                        },
+                      ],
+                    },
+                    {
+                      name: "Formation",
+                      items: [
+                        {
+                          type: "section",
+                          flex: true,
+                          items: [
+                            {
+                              id: "formation-0",
+                              name: "Character 1",
+                              offset: 0xc74,
+                              type: "variable",
+                              dataType: "uint8",
+                              resource: "characters",
+                              autocomplete: true,
+                            },
+                            {
+                              id: "formation-1",
+                              name: "Character 2",
+                              offset: 0xc75,
+                              type: "variable",
+                              dataType: "uint8",
+                              resource: "characters",
+                              autocomplete: true,
+                            },
+                            {
+                              id: "formation-2",
+                              name: "Character 3",
+                              offset: 0xc76,
+                              type: "variable",
+                              dataType: "uint8",
+                              resource: "characters",
+                              autocomplete: true,
+                            },
+                          ],
+                        },
+                        {
+                          name: "Field",
+                          type: "section",
+                          flex: true,
+                          items: [
+                            {
+                              name: "Character 1",
+                              offset: 0xeb8,
+                              type: "variable",
+                              dataType: "uint8",
+                              resource: "fieldCharacters",
+                              autocomplete: true,
+                            },
+                            {
+                              name: "Character 2",
+                              offset: 0xeb9,
+                              type: "variable",
+                              dataType: "uint8",
+                              resource: "fieldCharacters",
+                              autocomplete: true,
+                            },
+                            {
+                              name: "Character 3",
+                              offset: 0xeba,
+                              type: "variable",
+                              dataType: "uint8",
+                              resource: "fieldCharacters",
+                              autocomplete: true,
+                            },
+                          ],
+                        },
+                        {
+                          type: "section",
+                          flex: true,
+                          hidden: true,
+                          items: [
+                            {
+                              name: "Character 1 (Save Preview)",
+                              offset: 0x195,
+                              type: "variable",
+                              dataType: "uint8",
+                              resource: "fieldCharacters",
+                            },
+                            {
+                              name: "Character 2 (Save Preview)",
+                              offset: 0x196,
+                              type: "variable",
+                              dataType: "uint8",
+                              resource: "fieldCharacters",
+                            },
+                            {
+                              name: "Character 3 (Save Preview)",
+                              offset: 0x197,
+                              type: "variable",
+                              dataType: "uint8",
+                              resource: "fieldCharacters",
+                            },
+                          ],
+                        },
+                      ],
+                    },
+                    {
+                      name: "Names",
+                      flex: true,
+                      items: [
+                        {
+                          name: "Squall",
+                          offset: 0x198,
+                          length: 0x7,
+                          type: "variable",
+                          dataType: "string",
+                          letterDataType: "uint8",
+                          fallback: 0x20,
+                          endCode: 0x0,
+                          resource: "letters",
+                        },
+                        {
+                          name: "Rinoa",
+                          offset: 0x1a4,
+                          length: 0x7,
+                          type: "variable",
+                          dataType: "string",
+                          letterDataType: "uint8",
+                          fallback: 0x20,
+                          endCode: 0x0,
+                          resource: "letters",
+                        },
+                        {
+                          name: "Angelo",
+                          offset: 0x1b0,
+                          length: 0x7,
+                          type: "variable",
+                          dataType: "string",
+                          letterDataType: "uint8",
+                          fallback: 0x20,
+                          endCode: 0x0,
+                          resource: "letters",
+                        },
+                        {
+                          name: "Boko",
+                          offset: 0x1bc,
+                          length: 0x7,
+                          type: "variable",
+                          dataType: "string",
+                          letterDataType: "uint8",
+                          fallback: 0x20,
+                          endCode: 0x0,
+                          resource: "letters",
+                        },
+                        {
+                          name: "Griever",
+                          offset: 0xc7c,
+                          length: 0x9,
+                          type: "variable",
+                          dataType: "string",
+                          letterDataType: "uint8",
+                          fallback: 0x20,
+                          endCode: 0x0,
+                          resource: "letters",
+                        },
+                      ],
+                    },
+                    {
+                      name: "SeeD",
+                      flex: true,
+                      items: [
+                        {
+                          name: "Status",
+                          offset: 0xf48,
+                          type: "variable",
+                          dataType: "bit",
+                          bit: 3,
+                          resource: "seedStatus",
+                        },
+                        {
+                          name: "Seed Written Test Level",
+                          offset: 0xeb3,
+                          type: "variable",
+                          dataType: "uint8",
+                          max: 30,
+                        },
+                        {
+                          name: "Seed Rank",
+                          offset: 0xef0,
+                          type: "variable",
+                          dataType: "uint16",
+                          max: 3100,
+                          step: 10,
+                        },
+                        {
+                          id: "seedSteps",
+                          name: "Remaining steps for salary",
+                          offset: 0xee8,
+                          type: "variable",
+                          dataType: "uint32",
+                          min: 1,
+                          max: 24576,
+                        },
+                      ],
+                    },
+                    {
+                      name: "Shops",
+                      flex: true,
+                      items: [
+                        {
+                          name: "Squall",
+                          type: "bitflags",
+                          flags: [
+                            { offset: 0xae0, bit: 0, label: "Timber Pet Shop" }, // prettier-ignore
+                            { offset: 0xaf4, bit: 0, label: "Balamb Shop" }, // prettier-ignore
+                            { offset: 0xb08, bit: 0, label: "Dollet Shop" }, // prettier-ignore
+                            { offset: 0xb1c, bit: 0, label: "Timber Shop" }, // prettier-ignore
+                            { offset: 0xb30, bit: 0, label: "Deling City Shop" }, // prettier-ignore
+                            { offset: 0xb44, bit: 0, label: "Winhill Shop" }, // prettier-ignore
+                            { offset: 0xb58, bit: 0, label: "FH Shop" }, // prettier-ignore
+                            { offset: 0xb6c, bit: 0, label: "Trabia Shop" }, // prettier-ignore
+                            { offset: 0xb80, bit: 0, label: "Eshtar Shop" }, // prettier-ignore
+                            { offset: 0xc20, bit: 0, label: "Man from Garden" }, // prettier-ignore
+                            { offset: 0xc34, bit: 0, label: "Eshtar Pet Shop" }, // prettier-ignore
+                            { offset: 0xc48, bit: 0, label: "Eshtar Book Store" }, // prettier-ignore
+                            { offset: 0xc5c, bit: 0, label: "Eshtar Shop !!!" }, // prettier-ignore
+                          ],
+                        },
+                        {
+                          name: "Laguna",
+                          type: "bitflags",
+                          flags: [
+                            { offset: 0xb94, bit: 0, label: "Balamb Shop" }, // prettier-ignore
+                            { offset: 0xba8, bit: 0, label: "Dollet Shop" }, // prettier-ignore
+                            { offset: 0xbbc, bit: 0, label: "Timber Shop" }, // prettier-ignore
+                            { offset: 0xbd0, bit: 0, label: "Deling City Shop" }, // prettier-ignore
+                            { offset: 0xbe4, bit: 0, label: "Winhill Shop" }, // prettier-ignore
+                            { offset: 0xbf8, bit: 0, label: "FH Shop" }, // prettier-ignore
+                            { offset: 0xc0c, bit: 0, label: "Trabia Shop" }, // prettier-ignore
+                          ],
+                        },
+                      ],
+                    },
+                    {
+                      name: "Weapons",
+                      flex: true,
+                      items: [
+                        {
+                          name: "Squall",
+                          type: "bitflags",
+                          flags: [
+                            { offset: 0xc78, bit: 0, label: "Revolver" }, // prettier-ignore
+                            { offset: 0xc78, bit: 1, label: "Shear Trigger" }, // prettier-ignore
+                            { offset: 0xc78, bit: 2, label: "Cutting Trigger" }, // prettier-ignore
+                            { offset: 0xc78, bit: 3, label: "Flame Saber" }, // prettier-ignore
+                            { offset: 0xc78, bit: 4, label: "Twin Lance" }, // prettier-ignore
+                            { offset: 0xc78, bit: 5, label: "Punishment" }, // prettier-ignore
+                            { offset: 0xc78, bit: 6, label: "Lion Heart" }, // prettier-ignore
+                          ],
+                        },
+                        {
+                          name: "Zell",
+                          type: "bitflags",
+                          flags: [
+                            { offset: 0xc78, bit: 7, label: "Metal Knuckle" }, // prettier-ignore
+                            { offset: 0xc79, bit: 0, label: "Maverick" }, // prettier-ignore
+                            { offset: 0xc79, bit: 1, label: "Gauntlet" }, // prettier-ignore
+                            { offset: 0xc79, bit: 2, label: "Ehrgeiz" }, // prettier-ignore
+                          ],
+                        },
+                        {
+                          name: "Irvine",
+                          type: "bitflags",
+                          flags: [
+                            { offset: 0xc79, bit: 3, label: "Valiant" }, // prettier-ignore
+                            { offset: 0xc79, bit: 4, label: "Ulysses" }, // prettier-ignore
+                            { offset: 0xc79, bit: 5, label: "Bismarck" }, // prettier-ignore
+                            { offset: 0xc79, bit: 6, label: "Exeter" }, // prettier-ignore
+                          ],
+                        },
+                        {
+                          name: "Quistis",
+                          type: "bitflags",
+                          flags: [
+                            { offset: 0xc79, bit: 7, label: "Chain Whip" }, // prettier-ignore
+                            { offset: 0xc7a, bit: 0, label: "Slaying Tail" }, // prettier-ignore
+                            { offset: 0xc7a, bit: 1, label: "Red Scorpion" }, // prettier-ignore
+                            { offset: 0xc7a, bit: 2, label: "Save the Queen" }, // prettier-ignore
+                          ],
+                        },
+                        {
+                          name: "Rinoa",
+                          type: "bitflags",
+                          flags: [
+                            { offset: 0xc7a, bit: 3, label: "Pinwheel" }, // prettier-ignore
+                            { offset: 0xc7a, bit: 4, label: "Valkyrie" }, // prettier-ignore
+                            { offset: 0xc7a, bit: 5, label: "Rising Sun" }, // prettier-ignore
+                            { offset: 0xc7a, bit: 6, label: "Cardinal" }, // prettier-ignore
+                            { offset: 0xc7a, bit: 7, label: "Shooting Star" }, // prettier-ignore
+                          ],
+                        },
+                        {
+                          name: "Selphie",
+                          type: "bitflags",
+                          flags: [
+                            { offset: 0xc7b, bit: 0, label: "Flail" }, // prettier-ignore
+                            { offset: 0xc7b, bit: 1, label: "Morning Star" }, // prettier-ignore
+                            { offset: 0xc7b, bit: 2, label: "Crescent Wish" }, // prettier-ignore
+                            { offset: 0xc7b, bit: 3, label: "Strange Vision" }, // prettier-ignore
+                            { offset: 0xc7b, bit: 4, label: "???", hidden: true }, // prettier-ignore
+                            { offset: 0xc7b, bit: 5, label: "???", hidden: true }, // prettier-ignore
+                            { offset: 0xc7b, bit: 6, label: "???", hidden: true }, // prettier-ignore
+                            { offset: 0xc7b, bit: 7, label: "???", hidden: true }, // prettier-ignore
+                          ],
+                        },
+                      ],
+                    },
+                  ],
+                },
+              ],
+            },
+            {
+              name: "Party",
+              items: [
+                {
+                  length: 0x98,
+                  type: "container",
+                  instanceType: "tabs",
+                  instances: 8,
+                  resource: "characters",
+                  vertical: true,
+                  items: [
+                    {
+                      type: "tabs",
+                      items: [
+                        {
+                          name: "Status",
+                          items: [
+                            {
+                              type: "section",
+                              flex: true,
+                              noMargin: true,
+                              items: [
+                                {
+                                  name: "Status",
+                                  offset: 0x6a4,
+                                  type: "variable",
+                                  dataType: "bit",
+                                  bit: 0,
+                                  resource: "booleanJoined",
+                                },
+                                {
+                                  name: "Locked",
+                                  offset: 0x6a4,
+                                  type: "variable",
+                                  dataType: "bit",
+                                  bit: 1,
+                                  hidden: true,
+                                },
+                                {
+                                  id: "character-%index%",
+                                  name: "Character",
+                                  offset: 0x618,
+                                  type: "variable",
+                                  dataType: "uint8",
+                                  resource: "partyCharacters",
+                                  autocomplete: true,
+                                },
+                              ],
+                            },
+                            {
+                              type: "section",
+                              flex: true,
+                              items: [
+                                {
+                                  id: "level-1000-%index%",
+                                  name: "Level",
+                                  offset: 0x614,
+                                  type: "variable",
+                                  dataType: "uint32",
+                                  min: 1,
+                                  max: 100,
+                                },
+                                {
+                                  id: "experience-%index%",
+                                  name: "Experience",
+                                  offset: 0x614,
+                                  type: "variable",
+                                  dataType: "uint32",
+                                  max: 99000,
+                                },
+                                {
+                                  name: "HP",
+                                  offset: 0x610,
+                                  type: "variable",
+                                  dataType: "uint16",
+                                  max: 9999,
+                                },
+                                {
+                                  name: "Weapon",
+                                  offset: 0x619,
+                                  type: "variable",
+                                  dataType: "uint8",
+                                  resource: "weapons",
+                                  autocomplete: true,
+                                },
+                              ],
+                            },
+                            {
+                              name: "Bonus",
+                              type: "section",
+                              flex: true,
+                              items: [
+                                {
+                                  name: "HP",
+                                  offset: 0x612,
+                                  type: "variable",
+                                  dataType: "uint16",
+                                  max: 9999,
+                                },
+                                {
+                                  name: "Strength",
+                                  offset: 0x61a,
+                                  type: "variable",
+                                  dataType: "uint8",
+                                },
+                                {
+                                  name: "Vitality",
+                                  offset: 0x61b,
+                                  type: "variable",
+                                  dataType: "uint8",
+                                },
+                                {
+                                  name: "Magic",
+                                  offset: 0x61c,
+                                  type: "variable",
+                                  dataType: "uint8",
+                                },
+                                {
+                                  name: "Spirit",
+                                  offset: 0x61d,
+                                  type: "variable",
+                                  dataType: "uint8",
+                                },
+                                {
+                                  name: "Speed",
+                                  offset: 0x61e,
+                                  type: "variable",
+                                  dataType: "uint8",
+                                },
+                                {
+                                  name: "Luck",
+                                  offset: 0x61f,
+                                  type: "variable",
+                                  dataType: "uint8",
+                                },
+                              ],
+                            },
+                            {
+                              name: "Condition",
+                              type: "bitflags",
+                              flags: [
+                                { offset: 0x6a6, bit: 0, label: "Death" },
+                                { offset: 0x6a6, bit: 1, label: "Poison" },
+                                { offset: 0x6a6, bit: 2, label: "Petrify" },
+                                { offset: 0x6a6, bit: 3, label: "Darkness" },
+                                { offset: 0x6a6, bit: 4, label: "Silence" },
+                                { offset: 0x6a6, bit: 5, label: "Berserk" },
+                                { offset: 0x6a6, bit: 6, label: "Zombie" },
+                                { offset: 0x6a6, bit: 7, label: "???", hidden: true }, // prettier-ignore
+                              ],
+                            },
+                          ],
+                        },
+                        {
+                          name: "Junction GF",
+                          items: [...Array(16).keys()].map((index) => ({
+                            type: "section",
+                            flex: true,
+                            noMargin: true,
+                            items: [
+                              {
+                                id: `gfName-${index}`,
+                                name: "Dummy",
+                                offset: 0x668 + Math.floor(index / 0x8),
+                                type: "variable",
+                                dataType: "bit",
+                                bit: index % 8,
+                                resource: "booleanJunctioned",
+                              },
+                              {
+                                id: "gfCompatibility",
+                                name: "Compatibility",
+                                offset: 0x680 + index * 0x2,
+                                type: "variable",
+                                dataType: "uint16",
+                                max: 1000,
+                              },
+                            ],
+                          })),
+                        },
+                        {
+                          name: "Junction Magic",
+                          items: [
+                            {
+                              name: "Stats",
+                              type: "section",
+                              flex: true,
+                              noMargin: true,
+                              items: [
+                                {
+                                  name: "HP",
+                                  offset: 0x66c,
+                                  type: "variable",
+                                  dataType: "uint8",
+                                  resource: "magics",
+                                  autocomplete: true,
+                                },
+                              ],
+                            },
+                            {
+                              type: "section",
+                              flex: true,
+                              items: [
+                                {
+                                  name: "Strength",
+                                  offset: 0x66d,
+                                  type: "variable",
+                                  dataType: "uint8",
+                                  resource: "magics",
+                                  autocomplete: true,
+                                },
+                                {
+                                  name: "Vitality",
+                                  offset: 0x66e,
+                                  type: "variable",
+                                  dataType: "uint8",
+                                  resource: "magics",
+                                  autocomplete: true,
+                                },
+                                {
+                                  name: "Magic",
+                                  offset: 0x66f,
+                                  type: "variable",
+                                  dataType: "uint8",
+                                  resource: "magics",
+                                  autocomplete: true,
+                                },
+                                {
+                                  name: "Spirit",
+                                  offset: 0x670,
+                                  type: "variable",
+                                  dataType: "uint8",
+                                  resource: "magics",
+                                  autocomplete: true,
+                                },
+                                {
+                                  name: "Speed",
+                                  offset: 0x671,
+                                  type: "variable",
+                                  dataType: "uint8",
+                                  resource: "magics",
+                                  autocomplete: true,
+                                },
+                                {
+                                  name: "Evasion",
+                                  offset: 0x672,
+                                  type: "variable",
+                                  dataType: "uint8",
+                                  resource: "magics",
+                                  autocomplete: true,
+                                },
+                                {
+                                  name: "Hit",
+                                  offset: 0x673,
+                                  type: "variable",
+                                  dataType: "uint8",
+                                  resource: "magics",
+                                  autocomplete: true,
+                                },
+                                {
+                                  name: "Luck",
+                                  offset: 0x674,
+                                  type: "variable",
+                                  dataType: "uint8",
+                                  resource: "magics",
+                                  autocomplete: true,
+                                },
+                              ],
+                            },
+                            {
+                              name: "Elemental",
+                              type: "section",
+                              flex: true,
+                              noMargin: true,
+                              items: [
+                                {
+                                  name: "Attack",
+                                  offset: 0x675,
+                                  type: "variable",
+                                  dataType: "uint8",
+                                  resource: "magics",
+                                  autocomplete: true,
+                                },
+                              ],
+                            },
+                            {
+                              type: "section",
+                              flex: true,
+                              items: [
+                                {
+                                  name: "Defense 1",
+                                  offset: 0x677,
+                                  type: "variable",
+                                  dataType: "uint8",
+                                  resource: "magics",
+                                  autocomplete: true,
+                                },
+                                {
+                                  name: "Defense 2",
+                                  offset: 0x678,
+                                  type: "variable",
+                                  dataType: "uint8",
+                                  resource: "magics",
+                                  autocomplete: true,
+                                },
+                                {
+                                  name: "Defense 3",
+                                  offset: 0x679,
+                                  type: "variable",
+                                  dataType: "uint8",
+                                  resource: "magics",
+                                  autocomplete: true,
+                                },
+                                {
+                                  name: "Defense 4",
+                                  offset: 0x67a,
+                                  type: "variable",
+                                  dataType: "uint8",
+                                  resource: "magics",
+                                  autocomplete: true,
+                                },
+                              ],
+                            },
+                            {
+                              name: "Status",
+                              type: "section",
+                              flex: true,
+                              noMargin: true,
+                              items: [
+                                {
+                                  name: "Attack",
+                                  offset: 0x676,
+                                  type: "variable",
+                                  dataType: "uint8",
+                                  resource: "magics",
+                                  autocomplete: true,
+                                },
+                              ],
+                            },
+                            {
+                              type: "section",
+                              flex: true,
+                              items: [
+                                {
+                                  name: "Defense 1",
+                                  offset: 0x67b,
+                                  type: "variable",
+                                  dataType: "uint8",
+                                  resource: "magics",
+                                  autocomplete: true,
+                                },
+                                {
+                                  name: "Defense 2",
+                                  offset: 0x67c,
+                                  type: "variable",
+                                  dataType: "uint8",
+                                  resource: "magics",
+                                  autocomplete: true,
+                                },
+                                {
+                                  name: "Defense 3",
+                                  offset: 0x67d,
+                                  type: "variable",
+                                  dataType: "uint8",
+                                  resource: "magics",
+                                  autocomplete: true,
+                                },
+                                {
+                                  name: "Defense 4",
+                                  offset: 0x67e,
+                                  type: "variable",
+                                  dataType: "uint8",
+                                  resource: "magics",
+                                  autocomplete: true,
+                                },
+                              ],
+                            },
+                          ],
+                        },
+                        {
+                          name: "Abilities",
+                          items: [
+                            {
+                              type: "section",
+                              flex: true,
+                              items: [
+                                {
+                                  name: "Command 1",
+                                  offset: 0x660,
+                                  type: "variable",
+                                  dataType: "uint8",
+                                  resource: "commandAbilities",
+                                  autocomplete: true,
+                                },
+                                {
+                                  name: "Command 2",
+                                  offset: 0x661,
+                                  type: "variable",
+                                  dataType: "uint8",
+                                  resource: "commandAbilities",
+                                  autocomplete: true,
+                                },
+                                {
+                                  name: "Command 3",
+                                  offset: 0x662,
+                                  type: "variable",
+                                  dataType: "uint8",
+                                  resource: "commandAbilities",
+                                  autocomplete: true,
+                                },
+                                {
+                                  name: "Command 4",
+                                  offset: 0x663,
+                                  type: "variable",
+                                  dataType: "uint8",
+                                  hidden: true,
+                                },
+                              ],
+                            },
+                            {
+                              type: "section",
+                              flex: true,
+                              items: [
+                                {
+                                  name: "Ability 1",
+                                  offset: 0x664,
+                                  type: "variable",
+                                  dataType: "uint8",
+                                  resource: "characterAbilities",
+                                  autocomplete: true,
+                                },
+                                {
+                                  name: "Ability 2",
+                                  offset: 0x665,
+                                  type: "variable",
+                                  dataType: "uint8",
+                                  resource: "characterAbilities",
+                                  autocomplete: true,
+                                },
+                                {
+                                  name: "Ability 3",
+                                  offset: 0x666,
+                                  type: "variable",
+                                  dataType: "uint8",
+                                  resource: "characterAbilities",
+                                  autocomplete: true,
+                                },
+                                {
+                                  name: "Ability 4",
+                                  offset: 0x667,
+                                  type: "variable",
+                                  dataType: "uint8",
+                                  resource: "characterAbilities",
+                                  autocomplete: true,
+                                },
+                              ],
+                            },
+                          ],
+                        },
+                        {
+                          name: "Magic",
+                          items: [
+                            {
+                              length: 0x2,
+                              type: "container",
+                              instanceType: "section",
+                              instances: 32,
+                              flex: true,
+                              noMargin: true,
+                              items: [
+                                {
+                                  id: "magic",
+                                  name: "Magic %d",
+                                  offset: 0x620,
+                                  type: "variable",
+                                  dataType: "uint8",
+                                  resource: "magics",
+                                  autocomplete: true,
+                                },
+                                {
+                                  id: "quantity",
+                                  name: "Quantity",
+                                  offset: 0x621,
+                                  type: "variable",
+                                  dataType: "uint8",
+                                  min: 1,
+                                  max: 100,
+                                },
+                              ],
+                            },
+                          ],
+                        },
+                        {
+                          name: "Limit Break",
+                          items: [
+                            {
+                              id: "limitBreak-%index%-0",
+                              type: "section",
+                              flex: true,
+                              items: [
+                                {
+                                  name: "Gunblade Auto",
+                                  offset: 0xea0,
+                                  type: "variable",
+                                  dataType: "bit",
+                                  bit: 0,
+                                  resource: "optionBoolean",
+                                  overrideShift: {
+                                    parent: 1,
+                                    shift: 0x0,
+                                  },
+                                },
+                                {
+                                  name: "Renzokuken Indicator",
+                                  offset: 0xea1,
+                                  type: "variable",
+                                  dataType: "bit",
+                                  bit: 7,
+                                  resource: "optionBooleanReversed",
+                                  overrideShift: {
+                                    parent: 1,
+                                    shift: 0x0,
+                                  },
+                                },
+                              ],
+                            },
+                            {
+                              id: "limitBreak-%index%-1",
+                              type: "section",
+                              items: [
+                                {
+                                  name: "Duel-Auto",
+                                  offset: 0xea0,
+                                  type: "variable",
+                                  dataType: "bit",
+                                  bit: 1,
+                                  resource: "optionBoolean",
+                                  overrideShift: {
+                                    parent: 1,
+                                    shift: 0x0,
+                                  },
+                                },
+                                {
+                                  type: "bitflags",
+                                  overrideShift: {
+                                    parent: 1,
+                                    shift: 0x0,
+                                  },
+                                  flags: [
+                                    { offset: 0xC96, bit: 0, label: "Punch Rush" }, // prettier-ignore
+                                    { offset: 0xC96, bit: 1, label: "Booya" }, // prettier-ignore
+                                    { offset: 0xC96, bit: 2, label: "Heel Drop" }, // prettier-ignore
+                                    { offset: 0xC96, bit: 3, label: "Mach Kick" }, // prettier-ignore
+                                    { offset: 0xC96, bit: 4, label: "Dolphin Blow" }, // prettier-ignore
+                                    { offset: 0xC96, bit: 5, label: "Meteor Strike" }, // prettier-ignore
+                                    { offset: 0xC96, bit: 6, label: "Burning Rave" }, // prettier-ignore
+                                    { offset: 0xC96, bit: 7, label: "Meteor Barret" }, // prettier-ignore
+                                    { offset: 0xC97, bit: 0, label: "Different Beat" }, // prettier-ignore
+                                    { offset: 0xC97, bit: 1, label: "My Final Heaven" }, // prettier-ignore
+                                  ],
+                                },
+                              ],
+                            },
+                            {
+                              id: "limitBreak-%index%-2",
+                              type: "section",
+                              items: [
+                                {
+                                  type: "bitflags",
+                                  overrideShift: {
+                                    parent: 1,
+                                    shift: 0x0,
+                                  },
+                                  flags: [
+                                    { offset: 0xC98, bit: 0, label: "Normal Shot" }, // prettier-ignore
+                                    { offset: 0xC98, bit: 1, label: "Scatter Shot" }, // prettier-ignore
+                                    { offset: 0xC98, bit: 2, label: "Dark Shot" }, // prettier-ignore
+                                    { offset: 0xC98, bit: 3, label: "Flame Shot" }, // prettier-ignore
+                                    { offset: 0xC98, bit: 4, label: "Canister Shot" }, // prettier-ignore
+                                    { offset: 0xC98, bit: 5, label: "Quick Shot" }, // prettier-ignore
+                                    { offset: 0xC98, bit: 6, label: "Armor Shot" }, // prettier-ignore
+                                    { offset: 0xC98, bit: 7, label: "Hyper Shot" }, // prettier-ignore
+                                  ],
+                                },
+                              ],
+                            },
+                            {
+                              id: "limitBreak-%index%-3",
+                              type: "section",
+                              items: [
+                                {
+                                  type: "bitflags",
+                                  overrideShift: {
+                                    parent: 1,
+                                    shift: 0x0,
+                                  },
+                                  flags: [
+                                    { offset: 0xC94, bit: 0, label: "Laser Eye" }, // prettier-ignore
+                                    { offset: 0xC94, bit: 1, label: "Ultra Waves" }, // prettier-ignore
+                                    { offset: 0xC94, bit: 2, label: "Electrocute" }, // prettier-ignore
+                                    { offset: 0xC94, bit: 3, label: "LV?Death" }, // prettier-ignore
+                                    { offset: 0xC94, bit: 4, label: "Degenerator" }, // prettier-ignore
+                                    { offset: 0xC94, bit: 5, label: "Aqua Breath" }, // prettier-ignore
+                                    { offset: 0xC94, bit: 6, label: "Micro Missiles" }, // prettier-ignore
+                                    { offset: 0xC94, bit: 7, label: "Acid" }, // prettier-ignore
+                                    { offset: 0xC95, bit: 0, label: "Gatling Gun" }, // prettier-ignore
+                                    { offset: 0xC95, bit: 1, label: "Fire Breath" }, // prettier-ignore
+                                    { offset: 0xC95, bit: 2, label: "Bad Breath" }, // prettier-ignore
+                                    { offset: 0xC95, bit: 3, label: "White Wind" }, // prettier-ignore
+                                    { offset: 0xC95, bit: 4, label: "Homing Laser" }, // prettier-ignore
+                                    { offset: 0xC95, bit: 5, label: "Mighty Guard" }, // prettier-ignore
+                                    { offset: 0xC95, bit: 6, label: "Ray-Bomb" }, // prettier-ignore
+                                    { offset: 0xC95, bit: 7, label: "Shockwave Pulsar" }, // prettier-ignore
+                                  ],
+                                },
+                              ],
+                            },
+                            {
+                              id: "limitBreak-%index%-4",
+                              type: "section",
+                              items: [
+                                {
+                                  type: "section",
+                                  flex: true,
+                                  items: [
+                                    {
+                                      name: "Status",
+                                      offset: 0xea2,
+                                      type: "variable",
+                                      dataType: "bit",
+                                      bit: 4,
+                                      resource: "booleanJoinedReversed",
+                                      overrideShift: {
+                                        parent: 1,
+                                        shift: 0x0,
+                                      },
+                                    },
+                                    {
+                                      name: "Learning",
+                                      offset: 0xc8b,
+                                      type: "variable",
+                                      dataType: "uint8",
+                                      resource: "angeloAbilities",
+                                      overrideShift: {
+                                        parent: 1,
+                                        shift: 0x0,
+                                      },
+                                    },
+                                  ],
+                                },
+                                ...angeloAbilityList.map(
+                                  (ability) =>
+                                    ({
+                                      type: "section",
+                                      flex: true,
+                                      noMargin: true,
+                                      items: [
+                                        {
+                                          id: `angeloAbilityStatus-${ability.index}`,
+                                          name: ability.name,
+                                          offset:
+                                            0xc9b +
+                                            Math.floor(ability.index / 0x8),
+                                          type: "variable",
+                                          dataType: "bit",
+                                          bit: ability.index % 8,
+                                          resource: "angeloAbilityStatus",
+                                          overrideShift: {
+                                            parent: 1,
+                                            shift: 0x0,
+                                          },
+                                        },
+                                        {
+                                          id: `angeloAbilityProgression-${ability.index}`,
+                                          name: "Progression",
+                                          offset: 0xc9c + ability.index,
+                                          type: "variable",
+                                          dataType: "uint8",
+                                          overrideShift: {
+                                            parent: 1,
+                                            shift: 0x0,
+                                          },
+                                        },
+                                        {
+                                          name: "Learned",
+                                          offset:
+                                            0xc9a +
+                                            Math.floor(ability.index / 0x8),
+                                          type: "variable",
+                                          dataType: "bit",
+                                          bit: ability.index % 8,
+                                          overrideShift: {
+                                            parent: 1,
+                                            shift: 0x0,
+                                          },
+                                          hidden: true,
+                                        },
+                                      ],
+                                    }) as ItemSection,
+                                ),
+                              ],
+                            },
+                            {
+                              id: "limitBreak-%index%-5",
+                              type: "section",
+                              items: [
+                                {
+                                  type: "bitflags",
+                                  overrideShift: {
+                                    parent: 1,
+                                    shift: 0x0,
+                                  },
+                                  flags: [
+                                    { offset: 0xC99, bit: 0, label: "Full-cure" }, // prettier-ignore
+                                    { offset: 0xC99, bit: 1, label: "Wall" }, // prettier-ignore
+                                    { offset: 0xC99, bit: 2, label: "Rapture" }, // prettier-ignore
+                                    { offset: 0xC99, bit: 3, label: "Percent" }, // prettier-ignore
+                                    { offset: 0xC99, bit: 4, label: "Catastrophe" }, // prettier-ignore
+                                    { offset: 0xC99, bit: 5, label: "The End" }, // prettier-ignore
+                                  ],
+                                },
+                              ],
+                            },
+                          ],
+                        },
+                      ],
+                    },
+                  ],
+                },
+              ],
+            },
+            {
+              name: "Guardian Forces",
+              items: [
+                {
+                  id: "guardianForces",
+                  length: 0x44,
+                  type: "container",
+                  instanceType: "tabs",
+                  instances: 16,
+                  resource: "guardianForceNames",
+                  vertical: true,
+                  items: [
+                    {
+                      type: "tabs",
+                      items: [
+                        {
+                          name: "Status",
+                          items: [
+                            {
+                              name: "Status",
+                              offset: 0x1e1,
+                              type: "variable",
+                              dataType: "uint8",
+                              resource: "booleanObtained",
+                            },
+                            {
+                              type: "section",
+                              flex: true,
+                              items: [
+                                {
+                                  id: "slot-%parent%-gfName-%index%",
+                                  name: "Name",
+                                  offset: 0x1d0,
+                                  length: 0x9,
+                                  type: "variable",
+                                  dataType: "string",
+                                  letterDataType: "uint8",
+                                  fallback: 0x20,
+                                  endCode: 0x0,
+                                  resource: "letters",
+                                },
+                                {
+                                  id: "level-500",
+                                  name: "Level",
+                                  offset: 0x1dc,
+                                  type: "variable",
+                                  dataType: "uint32",
+                                  min: 1,
+                                  max: 100,
+                                },
+                                {
+                                  name: "Experience",
+                                  offset: 0x1dc,
+                                  type: "variable",
+                                  dataType: "uint32",
+                                  max: 49500,
+                                },
+                                {
+                                  name: "HP",
+                                  offset: 0x1e2,
+                                  type: "variable",
+                                  dataType: "uint16",
+                                  max: 9999,
+                                },
+                              ],
+                            },
+                            {
+                              name: "Learning",
+                              offset: 0x210,
+                              type: "variable",
+                              dataType: "uint8",
+                              resource: "gfAbilities",
+                              autocomplete: true,
+                            },
+                          ],
+                        },
+                        {
+                          name: "Abilities",
+                          items: gfAbilityList.map((ability) => ({
+                            type: "section",
+                            flex: true,
+                            noMargin: true,
+                            items: [
+                              {
+                                id: `gfAbility-${ability.index}`,
+                                name: ability.name,
+                                offset: 0x1e4 + Math.floor(ability.index / 0x8),
+                                type: "variable",
+                                dataType: "bit",
+                                bit: ability.index % 8,
+                                resource: "booleanLearned",
+                              },
+                              {
+                                id: `gfAbilityProgression-%index%-${ability.index}`,
+                                type: "section",
+                                flex: true,
+                                noMargin: true,
+                                hidden: true,
+                                items: [
+                                  {
+                                    name: "AP",
+                                    offset: 0x1f4,
+                                    type: "variable",
+                                    dataType: "uint8",
+                                  },
+                                  {
+                                    name: "Status",
+                                    offset: 0x211,
+                                    type: "variable",
+                                    dataType: "bit",
+                                    bit: 0,
+                                    resource: "booleanForgotten",
+                                  },
+                                ],
+                              },
+                            ],
+                          })),
+                        },
+                      ],
+                    },
+                  ],
+                },
+              ],
+            },
+            {
+              name: "Inventory",
+              items: [
+                {
+                  length: 0x2,
+                  type: "container",
+                  instanceType: "section",
+                  instances: 198,
+                  flex: true,
+                  noMargin: true,
+                  items: [
+                    {
+                      id: "item",
+                      name: "Item %d",
+                      offset: 0xcc4,
+                      type: "variable",
+                      dataType: "uint8",
+                      resource: "items",
+                      autocomplete: true,
+                    },
+                    {
+                      id: "quantity",
+                      name: "Quantity",
+                      offset: 0xcc5,
+                      type: "variable",
+                      dataType: "uint8",
+                      min: 1,
+                      max: 100,
+                    },
+                  ],
+                },
+              ],
+            },
+            {
+              name: "Triple Triad",
+              items: [
+                {
+                  type: "tabs",
+                  vertical: true,
+                  items: [
+                    {
+                      name: "General",
+                      flex: true,
+                      items: [
+                        {
+                          name: "Victories",
+                          offset: 0x14d4,
+                          type: "variable",
+                          dataType: "uint16",
+                        },
+                        {
+                          name: "Defeats",
+                          offset: 0x14d6,
+                          type: "variable",
+                          dataType: "uint16",
+                        },
+                        {
+                          name: "Draws",
+                          offset: 0x14d8,
+                          type: "variable",
+                          dataType: "uint16",
+                        },
+                      ],
+                    },
+                    {
+                      name: "Common Cards",
+                      items: commonCards.map((card, index) => ({
+                        type: "section",
+                        flex: true,
+                        noMargin: true,
+                        items: [
+                          {
+                            id: "commonCardObtained",
+                            name: card.name,
+                            offset: 0x1460 + index,
+                            type: "variable",
+                            dataType: "bit",
+                            bit: 7,
+                            resource: "booleanObtained",
+                          },
+                          {
+                            id: "commonCardQuantity",
+                            name: "Quantity",
+                            offset: 0x1460 + index,
+                            type: "variable",
+                            dataType: "uint8",
+                            binary: {
+                              bitStart: 0,
+                              bitLength: 7,
+                            },
+                            max: 100,
+                          },
+                        ],
+                      })),
+                    },
+                    {
+                      name: "Unique Cards",
+                      items: uniqueCards.map((card, index) => ({
+                        type: "section",
+                        flex: true,
+                        noMargin: true,
+                        items: [
+                          {
+                            id: `uniqueCardObtained-${index}`,
+                            name: card.name,
+                            offset: 0x14ce + Math.floor(index / 0x8),
+                            type: "variable",
+                            dataType: "bit",
+                            bit: index % 8,
+                            resource: "booleanObtained",
+                          },
+                          {
+                            id: `uniqueCardQuantity-${index}`,
+                            name: "Quantity",
+                            offset: 0x14ad + index,
+                            type: "variable",
+                            dataType: "uint8",
+                            max: 1,
+                          },
+                        ],
+                      })),
+                    },
+                  ],
+                },
+              ],
+            },
+            {
+              name: "Information",
+              items: [
+                {
+                  type: "tabs",
+                  vertical: true,
+                  items: [
+                    {
+                      name: "Online Help",
+                      items: [
+                        {
+                          type: "bitflags",
+                          flags: [
+                            { offset: 0xeaa, bit: 6, label: "GF Junction" }, // prettier-ignore
+                            { offset: 0xeaa, bit: 7, label: "Magic Junction" }, // prettier-ignore
+                            { offset: 0xeab, bit: 0, label: "Junction to Elements" }, // prettier-ignore
+                            { offset: 0xeab, bit: 1, label: "Junction to Status" }, // prettier-ignore
+                            { offset: 0xeab, bit: 2, label: "GF Tutorial" }, // prettier-ignore
+                            { offset: 0xeab, bit: 3, label: "Squall's Status Screen" }, // prettier-ignore
+                            { offset: 0xeab, bit: 4, label: "Zell's Status Screen" }, // prettier-ignore
+                            { offset: 0xeab, bit: 5, label: "Rinoa's Status Screen" }, // prettier-ignore
+                            { offset: 0xeab, bit: 6, label: "Switch" }, // prettier-ignore
+                            { offset: 0xeab, bit: 7, label: "???", hidden: true }, // prettier-ignore
+                          ],
+                        },
+                      ],
+                    },
+                    {
+                      name: "Location Name",
+                      items: [
+                        {
+                          type: "bitflags",
+                          flags: [
+                            { offset: 0x182, bit: 0, label: "Balamb", disabled: true }, // prettier-ignore
+                            { offset: 0xea3, bit: 0, label: "Fire Cavern" }, // prettier-ignore
+                            { offset: 0xea3, bit: 1, label: "Dollet" }, // prettier-ignore
+                            { offset: 0xea3, bit: 2, label: "Timber" }, // prettier-ignore
+                            { offset: 0xea3, bit: 3, label: "Timber TV Station" }, // prettier-ignore
+                            { offset: 0xea3, bit: 4, label: "Galbadia" }, // prettier-ignore
+                            { offset: 0xea3, bit: 5, label: "Tomb of the Unknown King" }, // prettier-ignore
+                            { offset: 0xea3, bit: 6, label: "Winhill" }, // prettier-ignore
+                            { offset: 0xea3, bit: 7, label: "D-District Prison" }, // prettier-ignore
+                            { offset: 0xea4, bit: 0, label: "Missile Base" }, // prettier-ignore
+                            { offset: 0xea4, bit: 1, label: "Horizon Bridge" }, // prettier-ignore
+                            { offset: 0xea4, bit: 2, label: "Fisherman's Horizon" }, // prettier-ignore
+                            { offset: 0xea4, bit: 3, label: "Trabia" }, // prettier-ignore
+                            { offset: 0xea4, bit: 4, label: "Esthar (1)" }, // prettier-ignore
+                            { offset: 0xea4, bit: 5, label: "Esthar (2)" }, // prettier-ignore
+                            { offset: 0xea4, bit: 6, label: "Esthar (3)" }, // prettier-ignore
+                            { offset: 0xea4, bit: 7, label: "Seaside Station" }, // prettier-ignore
+                            { offset: 0xea5, bit: 0, label: "Great Salt Lake" }, // prettier-ignore
+                            { offset: 0xea5, bit: 1, label: "Moon" }, // prettier-ignore
+                            { offset: 0xea5, bit: 2, label: "Deep Sea Research Center" }, // prettier-ignore
+                            { offset: 0xea5, bit: 3, label: "Deep Sea Deposit" }, // prettier-ignore
+                          ],
+                        },
+                      ],
+                    },
+                    {
+                      name: "Term",
+                      items: [
+                        {
+                          type: "bitflags",
+                          flags: [
+                            { offset: 0x182, bit: 0, label: "Draw Points", disabled: true }, // prettier-ignore
+                            { offset: 0xea5, bit: 4, label: "Time Compression" }, // prettier-ignore
+                            { offset: 0x182, bit: 0, label: "Garden", disabled: true }, // prettier-ignore
+                            { offset: 0x182, bit: 0, label: "SeeD (1)", disabled: true }, // prettier-ignore
+                            { offset: 0x182, bit: 0, label: "SeeD (2)", disabled: true }, // prettier-ignore
+                            { offset: 0x182, bit: 0, label: "SeeD (3)", disabled: true }, // prettier-ignore
+                            { offset: 0x182, bit: 0, label: "SeeD Rank", disabled: true }, // prettier-ignore
+                            { offset: 0x182, bit: 0, label: "SeeD Written Test", disabled: true }, // prettier-ignore
+                            { offset: 0xea5, bit: 5, label: "The truth about the Garden" }, // prettier-ignore
+                            { offset: 0xea5, bit: 6, label: "Radio Interference (1)" }, // prettier-ignore
+                            { offset: 0xea5, bit: 7, label: "Radio Interference (2)" }, // prettier-ignore
+                            { offset: 0xea6, bit: 0, label: "Lunar Cry" }, // prettier-ignore
+                            { offset: 0xea6, bit: 1, label: "Centra Civilisation" }, // prettier-ignore
+                            { offset: 0xea6, bit: 2, label: "Odine Items" }, // prettier-ignore
+                            { offset: 0xea6, bit: 3, label: "Sorceress" }, // prettier-ignore
+                            { offset: 0xea6, bit: 4, label: "Sorceress Power & Embodiment" }, // prettier-ignore
+                            { offset: 0xeaa, bit: 2, label: "Succession of Sorceress Power" }, // prettier-ignore
+                            { offset: 0xea6, bit: 5, label: "Crystal Pillar" }, // prettier-ignore
+                            { offset: 0xea6, bit: 6, label: "Lunatic Pandora" }, // prettier-ignore
+                            { offset: 0xea6, bit: 7, label: "Tears' Point" }, // prettier-ignore
+                            { offset: 0xea7, bit: 0, label: "Adel's Tomb" }, // prettier-ignore
+                            { offset: 0xea7, bit: 1, label: "Spaceship Ragnarok" }, // prettier-ignore
+                            { offset: 0xea7, bit: 2, label: "MD Level" }, // prettier-ignore
+                            { offset: 0xea7, bit: 3, label: "Centra Shelter" }, // prettier-ignore
+                            { offset: 0xea7, bit: 4, label: "Timber Maniacs" }, // prettier-ignore
+                            { offset: 0xea7, bit: 5, label: "Eyes On Me" }, // prettier-ignore
+                          ],
+                        },
+                      ],
+                    },
+                    {
+                      name: "Person",
+                      items: [
+                        {
+                          type: "bitflags",
+                          flags: [
+                            { offset: 0xea7, bit: 6, label: "Dr. Odine" }, // prettier-ignore
+                            { offset: 0xea7, bit: 7, label: "The Great Hyne" }, // prettier-ignore
+                            { offset: 0xea8, bit: 0, label: "White SeeD" }, // prettier-ignore
+                            { offset: 0xea8, bit: 1, label: "Moomba" }, // prettier-ignore
+                            { offset: 0xea8, bit: 2, label: "Shumi Tribe" }, // prettier-ignore
+                            { offset: 0xea8, bit: 3, label: "Chocobo" }, // prettier-ignore
+                            { offset: 0xea8, bit: 4, label: "Mayor Dobe" }, // prettier-ignore
+                          ],
+                        },
+                      ],
+                    },
+                    {
+                      name: "Battle Report",
+                      items: [
+                        {
+                          name: "Status",
+                          offset: 0xeaa,
+                          type: "variable",
+                          dataType: "bit",
+                          bit: 3,
+                          resource: "booleanUnlocked",
+                        },
+                        {
+                          name: "Walked",
+                          offset: 0xee4,
+                          type: "variable",
+                          dataType: "uint32",
+                        },
+                        {
+                          type: "section",
+                          flex: true,
+                          items: [
+                            {
+                              id: "brBattles",
+                              name: "Battles",
+                              offset: 0xe5c,
+                              type: "variable",
+                              dataType: "uint32",
+                              disabled: true,
+                            },
+                            {
+                              id: "copy-152",
+                              name: "Won",
+                              offset: 0xe5c,
+                              type: "variable",
+                              dataType: "uint32",
+                            },
+                            {
+                              id: "copy-152",
+                              name: "Escaped",
+                              offset: 0xe62,
+                              type: "variable",
+                              dataType: "uint16",
+                            },
+                          ],
+                        },
+                        {
+                          type: "section",
+                          flex: true,
+                          hidden: true,
+                          items: [
+                            {
+                              name: "Won",
+                              offset: 0xef4,
+                              type: "variable",
+                              dataType: "uint32",
+                              hidden: true,
+                            },
+                            {
+                              name: "Escaped",
+                              offset: 0xefa,
+                              type: "variable",
+                              dataType: "uint16",
+                              hidden: true,
+                            },
+                          ],
+                        },
+                      ],
+                    },
+                    {
+                      name: "Character Report",
+                      items: [
+                        {
+                          name: "Status",
+                          offset: 0xeaa,
+                          type: "variable",
+                          dataType: "bit",
+                          bit: 4,
+                          resource: "booleanUnlocked",
+                        },
+                        ...characterList.map((character) => {
+                          let offset =
+                            0xea8 + Math.floor(character.reportBit / 0x8);
+
+                          if (character.index === 0x0) {
+                            offset = 0x182;
+                          }
+
+                          return {
+                            type: "section",
+                            flex: true,
+                            noMargin: true,
+                            items: [
+                              {
+                                name: character.name,
+                                offset,
+                                type: "variable",
+                                dataType: "bit",
+                                bit: character.reportBit % 8,
+                                resource: "booleanUnlocked",
+                                disabled: character.index === 0x0,
+                              },
+                              {
+                                id: `crEnemiesKilled-${character.index}`,
+                                name: "Enemies Killed",
+                                offset: 0x6a0 + character.index * 0x98,
+                                type: "variable",
+                                dataType: "uint16",
+                              },
+                              {
+                                name: "Enemies Killed",
+                                offset: 0xefc + character.index * 0x2,
+                                type: "variable",
+                                dataType: "uint16",
+                                hidden: true,
+                              },
+                              {
+                                id: `copy-${2154 - 0x96 * character.index}`,
+                                name: "KO'd",
+                                offset: 0x6a2 + character.index * 0x98,
+                                type: "variable",
+                                dataType: "uint16",
+                              },
+                              {
+                                name: "KO'd",
+                                offset: 0xf0c + character.index * 0x2,
+                                type: "variable",
+                                dataType: "uint16",
+                                hidden: true,
+                              },
+                            ],
+                          } as ItemSection;
+                        }),
+                        {
+                          name: "Total Enemies Killed",
+                          offset: 0xf24,
+                          type: "variable",
+                          dataType: "uint32",
+                          disabled: true,
+                        },
+                      ],
+                    },
+                    {
+                      name: "GF Report",
+                      items: [
+                        {
+                          name: "Status",
+                          offset: 0xeaa,
+                          type: "variable",
+                          dataType: "bit",
+                          bit: 5,
+                          resource: "booleanUnlocked",
+                        },
+                        ...[...Array(16).keys()].map(
+                          (index) =>
+                            ({
+                              type: "section",
+                              flex: true,
+                              noMargin: true,
+                              items: [
+                                {
+                                  id: `gfName-${index}`,
+                                  name: "Dummy",
+                                  offset: 0xeac + Math.floor((1 + index) / 0x8),
+                                  type: "variable",
+                                  dataType: "bit",
+                                  bit: (1 + index) % 8,
+                                  resource: "booleanUnlocked",
+                                },
+                                {
+                                  name: "Enemies Killed",
+                                  offset: 0x20c + index * 0x44,
+                                  type: "variable",
+                                  dataType: "uint16",
+                                },
+                                {
+                                  name: "KO'd",
+                                  offset: 0x20e + index * 0x44,
+                                  type: "variable",
+                                  dataType: "uint16",
+                                },
+                              ],
+                            }) as ItemSection,
+                        ),
+                      ],
+                    },
+                  ],
+                },
+              ],
+            },
+            {
+              name: "Events",
+              items: [
+                {
+                  type: "tabs",
+                  vertical: true,
+                  items: [
+                    {
+                      name: "Passive Guardian Forces",
+                      items: [
+                        {
+                          type: "bitflags",
+                          flags: [
+                            { offset: 0xEA2, bit: 2, label: "Phoenix released" }, // prettier-ignore
+                            { offset: 0xEA2, bit: 1, label: "Odin obtained" }, // prettier-ignore
+                            { offset: 0xEA2, bit: 3, label: "Gilgamesh obtained" }, // prettier-ignore
+                          ],
+                        },
+                      ],
+                    },
+                    {
+                      name: "PuPu",
+                      flex: true,
+                      items: [
+                        {
+                          name: "Encountered UFO",
+                          type: "bitflags",
+                          flags: [
+                            { offset: 0x1455, bit: 2, label: "Mandy Beach" }, // prettier-ignore
+                            { offset: 0x1455, bit: 3, label: "Lallapalooza Canyon" }, // prettier-ignore
+                            { offset: 0x1455, bit: 4, label: "Heath Peninsula" }, // prettier-ignore
+                            { offset: 0x1455, bit: 5, label: "Kashkabald Desert" }, // prettier-ignore
+                          ],
+                        },
+                        {
+                          name: "PuPu",
+                          type: "bitflags",
+                          flags: [
+                            { offset: 0x1455, bit: 6, label: "UFO destroyed" }, // prettier-ignore
+                            { offset: 0x1455, bit: 7, label: "PuPu satisfied/defeated" }, // prettier-ignore
+                          ],
+                        },
+                      ],
+                    },
+                    {
+                      name: "Timber Maniacs",
+                      items: [
+                        {
+                          type: "bitflags",
+                          flags: [
+                            { offset: 0x1010, bit: 0, label: "Balamb Hotel" }, // prettier-ignore
+                            { offset: 0x1010, bit: 1, label: "Balamb- Station Yard" }, // prettier-ignore
+                            { offset: 0x1010, bit: 2, label: "Dollet Pub" }, // prettier-ignore
+                            { offset: 0x1010, bit: 3, label: "Dollet Hotel" }, // prettier-ignore
+                            { offset: 0x1010, bit: 4, label: "Timber- Editorial Department" }, // prettier-ignore
+                            { offset: 0x1010, bit: 5, label: "Timber Hotel" }, // prettier-ignore
+                            { offset: 0x1010, bit: 6, label: "Deling City- Hotel" }, // prettier-ignore
+                            { offset: 0x1010, bit: 7, label: "FH- Residence" }, // prettier-ignore
+                            { offset: 0x1011, bit: 0, label: "FH- Hotel" }, // prettier-ignore
+                            { offset: 0x1011, bit: 1, label: "T-Garden- Cemetery" }, // prettier-ignore
+                            { offset: 0x1011, bit: 2, label: "Centra Ruins" }, // prettier-ignore
+                            { offset: 0x1011, bit: 3, label: "Shumi Village- Residence" }, // prettier-ignore
+                            { offset: 0x1011, bit: 4, label: "Edea's House- Bedroom" }, // prettier-ignore
+                            { offset: 0x1011, bit: 5, label: "White SeeD Ship" }, // prettier-ignore
+                          ],
+                        },
+                      ],
+                    },
+                    {
+                      name: "Miscellaneous",
+                      items: [
+                        {
+                          type: "section",
+                          flex: true,
+                          items: [
+                            {
+                              name: "Countdown",
+                              type: "group",
+                              mode: "time",
+                              items: [
+                                {
+                                  id: "time-countdown",
+                                  offset: 0xe54,
+                                  type: "variable",
+                                  dataType: "uint32",
+                                  operations: [
+                                    { "*": 1.2 },
+                                    {
+                                      convert: { from: "seconds", to: "hours" },
+                                    },
+                                  ],
+                                  max: 599,
+                                },
+                                {
+                                  id: "time-countdown",
+                                  offset: 0xe54,
+                                  type: "variable",
+                                  dataType: "uint32",
+                                  operations: [
+                                    { "*": 1.2 },
+                                    {
+                                      convert: {
+                                        from: "seconds",
+                                        to: "minutes",
+                                      },
+                                    },
+                                  ],
+                                  leadingZeros: 1,
+                                  max: 59,
+                                },
+                                {
+                                  id: "time-countdown",
+                                  offset: 0xe54,
+                                  type: "variable",
+                                  dataType: "uint32",
+                                  operations: [
+                                    { "*": 1.2 },
+                                    {
+                                      convert: {
+                                        from: "seconds",
+                                        to: "seconds",
+                                      },
+                                    },
+                                  ],
+                                  leadingZeros: 1,
+                                  max: 59,
+                                },
+                              ],
+                            },
+                          ],
+                        },
+                        {
+                          type: "section",
+                          flex: true,
+                          items: [
+                            {
+                              name: "Student ID No.",
+                              offset: 0x11b8,
+                              type: "variable",
+                              dataType: "uint8",
+                              leadingZeros: 2,
+                            },
+                            {
+                              id: "centraRuinsCode",
+                              name: "Centra Ruins Code",
+                              offset: 0x104c,
+                              type: "variable",
+                              dataType: "uint32",
+                              leadingZeros: 4,
+                              max: 99999,
+                            },
+                          ],
+                        },
+                        {
+                          type: "section",
+                          flex: true,
+                          items: [
+                            {
+                              name: "Slayed Tonberries",
+                              offset: 0xe68,
+                              type: "variable",
+                              dataType: "uint32",
+                            },
+                            {
+                              name: "Omega Weapon",
+                              offset: 0xeb2,
+                              type: "variable",
+                              dataType: "bit",
+                              bit: 7,
+                              resource: "booleanDefeated",
+                            },
+                          ],
+                        },
+                      ],
+                    },
+                  ],
+                },
+              ],
+            },
+            {
+              name: "Config",
+              items: [
+                {
+                  type: "section",
+                  flex: true,
+                  items: [
+                    {
+                      name: "Sound",
+                      offset: 0xc64,
+                      type: "variable",
+                      dataType: "bit",
+                      bit: 1,
+                      resource: "sounds",
+                    },
+                    {
+                      name: "Controller",
+                      offset: 0xc64,
+                      type: "variable",
+                      dataType: "bit",
+                      bit: 5,
+                      resource: "controllers",
+                    },
+                    {
+                      name: "Cursor",
+                      offset: 0xc64,
+                      type: "variable",
+                      dataType: "bit",
+                      bit: 2,
+                      resource: "cursors",
+                    },
+                    {
+                      name: "ATB",
+                      offset: 0xc64,
+                      type: "variable",
+                      dataType: "bit",
+                      bit: 0,
+                      resource: "atbs",
+                    },
+                    {
+                      name: "Scan",
+                      offset: 0xc65,
+                      type: "variable",
+                      dataType: "bit",
+                      bit: 0,
+                      resource: "scans",
+                    },
+                  ],
+                },
+                {
+                  type: "section",
+                  flex: true,
+                  items: [
+                    {
+                      name: "Camera Movement",
+                      offset: 0xc66,
+                      type: "variable",
+                      dataType: "uint8",
+                      resource: "percents",
+                    },
+                    {
+                      name: "Battle speed",
+                      offset: 0xc60,
+                      type: "variable",
+                      dataType: "uint8",
+                      resource: "speeds",
+                    },
+                    {
+                      name: "Battle message",
+                      offset: 0xc61,
+                      type: "variable",
+                      dataType: "uint8",
+                      resource: "speeds",
+                    },
+                    {
+                      name: "Field message",
+                      offset: 0xc62,
+                      type: "variable",
+                      dataType: "uint8",
+                      resource: "speeds",
+                    },
+                    {
+                      name: "ANALOG input",
+                      offset: 0xc63,
+                      type: "variable",
+                      dataType: "uint8",
+                      resource: "speeds",
+                    },
+                  ],
+                },
+              ],
+            },
+          ],
+        },
+      ],
+    },
+  ],
+  resources: {
+    angeloAbilities: {
+      0x0: "-",
+      ...angeloAbilities,
+    },
+    angeloAbilityStatus: {
+      0x0: "-",
+      0x1: "Learnable",
+      0x2: "Learned",
+    },
+    atbs: {
+      0x0: "Active",
+      0x1: "Wait",
+    },
+    booleanDefeated: {
+      0x0: "-",
+      0x1: "Defeated",
+    },
+    booleanForgotten: {
+      0x0: "-",
+      0x1: "Forgotten",
+    },
+    booleanJoined: {
+      0x0: "-",
+      0x1: "Joined",
+    },
+    booleanJoinedReversed: {
+      0x0: "Joined",
+      0x1: "-",
+    },
+    booleanJunctioned: {
+      0x0: "-",
+      0x1: "Junctioned",
+    },
+    booleanLearned: {
+      0x0: "-",
+      0x1: "Learned",
+    },
+    booleanObtained: {
+      0x0: "-",
+      0x1: "Obtained",
+    },
+    booleanUnlocked: {
+      0x0: "-",
+      0x1: "Unlocked",
+    },
+    characterAbilities: {
+      0x0: "-",
+      ...characterAbilities,
+    },
+    characters: {
+      ...characters,
+      0xff: "-",
+    },
+    commandAbilities: {
+      0x0: "-",
+      ...commandAbilities,
+    },
+    controllers: {
+      0x0: "Normal",
+      0x1: "Customize",
+    },
+    cursors: {
+      0x0: "Initial",
+      0x1: "Memory",
+    },
+    disc1Locations: disc1Locations,
+    disc2Locations: disc2Locations,
+    disc3Locations: disc3Locations,
+    disc4Locations: disc4Locations,
+    discs: {
+      0x1: "Disc 1",
+      0x2: "Disc 2",
+      0x3: "Disc 3",
+      0x4: "Disc 4",
+    },
+    fieldCharacters: {
+      ...characters,
+      0x8: "Laguna",
+      0x9: "Kiros",
+      0xa: "Ward",
+      0xff: "-",
+    },
+    gfAbilities: {
+      0x0: "-",
+      ...gfAbilities,
+    },
+    guardianForceNames: "getGuardianForceNames()",
+    items: {
+      0x0: "-",
+      0x1: "Potion",
+      0x2: "Potion+",
+      0x3: "Hi-Potion",
+      0x4: "Hi-Potion+",
+      0x5: "X-Potion",
+      0x6: "Mega-Potion",
+      0x7: "Phoenix Down",
+      0x8: "Mega Phoenix",
+      0x9: "Elixir",
+      0xa: "Megalixir",
+      0xb: "Antidote",
+      0xc: "Soft",
+      0xd: "Eye Drops",
+      0xe: "Echo Screen",
+      0xf: "Holy Water",
+      0x10: "Remedy",
+      0x11: "Remedy+",
+      0x12: "Hero-trial",
+      0x13: "Hero",
+      0x14: "Holy War-trial",
+      0x15: "Holy War",
+      0x16: "Shell Stone",
+      0x17: "Protect Stone",
+      0x18: "Aura Stone",
+      0x19: "Death Stone",
+      0x1a: "Holy Stone",
+      0x1b: "Flare Stone",
+      0x1c: "Meteor Stone",
+      0x1d: "Ultima Stone",
+      0x1e: "Gysahl Greens",
+      0x1f: "Phoenix Pinion",
+      0x20: "Friendship",
+      0x21: "Tent",
+      0x22: "Pet House",
+      0x23: "Cottage",
+      0x24: "G-Potion",
+      0x25: "G-Hi-Potion",
+      0x26: "G-Mega-Potion",
+      0x27: "G-Returner",
+      0x28: "Rename Card",
+      0x29: "Amnesia Greens",
+      0x2a: "HP-J Scroll",
+      0x2b: "Str-J Scroll",
+      0x2c: "Vit-J Scroll",
+      0x2d: "Mag-J Scroll",
+      0x2e: "Spr-J Scroll",
+      0x2f: "Spd-J Scroll",
+      0x30: "Luck-J Scroll",
+      0x31: "Aegis Amulet",
+      0x32: "Elem Atk",
+      0x33: "Elem Guard",
+      0x34: "Status Atk",
+      0x35: "Status Guard",
+      0x36: "Rosetta Stone",
+      0x37: "Magic Scroll",
+      0x38: "GF Scroll",
+      0x39: "Draw Scroll",
+      0x3a: "Item Scroll",
+      0x3b: "Gambler Spirit",
+      0x3c: "Healing Ring",
+      0x3d: "Phoenix Spirit",
+      0x3e: "Med Kit",
+      0x3f: "Bomb Spirit",
+      0x40: "Hungry Cookpot",
+      0x41: "Mog's Amulet",
+      0x42: "Steel Pipe",
+      0x43: "Star Fragment",
+      0x44: "Energy Crystal",
+      0x45: "Samantha Soul",
+      0x46: "Healing Mail",
+      0x47: "Silver Mail",
+      0x48: "Gold Armor",
+      0x49: "Diamond Armor",
+      0x4a: "Regen Ring",
+      0x4b: "Giant's Ring",
+      0x4c: "Gaea's Ring",
+      0x4d: "Strength Love",
+      0x4e: "Power Wrist",
+      0x4f: "Hyper Wrist",
+      0x50: "Turtle Shell",
+      0x51: "Orihalcon",
+      0x52: "Adamantine",
+      0x53: "Rune Armlet",
+      0x54: "Force Armlet",
+      0x55: "Magic Armlet",
+      0x56: "Circlet",
+      0x57: "Hypno Crown",
+      0x58: "Royal Crown",
+      0x59: "Jet Engine",
+      0x5a: "Rocket Engine",
+      0x5b: "Moon Curtain",
+      0x5c: "Steel Curtain",
+      0x5d: "Glow Curtain",
+      0x5e: "Accelerator",
+      0x5f: "Monk's Code",
+      0x60: "Knight's Code",
+      0x61: "Doc's Code",
+      0x62: "Hundred Needles",
+      0x63: "Three Stars",
+      0x64: "Ribbon",
+      0x65: "Normal Ammo",
+      0x66: "Shotgun Ammo",
+      0x67: "Dark Ammo",
+      0x68: "Fire Ammo",
+      0x69: "Demolition Ammo",
+      0x6a: "Fast Ammo",
+      0x6b: "AP Ammo",
+      0x6c: "Pulse Ammo",
+      0x6d: "M-Stone Piece",
+      0x6e: "Magic Stone",
+      0x6f: "Wizard Stone",
+      0x70: "Ochu Tentacle",
+      0x71: "Healing Water",
+      0x72: "Cockatrice Pinion",
+      0x73: "Zombie Powder",
+      0x74: "Lightweight",
+      0x75: "Sharp Spike",
+      0x76: "Screw",
+      0x77: "Saw Blade",
+      0x78: "Mesmerize Blade",
+      0x79: "Vampire Fang",
+      0x7a: "Fury Fragment",
+      0x7b: "Betrayal Sword",
+      0x7c: "Sleep Powder",
+      0x7d: "Life Ring",
+      0x7e: "Dragon Fang",
+      0x7f: "Spider Web",
+      0x80: "Coral Fragment",
+      0x81: "Curse Spike",
+      0x82: "Black Hole",
+      0x83: "Water Crystal",
+      0x84: "Missile",
+      0x85: "Mystery Fluid",
+      0x86: "Running Fire",
+      0x87: "Inferno Fang",
+      0x88: "Malboro Tentacle",
+      0x89: "Whisper",
+      0x8a: "Laser Cannon",
+      0x8b: "Barrier",
+      0x8c: "Power Generator",
+      0x8d: "Dark Matter",
+      0x8e: "Bomb Fragment",
+      0x8f: "Red Fang",
+      0x90: "Arctic Wind",
+      0x91: "North Wind",
+      0x92: "Dynamo Stone",
+      0x93: "Shear Feather",
+      0x94: "Venom Fang",
+      0x95: "Steel Orb",
+      0x96: "Moon Stone",
+      0x97: "Dino Bone",
+      0x98: "Windmill",
+      0x99: "Dragon Skin",
+      0x9a: "Fish Fin",
+      0x9b: "Dragon Fin",
+      0x9c: "Silence Powder",
+      0x9d: "Poison Powder",
+      0x9e: "Dead Spirit",
+      0x9f: "Chef's Knife",
+      0xa0: "Cactus Thorn",
+      0xa1: "Shaman Stone",
+      0xa2: "Fuel",
+      0xa3: "Girl Next Door",
+      0xa4: "Sorceress' Letter",
+      0xa5: "Chocobo's Tag",
+      0xa6: "Pet Nametag",
+      0xa7: "Solomon Ring",
+      0xa8: "Magical Lamp",
+      0xa9: "HP Up",
+      0xaa: "Str Up",
+      0xab: "Vit Up",
+      0xac: "Mag Up",
+      0xad: "Spr Up",
+      0xae: "Spd Up",
+      0xaf: "Luck Up",
+      0xb0: "LuvLuv G",
+      0xb1: "Weapons Mon 1st",
+      0xb2: "Weapons Mon Mar",
+      0xb3: "Weapons Mon Apr",
+      0xb4: "Weapons Mon May",
+      0xb5: "Weapons Mon Jun",
+      0xb6: "Weapons Mon Jul",
+      0xb7: "Weapons Mon Aug",
+      0xb8: "Combat King 001",
+      0xb9: "Combat King 002",
+      0xba: "Combat King 003",
+      0xbb: "Combat King 004",
+      0xbc: "Combat King 005",
+      0xbd: "Pet Pals Vol.1",
+      0xbe: "Pet Pals Vol.2",
+      0xbf: "Pet Pals Vol.3",
+      0xc0: "Pet Pals Vol.4",
+      0xc1: "Pet Pals Vol.5",
+      0xc2: "Pet Pals Vol.6",
+      0xc3: "Occult Fan I",
+      0xc4: "Occult Fan II",
+      0xc5: "Occult Fan III",
+      0xc6: "Occult Fan IV",
+    },
+    letters: {
+      0x20: " ",
+      0x21: "0",
+      0x22: "1",
+      0x23: "2",
+      0x24: "3",
+      0x25: "4",
+      0x26: "5",
+      0x27: "6",
+      0x28: "7",
+      0x29: "8",
+      0x2a: "9",
+      0x2d: ":",
+      0x2e: "!",
+      0x2f: "?",
+      0x32: "-",
+      0x38: "(",
+      0x39: ")",
+      0x3a: "・",
+      0x3b: ".",
+      0x3c: ",",
+      0x44: "_",
+      0x45: "A",
+      0x46: "B",
+      0x47: "C",
+      0x48: "D",
+      0x49: "E",
+      0x4a: "F",
+      0x4b: "G",
+      0x4c: "H",
+      0x4d: "I",
+      0x4e: "J",
+      0x4f: "K",
+      0x50: "L",
+      0x51: "M",
+      0x52: "N",
+      0x53: "O",
+      0x54: "P",
+      0x55: "Q",
+      0x56: "R",
+      0x57: "S",
+      0x58: "T",
+      0x59: "U",
+      0x5a: "V",
+      0x5b: "W",
+      0x5c: "X",
+      0x5d: "Y",
+      0x5e: "Z",
+      0x5f: "a",
+      0x60: "b",
+      0x61: "c",
+      0x62: "d",
+      0x63: "e",
+      0x64: "f",
+      0x65: "g",
+      0x66: "h",
+      0x67: "i",
+      0x68: "j",
+      0x69: "k",
+      0x6a: "l",
+      0x6b: "m",
+      0x6c: "n",
+      0x6d: "o",
+      0x6e: "p",
+      0x6f: "q",
+      0x70: "r",
+      0x71: "s",
+      0x72: "t",
+      0x73: "u",
+      0x74: "v",
+      0x75: "w",
+      0x76: "x",
+      0x77: "y",
+      0x78: "z",
+      0x79: "À",
+      0x7a: "Á",
+      0x7b: "Â",
+      0x7c: "Ä",
+      0x7d: "Ç",
+      0x7e: "È",
+      0x7f: "É",
+      0x80: "Ê",
+      0x81: "Ë",
+      0x82: "Ì",
+      0x83: "Í",
+      0x84: "Î",
+      0x85: "Ï",
+      0x86: "Ñ",
+      0x87: "Ò",
+      0x88: "Ó",
+      0x89: "Ô",
+      0x8a: "Ö",
+      0x8b: "Ù",
+      0x8c: "Ú",
+      0x8d: "Û",
+      0x8e: "Ü",
+      0x8f: "Œ",
+      0x90: "ẞ",
+      0x91: "à",
+      0x92: "á",
+      0x93: "â",
+      0x94: "ä",
+      0x95: "ç",
+      0x96: "è",
+      0x97: "é",
+      0x98: "ê",
+      0x99: "ë",
+      0x9a: "ì",
+      0x9b: "í",
+      0x9c: "î",
+      0x9d: "ï",
+      0x9e: "ñ",
+      0x9f: "ò",
+      0xa0: "ó",
+      0xa1: "ô",
+      0xa2: "ö",
+      0xa3: "ù",
+      0xa4: "ú",
+      0xa5: "û",
+      0xa6: "ü",
+      0xa7: "œ",
+    },
+    locationTypes: {
+      0x1: "Pre-rendered Location",
+      0x2: "World Map",
+    },
+    magics: {
+      0x0: "-",
+      0x1: "Fire",
+      0x2: "Fira",
+      0x3: "Firaga",
+      0x4: "Blizzard",
+      0x5: "Blizzara",
+      0x6: "Blizzaga",
+      0x7: "Thunder",
+      0x8: "Thundara",
+      0x9: "Thundaga",
+      0xa: "Water",
+      0xb: "Aero",
+      0xc: "Bio",
+      0xd: "Demi",
+      0xe: "Holy",
+      0xf: "Flare",
+      0x10: "Meteor",
+      0x11: "Quake",
+      0x12: "Tornado",
+      0x13: "Ultima",
+      0x14: "Apocalypse",
+      0x15: "Cure",
+      0x16: "Cura",
+      0x17: "Curaga",
+      0x18: "Life",
+      0x19: "Full-life",
+      0x1a: "Regen",
+      0x1b: "Esuna",
+      0x1c: "Dispel",
+      0x1d: "Protect",
+      0x1e: "Shell",
+      0x1f: "Reflect",
+      0x20: "Aura",
+      0x21: "Double",
+      0x22: "Triple",
+      0x23: "Haste",
+      0x24: "Slow",
+      0x25: "Stop",
+      0x26: "Blind",
+      0x27: "Confuse",
+      0x28: "Sleep",
+      0x29: "Silence",
+      0x2a: "Break",
+      0x2b: "Death",
+      0x2c: "Drain",
+      0x2d: "Pain",
+      0x2e: "Berserk",
+      0x2f: "Float",
+      0x30: "Zombie",
+      0x31: "Meltdown",
+      0x32: "Scan",
+    },
+    optionBoolean: {
+      0x0: "Off",
+      0x1: "On",
+    },
+    optionBooleanReversed: {
+      0x0: "On",
+      0x1: "Off",
+    },
+    partyCharacters: {
+      ...characters,
+      0x8: "Laguna",
+      0x9: "Kiros",
+      0xa: "Ward",
+    },
+    percents: {
+      0x0: "100%",
+      0x1: "75%",
+      0x2: "50%",
+      0x3: "25%",
+      0x4: "0%",
+    },
+    scans: {
+      0x0: "Once",
+      0x1: "Always",
+    },
+    seedStatus: {
+      0x0: "SeeD Member",
+      0x1: "-",
+    },
+    sounds: {
+      0x0: "Stereo",
+      0x1: "Mono",
+    },
+    speeds: {
+      0x0: "Fast",
+      0x1: "Faster",
+      0x2: "Normal",
+      0x3: "Slower",
+      0x4: "Slow",
+    },
+    times: {
+      0x0: "Present (Squall)",
+      0x1: "Past (Laguna)",
+    },
+    weapons: {
+      0x0: "Revolver",
+      0x1: "Shear Trigger",
+      0x2: "Cutting Trigger",
+      0x3: "Flame Saber",
+      0x4: "Twin Lance",
+      0x5: "Punishment",
+      0x6: "Lion Heart",
+      0x7: "Metal Knuckle",
+      0x8: "Maverick",
+      0x9: "Gauntlet",
+      0xa: "Ehrgeiz",
+      0xb: "Valiant",
+      0xc: "Ulysses",
+      0xd: "Bismarck",
+      0xe: "Exeter",
+      0xf: "Chain Whip",
+      0x10: "Slaying Tail",
+      0x11: "Red Scorpion",
+      0x12: "Save the Queen",
+      0x13: "Pinwheel",
+      0x14: "Valkyrie",
+      0x15: "Rising Sun",
+      0x16: "Cardinal",
+      0x17: "Shooting Star",
+      0x18: "Flail",
+      0x19: "Morning Star",
+      0x1a: "Crescent Wish",
+      0x1b: "Strange Vision",
+      0x1c: "Hyperion",
+      0x1d: "None",
+      0x1e: "Machine Gun",
+      0x1f: "Katal",
+      0x20: "Harpoon",
+    },
+  },
+  resourcesLabels: {
+    weapons: {
+      0x0: "Squall",
+      0x7: "Zell",
+      0xb: "Irvine",
+      0xf: "Quistis",
+      0x13: "Rinoa",
+      0x18: "Selphie",
+      0x1c: "Seifer",
+      0x1d: "Edea",
+      0x1e: "Laguna",
+      0x1f: "Kiros",
+      0x20: "Ward",
+    },
+  },
+  resourcesGroups: {
+    disc1Locations: disc1LocationsGroups,
+    disc2Locations: disc2LocationsGroups,
+    disc3Locations: disc3LocationsGroups,
+    disc4Locations: disc4LocationsGroups,
+  },
+  resourcesOrder: {
+    booleanJoinedReversed: [0x1],
+    characters: [0xff],
+    fieldCharacters: [0xff],
+    disc1Locations: disc1LocationsOrder,
+    disc2Locations: disc2LocationsOrder,
+    disc3Locations: disc3LocationsOrder,
+    disc4Locations: disc4LocationsOrder,
+    seedStatus: [0x1],
+  },
+};
+
+export default template;

@@ -258,7 +258,7 @@ const template: GameJson = {
                           flex: true,
                           items: [
                             {
-                              name: "HP Bonus",
+                              name: "Bonus HP",
                               offset: 0x3d5,
                               type: "variable",
                               dataType: "uint8",
@@ -267,7 +267,7 @@ const template: GameJson = {
                               step: 10,
                             },
                             {
-                              name: "MP Bonus",
+                              name: "Bonus MP",
                               offset: 0x3d6,
                               type: "variable",
                               dataType: "uint8",
@@ -276,7 +276,7 @@ const template: GameJson = {
                               step: 10,
                             },
                             {
-                              name: "Hearts Bonus",
+                              name: "Bonus Hearts",
                               offset: 0x3d4,
                               type: "variable",
                               dataType: "uint8",

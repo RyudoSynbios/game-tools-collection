@@ -446,7 +446,6 @@ const template: GameJson = {
                               type: "variable",
                               dataType: "uint8",
                               resource: "characterNames",
-                              autocomplete: true,
                               hidden: true,
                             },
                             {
@@ -455,7 +454,6 @@ const template: GameJson = {
                               type: "variable",
                               dataType: "uint8",
                               resource: "characterNames",
-                              autocomplete: true,
                               hidden: true,
                             },
                             {
@@ -464,7 +462,6 @@ const template: GameJson = {
                               type: "variable",
                               dataType: "uint8",
                               resource: "characterNames",
-                              autocomplete: true,
                               hidden: true,
                             },
                             {
@@ -473,7 +470,6 @@ const template: GameJson = {
                               type: "variable",
                               dataType: "uint8",
                               resource: "characterNames",
-                              autocomplete: true,
                               hidden: true,
                             },
                           ],

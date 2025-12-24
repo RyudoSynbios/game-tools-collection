@@ -1,4 +1,6 @@
 <script lang="ts">
+  import FileSaver from "file-saver";
+
   import { page } from "$app/state";
   import Dropzone from "$lib/components/Dropzone.svelte";
   import Iso9660, { isIso9660Valid } from "$lib/utils/common/iso9660";
@@ -6,6 +8,28 @@
   let typeEl: HTMLSelectElement;
 
   let iso: Iso9660 | undefined;
+
+  function handleExportFile(event: Event): void {
+    if (iso === undefined) {
+      return;
+    }
+
+    let target = event.target as HTMLInputElement;
+
+    const file = iso.getFile(target.value);
+
+    if (file) {
+      const buffer = file.dataView.buffer as ArrayBuffer;
+
+      const blob = new Blob([buffer], {
+        type: "application/octet-stream",
+      });
+
+      FileSaver.saveAs(blob, file.name);
+    }
+
+    target.value = "";
+  }
 
   function handleIso9660(dataView: DataView): void {
     iso = new Iso9660(dataView);
@@ -61,12 +85,19 @@
       <select bind:this={typeEl} on:click|stopPropagation>
         <option value="iso9660">ISO 9660</option>
       </select>
-      <input
-        placeholder="Offset"
-        disabled={iso === undefined}
-        on:change={handleOffsetChange}
-        on:click|stopPropagation
-      />
+      {#if iso !== undefined}
+        <input
+          placeholder="Offset"
+          on:change={handleOffsetChange}
+          on:click|stopPropagation
+        />
+        <select on:change={handleExportFile} on:click|stopPropagation>
+          <option value="">Export file</option>
+          {#each iso.getFiles() as file}
+            <option value={file.path}>{file.path}</option>
+          {/each}
+        </select>
+      {/if}
     </div>
     {#if isDragging}
       <p>Drop the file here.</p>
@@ -86,6 +117,7 @@
   .gtc-explorer-form {
     @apply mb-4 flex flex-col;
 
+    & input,
     & select {
       @apply mb-2;
     }

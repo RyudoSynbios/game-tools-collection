@@ -126,14 +126,11 @@ export function overrideGetInt(
   if ("id" in item && item.id === "location") {
     const itemInt = item as ItemInt;
 
-    let int = getInt(itemInt.offset, "uint16");
     const locationType = getInt(itemInt.offset - 0x20, "uint8");
 
     if (locationType === 0x3) {
-      int = 0x0;
+      return [true, 0x0];
     }
-
-    return [true, int];
   } else if ("id" in item && item.id?.match(/characterName-/)) {
     const itemString = item as ItemString;
 
@@ -162,28 +159,16 @@ export function overrideSetInt(item: Item, value: string): boolean {
 
     const int = parseInt(value);
 
-    if (int === 0x0) {
-      setInt(itemInt.offset - 0x20, "uint8", 0x3);
-    } else {
-      setInt(itemInt.offset - 0x20, "uint8", 0x1);
-    }
-
     setInt(itemInt.offset, "uint16", value);
 
     updateLocation(itemInt.offset, int);
   } else if ("id" in item && item.id?.match(/characterName-/)) {
     const itemString = item as ItemString;
 
-    setString(
-      itemString.offset,
-      itemString.length,
-      "uint8",
-      value,
-      itemString.fallback,
-      {
-        resource: itemString.resource,
-      },
-    );
+    // prettier-ignore
+    setString(itemString.offset, itemString.length, "uint8", value, itemString.fallback, {
+      resource: itemString.resource,
+    });
 
     setInt(itemString.offset + value.length, "uint8", 0xff);
 
@@ -196,8 +181,6 @@ export function overrideSetInt(item: Item, value: string): boolean {
 export function afterSetInt(item: Item, flag: ItemBitflag): void {
   if ("id" in item && item.id === "disc") {
     const itemInt = item as ItemInt;
-
-    setInt(itemInt.offset + 0x7c, "uint8", 0x3);
 
     const disc = getInt(itemInt.offset, "uint8");
     let progression = getInt(itemInt.offset + 0xbc, "uint16");
@@ -459,6 +442,15 @@ export function updateCharacterNames(slotIndex: number): void {
 }
 
 function updateLocation(offset: number, value = 0x0): void {
+  let locationType = 0x1;
+
+  // If location is World Map, we force the Location Type
+  if (value === 0x0) {
+    locationType = 0x3;
+  }
+
+  setInt(offset - 0x20, "uint8", locationType);
+
   let disc = getInt(offset - 0x9c, "uint8");
 
   if (disc === 0x4) {
