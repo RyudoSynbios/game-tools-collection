@@ -104,6 +104,23 @@ const template: GameJson = {
                               hidden: true,
                             },
                             {
+                              name: "Progression",
+                              offset: 0x1c0,
+                              type: "variable",
+                              dataType: "uint16",
+                              max: 11770,
+                              hint: "Changing this value may softlock your save. Note the current value before changing it if you want to restore your progression.\n\nDisc 1: 1000->3899\nDisc 2: 3900->6989\nDisc 3: 6990->10994\nDisc 4: 11090->11770",
+                            },
+                            {
+                              id: "disc",
+                              name: "Disc",
+                              offset: 0x104,
+                              type: "variable",
+                              dataType: "uint8",
+                              resource: "discs",
+                              hint: "Be aware that your current scenario progression will be lost and adapted to the choosen disc.",
+                            },
+                            {
                               name: "Playtime",
                               type: "group",
                               mode: "time",
@@ -157,22 +174,12 @@ const template: GameJson = {
                                 },
                               ],
                             },
-                            {
-                              name: "Scenario Counter",
-                              offset: 0x1c0,
-                              type: "variable",
-                              dataType: "uint16",
-                              hidden: true,
-                            },
-                            {
-                              id: "disc",
-                              name: "Disc",
-                              offset: 0x104,
-                              type: "variable",
-                              dataType: "uint8",
-                              resource: "discs",
-                              hint: "Be aware that your current scenario progression will be lost and adapted to the choosen disc.",
-                            },
+                          ],
+                        },
+                        {
+                          type: "section",
+                          flex: true,
+                          items: [
                             {
                               name: "Location Type",
                               offset: 0x180,
@@ -198,13 +205,13 @@ const template: GameJson = {
                               dataType: "uint32",
                               max: 9999999,
                             },
-                            {
-                              name: "Gil (Save Preview)",
-                              offset: 0x130,
-                              type: "variable",
-                              dataType: "uint32",
-                              hidden: true,
-                            },
+                          ],
+                        },
+                        {
+                          type: "section",
+                          flex: true,
+                          hidden: true,
+                          items: [
                             {
                               name: "Location (Save Preview)",
                               offset: 0x110,
@@ -214,6 +221,13 @@ const template: GameJson = {
                               letterDataType: "uint8",
                               fallback: 0xf,
                               resource: "letters",
+                              hidden: true,
+                            },
+                            {
+                              name: "Gil (Save Preview)",
+                              offset: 0x130,
+                              type: "variable",
+                              dataType: "uint32",
                               hidden: true,
                             },
                           ],
@@ -1676,7 +1690,7 @@ const template: GameJson = {
               ],
             },
             {
-              name: "Sidequests",
+              name: "Side Quests",
               items: [
                 {
                   type: "tabs",

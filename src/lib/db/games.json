@@ -397,23 +397,23 @@
     }
   },
   {
-    "id": "final-fantasy-vii-rebirth-windows",
-    "name": "Final Fantasy VII Rebirth",
-    "consoleId": "windows",
-    "tools": {
-      "saveEditor": {
-        "createdAt": "2025-05-01",
-        "regions": ["🏳️"]
-      }
-    }
-  },
-  {
     "id": "final-fantasy-vii-remake-windows",
     "name": "Final Fantasy VII Remake",
     "consoleId": "windows",
     "tools": {
       "saveEditor": {
         "createdAt": "2025-01-05",
+        "regions": ["🏳️"]
+      }
+    }
+  },
+  {
+    "id": "final-fantasy-vii-rebirth-windows",
+    "name": "Final Fantasy VII Rebirth",
+    "consoleId": "windows",
+    "tools": {
+      "saveEditor": {
+        "createdAt": "2025-05-01",
         "regions": ["🏳️"]
       }
     }

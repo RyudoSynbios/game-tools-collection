@@ -365,10 +365,10 @@ const template: GameJson = {
               ],
             },
             {
-              name: "Formation",
+              name: "Party",
               items: [
                 {
-                  id: "formation-%index%",
+                  id: "party-%index%",
                   instanceId: "units",
                   length: 0xe0,
                   type: "container",
