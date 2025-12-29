@@ -1,6 +1,6 @@
 import { get } from "svelte/store";
 
-import { gameRegion } from "$lib/stores";
+import { dataView, gameRegion } from "$lib/stores";
 import {
   bitToOffset,
   copyInt,
@@ -31,6 +31,11 @@ import type {
 } from "$lib/types";
 
 import {
+  compressRemasteredSave,
+  decompressRemasteredSave,
+  isRemasteredSave,
+} from "./utils/remastered";
+import {
   angeloAbilityList,
   discStartPreviews,
   gfAbilityList,
@@ -42,10 +47,22 @@ export function initHeaderShift(dataView: DataView): number {
   return getHeaderShift(dataView);
 }
 
+export function beforeInitDataView(dataView: DataView): DataView {
+  if (isRemasteredSave(dataView, true)) {
+    return decompressRemasteredSave(dataView);
+  }
+
+  return dataView;
+}
+
 export function overrideGetRegions(
   dataView: DataView,
   shift: number,
 ): string[] {
+  if (isRemasteredSave(dataView)) {
+    return ["usa", "japan"];
+  }
+
   return customGetRegions(dataView, shift);
 }
 
@@ -125,6 +142,12 @@ export function overrideParseItem(item: Item): Item {
     }
 
     return itemInt;
+  } else if ("id" in item && item.id === "remasterExcluded") {
+    const itemInt = item as ItemInt;
+
+    itemInt.hidden = isRemasteredSave();
+
+    return itemInt;
   }
 
   return item;
@@ -136,6 +159,14 @@ export function overrideParseContainerItemsShifts(
   index: number,
 ): [boolean, number[] | undefined] {
   if (item.id === "slots") {
+    if (isRemasteredSave()) {
+      if (index === 0) {
+        return [false, undefined];
+      }
+
+      return [true, [-1]];
+    }
+
     return getSlotShifts("correspondance", shifts, index, { leadingZeros: 1 });
   }
 
@@ -776,6 +807,16 @@ export function generateChecksum(item: ItemChecksum): number {
   checksum = ~checksum;
 
   return formatChecksum(checksum, item.dataType);
+}
+
+export function beforeSaving(): ArrayBufferLike {
+  const $dataView = get(dataView);
+
+  if (isRemasteredSave()) {
+    return compressRemasteredSave();
+  }
+
+  return $dataView.buffer;
 }
 
 interface AngeloAbility {

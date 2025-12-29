@@ -73,6 +73,7 @@ const template: GameJson = {
       },
     },
     text: "Drag 'n' drop here or click to add a save file.",
+    hint: 'Compatible with "Fantasy VIII Remastered".',
     error: "Not a valid save file.",
   },
   items: [
@@ -2163,6 +2164,7 @@ const template: GameJson = {
                   flex: true,
                   items: [
                     {
+                      id: "remasterExcluded",
                       name: "Sound",
                       offset: 0xc64,
                       type: "variable",
@@ -2171,6 +2173,7 @@ const template: GameJson = {
                       resource: "sounds",
                     },
                     {
+                      id: "remasterExcluded",
                       name: "Controller",
                       offset: 0xc64,
                       type: "variable",
@@ -2237,6 +2240,7 @@ const template: GameJson = {
                       resource: "speeds",
                     },
                     {
+                      id: "remasterExcluded",
                       name: "ANALOG input",
                       offset: 0xc63,
                       type: "variable",
