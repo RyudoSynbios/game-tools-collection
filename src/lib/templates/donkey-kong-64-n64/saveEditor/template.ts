@@ -1,3 +1,5 @@
+import { bitToOffset } from "$lib/utils/bytes";
+
 import type { GameJson } from "$lib/types";
 
 import { shiftOffset } from "./utils";
@@ -715,7 +717,7 @@ const template: GameJson = {
                                 name: "Score",
                                 offset: shiftOffset(
                                   0x6d4,
-                                  Math.floor((2 + index * 9) / 8),
+                                  bitToOffset(2 + index * 9),
                                 ),
                                 type: "variable",
                                 dataType: "uint16",
@@ -731,7 +733,7 @@ const template: GameJson = {
                                 name: "Name",
                                 offset: shiftOffset(
                                   0x6ce,
-                                  Math.floor((7 + index * 5) / 8),
+                                  bitToOffset(7 + index * 5),
                                 ),
                                 length: 0x3,
                                 type: "variable",
@@ -755,7 +757,7 @@ const template: GameJson = {
                                 name: "Score",
                                 offset: shiftOffset(
                                   0x6e5,
-                                  Math.floor((2 + index * 9) / 8),
+                                  bitToOffset(2 + index * 9),
                                 ),
                                 type: "variable",
                                 dataType: "uint16",
@@ -771,7 +773,7 @@ const template: GameJson = {
                                 name: "Name",
                                 offset: shiftOffset(
                                   0x6df,
-                                  Math.floor((7 + index * 5) / 8),
+                                  bitToOffset(7 + index * 5),
                                 ),
                                 length: 0x3,
                                 type: "variable",
@@ -795,7 +797,7 @@ const template: GameJson = {
                                 name: "Score",
                                 offset: shiftOffset(
                                   0x6c6,
-                                  Math.floor((4 + index * 15) / 8),
+                                  bitToOffset(4 + index * 15),
                                 ),
                                 type: "variable",
                                 dataType: "uint24",
@@ -813,7 +815,7 @@ const template: GameJson = {
                                 name: "Name",
                                 offset: shiftOffset(
                                   0x6b8,
-                                  Math.floor((1 + index * 5) / 8),
+                                  bitToOffset(1 + index * 5),
                                 ),
                                 length: 0x3,
                                 type: "variable",

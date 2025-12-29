@@ -1,4 +1,4 @@
-import { getInt, setInt } from "$lib/utils/bytes";
+import { bitToOffset, getInt, setInt } from "$lib/utils/bytes";
 import { getItem, getResource, updateResources } from "$lib/utils/parser";
 
 import {
@@ -494,7 +494,7 @@ export function afterSetInt(item: Item, flag: ItemBitflag): void {
         (race) => race.index === index,
       );
 
-      offset = offset - 0x328818 + Math.floor((5 + raceIndex) / 0x8);
+      offset = offset - 0x328818 + bitToOffset(5 + raceIndex);
       value = getInt(itemInt.offset, "uint32") > 0 ? 1 : 0;
       bit = (5 + raceIndex) % 8;
     } else if (type === "gradeii") {
@@ -502,7 +502,7 @@ export function afterSetInt(item: Item, flag: ItemBitflag): void {
         (race) => race.index === index,
       );
 
-      offset = offset - 0x328817 + Math.floor((6 + raceIndex) / 0x8);
+      offset = offset - 0x328817 + bitToOffset(6 + raceIndex);
       value = getInt(itemInt.offset, "uint32") > 0 ? 1 : 0;
       bit = (6 + raceIndex) % 8;
     } else if (type === "gradei") {
@@ -551,7 +551,7 @@ export function afterSetInt(item: Item, flag: ItemBitflag): void {
     let count = 0;
 
     for (let i = 0x0; i < 0x6; i += 0x1) {
-      const offset = rewardItem.offset + Math.floor((6 + i) / 8);
+      const offset = rewardItem.offset + bitToOffset(6 + i);
       const bit = (rewardItem.bit! + i) % 8;
 
       const checked = getInt(offset, "bit", { bit });
@@ -598,7 +598,7 @@ function checkPianoRank(index: number, offset: number, score: number): void {
     return;
   }
 
-  offset = offset - index * 0x10 - 0x9c266 + Math.floor((7 + index) / 8);
+  offset = offset - index * 0x10 - 0x9c266 + bitToOffset(7 + index);
 
   const bit = (7 + index) % 8;
 

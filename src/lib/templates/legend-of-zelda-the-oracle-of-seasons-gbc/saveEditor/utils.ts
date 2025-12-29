@@ -1,7 +1,7 @@
 import { get } from "svelte/store";
 
 import { gameRegion } from "$lib/stores";
-import { getInt, setInt } from "$lib/utils/bytes";
+import { bitToOffset, getInt, setInt } from "$lib/utils/bytes";
 import { formatChecksum } from "$lib/utils/checksum";
 
 import type {
@@ -191,7 +191,7 @@ export function afterSetInt(item: Item): void {
     const offset = itemInt.offset - shift;
 
     for (let i = 0x1; i <= 0x19; i += 0x1) {
-      const obtainedOffset = offset + 0x12 + Math.floor(i / 0x8);
+      const obtainedOffset = offset + 0x12 + bitToOffset(i);
 
       setInt(obtainedOffset, "bit", 0, { bit: i % 8 });
     }
@@ -200,7 +200,7 @@ export function afterSetInt(item: Item): void {
       const item = getInt(offset + i, "uint8");
 
       if (item !== 0x0) {
-        const obtainedOffset = offset + 0x12 + Math.floor(item / 0x8);
+        const obtainedOffset = offset + 0x12 + bitToOffset(item);
 
         setInt(obtainedOffset, "bit", 1, { bit: item % 8 });
       }

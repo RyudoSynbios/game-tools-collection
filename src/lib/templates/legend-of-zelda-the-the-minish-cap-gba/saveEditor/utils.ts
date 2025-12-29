@@ -1,7 +1,13 @@
 import { get } from "svelte/store";
 
 import { fileHeaderShift, gameRegion } from "$lib/stores";
-import { byteswap, getInt, getString, setInt } from "$lib/utils/bytes";
+import {
+  bitToOffset,
+  byteswap,
+  getInt,
+  getString,
+  setInt,
+} from "$lib/utils/bytes";
 import { formatChecksum } from "$lib/utils/checksum";
 import { getHeaderShift } from "$lib/utils/common/gameBoyAdvance";
 
@@ -63,7 +69,7 @@ export function overrideParseItem(item: Item): Item {
 
         flags.push({
           ...flag,
-          offset: flag.offset + Math.floor((flag.bit + shiftBit) / 0x8),
+          offset: flag.offset + bitToOffset(flag.bit + shiftBit),
           bit: (flag.bit + shiftBit) % 8,
         });
 

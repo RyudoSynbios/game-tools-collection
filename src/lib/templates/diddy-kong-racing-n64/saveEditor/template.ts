@@ -1,3 +1,5 @@
+import { bitToOffset } from "$lib/utils/bytes";
+
 import type { GameJson, ItemTab } from "$lib/types";
 
 import { records, worlds } from "./utils/resource";
@@ -788,7 +790,7 @@ const template: GameJson = {
                         items: [
                           {
                             name: "T.T. Record",
-                            offset: 0x7d + Math.floor(record.ttIndex / 0x8),
+                            offset: 0x7d + bitToOffset(record.ttIndex),
                             type: "variable",
                             dataType: "bit",
                             bit: record.ttIndex % 8,

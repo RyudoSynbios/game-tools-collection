@@ -1,6 +1,6 @@
 <script lang="ts">
   import Tabs from "$lib/components/Items/Tabs.svelte";
-  import { getInt } from "$lib/utils/bytes";
+  import { bitToOffset, getInt } from "$lib/utils/bytes";
   import { getItem } from "$lib/utils/parser";
 
   import type { ItemBitflag, ItemString, ItemTab, ItemTabs } from "$lib/types";
@@ -108,7 +108,7 @@
                           const offset = itemString.offset - 0x93 + index * 0x3;
 
                           let flag: ItemBitflag = {
-                            offset: offset + Math.floor(abilityIndex / 0x8),
+                            offset: offset + bitToOffset(abilityIndex),
                             bit: 7 - (abilityIndex % 8),
                             label: ability.name,
                           };
@@ -145,7 +145,7 @@
                           const offset = itemString.offset - 0x91 + index * 0x3;
 
                           const flag = {
-                            offset: offset + Math.floor(abilityIndex / 0x8),
+                            offset: offset + bitToOffset(abilityIndex),
                             bit: 7 - (abilityIndex % 8),
                             label: ability.name,
                           };

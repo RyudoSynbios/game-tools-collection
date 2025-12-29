@@ -6,7 +6,7 @@ import {
   dataViewAltMetas,
   gameRegion,
 } from "$lib/stores";
-import { getInt, getString, setInt } from "$lib/utils/bytes";
+import { bitToOffset, getInt, getString, setInt } from "$lib/utils/bytes";
 import { formatChecksum } from "$lib/utils/checksum";
 import {
   customGetRegions,
@@ -84,7 +84,7 @@ export function overrideParseItem(item: Item): Item | ItemTab {
 
       const newStatusItem = newItemSection.items[0] as ItemInt;
 
-      newStatusItem.offset += level * 0x2 + Math.floor((bitStart + i) / 0x8);
+      newStatusItem.offset += level * 0x2 + bitToOffset(bitStart + i);
       newStatusItem.bit! = (bitStart + i) % 8;
 
       const newElementItem = newItemSection.items[1] as ItemInt;

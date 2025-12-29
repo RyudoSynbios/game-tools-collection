@@ -2,6 +2,7 @@ import { get } from "svelte/store";
 
 import { dataView, gameRegion } from "$lib/stores";
 import {
+  bitToOffset,
   cloneDataView,
   getBitflag,
   getInt,
@@ -148,7 +149,7 @@ export function overrideSetInt(item: Item, value: string): boolean {
     const offset =
       itemInt.offset -
       characterIndex * 0xac -
-      Math.floor(characterIndex / 8) -
+      bitToOffset(characterIndex) -
       (0x729 - mode * 0x3);
 
     setInt(offset, "bit", int, { bit: characterIndex % 8 });
@@ -218,8 +219,7 @@ export function afterSetInt(item: Item): void {
 
     const [index] = item.id.splitInt();
 
-    const offset =
-      itemInt.offset - index * 0xac - 0x719 - Math.floor(index / 0x8);
+    const offset = itemInt.offset - index * 0xac - 0x719 - bitToOffset(index);
 
     const isCleared = getBitflag(itemInt.offset, 7);
 
@@ -299,7 +299,7 @@ export function afterSetInt(item: Item): void {
       }
 
       const flagOffset =
-        offset - 0x17a + Math.floor(i / 0x20) * 0x8 - Math.floor(i / 8);
+        offset - 0x17a + Math.floor(i / 0x20) * 0x8 - bitToOffset(i);
 
       setInt(flagOffset, "bit", value, { bit: i % 8 });
     }

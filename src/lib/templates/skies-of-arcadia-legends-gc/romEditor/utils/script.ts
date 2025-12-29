@@ -1,7 +1,7 @@
 import { get } from "svelte/store";
 
 import { gameRegion } from "$lib/stores";
-import { getInt, getString } from "$lib/utils/bytes";
+import { bitToOffset, getInt, getString } from "$lib/utils/bytes";
 import debug from "$lib/utils/debug";
 import { decodeChar, isCharUint16 } from "$lib/utils/encoding";
 import { capitalize } from "$lib/utils/format";
@@ -3727,7 +3727,7 @@ export default class Script {
 
   private parseFlag(value: number): string {
     const baseOffset = (value >> 0x3) & 0x1ffffffc;
-    const shift = Math.floor((0x1f - (value & 0x1f)) / 0x8);
+    const shift = bitToOffset(0x1f - (value & 0x1f));
     const bit = (value & 0x1f) - (0x3 - shift) * 0x8;
 
     const offset = baseOffset + shift;

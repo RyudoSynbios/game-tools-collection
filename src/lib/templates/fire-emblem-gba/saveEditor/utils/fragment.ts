@@ -1,3 +1,5 @@
+import { bitToOffset } from "$lib/utils/bytes";
+
 import type { ItemTabs } from "$lib/types";
 
 export function characterFragment(type: string, offset: number): ItemTabs {
@@ -328,7 +330,7 @@ export function characterFragment(type: string, offset: number): ItemTabs {
           items: [
             {
               name: `Item ${index + 1}`,
-              offset: offset + 0xb + Math.floor((2 + index * 14) / 8),
+              offset: offset + 0xb + bitToOffset(2 + index * 14),
               type: "variable",
               dataType: "uint16",
               binary: {
@@ -340,7 +342,7 @@ export function characterFragment(type: string, offset: number): ItemTabs {
             },
             {
               name: "Durability",
-              offset: offset + 0xc + Math.floor((2 + index * 14) / 8),
+              offset: offset + 0xc + bitToOffset(2 + index * 14),
               type: "variable",
               dataType: "uint16",
               binary: {

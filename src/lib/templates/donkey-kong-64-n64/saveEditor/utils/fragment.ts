@@ -1,3 +1,5 @@
+import { bitToOffset } from "$lib/utils/bytes";
+
 import type { ItemInt } from "$lib/types";
 
 import { shiftOffset } from "../utils";
@@ -26,7 +28,7 @@ export function characterFragment(
       break;
   }
 
-  const offset = shiftOffset(0x13a, Math.floor((4 + bitShifts) / 8));
+  const offset = shiftOffset(0x13a, bitToOffset(4 + bitShifts));
 
   return {
     id: `count-${type}-%index%-${level}-${character}`,

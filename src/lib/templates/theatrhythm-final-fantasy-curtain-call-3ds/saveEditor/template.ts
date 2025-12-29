@@ -1,3 +1,5 @@
+import { bitToOffset } from "$lib/utils/bytes";
+
 import type { GameJson, ItemBitflag } from "$lib/types";
 
 import {
@@ -416,8 +418,7 @@ const template: GameJson = {
                                 type: "bitflags",
                                 flags: category.abilities.map(
                                   (ability, index) => ({
-                                    offset:
-                                      0xd32 + Math.floor(ability.index / 8),
+                                    offset: 0xd32 + bitToOffset(ability.index),
                                     bit: ability.index % 8,
                                     label: ability.name,
                                     separator:
@@ -1558,7 +1559,7 @@ const template: GameJson = {
                                 name: "Songs",
                                 type: "bitflags",
                                 flags: game.songs.map((song) => ({
-                                  offset: 0x33ca + Math.floor(song.index / 8),
+                                  offset: 0x33ca + bitToOffset(song.index),
                                   bit: song.index % 8,
                                   label: song.name,
                                 })),

@@ -2,7 +2,13 @@ import moment from "moment";
 import { get } from "svelte/store";
 
 import { gameRegion } from "$lib/stores";
-import { getInt, getIntFromArray, getString, setInt } from "$lib/utils/bytes";
+import {
+  bitToOffset,
+  getInt,
+  getIntFromArray,
+  getString,
+  setInt,
+} from "$lib/utils/bytes";
 import {
   customGetRegions,
   getHeaderShift,
@@ -406,10 +412,10 @@ function dateToDays(
 
 export function getDateOffset(index: number, type: "days" | "months"): number {
   if (type === "months") {
-    return Math.floor((5 + index * 0x9) / 0x8);
+    return bitToOffset(5 + index * 0x9);
   }
 
-  return Math.floor((index * 0x9) / 0x8);
+  return bitToOffset(index * 0x9);
 }
 
 export function getBraveStoryOffset(index: number, type: string): number {
@@ -417,9 +423,9 @@ export function getBraveStoryOffset(index: number, type: string): number {
     case "job":
       return 0x1975 + Math.floor(index / 0x2);
     case "land":
-      return 0x1985 + Math.floor(index / 0x8);
+      return 0x1985 + bitToOffset(index);
     case "treasure":
-      return 0x19b4 + Math.floor((1 + index) / 0x8);
+      return 0x19b4 + bitToOffset(1 + index);
   }
 
   return 0x0;

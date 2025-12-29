@@ -1,7 +1,13 @@
 import { get } from "svelte/store";
 
 import { gameRegion } from "$lib/stores";
-import { extractBit, getInt, getString, setInt } from "$lib/utils/bytes";
+import {
+  bitToOffset,
+  extractBit,
+  getInt,
+  getString,
+  setInt,
+} from "$lib/utils/bytes";
 import { formatChecksum } from "$lib/utils/checksum";
 import {
   customGetRegions,
@@ -84,7 +90,7 @@ export function overrideParseItem(item: Item): Item {
     if (type) {
       type.forEach((ability) => {
         itemBitflags.flags.push({
-          offset: 0xa98 + Math.floor(ability.index / 0x8),
+          offset: 0xa98 + bitToOffset(ability.index),
           bit: ability.index % 8,
           label: ability.name,
         });

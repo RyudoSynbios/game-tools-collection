@@ -1,3 +1,5 @@
+import { bitToOffset } from "$lib/utils/bytes";
+
 import type { GameJson, ItemTab } from "$lib/types";
 
 import { arcadeLeagues, challengeSets, weapons } from "./utils/resource";
@@ -476,7 +478,7 @@ const template: GameJson = {
                                       offset:
                                         0x1b12 +
                                         index * 0x10 +
-                                        Math.floor((match.index + 5) / 0x8),
+                                        bitToOffset(match.index + 5),
                                       type: "variable",
                                       dataType: "bit",
                                       bit: (match.index + 5) % 8,
@@ -610,7 +612,7 @@ const template: GameJson = {
                                   offset:
                                     0x1b10 +
                                     index * 0x10 +
-                                    Math.floor(challenge.index / 0x8),
+                                    bitToOffset(challenge.index),
                                   type: "variable",
                                   dataType: "bit",
                                   bit: challenge.index % 8,

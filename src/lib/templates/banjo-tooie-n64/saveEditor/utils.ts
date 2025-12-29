@@ -1,7 +1,7 @@
 import { get } from "svelte/store";
 
 import { fileHeaderShift, gameRegion } from "$lib/stores";
-import { getInt, getString, setInt } from "$lib/utils/bytes";
+import { bitToOffset, getInt, getString, setInt } from "$lib/utils/bytes";
 import {
   byteswapDataView,
   generateRareChecksum,
@@ -51,7 +51,7 @@ function getShift(
       int += 0x2;
     }
 
-    offset = Math.floor(int / 0x8);
+    offset = bitToOffset(int);
     bit = int % 8;
   }
 

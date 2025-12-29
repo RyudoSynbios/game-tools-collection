@@ -1,7 +1,7 @@
 import { get } from "svelte/store";
 
 import { gameRegion } from "$lib/stores";
-import { getInt, setInt } from "$lib/utils/bytes";
+import { bitToOffset, getInt, setInt } from "$lib/utils/bytes";
 import { formatChecksum } from "$lib/utils/checksum";
 import { byteswapDataView, getHeaderShift } from "$lib/utils/common/nintendo64";
 
@@ -93,14 +93,9 @@ export function afterSetInt(item: Item): void {
 
     const offset = itemInt.offset - index * 0x4 + 0x2a;
 
-    setInt(
-      offset + Math.floor((index + 0x1) / 0x8),
-      "bit",
-      value > 0x0 ? 0x1 : 0x0,
-      {
-        bit: (index + 1) % 8,
-      },
-    );
+    setInt(offset + bitToOffset(index + 0x1), "bit", value > 0x0 ? 0x1 : 0x0, {
+      bit: (index + 1) % 8,
+    });
   }
 }
 

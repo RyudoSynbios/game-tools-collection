@@ -1,3 +1,5 @@
+import { bitToOffset } from "$lib/utils/bytes";
+
 import type { GameJson, ItemSection, ItemTab } from "$lib/types";
 
 import {
@@ -897,8 +899,7 @@ const template: GameJson = {
                                 flags: inventory
                                   .filter((item) => item.type === index)
                                   .map((item) => ({
-                                    offset:
-                                      0x14a8 + Math.floor(item.index / 0x8),
+                                    offset: 0x14a8 + bitToOffset(item.index),
                                     bit: item.index % 8,
                                     label: item.name,
                                   })),

@@ -1,3 +1,5 @@
+import { bitToOffset } from "$lib/utils/bytes";
+
 import type { GameJson } from "$lib/types";
 
 import {
@@ -1501,7 +1503,7 @@ const template: GameJson = {
                           flags: [
                             { offset: 0x1245c, bit: 6, label: "Explanation heard", hidden: true },
                             ...troubleList.map((trouble) => ({
-                              offset: 0x1245c + Math.floor(trouble.index / 0x8),
+                              offset: 0x1245c + bitToOffset(trouble.index),
                               bit: trouble.index % 8,
                               label: `<b>${trouble.troubled}:</b> ${trouble.trouble}`,
                             })),

@@ -1,3 +1,5 @@
+import { bitToOffset } from "$lib/utils/bytes";
+
 import type { GameJson, ItemInt } from "$lib/types";
 
 import { dungeons, gashasLocations } from "./utils/resource";
@@ -1161,7 +1163,7 @@ const template: GameJson = {
                   type: "tabs",
                   vertical: true,
                   items: dungeons.map((dungeon) => {
-                    const shift = Math.floor(dungeon.index / 0x8);
+                    const shift = bitToOffset(dungeon.index);
                     const bit = dungeon.index % 8;
 
                     return {
@@ -1255,7 +1257,7 @@ const template: GameJson = {
                           items: [
                             {
                               name: location.name,
-                              offset: 0xad + Math.floor(location.index / 0x8),
+                              offset: 0xad + bitToOffset(location.index),
                               type: "variable",
                               dataType: "bit",
                               bit: location.index % 8,

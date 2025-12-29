@@ -1,3 +1,5 @@
+import { bitToOffset } from "$lib/utils/bytes";
+
 import type { GameJson } from "$lib/types";
 
 import { enemies } from "./utils/resource";
@@ -3026,7 +3028,7 @@ const template: GameJson = {
                   name: "Entries",
                   type: "bitflags",
                   flags: enemies.map((enemy) => ({
-                    offset: 0x388 + Math.floor(enemy.index / 8),
+                    offset: 0x388 + bitToOffset(enemy.index),
                     bit: enemy.index % 8,
                     label: enemy.name,
                     separator: (enemy.index + 1) % 7 === 0,
@@ -3036,7 +3038,7 @@ const template: GameJson = {
                   name: "Drops",
                   type: "bitflags",
                   flags: enemies.map((enemy) => ({
-                    offset: 0x398 + Math.floor(enemy.index / 8),
+                    offset: 0x398 + bitToOffset(enemy.index),
                     bit: enemy.index % 8,
                     label: enemy.name,
                     separator: (enemy.index + 1) % 7 === 0,
@@ -3047,7 +3049,7 @@ const template: GameJson = {
                   name: "Rare Drops",
                   type: "bitflags",
                   flags: enemies.map((enemy) => ({
-                    offset: 0x3a8 + Math.floor(enemy.index / 8),
+                    offset: 0x3a8 + bitToOffset(enemy.index),
                     bit: enemy.index % 8,
                     label: enemy.name,
                     separator: (enemy.index + 1) % 7 === 0,

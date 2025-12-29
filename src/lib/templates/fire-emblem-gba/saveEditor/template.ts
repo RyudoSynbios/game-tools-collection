@@ -1,3 +1,5 @@
+import { bitToOffset } from "$lib/utils/bytes";
+
 import type { GameJson, ItemBitflag } from "$lib/types";
 
 import { characterFragment } from "./utils/fragment";
@@ -959,7 +961,7 @@ const template: GameJson = {
 
                                 if (index !== undefined) {
                                   gallery.push({
-                                    offset: 0x7120 + Math.floor(index / 0x8),
+                                    offset: 0x7120 + bitToOffset(index),
                                     bit: index % 8,
                                     label: image.name,
                                   });
@@ -986,8 +988,7 @@ const template: GameJson = {
                         items: [
                           {
                             name: "Status",
-                            offset:
-                              0x40 + Math.floor((0x1 + character.index) / 0x8),
+                            offset: 0x40 + bitToOffset(0x1 + character.index),
                             type: "variable",
                             dataType: "bit",
                             bit: (1 + character.index) % 8,

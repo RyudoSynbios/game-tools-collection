@@ -2,6 +2,7 @@ import { get } from "svelte/store";
 
 import { fileHeaderShift, gameRegion, gameTemplate } from "$lib/stores";
 import {
+  bitToOffset,
   dataTypeToLength,
   extractBinary,
   getInt,
@@ -309,7 +310,7 @@ export function overrideGetInt(
     for (let i = 0x0; i < itemString.length; i += 0x1) {
       const offset = shiftOffset(
         itemString.offset,
-        Math.floor((bitStart + i * 25) / 8),
+        bitToOffset(bitStart + i * 25),
       );
       const bit = (bitStart + i * 25) % 8;
 
@@ -420,7 +421,7 @@ export function overrideSetInt(
 
       const offset = shiftOffset(
         itemString.offset,
-        Math.floor((bitStart + i * 25) / 8),
+        bitToOffset(bitStart + i * 25),
       );
       const bit = (bitStart + i * 25) % 8;
 

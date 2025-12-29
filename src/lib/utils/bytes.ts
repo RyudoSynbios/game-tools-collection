@@ -262,6 +262,10 @@ export function cloneDataView(dataView: DataView): DataView {
   return new DataView(arrayBuffer);
 }
 
+export function bitToOffset(bit: number): number {
+  return bit >> 0x3;
+}
+
 export function extractBit(number: number, bit: number): boolean {
   return (number & (0x1 << bit)) !== 0x0;
 }

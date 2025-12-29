@@ -2,6 +2,7 @@ import { get } from "svelte/store";
 
 import { gameRegion } from "$lib/stores";
 import {
+  bitToOffset,
   getBitflag,
   getInt,
   getString,
@@ -203,8 +204,7 @@ export function afterSetInt(item: Item, flag: ItemBitflag): void {
 
     const shift = type === "arcade" ? 0x596 : 0x738;
 
-    const offset =
-      itemInt.offset - index * 0x14 + shift + Math.floor(index / 0x8);
+    const offset = itemInt.offset - index * 0x14 + shift + bitToOffset(index);
 
     const bit = ((type === "arcade" ? 5 : 0) + index) % 8;
 

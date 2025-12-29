@@ -1,3 +1,5 @@
+import { bitToOffset } from "$lib/utils/bytes";
+
 import type { GameJson, Resource } from "$lib/types";
 
 import { getDateOffset } from "./utils";
@@ -284,8 +286,7 @@ const template: GameJson = {
                               name: "Places",
                               type: "bitflags",
                               flags: locationList.map((location) => ({
-                                offset:
-                                  0x1ab4 + Math.floor(location.index / 0x8),
+                                offset: 0x1ab4 + bitToOffset(location.index),
                                 bit: location.index % 8,
                                 label: location.name,
                               })),
@@ -295,9 +296,7 @@ const template: GameJson = {
                               type: "bitflags",
                               hidden: true,
                               flags: locationList.map((location) => ({
-                                offset:
-                                  0x1ac0 +
-                                  Math.floor((7 + location.index) / 0x8),
+                                offset: 0x1ac0 + bitToOffset(7 + location.index),
                                 bit: (7 + location.index) % 8,
                                 label: location.name,
                               })),
@@ -1295,7 +1294,7 @@ const template: GameJson = {
                           {
                             id: `braveStory-land-${land.index}`,
                             name: land.name,
-                            offset: 0x1ade + Math.floor(land.index / 0x8),
+                            offset: 0x1ade + bitToOffset(land.index),
                             type: "variable",
                             dataType: "bit",
                             bit: land.index % 8,
@@ -1345,8 +1344,7 @@ const template: GameJson = {
                           {
                             id: `braveStory-treasure-${treasure.index}`,
                             name: treasure.name,
-                            offset:
-                              0x1ad8 + Math.floor((1 + treasure.index) / 0x8),
+                            offset: 0x1ad8 + bitToOffset(1 + treasure.index),
                             type: "variable",
                             dataType: "bit",
                             bit: (1 + treasure.index) % 8,

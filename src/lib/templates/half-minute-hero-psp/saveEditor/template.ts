@@ -1,3 +1,5 @@
+import { bitToOffset } from "$lib/utils/bytes";
+
 import type { GameJson, ItemTab } from "$lib/types";
 
 import { princess30Levels } from "./utils/resource";
@@ -1047,8 +1049,7 @@ const template: GameJson = {
                                       {
                                         id: `princess30Progression-${index}`,
                                         name: "Progression",
-                                        offset:
-                                          0x2816 + Math.floor((2 + index) / 8),
+                                        offset: 0x2816 + bitToOffset(2 + index),
                                         type: "variable",
                                         dataType: "bit",
                                         bit: (2 + index) % 8,

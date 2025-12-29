@@ -1,3 +1,5 @@
+import { bitToOffset } from "$lib/utils/bytes";
+
 import type { GameJson, ItemTab } from "$lib/types";
 
 import {
@@ -2932,7 +2934,7 @@ const template: GameJson = {
                                 name: "Unlocked",
                                 type: "bitflags",
                                 flags: zone.floors.map((floor, index) => ({
-                                  offset: 0x1e87c + Math.floor(floor.index / 8),
+                                  offset: 0x1e87c + bitToOffset(floor.index),
                                   bit: floor.index % 8,
                                   label: floor.name,
                                   separator:
@@ -2946,7 +2948,7 @@ const template: GameJson = {
                                 type: "bitflags",
                                 hidden: true,
                                 flags: zone.floors.map((floor, index) => ({
-                                  offset: 0x1ea0c + Math.floor(floor.index / 8),
+                                  offset: 0x1ea0c + bitToOffset(floor.index),
                                   bit: floor.index % 8,
                                   label: floor.name,
                                   separator:
@@ -2959,7 +2961,7 @@ const template: GameJson = {
                                 name: "Visited",
                                 type: "bitflags",
                                 flags: zone.floors.map((floor, index) => ({
-                                  offset: 0x1eb9c + Math.floor(floor.index / 8),
+                                  offset: 0x1eb9c + bitToOffset(floor.index),
                                   bit: floor.index % 8,
                                   label: floor.name,
                                   separator:
@@ -2984,7 +2986,7 @@ const template: GameJson = {
                                       index !== zone.floors.length - 1);
 
                                   return {
-                                    offset: 0x1ed2c + Math.floor(floor.index / 8),
+                                    offset: 0x1ed2c + bitToOffset(floor.index),
                                     bit: floor.index % 8,
                                     label: floor.name,
                                     disabled,
@@ -5950,7 +5952,7 @@ const template: GameJson = {
                               type: "bitflags",
                               reversed: true,
                               flags: items.map((item) => ({
-                                offset: 0x3d1f0 + Math.floor(item.index / 8),
+                                offset: 0x3d1f0 + bitToOffset(item.index),
                                 bit: item.index % 8,
                                 label: item.name,
                               })),
@@ -5960,7 +5962,7 @@ const template: GameJson = {
                               type: "bitflags",
                               reversed: true,
                               flags: accessories.map((item) => ({
-                                offset: 0x3d270 + Math.floor(item.index / 8),
+                                offset: 0x3d270 + bitToOffset(item.index),
                                 bit: item.index % 8,
                                 label: item.name,
                               })),
@@ -5977,7 +5979,7 @@ const template: GameJson = {
                                 }
 
                                 return {
-                                  offset: 0x3d2f0 + Math.floor(index / 8),
+                                  offset: 0x3d2f0 + bitToOffset(index),
                                   bit: index % 8,
                                   label: item.name,
                                 };
