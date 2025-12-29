@@ -43,6 +43,7 @@ Link to the website: [https://game-tools-collection.com](https://game-tools-coll
 | Final Fantasy IV Pixel Remaster              | WIN      | Save                    | WORLD                                         |
 | Final Fantasy VII Remake                     | WIN      | Save                    | WORLD                                         |
 | Final Fantasy VII Rebirth                    | WIN      | Save                    | WORLD                                         |
+| Final Fantasy VIII                           | PS       | Save                    | EUR / USA / JAP / FRA / GER / ITA / SPA       |
 | Final Fantasy IX                             | PS       | Save                    | EUR / USA / JAP / FRA / GER / ITA / SPA       |
 | Final Fantasy Tactics                        | PS       | Save                    | USA / JAP                                     |
 | Final Fight One                              | GBA      | Save                    | EUR / USA / JAP                               |
