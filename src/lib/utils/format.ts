@@ -20,6 +20,10 @@ export function capitalize(string: string): string {
   return string[0].toUpperCase() + string.slice(1);
 }
 
+export function camelCaseToString(string: string): string {
+  return string.replace(/([a-z])([A-Z])/, "$1 $2");
+}
+
 export function lowerize(string: string): string {
   return string[0].toLowerCase() + string.slice(1);
 }
