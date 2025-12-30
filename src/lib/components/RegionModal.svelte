@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { capitalize } from "$lib/utils/format";
+  import { camelCaseToString, capitalize } from "$lib/utils/format";
 
   export let regions: string[];
   export let onSubmit: (region: string) => void;
@@ -9,7 +9,10 @@
       const strings = region.split("_");
 
       strings.forEach((string) => {
-        results.push({ id: region, name: capitalize(string) });
+        results.push({
+          id: region,
+          name: capitalize(camelCaseToString(string)),
+        });
       });
 
       return results;
@@ -31,9 +34,20 @@
     "Asia",
   ];
 
-  regionsFormatted.sort(
-    (a, b) => order.indexOf(a.name) - order.indexOf(b.name),
-  );
+  regionsFormatted.sort((a, b) => {
+    let indexA = order.indexOf(a.name);
+    let indexB = order.indexOf(b.name);
+
+    if (indexA === -1) {
+      indexA = 9999;
+    }
+
+    if (indexB === -1) {
+      indexB = 9999;
+    }
+
+    return indexA - indexB;
+  });
 </script>
 
 <!-- svelte-ignore a11y-click-events-have-key-events -->
