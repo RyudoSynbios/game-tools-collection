@@ -4,9 +4,9 @@ import type { Item } from "$lib/types";
 
 import { commonCards, uniqueCards } from "./resource";
 
-export function cardPageFragment(page: number): Item[] {
-  if (page < 7) {
-    const base = page * 11;
+export function cardPageFragment(level: number): Item[] {
+  if (level < 7) {
+    const base = level * 11;
 
     return commonCards.slice(base, base + 11).map((card, index) => {
       index += base;
@@ -41,7 +41,7 @@ export function cardPageFragment(page: number): Item[] {
       };
     });
   } else {
-    const base = (page - 7) * 11;
+    const base = (level - 7) * 11;
 
     return uniqueCards.slice(base, base + 11).map((card, index) => {
       index += base;

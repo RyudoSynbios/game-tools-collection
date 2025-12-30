@@ -123,9 +123,9 @@ export function getSlotShifts(
   if (isPsvHeader()) {
     if (index === 0) {
       return [false, undefined];
-    } else {
-      return [true, [-1]];
     }
+
+    return [true, [-1]];
   }
 
   let validCount = 0;
