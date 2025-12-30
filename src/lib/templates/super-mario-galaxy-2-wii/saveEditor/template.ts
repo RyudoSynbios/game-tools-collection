@@ -516,6 +516,38 @@ const template: GameJson = {
           ],
         },
       ],
+      appendSubinstance: [
+        {
+          name: "Shared",
+          items: [
+            {
+              name: "Banktoad",
+              type: "section",
+              flex: true,
+              items: [
+                {
+                  id: "sysconf-SYSC",
+                  name: "Stashed Star Bits",
+                  offset: 0x39,
+                  type: "variable",
+                  dataType: "uint16",
+                  bigEndian: true,
+                  max: 9999,
+                },
+                {
+                  id: "sysconf-SYSC",
+                  name: "Highest amount stashed",
+                  offset: 0x3b,
+                  type: "variable",
+                  dataType: "uint16",
+                  bigEndian: true,
+                  max: 9999,
+                },
+              ],
+            },
+          ],
+        },
+      ],
     },
   ],
   resources: {

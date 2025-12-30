@@ -32,6 +32,14 @@ export function overrideParseItem(item: Item): Item {
     }
 
     return item;
+  } else if ("id" in item && item.id?.match(/sysconf-/)) {
+    const itemInt = item as ItemInt;
+
+    const [, type] = item.id.split("-");
+
+    itemInt.offset += saveBlocks.sysconf[type];
+
+    return itemInt;
   }
 
   return item;
