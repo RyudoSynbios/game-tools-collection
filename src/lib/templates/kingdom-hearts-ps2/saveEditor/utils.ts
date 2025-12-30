@@ -21,6 +21,8 @@ import type {
   Resource,
 } from "$lib/types";
 
+import { abilityList, inventory } from "./utils/resource";
+
 export function beforeInitDataView(dataView: DataView): DataView {
   return unpackFile(dataView);
 }
@@ -36,7 +38,13 @@ export function onInitFailed(): void {
 export function overrideParseItem(item: Item): Item {
   const $gameRegion = get(gameRegion);
 
-  if ("id" in item && item.id === "slots") {
+  if ("id" in item && item.id === "difficuty") {
+    const itemInt = item as ItemInt;
+
+    itemInt.hidden = [2, 7].includes($gameRegion);
+
+    return itemInt;
+  } else if ("id" in item && item.id === "slots") {
     const itemContainer = item as ItemContainer;
 
     const saves = getSaves();
@@ -45,12 +53,16 @@ export function overrideParseItem(item: Item): Item {
   } else if ("id" in item && item.id?.match(/time/)) {
     const itemInt = item as ItemInt;
 
-    if ([1, 2].includes($gameRegion)) {
+    if ([1, 2, 7].includes($gameRegion)) {
       itemInt.operations![0] = { "/": 60 };
     }
 
     return itemInt;
-  } else if ("id" in item && item.id === "name" && $gameRegion === 2) {
+  } else if (
+    "id" in item &&
+    item.id === "name" &&
+    [2, 7].includes($gameRegion)
+  ) {
     const itemString = item as ItemString;
 
     itemString.length = 0x8;
@@ -62,6 +74,22 @@ export function overrideParseItem(item: Item): Item {
     itemInt.hidden = $gameRegion === 2;
 
     return itemInt;
+  } else if ("id" in item && item.id === "finalMixExclude") {
+    const itemInt = item as ItemInt;
+
+    itemInt.hidden = $gameRegion === 7;
+
+    return itemInt;
+  } else if ("id" in item && item.id === "ansemsReport") {
+    const itemBitflags = item as ItemBitflags;
+
+    itemBitflags.flags.map((flag, index) => {
+      if ([10, 11, 12].includes(index) && $gameRegion === 7) {
+        flag.hidden = false;
+      }
+    });
+
+    return itemBitflags;
   } else if ("id" in item && item.id?.match(/japanExclude-/)) {
     const itemBitflags = item as ItemBitflags;
 
@@ -78,6 +106,24 @@ export function overrideParseItem(item: Item): Item {
     });
 
     return itemBitflags;
+  } else if ("id" in item && item.id?.match(/finalMixOnly-/)) {
+    const itemBitflags = item as ItemBitflags;
+
+    itemBitflags.flags.map((flag, index) => {
+      if (index === 8 && $gameRegion === 7) {
+        flag.separator = true;
+      } else if (index === 9 && $gameRegion !== 7) {
+        flag.hidden = true;
+      }
+    });
+
+    return itemBitflags;
+  } else if ("id" in item && item.id === "finalMixOnly") {
+    const itemInt = item as ItemInt;
+
+    itemInt.hidden = $gameRegion !== 7;
+
+    return itemInt;
   }
 
   return item;
@@ -152,6 +198,56 @@ export function beforeSaving(): ArrayBufferLike {
 
 export function onReset(): void {
   resetState();
+}
+
+export function getAbilityNames(): Resource {
+  const $gameRegion = get(gameRegion);
+
+  const names: Resource = {};
+
+  abilityList.forEach((ability) => {
+    if (!ability.finalMix || $gameRegion === 7) {
+      names[ability.index] = ability.name;
+    }
+  });
+
+  names[0x0] = "-";
+
+  return names;
+}
+
+export function getItemNames(type: string): Resource {
+  const $gameRegion = get(gameRegion);
+
+  const names: Resource = {};
+
+  let subtype = -1;
+
+  switch (type) {
+    case "accessories":
+      subtype = 0x6;
+      break;
+    case "items":
+      subtype = 0x0;
+      break;
+    case "weapons":
+      subtype = 0x5;
+      break;
+  }
+
+  inventory.forEach((item) => {
+    if (
+      (!item.finalMix || $gameRegion === 7) &&
+      item.type !== 0x1 &&
+      item.type >> 0x4 === subtype
+    ) {
+      names[item.index] = item.name;
+    }
+  });
+
+  names[0x0] = "-";
+
+  return names;
 }
 
 export function getSlotNames(): Resource {
