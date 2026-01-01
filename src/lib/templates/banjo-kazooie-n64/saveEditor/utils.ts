@@ -10,7 +10,6 @@ import {
 import { clone, makeOperations } from "$lib/utils/format";
 
 import type {
-  DataViewABL,
   Item,
   ItemChecksum,
   ItemContainer,
@@ -33,10 +32,8 @@ export function overrideGetRegions(
   const $gameTemplate = get(gameTemplate);
 
   const itemContainer = $gameTemplate.items[0] as ItemContainer;
-
-  const itemSubinstance = clone(itemContainer).appendSubinstance![0] as ItemTab;
-
-  const itemChecksum = itemSubinstance.items[0] as ItemChecksum;
+  const itemSubinstance = itemContainer.appendSubinstance![0] as ItemTab;
+  const itemChecksum = clone(itemSubinstance.items[0] as ItemChecksum);
 
   itemChecksum.offset += shift;
   itemChecksum.control.offsetStart += shift;
@@ -200,7 +197,7 @@ export function afterSetInt(item: Item): void {
 
 export function generateChecksum(
   item: ItemChecksum,
-  dataView: DataViewABL = new DataView(new ArrayBuffer(0)),
+  dataView?: DataView,
 ): number {
   const [, checksum2] = generateRareChecksum(item, dataView);
 

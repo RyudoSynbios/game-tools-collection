@@ -378,7 +378,7 @@ function long(value: number): Long {
 // Adapted from https://github.com/bryc/rare-n64-chksm
 export function generateRareChecksum(
   item: ItemChecksum,
-  dataView: DataViewABL = new DataView(new ArrayBuffer(0)),
+  dataView?: DataView,
 ): [Long, Long] {
   let checksum1 = long(0x0);
   let polynormal = long(0x13108b3c1);

@@ -19,7 +19,6 @@ import { clone } from "$lib/utils/format";
 import { getRegions } from "$lib/utils/validator";
 
 import type {
-  DataViewABL,
   Item,
   ItemChecksum,
   ItemContainer,
@@ -234,7 +233,7 @@ export function afterSetInt(item: Item): void {
 
 export function generateChecksum(
   item: ItemChecksum,
-  dataView: DataViewABL = new DataView(new ArrayBuffer(0)),
+  dataView?: DataView,
 ): number {
   let checksum = 0x0;
 

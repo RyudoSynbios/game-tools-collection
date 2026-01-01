@@ -353,7 +353,7 @@ const template: GameJson = {
                           flex: true,
                           items: [
                             {
-                              id: "slot-characterName-%index%",
+                              id: "characterName-%index%",
                               name: "Name",
                               offset: 0x1490,
                               length: 0xa,

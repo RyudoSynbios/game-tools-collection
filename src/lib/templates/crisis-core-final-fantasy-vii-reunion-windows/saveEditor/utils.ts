@@ -343,7 +343,7 @@ export function getInventoryMateriaNames(
       names[index + (isEquipment ? 0xe000 : 0x0)] = materias[materia];
 
       if (isEquipped === 0x0 && !isEquipment) {
-        names[index + 0x0] += ` (Equipped)`;
+        names[index + 0x0] += " (Equipped)";
       }
     }
   });

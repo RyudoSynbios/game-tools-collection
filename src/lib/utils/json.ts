@@ -199,7 +199,7 @@ export function getJsonValue<T>(
   if (isObjIsEmpty(obj) && !isObjIsEmpty($dataJson)) {
     obj = $dataJson;
   } else {
-    debug.error(`JSON is empty.`);
+    debug.error("JSON is empty.");
     return defaultValue;
   }
 
@@ -253,7 +253,7 @@ export function setJsonValue<T>(
     obj = $dataJson;
     updateDataJson = true;
   } else {
-    debug.error(`JSON is empty.`);
+    debug.error("JSON is empty.");
     return;
   }
 

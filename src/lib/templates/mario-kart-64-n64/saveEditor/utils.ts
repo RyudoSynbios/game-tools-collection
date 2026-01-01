@@ -7,7 +7,6 @@ import { byteswapDataView, getHeaderShift } from "$lib/utils/common/nintendo64";
 import { clone } from "$lib/utils/format";
 
 import type {
-  DataViewABL,
   Item,
   ItemChecksum,
   ItemInt,
@@ -31,9 +30,9 @@ export function overrideGetRegions(
 ): string[] {
   const $gameTemplate = get(gameTemplate);
 
-  const itemTabs = clone($gameTemplate.items[0] as ItemTabs);
+  const itemTabs = $gameTemplate.items[0] as ItemTabs;
   const itemTab = itemTabs.items[0] as ItemTab;
-  const itemChecksum = itemTab.items[0] as ItemChecksum;
+  const itemChecksum = clone(itemTab.items[0] as ItemChecksum);
 
   itemChecksum.offset += shift;
   itemChecksum.control.offsetStart += shift;
@@ -169,7 +168,7 @@ export function afterSetInt(item: Item): void {
 
 export function generateChecksum(
   item: ItemChecksum,
-  dataView: DataViewABL = new DataView(new ArrayBuffer(0)),
+  dataView?: DataView,
 ): number {
   let checksum = 0x0;
 
@@ -208,7 +207,7 @@ function generateBestRecordsChecksum(item: ItemChecksum): number {
 
 function generateMarioGPChecksum(
   item: ItemChecksum,
-  dataView: DataViewABL = new DataView(new ArrayBuffer(0)),
+  dataView?: DataView,
 ): number {
   let checksum = 0x0;
 

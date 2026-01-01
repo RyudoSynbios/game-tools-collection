@@ -16,7 +16,6 @@ import { clone, getRegionArray } from "$lib/utils/format";
 import { getItem } from "$lib/utils/parser";
 
 import type {
-  DataViewABL,
   Item,
   ItemChecksum,
   ItemContainer,
@@ -54,11 +53,11 @@ export function overrideGetRegions(dataView: DataView): string[] {
     return regions;
   }
 
+  const itemContainer = $gameTemplate.items[0] as ItemContainer;
+
   // Check if save is a hook file
   for (let i = 0x0; i < 0x3; i += 0x1) {
-    const itemChecksum = clone(
-      ($gameTemplate.items[0] as ItemSection).items[0],
-    ) as ItemChecksum;
+    const itemChecksum = clone(itemContainer.items[0]) as ItemChecksum;
 
     itemChecksum.offset -= 0x10;
     itemChecksum.control.offsetStart -= 0x10;
@@ -285,7 +284,7 @@ export function afterSetInt(item: Item): void {
 
 export function generateChecksum(
   item: ItemChecksum,
-  dataView: DataViewABL = new DataView(new ArrayBuffer(0)),
+  dataView?: DataView,
 ): number {
   let checksum = 0x0;
 

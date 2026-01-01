@@ -57,7 +57,7 @@ const template: GameJson = {
               type: "checksum",
               dataType: "uint32",
               control: {
-                offsetStart: 0x10,
+                offsetStart: 0xc,
                 offsetEnd: 0x11e,
               },
             },
@@ -94,7 +94,6 @@ const template: GameJson = {
                           type: "variable",
                           dataType: "uint8",
                           resource: "levels",
-                          autocomplete: true,
                         },
                         {
                           name: "Playtime",

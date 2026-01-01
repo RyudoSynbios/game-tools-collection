@@ -12,7 +12,7 @@ import {
 import debug from "$lib/utils/debug";
 import { utilsExists } from "$lib/utils/format";
 
-import type { DataType, DataViewABL, ItemChecksum } from "$lib/types";
+import type { DataType, ItemChecksum } from "$lib/types";
 
 export function formatChecksum(
   checksum: number,
@@ -166,7 +166,7 @@ const crc32Array = [
 
 export function generateCrcCcitt(
   item: ItemChecksum,
-  dataView: DataViewABL = new DataView(new ArrayBuffer(0)),
+  dataView?: DataView,
 ): number {
   let checksum = dataTypeToValue(item.dataType);
 

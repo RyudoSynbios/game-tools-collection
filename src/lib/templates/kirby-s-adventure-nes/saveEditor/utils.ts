@@ -6,14 +6,13 @@ import { formatChecksum } from "$lib/utils/checksum";
 import { clone } from "$lib/utils/format";
 
 import type {
-  DataViewABL,
   Item,
   ItemBitflag,
   ItemBitflagChecked,
   ItemBitflags,
   ItemChecksum,
+  ItemContainer,
   ItemInt,
-  ItemSection,
 } from "$lib/types";
 
 export function overrideGetRegions(
@@ -22,13 +21,13 @@ export function overrideGetRegions(
 ): string[] {
   const $gameTemplate = get(gameTemplate);
 
-  for (let i = 0x0; i < 0x3; i += 0x1) {
-    const itemChecksum = clone(
-      ($gameTemplate.items[1] as ItemSection).items[0],
-    ) as ItemChecksum;
+  const itemContainer = $gameTemplate.items[1] as ItemContainer;
+
+  for (let i = 0x0; i < itemContainer.instances; i += 0x1) {
+    const itemChecksum = clone(itemContainer.items[0]) as ItemChecksum;
 
     for (let j = 0x0; j < 0x3; j += 0x1) {
-      let tmpShift = shift + j * 0x4c;
+      let tmpShift = shift + j * itemContainer.length;
 
       if (i > 0x0) {
         tmpShift += 0x12;
@@ -174,17 +173,17 @@ export function afterSetInt(item: Item, flag: ItemBitflag): void {
 
 export function generateChecksum(
   item: ItemChecksum,
-  dataView: DataViewABL = new DataView(new ArrayBuffer(0)),
+  dataView?: DataView,
 ): number {
-  let checksumByte1 = 0x0;
-  let checksumByte2 = 0x0;
+  let checksumHigh = 0x0;
+  let checksumLow = 0x0;
 
   for (let i = item.control.offsetStart; i < item.control.offsetEnd; i += 0x1) {
-    checksumByte1 ^= getInt(i, "uint8", {}, dataView);
-    checksumByte2 += getInt(i, "uint8", {}, dataView);
+    checksumHigh ^= getInt(i, "uint8", {}, dataView);
+    checksumLow += getInt(i, "uint8", {}, dataView);
   }
 
-  const checksum = (checksumByte1 << 0x8) | (checksumByte2 & 0xff);
+  const checksum = (checksumHigh << 0x8) | (checksumLow & 0xff);
 
   return formatChecksum(checksum, item.dataType);
 }

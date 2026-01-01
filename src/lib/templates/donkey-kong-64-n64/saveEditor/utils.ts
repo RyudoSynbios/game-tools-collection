@@ -20,7 +20,6 @@ import {
 import { getItem, getResource } from "$lib/utils/parser";
 
 import type {
-  DataViewABL,
   Item,
   ItemBitflag,
   ItemBitflagChecked,
@@ -468,7 +467,7 @@ export function afterSetInt(item: Item, flag: ItemBitflag): void {
 
 export function generateChecksum(
   item: ItemChecksum,
-  dataView: DataViewABL = new DataView(new ArrayBuffer(0)),
+  dataView?: DataView,
 ): number {
   const checksum = generateCrcCcitt(item, dataView) ^ 0xffffffff;
 

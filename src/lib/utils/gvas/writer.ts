@@ -102,7 +102,7 @@ export default class Writer {
     const identifier = this.types[`${key}$ID`];
 
     if (!identifier) {
-      throw new Error(`Identifier not found`);
+      throw new Error("Identifier not found");
     }
 
     for (let i = 0x0; i < 0x10; i += 0x1) {

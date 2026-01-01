@@ -5,13 +5,7 @@ import { getBigInt, getInt, setInt } from "$lib/utils/bytes";
 import { byteswapDataView, getHeaderShift } from "$lib/utils/common/nintendo64";
 import { clone } from "$lib/utils/format";
 
-import type {
-  DataViewABL,
-  Item,
-  ItemChecksum,
-  ItemInt,
-  ItemSection,
-} from "$lib/types";
+import type { Item, ItemChecksum, ItemInt, ItemSection } from "$lib/types";
 
 export function initHeaderShift(dataView: DataView): number {
   return getHeaderShift(dataView, "sra");
@@ -27,9 +21,8 @@ export function overrideGetRegions(
 ): string[] {
   const $gameTemplate = get(gameTemplate);
 
-  const itemChecksum = clone(
-    ($gameTemplate.items[0] as ItemSection).items[3],
-  ) as ItemChecksum;
+  const itemSection = $gameTemplate.items[0] as ItemSection;
+  const itemChecksum = clone(itemSection.items[3]) as ItemChecksum;
 
   itemChecksum.offset += shift;
   itemChecksum.control.offsetStart += shift;
@@ -72,7 +65,7 @@ export function afterSetInt(item: Item): void {
 // prettier-ignore
 export function generateChecksum(
   item: ItemChecksum,
-  dataView: DataViewABL = new DataView(new ArrayBuffer(0)),
+  dataView?: DataView,
 ): bigint {
   let checksum1 = 0x0;
   let checksum2 = 0x0;

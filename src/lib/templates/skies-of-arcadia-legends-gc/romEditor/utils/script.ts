@@ -941,7 +941,7 @@ export default class Script {
                 "unknown",
               ],
             });
-            action.debug = `unknown instruction 0x35 (Mvj) with values "action.parameters[0].value}", "action.parameters[1].value}", "action.parameters[2].value}", "action.parameters[3].value}", "action.parameters[4].value}", "action.parameters[5].value}", "action.parameters[6].value}", "action.parameters[7].value}", "action.parameters[8].value}", "action.parameters[9].value}", "action.parameters[10].value}", "action.parameters[11].value}", "action.parameters[12].value}", "action.parameters[13].value}", "action.parameters[14].value}", "action.parameters[15].value}", "action.parameters[16].value}", "action.parameters[17].value}", "action.parameters[18].value}", "action.parameters[19].value}"`;
+            action.debug = `unknown instruction 0x35 (Mvj) with values "${action.parameters[0].value}", "${action.parameters[1].value}", "${action.parameters[2].value}", "${action.parameters[3].value}", "${action.parameters[4].value}", "${action.parameters[5].value}", "${action.parameters[6].value}", "${action.parameters[7].value}", "${action.parameters[8].value}", "${action.parameters[9].value}", "${action.parameters[10].value}", "${action.parameters[11].value}", "${action.parameters[12].value}", "${action.parameters[13].value}", "${action.parameters[14].value}", "${action.parameters[15].value}", "${action.parameters[16].value}", "${action.parameters[17].value}", "${action.parameters[18].value}", "${action.parameters[19].value}"`;
             break;
 
           case Instruction.PlayBgm:
@@ -3556,7 +3556,7 @@ export default class Script {
           text += "(";
           break;
         case "text":
-          text += `<p style="margin-left: 12px; color: green;">`;
+          text += '<p style="margin-left: 12px; color: green;">';
           break;
       }
 

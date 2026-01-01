@@ -6,7 +6,7 @@ import { formatChecksum } from "$lib/utils/checksum";
 import { byteswapDataView, getHeaderShift } from "$lib/utils/common/nintendo64";
 import { clone } from "$lib/utils/format";
 
-import type { DataViewABL, Item, ItemChecksum, ItemInt } from "$lib/types";
+import type { Item, ItemChecksum, ItemInt } from "$lib/types";
 
 export function initHeaderShift(dataView: DataView): number {
   return getHeaderShift(dataView, "sra");
@@ -60,7 +60,7 @@ export function overrideParseItem(item: Item): Item {
 
 export function generateChecksum(
   item: ItemChecksum,
-  dataView: DataViewABL = new DataView(new ArrayBuffer(0)),
+  dataView?: DataView,
 ): number {
   let checksum = 0x0;
 

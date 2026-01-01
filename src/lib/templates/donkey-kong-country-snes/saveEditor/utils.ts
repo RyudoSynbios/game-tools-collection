@@ -154,15 +154,15 @@ export function afterSetInt(item: Item): void {
 }
 
 export function generateChecksum(item: ItemChecksum): number {
-  let checksumByte1 = 0xa486;
-  let checksumByte2 = 0x4;
+  let checksumHigh = 0x0;
+  let checksumLow = 0x0;
 
   for (let i = item.control.offsetStart; i < item.control.offsetEnd; i += 0x2) {
-    checksumByte1 += getInt(i, "uint16");
-    checksumByte2 ^= getInt(i, "uint16");
+    checksumHigh += getInt(i, "uint16");
+    checksumLow ^= getInt(i, "uint16");
   }
 
-  const checksum = (checksumByte1 << 0x10) | (checksumByte2 & 0xffff);
+  const checksum = (checksumHigh << 0x10) | (checksumLow & 0xffff);
 
   return formatChecksum(checksum, item.dataType);
 }

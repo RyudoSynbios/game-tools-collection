@@ -3,14 +3,12 @@ import { get } from "svelte/store";
 import { dataView } from "$lib/stores";
 import { byteswap, getInt } from "$lib/utils/bytes";
 
-import type { DataViewABL, ItemChecksum } from "$lib/types";
+import type { ItemChecksum } from "$lib/types";
 
-export function isDciFile(
-  dataView: DataViewABL = new DataView(new ArrayBuffer(0)),
-): boolean {
+export function isDciFile(dataView?: DataView): boolean {
   const firstHex = getInt(0x0, "uint8", {}, dataView);
 
-  if (dataView.byteLength !== 0x20000 && firstHex === 0x33) {
+  if (dataView?.byteLength !== 0x20000 && firstHex === 0x33) {
     return true;
   }
 

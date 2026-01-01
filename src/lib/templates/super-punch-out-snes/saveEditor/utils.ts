@@ -3,11 +3,9 @@ import { get } from "svelte/store";
 import { gameTemplate } from "$lib/stores";
 import { getInt, getString, setInt } from "$lib/utils/bytes";
 import { formatChecksum } from "$lib/utils/checksum";
-import { clone } from "$lib/utils/format";
 import { getItem, updateResources } from "$lib/utils/parser";
 
 import type {
-  DataViewABL,
   Item,
   ItemBitflag,
   ItemBitflagChecked,
@@ -24,7 +22,7 @@ import { recordsNames } from "./utils/resource";
 export function overrideGetRegions(dataView: DataView): string[] {
   const $gameTemplate = get(gameTemplate);
 
-  const itemContainer = clone($gameTemplate.items[0] as ItemContainer);
+  const itemContainer = $gameTemplate.items[0] as ItemContainer;
   const itemChecksum = itemContainer.items[0] as ItemChecksum;
 
   if (dataView.byteLength < itemChecksum.control.offsetEnd) {
@@ -248,7 +246,7 @@ export function afterSetInt(item: Item): void {
 
 export function generateChecksum(
   item: ItemChecksum,
-  dataView: DataViewABL = new DataView(new ArrayBuffer(0)),
+  dataView?: DataView,
 ): number {
   let checksum = 0x0;
 

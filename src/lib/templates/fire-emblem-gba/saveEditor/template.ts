@@ -5,7 +5,6 @@ import type { GameJson, ItemBitflag } from "$lib/types";
 import { characterFragment } from "./utils/fragment";
 import {
   characterEnum,
-  characterList,
   characters,
   characterSupports,
   eliwoodChapters,
@@ -16,7 +15,6 @@ import {
   lynEliwoodChapters,
   lynHectorChapters,
   soundRoomGallery,
-  supportList,
 } from "./utils/resource";
 
 export const regex = "[!#$%&*+,-./0-9:;?A-Za-z¡¿À-ÄÇ-ÏÑ-ÔÖÙ-Üßà-äç-ïñ-ôöŒœªº]";

@@ -8,7 +8,6 @@ import { clone, getObjKey } from "$lib/utils/format";
 import { getItem, getResource } from "$lib/utils/parser";
 
 import type {
-  DataViewABL,
   Item,
   ItemBitflag,
   ItemBitflags,
@@ -38,13 +37,14 @@ export function overrideGetRegions(
 ): string[] {
   const $gameTemplate = get(gameTemplate);
 
-  for (let i = 0; i < 3; i += 1) {
-    const itemTabs = clone($gameTemplate.items[0] as ItemTabs);
-    const itemTab = itemTabs.items[1] as ItemTab;
-    const itemContainer = itemTab.items[0] as ItemContainer;
-    const itemChecksum = itemContainer.items[0] as ItemChecksum;
+  const itemTabs = $gameTemplate.items[0] as ItemTabs;
+  const itemTab = itemTabs.items[1] as ItemTab;
+  const itemContainer = itemTab.items[0] as ItemContainer;
 
-    const tmpShift = shift + i * 0x28;
+  for (let i = 0x0; i < itemContainer.instances; i += 0x1) {
+    const itemChecksum = clone(itemContainer.items[0] as ItemChecksum);
+
+    const tmpShift = shift + i * itemContainer.length;
 
     itemChecksum.offset += tmpShift;
     itemChecksum.control.offsetStart += tmpShift;
@@ -209,7 +209,7 @@ export function afterSetInt(item: Item, flag: ItemBitflag): void {
 
 export function generateChecksum(
   item: ItemChecksum,
-  dataView: DataViewABL = new DataView(new ArrayBuffer(0)),
+  dataView?: DataView,
 ): number {
   let checksum = 0x5;
 

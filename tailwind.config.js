@@ -25,7 +25,7 @@ export default {
       keyframes: {
         char: {
           ["0%, 49%"]: {
-            boxShadow: `inset 0 0 0 20px var(--animate-color)`,
+            boxShadow: "inset 0 0 0 20px var(--animate-color)",
           },
           ["50%,100%"]: {
             boxShadow: "none",
@@ -33,7 +33,7 @@ export default {
         },
         hex: {
           ["0%, 49%"]: {
-            boxShadow: `inset 0 -4px 0 -2px var(--animate-color)`,
+            boxShadow: "inset 0 -4px 0 -2px var(--animate-color)",
           },
           ["50%,100%"]: {
             boxShadow: "none",

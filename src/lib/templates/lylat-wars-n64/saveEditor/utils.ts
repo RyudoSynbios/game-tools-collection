@@ -8,7 +8,6 @@ import { clone } from "$lib/utils/format";
 
 import type {
   Item,
-  ItemBitflag,
   ItemBitflagChecked,
   ItemBitflags,
   ItemChecksum,

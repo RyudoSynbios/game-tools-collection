@@ -7513,6 +7513,7 @@ const template: GameJson = {
       0x12: "M.S. Prima Vista",
     },
     subtitleLanguages: [
+      // Europe / USA
       {
         0x0: "English",
         0x1: "French",
@@ -7520,9 +7521,11 @@ const template: GameJson = {
         0x3: "Italian",
         0x4: "Spanish",
       },
+      // Japan
       {
         0x0: "Japanese",
       },
+      // Asia
       {
         0x0: "English",
         0x1: "Korean",

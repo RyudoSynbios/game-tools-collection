@@ -200,7 +200,7 @@ export function generateChecksum(item: ItemChecksum): number {
 export function getCharacterNames(): Resource {
   const names: Resource = {};
 
-  const itemString = getItem(`slot-characterName-0`) as ItemString;
+  const itemString = getItem("characterName-0") as ItemString;
 
   [...Array(6).keys()].forEach((index) => {
     const name = getString(

@@ -19,7 +19,6 @@ import { clone } from "$lib/utils/format";
 import { getItem } from "$lib/utils/parser";
 
 import type {
-  DataViewABL,
   Item,
   ItemBitflag,
   ItemBitflags,
@@ -55,9 +54,9 @@ export function overrideGetRegions(
   if (isUnpackedMpk()) {
     return getRegionsFromMpk();
   } else {
-    const itemContainer = clone($gameTemplate.items[0] as ItemContainer);
+    const itemContainer = $gameTemplate.items[0] as ItemContainer;
     const itemTab = (itemContainer.appendSubinstance as ItemTab[])[0];
-    const itemChecksum = itemTab.items[0] as ItemChecksum;
+    const itemChecksum = clone(itemTab.items[0] as ItemChecksum);
 
     itemChecksum.offset += shift;
     itemChecksum.control.offsetStart += shift;
@@ -245,7 +244,7 @@ export function afterSetInt(item: Item, flag: ItemBitflag): void {
 
 export function generateChecksum(
   item: ItemChecksum,
-  dataView: DataViewABL = new DataView(new ArrayBuffer(0)),
+  dataView?: DataView,
 ): number {
   const bitMask = 0x4c11db7;
 
@@ -254,7 +253,7 @@ export function generateChecksum(
   for (let i = item.control.offsetStart; i < item.control.offsetEnd; i += 0x1) {
     let int = getInt(i, "uint8", {}, dataView);
 
-    if (dataView.byteLength > 0x0 && i < item.control.offsetStart + 0x8) {
+    if (dataView && i < item.control.offsetStart + 0x8) {
       int = 0x0;
     }
 

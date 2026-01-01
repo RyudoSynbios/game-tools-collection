@@ -9,13 +9,7 @@ import {
 } from "$lib/utils/common/nintendo64";
 import { clone } from "$lib/utils/format";
 
-import type {
-  DataViewABL,
-  Item,
-  ItemChecksum,
-  ItemContainer,
-  ItemInt,
-} from "$lib/types";
+import type { Item, ItemChecksum, ItemContainer, ItemInt } from "$lib/types";
 
 export function initHeaderShift(dataView: DataView): number {
   return getHeaderShift(dataView, "eep");
@@ -31,8 +25,8 @@ export function overrideGetRegions(
 ): string[] {
   const $gameTemplate = get(gameTemplate);
 
-  const itemChecksum = clone($gameTemplate.items[0] as ItemContainer)
-    .items[0] as ItemChecksum;
+  const itemContainer = $gameTemplate.items[0] as ItemContainer;
+  const itemChecksum = clone(itemContainer.items[0] as ItemChecksum);
 
   itemChecksum.offset += shift;
   itemChecksum.control.offsetStart += shift;
@@ -154,7 +148,7 @@ export function afterSetInt(item: Item): void {
 
 export function generateChecksum(
   item: ItemChecksum,
-  dataView: DataViewABL = new DataView(new ArrayBuffer(0)),
+  dataView?: DataView,
 ): bigint {
   const [checksum1, checksum2] = generateRareChecksum(item, dataView);
 

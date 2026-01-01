@@ -4,13 +4,7 @@ import { gameRegion, gameTemplate } from "$lib/stores";
 import { getInt, setInt } from "$lib/utils/bytes";
 import { formatChecksum } from "$lib/utils/checksum";
 
-import type {
-  DataViewABL,
-  Item,
-  ItemChecksum,
-  ItemInt,
-  ItemString,
-} from "$lib/types";
+import type { Item, ItemChecksum, ItemInt, ItemString } from "$lib/types";
 
 import { levels } from "./utils/resource";
 
@@ -177,7 +171,7 @@ export function afterSetInt(item: Item): void {
 
 export function generateChecksum(
   item: ItemChecksum,
-  dataView: DataViewABL = new DataView(new ArrayBuffer(0)),
+  dataView?: DataView,
 ): number {
   let checksum1 = 0x0;
   let checksum2 = 0x0;
