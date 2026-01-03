@@ -320,6 +320,17 @@
     }
   },
   {
+    "id": "donkey-kong-country-2-diddy-s-kong-quest-snes",
+    "name": "Donkey Kong Country 2: Diddy's Kong Quest",
+    "consoleId": "super-nintendo",
+    "tools": {
+      "saveEditor": {
+        "createdAt": "2026-01-03",
+        "regions": ["🇪🇺", "🇺🇸", "🇯🇵", "🇩🇪"]
+      }
+    }
+  },
+  {
     "id": "donkey-kong-land-gb",
     "name": "Donkey Kong Land",
     "consoleId": "game-boy",
