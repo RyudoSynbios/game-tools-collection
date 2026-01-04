@@ -84,7 +84,7 @@
       { key: "float32", value: "float32" },
     ]}
     onChange={handleSearchTypeChange}
-    bind:value={$searchType}
+    value={$searchType}
   />
   <button type="button" on:click={() => handleSearch("previous")}>{"<"}</button>
   <button type="button" on:click={() => handleSearch("next")}>{">"}</button>
