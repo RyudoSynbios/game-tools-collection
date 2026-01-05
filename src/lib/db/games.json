@@ -634,6 +634,17 @@
     }
   },
   {
+    "id": "kurukuru-kururin-gba",
+    "name": "Kurukuru Kururin",
+    "consoleId": "game-boy-advance",
+    "tools": {
+      "saveEditor": {
+        "createdAt": "2026-01-05",
+        "regions": ["🇪🇺", "🇯🇵"]
+      }
+    }
+  },
+  {
     "id": "legend-of-zelda-the-a-link-to-the-past-snes",
     "name": "Legend of Zelda, The: A Link to the Past",
     "consoleId": "super-nintendo",
