@@ -10,6 +10,7 @@ import {
 } from "$lib/utils/bytes";
 import { formatChecksum } from "$lib/utils/checksum";
 import { getHeaderShift } from "$lib/utils/common/gameBoyAdvance";
+import { getShift } from "$lib/utils/parser";
 
 import {
   Item,
@@ -89,10 +90,8 @@ export function overrideParseContainerItemsShifts(
   shifts: number[],
   index: number,
 ): [boolean, number[] | undefined] {
-  const $fileHeaderShift = get(fileHeaderShift);
-
   if (item.id === "slots") {
-    const offset = $fileHeaderShift + 0x34 + index * 0x10;
+    const offset = getShift(shifts) + 0x34 + index * 0x10;
 
     const magic = getString(offset, 0x4, "uint8");
 

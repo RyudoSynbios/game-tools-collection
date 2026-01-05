@@ -173,13 +173,13 @@ export default class Lzss {
 
     this.buffer.set(part, nodeIndex);
 
-    let size = part.length;
+    let length = part.length;
 
-    if (size <= 0x0) {
+    if (length <= 0x0) {
       return new Uint8Array(compressedData);
     }
 
-    let offset = size;
+    let offset = length;
 
     for (let i = 0x1; i <= this.maxLength; i += 0x1) {
       this.insertNode(nodeIndex - i);
@@ -187,9 +187,9 @@ export default class Lzss {
 
     this.insertNode(nodeIndex);
 
-    while (size > 0x0) {
-      if (this.matchLength > size) {
-        this.matchLength = size;
+    while (length > 0x0) {
+      if (this.matchLength > length) {
+        this.matchLength = length;
       }
 
       if (this.matchLength < this.minLength) {
@@ -250,9 +250,9 @@ export default class Lzss {
         this.bufferIndex = (this.bufferIndex + 0x1) & this.bufferMask;
         nodeIndex = (nodeIndex + 0x1) & this.bufferMask;
 
-        if (size !== 0x0) {
+        if (length !== 0x0) {
           this.insertNode(nodeIndex);
-          size -= 0x1;
+          length -= 0x1;
         }
 
         i += 0x1;
@@ -266,12 +266,12 @@ export default class Lzss {
     return new Uint8Array(compressedData);
   }
 
-  public decompress(data: Uint8Array, size: number): Uint8Array {
+  public decompress(data: Uint8Array, length: number): Uint8Array {
     const decompressedData = [];
 
     let offset = 0x0;
 
-    while (decompressedData.length < size) {
+    while (decompressedData.length < length) {
       let flags = data[offset++];
       let mask = 0x80;
 
@@ -295,8 +295,8 @@ export default class Lzss {
             (((special2 & (0xff - countMask)) << wordShift) | special1);
           const count = this.minLength + (special2 & countMask);
 
-          for (let j = 0; j < count; j += 1) {
-            const value = this.buffer[(position + j) & this.bufferMask];
+          for (let i = 0; i < count; i += 1) {
+            const value = this.buffer[(position + i) & this.bufferMask];
 
             decompressedData.push(value);
 
@@ -305,7 +305,7 @@ export default class Lzss {
           }
         }
 
-        if (decompressedData.length === size) {
+        if (decompressedData.length === length) {
           break;
         }
 

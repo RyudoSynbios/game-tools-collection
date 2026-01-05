@@ -4,7 +4,7 @@ import { fileHeaderShift, gameRegion } from "$lib/stores";
 import { getInt, setInt } from "$lib/utils/bytes";
 import { formatChecksum } from "$lib/utils/checksum";
 import { getHeaderShift } from "$lib/utils/common/gameBoyAdvance";
-import { getItem, updateResources } from "$lib/utils/parser";
+import { getItem, getShift, updateResources } from "$lib/utils/parser";
 
 import type {
   Item,
@@ -73,10 +73,8 @@ export function overrideParseContainerItemsShifts(
   shifts: number[],
   index: number,
 ): [boolean, number[] | undefined] {
-  const $fileHeaderShift = get(fileHeaderShift);
-
   if (item.id === "slots") {
-    const int = getInt($fileHeaderShift + 0x64 + index * 0x10, "uint32");
+    const int = getInt(getShift(shifts) + 0x64 + index * 0x10, "uint32");
 
     if (int !== 0x11217) {
       return [true, [-1]];

@@ -1,6 +1,6 @@
 import { get } from "svelte/store";
 
-import { fileHeaderShift, gameTemplate } from "$lib/stores";
+import { gameTemplate } from "$lib/stores";
 import { getInt, setInt } from "$lib/utils/bytes";
 import {
   byteswapDataView,
@@ -8,6 +8,7 @@ import {
   getHeaderShift,
 } from "$lib/utils/common/nintendo64";
 import { clone, makeOperations } from "$lib/utils/format";
+import { getShift } from "$lib/utils/parser";
 
 import type {
   Item,
@@ -60,11 +61,9 @@ export function overrideParseContainerItemsShifts(
   shifts: number[],
   index: number,
 ): [boolean, number[] | undefined] {
-  const $fileHeaderShift = get(fileHeaderShift);
-
   if (item.id === "slots") {
     for (let i = 0; i < item.instances + 1; i += 1) {
-      let saveIndex = getInt($fileHeaderShift + i * item.length + 0x1, "uint8");
+      let saveIndex = getInt(getShift(shifts) + i * item.length + 0x1, "uint8");
 
       if (saveIndex === 2) {
         saveIndex = 3;

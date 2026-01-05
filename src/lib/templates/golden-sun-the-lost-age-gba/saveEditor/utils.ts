@@ -1,10 +1,7 @@
-import { get } from "svelte/store";
-
-import { fileHeaderShift } from "$lib/stores";
 import { extractBit, getInt, getString, setInt } from "$lib/utils/bytes";
 import { formatChecksum } from "$lib/utils/checksum";
 import { getHeaderShift } from "$lib/utils/common/gameBoyAdvance";
-import { getItem, updateResources } from "$lib/utils/parser";
+import { getItem, getShift, updateResources } from "$lib/utils/parser";
 
 import type {
   Item,
@@ -25,11 +22,9 @@ export function overrideParseContainerItemsShifts(
   shifts: number[],
   index: number,
 ): [boolean, number[] | undefined] {
-  const $fileHeaderShift = get(fileHeaderShift);
-
   if (item.id === "slots") {
     for (let i = 0x0; i < item.length * 0x5; i += item.length) {
-      const saveIndex = getInt($fileHeaderShift + i + 0x7, "uint8");
+      const saveIndex = getInt(getShift(shifts) + i + 0x7, "uint8");
 
       if (saveIndex === index) {
         return [true, [...shifts, i]];

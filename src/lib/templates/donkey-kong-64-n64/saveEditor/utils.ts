@@ -1,6 +1,6 @@
 import { get } from "svelte/store";
 
-import { fileHeaderShift, gameRegion, gameTemplate } from "$lib/stores";
+import { gameRegion, gameTemplate } from "$lib/stores";
 import {
   bitToOffset,
   dataTypeToLength,
@@ -17,7 +17,7 @@ import {
   getPartialValue,
   makeOperations,
 } from "$lib/utils/format";
-import { getItem, getResource } from "$lib/utils/parser";
+import { getItem, getResource, getShift } from "$lib/utils/parser";
 
 import type {
   Item,
@@ -96,12 +96,10 @@ export function overrideParseContainerItemsShifts(
   shifts: number[],
   index: number,
 ): [boolean, number[] | undefined] {
-  const $fileHeaderShift = get(fileHeaderShift);
-
   if (item.id === "slots") {
     for (let i = 0; i < item.instances + 1; i += 1) {
       const saveIndex = getInt(
-        $fileHeaderShift + i * item.length + 0x1a0,
+        getShift(shifts) + i * item.length + 0x1a0,
         "uint8",
         { binary: { bitStart: 2, bitLength: 2 } },
       );
