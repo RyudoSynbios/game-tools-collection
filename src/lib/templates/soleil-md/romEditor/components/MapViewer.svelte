@@ -3,15 +3,24 @@
 
   import Checkbox from "$lib/components/Checkbox.svelte";
   import { isDebug } from "$lib/stores";
-  import { getInt, getIntFromArray } from "$lib/utils/bytes";
+  import { getIntFromArray } from "$lib/utils/bytes";
   import Canvas from "$lib/utils/canvas";
   import { capitalize } from "$lib/utils/format";
-  import { applyPalette, flipTileData, getColor } from "$lib/utils/graphics";
-
-  import type { Palette } from "$lib/types";
+  import { applyPalette, flipTileData } from "$lib/utils/graphics";
 
   import { pointerToRoomsTable } from "../template";
-  import { getDecompressedData, getTiles, pointerToOffset } from "../utils";
+  import { pointerToOffset } from "../utils";
+  import {
+    generateTilesetData,
+    getHeroTiles,
+    getMap,
+    getMapTiles,
+    getMapValue,
+    getPalettes,
+    getSprites,
+    getSpriteTiles,
+    getUITiles,
+  } from "../utils/map";
 
   export let roomIndex: number;
 
@@ -34,227 +43,65 @@
   function updateCanvas(): void {
     const roomOffset = roomsTableOffset + roomIndex * 0x40;
 
-    // Palettes
-
-    const palettes: Palette[] = [];
-
-    const palettesOffset = 0xff000;
-
-    for (let i = 0x0; i < 0x4; i += 0x1) {
-      const palette: Palette = [];
-
-      const offset = (getInt(roomOffset + 0xc + i, "uint8") - 0x1) * 0x20;
-
-      for (let j = 0x0; j < 0x10; j += 0x1) {
-        const encoded = getInt(palettesOffset + offset + j * 0x2, "uint16", {
-          bigEndian: true,
-        });
-
-        const rawColor =
-          (((encoded & 0x3e) >> 0x3) << 0x9) |
-          ((encoded >> 0xd) << 0x5) |
-          (((encoded & 0x7c0) >> 0x8) << 0x1);
-
-        const color = getColor(rawColor, "BGR333");
-
-        palette.push(color);
-      }
-
-      palettes.push(palette);
-    }
-
-    // Tileset
-
-    let tilesetDatas: number[][] = [];
-
-    const vdp = new Uint8Array(0x10000);
-
-    let vdpOffset = 0x0;
-
-    // UI
-
-    const uiOffset = 0xf2000;
-
-    let tilesUncompressedSize = getInt(uiOffset + 0x4, "uint32");
-
-    let vdpTiles = getTiles(uiOffset + 0x8, tilesUncompressedSize);
-
-    vdp.set(vdpTiles.slice(0x0, tilesUncompressedSize), vdpOffset);
-
-    vdpOffset = 0xd740;
-
-    // Hero graphics
-
-    const heroSpriteOffset = 0xf4800;
-
-    tilesUncompressedSize = getInt(heroSpriteOffset + 0x4, "uint32");
-
-    vdpTiles = getTiles(heroSpriteOffset + 0x8, tilesUncompressedSize);
-
-    vdp.set(vdpTiles.slice(0x0, tilesUncompressedSize), vdpOffset);
-
-    vdpOffset = 0x2000;
-
-    // Base tiles
-
-    const tilesBaseOffset = 0x120000;
-
-    const tilesOffset = (getInt(roomOffset + 0x4, "uint8") - 0x1) * 0x4;
-    const tilesCompressedDatasOffset =
-      tilesBaseOffset +
-      getInt(tilesBaseOffset + tilesOffset, "uint32", { bigEndian: true });
-
-    tilesUncompressedSize = getInt(tilesCompressedDatasOffset + 0x4, "uint32");
-
-    vdpTiles = getTiles(
-      tilesCompressedDatasOffset + 0x8,
-      tilesUncompressedSize,
-    );
-
-    vdp.set(vdpTiles.slice(0x0, tilesUncompressedSize), vdpOffset);
-
-    vdpOffset += tilesUncompressedSize;
-
-    // Additional tiles
-
-    const additionalTilesBaseOffset = getInt(roomOffset + 0x5, "uint8");
-
-    if (additionalTilesBaseOffset) {
-      const additionalTilesOffset = (additionalTilesBaseOffset - 0x1) * 0x4;
-      const additionalTilesCompressedDatasOffset =
-        tilesBaseOffset +
-        getInt(tilesBaseOffset + additionalTilesOffset, "uint32", {
-          bigEndian: true,
-        });
-
-      tilesUncompressedSize = getInt(
-        additionalTilesCompressedDatasOffset + 0x4,
-        "uint32",
-      );
-
-      vdpTiles = getTiles(
-        additionalTilesCompressedDatasOffset + 0x8,
-        tilesUncompressedSize,
-      );
-
-      vdp.set(vdpTiles.slice(0x0, tilesUncompressedSize), vdpOffset);
-
-      vdpOffset += tilesUncompressedSize;
-    }
-
     // Map
 
-    const mapsBaseOffset = 0x15e000;
-    const mapOffset = (getInt(roomOffset, "uint8") - 0x1) * 0x4;
-    const mapCompressedDatasOffset =
-      mapsBaseOffset +
-      getInt(mapsBaseOffset + mapOffset, "uint32", { bigEndian: true });
-
-    const mapUncompressedSize = getInt(
-      mapCompressedDatasOffset + 0x4,
-      "uint32",
-    );
-
-    const map = getDecompressedData(
-      mapCompressedDatasOffset + 0x8,
-      mapUncompressedSize,
-    );
-
-    for (let i = 0x0; i <= 0xfff; i += 0x1) {
-      map[i * 2] += 0x1;
-    }
+    const map = getMap(roomOffset);
 
     const mapWidth = map[0x2c00] * 0x20;
     const mapHeight = map[0x2c01] * 0x10;
 
     canvas.resize(mapWidth * 0x8, mapHeight * 0x10);
 
-    // Additional layer
+    // VDP
+
+    const vdp = new Uint8Array(0x10000);
+
+    const uiTiles = getUITiles();
+    const heroTiles = getHeroTiles();
+    const mapTiles1 = getMapTiles(roomOffset + 0x4);
+    const mapTiles2 = getMapTiles(roomOffset + 0x5);
+
+    const palettes = getPalettes(roomOffset + 0xc);
+
+    vdp.set(uiTiles, 0x0);
+    vdp.set(heroTiles, 0xd740);
+    vdp.set(mapTiles1, 0x2000);
+
+    let vdpOffset = 0x2000 + mapTiles1.byteLength;
+
+    vdp.set(mapTiles2, vdpOffset);
+
+    vdpOffset += mapTiles2.byteLength;
 
     // const additionalLayer = getInt(roomOffset + 0x1, "uint8");
 
     // Sprites
 
-    let sprites = map;
-    let baseRamTest = 0x2800;
+    let sprites = getSprites(roomOffset + 0x10);
+    let spritesOffset = 0x0;
 
-    const spritesOverrideOffset = getInt(roomOffset + 0x10, "uint16", {
-      bigEndian: true,
-    });
-
-    if (spritesOverrideOffset) {
-      const spriteOverrideBaseOffset = 0x50000;
-
-      const spriteOverrideOffset = (spritesOverrideOffset - 0x1) * 0x4;
-      const spriteOverrideCompressedDatasOffset =
-        spriteOverrideBaseOffset +
-        getInt(spriteOverrideBaseOffset + spriteOverrideOffset, "uint32", {
-          bigEndian: true,
-        });
-
-      const spritesUncompressedSize = getInt(
-        spriteOverrideCompressedDatasOffset + 0x4,
-        "uint32",
-      );
-
-      sprites = getDecompressedData(
-        spriteOverrideCompressedDatasOffset + 0x8,
-        spritesUncompressedSize,
-      );
-      baseRamTest = 0x0;
+    if (sprites.length === 0) {
+      sprites = map;
+      spritesOffset = 0x2800;
     }
 
+    // prettier-ignore
     while (true) {
-      const spriteType = getIntFromArray(sprites, baseRamTest, "uint16", true);
-      const x = getIntFromArray(sprites, baseRamTest + 0x2, "uint16", true);
-      const y = getIntFromArray(sprites, baseRamTest + 0x4, "uint16", true);
-      const spriteId = getIntFromArray(sprites, baseRamTest + 0x6, "uint16", true); // prettier-ignore
+      const spriteType = getIntFromArray(sprites, spritesOffset, "uint16", true);
+      const x = getIntFromArray(sprites, spritesOffset + 0x2, "uint16", true);
+      const y = getIntFromArray(sprites, spritesOffset + 0x4, "uint16", true);
+      const spriteId = getIntFromArray(sprites, spritesOffset + 0x6, "uint16", true);
 
       if (x + y === 0x0) {
         break;
       }
 
-      // Sprites Graphics
-
-      const spritesTableOffset = getInt(0x124ea + roomIndex * 0x4, "uint32", {
-        bigEndian: true,
-      });
-
       if (spriteType === 0x16) {
-        const spritesDataOffset = getInt(
-          spritesTableOffset + spriteId * 0x8 + 0x4,
-          "uint32",
-          {
-            bigEndian: true,
-          },
-        );
+        const spriteTiles = getSpriteTiles(roomIndex, spriteId);
 
-        const spriteIndex = (spritesDataOffset & 0xff) * 0x8;
-        const spritesOffset = getInt(0x19848 + spriteIndex, "uint8");
+        vdp.set(spriteTiles, vdpOffset + 0x80);
 
-        if (spritesOffset !== 0x0) {
-          const spritesBaseOffset = 0x59000;
-          const spriteOffset = (spritesOffset - 0x1) * 0x4;
-          const spriteCompressedDataOffset =
-            spritesBaseOffset +
-            getInt(spritesBaseOffset + spriteOffset, "uint32", {
-              bigEndian: true,
-            });
-
-          tilesUncompressedSize = getInt(
-            spriteCompressedDataOffset + 0x4,
-            "uint32",
-          );
-
-          vdpTiles = getTiles(
-            spriteCompressedDataOffset + 0x8,
-            tilesUncompressedSize,
-          );
-
-          vdp.set(vdpTiles.slice(0x0, tilesUncompressedSize), vdpOffset + 0x80);
-
-          vdpOffset += tilesUncompressedSize;
-        }
+        vdpOffset += spriteTiles.byteLength;
       }
 
       const tileData = [...Array(0x40).keys()].map(() => 0x0);
@@ -262,27 +109,10 @@
 
       canvas.addGraphic("sprites", tile, 8, 8, x, y);
 
-      baseRamTest += 0x8;
+      spritesOffset += 0x8;
     }
 
-    // Generate tilesetDatas
-
-    vdp.forEach((data, index) => {
-      const high = data >> 0x4;
-      const low = data - (high << 0x4);
-
-      const tileIndex = Math.floor(index / 0x20);
-
-      if (!tilesetDatas[tileIndex]) {
-        tilesetDatas[tileIndex] = [];
-      }
-
-      tilesetDatas[tileIndex].push(high, low);
-    });
-
-    function getMapValue(offset: number): number {
-      return getIntFromArray(map, offset, "uint16", true);
-    }
+    const tilesetDatas = generateTilesetData(vdp);
 
     // Generate map
 
@@ -294,10 +124,10 @@
       for (let row = 0x0; row < mapHeight; row += 0x1) {
         for (let column = 0x0; column < 0x20; column += 0x1) {
           const mapOffset =
-            (getMapValue(ramOffset + section * 0x40) & 0x3fff) * 0x8;
+            (getMapValue(ramOffset + section * 0x40, map) & 0x3fff) * 0x8;
 
           [0x0, 0x2, 0x80, 0x82].forEach((offset, index) => {
-            const rawTile = getMapValue(mapOffset + index * 2);
+            const rawTile = getMapValue(mapOffset + index * 2, map);
 
             const flipX = (rawTile & 0x800) >> 0xb;
             const flipY = (rawTile & 0x1000) >> 0xc;
