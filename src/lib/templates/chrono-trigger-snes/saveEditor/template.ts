@@ -184,24 +184,11 @@ const template: GameJson = {
                           ],
                         },
                         {
-                          type: "section",
-                          flex: true,
-                          items: [
-                            {
-                              name: "Gold",
-                              offset: 0x5e0,
-                              type: "variable",
-                              dataType: "uint24",
-                              max: 9999999,
-                            },
-                            {
-                              name: "Silver Points",
-                              offset: 0x655,
-                              type: "variable",
-                              dataType: "uint8",
-                              max: 200,
-                            },
-                          ],
+                          name: "Gold",
+                          offset: 0x5e0,
+                          type: "variable",
+                          dataType: "uint24",
+                          max: 9999999,
                         },
                       ],
                     },
@@ -774,6 +761,100 @@ const template: GameJson = {
               ],
             },
             {
+              name: "Events",
+              items: [
+                {
+                  type: "tabs",
+                  vertical: true,
+                  items: [
+                    {
+                      name: "The Millennial Fair",
+                      items: [
+                        {
+                          type: "section",
+                          flex: true,
+                          items: [
+                            {
+                              name: "Silver Points",
+                              offset: 0x655,
+                              type: "variable",
+                              dataType: "uint8",
+                              max: 200,
+                            },
+                          ],
+                        },
+                        {
+                          name: "Cats",
+                          type: "section",
+                          flex: true,
+                          items: [
+                            {
+                              id: "catsStatus",
+                              name: "Additional Cats",
+                              offset: 0x660,
+                              type: "variable",
+                              dataType: "bit",
+                              bit: 7,
+                              resource: "booleanObtained",
+                            },
+                            {
+                              id: "cats",
+                              name: "Cats",
+                              offset: 0x656,
+                              type: "variable",
+                              dataType: "uint8",
+                              min: 2,
+                              max: 11,
+                            },
+                            {
+                              name: "Ounces of cat food",
+                              offset: 0x662,
+                              type: "variable",
+                              dataType: "uint8",
+                              max: 200,
+                            },
+                          ],
+                        },
+                        {
+                          name: "Norstein Bekkler's Lab",
+                          type: "section",
+                          flex: true,
+                          items: [
+                            {
+                              name: "Pyozo Doll",
+                              type: "bitflags",
+                              flags: [
+                                { offset: 0x660, bit: 0, label: "Crono" },
+                                { offset: 0x660, bit: 1, label: "Marle" },
+                                { offset: 0x660, bit: 2, label: "Lucca" },
+                                { offset: 0x660, bit: 3, label: "Robo" },
+                                { offset: 0x660, bit: 4, label: "Frog" },
+                                { offset: 0x660, bit: 5, label: "Ayla" },
+                                { offset: 0x660, bit: 6, label: "Magus" },
+                              ],
+                            },
+                            {
+                              name: "Clone",
+                              type: "bitflags",
+                              flags: [
+                                { offset: 0x661, bit: 0, label: "Crono" },
+                                { offset: 0x661, bit: 1, label: "Marle" },
+                                { offset: 0x661, bit: 2, label: "Lucca" },
+                                { offset: 0x661, bit: 3, label: "Robo" },
+                                { offset: 0x661, bit: 4, label: "Frog" },
+                                { offset: 0x661, bit: 5, label: "Ayla" },
+                                { offset: 0x661, bit: 6, label: "Magus" },
+                              ],
+                            },
+                          ],
+                        },
+                      ],
+                    },
+                  ],
+                },
+              ],
+            },
+            {
               name: "Options",
               items: [
                 {
@@ -939,6 +1020,10 @@ const template: GameJson = {
     battleModes: {
       0x0: "Wait",
       0x1: "Active",
+    },
+    booleanObtained: {
+      0x0: "-",
+      0x1: "Obtained",
     },
     buttons: {
       0x2: "S",

@@ -111,6 +111,14 @@ export function overrideItem(item: Item): Item {
     itemInt.disabled = itemIndex === 0x0;
 
     return itemInt;
+  } else if ("id" in item && item.id === "cats") {
+    const itemInt = item as ItemInt;
+
+    const unlocked = getInt(itemInt.offset + 0xa, "bit", { bit: 7 });
+
+    itemInt.disabled = unlocked === 0x0;
+
+    return itemInt;
   }
 
   return item;
@@ -165,6 +173,21 @@ export function overrideGetInt(item: Item): [boolean, number | undefined] {
     }
 
     return [true, int];
+  } else if ("id" in item && item.id === "cats") {
+    const itemInt = item as ItemInt;
+
+    const rate = getInt(itemInt.offset, "uint8");
+    const unlocked = getInt(itemInt.offset + 0xa, "bit", { bit: 7 });
+
+    let cats = 1 + unlocked + rate;
+
+    if (rate >= 0x6) {
+      cats -= 1;
+    }
+
+    cats = Math.min(cats, 11);
+
+    return [true, cats];
   }
 
   return [false, undefined];
@@ -203,6 +226,20 @@ export function overrideSetInt(item: Item, value: string): boolean {
 
     setInt(itemInt.offset, dataType, value);
     setInt(itemInt.offset + shift, dataType, base + diff);
+
+    return true;
+  } else if ("id" in item && item.id === "cats") {
+    const itemInt = item as ItemInt;
+
+    const cats = parseInt(value);
+
+    let rate = cats - 2;
+
+    if (cats >= 7) {
+      rate += 0x1;
+    }
+
+    setInt(itemInt.offset, "uint8", rate);
 
     return true;
   }
@@ -286,6 +323,10 @@ export function afterSetInt(item: Item): void {
     } else if (quantity === 0x0) {
       setInt(itemInt.offset + 0x100, "uint8", 0x1);
     }
+  } else if ("id" in item && item.id === "catsStatus") {
+    const itemInt = item as ItemInt;
+
+    setInt(itemInt.offset - 0xa, "uint8", 0x0);
   }
 }
 
