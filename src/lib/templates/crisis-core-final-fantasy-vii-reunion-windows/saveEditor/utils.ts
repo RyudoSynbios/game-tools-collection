@@ -334,19 +334,19 @@ export function getInventoryMateriaNames(
   const materias = getResource("materias") as Resource;
 
   // prettier-ignore
-  [...Array(999).keys()].forEach((index) => {
-    const materia = getInt(materiaItem.offset + index * 0xf, "uint16", {}, $dataViewAlt.save);
-    const quantity = getInt(materiaItem.offset + index * 0xf + 0x2, "uint8", {}, $dataViewAlt.save);
-    const isEquipped = getInt(materiaItem.offset + index * 0xf + 0xa, "uint8", {}, $dataViewAlt.save);
+  for (let i = 0x0; i < 0x3e7; i += 0x1) {
+    const materia = getInt(materiaItem.offset + i * 0xf, "uint16", {}, $dataViewAlt.save);
+    const quantity = getInt(materiaItem.offset + i * 0xf + 0x2, "uint8", {}, $dataViewAlt.save);
+    const isEquipped = getInt(materiaItem.offset + i * 0xf + 0xa, "uint8", {}, $dataViewAlt.save);
 
     if (materia !== 0x0 && quantity === 0x1) {
-      names[index + (isEquipment ? 0xe000 : 0x0)] = materias[materia];
+      names[i + (isEquipment ? 0xe000 : 0x0)] = materias[materia];
 
       if (isEquipped === 0x0 && !isEquipment) {
-        names[index + 0x0] += " (Equipped)";
+        names[i + 0x0] += " (Equipped)";
       }
     }
-  });
+  }
 
   if (isEquipment) {
     names[0x0] = "-";

@@ -628,13 +628,14 @@ export function getEnemyEventGroupNames(): Resource {
 
   const names: Resource = {};
 
-  [...Array(256).keys()].forEach((index) => {
-    const enemyIndex = getInt(0xad + index * 0x25, "uint8", {}, $dataViewAlt.enemyEventGroups); // prettier-ignore
+  // prettier-ignore
+  for (let i = 0x0; i < 0x100; i += 0x1) {
+    const enemyIndex = getInt(0xad + i * 0x25, "uint8", {}, $dataViewAlt.enemyEventGroups);
 
     if (enemyIndex !== 0xff) {
-      names[index] = enemies[enemyIndex];
+      names[i] = enemies[enemyIndex];
     }
-  });
+  }
 
   return names;
 }
@@ -700,10 +701,11 @@ export function getWeaponConditionNames(): Resource {
 
   const conditions = getResource("conditions") as Resource;
 
-  const item = getItem("weaponCondition-name-0") as ItemString;
+  const itemString = getItem("weaponCondition-name-0") as ItemString;
 
   for (let i = 0x0; i < mainDolModels.weaponConditions.count; i += 0x1) {
-    const offset = item.offset + i * mainDolModels.weaponConditions.length;
+    const offset =
+      itemString.offset + i * mainDolModels.weaponConditions.length;
 
     const condition = getInt(offset + 0x12, "uint8", {}, $dataViewAlt.weaponConditions); // prettier-ignore
     let hit = getInt(offset + 0x13, "uint8", {}, $dataViewAlt.weaponConditions);

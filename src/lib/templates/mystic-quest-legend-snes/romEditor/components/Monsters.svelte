@@ -48,7 +48,7 @@
             type: "tabs",
             items: [
               {
-                name: "General",
+                name: "Status",
                 items: [
                   {
                     type: "section",

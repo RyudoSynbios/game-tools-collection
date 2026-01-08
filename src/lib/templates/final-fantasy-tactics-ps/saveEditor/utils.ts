@@ -442,17 +442,17 @@ export function getPropositionNames(slotIndex: number): Resource {
 
   const slots = getInt(propositionItem.offset - 0x2, "uint8");
 
-  [...Array(8).keys()].forEach((index) => {
-    const pIndex = getInt(propositionItem.offset + index * 0x9, "uint8");
+  for (let i = 0x0; i < 0x8; i += 0x1) {
+    const index = getInt(propositionItem.offset + i * 0x9, "uint8");
 
     const proposition = propositionList.find(
-      (proposition) => proposition.index === pIndex,
+      (proposition) => proposition.index === index,
     );
 
-    if (index < slots && proposition) {
-      names[index] = proposition.name;
+    if (i < slots && proposition) {
+      names[i] = proposition.name;
     }
-  });
+  }
 
   return names;
 }
@@ -468,24 +468,22 @@ export function getUnitNames(slotIndex: number): Resource {
 
   const itemString = getItem(`slot-${slotIndex}-unitName-0`) as ItemString;
 
-  [...Array(20).keys()].forEach((index) => {
-    const offset = itemString.offset + index * 0xe0;
+  for (let i = 0x0; i < 0x14; i += 0x1) {
+    const offset = itemString.offset + i * 0xe0;
 
     // prettier-ignore
     if (getInt(offset - 0xbd, "uint8") !== 0xff) {
-      const name = getString(offset, itemString.length, itemString.letterDataType, {
+      names[i] = getString(offset, itemString.length, itemString.letterDataType, {
         letterIsAdaptive: itemString.letterIsAdaptive,
         endCode: itemString.endCode,
         resource: "letters",
-      });
+      }).trim();
 
-      names[index] = name.trim();
-
-      if (index >= 16) {
-        names[index] += " (Guest)";
+      if (i >= 0x10) {
+        names[i] += " (Guest)";
       }
     }
-  });
+  }
 
   return names;
 }

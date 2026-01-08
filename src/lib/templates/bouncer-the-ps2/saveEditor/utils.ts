@@ -262,9 +262,9 @@ function updateCharacterRank(offset: number, character: number): void {
   const skills = getBitflags(offset + 0x6);
 
   stats.forEach((value) => {
-    [...Array(value).keys()].forEach((index) => {
-      points += characterBP.stats[index];
-    });
+    for (let i = 0; i < value; i += 1) {
+      points += characterBP.stats[i];
+    }
   });
 
   skills.forEach((skill, index) => {

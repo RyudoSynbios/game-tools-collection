@@ -523,15 +523,15 @@ export function getInventoryNames(itemType: number): Resource {
 
   const items = getItemNames() as Resource;
 
-  [...Array(1000).keys()].forEach((index) => {
-    const itemIndex = getInt(itemItem.offset + index * 0x18, "uint32");
+  for (let i = 0x0; i < 0x3e8; i += 0x1) {
+    const index = getInt(itemItem.offset + i * 0x18, "uint32");
 
-    const type = itemList.find((item) => item.index === itemIndex)?.type;
+    const type = itemList.find((item) => item.index === index)?.type;
 
     if (type === itemType) {
-      names[index] = items[itemIndex];
+      names[i] = items[index];
     }
-  });
+  }
 
   names[0xffffffff] = "-";
 
@@ -545,13 +545,13 @@ export function getInventoryItemNames(): Resource {
 
   const items = getItemNames() as Resource;
 
-  [...Array(1000).keys()].forEach((index) => {
-    const itemIndex = getInt(itemItem.offset + index * 0x18, "uint32");
+  for (let i = 0x0; i < 0x3e8; i += 0x1) {
+    const index = getInt(itemItem.offset + i * 0x18, "uint32");
 
-    if (itemIndex !== 0xffffffff) {
-      names[index] = items[itemIndex];
+    if (index !== 0xffffffff) {
+      names[i] = items[index];
     }
-  });
+  }
 
   return names;
 }
@@ -564,16 +564,16 @@ export function getInventoryMateriaNames(type: string): Resource {
   const materias = getResource("materias") as Resource;
   const characters = getResource("characters") as Resource;
 
-  [...Array(1000).keys()].forEach((index) => {
-    const materia = getInt(materiaItem.offset + index * 0x20, "uint32");
-    const character = getInt(materiaItem.offset + index * 0x20 - 0x3, "uint8");
+  for (let i = 0x0; i < 0x3e8; i += 0x1) {
+    const materia = getInt(materiaItem.offset + i * 0x20, "uint32");
+    const character = getInt(materiaItem.offset + i * 0x20 - 0x3, "uint8");
     const isSummon = materia >= 0x36b1 && materia <= 0x36ba;
 
     if (materia && (!type || (type === "summons" && isSummon))) {
-      names[index] =
+      names[i] =
         `${materias[materia]}${character !== 0x9 ? ` (${characters[character][0]})` : ""}`;
     }
-  });
+  }
 
   names[0xffffffff] = "-";
 
@@ -600,13 +600,13 @@ export function getInventoryWeaponNames(): Resource {
 
   const weapons = getResource("weapons") as Resource;
 
-  [...Array(128).keys()].forEach((index) => {
-    const weaponIndex = getInt(weaponItem.offset + index * 0x10, "uint32");
+  for (let i = 0x0; i < 0x80; i += 0x1) {
+    const index = getInt(weaponItem.offset + i * 0x10, "uint32");
 
-    if (weaponIndex !== 0x0) {
-      names[index] = weapons[weaponIndex];
+    if (index !== 0x0) {
+      names[i] = weapons[index];
     }
-  });
+  }
 
   names[0xffffffff] = "-";
 

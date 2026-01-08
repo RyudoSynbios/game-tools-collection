@@ -136,16 +136,12 @@ export function getInventoryNames(): Resource {
 
   const names: Resource = {};
 
-  [...Array(getItemCount()).keys()].forEach((index) => {
-    const int = getInt(
-      0x5c + index * getItemLength(),
-      "uint32",
-      {},
-      $dataViewAlt.inventory,
-    );
+  // prettier-ignore
+  for (let i = 0x0; i < getItemCount(); i += 0x1) {
+    const int = getInt(0x5c + i * getItemLength(), "uint32", {}, $dataViewAlt.inventory);
 
-    names[index] = itemTypes[int];
-  });
+    names[i] = itemTypes[int];
+  }
 
   return names;
 }

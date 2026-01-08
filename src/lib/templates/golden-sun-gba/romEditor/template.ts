@@ -1337,7 +1337,7 @@ const template: GameJson = {
                               flex: true,
                               items: [
                                 {
-                                  name: "Equipable by",
+                                  name: "Equippable by",
                                   type: "bitflags",
                                   flags: [
                                     { offset: 0x4, bit: 0, label: "Isaac" },
@@ -1677,7 +1677,7 @@ const template: GameJson = {
                       type: "tabs",
                       items: [
                         {
-                          name: "General",
+                          name: "Status",
                           items: [
                             {
                               type: "section",

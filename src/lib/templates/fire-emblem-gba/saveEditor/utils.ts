@@ -324,17 +324,17 @@ export function getCharacterNames(slotIndex: number): Resource {
 
   const itemInt = getItem(`slot-${slotIndex}-party-character-0`) as ItemInt;
 
-  [...Array(44).keys()].forEach((index) => {
-    const characterIndex = getInt(itemInt.offset + index * 0x24, "uint8");
+  for (let i = 0x0; i < 0x34; i += 0x1) {
+    const characterIndex = getInt(itemInt.offset + i * 0x24, "uint8");
 
     const character = characterList.find(
       (character) => character.index + 0x1 === characterIndex,
     );
 
     if (character) {
-      names[index] = character.name;
+      names[i] = character.name;
     }
-  });
+  }
 
   return names;
 }

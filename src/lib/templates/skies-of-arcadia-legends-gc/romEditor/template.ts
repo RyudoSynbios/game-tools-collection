@@ -374,7 +374,7 @@ const template: GameJson = {
                       flex: true,
                       items: [
                         {
-                          name: "Condition Weakness",
+                          name: "Condition",
                           type: "section",
                           items: [
                             {
@@ -523,7 +523,7 @@ const template: GameJson = {
                           ],
                         },
                         {
-                          name: "Magic Weakness",
+                          name: "Magic",
                           type: "section",
                           items: [
                             {
@@ -1521,7 +1521,7 @@ const template: GameJson = {
                           flex: true,
                           items: [
                             {
-                              name: "Equipable by",
+                              name: "Equippable by",
                               dataViewAltKey: "armors",
                               type: "bitflags",
                               flags: [
@@ -1709,7 +1709,7 @@ const template: GameJson = {
                           flex: true,
                           items: [
                             {
-                              name: "Equipable by",
+                              name: "Equippable by",
                               dataViewAltKey: "accessories",
                               type: "bitflags",
                               flags: [
@@ -2188,7 +2188,7 @@ const template: GameJson = {
                           flex: true,
                           items: [
                             {
-                              name: "Equipable by",
+                              name: "Equippable by",
                               dataViewAltKey: "shipWeapons",
                               type: "bitflags",
                               flags: [
@@ -2378,7 +2378,7 @@ const template: GameJson = {
                           flex: true,
                           items: [
                             {
-                              name: "Equipable by",
+                              name: "Equippable by",
                               dataViewAltKey: "shipAccessories",
                               type: "bitflags",
                               flags: [
@@ -2808,7 +2808,7 @@ const template: GameJson = {
                       flex: true,
                       items: [
                         {
-                          name: "Magic Weakness",
+                          name: "Magic",
                           type: "section",
                           items: [
                             {
@@ -3220,7 +3220,7 @@ const template: GameJson = {
                           type: "tabs",
                           items: [
                             {
-                              name: "General",
+                              name: "Status",
                               items: [
                                 {
                                   type: "section",
@@ -3423,7 +3423,7 @@ const template: GameJson = {
                               flex: true,
                               items: [
                                 {
-                                  name: "Condition Weakness",
+                                  name: "Condition",
                                   type: "section",
                                   items: [
                                     {
@@ -3563,7 +3563,7 @@ const template: GameJson = {
                                   ],
                                 },
                                 {
-                                  name: "Magic Weakness",
+                                  name: "Magic",
                                   type: "section",
                                   items: [
                                     {
@@ -3799,7 +3799,7 @@ const template: GameJson = {
                               flex: true,
                               items: [
                                 {
-                                  name: "Magic Weakness",
+                                  name: "Magic",
                                   type: "section",
                                   items: [
                                     {

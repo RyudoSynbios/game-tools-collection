@@ -1,7 +1,5 @@
 import type { GameJson } from "$lib/types";
 
-export const pointerToRoomsTable = [0x5c8e, 0x5c6a, 0x5e7e, 0x5e48];
-
 const template: GameJson = {
   validator: {
     regions: {

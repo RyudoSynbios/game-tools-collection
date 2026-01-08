@@ -626,6 +626,7 @@ const template: GameJson = {
               items: [...Array(200).keys()].map((index) => ({
                 type: "section",
                 flex: true,
+                noMargin: true,
                 items: [
                   {
                     id: "badge",

@@ -361,9 +361,9 @@ export function getCharacterNames(slotIndex: number): Resource {
 
   const itemString = getItem(`slot-${slotIndex}-characterName-0`) as ItemString;
 
-  [...Array(44).keys()].forEach((index) => {
-    names[index] = getString(
-      itemString.offset + index * 0x10,
+  for (let i = 0x0; i < 0x2c; i += 0x1) {
+    names[i] = getString(
+      itemString.offset + i * 0x10,
       itemString.length,
       "uint8",
       {
@@ -373,7 +373,7 @@ export function getCharacterNames(slotIndex: number): Resource {
       },
       $dataViewAlt[`slot${slotIndex}`],
     );
-  });
+  }
 
   names[0xff] = "-";
 

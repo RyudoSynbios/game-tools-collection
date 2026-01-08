@@ -299,8 +299,8 @@ export function getDeckCardNames(slotIndex: number): Resource {
 
   const cardItem = getItem(`card-${slotIndex}-0`) as ItemInt;
 
-  [...Array(999).keys()].forEach((index) => {
-    const offset = cardItem.offset + index * 0x2;
+  for (let i = 0x0; i < 0x3e7; i += 0x1) {
+    const offset = cardItem.offset + i * 0x2;
 
     const isPremium = getInt(offset + 0x1, "bit", { bit: 7 });
 
@@ -311,9 +311,9 @@ export function getDeckCardNames(slotIndex: number): Resource {
     }
 
     if (card !== 0xfff) {
-      names[index] = cards[card];
+      names[i] = cards[card];
     }
-  });
+  }
 
   names[0xffff] = "-";
 
@@ -325,9 +325,9 @@ export function getDeckNames(slotIndex: number): Resource {
 
   const deckItem = getItem(`deckName-${slotIndex}-0`) as ItemString;
 
-  [...Array(3).keys()].forEach((index) => {
-    const name = getString(
-      deckItem.offset + index * 0xe0,
+  for (let i = 0x0; i < 0x3; i += 0x1) {
+    names[i] = getString(
+      deckItem.offset + i * 0xe0,
       deckItem.length,
       deckItem.letterDataType,
       {
@@ -336,9 +336,7 @@ export function getDeckNames(slotIndex: number): Resource {
         endCode: 0x0,
       },
     );
-
-    names[index] = name;
-  });
+  }
 
   return names;
 }

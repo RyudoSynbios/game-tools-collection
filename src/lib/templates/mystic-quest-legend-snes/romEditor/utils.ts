@@ -215,9 +215,9 @@ export function getCharacterNames(): Resource {
 
   const names: Resource = {};
 
-  [...Array(9).keys()].forEach((index) => {
-    names[index] = getText(offset + index * 0x50, 0x10);
-  });
+  for (let i = 0x0; i < 0x9; i += 0x1) {
+    names[i] = getText(offset + i * 0x50, 0x10);
+  }
 
   names[0xff] = "-";
 
@@ -231,9 +231,9 @@ export function getLocationNames(): Resource {
 
   const names: Resource = {};
 
-  [...Array(37).keys()].forEach((index) => {
-    names[index] = getText(offset + index * length, length);
-  });
+  for (let i = 0x0; i < 0x25; i += 0x1) {
+    names[i] = getText(offset + i * length, length);
+  }
 
   names[0xff] = "-";
 
@@ -248,13 +248,13 @@ export function getMonsterGroupNames(): Resource {
 
   const names: Resource = {};
 
-  [...Array(234).keys()].forEach((index) => {
-    const monsterIndex = getInt(monsterGroupsOffset + index * 0x4, "uint8");
+  for (let i = 0x0; i < 0xea; i += 0x1) {
+    const index = getInt(monsterGroupsOffset + i * 0x4, "uint8");
 
-    if (monsterIndex !== 0xff) {
-      names[index] = getText(offset + (monsterIndex & 0x7f) * length, length);
+    if (index !== 0xff) {
+      names[i] = getText(offset + (index & 0x7f) * length, length);
     }
-  });
+  }
 
   return names;
 }
@@ -265,9 +265,9 @@ export function getMonsterNames(): Resource {
 
   const names: Resource = {};
 
-  [...Array(81).keys()].forEach((index) => {
-    names[index] = getText(offset + index * length, length);
-  });
+  for (let i = 0x0; i < 0x51; i += 0x1) {
+    names[i] = getText(offset + i * length, length);
+  }
 
   names[0xff] = "-";
 
@@ -506,9 +506,7 @@ export function getMappedTiles(
     const tileDataPrevious = getInt(mapOffset + i + 0x1, "uint8") + 1;
 
     [...Array(tileRomIterations).keys()].forEach(() => {
-      mappedTiles.push(getInt(tileOffset, "uint8"));
-
-      tileOffset += 0x1;
+      mappedTiles.push(getInt(tileOffset++, "uint8"));
     });
 
     if (tileDataIterations === 0x0) {

@@ -20,33 +20,16 @@ import {
   characterLevels,
   locations,
   progressionList,
-  tech,
+  techTypes,
 } from "./utils/resource";
 
 export function overrideParseItem(item: Item): Item {
-  if ("id" in item && item.id?.match(/baseStats-/)) {
-    const itemInt = item as ItemInt;
-
-    let [shift] = item.id.splitInt();
-
-    if (shift === 58) {
-      shift = -shift;
-    }
-
-    const dataType = itemInt.dataType as "uint8" | "uint16";
-
-    const calculate = getInt(itemInt.offset, dataType);
-    const base = getInt(itemInt.offset + shift, dataType);
-
-    itemInt.min = Math.max(0, calculate - base);
-
-    return itemInt;
-  } else if ("id" in item && item.id?.match(/tech-/)) {
+  if ("id" in item && item.id?.match(/tech-/)) {
     const itemBitflags = item as ItemBitflags;
 
     const [characterIndex, typeIndex] = item.id.splitInt();
 
-    const techs = tech[typeIndex];
+    const techs = techTypes[typeIndex];
 
     if (characterIndex === 6 && [1, 2].includes(typeIndex)) {
       itemBitflags.hidden = true;
@@ -57,7 +40,7 @@ export function overrideParseItem(item: Item): Item {
         flags.push({
           ...flag,
           offset: flag.offset - characterIndex * 0x50,
-          hidden: !techs.techs[index].characters.includes(characterIndex),
+          hidden: !techs.tech[index].characters.includes(characterIndex),
         });
 
         return flags;
@@ -101,6 +84,23 @@ export function overrideItem(item: Item): Item {
     const worldMaps = [0x1f0, 0x1f1, 0x1f2, 0x1f3, 0x1f4, 0x1f5, 0x1f6, 0x1f7];
 
     itemInt.disabled = !worldMaps.includes(location);
+
+    return itemInt;
+  } else if ("id" in item && item.id?.match(/baseStats-/)) {
+    const itemInt = item as ItemInt;
+
+    let [shift] = item.id.splitInt();
+
+    if (shift === 58) {
+      shift = -shift;
+    }
+
+    const dataType = itemInt.dataType as "uint8" | "uint16";
+
+    const calculate = getInt(itemInt.offset, dataType);
+    const base = getInt(itemInt.offset + shift, dataType);
+
+    itemInt.min = Math.max(0, calculate - base);
 
     return itemInt;
   } else if ("id" in item && item.id === "quantity") {
@@ -354,9 +354,9 @@ export function getCharacterNames(slotIndex: number): Resource {
 
   const itemString = getItem(`slot-${slotIndex}-characterName-0`) as ItemString;
 
-  [...Array(7).keys()].forEach((index) => {
-    const name = getString(
-      itemString.offset + index * 0x6,
+  for (let i = 0x0; i < 0x7; i += 0x1) {
+    names[i] = getString(
+      itemString.offset + i * 0x6,
       itemString.length,
       itemString.letterDataType,
       {
@@ -364,9 +364,7 @@ export function getCharacterNames(slotIndex: number): Resource {
         resource: itemString.resource,
       },
     );
-
-    names[index] = name;
-  });
+  }
 
   names[0x80] = "-";
 

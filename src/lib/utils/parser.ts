@@ -369,18 +369,18 @@ export function parseContainer(
     });
   }
 
-  [...Array(item.instances).keys()].forEach((index: any) => {
+  for (let i = 0x0; i < item.instances; i += 0x1) {
     let instanceShifts: number[] = [];
 
     let isOverrided = false;
 
     if (utilsExists("overrideParseContainerItemsShifts")) {
       [isOverrided, instanceShifts] =
-        $gameUtils.overrideParseContainerItemsShifts(item, shifts, index);
+        $gameUtils.overrideParseContainerItemsShifts(item, shifts, i);
     }
 
     if (!isOverrided) {
-      instanceShifts = [...shifts, item.length * index];
+      instanceShifts = [...shifts, i * item.length];
     }
 
     const disabled = getShift(instanceShifts) === -1;
@@ -393,7 +393,7 @@ export function parseContainer(
         ? item.items.reduce((results: any, subitem: any) => {
             const itemParents = [
               ...parents,
-              { id: item.instanceId || "", index: index },
+              { id: item.instanceId || "", index: i },
             ];
 
             const parsedItem = parseItem(subitem, instanceShifts, itemParents, {
@@ -409,13 +409,13 @@ export function parseContainer(
 
     if (item.instanceType === "section") {
       if (item.enumeration) {
-        parsedSubitem.name = item.enumeration.format(index + 1);
+        parsedSubitem.name = item.enumeration.format(i + 1);
       } else if (
         item.resource &&
         $gameTemplate.resources &&
         $gameTemplate.resources[item.resource]
       ) {
-        parsedSubitem.name = $gameTemplate.resources[item.resource][index];
+        parsedSubitem.name = $gameTemplate.resources[item.resource][i];
       }
 
       parsedSubitem.type = "section";
@@ -432,7 +432,7 @@ export function parseContainer(
     }
 
     parsedItem.items.push(parsedSubitem);
-  });
+  }
 
   if (item.instanceType === "tabs" && item.appendSubinstance) {
     item.appendSubinstance.forEach((subitem: any) => {

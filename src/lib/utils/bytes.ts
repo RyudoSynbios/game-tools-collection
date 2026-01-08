@@ -656,14 +656,12 @@ export function setInt(
 
       const dataTypeLength = dataTypeToLength(dataType);
 
-      [...Array(dataTypeLength).keys()].forEach((index) => {
-        const mutliplier = options.bigEndian
-          ? dataTypeLength - 1 - index
-          : index;
+      for (let i = 0x0; i < dataTypeLength; i += 0x1) {
+        const mutliplier = options.bigEndian ? dataTypeLength - 1 - i : i;
         const int = (value >>> (mutliplier * 0x8)) & 0xff;
 
-        $dataViewAltMetas[dataViewAltKey]!.patch![offset + index] = int;
-      });
+        $dataViewAltMetas[dataViewAltKey]!.patch![offset + i] = int;
+      }
     }
 
     $dataViewAltMetas[dataViewAltKey].isDirty = true;

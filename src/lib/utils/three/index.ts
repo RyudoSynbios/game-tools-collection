@@ -46,9 +46,9 @@ import { toCreasedNormals } from "three/examples/jsm/utils/BufferGeometryUtils.j
 import { isDebug } from "$lib/stores";
 import { generateUUID } from "$lib/utils/format";
 
-import debug from "./debug";
-import { getLocalStorage, setLocalStorage } from "./format";
-import OBJExporter from "./three/OBJExporter";
+import debug from "../debug";
+import { getLocalStorage, setLocalStorage } from "../format";
+import OBJExporter from "./OBJExporter";
 
 export type Side = "front" | "back" | "double";
 

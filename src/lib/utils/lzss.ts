@@ -273,9 +273,8 @@ export default class Lzss {
 
     while (decompressedData.length < length) {
       let flags = data[offset++];
-      let mask = 0x80;
 
-      while (mask > 0x0) {
+      for (let i = 0x0; i < 0x8; i += 0x1) {
         if (flags & 0x1) {
           const value = data[offset++];
 
@@ -295,8 +294,8 @@ export default class Lzss {
             (((special2 & (0xff - countMask)) << wordShift) | special1);
           const count = this.minLength + (special2 & countMask);
 
-          for (let i = 0; i < count; i += 1) {
-            const value = this.buffer[(position + i) & this.bufferMask];
+          for (let j = 0; j < count; j += 1) {
+            const value = this.buffer[(position + j) & this.bufferMask];
 
             decompressedData.push(value);
 
@@ -309,7 +308,6 @@ export default class Lzss {
           break;
         }
 
-        mask >>= 0x1;
         flags >>= 0x1;
       }
     }

@@ -35,8 +35,9 @@
     if (offset !== 0x0) {
       const palette = getPalette("BGR555", graphicsOffset + offset, 0x10);
       const compressedDataOffset = graphicsOffset + offset + 0x20;
+      const sprite = getSprite(compressedDataOffset, palette);
 
-      sprites.push(getSprite(compressedDataOffset, palette));
+      sprites.push(sprite);
     } else {
       sprites.push(null);
     }

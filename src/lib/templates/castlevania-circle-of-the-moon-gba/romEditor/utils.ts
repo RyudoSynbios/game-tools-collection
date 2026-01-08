@@ -20,6 +20,7 @@ import {
   pointerToTexts,
   shinyArmorSpriteGraphics,
 } from "./template";
+import { dssCards } from "./utils/resource";
 import { getMonsterSpriteInfos, getSpriteFrameOffset } from "./utils/sprite";
 
 export function getComponent(
@@ -347,45 +348,40 @@ export function getDecompressedData(offset: number): number[][] {
   const magic = header & 0xff;
   const decompressedLength = header >> 0x8;
 
-  const decompressedData: number[] = [];
-
   if (magic !== 0x10) {
     debug.warn(`Image in offet 0x${offset.toHex()} is not LZSS compressed.`);
 
     return [];
   }
 
+  const decompressedData: number[] = [];
+
+  let index = 0x0;
+
   offset += 0x4;
 
-  let bytesWritten = 0;
-  while (bytesWritten < decompressedLength) {
-    const flags = getInt(offset, "uint8");
+  while (index < decompressedLength) {
+    const flags = getInt(offset++, "uint8");
+    let mask = 0x80;
 
-    offset += 0x1;
-
-    for (let i = 0x0; i < 0x8 && bytesWritten < decompressedLength; i += 0x1) {
-      const type = flags & (0x80 >> i);
-
-      if (type) {
-        const value = getInt(offset, "uint16");
-        const disp = ((value & 0xf) << 0x8) | (value >> 0x8);
-        const n = (value >> 0x4) & 0xf;
-
-        for (let j = 0x0; j < n + 0x3; j += 0x1) {
-          decompressedData[bytesWritten] =
-            decompressedData[bytesWritten - disp - 0x1];
-
-          bytesWritten += 0x1;
-        }
-
-        offset += 0x2;
+    while (mask > 0x0) {
+      if ((flags & mask) === 0x0) {
+        decompressedData[index++] = getInt(offset++, "uint8");
       } else {
-        const value = getInt(offset, "uint8");
-        decompressedData[bytesWritten] = value;
+        const special1 = getInt(offset++, "uint8");
+        const special2 = getInt(offset++, "uint8");
 
-        bytesWritten += 0x1;
-        offset += 0x1;
+        const position = (((special1 & 0xf) << 0x8) | special2) + 0x1;
+        const count = 0x3 + ((special1 >> 0x4) & 0xf);
+
+        for (let i = 0x0; i < count; i += 0x1) {
+          decompressedData[index] = decompressedData[index - position];
+
+          index += 0x1;
+        }
       }
+
+      mask >>= 0x1;
     }
   }
 
@@ -419,34 +415,11 @@ export function getItemNames(): Resource {
 
   const names: Resource = {};
 
-  [...Array(55).keys()].forEach((index) => {
-    names[index] = getText(getInt(offset + index * 0x2, "uint16"));
-  });
+  for (let i = 0x0; i < 0x37; i += 0x1) {
+    names[i] = getText(getInt(offset + i * 0x2, "uint16"));
+  }
 
   names[0x0] = "-";
-
-  const dssCards = [
-    "Salamander Card",
-    "Serpent Card",
-    "Mandragora Card",
-    "Golem Card",
-    "Cockatrice Card",
-    "Manticore Card",
-    "Griffin Card",
-    "Thunderbir Card",
-    "Unicorn Card",
-    "Black Dog Card",
-    "Mercury Card",
-    "Venus Card",
-    "Jupiter Card",
-    "Mars Card",
-    "Diana Card",
-    "Apollo Card",
-    "Neptune Card",
-    "Saturn Card",
-    "Uranus Card",
-    "Pluto Card",
-  ];
 
   for (let i = 0; i < dssCards.length; i += 1) {
     const offset = Object.keys(names).length;
@@ -529,9 +502,9 @@ export function getMonsterNames(): Resource {
 
   const names: Resource = {};
 
-  [...Array(142).keys()].forEach((index) => {
-    names[index] = getText(getInt(offset + index * 0x4, "uint16"));
-  });
+  for (let i = 0x0; i < 0x8e; i += 0x1) {
+    names[i] = getText(getInt(offset + i * 0x4, "uint16"));
+  }
 
   return names;
 }

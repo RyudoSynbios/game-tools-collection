@@ -546,9 +546,9 @@ export function getArtifactNames(): Resource {
 
   if (nameItem) {
     for (let i = 0x0; i < 0x14; i += 0x1) {
-      const offset = nameItem.offset + i * 0x138;
-
-      names[i] = getString(offset, 0x18, "uint16", { endCode: 0x0 });
+      names[i] = getString(nameItem.offset + i * 0x138, 0x18, "uint16", {
+        endCode: 0x0,
+      });
     }
   }
 
@@ -715,9 +715,9 @@ export function getPartySettingsNames(): Resource {
 
   if (nameItem) {
     for (let i = 0x0; i < 0x5; i += 0x1) {
-      const offset = nameItem.offset + i * 0x48;
-
-      names[i] = getString(offset, 0x18, "uint16", { endCode: 0x0 });
+      names[i] = getString(nameItem.offset + i * 0x48, 0x18, "uint16", {
+        endCode: 0x0,
+      });
     }
   }
 
@@ -731,9 +731,9 @@ export function getRuleNames(): Resource {
 
   if (nameItem) {
     for (let i = 0x0; i < 0x5; i += 0x1) {
-      const offset = nameItem.offset + i * 0x154;
-
-      names[i] = getString(offset, 0x18, "uint16", { endCode: 0x0 });
+      names[i] = getString(nameItem.offset + i * 0x154, 0x18, "uint16", {
+        endCode: 0x0,
+      });
     }
   }
 

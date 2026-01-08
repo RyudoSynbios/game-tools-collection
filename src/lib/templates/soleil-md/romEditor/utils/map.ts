@@ -4,16 +4,17 @@ import { getColor } from "$lib/utils/graphics";
 import type { Palette } from "$lib/types";
 
 import { getDecompressedData } from "../utils";
-
-const HERO_TILES_OFFSET = 0xf4800;
-const MAP_OFFSET = 0x15e000;
-const MAP_TILES_OFFSET = 0x120000;
-const PALETTES_OFFSET = 0xff000;
-const SPRITES_BASE_TILES_OFFSET = 0x59000;
-const SPRITES_DATA = 0x19848;
-const SPRITES_OVERRIDE_TILES_OFFSET = 0x50000;
-const SPRITE_TABLE_OFFSET = 0x124ea;
-const UI_TILES_OFFSET = 0xf2000;
+import {
+  HERO_TILES_OFFSET,
+  MAP_OFFSET,
+  MAP_TILES_OFFSET,
+  PALETTES_OFFSET,
+  SPRITE_TABLE_OFFSET,
+  SPRITES_BASE_TILES_OFFSET,
+  SPRITES_DATA,
+  SPRITES_OVERRIDE_TILES_OFFSET,
+  UI_TILES_OFFSET,
+} from "./constants";
 
 export function getHeroTiles(): Uint8Array {
   const length = getInt(HERO_TILES_OFFSET + 0x4, "uint32");

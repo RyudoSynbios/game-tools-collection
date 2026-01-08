@@ -639,16 +639,16 @@ export function getInventoryNames(itemType: number): Resource {
 
   const items = getItemNames() as Resource;
 
-  [...Array(1000).keys()].forEach((index) => {
-    const id = getInt(itemItem.offset + index * 0x20 - 0x4, "uint32");
-    const itemIndex = getInt(itemItem.offset + index * 0x20, "uint32");
+  for (let i = 0x0; i < 0x3e8; i += 0x1) {
+    const id = getInt(itemItem.offset + i * 0x20 - 0x4, "uint32");
+    const index = getInt(itemItem.offset + i * 0x20, "uint32");
 
-    const type = itemList.find((item) => item.index === itemIndex)?.type;
+    const type = itemList.find((item) => item.index === index)?.type;
 
     if (type === itemType) {
-      names[id] = items[itemIndex];
+      names[id] = items[index];
     }
-  });
+  }
 
   names[0xffffffff] = "-";
 
@@ -662,13 +662,13 @@ export function getInventoryItemNames(): Resource {
 
   const items = getItemNames() as Resource;
 
-  [...Array(1000).keys()].forEach((index) => {
-    const itemIndex = getInt(itemItem.offset + index * 0x20, "uint32");
+  for (let i = 0x0; i < 0x3e8; i += 0x1) {
+    const index = getInt(itemItem.offset + i * 0x20, "uint32");
 
-    if (itemIndex !== 0xffffffff) {
-      names[index] = items[itemIndex];
+    if (index !== 0xffffffff) {
+      names[i] = items[index];
     }
-  });
+  }
 
   return names;
 }
@@ -684,17 +684,17 @@ export function getInventoryMateriaNames(
   const materias = getResource("materias") as Resource;
   const characters = getResource("characters") as Resource;
 
-  [...Array(1000).keys()].forEach((index) => {
-    const id = getInt(materiaItem.offset + index * 0x20 - 0x4, "uint32");
-    const materia = getInt(materiaItem.offset + index * 0x20, "uint32");
-    const character = getInt(materiaItem.offset + index * 0x20 + 0xd, "uint8");
+  for (let i = 0x0; i < 0x3e8; i += 0x1) {
+    const id = getInt(materiaItem.offset + i * 0x20 - 0x4, "uint32");
+    const materia = getInt(materiaItem.offset + i * 0x20, "uint32");
+    const character = getInt(materiaItem.offset + i * 0x20 + 0xd, "uint8");
     const isSummon = materia >= 0x36b1 && materia <= 0x36c4;
 
     if (materia !== 0xffffffff && (!type || (type === "summons" && isSummon))) {
-      names[idAsKey ? id : index] =
+      names[idAsKey ? id : i] =
         `${materias[materia]}${character !== 0x10 ? ` (${characters[character][0]})` : ""}`;
     }
-  });
+  }
 
   names[0xffffffff] = "-";
 
@@ -721,14 +721,14 @@ export function getInventoryWeaponNames(idAsKey: boolean): Resource {
 
   const weapons = getResource("weapons") as Resource;
 
-  [...Array(128).keys()].forEach((index) => {
-    const id = getInt(weaponItem.offset + index * 0x60 - 0x4, "uint32");
-    const weaponIndex = getInt(weaponItem.offset + index * 0x60, "uint32");
+  for (let i = 0x0; i < 0x80; i += 0x1) {
+    const id = getInt(weaponItem.offset + i * 0x60 - 0x4, "uint32");
+    const index = getInt(weaponItem.offset + i * 0x60, "uint32");
 
-    if (weaponIndex !== 0xffffffff) {
-      names[idAsKey ? id : index] = weapons[weaponIndex];
+    if (index !== 0xffffffff) {
+      names[idAsKey ? id : i] = weapons[index];
     }
-  });
+  }
 
   names[0xffffffff] = "-";
 

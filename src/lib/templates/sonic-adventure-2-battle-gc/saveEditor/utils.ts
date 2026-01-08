@@ -205,11 +205,11 @@ export function getChaoNames(): Resource {
 
   const item = getItem("chaoName-0") as ItemString;
 
-  [...Array(24).keys()].forEach((index) => {
-    const type = getInt(item.offset + 0x800 * index + 0x6e, "uint8");
+  for (let i = 0x0; i < 0x18; i += 0x1) {
+    const type = getInt(item.offset + 0x800 * i + 0x6e, "uint8");
 
     const name = getString(
-      item.offset + 0x800 * index,
+      item.offset + 0x800 * i,
       item.length,
       item.letterDataType,
       {
@@ -218,12 +218,12 @@ export function getChaoNames(): Resource {
       },
     );
 
-    names[index] = name || `Slot ${index + 1}`;
+    names[i] = name || `Slot ${i + 1}`;
 
     if (type !== 0x0 && name === "") {
-      names[index] = " ";
+      names[i] = " ";
     }
-  });
+  }
 
   return names;
 }
@@ -270,11 +270,11 @@ function updateEmblems(): void {
   );
 
   // Ending Emblems
-  [...Array(3).keys()].forEach((index) => {
-    const storyProgression = getItem(`storyProgression-${index}`) as ItemInt;
+  for (let i = 0x0; i < 0x3; i += 0x1) {
+    const storyProgression = getItem(`storyProgression-${i}`) as ItemInt;
 
     emblemCount += getInt(storyProgression.offset + 0x3489, "uint8");
-  });
+  }
 
   // Chao World & Kart Race Emblems
   for (let i = 0; i < 12; i += 1) {
@@ -284,11 +284,11 @@ function updateEmblems(): void {
   }
 
   // Boss Emblems
-  [...Array(3).keys()].forEach((index) => {
-    const bossProgression = getItem(`bossProgression-${index}`) as ItemInt;
+  for (let i = 0x0; i < 0x3; i += 0x1) {
+    const bossProgression = getItem(`bossProgression-${i}`) as ItemInt;
 
     emblemCount += getInt(bossProgression.offset, "uint8");
-  });
+  }
 
   const emblems = getItem("emblems") as ItemInt;
 

@@ -75,18 +75,16 @@ export function getCharacterNames(): Resource {
 
   const itemString = getItem("name-0") as ItemString;
 
-  [...Array(4).keys()].forEach((index) => {
-    const name = getString(
-      itemString.offset + index * 0x40,
+  for (let i = 0x0; i < 0x4; i += 0x1) {
+    names[i] = getString(
+      itemString.offset + i * 0x40,
       itemString.length,
       itemString.letterDataType,
       {
         resource: "letters",
       },
     );
-
-    names[index] = name;
-  });
+  }
 
   names[0x9] = "-";
 

@@ -213,9 +213,9 @@ export function getEnemyNames(): Resource {
 
   const equName = getItem("pointerText-0-eneName") as ItemString;
 
-  [...Array(400).keys()].forEach((index) => {
-    names[index] = getText(equName.offset + index * 0x28, "dra");
-  });
+  for (let i = 0x0; i < 0x190; i += 0x1) {
+    names[i] = getText(equName.offset + i * 0x28, "dra");
+  }
 
   return names;
 }
@@ -225,9 +225,9 @@ export function getEquipmentNames(startIndex = 0x0): Resource {
 
   const eneName = getItem("pointerText-0-equName") as ItemString;
 
-  [...Array(90).keys()].forEach((index) => {
-    names[startIndex + index] = getText(eneName.offset + index * 0x20, "dra");
-  });
+  for (let i = 0x0; i < 0x5a; i += 0x1) {
+    names[startIndex + i] = getText(eneName.offset + i * 0x20, "dra");
+  }
 
   return names;
 }
@@ -257,9 +257,9 @@ export function getTacticNames(): Resource {
 
   const offset = getRegionArray(tacticsOffset);
 
-  [...Array(29).keys()].forEach((index) => {
-    names[index] = getText(offset - 0x74 + index * 0x4, "lib");
-  });
+  for (let i = 0x0; i < 0x1d; i += 0x1) {
+    names[i] = getText(offset - 0x74 + i * 0x4, "lib");
+  }
 
   return names;
 }
@@ -269,9 +269,9 @@ export function getWeaponNames(startIndex = 0x0): Resource {
 
   const weaName = getItem("pointerText-0-weaName") as ItemString;
 
-  [...Array(217).keys()].forEach((index) => {
-    names[startIndex + index] = getText(weaName.offset + index * 0x34, "dra");
-  });
+  for (let i = 0x0; i < 0xd9; i += 0x1) {
+    names[startIndex + i] = getText(weaName.offset + i * 0x34, "dra");
+  }
 
   return names;
 }

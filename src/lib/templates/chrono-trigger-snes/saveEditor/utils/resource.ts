@@ -369,10 +369,10 @@ export const progressions = progressionList.reduce(
   {},
 );
 
-export const tech = [
+export const techTypes = [
   {
     name: "Single Tech",
-    techs: [
+    tech: [
       { index: 0x7, name: "Cyclone", characters: [0x0] },
       { index: 0x6, name: "Slash", characters: [0x0] },
       { index: 0x5, name: "Lightning", characters: [0x0] },
@@ -433,7 +433,7 @@ export const tech = [
   },
   {
     name: "Dual Tech",
-    techs: [
+    tech: [
       { index: 0x3f, name: "Aura Whirl", characters: [0x0, 0x1] },
       { index: 0x3e, name: "Ice Sword", characters: [0x0, 0x1] },
       { index: 0x3d, name: "Ice Sword 2", characters: [0x0, 0x1] },
@@ -483,7 +483,7 @@ export const tech = [
   },
   {
     name: "Triple Tech",
-    techs: [
+    tech: [
       { index: 0xb7, name: "Delta Force", characters: [0x0, 0x1, 0x2] },
       { index: 0xbf, name: "Lifeline", characters: [0x0, 0x1, 0x3] },
       { index: 0xc7, name: "Arc Impulse", characters: [0x0, 0x1, 0x4] },

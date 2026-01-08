@@ -1603,6 +1603,7 @@ const template: GameJson = {
                   name: "Chao",
                   items: [
                     {
+                      id: "chao",
                       length: 0x800,
                       type: "container",
                       instanceType: "tabs",

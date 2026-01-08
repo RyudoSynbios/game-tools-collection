@@ -202,19 +202,17 @@ export function getCharacterNames(): Resource {
 
   const itemString = getItem("characterName-0") as ItemString;
 
-  [...Array(6).keys()].forEach((index) => {
-    const name = getString(
-      itemString.offset + index * 0x5c,
+  for (let i = 0x0; i < 0x6; i += 0x1) {
+    names[i] = getString(
+      itemString.offset + i * 0x5c,
       itemString.length,
       itemString.letterDataType,
       {
         encoding: "windows31J",
         endCode: itemString.endCode,
       },
-    );
-
-    names[index] = name.trim();
-  });
+    ).trim();
+  }
 
   names[0xff] = "-";
 

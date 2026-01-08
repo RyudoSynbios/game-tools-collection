@@ -400,14 +400,12 @@ export function getCharacterNames(slotIndex: number): Resource {
 
   const itemString = getItem(`slot-${slotIndex}-characterName-0`) as ItemString;
 
-  [...Array(9).keys()].forEach((index) => {
-    const name = trimCharacterName(
+  for (let i = 0x0; i < 0x9; i += 0x1) {
+    names[i] = trimCharacterName(
       itemString,
-      itemString.offset + index * 0x90,
-    );
-
-    names[index] = name.trim();
-  });
+      itemString.offset + i * 0x90,
+    ).trim();
+  }
 
   names[0x9] = "-";
 

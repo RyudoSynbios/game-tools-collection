@@ -291,8 +291,16 @@ export function objToArrayKeyValue<T>(
 
   if (order) {
     array.sort((a, b) => {
-      const indexA = order.indexOf(parseInt(a.key)) || -2;
-      const indexB = order.indexOf(parseInt(b.key)) || -2;
+      let indexA = order.indexOf(parseInt(a.key));
+      let indexB = order.indexOf(parseInt(b.key));
+
+      if (indexA === -1) {
+        indexA = 9999;
+      }
+
+      if (indexB === -1) {
+        indexB = 9999;
+      }
 
       return indexA - indexB;
     });

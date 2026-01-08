@@ -929,9 +929,9 @@ export function getGuardianForcesNames(slotIndex: number): Resource {
 
   const itemString = getItem(`slot-${slotIndex}-gfName-0`) as ItemString;
 
-  [...Array(16).keys()].forEach((index) => {
-    const name = getString(
-      itemString.offset + index * 0x44,
+  for (let i = 0x0; i < 0x10; i += 0x1) {
+    names[i] = getString(
+      itemString.offset + i * 0x44,
       itemString.length,
       itemString.letterDataType,
       {
@@ -939,9 +939,7 @@ export function getGuardianForcesNames(slotIndex: number): Resource {
         resource: itemString.resource,
       },
     );
-
-    names[index] = name;
-  });
+  }
 
   return names;
 }

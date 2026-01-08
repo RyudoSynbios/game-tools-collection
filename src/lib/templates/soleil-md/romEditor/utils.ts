@@ -30,7 +30,7 @@ export function getDecompressedData(
     bufferIndex: number,
   ) => [number[], number],
 ): number[] {
-  let decompressedData: number[] = [...Array(0x10000).keys()].map(() => 0x0);
+  let decompressedData = [...Array(0x10000).keys()].map(() => 0x0);
 
   const bufferOffset = 0xe800;
 
@@ -64,9 +64,8 @@ export function getDecompressedData(
 
   while (decompressedLength < length) {
     let flags = getInt(offset++, "uint8");
-    let mask = 0x80;
 
-    while (mask > 0x0) {
+    for (let i = 0x0; i < 0x8; i += 0x1) {
       if (flags & 0x1) {
         d0 = (d0 & 0xff00) | (getInt(offset, "uint8") & 0xff);
 
@@ -86,7 +85,7 @@ export function getDecompressedData(
 
         d0 = (((d0 << 0x4) & 0xff00) | (getInt(offset, "uint8") & 0xff)) & 0xfff; // prettier-ignore
 
-        for (let i = 0x0; i <= count; i += 0x1) {
+        for (let j = 0x0; j <= count; j += 0x1) {
           const value = decompressedData[bufferOffset + d0];
 
           decompressedData[bufferIndex & 0xffff] = value;
@@ -102,7 +101,6 @@ export function getDecompressedData(
         offset += 0x2;
       }
 
-      mask >>= 0x1;
       flags >>= 0x1;
     }
 

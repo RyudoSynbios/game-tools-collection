@@ -9,7 +9,7 @@ import {
   items,
   itemsGroups,
   progressions,
-  tech,
+  techTypes,
   weapons,
   weaponsGroups,
 } from "./utils/resource";
@@ -442,6 +442,26 @@ const template: GameJson = {
                                   test: true,
                                 },
                                 {
+                                  name: "Element",
+                                  offset: 0x201,
+                                  type: "variable",
+                                  dataType: "upper4",
+                                  resource: "elements",
+                                },
+                                {
+                                  name: "Element Value?",
+                                  offset: 0x201,
+                                  type: "variable",
+                                  dataType: "lower4",
+                                  hidden: true,
+                                },
+                              ],
+                            },
+                            {
+                              type: "section",
+                              flex: true,
+                              items: [
+                                {
                                   id: "level",
                                   name: "Level",
                                   offset: 0x212,
@@ -706,13 +726,13 @@ const template: GameJson = {
                               },
                               hidden: true,
                             },
-                            ...tech.map(
+                            ...techTypes.map(
                               (type, index) =>
                                 ({
                                   id: `tech-%index%-${index}`,
                                   name: type.name,
                                   type: "bitflags",
-                                  flags: type.techs.map((tech) => ({
+                                  flags: type.tech.map((tech) => ({
                                     offset: 0x437 + bitToOffset(tech.index),
                                     bit: tech.index % 8,
                                     label: tech.name,
@@ -1038,6 +1058,12 @@ const template: GameJson = {
     controlModes: {
       0x0: "Standard",
       0x1: "Custom",
+    },
+    elements: {
+      0x1: "Fire",
+      0x2: "Water",
+      0x4: "Shadow",
+      0x8: "Lightning",
     },
     epochLocations: {
       0x0: "-",
@@ -1430,6 +1456,7 @@ const template: GameJson = {
   },
   resourcesOrder: {
     characterNames: [0x80],
+    elements: [0x8, 0x4, 0x2, 0x1],
     locations: [
       0x1f3, 0x120, 0x130, 0x12f, 0x1f4, 0x1f5, 0x1f6, 0x149, 0x17c, 0x188,
       0x189, 0x194, 0x19a, 0x19d, 0x1a9, 0x173, 0x1f1, 0x83, 0x84, 0x95, 0xa9,

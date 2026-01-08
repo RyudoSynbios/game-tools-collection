@@ -998,21 +998,25 @@ const template: GameJson = {
                               flex: true,
                               items: [
                                 {
-                                  id: "item",
                                   name: "Item %d",
-                                  offset: 0x5e8,
-                                  type: "variable",
-                                  dataType: "uint8",
-                                  resource: "items",
-                                  autocomplete: true,
-                                },
-                                {
-                                  name: "Status",
-                                  offset: 0x5e9,
-                                  type: "variable",
-                                  dataType: "bit",
-                                  bit: 1,
-                                  resource: "booleanEquipped",
+                                  type: "group",
+                                  items: [
+                                    {
+                                      id: "item",
+                                      offset: 0x5e8,
+                                      type: "variable",
+                                      dataType: "uint8",
+                                      resource: "items",
+                                      autocomplete: true,
+                                    },
+                                    {
+                                      offset: 0x5e9,
+                                      type: "variable",
+                                      dataType: "bit",
+                                      bit: 1,
+                                      resource: "booleanEquipped",
+                                    },
+                                  ],
                                 },
                                 {
                                   name: "???",
@@ -1042,7 +1046,7 @@ const template: GameJson = {
               ],
             },
             {
-              name: "Stores",
+              name: "Shops",
               planned: true,
               items: [],
             },

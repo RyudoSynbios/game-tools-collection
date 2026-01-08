@@ -152,9 +152,9 @@ export function getAbilityDescriptions(): Resource {
 
   const descriptions: Resource = {};
 
-  [...Array(519).keys()].forEach((index) => {
-    descriptions[index] = getText(abilityDescriptionStartIndex + index);
-  });
+  for (let i = 0x0; i < 0x207; i += 0x1) {
+    descriptions[i] = getText(abilityDescriptionStartIndex + i);
+  }
 
   return descriptions;
 }
@@ -164,9 +164,9 @@ export function getAbilityNames(): Resource {
 
   const names: Resource = {};
 
-  [...Array(519).keys()].forEach((index) => {
-    names[index] = getText(abilityNamesStartIndex + index);
-  });
+  for (let i = 0x0; i < 0x207; i += 0x1) {
+    names[i] = getText(abilityNamesStartIndex + i);
+  }
 
   return names;
 }
@@ -176,9 +176,9 @@ export function getCharacterNames(): Resource {
 
   const names: Resource = {};
 
-  [...Array(8).keys()].forEach((index) => {
-    names[index] = getText(characterNamesStartIndex + index);
-  });
+  for (let i = 0x0; i < 0x8; i += 0x1) {
+    names[i] = getText(characterNamesStartIndex + i);
+  }
 
   return names;
 }
@@ -188,9 +188,9 @@ export function getClassNames(): Resource {
 
   const names: Resource = {};
 
-  [...Array(203).keys()].forEach((index) => {
-    names[index] = getText(classNamesStartIndex + index);
-  });
+  for (let i = 0x0; i < 0xcb; i += 0x1) {
+    names[i] = getText(classNamesStartIndex + i);
+  }
 
   return names;
 }
@@ -202,9 +202,9 @@ export function getDjinniDescriptions(): Resource {
 
   const descriptions: Resource = {};
 
-  [...Array(80).keys()].forEach((index) => {
-    descriptions[index] = getText(djinniDescriptionsStartIndex + index);
-  });
+  for (let i = 0x0; i < 0x50; i += 0x1) {
+    descriptions[i] = getText(djinniDescriptionsStartIndex + i);
+  }
 
   return descriptions;
 }
@@ -214,9 +214,9 @@ export function getDjinniNames(): Resource {
 
   const names: Resource = {};
 
-  [...Array(80).keys()].forEach((index) => {
-    names[index] = getText(djinniNamesStartIndex + index);
-  });
+  for (let i = 0x0; i < 0x50; i += 0x1) {
+    names[i] = getText(djinniNamesStartIndex + i);
+  }
 
   return names;
 }
@@ -228,11 +228,11 @@ export function getEnemyGroupNames(): Resource {
 
   const names: Resource = {};
 
-  [...Array(380).keys()].forEach((index) => {
-    names[index] = getText(
-      enemyNamesStartIndex + getInt(offset + 0x1 + index * 0x10, "uint8"),
+  for (let i = 0x0; i < 0x17c; i += 0x1) {
+    names[i] = getText(
+      enemyNamesStartIndex + getInt(offset + 0x1 + i * 0x10, "uint8"),
     );
-  });
+  }
 
   names[0x0] = "-";
 
@@ -244,9 +244,9 @@ export function getEnemyNames(): Resource {
 
   const names: Resource = {};
 
-  [...Array(164).keys()].forEach((index) => {
-    names[index] = getText(enemyNamesStartIndex + index);
-  });
+  for (let i = 0x0; i < 0xa4; i += 0x1) {
+    names[i] = getText(enemyNamesStartIndex + i);
+  }
 
   names[0x0] = "-";
 
@@ -260,9 +260,9 @@ export function getItemDescriptions(): Resource {
 
   const descriptions: Resource = {};
 
-  [...Array(269).keys()].forEach((index) => {
-    descriptions[index] = getText(itemDescriptionStartIndex + index);
-  });
+  for (let i = 0x0; i < 0x10d; i += 0x1) {
+    descriptions[i] = getText(itemDescriptionStartIndex + i);
+  }
 
   return descriptions;
 }
@@ -272,9 +272,9 @@ export function getItemNames(): Resource {
 
   const names: Resource = {};
 
-  [...Array(269).keys()].forEach((index) => {
-    names[index] = getText(itemNamesStartIndex + index);
-  });
+  for (let i = 0x0; i < 0x10d; i += 0x1) {
+    names[i] = getText(itemNamesStartIndex + i);
+  }
 
   names[0x0] = "-";
 
@@ -286,9 +286,9 @@ export function getMapNames(): Resource {
 
   const names: Resource = {};
 
-  [...Array(201).keys()].forEach((index) => {
-    names[index] = getText(mapNamesStartIndex + index);
-  });
+  for (let i = 0x0; i < 0xc9; i += 0x1) {
+    names[i] = getText(mapNamesStartIndex + i);
+  }
 
   return names;
 }
@@ -300,11 +300,9 @@ export function getShopNames(): Resource {
 
   const names: Resource = {};
 
-  [...Array(35).keys()].forEach((index) => {
-    names[index] = shopTypes[
-      getInt(offset + 0x40 + index * 0x42, "uint8")
-    ] as string;
-  });
+  for (let i = 0x0; i < 0x23; i += 0x1) {
+    names[i] = shopTypes[getInt(offset + 0x40 + i * 0x42, "uint8")];
+  }
 
   return names;
 }
@@ -318,11 +316,11 @@ export function getSummonDescriptions(): Resource {
 
   const descriptions: Resource = {};
 
-  [...Array(16).keys()].forEach((index) => {
-    descriptions[index] = getText(
-      abilityDescriptionsStartIndex + getInt(offset + index * 0x8, "uint16"),
+  for (let i = 0x0; i < 0x10; i += 0x1) {
+    descriptions[i] = getText(
+      abilityDescriptionsStartIndex + getInt(offset + i * 0x8, "uint16"),
     );
-  });
+  }
 
   return descriptions;
 }
@@ -334,11 +332,11 @@ export function getSummonNames(): Resource {
 
   const names: Resource = {};
 
-  [...Array(16).keys()].forEach((index) => {
-    names[index] = getText(
-      abilityNamesStartIndex + getInt(offset + index * 0x8, "uint16"),
+  for (let i = 0x0; i < 0x10; i += 0x1) {
+    names[i] = getText(
+      abilityNamesStartIndex + getInt(offset + i * 0x8, "uint16"),
     );
-  });
+  }
 
   return names;
 }

@@ -8,8 +8,8 @@
   import { capitalize } from "$lib/utils/format";
   import { applyPalette, flipTileData } from "$lib/utils/graphics";
 
-  import { pointerToRoomsTable } from "../template";
   import { pointerToOffset } from "../utils";
+  import { ROOM_TABLE_POINTER } from "../utils/constants";
   import {
     generateTilesetData,
     getHeroTiles,
@@ -30,7 +30,7 @@
   let canvas: Canvas;
   let canvasDebug: Canvas;
 
-  const roomsTableOffset = pointerToOffset(pointerToRoomsTable);
+  const roomsTableOffset = pointerToOffset(ROOM_TABLE_POINTER);
 
   function handleLayerVisibilityChange(event: Event, layer: string): void {
     if ((event.target as HTMLInputElement).checked) {
