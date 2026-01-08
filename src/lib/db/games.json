@@ -217,6 +217,10 @@
       "saveEditor": {
         "createdAt": "2025-09-04",
         "regions": ["🇺🇸", "🇯🇵"]
+      },
+      "romEditor": {
+        "createdAt": "2026-01-07",
+        "regions": ["🇺🇸", "🇯🇵"]
       }
     }
   },

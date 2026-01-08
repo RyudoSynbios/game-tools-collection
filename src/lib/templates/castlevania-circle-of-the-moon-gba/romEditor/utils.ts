@@ -347,45 +347,40 @@ export function getDecompressedData(offset: number): number[][] {
   const magic = header & 0xff;
   const decompressedLength = header >> 0x8;
 
-  const decompressedData: number[] = [];
-
   if (magic !== 0x10) {
     debug.warn(`Image in offet 0x${offset.toHex()} is not LZSS compressed.`);
 
     return [];
   }
 
+  const decompressedData: number[] = [];
+
+  let index = 0x0;
+
   offset += 0x4;
 
-  let bytesWritten = 0;
-  while (bytesWritten < decompressedLength) {
-    const flags = getInt(offset, "uint8");
+  while (index < decompressedLength) {
+    const flags = getInt(offset++, "uint8");
+    let mask = 0x80;
 
-    offset += 0x1;
-
-    for (let i = 0x0; i < 0x8 && bytesWritten < decompressedLength; i += 0x1) {
-      const type = flags & (0x80 >> i);
-
-      if (type) {
-        const value = getInt(offset, "uint16");
-        const disp = ((value & 0xf) << 0x8) | (value >> 0x8);
-        const n = (value >> 0x4) & 0xf;
-
-        for (let j = 0x0; j < n + 0x3; j += 0x1) {
-          decompressedData[bytesWritten] =
-            decompressedData[bytesWritten - disp - 0x1];
-
-          bytesWritten += 0x1;
-        }
-
-        offset += 0x2;
+    while (mask > 0x0) {
+      if ((flags & mask) === 0x0) {
+        decompressedData[index++] = getInt(offset++, "uint8");
       } else {
-        const value = getInt(offset, "uint8");
-        decompressedData[bytesWritten] = value;
+        const special1 = getInt(offset++, "uint8");
+        const special2 = getInt(offset++, "uint8");
 
-        bytesWritten += 0x1;
-        offset += 0x1;
+        const position = (((special1 & 0xf) << 0x8) | special2) + 0x1;
+        const count = 0x3 + ((special1 >> 0x4) & 0xf);
+
+        for (let i = 0x0; i < count; i += 0x1) {
+          decompressedData[index] = decompressedData[index - position];
+
+          index += 0x1;
+        }
       }
+
+      mask >>= 0x1;
     }
   }
 

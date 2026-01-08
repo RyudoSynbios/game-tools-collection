@@ -1042,7 +1042,7 @@ const template: GameJson = {
               ],
             },
             {
-              name: "Stores",
+              name: "Shops",
               planned: true,
               items: [],
             },

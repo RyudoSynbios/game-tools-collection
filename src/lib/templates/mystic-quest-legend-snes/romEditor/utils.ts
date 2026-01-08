@@ -439,7 +439,7 @@ export function generateBattleBackgroundCanvas(
             palette = paletteSecondary;
           }
 
-          let tileData = getTileData(spriteOffset);
+          let tileData = getTileData(spriteOffset, "3bpp");
 
           if (flipX) {
             tileData = flipTileData(tileData, 8, "x");
@@ -476,7 +476,7 @@ export function generateMonsterCanvas(
       if (!pattern || pattern[row * columns + column] === "1") {
         const offsetPosition = offset + count * 0x18;
 
-        const tileData = getTileData(offsetPosition);
+        const tileData = getTileData(offsetPosition, "3bpp");
         const tile = applyPalette(tileData, palette);
 
         canvas.addGraphic("background", tile, 8, 8, column * 8, row * 8);
