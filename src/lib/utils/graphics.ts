@@ -2,6 +2,8 @@ import { extractBit, getInt, getIntFromArray } from "$lib/utils/bytes";
 
 import type { Color, ColorType, Palette } from "$lib/types";
 
+import Canvas from "./canvas";
+
 export function getColor(raw: number, type: ColorType): Color {
   let red = 0;
   let green = 0;
@@ -185,6 +187,34 @@ export function applyPalette(
   });
 
   return tileData;
+}
+
+export function renderPalettes(palettes: Palette[], canvas: Canvas): void {
+  canvas.resize(128, 128);
+
+  palettes.forEach((palette, paletteIndex) => {
+    palette.forEach((color, colorIndex) => {
+      const tileData = new Uint8Array(0x10000);
+
+      for (let j = 0; j < tileData.length; j += 0x4) {
+        tileData[j] = color[0];
+        tileData[j + 1] = color[1];
+        tileData[j + 2] = color[2];
+        tileData[j + 3] = 0xff;
+      }
+
+      canvas.addGraphic(
+        "palettes",
+        tileData,
+        8,
+        8,
+        colorIndex * 8,
+        paletteIndex * 8,
+      );
+    });
+  });
+
+  canvas.render();
 }
 
 interface GraphicsSheet {
