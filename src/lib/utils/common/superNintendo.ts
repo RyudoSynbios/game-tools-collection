@@ -1,18 +1,41 @@
 import { getInt } from "$lib/utils/bytes";
 
-export function getTileData(offset: number): number[] {
+export function getTileData(
+  offset: number,
+  type: "3bpp" | "4bpp",
+  data?: Uint8Array,
+): number[] {
   const tileData = [];
 
-  for (let line = 0x0; line < 0x8; line += 0x1) {
-    const rowA = getInt(offset + line * 0x2, "uint8").toBinary();
-    const rowB = getInt(offset + line * 0x2 + 0x1, "uint8").toBinary();
-    const rowC = getInt(offset + line + 0x10, "uint8").toBinary();
+  const jIncrement = type === "3bpp" ? 0x1 : 0x2;
 
-    for (let pixel = 0x0; pixel < 0x8; pixel += 0x1) {
-      const index =
-        parseInt(rowA[pixel]) +
-        parseInt(rowB[pixel]) * 0x2 +
-        parseInt(rowC[pixel]) * 0x4;
+  for (let i = 0x0, j = 0x0; i < 0x10; i += 0x2, j += jIncrement) {
+    let rowA = 0x0;
+    let rowB = 0x0;
+    let rowC = 0x0;
+    let rowD = 0x0;
+
+    if (data) {
+      rowA = data[offset + i];
+      rowB = data[offset + i + 0x1];
+      rowC = data[offset + j + 0x10];
+      rowD = data[offset + j + 0x11];
+    } else {
+      rowA = getInt(offset + i, "uint8");
+      rowB = getInt(offset + i + 0x1, "uint8");
+      rowC = getInt(offset + j + 0x10, "uint8");
+      rowD = getInt(offset + j + 0x11, "uint8");
+    }
+
+    for (let k = 0x7; k >= 0x0; k -= 0x1) {
+      let index =
+        ((rowA >> k) & 0x1) |
+        (((rowB >> k) & 0x1) << 0x1) |
+        (((rowC >> k) & 0x1) << 0x2);
+
+      if (type === "4bpp") {
+        index |= ((rowD >> k) & 0x1) << 0x3;
+      }
 
       tileData.push(index);
     }

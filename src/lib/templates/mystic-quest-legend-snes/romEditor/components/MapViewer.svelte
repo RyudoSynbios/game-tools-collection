@@ -126,7 +126,10 @@
       for (let j = 0x0; j < 0x20; j += 0x1) {
         if (tilesetIndex !== 0xff) {
           tilemapDatas.push(
-            getTileData(tilesetIndex * 0x300 + tilesetsOffset + j * 0x18),
+            getTileData(
+              tilesetIndex * 0x300 + tilesetsOffset + j * 0x18,
+              "3bpp",
+            ),
           );
         } else {
           tilemapDatas.push([...Array(0x100).keys()].map(() => 0x0));
@@ -463,7 +466,7 @@
     array.forEach((offset) => {
       for (let i = 0x0; i < 0x2; i += 0x1) {
         if (offset > 0x0) {
-          spritesDatas.push(getTileData(offset + i * 0x18));
+          spritesDatas.push(getTileData(offset + i * 0x18, "3bpp"));
         } else {
           spritesDatas.push([]);
         }
@@ -479,7 +482,7 @@
     }
 
     for (let i = 0x0; i < 0x20 * 0x4; i += 0x1) {
-      spritesDatas.push(getTileData(spritesOffset + i * 0x18));
+      spritesDatas.push(getTileData(spritesOffset + i * 0x18, "3bpp"));
     }
 
     // Sprites Chunks
@@ -694,6 +697,7 @@
               const tile = applyPalette(
                 getTileData(
                   movingSpritesOffset - 0x1690 + (i >> 0x1) * 0x150 + i * 0x18,
+                  "3bpp",
                 ),
                 getPalette("BGR555", spritesPalettesOffset + 0xe0, 0x8),
               );
