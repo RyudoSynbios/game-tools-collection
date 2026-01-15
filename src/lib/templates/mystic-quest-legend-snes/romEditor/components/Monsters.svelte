@@ -6,26 +6,26 @@
 
   import type { ItemTabs, Resource } from "$lib/types";
 
-  import {
-    monsterNamesLength,
-    pointerToMonsterDrops,
-    pointerToMonsterNames,
-    pointerToMonsterPalettes,
-    pointerToMonsterSkills,
-    pointerToMonsterStats,
-  } from "../template";
   import { pointerToOffset } from "../utils";
+  import {
+    MONSTER_DROPS_POINTER,
+    MONSTER_NAMES_LENGTH,
+    MONSTER_NAMES_POINTER,
+    MONSTER_PALETTES_POINTER,
+    MONSTER_SKILLS_POINTER,
+    MONSTER_STATS_POINTER,
+  } from "../utils/constants";
 
-  const namesOffset = pointerToOffset(pointerToMonsterNames);
-  const namesLength = getRegionArray(monsterNamesLength);
+  const namesOffset = pointerToOffset(MONSTER_NAMES_POINTER);
+  const namesLength = getRegionArray(MONSTER_NAMES_LENGTH);
 
-  const dropsOffset = pointerToOffset(pointerToMonsterDrops);
+  const dropsOffset = pointerToOffset(MONSTER_DROPS_POINTER);
 
-  const statsOffset = pointerToOffset(pointerToMonsterStats);
+  const statsOffset = pointerToOffset(MONSTER_STATS_POINTER);
 
-  const skillsOffset = pointerToOffset(pointerToMonsterSkills);
+  const skillsOffset = pointerToOffset(MONSTER_SKILLS_POINTER);
 
-  const palettesOffset = pointerToOffset(pointerToMonsterPalettes);
+  const palettesOffset = pointerToOffset(MONSTER_PALETTES_POINTER);
 
   let item: ItemTabs;
 

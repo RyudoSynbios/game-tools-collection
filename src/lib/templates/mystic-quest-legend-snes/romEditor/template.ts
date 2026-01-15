@@ -1,107 +1,9 @@
 import type { GameJson } from "$lib/types";
 
-export const monsterNamesLength = [0x10, 0x10, 0x10, 0x8, 0xe, 0xe];
-export const pointerToCharacterNames = 0x2ee;
-export const monsterPalettesOffset = 0x48000;
-export const pointerToChestSet = [
-  0xa490, 0xa48f, 0xa490, 0xa494, 0xa494, 0xa494,
-];
-export const pointerToVillagersTiles = [
-  0xa574, 0xa573, 0xa574, 0xa578, 0xa578, 0xa578,
-];
-export const pointerToMonstersTiles = [
-  0xa5b1, 0xa5b0, 0xa5b1, 0xa5b5, 0xa5b5, 0xa5b5,
-];
-export const tilesPositionement = [
-  0xa5e0, 0xa5df, 0xa5e0, 0xa5e4, 0xa5e4, 0xa5e4,
-];
-export const pointerToMovingSprites = [
-  0xa88f, 0xa88e, 0xa88f, 0xa893, 0xa893, 0xa893,
-];
-export const pointerToStaticSprites = [
-  0xa8af, 0xa8ae, 0xa8af, 0xa8b3, 0xa8b3, 0xa8b3,
-];
-export const pointerToTilesets = [
-  0xfdaf, 0xfdae, 0xfdaf, 0xfdb3, 0xfdb3, 0xfdb3,
-];
-export const pointerToTilesChunksPalettes = [
-  0xfdec, 0xfdeb, 0xfdec, 0xfdf0, 0xfdf0, 0xfdf0,
-];
-export const pointerToBackgroundsPointers = [
-  0x1654, 0x1654, 0x1654, 0x16f9, 0x16fc, 0x16fc,
-];
-export const pointerToMonsterGroups = [
-  0x10cfc, 0x10cdb, 0x10cdb, 0x10cdb, 0x10cdb, 0x10cdb,
-];
-export const pointerToMonsterNames = [
-  0x10d9b, 0x10d7a, 0x10d7a, 0x10d79, 0x10d82, 0x10d82,
-];
-export const pointerToMonsterDrops = [
-  0x10db8, 0x10d97, 0x10d97, 0x10d96, 0x10d9f, 0x10d9f,
-];
-export const pointerToMonsterStats = [
-  0x10dee, 0x10dcd, 0x10dcd, 0x10dcc, 0x10dd5, 0x10dd5,
-];
-export const pointerToMonsterSkills = [
-  0x10e94, 0x10e73, 0x10e73, 0x10e72, 0x10e7b, 0x10e7b,
-];
-export const pointerToMonsterTiles = [
-  0x1559f, 0x1559f, 0x1559f, 0x1559f, 0x1559c, 0x1559c,
-];
-export const pointerToMonsterSpriteSizes = [
-  0x157ab, 0x157ab, 0x157ab, 0x157ab, 0x157a8, 0x157a8,
-];
-export const pointerToMonsterGraphics = [
-  0x15826, 0x15826, 0x15826, 0x15826, 0x15823, 0x15823,
-];
-export const pointerToMonsterPalettes = [
-  0x15842, 0x15842, 0x15842, 0x15842, 0x1583f, 0x1583f,
-];
-export const pointerToMonsterTilesPaterns = [
-  0x158b7, 0x158b7, 0x158b7, 0x158b7, 0x158b4, 0x158b4,
-];
-export const pointerToMonsterTilesPaternSizes = [
-  0x15932, 0x15932, 0x15932, 0x15932, 0x1592f, 0x1592f,
-];
-export const pointerToBattleBackgroundTiles = [
-  0x15e46, 0x15e46, 0x15e46, 0x15e46, 0x15e43, 0x15e43,
-];
-export const pointerToBattleBackgroundSets = [
-  0x15fff, 0x15fff, 0x15fff, 0x15fff, 0x15ffc, 0x15ffc,
-];
-export const pointerToBattleBackgroundChunks = [
-  0x1603b, 0x1603b, 0x1603b, 0x1603b, 0x16038, 0x16038,
-];
-export const pointerToBattleBackgroundGraphics = [
-  0x16085, 0x16085, 0x16085, 0x16085, 0x16082, 0x16082,
-];
-export const pointerToBattleBackgroundPalettes = [
-  0x160b1, 0x160b1, 0x160b1, 0x160b1, 0x160ae, 0x160ae,
-];
-export const pointerToMapsPointers = [
-  0x3f2b9, 0x3f0b9, 0x3f0b9, 0x3f2b2, 0x3f2b5, 0x3f2b5,
-];
-export const pointerToRoomsTable = [
-  0x581b0, 0x581b0, 0x581b0, 0x581b0, 0x581b0, 0x581b0,
-];
-export const pointerToRooms = [
-  0x581bd, 0x581bd, 0x581bd, 0x581bd, 0x581bd, 0x581bd,
-];
-export const pointerToSpriteSetIndex = [
-  0x58201, 0x58201, 0x58201, 0x58201, 0x58201, 0x58201,
-];
-export const pointerToTilemapPalettes = [
-  0x583ca, 0x583ca, 0x583ca, 0x583ca, 0x583ca, 0x583ca,
-];
-export const pointerToMapSize = [
-  0x58508, 0x58508, 0x58508, 0x58508, 0x58508, 0x58508,
-];
-export const pointerToSpritesPalettes = [
-  0x59385, 0x59385, 0x59385, 0x59385, 0x59385, 0x59385,
-];
-export const pointerToSpriteSet = [
-  0x599a2, 0x599a2, 0x599a2, 0x599a2, 0x599a2, 0x599a2,
-];
+import {
+  BATTLE_BACKGROUND_SETS_POINTER,
+  MONSTER_GROUPS_POINTER,
+} from "./utils/constants";
 
 const template: GameJson = {
   validator: {
@@ -493,7 +395,7 @@ const template: GameJson = {
           items: [
             {
               id: "monsterGroups",
-              pointer: pointerToMonsterGroups,
+              pointer: MONSTER_GROUPS_POINTER,
               pointerDataType: "uint16",
               length: 0x4,
               type: "container",
@@ -627,7 +529,7 @@ const template: GameJson = {
           name: "Battle Backgrounds",
           items: [
             {
-              pointer: pointerToBattleBackgroundSets,
+              pointer: BATTLE_BACKGROUND_SETS_POINTER,
               instanceId: "battleBackgrounds",
               length: 0x3,
               type: "container",

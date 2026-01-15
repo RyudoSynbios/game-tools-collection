@@ -12,31 +12,31 @@
   import type { Palette } from "$lib/types";
 
   import {
-    animatedTilesDracula2,
-    animatedTilesTable,
-    commonSpritesGraphics,
-    commonSpritesPalettes,
-    eventsTable,
-    monstersGraphicsTable,
-    pointerToMapBlocks,
-    pointerToMapCollisions,
-    pointerToMapSpritesTable,
-    specialGraphicsTable,
-    spritesetPalette1,
-    spritesetPalette2,
-    spritesetPalette3,
-    spritesetPalette4,
-    spritesetPalette5,
-    spritesetPalette6,
-    undergroundWaterwayPalette,
-  } from "../template";
-  import {
     generateMap,
     generateSprites,
     getDecompressedGraphic,
     getMapsInfos,
     getSpriteData,
   } from "../utils";
+  import {
+    ANIMATED_TILESET_DRACULA2_OFFSET,
+    ANIMATED_TILESET_TABLE_OFFSET,
+    COMMON_SPRITES_PALETTES,
+    COMMON_SPRITES_TILESET_OFFSET,
+    ENEMIES_TILESET_TABLE_OFFSET,
+    EVENT_TABLE_OFFSET,
+    MAP_CHUNKS_POINTER,
+    MAP_COLLISIONS_POINTER,
+    MAP_SPRITE_TABLE_POINTER,
+    SPECIAL_TILESET_TABLE_OFFSET,
+    SPRITE_SET_PALETTE1_OFFSET,
+    SPRITE_SET_PALETTE2_OFFSET,
+    SPRITE_SET_PALETTE3_OFFSET,
+    SPRITE_SET_PALETTE4_OFFSET,
+    SPRITE_SET_PALETTE5_OFFSET,
+    SPRITE_SET_PALETTE6_OFFSET,
+    UNDERGROUND_WATERWAY_PALETTE_OFFSET,
+  } from "../utils/constants";
 
   export let roomIndex: number;
 
@@ -49,8 +49,8 @@
   let monsterSet = 0;
 
   const mapInfos = getMapsInfos();
-  const mapBlocksPointer = getRegionArray(pointerToMapBlocks);
-  const mapCollisionsPointer = getRegionArray(pointerToMapCollisions);
+  const mapChunksPointer = getRegionArray(MAP_CHUNKS_POINTER);
+  const mapCollisionsPointer = getRegionArray(MAP_COLLISIONS_POINTER);
   const mapCollisionsOffset = getInt(mapCollisionsPointer, "uint24");
 
   function handleLayerVisibilityChange(event: Event, layer: string): void {
@@ -79,9 +79,9 @@
     const tileset3Offset = getInt(roomOffset + 0x18, "uint24");
     const tileset3VramOffset = getInt(roomOffset + 0x1c, "uint16") & 0x7fff;
     const tilesetsPalettesPointer = getInt(roomOffset + 0x24, "uint24");
-    const foregroundBlockset = getInt(roomOffset + 0x30, "uint24");
+    const foregroundChunkset = getInt(roomOffset + 0x30, "uint24");
     const foregroundRoomOffset = getInt(roomOffset + 0x38, "uint24");
-    const backgroundBlockset = getInt(roomOffset + 0x40, "uint24");
+    const backgroundChunkset = getInt(roomOffset + 0x40, "uint24");
     const backgroundRoomOffset = getInt(roomOffset + 0x48, "uint24");
     const foregroundAboveSprites = getInt(roomOffset + 0x59, "bit", { bit: 2 });
     const foregroundAlpha = getInt(roomOffset + 0x5a, "uint8") === 0x42;
@@ -103,7 +103,7 @@
     if ([0xb7, 0xb9, 0xbb, 0xbc, 0xbf, 0xc0, 0xc1].includes(roomIndex)) {
       tilesetsPalettes[7] = getPalette(
         "BGR555",
-        getRegionArray(undergroundWaterwayPalette),
+        getRegionArray(UNDERGROUND_WATERWAY_PALETTE_OFFSET),
         0x10,
         { firstTransparent: true },
       );
@@ -144,8 +144,12 @@
     let animationTilesLength = 0x0;
     let animationTilesPosition = 0x8000;
 
-    const animatedTilesTableOffset = getRegionArray(animatedTilesTable);
-    const animatedTilesDracula2Offset = getRegionArray(animatedTilesDracula2);
+    const animatedTilesTableOffset = getRegionArray(
+      ANIMATED_TILESET_TABLE_OFFSET,
+    );
+    const animatedTilesDracula2Offset = getRegionArray(
+      ANIMATED_TILESET_DRACULA2_OFFSET,
+    );
 
     // Load animated tiles
     switch (roomIndex) {
@@ -225,13 +229,13 @@
 
     // Room
 
-    const blocksPointer = getInt(mapBlocksPointer, "uint24");
+    const chunksPointer = getInt(mapChunksPointer, "uint24");
 
-    const backgroundRoomInfosOffset = blocksPointer + backgroundBlockset * 0x40;
+    const backgroundRoomInfosOffset = chunksPointer + backgroundChunkset * 0x40;
     const backgroundRoomWidth = getInt(backgroundRoomInfosOffset + 0x10, "uint16"); // prettier-ignore
     const backgroundRoomHeight = getInt(backgroundRoomInfosOffset + 0x12, "uint16"); // prettier-ignore
 
-    const foregroundRoomInfosOffset = blocksPointer + foregroundBlockset * 0x40;
+    const foregroundRoomInfosOffset = chunksPointer + foregroundChunkset * 0x40;
     const foregroundRoomWidth = getInt(foregroundRoomInfosOffset + 0x10, "uint16"); // prettier-ignore
     const foregroundRoomHeight = getInt(foregroundRoomInfosOffset + 0x12, "uint16"); // prettier-ignore
 
@@ -306,12 +310,16 @@
 
     // Sprites
 
-    const mapSpritesTablePointer = getRegionArray(pointerToMapSpritesTable);
+    const mapSpritesTablePointer = getRegionArray(MAP_SPRITE_TABLE_POINTER);
     const mapSpritesTableOffset =
       getInt(mapSpritesTablePointer, "uint24") + roomIndex * 0x1c;
 
-    const monstersGraphicsTableOffset = getRegionArray(monstersGraphicsTable);
-    const specialGraphicsTableOffset = getRegionArray(specialGraphicsTable);
+    const enemiesGraphicsTableOffset = getRegionArray(
+      ENEMIES_TILESET_TABLE_OFFSET,
+    );
+    const specialGraphicsTableOffset = getRegionArray(
+      SPECIAL_TILESET_TABLE_OFFSET,
+    );
 
     const spritesDetailsOffset = getInt(mapSpritesTableOffset, "uint24");
     const spriteMonsterA1 = getInt(mapSpritesTableOffset + 0x4, "int16");
@@ -350,48 +358,48 @@
       },
     ];
 
-    // Spriteset Palettes
+    // Sprite Set Palettes
 
-    const spritesetPalettes: Palette[] = [];
+    const spriteSetPalettes: Palette[] = [];
 
-    const spritesetPalette1Offset = getRegionArray(spritesetPalette1);
-    const spritesetPalette2Offset = getRegionArray(spritesetPalette2);
-    const spritesetPalette3Offset = getRegionArray(spritesetPalette3);
-    const spritesetPalette4Offset = getRegionArray(spritesetPalette4);
-    const spritesetPalette5Offset = getRegionArray(spritesetPalette5);
-    const spritesetPalette6Offset = getRegionArray(spritesetPalette6);
+    const spriteSetPalette1Offset = getRegionArray(SPRITE_SET_PALETTE1_OFFSET);
+    const spriteSetPalette2Offset = getRegionArray(SPRITE_SET_PALETTE2_OFFSET);
+    const spriteSetPalette3Offset = getRegionArray(SPRITE_SET_PALETTE3_OFFSET);
+    const spriteSetPalette4Offset = getRegionArray(SPRITE_SET_PALETTE4_OFFSET);
+    const spriteSetPalette5Offset = getRegionArray(SPRITE_SET_PALETTE5_OFFSET);
+    const spriteSetPalette6Offset = getRegionArray(SPRITE_SET_PALETTE6_OFFSET);
 
-    spritesetPalettes.push(
-      getPalette("BGR555", spritesetPalette1Offset, 0x10, {
+    spriteSetPalettes.push(
+      getPalette("BGR555", spriteSetPalette1Offset, 0x10, {
         firstTransparent: true,
       }),
     );
 
     for (let i = 0x0; i < 0x3; i += 0x1) {
-      spritesetPalettes.push(
-        getPalette("BGR555", spritesetPalette2Offset + i * 0x20, 0x10, {
+      spriteSetPalettes.push(
+        getPalette("BGR555", spriteSetPalette2Offset + i * 0x20, 0x10, {
           firstTransparent: true,
         }),
       );
     }
 
-    spritesetPalettes.push(
-      getPalette("BGR555", spritesetPalette3Offset, 0x10, {
+    spriteSetPalettes.push(
+      getPalette("BGR555", spriteSetPalette3Offset, 0x10, {
         firstTransparent: true,
       }),
     );
-    spritesetPalettes.push(
-      getPalette("BGR555", spritesetPalette4Offset, 0x10, {
+    spriteSetPalettes.push(
+      getPalette("BGR555", spriteSetPalette4Offset, 0x10, {
         firstTransparent: true,
       }),
     );
-    spritesetPalettes.push(
-      getPalette("BGR555", spritesetPalette5Offset, 0x10, {
+    spriteSetPalettes.push(
+      getPalette("BGR555", spriteSetPalette5Offset, 0x10, {
         firstTransparent: true,
       }),
     );
-    spritesetPalettes.push(
-      getPalette("BGR555", spritesetPalette6Offset, 0x10, {
+    spriteSetPalettes.push(
+      getPalette("BGR555", spriteSetPalette6Offset, 0x10, {
         firstTransparent: true,
       }),
     );
@@ -400,14 +408,14 @@
 
     // Dracula
     if (monsters[0].index === 0x67) {
-      const eventsTableOffset = getRegionArray(eventsTable);
+      const eventsTableOffset = getRegionArray(EVENT_TABLE_OFFSET);
 
       const pointer = getInt(eventsTableOffset + 0x1ca * 0x4, "uint24");
 
       const paletteOffset = getInt(pointer + 0x15f, "uint24");
 
       for (let i = 0x0; i < 0x4; i += 0x1) {
-        spritesetPalettes.push(
+        spriteSetPalettes.push(
           getPalette("BGR555", paletteOffset + i * 0x20, 0x10, {
             firstTransparent: true,
           }),
@@ -417,17 +425,17 @@
       monsters.forEach((monster) => {
         if (monster.index !== -1) {
           const paletteOffset = getInt(
-            monstersGraphicsTableOffset + monster.index * 0x10,
+            enemiesGraphicsTableOffset + monster.index * 0x10,
             "uint24",
           );
 
-          spritesetPalettes.push(
+          spriteSetPalettes.push(
             getPalette("BGR555", paletteOffset, 0x10, {
               firstTransparent: true,
             }),
           );
         } else {
-          spritesetPalettes.push(
+          spriteSetPalettes.push(
             [...Array(0x10).keys()].map(() => [0, 0, 0, 0]),
           );
         }
@@ -435,33 +443,33 @@
     }
 
     for (let i = 0x0; i < 0x4; i += 0x1) {
-      spritesetPalettes.push(
+      spriteSetPalettes.push(
         getPalette(
           "BGR555",
-          getRegionArray(commonSpritesPalettes) + i * 0x20,
+          getRegionArray(COMMON_SPRITES_PALETTES) + i * 0x20,
           0x10,
           { firstTransparent: true },
         ),
       );
     }
 
-    // Spriteset
+    // SpriteSet
 
-    const vramSpriteset = new Uint8Array(0x10000);
+    const vramSpriteSet = new Uint8Array(0x10000);
 
     let vramOffset = 0x8000;
 
     monsters.forEach((monster) => {
       if (monster.index !== -1) {
         const spriteOffset = getInt(
-          monstersGraphicsTableOffset + monster.index * 0x10 + 0x4,
+          enemiesGraphicsTableOffset + monster.index * 0x10 + 0x4,
           "uint24",
         );
 
         monster.firstTile = (vramOffset - 0x8000) / 0x40;
 
         getDecompressedGraphic(spriteOffset).forEach((tile) => {
-          vramSpriteset.set(tile, vramOffset);
+          vramSpriteSet.set(tile, vramOffset);
 
           vramOffset += 0x40;
         });
@@ -477,33 +485,34 @@
       );
 
       getDecompressedGraphic(spriteOffset).forEach((tile, index) => {
-        vramSpriteset.set(tile, 0x7000 + index * 0x40);
+        vramSpriteSet.set(tile, 0x7000 + index * 0x40);
       });
     }
 
-    getSpriteData(getRegionArray(commonSpritesGraphics), 0x1bc0).forEach(
-      (tile, index) => {
-        vramSpriteset.set(tile, 0xc000 + index * 0x40);
-      },
-    );
+    getSpriteData(
+      getRegionArray(COMMON_SPRITES_TILESET_OFFSET),
+      0x1bc0,
+    ).forEach((tile, index) => {
+      vramSpriteSet.set(tile, 0xc000 + index * 0x40);
+    });
 
-    // Convert vram to spriteset
+    // Convert vram to spriteSet
 
-    const spriteset: number[][] = [];
+    const spriteSet: number[][] = [];
 
-    for (let i = 0x0; i < vramSpriteset.length / 0x40; i += 0x1) {
-      spriteset[i] = [];
+    for (let i = 0x0; i < vramSpriteSet.length / 0x40; i += 0x1) {
+      spriteSet[i] = [];
 
       for (let j = 0x0; j < 0x40; j += 0x1) {
-        spriteset[i].push(vramSpriteset[i * 0x40 + j]);
+        spriteSet[i].push(vramSpriteSet[i * 0x40 + j]);
       }
     }
 
     generateSprites(
       canvas,
       spritesDetailsOffset,
-      spriteset,
-      spritesetPalettes,
+      spriteSet,
+      spriteSetPalettes,
       monsters,
       spriteSpecial,
     );
@@ -544,7 +553,7 @@
         canvasDebug.addGraphic("debug", tile, 8, 8, x, y);
       });
 
-      spritesetPalettes.forEach((palette, paletteIndex) => {
+      spriteSetPalettes.forEach((palette, paletteIndex) => {
         palette.forEach((color, index) => {
           const tileData = new Uint8Array(0x10 * 8 * 0x10 * 8 * 4);
 
@@ -566,11 +575,11 @@
         });
       });
 
-      spriteset.forEach((tileData, index) => {
+      spriteSet.forEach((tileData, index) => {
         const x = 0x11 * 0x8 + (index % 0x10) * 0x8;
         const y = 0x88 + Math.floor(index / 0x10) * 0x8;
 
-        const tile = applyPalette(tileData, spritesetPalettes[0]);
+        const tile = applyPalette(tileData, spriteSetPalettes[0]);
 
         canvasDebug.addGraphic("debug", tile, 8, 8, x, y);
       });

@@ -6,13 +6,16 @@
   import Canvas from "$lib/utils/canvas";
   import { getPalette } from "$lib/utils/graphics";
 
-  import { monsterPalettesOffset, pointerToMonsterGraphics } from "../template";
   import {
     generateMonsterCanvas,
     getMonsterSpritePattern,
     getMonsterSpriteSize,
     pointerToOffset,
   } from "../utils";
+  import {
+    MONSTER_GRAPHICS_POINTER,
+    MONSTER_PALETTES_OFFSET,
+  } from "../utils/constants";
 
   export let monsterIndex: number;
 
@@ -23,7 +26,7 @@
   function updateCanvas(): void {
     const [width, height] = getMonsterSpriteSize(monsterIndex);
 
-    const graphicsOffset = pointerToOffset(pointerToMonsterGraphics);
+    const graphicsOffset = pointerToOffset(MONSTER_GRAPHICS_POINTER);
 
     const spriteOffset = pointerToOffset(
       graphicsOffset + monsterIndex * 0x5,
@@ -37,7 +40,7 @@
 
     const palette = getPalette(
       "BGR555",
-      monsterPalettesOffset + paletteIndex * 0x10,
+      MONSTER_PALETTES_OFFSET + paletteIndex * 0x10,
       0x8,
       { firstTransparent: true },
     );

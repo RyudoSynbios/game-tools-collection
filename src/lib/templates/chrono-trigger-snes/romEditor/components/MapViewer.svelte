@@ -41,9 +41,6 @@
 
     if ($isDebug) {
       map.renderDebugPalettes(canvasPalettes);
-    }
-
-    if ($isDebug) {
       map.renderDebugTiles(canvasTiles);
     }
 
@@ -66,7 +63,6 @@
     if ($isDebug) {
       canvasPalettes = new Canvas({
         canvasEl: canvasPalettesEl,
-        backgroundAlpha: 1,
       });
 
       canvasTiles = new Canvas({

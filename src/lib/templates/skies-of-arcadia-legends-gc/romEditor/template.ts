@@ -16,10 +16,6 @@ import {
   shipItemEffects,
 } from "./utils/resource";
 
-export const offsetToMainDolStart = [0x2ad628, 0x2a9d18, 0x2a97c0];
-export const offsetToDescriptionPointers = [0x0, 0x2f3918, 0x2f35e0];
-export const offsetToRandomEncounterRate = [0x304588, 0x300d68, 0x300810];
-
 const template: GameJson = {
   validator: {
     regions: {

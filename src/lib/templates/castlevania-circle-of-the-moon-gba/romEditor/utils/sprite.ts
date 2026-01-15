@@ -4,7 +4,7 @@ import { gameRegion } from "$lib/stores";
 import { getInt } from "$lib/utils/bytes";
 import { getRegionArray } from "$lib/utils/format";
 
-import { eventsTable } from "../template";
+import { EVENT_TABLE_OFFSET } from "./constants";
 
 interface MonsterSprite {
   index: number;
@@ -408,7 +408,7 @@ export function getSpriteFrameOffset(
 ): number {
   const $gameRegion = get(gameRegion);
 
-  const eventsTableOffset = getRegionArray(eventsTable);
+  const eventsTableOffset = getRegionArray(EVENT_TABLE_OFFSET);
   const eventPointer = getInt(eventsTableOffset + type * 0x4, "uint24");
 
   let offset = 0x0;

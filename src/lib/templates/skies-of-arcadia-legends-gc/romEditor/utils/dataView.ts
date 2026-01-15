@@ -17,12 +17,12 @@ import {
 } from "$lib/utils/common/gamecube";
 import { getRegionArray, mergeUint8Arrays } from "$lib/utils/format";
 
-import { offsetToMainDolStart } from "../template";
 import {
   getCompressedData,
   getDecompressedData,
   getEnemyGroupDetails,
 } from "../utils";
+import { MAIN_DOL_START_OFFSET } from "./constants";
 import {
   generateEuropeLocales,
   generateNonEuropeLocales,
@@ -46,7 +46,7 @@ export function initDataViewAlt(): void {
 
   // Main
 
-  let partyOffset = getRegionArray(offsetToMainDolStart);
+  let partyOffset = getRegionArray(MAIN_DOL_START_OFFSET);
 
   const mainDol = getFile("system/main.dol")!;
   const firstLmt = getFile("battle/first.lmt")!;
@@ -184,7 +184,7 @@ export function exportDataViewAlt(): ArrayBufferLike {
 
   // Main
 
-  let partyOffset = getRegionArray(offsetToMainDolStart);
+  let partyOffset = getRegionArray(MAIN_DOL_START_OFFSET);
 
   const data = new Uint8Array($dataViewAlt["main.dol"].buffer);
 

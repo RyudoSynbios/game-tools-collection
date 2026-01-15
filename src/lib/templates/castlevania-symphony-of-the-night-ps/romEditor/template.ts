@@ -2,9 +2,6 @@ import type { GameJson } from "$lib/types";
 
 import { attributesFragment } from "./utils/fragment";
 
-export const shopOffset = [0x134c, 0x134c, 0x134c, 0x1350, 0x134c];
-export const tacticsOffset = [0x173c, 0x173c, 0x17a8, 0x17ac, 0x173c];
-
 const template: GameJson = {
   validator: {
     regions: {

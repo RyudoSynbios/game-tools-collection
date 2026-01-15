@@ -27,7 +27,7 @@ import type {
 } from "$lib/types";
 
 import { equipmentList } from "../saveEditor/utils/resource";
-import { shopOffset, tacticsOffset } from "./template";
+import { SHOP_OFFSET, TACTICS_OFFSET } from "./utils/constants";
 
 export function overrideGetRegions(
   dataView: DataView,
@@ -64,9 +64,9 @@ export function overrideParseContainerItemsShifts(
   index: number,
 ): [boolean, number[] | undefined] {
   if (item.id === "shop") {
-    return [true, [getRegionArray(shopOffset), index * item.length]];
+    return [true, [getRegionArray(SHOP_OFFSET), index * item.length]];
   } else if (item.id === "tactics") {
-    return [true, [getRegionArray(tacticsOffset), index * item.length]];
+    return [true, [getRegionArray(TACTICS_OFFSET), index * item.length]];
   }
 
   return [false, undefined];
@@ -235,7 +235,7 @@ export function getEquipmentNames(startIndex = 0x0): Resource {
 export function getLibItemNames(): Resource {
   let names: Resource = {};
 
-  const offset = getRegionArray(tacticsOffset) - 0x90;
+  const offset = getRegionArray(TACTICS_OFFSET) - 0x90;
 
   names = {
     ...getWeaponNames(),
@@ -255,7 +255,7 @@ export function getLibItemNames(): Resource {
 export function getTacticNames(): Resource {
   const names: Resource = {};
 
-  const offset = getRegionArray(tacticsOffset);
+  const offset = getRegionArray(TACTICS_OFFSET);
 
   for (let i = 0x0; i < 0x1d; i += 0x1) {
     names[i] = getText(offset - 0x74 + i * 0x4, "lib");

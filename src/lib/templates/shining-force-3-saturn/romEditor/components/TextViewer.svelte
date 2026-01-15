@@ -4,7 +4,6 @@
 
   import type { Resource } from "$lib/types";
 
-  import { characterNamesStartIndexes, dialogsStartIndexes } from "../template";
   import {
     decodeTextError,
     getFileData,
@@ -12,6 +11,10 @@
     getScenario,
     getText,
   } from "../utils";
+  import {
+    CHARACTER_NAMES_START_INDEX,
+    DIALOGS_START_INDEX,
+  } from "../utils/constants";
 
   export let assetIndex: number;
 
@@ -40,7 +43,9 @@
     const file = files[assetIndex];
     const dataView = getFileData("text", assetIndex);
 
-    const characterNamesStartIndex = getRegionArray(characterNamesStartIndexes);
+    const characterNamesStartIndex = getRegionArray(
+      CHARACTER_NAMES_START_INDEX,
+    );
 
     const colors = [
       "#000000",
@@ -69,7 +74,7 @@
       characterNames[i] = getText(characterNamesStartIndex + i);
     }
 
-    let dialogsStartIndex = getRegionArray(dialogsStartIndexes);
+    let dialogsStartIndex = getRegionArray(DIALOGS_START_INDEX);
 
     if (scenario === "2" && file.name.match(/X5BTL(.*?).BIN$/)) {
       dialogsStartIndex += 0x25;

@@ -32,21 +32,21 @@ import TextViewer from "./components/TextViewer.svelte";
 import TxtViewer from "./components/TxtViewer.svelte";
 import VideoViewer from "./components/VideoViewer.svelte";
 import {
-  characterCount,
-  characterNamesStartIndexes,
-  classNamesStartIndexes,
-  enemyCount,
-  enemyNamesStartIndexes,
-  itemCount,
-  itemDescriptionsStartIndexes,
-  itemNamesStartIndexes,
-  itemOffsetShift,
-  itemTypesStartIndexes,
-  specialAttackCount,
-  specialAttackNamesStartIndexes,
-  spellCount,
-  spellNamesStartIndexes,
-} from "./template";
+  CHARACTER_COUNT,
+  CHARACTER_NAMES_START_INDEX,
+  CLASS_NAMES_START_INDEX,
+  ENEMY_COUNT,
+  ENEMY_NAMES_START_INDEX,
+  ITEM_COUNT,
+  ITEM_DESCRIPTIONS_START_INDEX,
+  ITEM_NAMES_START_INDEX,
+  ITEM_OFFSET_SHIFT,
+  ITEM_TYPES_START_INDEX,
+  SPECIAL_ATTACK_COUNT,
+  SPECIAL_ATTACK_NAMES_START_INDEX,
+  SPELL_COUNT,
+  SPELL_NAMES_START_INDEX,
+} from "./utils/constants";
 import { decodeKanji } from "./utils/encoding";
 
 export function overrideGetRegions(
@@ -86,7 +86,7 @@ export function overrideParseItem(item: Item): Item {
   if ("id" in item && item.id === "party") {
     const itemContainer = item as ItemContainer;
 
-    itemContainer.instances = getRegionArray(characterCount);
+    itemContainer.instances = getRegionArray(CHARACTER_COUNT);
   } else if ("dataViewAltKey" in item && item.dataViewAltKey === "x033") {
     if (!cache.partyStatsBaseOffset) {
       const shifts = getCharacterShifts();
@@ -113,10 +113,10 @@ export function overrideParseItem(item: Item): Item {
   } else if ("id" in item && item.id === "items") {
     const itemContainer = item as ItemContainer;
 
-    itemContainer.instances = getRegionArray(itemCount);
+    itemContainer.instances = getRegionArray(ITEM_COUNT);
   } else if ("dataViewAltKey" in item && item.dataViewAltKey === "x002") {
     if (!cache.itemsBaseOffset) {
-      const shift = getRegionArray(itemOffsetShift);
+      const shift = getRegionArray(ITEM_OFFSET_SHIFT);
 
       const baseOffset = getFileOffset("x002", 0x80, $dataViewAlt.x002);
 
@@ -137,7 +137,7 @@ export function overrideParseItem(item: Item): Item {
   } else if ("id" in item && item.id === "enemies") {
     const itemContainer = item as ItemContainer;
 
-    itemContainer.instances = getRegionArray(enemyCount);
+    itemContainer.instances = getRegionArray(ENEMY_COUNT);
   } else if ("dataViewAltKey" in item && item.dataViewAltKey === "x019") {
     if (!cache.enemiesBaseOffset) {
       cache.enemiesBaseOffset = getFileOffset("x019", 0x0, $dataViewAlt.x019);
@@ -380,8 +380,8 @@ export function getAssetNames(type: string): Resource {
 export function getCharacterNames(): Resource {
   const $dataViewAlt = get(dataViewAlt);
 
-  const characterNamesStartIndex = getRegionArray(characterNamesStartIndexes);
-  const count = getRegionArray(characterCount);
+  const characterNamesStartIndex = getRegionArray(CHARACTER_NAMES_START_INDEX);
+  const count = getRegionArray(CHARACTER_COUNT);
 
   const names: Resource = {};
 
@@ -410,7 +410,7 @@ export function getCharacterNames(): Resource {
 }
 
 export function getClassesNames(): Resource {
-  const classNamesStartIndex = getRegionArray(classNamesStartIndexes);
+  const classNamesStartIndex = getRegionArray(CLASS_NAMES_START_INDEX);
 
   const names: Resource = {};
 
@@ -422,8 +422,8 @@ export function getClassesNames(): Resource {
 }
 
 export function getEnemyNames(): Resource {
-  const enemyNamesStartIndex = getRegionArray(enemyNamesStartIndexes);
-  const count = getRegionArray(enemyCount);
+  const enemyNamesStartIndex = getRegionArray(ENEMY_NAMES_START_INDEX);
+  const count = getRegionArray(ENEMY_COUNT);
 
   const names: Resource = {};
 
@@ -438,9 +438,9 @@ export function getEnemyNames(): Resource {
 
 export function getItemDescriptions(): Resource {
   const itemDescriptionStartIndex = getRegionArray(
-    itemDescriptionsStartIndexes,
+    ITEM_DESCRIPTIONS_START_INDEX,
   );
-  const count = getRegionArray(itemCount);
+  const count = getRegionArray(ITEM_COUNT);
 
   const names: Resource = {};
 
@@ -490,8 +490,8 @@ export function getItemEffectSpells(): Resource {
 }
 
 export function getItemNames(): Resource {
-  const itemNamesStartIndex = getRegionArray(itemNamesStartIndexes);
-  const count = getRegionArray(itemCount);
+  const itemNamesStartIndex = getRegionArray(ITEM_NAMES_START_INDEX);
+  const count = getRegionArray(ITEM_COUNT);
 
   const names: Resource = {};
 
@@ -505,7 +505,7 @@ export function getItemNames(): Resource {
 }
 
 export function getItemTypes(): Resource {
-  const itemTypesStartIndex = getRegionArray(itemTypesStartIndexes);
+  const itemTypesStartIndex = getRegionArray(ITEM_TYPES_START_INDEX);
 
   const scenario = getScenario();
 
@@ -543,9 +543,9 @@ export function getItemTypes(): Resource {
 
 export function getSpecialAttackNames(): Resource {
   const specialAttackNamesStartIndex = getRegionArray(
-    specialAttackNamesStartIndexes,
+    SPECIAL_ATTACK_NAMES_START_INDEX,
   );
-  const count = getRegionArray(specialAttackCount);
+  const count = getRegionArray(SPECIAL_ATTACK_COUNT);
 
   const names: Resource = {};
 
@@ -559,8 +559,8 @@ export function getSpecialAttackNames(): Resource {
 }
 
 export function getSpellNames(): Resource {
-  const spellNamesStartIndex = getRegionArray(spellNamesStartIndexes);
-  const count = getRegionArray(spellCount);
+  const spellNamesStartIndex = getRegionArray(SPELL_NAMES_START_INDEX);
+  const count = getRegionArray(SPELL_COUNT);
 
   const names: Resource = {};
 

@@ -4,11 +4,11 @@
   import { getRegionArray } from "$lib/utils/format";
   import { getPalette } from "$lib/utils/graphics";
 
-  import {
-    pointerToCharacterGraphics,
-    pointerToCharacterPortraits,
-  } from "../template";
   import { getSprite } from "../utils";
+  import {
+    CHARACTER_PORTRAITS_POINTER,
+    CHARACTER_TILESET_POINTER,
+  } from "../utils/constants";
 
   export let characterIndex: number;
 
@@ -22,19 +22,19 @@
 
   // Sprites
 
-  const graphicsPointer = getRegionArray(pointerToCharacterGraphics);
-  const graphicsOffset = getInt(graphicsPointer, "uint24");
+  const tilesetPointer = getRegionArray(CHARACTER_TILESET_POINTER);
+  const tilesetOffset = getInt(tilesetPointer, "uint24");
 
-  const portraitsCount = getInt(graphicsOffset, "uint16") / 2;
+  const portraitsCount = getInt(tilesetOffset, "uint16") / 2;
 
   const sprites: (Uint8Array | null)[] = [];
 
   for (let i = 0; i < portraitsCount; i += 1) {
-    const offset = getInt(graphicsOffset + i * 2, "uint16");
+    const offset = getInt(tilesetOffset + i * 2, "uint16");
 
     if (offset !== 0x0) {
-      const palette = getPalette("BGR555", graphicsOffset + offset, 0x10);
-      const compressedDataOffset = graphicsOffset + offset + 0x20;
+      const palette = getPalette("BGR555", tilesetOffset + offset, 0x10);
+      const compressedDataOffset = tilesetOffset + offset + 0x20;
       const sprite = getSprite(compressedDataOffset, palette);
 
       sprites.push(sprite);
@@ -45,7 +45,7 @@
 
   // Portraits
 
-  const portraitsPointer = getRegionArray(pointerToCharacterPortraits);
+  const portraitsPointer = getRegionArray(CHARACTER_PORTRAITS_POINTER);
   const portraitsOffset = getInt(portraitsPointer, "uint24");
 
   const portraits: {

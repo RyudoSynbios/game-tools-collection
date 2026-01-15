@@ -6,8 +6,8 @@
   import { getRegionArray } from "$lib/utils/format";
   import { applyPalette, getPalette } from "$lib/utils/graphics";
 
-  import { pointerToDssCardsGraphics } from "../template";
   import { getDecompressedGraphic } from "../utils";
+  import { DSS_CARDS_TILESET_POINTER } from "../utils/constants";
 
   let canvasEl: HTMLDivElement;
 
@@ -22,16 +22,16 @@
 
     canvas.addLayer("background", "image");
 
-    const dssCardsGraphicsPointer = getRegionArray(pointerToDssCardsGraphics);
+    const dssCardsTilesetPointer = getRegionArray(DSS_CARDS_TILESET_POINTER);
 
     for (let i = 0x0; i < 0x14; i += 0x1) {
-      const graphicOffset = getInt(dssCardsGraphicsPointer + i * 0x4, "uint24");
+      const tilesetOffset = getInt(dssCardsTilesetPointer + i * 0x4, "uint24");
       const paletteOffset = getInt(
-        dssCardsGraphicsPointer + 0x50 + i * 0x4,
+        dssCardsTilesetPointer + 0x50 + i * 0x4,
         "uint24",
       );
 
-      const graphic = getDecompressedGraphic(graphicOffset);
+      const graphic = getDecompressedGraphic(tilesetOffset);
       const palette = getPalette("BGR555", paletteOffset, 0x10, {
         firstTransparent: true,
       });

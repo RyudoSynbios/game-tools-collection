@@ -25,7 +25,7 @@ import ImageViewer from "./components/ImageViewer.svelte";
 import ModelViewer from "./components/ModelViewer.svelte";
 import ScriptViewer from "./components/ScriptViewer.svelte";
 import Texture from "./components/Texture.svelte";
-import { offsetToRandomEncounterRate } from "./template";
+import { RANDOM_ENCOUNTER_RATE_OFFSET } from "./utils/constants";
 import { exportDataViewAlt, initDataViewAlt } from "./utils/dataView";
 import {
   DESCRIPTION_LENGTH_OFFSET,
@@ -62,7 +62,7 @@ export function overrideParseItem(item: Item): Item {
   } else if ("id" in item && item.id === "randomEncounterRate") {
     const itemInt = item as ItemInt;
 
-    const offset = getRegionArray(offsetToRandomEncounterRate);
+    const offset = getRegionArray(RANDOM_ENCOUNTER_RATE_OFFSET);
 
     itemInt.offset = offset;
 

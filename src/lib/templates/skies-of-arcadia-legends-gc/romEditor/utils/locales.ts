@@ -5,7 +5,7 @@ import { getInt, intToArray } from "$lib/utils/bytes";
 import { getFile, writeFile } from "$lib/utils/common/gamecube";
 import { getRegionArray, mergeUint8Arrays } from "$lib/utils/format";
 
-import { offsetToDescriptionPointers, offsetToMainDolStart } from "../template";
+import { DESCRIPTION_TABLE_OFFSET, MAIN_DOL_START_OFFSET } from "./constants";
 import { getModelShift } from "./dataView";
 import { abilityTypes, mainDolModels } from "./resource";
 
@@ -152,7 +152,7 @@ export function generateNonEuropeLocales(): void {
 
   const dataLocales: { [name: string]: Uint8Array } = {};
 
-  let pointerOffset = getRegionArray(offsetToDescriptionPointers);
+  let pointerOffset = getRegionArray(DESCRIPTION_TABLE_OFFSET);
 
   Object.entries(mainDolModels).forEach(([name, model]) => {
     if (!model.hasName) {
@@ -281,8 +281,8 @@ export function writeEuropeLocales(): void {
 export function writeNonEuropeLocales(data: Uint8Array): void {
   const $dataViewAlt = get(dataViewAlt);
 
-  let nameOffset = getRegionArray(offsetToMainDolStart);
-  let pointerOffset = getRegionArray(offsetToDescriptionPointers);
+  let nameOffset = getRegionArray(MAIN_DOL_START_OFFSET);
+  let pointerOffset = getRegionArray(DESCRIPTION_TABLE_OFFSET);
 
   Object.entries(mainDolModels).forEach(([name, model]) => {
     if (!model.hasName) {

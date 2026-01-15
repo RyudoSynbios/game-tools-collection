@@ -7,8 +7,6 @@
 
   import type { Palette } from "$lib/types";
 
-  import { albumOffset } from "../template";
-
   export let photoIndex: number;
 
   let canvasEl: HTMLDivElement;
@@ -31,7 +29,7 @@
 
         for (let tile = 0x0; tile < 0x8; tile += 0x1) {
           const offset =
-            albumOffset +
+            0x2000 +
             photoIndex * 0x1000 +
             row * 0x100 +
             column * 0x10 +

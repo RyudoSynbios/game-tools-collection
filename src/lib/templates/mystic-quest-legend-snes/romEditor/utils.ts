@@ -16,30 +16,30 @@ import MapViewer from "./components/MapViewer.svelte";
 import MonsterCanvas from "./components/MonsterCanvas.svelte";
 import Monsters from "./components/Monsters.svelte";
 import {
-  monsterNamesLength,
-  pointerToBackgroundsPointers,
-  pointerToBattleBackgroundGraphics,
-  pointerToBattleBackgroundPalettes,
-  pointerToBattleBackgroundTiles,
-  pointerToCharacterNames,
-  pointerToChestSet,
-  pointerToMapsPointers,
-  pointerToMonsterGroups,
-  pointerToMonsterNames,
-  pointerToMonsterSpriteSizes,
-  pointerToMonstersTiles,
-  pointerToMonsterTiles,
-  pointerToMonsterTilesPaterns,
-  pointerToMonsterTilesPaternSizes,
-  pointerToMovingSprites,
-  pointerToSpriteSet,
-  pointerToSpritesPalettes,
-  pointerToStaticSprites,
-  pointerToTilemapPalettes,
-  pointerToTilesChunksPalettes,
-  pointerToTilesets,
-  pointerToVillagersTiles,
-} from "./template";
+  BACKGROUND_TABLE_POINTER,
+  BATTLE_BACKGROUND_GRAPHICS_POINTER,
+  BATTLE_BACKGROUND_PALETTES_POINTER,
+  BATTLE_BACKGROUND_TILESET_POINTER,
+  CHARACTER_NAMES_POINTER,
+  CHEST_TILESET_POINTER,
+  MAP_TABLE_POINTER,
+  MONSTER_GROUPS_POINTER,
+  MONSTER_NAMES_LENGTH,
+  MONSTER_NAMES_POINTER,
+  MONSTER_SPRITE_SIZES_POINTER,
+  MONSTER_TILESET_PATERN_SIZES_POINTER,
+  MONSTER_TILESET_PATERNS_POINTER,
+  MONSTER_TILESET_POINTER,
+  MONSTERS_TILESET_POINTER,
+  MOVING_SPRITES_POINTER,
+  SPRITE_SET_POINTER,
+  SPRITES_PALETTES_POINTER,
+  STATIC_SPRITES_POINTER,
+  TILEMAP_PALETTES_POINTER,
+  TILESET_CHUNKS_PALETTES_POINTER,
+  TILESETS_POINTER,
+  VILLAGERS_TILESET_POINTER,
+} from "./utils/constants";
 
 export function getComponent(
   component: string,
@@ -176,33 +176,33 @@ export function pointerToOffset(
   }
 
   if (
-    pointerToChestSet.includes(pointer) ||
-    pointerToMonstersTiles.includes(pointer) ||
-    pointerToMovingSprites.includes(pointer) ||
-    pointerToStaticSprites.includes(pointer) ||
-    pointerToVillagersTiles.includes(pointer)
+    CHEST_TILESET_POINTER.includes(pointer) ||
+    MONSTERS_TILESET_POINTER.includes(pointer) ||
+    MOVING_SPRITES_POINTER.includes(pointer) ||
+    STATIC_SPRITES_POINTER.includes(pointer) ||
+    VILLAGERS_TILESET_POINTER.includes(pointer)
   ) {
     bank = 0x4;
   } else if (
-    pointerToTilesets.includes(pointer) ||
-    pointerToTilemapPalettes.includes(pointer) ||
-    pointerToTilesChunksPalettes.includes(pointer)
+    TILESETS_POINTER.includes(pointer) ||
+    TILEMAP_PALETTES_POINTER.includes(pointer) ||
+    TILESET_CHUNKS_PALETTES_POINTER.includes(pointer)
   ) {
     bank = 0x5;
-  } else if (pointerToSpritesPalettes.includes(pointer)) {
+  } else if (SPRITES_PALETTES_POINTER.includes(pointer)) {
     bank = 0x7;
   } else if (
-    pointerToBackgroundsPointers.includes(pointer) ||
-    pointerToMapsPointers.includes(pointer) ||
-    pointerToSpriteSet.includes(pointer)
+    BACKGROUND_TABLE_POINTER.includes(pointer) ||
+    MAP_TABLE_POINTER.includes(pointer) ||
+    SPRITE_SET_POINTER.includes(pointer)
   ) {
     bank = 0xb;
   } else if (
     pointer === 0x2ee ||
-    pointerToBattleBackgroundGraphics.includes(pointer) ||
-    pointerToBattleBackgroundPalettes.includes(pointer) ||
-    pointerToBattleBackgroundTiles.includes(pointer) ||
-    pointerToMonsterNames.includes(pointer)
+    BATTLE_BACKGROUND_GRAPHICS_POINTER.includes(pointer) ||
+    BATTLE_BACKGROUND_PALETTES_POINTER.includes(pointer) ||
+    BATTLE_BACKGROUND_TILESET_POINTER.includes(pointer) ||
+    MONSTER_NAMES_POINTER.includes(pointer)
   ) {
     bank = 0xc;
   }
@@ -211,7 +211,7 @@ export function pointerToOffset(
 }
 
 export function getCharacterNames(): Resource {
-  const offset = pointerToOffset(pointerToCharacterNames);
+  const offset = pointerToOffset(CHARACTER_NAMES_POINTER);
 
   const names: Resource = {};
 
@@ -241,10 +241,10 @@ export function getLocationNames(): Resource {
 }
 
 export function getMonsterGroupNames(): Resource {
-  const monsterGroupsOffset = pointerToOffset(pointerToMonsterGroups);
+  const monsterGroupsOffset = pointerToOffset(MONSTER_GROUPS_POINTER);
 
-  const offset = pointerToOffset(pointerToMonsterNames);
-  const length = getRegionArray(monsterNamesLength);
+  const offset = pointerToOffset(MONSTER_NAMES_POINTER);
+  const length = getRegionArray(MONSTER_NAMES_LENGTH);
 
   const names: Resource = {};
 
@@ -260,8 +260,8 @@ export function getMonsterGroupNames(): Resource {
 }
 
 export function getMonsterNames(): Resource {
-  const offset = pointerToOffset(pointerToMonsterNames);
-  const length = getRegionArray(monsterNamesLength);
+  const offset = pointerToOffset(MONSTER_NAMES_POINTER);
+  const length = getRegionArray(MONSTER_NAMES_LENGTH);
 
   const names: Resource = {};
 
@@ -299,14 +299,14 @@ export function getMonsterSpritePattern(
   width: number,
   height: number,
 ): string {
-  const tilesPatternsOffset = pointerToOffset(pointerToMonsterTilesPaterns);
+  const tilesPatternsOffset = pointerToOffset(MONSTER_TILESET_PATERNS_POINTER);
 
   let patternPosition = -1;
 
   let monsterId = getInt(tilesPatternsOffset + index, "uint8");
 
   let monsterPatternSizesOffset = pointerToOffset(
-    pointerToMonsterTilesPaternSizes,
+    MONSTER_TILESET_PATERN_SIZES_POINTER,
   );
 
   while (patternPosition === -1) {
@@ -327,7 +327,8 @@ export function getMonsterSpritePattern(
     monsterPatternSizesOffset += 0xa;
   }
 
-  const tilesOffset = pointerToOffset(pointerToMonsterTiles) + patternPosition;
+  const tilesOffset =
+    pointerToOffset(MONSTER_TILESET_POINTER) + patternPosition;
 
   let pattern = "";
 
@@ -344,7 +345,7 @@ export function getMonsterSpriteSize(index: number): [number, number] {
   let width = 0;
   let height = 0;
 
-  let spriteSizesOffset = pointerToOffset(pointerToMonsterSpriteSizes);
+  let spriteSizesOffset = pointerToOffset(MONSTER_SPRITE_SIZES_POINTER);
 
   while (width + height === 0) {
     if (index <= getInt(spriteSizesOffset, "uint8")) {
@@ -366,9 +367,9 @@ export function generateBattleBackgroundCanvas(
   paletteSecondary: Palette,
   position: "bottom" | "top",
 ): void {
-  const tilesOffset = pointerToOffset(pointerToBattleBackgroundTiles);
+  const tilesOffset = pointerToOffset(BATTLE_BACKGROUND_TILESET_POINTER);
 
-  const graphicsOffset = pointerToOffset(pointerToBattleBackgroundGraphics);
+  const graphicsOffset = pointerToOffset(BATTLE_BACKGROUND_GRAPHICS_POINTER);
 
   let repeats = 4;
   let rows = 4;

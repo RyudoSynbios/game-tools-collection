@@ -4,7 +4,7 @@ import { dataViewAlt } from "$lib/stores";
 import { getInt, setInt } from "$lib/utils/bytes";
 import { getRegionArray } from "$lib/utils/format";
 
-import { offsetToRandomEncounterRate } from "../../romEditor/template";
+import { RANDOM_ENCOUNTER_RATE_OFFSET } from "../../romEditor/utils/constants";
 import { mainDolModels } from "../../romEditor/utils/resource";
 import { Options } from "../utils";
 
@@ -59,7 +59,7 @@ export function applyQualityOfLife(options: Options): void {
 
   if (options.qualityOfLife.reduceRandomEncouterRate === 0x1) {
     const randomEncounterRateOffset = getRegionArray(
-      offsetToRandomEncounterRate,
+      RANDOM_ENCOUNTER_RATE_OFFSET,
     );
 
     setInt(randomEncounterRateOffset, "float32", 0.01, { bigEndian: true }, "main.dol"); // prettier-ignore

@@ -4,12 +4,12 @@
   import { getRegionArray } from "$lib/utils/format";
   import { getPalette } from "$lib/utils/graphics";
 
-  import {
-    pointerToAbilities,
-    pointerToAbilityGraphicsPointers,
-    pointerToPalettes,
-  } from "../template";
   import { getSprite } from "../utils";
+  import {
+    ABILITIES_POINTER,
+    ABILITY_TILESET_TABLE_POINTER,
+    PALETTES_POINTER,
+  } from "../utils/constants";
 
   export let abilityIndex: number;
 
@@ -23,13 +23,13 @@
 
   // Sprites
 
-  const graphicsPointer = getRegionArray(pointerToAbilityGraphicsPointers);
-  const graphicsOffset = getInt(graphicsPointer, "uint24");
+  const tilesetPointer = getRegionArray(ABILITY_TILESET_TABLE_POINTER);
+  const tilesetOffset = getInt(tilesetPointer, "uint24");
 
   let iconsCount = 0;
 
   while (true) {
-    const offset = getInt(graphicsOffset + iconsCount * 0x4, "uint24");
+    const offset = getInt(tilesetOffset + iconsCount * 0x4, "uint24");
 
     if (offset === 0xffffff) {
       break;
@@ -40,7 +40,7 @@
 
   const sprites: (Uint8Array | null)[] = [];
 
-  const palettesPointers = getRegionArray(pointerToPalettes);
+  const palettesPointers = getRegionArray(PALETTES_POINTER);
   const palettesOffset = getInt(palettesPointers, "uint24");
 
   const palette = getPalette("BGR555", palettesOffset, 0x10, {
@@ -48,14 +48,14 @@
   });
 
   for (let i = 0; i < iconsCount; i += 1) {
-    const compressedDataOffset = getInt(graphicsOffset + i * 0x4, "uint24");
+    const compressedDataOffset = getInt(tilesetOffset + i * 0x4, "uint24");
 
     sprites.push(getSprite(compressedDataOffset, palette));
   }
 
   // Main Sprite
 
-  const pointer = getRegionArray(pointerToAbilities);
+  const pointer = getRegionArray(ABILITIES_POINTER);
   const offset = getInt(pointer, "uint24");
 
   $: {

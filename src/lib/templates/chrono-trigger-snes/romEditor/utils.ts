@@ -31,7 +31,7 @@ import {
   EQUIPMENT_BONUS_STATS_TABLE_OFFSET,
   INVENTORY_NAMES_LENGTH,
   INVENTORY_NAMES_OFFSET,
-  SHOPS_TABLE_OFFSET,
+  SHOP_TABLE_OFFSET,
 } from "./utils/constants";
 
 export function getComponent(
@@ -533,7 +533,7 @@ export function getPortrait(offset: number, palette: Palette) {
 function getShops(): { offset: number; items: number }[] {
   const shops = [];
 
-  let offset = getRegionArray(SHOPS_TABLE_OFFSET);
+  let offset = getRegionArray(SHOP_TABLE_OFFSET);
 
   const end = getInt(offset, "uint16") + 0xc0000;
 

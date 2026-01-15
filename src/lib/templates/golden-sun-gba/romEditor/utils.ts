@@ -13,22 +13,22 @@ import AbilityIconSelector from "./components/AbilityIconSelector.svelte";
 import ItemIconSelector from "./components/ItemIconSelector.svelte";
 import PartyPortraitSelector from "./components/PartyPortraitSelector.svelte";
 import {
-  abilityDescriptionsStartIndexes,
-  abilityNamesStartIndexes,
-  characterNamesStartIndexes,
-  classNamesStartIndexes,
-  djinniDescriptionsStartIndexes,
-  djinniNamesStartIndexes,
-  enemyNamesStartIndexes,
-  itemDescriptionsStartIndexes,
-  itemNamesStartIndexes,
-  mapNamesStartIndexes,
-  pointerToEnemyGroups,
-  pointerToPartyExperiences,
-  pointerToShops,
-  pointerToSummons,
-  pointerToTexts,
-} from "./template";
+  ABILITY_DESCRIPTIONS_START_INDEX,
+  ABILITY_NAMES_START_INDEX,
+  CHARACTER_NAMES_START_INDEX,
+  CLASS_NAMES_START_INDEX,
+  DJINNI_DESCRIPTIONS_START_INDEX,
+  DJINNI_NAMES_START_INDEX,
+  ENEMY_GROUPS_POINTER,
+  ENEMY_NAMES_START_INDEX,
+  ITEM_DESCRIPTIONS_START_INDEX,
+  ITEM_NAMES_START_INDEX,
+  MAP_NAMES_START_INDEX,
+  PARTY_EXPERIENCES_POINTER,
+  SHOPS_POINTER,
+  SUMMONS_POINTER,
+  TEXTS_POINTER,
+} from "./utils/constants";
 
 export function getComponent(
   component: string,
@@ -86,7 +86,7 @@ export function overrideGetInt(
 
     const [index] = item.id.splitInt();
 
-    const partyExperiencesPointer = getRegionArray(pointerToPartyExperiences);
+    const partyExperiencesPointer = getRegionArray(PARTY_EXPERIENCES_POINTER);
 
     const offset = getInt(partyExperiencesPointer, "uint24");
 
@@ -110,7 +110,7 @@ export function overrideSetInt(item: Item, value: string): boolean {
 
     const [index] = item.id.splitInt();
 
-    const partyExperiencesPointer = getRegionArray(pointerToPartyExperiences);
+    const partyExperiencesPointer = getRegionArray(PARTY_EXPERIENCES_POINTER);
 
     const offset = getInt(partyExperiencesPointer, "uint24");
 
@@ -147,7 +147,7 @@ export function onReset(): void {
 
 export function getAbilityDescriptions(): Resource {
   const abilityDescriptionStartIndex = getRegionArray(
-    abilityDescriptionsStartIndexes,
+    ITEM_DESCRIPTIONS_START_INDEX,
   );
 
   const descriptions: Resource = {};
@@ -160,7 +160,7 @@ export function getAbilityDescriptions(): Resource {
 }
 
 export function getAbilityNames(): Resource {
-  const abilityNamesStartIndex = getRegionArray(abilityNamesStartIndexes);
+  const abilityNamesStartIndex = getRegionArray(ABILITY_NAMES_START_INDEX);
 
   const names: Resource = {};
 
@@ -172,7 +172,7 @@ export function getAbilityNames(): Resource {
 }
 
 export function getCharacterNames(): Resource {
-  const characterNamesStartIndex = getRegionArray(characterNamesStartIndexes);
+  const characterNamesStartIndex = getRegionArray(CHARACTER_NAMES_START_INDEX);
 
   const names: Resource = {};
 
@@ -184,7 +184,7 @@ export function getCharacterNames(): Resource {
 }
 
 export function getClassNames(): Resource {
-  const classNamesStartIndex = getRegionArray(classNamesStartIndexes);
+  const classNamesStartIndex = getRegionArray(CLASS_NAMES_START_INDEX);
 
   const names: Resource = {};
 
@@ -197,7 +197,7 @@ export function getClassNames(): Resource {
 
 export function getDjinniDescriptions(): Resource {
   const djinniDescriptionsStartIndex = getRegionArray(
-    djinniDescriptionsStartIndexes,
+    DJINNI_DESCRIPTIONS_START_INDEX,
   );
 
   const descriptions: Resource = {};
@@ -210,7 +210,7 @@ export function getDjinniDescriptions(): Resource {
 }
 
 export function getDjinniNames(): Resource {
-  const djinniNamesStartIndex = getRegionArray(djinniNamesStartIndexes);
+  const djinniNamesStartIndex = getRegionArray(DJINNI_NAMES_START_INDEX);
 
   const names: Resource = {};
 
@@ -222,9 +222,9 @@ export function getDjinniNames(): Resource {
 }
 
 export function getEnemyGroupNames(): Resource {
-  const offset = getInt(getRegionArray(pointerToEnemyGroups), "int24");
+  const offset = getInt(getRegionArray(ENEMY_GROUPS_POINTER), "int24");
 
-  const enemyNamesStartIndex = getRegionArray(enemyNamesStartIndexes);
+  const enemyNamesStartIndex = getRegionArray(ENEMY_NAMES_START_INDEX);
 
   const names: Resource = {};
 
@@ -240,7 +240,7 @@ export function getEnemyGroupNames(): Resource {
 }
 
 export function getEnemyNames(): Resource {
-  const enemyNamesStartIndex = getRegionArray(enemyNamesStartIndexes);
+  const enemyNamesStartIndex = getRegionArray(ENEMY_NAMES_START_INDEX);
 
   const names: Resource = {};
 
@@ -255,7 +255,7 @@ export function getEnemyNames(): Resource {
 
 export function getItemDescriptions(): Resource {
   const itemDescriptionStartIndex = getRegionArray(
-    itemDescriptionsStartIndexes,
+    ITEM_DESCRIPTIONS_START_INDEX,
   );
 
   const descriptions: Resource = {};
@@ -268,7 +268,7 @@ export function getItemDescriptions(): Resource {
 }
 
 export function getItemNames(): Resource {
-  const itemNamesStartIndex = getRegionArray(itemNamesStartIndexes);
+  const itemNamesStartIndex = getRegionArray(ITEM_NAMES_START_INDEX);
 
   const names: Resource = {};
 
@@ -282,7 +282,7 @@ export function getItemNames(): Resource {
 }
 
 export function getMapNames(): Resource {
-  const mapNamesStartIndex = getRegionArray(mapNamesStartIndexes);
+  const mapNamesStartIndex = getRegionArray(MAP_NAMES_START_INDEX);
 
   const names: Resource = {};
 
@@ -294,7 +294,7 @@ export function getMapNames(): Resource {
 }
 
 export function getShopNames(): Resource {
-  const offset = getInt(getRegionArray(pointerToShops), "int24");
+  const offset = getInt(getRegionArray(SHOPS_POINTER), "int24");
 
   const shopTypes = getResource("shopTypes") as Resource;
 
@@ -308,10 +308,10 @@ export function getShopNames(): Resource {
 }
 
 export function getSummonDescriptions(): Resource {
-  const offset = getInt(getRegionArray(pointerToSummons), "int24");
+  const offset = getInt(getRegionArray(SUMMONS_POINTER), "int24");
 
   const abilityDescriptionsStartIndex = getRegionArray(
-    abilityDescriptionsStartIndexes,
+    ABILITY_DESCRIPTIONS_START_INDEX,
   );
 
   const descriptions: Resource = {};
@@ -326,9 +326,9 @@ export function getSummonDescriptions(): Resource {
 }
 
 export function getSummonNames(): Resource {
-  const offset = getInt(getRegionArray(pointerToSummons), "int24");
+  const offset = getInt(getRegionArray(SUMMONS_POINTER), "int24");
 
-  const abilityNamesStartIndex = getRegionArray(abilityNamesStartIndexes);
+  const abilityNamesStartIndex = getRegionArray(ABILITY_NAMES_START_INDEX);
 
   const names: Resource = {};
 
@@ -361,7 +361,7 @@ let treesCache: {
 }[][] = [];
 
 function generateTrees(): void {
-  const pointer = getRegionArray(pointerToTexts);
+  const pointer = getRegionArray(TEXTS_POINTER);
 
   const pointerToStartCharTrees = getInt(pointer, "uint24");
   const startOffsetsTable = getInt(pointerToStartCharTrees + 0x4, "uint24");
@@ -445,7 +445,7 @@ function generateTrees(): void {
 function decodeText(index: number): string {
   const $gameRegion = get(gameRegion);
 
-  const pointer = getRegionArray(pointerToTexts);
+  const pointer = getRegionArray(TEXTS_POINTER);
 
   const pointerToStartTextBitstream =
     getInt(pointer + 0x60, "uint24") + 0x8 * (index >> 0x8);

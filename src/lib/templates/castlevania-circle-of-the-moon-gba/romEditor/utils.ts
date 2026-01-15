@@ -13,13 +13,13 @@ import type { Item, Palette, Resource } from "$lib/types";
 import Debug from "./components/Debug.svelte";
 import MapViewer from "./components/MapViewer.svelte";
 import {
-  pointerToItemTexts,
-  pointerToMapsPointers,
-  pointerToMapTexts,
-  pointerToMonsterTexts,
-  pointerToTexts,
-  shinyArmorSpriteGraphics,
-} from "./template";
+  ITEM_TEXTS_POINTER,
+  MAP_TABLE_POINTER,
+  MAP_TEXTS_POINTER,
+  MONSTER_TEXTS_POINTER,
+  SHINY_ARMOR_TILES_OFFSET,
+  TEXTS_POINTER,
+} from "./utils/constants";
 import { dssCards } from "./utils/resource";
 import { getMonsterSpriteInfos, getSpriteFrameOffset } from "./utils/sprite";
 
@@ -117,7 +117,7 @@ export function generateMap(
 export function generateSprites(
   canvas: Canvas,
   offset: number,
-  spriteset: number[][],
+  spriteSet: number[][],
   palettes: Palette[],
   monsters: { index: number; firstTile: number }[],
   spriteSpecial: number,
@@ -186,10 +186,10 @@ export function generateSprites(
 
           if (type === 0x1e7) {
             getSpriteData(
-              getRegionArray(shinyArmorSpriteGraphics) + tileIndex * 0x20,
+              getRegionArray(SHINY_ARMOR_TILES_OFFSET) + tileIndex * 0x20,
               0x80,
             ).forEach((tile, index) => {
-              spriteset[0x3e0 + index] = tile;
+              spriteSet[0x3e0 + index] = tile;
             });
 
             tileIndex = 0x3e0;
@@ -229,7 +229,7 @@ export function generateSprites(
               let x = blockX + anchorX + w * 8;
               let y = blockY + anchorY + 1 + h * 8;
 
-              let tileData = spriteset[tileIndex + h * width + w];
+              let tileData = spriteSet[tileIndex + h * width + w];
 
               if (flipX) {
                 tileData = flipTileData(tileData, 8, "x");
@@ -411,7 +411,7 @@ export function getDecompressedGraphic(offset: number): number[][] {
 }
 
 export function getItemNames(): Resource {
-  const offset = getInt(getRegionArray(pointerToItemTexts), "uint24");
+  const offset = getInt(getRegionArray(ITEM_TEXTS_POINTER), "uint24");
 
   const names: Resource = {};
 
@@ -435,7 +435,7 @@ export function getMapsInfos(): {
   name: string;
   pointer: number;
 }[] {
-  const mapsPointers = getRegionArray(pointerToMapsPointers);
+  const mapsPointers = getRegionArray(MAP_TABLE_POINTER);
 
   const maps = [];
 
@@ -450,7 +450,7 @@ export function getMapsInfos(): {
     );
 
     const sectionNameOffset = getInt(
-      getRegionArray(pointerToMapTexts),
+      getRegionArray(MAP_TEXTS_POINTER),
       "uint24",
     );
 
@@ -498,7 +498,7 @@ export function getMapNames(): Resource {
 }
 
 export function getMonsterNames(): Resource {
-  const offset = getInt(getRegionArray(pointerToMonsterTexts), "uint24");
+  const offset = getInt(getRegionArray(MONSTER_TEXTS_POINTER), "uint24");
 
   const names: Resource = {};
 
@@ -516,7 +516,7 @@ export function getText(index: number): string {
     return "???";
   }
 
-  const offsetTexts = getInt(getRegionArray(pointerToTexts), "uint24");
+  const offsetTexts = getInt(getRegionArray(TEXTS_POINTER), "uint24");
 
   let offset = getInt(offsetTexts + (index - 0x8001) * 0x4, "uint24");
 

@@ -6,8 +6,8 @@
 
   import { getPortrait } from "../utils";
   import {
-    PORTRAITS_GRAPHICS_OFFSET,
     PORTRAITS_PALETTE_POINTER,
+    PORTRAITS_TILESET_OFFSET,
   } from "../utils/constants";
 
   export let characterIndex: number;
@@ -27,10 +27,10 @@
   for (let i = 0; i < 0x7; i += 1) {
     const pointer = getRegionArray(PORTRAITS_PALETTE_POINTER);
     const paletteOffset =
-      PORTRAITS_GRAPHICS_OFFSET + getInt(pointer + i * 0x2, "uint16");
+      PORTRAITS_TILESET_OFFSET + getInt(pointer + i * 0x2, "uint16");
 
     const palette = getPalette("BGR555", paletteOffset, 0x10);
-    const sprite = getPortrait(PORTRAITS_GRAPHICS_OFFSET + i * 0x480, palette);
+    const sprite = getPortrait(PORTRAITS_TILESET_OFFSET + i * 0x480, palette);
 
     sprites.push(sprite);
   }

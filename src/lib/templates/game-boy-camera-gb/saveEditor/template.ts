@@ -1,7 +1,5 @@
 import type { GameJson } from "$lib/types";
 
-export const albumOffset = 0x2000;
-
 const template: GameJson = {
   validator: {
     regions: {

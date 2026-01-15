@@ -12,26 +12,29 @@
 
   import type { Palette } from "$lib/types";
 
-  import {
-    pointerToBackgroundsPointers,
-    pointerToChestSet,
-    pointerToMapSize,
-    pointerToMapsPointers,
-    pointerToMonstersTiles,
-    pointerToMovingSprites,
-    pointerToRooms,
-    pointerToRoomsTable,
-    pointerToSpriteSet,
-    pointerToSpriteSetIndex,
-    pointerToSpritesPalettes,
-    pointerToStaticSprites,
-    pointerToTilemapPalettes,
-    pointerToTilesChunksPalettes,
-    pointerToTilesets,
-    pointerToVillagersTiles,
-    tilesPositionement,
-  } from "../template";
   import { getMappedTiles, pointerToOffset } from "../utils";
+  import {
+    BACKGROUND_TABLE_POINTER,
+    CHEST_TILESET_POINTER,
+    MAP_SIZE_POINTER,
+    MAP_TABLE_POINTER,
+    MONSTERS_TILESET_POINTER,
+    MOVING_SPRITES_POINTER,
+    ROOM_TABLE_POINTER,
+    ROOMS_POINTER,
+    SPRITE_SET_INDEX_POINTER,
+    SPRITE_SET_POINTER,
+    SPRITES_PALETTES_POINTER,
+    STATIC_SPRITES_POINTER,
+    TILEMAP_PALETTES_POINTER,
+    TILESET_CHUNKS_COLLISIONS_OFFSET,
+    TILESET_CHUNKS_FLIPS_OFFSET,
+    TILESET_CHUNKS_OFFSET,
+    TILESET_CHUNKS_PALETTES_POINTER,
+    TILESET_POSITIONEMENT,
+    TILESETS_POINTER,
+    VILLAGERS_TILESET_POINTER,
+  } from "../utils/constants";
 
   export let roomIndex: number;
 
@@ -41,28 +44,25 @@
   let canvas: Canvas;
   let canvasDebug: Canvas;
 
-  const roomsTableOffset = pointerToOffset(pointerToRoomsTable);
-  const roomsOffset = pointerToOffset(pointerToRooms);
-  const mapsPointers = pointerToOffset(pointerToMapsPointers);
-  const mapSizeOffset = pointerToOffset(pointerToMapSize);
-  const tilesetsOffset = pointerToOffset(pointerToTilesets);
-  const tilemapPalettesOffset = pointerToOffset(pointerToTilemapPalettes);
-  const backgroundsPointers = pointerToOffset(pointerToBackgroundsPointers);
+  const roomsTableOffset = pointerToOffset(ROOM_TABLE_POINTER);
+  const roomsOffset = pointerToOffset(ROOMS_POINTER);
+  const mapsPointers = pointerToOffset(MAP_TABLE_POINTER);
+  const mapSizeOffset = pointerToOffset(MAP_SIZE_POINTER);
+  const tilesetsOffset = pointerToOffset(TILESETS_POINTER);
+  const tilemapPalettesOffset = pointerToOffset(TILEMAP_PALETTES_POINTER);
+  const backgroundsPointers = pointerToOffset(BACKGROUND_TABLE_POINTER);
   const tilesChunksPalettesOffset = pointerToOffset(
-    pointerToTilesChunksPalettes,
+    TILESET_CHUNKS_PALETTES_POINTER,
   );
-  const tilesChunkOffset = 0x30000;
-  const tilesChunksFlipsOffset = 0x32000;
-  const tilesChunksCollisionsOffset = 0x32800;
-  const spritesPalettesOffset = pointerToOffset(pointerToSpritesPalettes);
-  const spriteSetStartOffset = pointerToOffset(pointerToSpriteSet);
-  const spriteSetIndexOffset = pointerToOffset(pointerToSpriteSetIndex);
-  const chestSetOffset = pointerToOffset(pointerToChestSet);
-  const movingSpritesOffset = pointerToOffset(pointerToMovingSprites);
-  const staticSpritesOffset = pointerToOffset(pointerToStaticSprites);
-  const tilesPositionementOffset = getRegionArray(tilesPositionement);
-  const villagersTilesOffset = pointerToOffset(pointerToVillagersTiles);
-  const monstersTilesOffset = pointerToOffset(pointerToMonstersTiles);
+  const spritesPalettesOffset = pointerToOffset(SPRITES_PALETTES_POINTER);
+  const spriteSetStartOffset = pointerToOffset(SPRITE_SET_POINTER);
+  const spriteSetIndexOffset = pointerToOffset(SPRITE_SET_INDEX_POINTER);
+  const chestSetOffset = pointerToOffset(CHEST_TILESET_POINTER);
+  const movingSpritesOffset = pointerToOffset(MOVING_SPRITES_POINTER);
+  const staticSpritesOffset = pointerToOffset(STATIC_SPRITES_POINTER);
+  const tilesPositionementOffset = getRegionArray(TILESET_POSITIONEMENT);
+  const villagersTilesOffset = pointerToOffset(VILLAGERS_TILESET_POINTER);
+  const monstersTilesOffset = pointerToOffset(MONSTERS_TILESET_POINTER);
 
   function handleAnimationChange(event: Event): void {
     if ((event.target as HTMLInputElement).checked) {
@@ -142,10 +142,10 @@
     const tilemapCorrespondanceIndex = getInt(mapSettingsOffset, "uint8") & 0xf;
 
     const tileIndexOffset =
-      tilesChunkOffset + tilemapCorrespondanceIndex * 0x200;
+      TILESET_CHUNKS_OFFSET + tilemapCorrespondanceIndex * 0x200;
 
     const tileFlipIndexOffset =
-      tilesChunksFlipsOffset + tilemapCorrespondanceIndex * 0x80;
+      TILESET_CHUNKS_FLIPS_OFFSET + tilemapCorrespondanceIndex * 0x80;
 
     const tilesChunks = [];
 
@@ -201,7 +201,7 @@
     // Tiles Chunks Collisions
 
     const tilesChunkCollisionIndexOffset =
-      tilesChunksCollisionsOffset + tilemapCorrespondanceIndex * 0x100;
+      TILESET_CHUNKS_COLLISIONS_OFFSET + tilemapCorrespondanceIndex * 0x100;
 
     const tilesChunksCollisions: Uint8Array[] = [];
 

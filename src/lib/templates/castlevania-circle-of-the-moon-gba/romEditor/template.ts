@@ -1,30 +1,5 @@
 import type { GameJson } from "$lib/types";
 
-export const pointerToTexts = [0x5ff14, 0x5ff14, 0x5fb34];
-export const pointerToItemTexts = [0x62468, 0x62468, 0x620ac];
-export const pointerToMonsterTexts = [0x62480, 0x62480, 0x620c4];
-export const pointerToMapTexts = [0x6270c, 0x6270c, 0x623ac];
-export const pointerToMapBlocks = [0x8b8f8, 0x8b8f8, 0x8b5c4];
-export const animatedTilesTable = [0x8bd64, 0x8bd64, 0x8ba2c];
-export const monstersGraphicsTable = [0xcdaa8, 0xcdaa8, 0xcd69c];
-export const pointerToMapSpritesTable = [0xd9a40, 0xd9a40, 0xd95c4];
-export const specialGraphicsTable = [0x100268, 0x100268, 0x101e6c];
-export const commonSpritesGraphics = [0x4548a4, 0x4548a4, 0x458868];
-export const spritesetPalette2 = [0x453ec0, 0x453ec0, 0x457e84];
-export const commonSpritesPalettes = [0x453f20, 0x453f20, 0x457ee4];
-export const spritesetPalette1 = [0x456464, 0x456464, 0x45a428];
-export const spritesetPalette3 = [0x49a624, 0x49a624, 0x49e5e8];
-export const spritesetPalette6 = [0x4a56bc, 0x4a56bc, 0x4a9680];
-export const spritesetPalette4 = [0x4eda40, 0x4eda40, 0x4f1a04];
-export const undergroundWaterwayPalette = [0x5d3cc4, 0x5d3cc4, 0x5d7c88];
-export const spritesetPalette5 = [0x62f64c, 0x62f64c, 0x6336ac];
-export const shinyArmorSpriteGraphics = [0x65e2a8, 0x65e2f4, 0x6639ec];
-export const eventsTable = [0x66c16c, 0x66c1b8, 0x6718b0];
-export const pointerToDssCardsGraphics = [0x66cfa0, 0x66cfec, 0x6726e0];
-export const pointerToMapsPointers = [0x66f7f4, 0x66f840, 0x674f30];
-export const pointerToMapCollisions = [0x66f830, 0x66f87c, 0x674f6c];
-export const animatedTilesDracula2 = [0x670710, 0x67075c, 0x675e4c];
-
 const template: GameJson = {
   validator: {
     regions: {

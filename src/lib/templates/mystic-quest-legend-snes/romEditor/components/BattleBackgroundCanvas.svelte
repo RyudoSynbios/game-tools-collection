@@ -6,13 +6,13 @@
   import Canvas from "$lib/utils/canvas";
   import { getPalette } from "$lib/utils/graphics";
 
-  import {
-    pointerToBattleBackgroundChunks,
-    pointerToBattleBackgroundPalettes,
-    pointerToBattleBackgroundSets,
-    pointerToBattleBackgroundTiles,
-  } from "../template";
   import { generateBattleBackgroundCanvas, pointerToOffset } from "../utils";
+  import {
+    BATTLE_BACKGROUND_CHUNKS_POINTER,
+    BATTLE_BACKGROUND_PALETTES_POINTER,
+    BATTLE_BACKGROUND_SETS_POINTER,
+    BATTLE_BACKGROUND_TILESET_POINTER,
+  } from "../utils/constants";
 
   export let backgroundIndex: number;
 
@@ -21,8 +21,8 @@
   let canvas: Canvas;
 
   function updateCanvas(): void {
-    const tilesetsOffset = pointerToOffset(pointerToBattleBackgroundSets);
-    const chunksOffset = pointerToOffset(pointerToBattleBackgroundChunks);
+    const tilesetsOffset = pointerToOffset(BATTLE_BACKGROUND_SETS_POINTER);
+    const chunksOffset = pointerToOffset(BATTLE_BACKGROUND_CHUNKS_POINTER);
 
     const tilesetTop = getInt(tilesetsOffset + backgroundIndex * 3, "uint8");
 
@@ -36,7 +36,7 @@
       "upper4",
     );
 
-    const palettesOffset = pointerToOffset(pointerToBattleBackgroundPalettes);
+    const palettesOffset = pointerToOffset(BATTLE_BACKGROUND_PALETTES_POINTER);
 
     const palettePrimary = getPalette(
       "BGR555",
@@ -63,7 +63,7 @@
       "lower4",
     );
 
-    const tilesOffset = pointerToOffset(pointerToBattleBackgroundTiles);
+    const tilesOffset = pointerToOffset(BATTLE_BACKGROUND_TILESET_POINTER);
 
     generateBattleBackgroundCanvas(
       canvas,

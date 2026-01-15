@@ -59,6 +59,7 @@ interface Map {
 }
 
 interface Room {
+  index: number;
   bgmIndex: number;
   bg12TilesetSetIndex: number;
   bg3TilesetIndex: number;
@@ -82,7 +83,7 @@ export default class CTMap {
     this.room = this.getRoom(roomIndex);
     this.map = this.getMap();
     this.palettes = this.getPalettes();
-    this.tilesData = this.getMapTilesData();
+    this.tilesData = this.generateTilesData();
 
     this.generateBackgroundsData();
   }
@@ -91,6 +92,7 @@ export default class CTMap {
     const offset = ROOM_TABLE_OFFSET + 0xe * index;
 
     return {
+      index,
       bgmIndex: getInt(offset, "uint8"),
       bg12TilesetSetIndex: getInt(offset + 0x1, "uint8"),
       bg3TilesetIndex: getInt(offset + 0x2, "uint8"),
@@ -284,14 +286,7 @@ export default class CTMap {
     palettes.push([
       [0, 0, 0, 0],
       ...getPalette("BGR555", 0x3fb212, 0x7),
-      [0, 0, 0, 0],
-      [0, 0, 0, 0],
-      [0, 0, 0, 0],
-      [0, 0, 0, 0],
-      [0, 0, 0, 0],
-      [0, 0, 0, 0],
-      [0, 0, 0, 0],
-      [0, 0, 0, 0],
+      ...Array(0x8).fill([0, 0, 0, 0]),
     ]);
 
     for (let i = 0x0; i < 0x7; i += 0x1) {
@@ -301,12 +296,17 @@ export default class CTMap {
       ]);
     }
 
+    for (let i = 0x0; i < 0x8; i += 0x1) {
+      palettes.push([...Array(0x10).fill([0, 0, 0, 0])]);
+    }
+
     return palettes;
   }
 
-  private getMapTilesData(): number[][] {
+  private generateTilesData(): number[][] {
     const tilesData: number[][] = [];
 
+    // Fill with black tiles
     for (let i = 0x0; i < 0x200; i += 0x1) {
       tilesData.push(Array(0x40).fill(0x0));
     }
@@ -323,6 +323,11 @@ export default class CTMap {
 
     // Background 3
     tilesData.push(...this.getTilesData(this.room.bg3TilesetIndex));
+
+    // Fill with black tiles
+    while (tilesData.length < 0x800) {
+      tilesData.push(Array(0x40).fill(0x0));
+    }
 
     return tilesData;
   }

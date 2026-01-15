@@ -1,67 +1,12 @@
 import type { GameJson } from "$lib/types";
 
-export const abilityDescriptionsStartIndexes = [
-  0x53a, 0x53a, 0x631, 0x631, 0x631, 0x631,
-];
-export const abilityNamesStartIndexes = [
-  0x333, 0x333, 0x42a, 0x42a, 0x42a, 0x42a,
-];
-export const characterNamesStartIndexes = [0x66, 0x66, 0x56, 0x56, 0x56, 0x56];
-export const classNamesStartIndexes = [
-  0x741, 0x741, 0x838, 0x838, 0x838, 0x838,
-];
-export const djinniDescriptionsStartIndexes = [
-  0x666, 0x666, 0x75d, 0x75d, 0x75d, 0x75d,
-];
-export const djinniNamesStartIndexes = [
-  0x45f, 0x45f, 0x556, 0x556, 0x556, 0x556,
-];
-export const enemyNamesStartIndexes = [
-  0x28f, 0x28f, 0x386, 0x386, 0x386, 0x386,
-];
-export const itemDescriptionsStartIndexes = [
-  0x75, 0x75, 0x5f, 0x5f, 0x5f, 0x5f,
-];
-export const itemNamesStartIndexes = [0x182, 0x182, 0x16c, 0x16c, 0x16c, 0x16c];
-export const mapNamesStartIndexes = [
-  0xa07, 0xa40, 0x29ce, 0x29ce, 0x29ce, 0x29ce,
-];
-export const pointerToPalettes = [
-  0x45ec, 0x45ec, 0x45fc, 0x461c, 0x462c, 0x464c,
-];
-export const pointerToTexts = [
-  0x1556c, 0x1556c, 0x1456c, 0x1426c, 0x1556c, 0x1456c,
-];
-export const pointerToCharacterPortraits = [
-  0x19da0, 0x19d9c, 0x18cd0, 0x18a14, 0x19d0c, 0x18d80,
-];
-export const pointerToItemGraphicsPointers = [
-  0x19ecc, 0x19ec4, 0x18dfc, 0x18b40, 0x19e38, 0x18eac,
-];
-export const pointerToAbilityGraphicsPointers = [
-  0x19ee0, 0x19ed8, 0x18e10, 0x18b54, 0x19e4c, 0x18ec0,
-];
-export const pointerToItems = [
-  0x78428, 0x6e428, 0x7d428, 0x7c228, 0x78428, 0x7d428,
-];
-export const pointerToAbilities = [
-  0x78bbc, 0x6ebbc, 0x7dbbc, 0x7c9bc, 0x78bbc, 0x7dbbc,
-];
-export const pointerToPartyExperiences = [
-  0x79058, 0x6f058, 0x7e058, 0x7ce58, 0x79058, 0x7e058,
-];
-export const pointerToSummons = [
-  0x797e8, 0x6f7e8, 0x7e7e8, 0x7d5e8, 0x797e8, 0x7e7e8,
-];
-export const pointerToShops = [
-  0xb271c, 0xa9740, 0xb671c, 0xb4d1c, 0xb271c, 0xb671c,
-];
-export const pointerToEnemyGroups = [
-  0xc227c, 0xb927c, 0xc6294, 0xc4894, 0xc2294, 0xc6294,
-];
-export const pointerToCharacterGraphics = [
-  0x3203c0, 0x3173c0, 0x321bc0, 0x3201c0, 0x3203c0, 0x321bc0,
-];
+import {
+  ABILITIES_POINTER,
+  ENEMY_GROUPS_POINTER,
+  ITEMS_POINTER,
+  SHOPS_POINTER,
+  SUMMONS_POINTER,
+} from "./utils/constants";
 
 const template: GameJson = {
   validator: {
@@ -1079,7 +1024,7 @@ const template: GameJson = {
           name: "Abilities",
           items: [
             {
-              pointer: pointerToAbilities,
+              pointer: ABILITIES_POINTER,
               pointerDataType: "uint24",
               instanceId: "abilities",
               length: 0x10,
@@ -1208,7 +1153,7 @@ const template: GameJson = {
           name: "Items",
           items: [
             {
-              pointer: pointerToItems,
+              pointer: ITEMS_POINTER,
               pointerDataType: "uint24",
               instanceId: "items",
               length: 0x2c,
@@ -1572,7 +1517,7 @@ const template: GameJson = {
           items: [
             {
               id: "summons",
-              pointer: pointerToSummons,
+              pointer: SUMMONS_POINTER,
               pointerDataType: "uint24",
               length: 0x8,
               type: "container",
@@ -1988,7 +1933,7 @@ const template: GameJson = {
           items: [
             {
               id: "enemyGroups",
-              pointer: pointerToEnemyGroups,
+              pointer: ENEMY_GROUPS_POINTER,
               pointerDataType: "uint24",
               length: 0x10,
               type: "container",
@@ -2147,7 +2092,7 @@ const template: GameJson = {
           items: [
             {
               id: "shops",
-              pointer: pointerToShops,
+              pointer: SHOPS_POINTER,
               pointerDataType: "uint24",
               length: 0x42,
               type: "container",
