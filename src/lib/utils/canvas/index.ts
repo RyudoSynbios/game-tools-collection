@@ -1,5 +1,11 @@
 import { Application } from "@pixi/app";
-import { BaseTexture, BufferResource, extensions, Texture } from "@pixi/core";
+import {
+  BaseTexture,
+  BufferResource,
+  extensions,
+  Filter,
+  Texture,
+} from "@pixi/core";
 import { Container } from "@pixi/display";
 import "@pixi/events";
 import { Extract } from "@pixi/extract";
@@ -7,6 +13,8 @@ import { Sprite } from "@pixi/sprite";
 import { TilingSprite } from "@pixi/sprite-tiling";
 
 import debug from "$lib/utils/debug";
+
+import highlightArea from "./fragments/highlightArea";
 
 export type Axis = "x" | "y";
 
@@ -17,13 +25,20 @@ interface Animation {
   speed: number;
 }
 
+interface FilterArea {
+  width: number;
+  height: number;
+  x: number;
+  y: number;
+}
+
 interface Layer {
   type: LayerType;
   width: number;
   height: number;
   datas: Uint8Array[];
   container: Container;
-  animation: Animation | null;
+  animation?: Animation;
 }
 
 extensions.add(Extract);
@@ -34,6 +49,8 @@ export default class Canvas {
   private height: number;
   private scale: number;
   private animation: boolean;
+  private filter: boolean;
+  private filterArea: FilterArea;
   private layers: { [key: string]: Layer };
 
   constructor(options?: {
@@ -43,6 +60,7 @@ export default class Canvas {
     scale?: number;
     backgroundAlpha?: number;
     animation?: boolean;
+    filter?: boolean;
   }) {
     const canvasEl = options?.canvasEl;
     const width = options?.width || 0;
@@ -51,12 +69,15 @@ export default class Canvas {
     const backgroundAlpha = options?.backgroundAlpha || 0;
     const animation =
       options?.animation !== undefined ? options?.animation : true;
+    const filter = options?.filter !== undefined ? options?.filter : false;
 
     this.width = width;
     this.height = height;
     this.scale = scale;
     this.layers = {};
     this.animation = animation;
+    this.filter = filter;
+    this.filterArea = { width: 0, height: 0, x: 0, y: 0 };
 
     this.app = new Application({
       width,
@@ -105,7 +126,7 @@ export default class Canvas {
 
     const width = options?.width || 0;
     const height = options?.height || 0;
-    const animation = options?.animation || null;
+    const animation = options?.animation;
     const hidden = options?.hidden || false;
     const order = options?.order || 0;
 
@@ -192,7 +213,7 @@ export default class Canvas {
 
   public stopLayerAnimation(key: string): void {
     if (this.layers[key]) {
-      this.layers[key].animation = null;
+      this.layers[key].animation = undefined;
     }
   }
 
@@ -337,28 +358,72 @@ export default class Canvas {
     this.layers[layer].container.addChild(sprite);
   }
 
+  public defineHighlightArea(
+    width: number,
+    height: number,
+    x: number,
+    y: number,
+  ) {
+    const filter = new Filter(undefined, highlightArea, {
+      uRect: new Float32Array([x, y, width, height]),
+      uResolution: new Float32Array([
+        this.app.renderer.width,
+        this.app.renderer.height,
+      ]),
+      uDarkness: 0.5,
+    });
+
+    this.filterArea = { width, height, x, y };
+
+    if (this.filter) {
+      this.app.stage.filters = [filter];
+    }
+  }
+
+  public enableFilter() {
+    this.filter = true;
+
+    this.defineHighlightArea(
+      this.filterArea.width,
+      this.filterArea.height,
+      this.filterArea.x,
+      this.filterArea.y,
+    );
+  }
+
+  public disableFilter() {
+    this.app.stage.filters = null;
+    this.filter = false;
+  }
+
+  public getFilterStatus(): boolean {
+    return this.filter;
+  }
+
   public reset() {
-    Object.keys(this.layers).forEach((key) => {
-      if (this.layers[key].type === "image") {
-        this.layers[key].width = this.width;
-        this.layers[key].height = this.height;
-        this.layers[key].datas = [new Uint8Array(this.width * this.height * 4)];
-      } else if (this.layers[key].type === "sprites") {
-        this.layers[key].width = this.width;
-        this.layers[key].height = this.height;
-        this.layers[key].datas = [];
-        this.layers[key].container.children.forEach((child) => child.destroy());
-      } else if (this.layers[key].type === "tilingSprite") {
-        this.layers[key].datas = [
-          new Uint8Array(this.layers[key].width * this.layers[key].height * 4),
-        ];
+    Object.values(this.layers).forEach((layer) => {
+      switch (layer.type) {
+        case "image":
+          layer.width = this.width;
+          layer.height = this.height;
+          layer.datas = [new Uint8Array(this.width * this.height * 4)];
+          break;
 
-        const tilingSprite = this.layers[key].container.getChildAt(
-          0,
-        ) as TilingSprite;
+        case "sprites":
+          layer.width = this.width;
+          layer.height = this.height;
+          layer.datas = [];
+          layer.container.children.forEach((child) => child.destroy());
+          break;
 
-        tilingSprite.width = this.width;
-        tilingSprite.height = this.height;
+        case "tilingSprite":
+          layer.datas = [new Uint8Array(layer.width * layer.height * 4)];
+
+          const tilingSprite = layer.container.getChildAt(0) as TilingSprite;
+
+          tilingSprite.width = this.width;
+          tilingSprite.height = this.height;
+          break;
       }
     });
   }
@@ -382,22 +447,15 @@ export default class Canvas {
   }
 
   public render(): void {
-    Object.keys(this.layers).forEach((key) => {
-      this.layers[key].container.children.forEach((displayObject, index) => {
+    Object.values(this.layers).forEach((layer) => {
+      layer.container.children.forEach((displayObject, index) => {
         const sprite = displayObject as Sprite | TilingSprite;
 
-        const width =
-          this.layers[key].type === "sprites"
-            ? sprite.width
-            : this.layers[key].width;
-
-        const height =
-          this.layers[key].type === "sprites"
-            ? sprite.height
-            : this.layers[key].height;
+        const width = layer.type === "sprites" ? sprite.width : layer.width;
+        const height = layer.type === "sprites" ? sprite.height : layer.height;
 
         const baseTexture = new BaseTexture(
-          new BufferResource(this.layers[key].datas[index], { width, height }),
+          new BufferResource(layer.datas[index], { width, height }),
           { scaleMode: 0 },
         );
 
