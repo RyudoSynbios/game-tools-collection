@@ -1,0 +1,23 @@
+export const CHARACTERS_EXPERIENCE_CURVE_OFFSET = [0xc2634, 0xc22f1];
+
+export const ENEMY_NAMES_LENGTH = [0xb, 0x8];
+export const ENEMY_STATS_OFFSET = [0xc4700, 0xc4800];
+export const ENEMY_NAMES_OFFSET = [0xc6500, 0xc6700];
+
+export const INVENTORY_NAMES_LENGTH = [0xa, 0x8];
+export const INVENTORY_NAMES_OFFSET = 0xc0b5e;
+
+export const EQUIPMENT_BONUS_STATS_TABLE_OFFSET = [0xc29d7, 0xc2694];
+
+export const SHOPS_TABLE_OFFSET = [0xc2c6d, 0xc2adb];
+
+export const ROOM_TABLE_OFFSET = 0x360000;
+export const MAP_TILESET_TABLE_OFFSET = 0x361c00;
+export const MAP_TABLE_OFFSET = 0x361e00;
+export const CHUNK_BG12_TABLE_OFFSET = 0x362100;
+export const CHUNK_BG3_TABLE_OFFSET = 0x3621c0;
+export const TILESET_TABLE_OFFSET = 0x362220;
+export const PALETTE_MAP_TABLE_OFFSET = 0x3624c0;
+
+export const PORTRAITS_GRAPHICS_OFFSET = 0x3f0000;
+export const PORTRAITS_PALETTE_POINTER = [0x3fce78, 0x3fccd2];

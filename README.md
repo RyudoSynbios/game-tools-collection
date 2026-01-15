@@ -24,7 +24,7 @@ Link to the website: [https://game-tools-collection.com](https://game-tools-coll
 | Castlevania: Order of Ecclesia               | DS       | Save                    | EUR / USA / JAP / KOR                         |
 | Castlevania: Symphony of the Night           | PS       | Save / Rom              | EUR / USA / JAP                               |
 | Chrono Cross                                 | PS       | Save                    | USA / JAP                                     |
-| Chrono Trigger                               | SNES     | Save                    | USA / JAP                                     |
+| Chrono Trigger                               | SNES     | Save / Rom              | USA / JAP                                     |
 | Crash Bandicoot                              | PS       | Save                    | EUR / USA / JAP / AUS                         |
 | Crisis Core -Final Fantasy VII- Reunion      | WIN      | Save                    | WORLD                                         |
 | CTR: Crash Team Racing                       | PS       | Save                    | EUR / USA / JAP                               |
