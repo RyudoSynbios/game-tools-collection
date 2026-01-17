@@ -11,7 +11,7 @@ import {
   applyPalette,
   flipTileData,
   getPalette,
-  renderPalettes,
+  renderDebugPalettes,
 } from "$lib/utils/graphics";
 
 import type { Palette } from "$lib/types";
@@ -355,7 +355,7 @@ export default class CTMap {
   }
 
   public renderDebugPalettes(canvas: Canvas): void {
-    renderPalettes(this.palettes, canvas);
+    renderDebugPalettes(this.palettes, canvas);
   }
 
   public renderDebugTiles(canvas: Canvas): void {

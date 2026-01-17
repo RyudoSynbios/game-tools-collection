@@ -189,8 +189,13 @@ export function applyPalette(
   return tileData;
 }
 
-export function renderPalettes(palettes: Palette[], canvas: Canvas): void {
-  canvas.resize(128, 128);
+export function renderDebugPalettes(palettes: Palette[], canvas: Canvas): void {
+  if (palettes.length === 0) {
+    canvas.reset();
+    return;
+  }
+
+  canvas.resize(palettes[0].length * 8, palettes.length * 8);
 
   palettes.forEach((palette, paletteIndex) => {
     palette.forEach((color, colorIndex) => {
