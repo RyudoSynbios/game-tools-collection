@@ -118,6 +118,16 @@ export function getPalette(
   return palette;
 }
 
+export function initTilesData(length: number): number[][] {
+  const tilesData = [];
+
+  while (tilesData.length < length) {
+    tilesData.push(Array(0x40).fill(0x0));
+  }
+
+  return tilesData;
+}
+
 export function flipTileData(
   data: number[],
   width: number,
