@@ -24,13 +24,16 @@ export function generateChecksum(item: ItemChecksum): number {
 
 export function getDecompressedData(
   offset: number,
-  length: number,
   callback?: (
-    decompressedData: number[],
+    decompressedData: Uint8Array,
     bufferIndex: number,
-  ) => [number[], number],
-): number[] {
-  let decompressedData = [...Array(0x10000).keys()].map(() => 0x0);
+  ) => [Uint8Array, number],
+): Uint8Array {
+  let decompressedData = new Uint8Array(0x10000) as Uint8Array<ArrayBufferLike>;
+
+  const length = getInt(offset, "uint32");
+
+  offset += 0x4;
 
   const bufferOffset = 0xe800;
 
@@ -109,7 +112,50 @@ export function getDecompressedData(
     }
   }
 
-  return decompressedData;
+  return decompressedData.slice(0x0, length);
+}
+
+export function getDecompressedTilesData(offset: number): Uint8Array {
+  const vdp = new Uint8Array(0x10000);
+
+  let vdpaCount = 0x0;
+
+  const callback = (
+    decompressedData: Uint8Array,
+    bufferIndex: number,
+  ): [Uint8Array, number] => {
+    let position = 0x0;
+
+    const count = (bufferIndex >> 0x1) - 0x1;
+
+    for (let i = 0x0; i <= count; i += 0x1) {
+      for (let j = 0x0; j < 0x2; j += 0x1) {
+        vdp.set([decompressedData[position + j]], vdpaCount++);
+      }
+
+      position += 0x2;
+    }
+
+    const clearFlag = !extractBit(bufferIndex, 0);
+
+    bufferIndex = 0x0;
+
+    if (!clearFlag) {
+      decompressedData[bufferIndex] = decompressedData[position + bufferIndex];
+
+      bufferIndex += 0x1;
+    }
+
+    return [decompressedData, bufferIndex];
+  };
+
+  const data = getDecompressedData(offset, callback);
+
+  return vdp.slice(0x0, data.length);
+}
+
+export function getOffset(offset: number, shift: number): number {
+  return offset + getInt(offset + shift, "uint32", { bigEndian: true });
 }
 
 export function pointerToOffset(pointer: number | number[]): number {

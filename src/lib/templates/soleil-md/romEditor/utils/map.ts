@@ -1,201 +1,319 @@
-import { extractBit, getInt, getIntFromArray } from "$lib/utils/bytes";
-import { getColor } from "$lib/utils/graphics";
+import { getInt, getIntFromArray } from "$lib/utils/bytes";
+import Canvas from "$lib/utils/canvas";
+import debug from "$lib/utils/debug";
+import {
+  applyPalette,
+  flipTileData,
+  getColor,
+  renderDebugPalettes,
+  renderDebugTiles,
+} from "$lib/utils/graphics";
 
 import type { Palette } from "$lib/types";
 
-import { getDecompressedData } from "../utils";
 import {
-  HERO_TILES_OFFSET,
+  getDecompressedData,
+  getDecompressedTilesData,
+  getOffset,
+  pointerToOffset,
+} from "../utils";
+import {
+  HERO_TILESET_OFFSET,
   MAP_OFFSET,
-  MAP_TILES_OFFSET,
+  MAP_TILESET_OFFSET,
   PALETTES_OFFSET,
-  SPRITE_TABLE_OFFSET,
-  SPRITES_BASE_TILES_OFFSET,
-  SPRITES_DATA,
-  SPRITES_OVERRIDE_TILES_OFFSET,
-  UI_TILES_OFFSET,
+  ROOM_TABLE_POINTER,
+  SPRITES_DEFAULT_DATA_OFFSET,
+  UI_TILESET_OFFSET,
 } from "./constants";
 
-export function getHeroTiles(): Uint8Array {
-  const length = getInt(HERO_TILES_OFFSET + 0x4, "uint32");
-
-  return getTiles(HERO_TILES_OFFSET + 0x8, length);
+interface Map {
+  width: number;
+  height: number;
+  tiles: Uint8Array;
+  sprites: Uint8Array;
+  chunks: Uint8Array;
+  data: Uint16Array;
 }
 
-export function getMapTiles(baseOffset: number): Uint8Array {
-  const index = getInt(baseOffset, "uint8") - 0x1;
+interface Room {
+  index: number;
+  mapIndex: number;
+  bgTilesetSetIndexes: number[];
+  paletteIndexes: number[];
+  spriteSetIndex: number;
+}
 
-  if (index === -1) {
-    return new Uint8Array(0x0);
+interface Sprite {
+  type: number;
+  positionX: number;
+  positionY: number;
+  index: number;
+}
+
+export default class SMap {
+  private room: Room;
+  private map: Map;
+  private palettes: Palette[];
+  private tilesData: number[][];
+  private sprites: Sprite[];
+
+  constructor(roomIndex: number) {
+    this.room = this.getRoom(roomIndex);
+    this.map = this.getMap();
+    this.sprites = this.getSprites();
+    this.palettes = this.getPalettes();
+    this.tilesData = this.generateTilesData();
+
+    this.generateBackgroundData();
   }
 
-  const offset =
-    MAP_TILES_OFFSET +
-    getInt(MAP_TILES_OFFSET + index * 0x4, "uint32", { bigEndian: true });
+  // prettier-ignore
+  private getRoom(index: number): Room {
+    const pointer = pointerToOffset(ROOM_TABLE_POINTER);
 
-  const length = getInt(offset + 0x4, "uint32");
+    const offset = pointer + index * 0x40;
 
-  return getTiles(offset + 0x8, length);
-}
-
-export function getSpriteTiles(
-  roomIndex: number,
-  spriteId: number,
-): Uint8Array {
-  const tableOffset = getInt(SPRITE_TABLE_OFFSET + roomIndex * 0x4, "uint32", {
-    bigEndian: true,
-  });
-
-  const dataOffset = getInt(tableOffset + spriteId * 0x8 + 0x4, "uint32", {
-    bigEndian: true,
-  });
-
-  const index = getInt(SPRITES_DATA + (dataOffset & 0xff) * 0x8, "uint8") - 0x1;
-
-  if (index == -1) {
-    return new Uint8Array();
+    return {
+      index,
+      mapIndex: getInt(offset, "uint8") - 0x1,
+      // unknown1: getInt(offset + 0x1, "uint8"),
+      // unknown2: getInt(offset + 0x2, "uint8"),
+      // unknown3: getInt(offset + 0x3, "uint8"),
+      bgTilesetSetIndexes: [
+        getInt(offset + 0x4, "uint8") - 0x1,
+        getInt(offset + 0x5, "uint8") - 0x1,
+      ],
+      paletteIndexes: [
+        getInt(offset + 0xc, "uint8") - 0x1,
+        getInt(offset + 0xd, "uint8") - 0x1,
+        getInt(offset + 0xe, "uint8") - 0x1,
+        getInt(offset + 0xf, "uint8") - 0x1,
+      ],
+      spriteSetIndex: getInt(offset + 0x10, "uint16", { bigEndian: true }) - 0x1,
+    };
   }
 
-  const offset =
-    SPRITES_BASE_TILES_OFFSET +
-    getInt(SPRITES_BASE_TILES_OFFSET + index * 0x4, "uint32", {
-      bigEndian: true,
-    });
+  private getMap(): Map {
+    const offset = getOffset(MAP_OFFSET, this.room.mapIndex * 0x4);
 
-  const length = getInt(offset + 0x4, "uint32");
+    const data = getDecompressedData(offset + 0x4);
 
-  return getTiles(offset + 0x8, length);
-}
-
-export function getUITiles(): Uint8Array {
-  const length = getInt(UI_TILES_OFFSET + 0x4, "uint32");
-
-  return getTiles(UI_TILES_OFFSET + 0x8, length);
-}
-
-export function getMap(baseOffset: number): number[] {
-  const index = getInt(baseOffset, "uint8") - 0x1;
-
-  const offset =
-    MAP_OFFSET +
-    getInt(MAP_OFFSET + index * 0x4, "uint32", { bigEndian: true });
-
-  const length = getInt(offset + 0x4, "uint32");
-
-  const map = getDecompressedData(offset + 0x8, length);
-
-  for (let i = 0x0; i < 0x1000; i += 0x1) {
-    map[i * 0x2] += 0x1;
-  }
-
-  return map;
-}
-
-export function getMapValue(offset: number, map: number[]): number {
-  return getIntFromArray(map, offset, "uint16", true);
-}
-
-export function getSprites(baseOffset: number): number[] {
-  const index = getInt(baseOffset, "uint16", { bigEndian: true }) - 0x1;
-
-  if (index === -1) {
-    return [];
-  }
-
-  const offset =
-    SPRITES_OVERRIDE_TILES_OFFSET +
-    getInt(SPRITES_OVERRIDE_TILES_OFFSET + index * 0x4, "uint32", {
-      bigEndian: true,
-    });
-
-  const length = getInt(offset + 0x4, "uint32");
-
-  return getDecompressedData(offset + 0x8, length);
-}
-
-export function getPalettes(baseOffset: number): Palette[] {
-  const palettes: Palette[] = [];
-
-  for (let i = 0x0; i < 0x4; i += 0x1) {
-    const palette: Palette = [];
-
-    const offset = (getInt(baseOffset + i, "uint8") - 0x1) * 0x20;
-
-    for (let j = 0x0; j < 0x10; j += 0x1) {
-      const encoded = getInt(PALETTES_OFFSET + offset + j * 0x2, "uint16", {
-        bigEndian: true,
-      });
-
-      const rawColor =
-        (((encoded & 0x3e) >> 0x3) << 0x9) |
-        ((encoded >> 0xd) << 0x5) |
-        (((encoded & 0x7c0) >> 0x8) << 0x1);
-
-      const color = getColor(rawColor, "BGR333");
-
-      palette.push(color);
+    for (let i = 0x0; i < 0x1000; i += 0x1) {
+      data[i * 0x2] += 0x1;
     }
 
-    palettes.push(palette);
+    return {
+      width: data[0x2c00] * 0x10,
+      height: data[0x2c01] * 0x10,
+      tiles: data.slice(0x0, 0x2000),
+      sprites: data.slice(0x2800, 0x2c00),
+      chunks: data.slice(0x2c04),
+      data: new Uint16Array(),
+    };
   }
 
-  return palettes;
-}
+  private generateBackgroundData(): void {
+    this.map.data = new Uint16Array(this.map.width * this.map.height * 0x4);
 
-export function getTiles(offset: number, length: number): Uint8Array {
-  const vdp = new Uint8Array(0x10000);
+    const sections = this.map.width / 0x20;
 
-  let vdpaCount = 0x0;
+    let offset = 0x0;
 
-  const callback = (
-    decompressedData: number[],
-    bufferIndex: number,
-  ): [number[], number] => {
-    let position = 0x0;
+    // prettier-ignore
+    for (let i = 0x0; i < this.map.height; i += 0x1) {
+      for (let j = 0x0; j < this.map.width; j += 0x1) {
+        const chunkIndex = getIntFromArray(this.map.chunks, offset, "uint16", true);
+        const chunkOffset = chunkIndex * 0x8;
+        const offsetRow1 = sections * i * 0x80 + j * 0x2;
+        const offsetRow2 = offsetRow1 + 0x40 * sections;
 
-    const count = (bufferIndex >> 0x1) - 0x1;
+        this.map.data[offsetRow1] = getIntFromArray(this.map.tiles, chunkOffset, "uint16", true);
+        this.map.data[offsetRow1 + 0x1] = getIntFromArray(this.map.tiles, chunkOffset + 0x2, "uint16", true);
+        this.map.data[offsetRow2] = getIntFromArray(this.map.tiles, chunkOffset + 0x4, "uint16", true);
+        this.map.data[offsetRow2 + 0x1] = getIntFromArray(this.map.tiles, chunkOffset + 0x6, "uint16", true);
 
-    for (let i = 0x0; i <= count; i += 0x1) {
-      for (let j = 0x0; j < 0x2; j += 0x1) {
-        vdp.set([decompressedData[position + j]], vdpaCount++);
+        offset += 0x2;
+      }
+    }
+  }
+
+  private getPalettes(): Palette[] {
+    const palettes: Palette[] = [];
+
+    this.room.paletteIndexes.forEach((index) => {
+      const palette: Palette = [];
+
+      for (let j = 0x0; j < 0x10; j += 0x1) {
+        const encoded = getInt(
+          PALETTES_OFFSET + index * 0x20 + j * 0x2,
+          "uint16",
+          { bigEndian: true },
+        );
+
+        const rawColor =
+          (((encoded & 0x3e) >> 0x3) << 0x9) |
+          ((encoded >> 0xd) << 0x5) |
+          (((encoded & 0x7c0) >> 0x8) << 0x1);
+
+        const color = getColor(rawColor, "BGR333");
+
+        palette.push(color);
       }
 
-      position += 0x2;
+      palettes.push(palette);
+    });
+
+    return palettes;
+  }
+
+  private getSprites(): Sprite[] {
+    const sprites = [];
+
+    let data = this.map.sprites;
+
+    if (this.room.spriteSetIndex !== -1) {
+      const offset = getOffset(
+        SPRITES_DEFAULT_DATA_OFFSET,
+        this.room.spriteSetIndex * 0x4,
+      );
+
+      data = getDecompressedData(offset + 0x4);
     }
 
-    const clearFlag = !extractBit(bufferIndex, 0);
+    let offset = 0x0;
 
-    bufferIndex = 0x0;
+    while (true) {
+      const sprite = {
+        type: getIntFromArray(data, offset, "uint16", true),
+        positionX: getIntFromArray(data, offset + 0x2, "uint16", true),
+        positionY: getIntFromArray(data, offset + 0x4, "uint16", true),
+        index: getIntFromArray(data, offset + 0x6, "uint16", true),
+      };
 
-    if (!clearFlag) {
-      decompressedData[bufferIndex] = decompressedData[position + bufferIndex];
+      if (sprite.positionX + sprite.positionY === 0x0) {
+        break;
+      }
 
-      bufferIndex += 0x1;
+      sprites.push(sprite);
+
+      offset += 0x8;
     }
 
-    return [decompressedData, bufferIndex];
-  };
+    return sprites;
+  }
 
-  getDecompressedData(offset, length, callback);
+  private generateTilesData(): number[][] {
+    const tilesData: number[][] = [];
 
-  return vdp.slice(0x0, length);
-}
+    // UI
+    tilesData.push(...this.getTilesData(UI_TILESET_OFFSET + 0x4));
 
-export function generateTilesetData(vdp: Uint8Array): number[][] {
-  const tilesetDatas: number[][] = [];
+    // Background
+    this.room.bgTilesetSetIndexes.forEach((index) => {
+      if (index !== -1) {
+        const offset = getOffset(MAP_TILESET_OFFSET, index * 0x4);
 
-  vdp.forEach((data, index) => {
-    const high = data >> 0x4;
-    const low = data - (high << 0x4);
+        tilesData.push(...this.getTilesData(offset + 0x4));
+      }
+    });
 
-    const tileIndex = Math.floor(index / 0x20);
-
-    if (!tilesetDatas[tileIndex]) {
-      tilesetDatas[tileIndex] = [];
+    // Fill with black tiles
+    while (tilesData.length < 0x6ba) {
+      tilesData.push(Array(0x40).fill(0x0));
     }
 
-    tilesetDatas[tileIndex].push(high, low);
-  });
+    // Hero Sprite
+    tilesData.push(...this.getTilesData(HERO_TILESET_OFFSET + 0x4));
 
-  return tilesetDatas;
+    // Fill with black tiles
+    while (tilesData.length < 0x800) {
+      tilesData.push(Array(0x40).fill(0x0));
+    }
+
+    return tilesData;
+  }
+
+  private getTilesData(offset: number): number[][] {
+    const tilesData: number[][] = [];
+
+    const data = getDecompressedTilesData(offset);
+
+    data.forEach((data, index) => {
+      const high = data >> 0x4;
+      const low = data - (high << 0x4);
+
+      const tileIndex = Math.floor(index / 0x20);
+
+      if (!tilesData[tileIndex]) {
+        tilesData[tileIndex] = [];
+      }
+
+      tilesData[tileIndex].push(high, low);
+    });
+
+    return tilesData;
+  }
+
+  public renderDebugPalettes(canvas: Canvas): void {
+    renderDebugPalettes(this.palettes, canvas);
+  }
+
+  public renderDebugTiles(canvas: Canvas): void {
+    renderDebugTiles(0x10, 0x80, this.tilesData, this.palettes[0], canvas);
+  }
+
+  public renderMap(canvas: Canvas): void {
+    canvas.resize(this.map.width * 0x10, this.map.height * 0x10);
+
+    const rows = this.map.height * 0x2;
+    const columns = this.map.width * 0x2;
+
+    for (let row = 0x0; row < rows; row += 0x1) {
+      for (let column = 0x0; column < columns; column += 0x1) {
+        const flags = this.map.data[row * columns + column];
+
+        const tileIndex = flags & 0x7ff;
+        const paletteIndex = (flags & 0x6000) >> 0xd;
+        const flipX = (flags & 0x800) >> 0xb;
+        const flipY = (flags & 0x1000) >> 0xc;
+
+        let tileData = this.tilesData[tileIndex];
+
+        if (tileData) {
+          if (flipX) {
+            tileData = flipTileData(tileData, 8, "x");
+          }
+
+          if (flipY) {
+            tileData = flipTileData(tileData, 8, "y");
+          }
+
+          const tile = applyPalette(tileData, this.palettes[paletteIndex]);
+
+          canvas.addGraphic("background", tile, 8, 8, column * 8, row * 8);
+        } else {
+          debug.warn(`tileIndex "${tileIndex.toHex()}" is out of range.`);
+        }
+      }
+    }
+
+    const dummySprite = applyPalette(
+      [...Array(0x40).keys()].map(() => 0x0),
+      this.palettes[0],
+    );
+
+    this.sprites.forEach((sprite) => {
+      canvas.addGraphic(
+        "sprites",
+        dummySprite,
+        8,
+        8,
+        sprite.positionX,
+        sprite.positionY,
+      );
+    });
+
+    canvas.render();
+  }
 }
