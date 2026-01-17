@@ -222,6 +222,32 @@ export function renderDebugPalettes(palettes: Palette[], canvas: Canvas): void {
   canvas.render();
 }
 
+export function renderDebugTiles(
+  columns: number,
+  rows: number,
+  tilesData: number[][],
+  palette: Palette,
+  canvas: Canvas,
+): void {
+  canvas.resize(columns * 0x8, rows * 0x8);
+
+  let index = 0;
+
+  for (let row = 0x0; row < rows; row += 0x1) {
+    for (let column = 0x0; column < columns; column += 0x1) {
+      if (tilesData[index]) {
+        const tile = applyPalette(tilesData[index], palette);
+
+        canvas.addGraphic("tiles", tile, 8, 8, column * 8, row * 8);
+      }
+
+      index += 1;
+    }
+  }
+
+  canvas.render();
+}
+
 interface GraphicsSheet {
   width: number;
   height: number;

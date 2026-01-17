@@ -12,6 +12,7 @@ import {
   flipTileData,
   getPalette,
   renderDebugPalettes,
+  renderDebugTiles,
 } from "$lib/utils/graphics";
 
 import type { Palette } from "$lib/types";
@@ -359,23 +360,7 @@ export default class CTMap {
   }
 
   public renderDebugTiles(canvas: Canvas): void {
-    canvas.resize(128, 1024);
-
-    let index = 0;
-
-    for (let row = 0x0; row < 0x80; row += 0x1) {
-      for (let column = 0x0; column < 0x10; column += 0x1) {
-        if (this.tilesData[index]) {
-          const tile = applyPalette(this.tilesData[index], this.palettes[1]);
-
-          canvas.addGraphic("tiles", tile, 8, 8, column * 8, row * 8);
-        }
-
-        index += 1;
-      }
-    }
-
-    canvas.render();
+    renderDebugTiles(0x10, 0x80, this.tilesData, this.palettes[1], canvas);
   }
 
   public renderMap(canvas: Canvas): void {
