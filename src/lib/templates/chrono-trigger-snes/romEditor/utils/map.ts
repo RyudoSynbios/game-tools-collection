@@ -11,6 +11,7 @@ import {
   applyPalette,
   flipTileData,
   getPalette,
+  initTilesData,
   renderDebugPalettes,
   renderDebugTiles,
 } from "$lib/utils/graphics";
@@ -215,13 +216,13 @@ export default class CTMap {
           }
 
           const chunkOffset = chunkIndex * 0x8;
-          const offsetRow1 = i * background.width * 0x4 + j * 0x2;
-          const offsetRow2 = offsetRow1 + background.width * 0x2;
+          const row1Offset = i * background.width * 0x4 + j * 0x2;
+          const row2Offset = row1Offset + background.width * 0x2;
 
-          background.data[offsetRow1] = getIntFromArray(chunksData, chunkOffset, "uint16");
-          background.data[offsetRow1 + 0x1] = getIntFromArray(chunksData, chunkOffset + 0x2, "uint16");
-          background.data[offsetRow2] = getIntFromArray(chunksData, chunkOffset + 0x4, "uint16");
-          background.data[offsetRow2 + 0x1] = getIntFromArray(chunksData, chunkOffset + 0x6, "uint16");
+          background.data[row1Offset] = getIntFromArray(chunksData, chunkOffset, "uint16");
+          background.data[row1Offset + 0x1] = getIntFromArray(chunksData, chunkOffset + 0x2, "uint16");
+          background.data[row2Offset] = getIntFromArray(chunksData, chunkOffset + 0x4, "uint16");
+          background.data[row2Offset + 0x1] = getIntFromArray(chunksData, chunkOffset + 0x6, "uint16");
 
           offset += 0x1;
         }
@@ -305,30 +306,28 @@ export default class CTMap {
   }
 
   private generateTilesData(): number[][] {
-    const tilesData: number[][] = [];
+    const tilesData = initTilesData(0x800);
 
-    // Fill with black tiles
-    for (let i = 0x0; i < 0x200; i += 0x1) {
-      tilesData.push(Array(0x40).fill(0x0));
-    }
+    let tileIndex = 0x200;
 
     // Background 1 & 2
+
     for (let i = 0x0; i < 0x8; i += 0x1) {
       const index = getInt(
         MAP_TILESET_TABLE_OFFSET + this.room.bg12TilesetSetIndex * 0x8 + i,
         "uint8",
       );
 
-      tilesData.push(...this.getTilesData(index));
+      this.getTilesData(index).forEach((tileData) => {
+        tilesData[tileIndex++] = tileData;
+      });
     }
 
     // Background 3
-    tilesData.push(...this.getTilesData(this.room.bg3TilesetIndex));
 
-    // Fill with black tiles
-    while (tilesData.length < 0x800) {
-      tilesData.push(Array(0x40).fill(0x0));
-    }
+    this.getTilesData(this.room.bg3TilesetIndex).forEach((tileData) => {
+      tilesData[tileIndex++] = tileData;
+    });
 
     return tilesData;
   }
@@ -360,7 +359,7 @@ export default class CTMap {
   }
 
   public renderDebugTiles(canvas: Canvas): void {
-    renderDebugTiles(0x10, 0x80, this.tilesData, this.palettes[1], canvas);
+    renderDebugTiles(this.tilesData, this.palettes[1], canvas);
   }
 
   public renderMap(canvas: Canvas): void {
@@ -368,24 +367,24 @@ export default class CTMap {
 
     const backgrounds = [this.map.background1, this.map.background2];
 
-    if (this.map.background3) {
-      backgrounds.push(this.map.background3);
-    }
-
     // Temporary hide background 3
-    backgrounds.slice(0, 2).forEach((background, index) => {
+    // if (this.map.background3) {
+    //   backgrounds.push(this.map.background3);
+    // }
+
+    backgrounds.forEach((background, index) => {
       const rows = background.height * 0x2;
       const columns = background.width * 0x2;
 
       for (let row = 0x0; row < rows; row += 0x1) {
         for (let column = 0x0; column < columns; column += 0x1) {
-          const flags = background.data[row * columns + column];
+          const rawTile = background.data[row * columns + column];
 
-          let tileIndex = flags & 0x3ff;
-          const paletteIndex = (flags >> 0xa) & 0x7;
-          const priority = (flags >> 0xd) & 0x1;
-          const flipX = (flags >> 0xe) & 0x1;
-          const flipY = flags >> 0xf;
+          let tileIndex = rawTile & 0x3ff;
+          const paletteIndex = (rawTile >> 0xa) & 0x7;
+          const priority = (rawTile >> 0xd) & 0x1;
+          const flipX = (rawTile >> 0xe) & 0x1;
+          const flipY = rawTile >> 0xf;
 
           if (index !== 2) {
             tileIndex += 0x100;

@@ -45,8 +45,8 @@ extensions.add(Extract);
 
 export default class Canvas {
   private app: Application;
-  private width: number;
-  private height: number;
+  private width_: number;
+  private height_: number;
   private scale: number;
   private animation: boolean;
   private filter: boolean;
@@ -71,8 +71,8 @@ export default class Canvas {
       options?.animation !== undefined ? options?.animation : true;
     const filter = options?.filter !== undefined ? options?.filter : false;
 
-    this.width = width;
-    this.height = height;
+    this.width_ = width;
+    this.height_ = height;
     this.scale = scale;
     this.layers = {};
     this.animation = animation;
@@ -108,6 +108,14 @@ export default class Canvas {
     }
   }
 
+  get width() {
+    return this.width_;
+  }
+
+  get height() {
+    return this.height_;
+  }
+
   public addLayer(
     key: string,
     type: LayerType,
@@ -140,9 +148,9 @@ export default class Canvas {
 
       this.layers[key] = {
         type,
-        width: this.width,
-        height: this.height,
-        datas: [new Uint8Array(this.width * this.height * 4)],
+        width: this.width_,
+        height: this.height_,
+        datas: [new Uint8Array(this.width_ * this.height_ * 4)],
         container,
         animation,
       };
@@ -157,7 +165,7 @@ export default class Canvas {
       };
     } else if (type === "tilingSprite") {
       container.addChild(
-        new TilingSprite(Texture.EMPTY, this.width, this.height),
+        new TilingSprite(Texture.EMPTY, this.width_, this.height_),
       );
 
       this.layers[key] = {
@@ -404,14 +412,14 @@ export default class Canvas {
     Object.values(this.layers).forEach((layer) => {
       switch (layer.type) {
         case "image":
-          layer.width = this.width;
-          layer.height = this.height;
-          layer.datas = [new Uint8Array(this.width * this.height * 4)];
+          layer.width = this.width_;
+          layer.height = this.height_;
+          layer.datas = [new Uint8Array(this.width_ * this.height_ * 4)];
           break;
 
         case "sprites":
-          layer.width = this.width;
-          layer.height = this.height;
+          layer.width = this.width_;
+          layer.height = this.height_;
           layer.datas = [];
           layer.container.children.forEach((child) => child.destroy());
           break;
@@ -421,8 +429,8 @@ export default class Canvas {
 
           const tilingSprite = layer.container.getChildAt(0) as TilingSprite;
 
-          tilingSprite.width = this.width;
-          tilingSprite.height = this.height;
+          tilingSprite.width = this.width_;
+          tilingSprite.height = this.height_;
           break;
       }
     });
@@ -438,8 +446,8 @@ export default class Canvas {
   }
 
   public resize(width: number, height: number) {
-    this.width = width || 1;
-    this.height = height || 1;
+    this.width_ = width || 1;
+    this.height_ = height || 1;
 
     this.reset();
 

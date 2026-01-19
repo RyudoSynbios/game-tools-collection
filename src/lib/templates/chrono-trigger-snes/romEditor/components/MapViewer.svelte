@@ -63,11 +63,14 @@
     if ($isDebug) {
       canvasPalettes = new Canvas({
         canvasEl: canvasPalettesEl,
+        width: 128,
+        height: 128,
       });
 
       canvasTiles = new Canvas({
         canvasEl: canvasTilesEl,
-        backgroundAlpha: 1,
+        width: 128,
+        height: 1024,
       });
 
       canvasPalettes.addLayer("palettes", "image");

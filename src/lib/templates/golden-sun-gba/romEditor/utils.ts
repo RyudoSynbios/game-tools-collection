@@ -146,11 +146,11 @@ export function onReset(): void {
 }
 
 export function getAbilityDescriptions(): Resource {
+  const descriptions: Resource = {};
+
   const abilityDescriptionStartIndex = getRegionArray(
     ITEM_DESCRIPTIONS_START_INDEX,
   );
-
-  const descriptions: Resource = {};
 
   for (let i = 0x0; i < 0x207; i += 0x1) {
     descriptions[i] = getText(abilityDescriptionStartIndex + i);
@@ -160,9 +160,9 @@ export function getAbilityDescriptions(): Resource {
 }
 
 export function getAbilityNames(): Resource {
-  const abilityNamesStartIndex = getRegionArray(ABILITY_NAMES_START_INDEX);
-
   const names: Resource = {};
+
+  const abilityNamesStartIndex = getRegionArray(ABILITY_NAMES_START_INDEX);
 
   for (let i = 0x0; i < 0x207; i += 0x1) {
     names[i] = getText(abilityNamesStartIndex + i);
@@ -172,9 +172,9 @@ export function getAbilityNames(): Resource {
 }
 
 export function getCharacterNames(): Resource {
-  const characterNamesStartIndex = getRegionArray(CHARACTER_NAMES_START_INDEX);
-
   const names: Resource = {};
+
+  const characterNamesStartIndex = getRegionArray(CHARACTER_NAMES_START_INDEX);
 
   for (let i = 0x0; i < 0x8; i += 0x1) {
     names[i] = getText(characterNamesStartIndex + i);
@@ -184,9 +184,9 @@ export function getCharacterNames(): Resource {
 }
 
 export function getClassNames(): Resource {
-  const classNamesStartIndex = getRegionArray(CLASS_NAMES_START_INDEX);
-
   const names: Resource = {};
+
+  const classNamesStartIndex = getRegionArray(CLASS_NAMES_START_INDEX);
 
   for (let i = 0x0; i < 0xcb; i += 0x1) {
     names[i] = getText(classNamesStartIndex + i);
@@ -196,11 +196,11 @@ export function getClassNames(): Resource {
 }
 
 export function getDjinniDescriptions(): Resource {
+  const descriptions: Resource = {};
+
   const djinniDescriptionsStartIndex = getRegionArray(
     DJINNI_DESCRIPTIONS_START_INDEX,
   );
-
-  const descriptions: Resource = {};
 
   for (let i = 0x0; i < 0x50; i += 0x1) {
     descriptions[i] = getText(djinniDescriptionsStartIndex + i);
@@ -210,9 +210,9 @@ export function getDjinniDescriptions(): Resource {
 }
 
 export function getDjinniNames(): Resource {
-  const djinniNamesStartIndex = getRegionArray(DJINNI_NAMES_START_INDEX);
-
   const names: Resource = {};
+
+  const djinniNamesStartIndex = getRegionArray(DJINNI_NAMES_START_INDEX);
 
   for (let i = 0x0; i < 0x50; i += 0x1) {
     names[i] = getText(djinniNamesStartIndex + i);
@@ -222,11 +222,11 @@ export function getDjinniNames(): Resource {
 }
 
 export function getEnemyGroupNames(): Resource {
+  const names: Resource = {};
+
   const offset = getInt(getRegionArray(ENEMY_GROUPS_POINTER), "int24");
 
   const enemyNamesStartIndex = getRegionArray(ENEMY_NAMES_START_INDEX);
-
-  const names: Resource = {};
 
   for (let i = 0x0; i < 0x17c; i += 0x1) {
     names[i] = getText(
@@ -240,9 +240,9 @@ export function getEnemyGroupNames(): Resource {
 }
 
 export function getEnemyNames(): Resource {
-  const enemyNamesStartIndex = getRegionArray(ENEMY_NAMES_START_INDEX);
-
   const names: Resource = {};
+
+  const enemyNamesStartIndex = getRegionArray(ENEMY_NAMES_START_INDEX);
 
   for (let i = 0x0; i < 0xa4; i += 0x1) {
     names[i] = getText(enemyNamesStartIndex + i);
@@ -254,11 +254,11 @@ export function getEnemyNames(): Resource {
 }
 
 export function getItemDescriptions(): Resource {
+  const descriptions: Resource = {};
+
   const itemDescriptionStartIndex = getRegionArray(
     ITEM_DESCRIPTIONS_START_INDEX,
   );
-
-  const descriptions: Resource = {};
 
   for (let i = 0x0; i < 0x10d; i += 0x1) {
     descriptions[i] = getText(itemDescriptionStartIndex + i);
@@ -268,9 +268,9 @@ export function getItemDescriptions(): Resource {
 }
 
 export function getItemNames(): Resource {
-  const itemNamesStartIndex = getRegionArray(ITEM_NAMES_START_INDEX);
-
   const names: Resource = {};
+
+  const itemNamesStartIndex = getRegionArray(ITEM_NAMES_START_INDEX);
 
   for (let i = 0x0; i < 0x10d; i += 0x1) {
     names[i] = getText(itemNamesStartIndex + i);
@@ -282,9 +282,9 @@ export function getItemNames(): Resource {
 }
 
 export function getMapNames(): Resource {
-  const mapNamesStartIndex = getRegionArray(MAP_NAMES_START_INDEX);
-
   const names: Resource = {};
+
+  const mapNamesStartIndex = getRegionArray(MAP_NAMES_START_INDEX);
 
   for (let i = 0x0; i < 0xc9; i += 0x1) {
     names[i] = getText(mapNamesStartIndex + i);
@@ -294,11 +294,11 @@ export function getMapNames(): Resource {
 }
 
 export function getShopNames(): Resource {
+  const names: Resource = {};
+
   const offset = getInt(getRegionArray(SHOPS_POINTER), "int24");
 
   const shopTypes = getResource("shopTypes") as Resource;
-
-  const names: Resource = {};
 
   for (let i = 0x0; i < 0x23; i += 0x1) {
     names[i] = shopTypes[getInt(offset + 0x40 + i * 0x42, "uint8")];
@@ -308,13 +308,13 @@ export function getShopNames(): Resource {
 }
 
 export function getSummonDescriptions(): Resource {
+  const descriptions: Resource = {};
+
   const offset = getInt(getRegionArray(SUMMONS_POINTER), "int24");
 
   const abilityDescriptionsStartIndex = getRegionArray(
     ABILITY_DESCRIPTIONS_START_INDEX,
   );
-
-  const descriptions: Resource = {};
 
   for (let i = 0x0; i < 0x10; i += 0x1) {
     descriptions[i] = getText(
@@ -326,11 +326,11 @@ export function getSummonDescriptions(): Resource {
 }
 
 export function getSummonNames(): Resource {
+  const names: Resource = {};
+
   const offset = getInt(getRegionArray(SUMMONS_POINTER), "int24");
 
   const abilityNamesStartIndex = getRegionArray(ABILITY_NAMES_START_INDEX);
-
-  const names: Resource = {};
 
   for (let i = 0x0; i < 0x10; i += 0x1) {
     names[i] = getText(

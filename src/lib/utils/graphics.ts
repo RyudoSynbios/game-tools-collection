@@ -199,17 +199,19 @@ export function applyPalette(
   return tileData;
 }
 
-export function renderDebugPalettes(palettes: Palette[], canvas: Canvas): void {
+export function renderDebugPalettes(
+  palettes: Palette[],
+  canvas: Canvas,
+  x = 0,
+  y = 0,
+): void {
   if (palettes.length === 0) {
-    canvas.reset();
     return;
   }
 
-  canvas.resize(palettes[0].length * 8, palettes.length * 8);
-
   palettes.forEach((palette, paletteIndex) => {
     palette.forEach((color, colorIndex) => {
-      const tileData = new Uint8Array(0x10000);
+      const tileData = new Uint8Array(0x100);
 
       for (let j = 0; j < tileData.length; j += 0x4) {
         tileData[j] = color[0];
@@ -223,8 +225,8 @@ export function renderDebugPalettes(palettes: Palette[], canvas: Canvas): void {
         tileData,
         8,
         8,
-        colorIndex * 8,
-        paletteIndex * 8,
+        x + colorIndex * 8,
+        y + paletteIndex * 8,
       );
     });
   });
@@ -233,22 +235,29 @@ export function renderDebugPalettes(palettes: Palette[], canvas: Canvas): void {
 }
 
 export function renderDebugTiles(
-  columns: number,
-  rows: number,
   tilesData: number[][],
   palette: Palette,
   canvas: Canvas,
+  width = canvas.width,
+  height = canvas.height,
+  x = 0,
+  y = 0,
 ): void {
-  canvas.resize(columns * 0x8, rows * 0x8);
+  if (tilesData.length === 0 || palette.length === 0) {
+    return;
+  }
 
   let index = 0;
+
+  const rows = height / 0x8;
+  const columns = width / 0x8;
 
   for (let row = 0x0; row < rows; row += 0x1) {
     for (let column = 0x0; column < columns; column += 0x1) {
       if (tilesData[index]) {
         const tile = applyPalette(tilesData[index], palette);
 
-        canvas.addGraphic("tiles", tile, 8, 8, column * 8, row * 8);
+        canvas.addGraphic("tiles", tile, 8, 8, x + column * 8, y + row * 8);
       }
 
       index += 1;

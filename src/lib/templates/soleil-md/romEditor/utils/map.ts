@@ -5,6 +5,7 @@ import {
   applyPalette,
   flipTileData,
   getColor,
+  initTilesData,
   renderDebugPalettes,
   renderDebugTiles,
 } from "$lib/utils/graphics";
@@ -45,18 +46,18 @@ interface Room {
 }
 
 interface Sprite {
+  index: number;
   type: number;
   positionX: number;
   positionY: number;
-  index: number;
 }
 
 export default class SMap {
   private room: Room;
   private map: Map;
+  private sprites: Sprite[];
   private palettes: Palette[];
   private tilesData: number[][];
-  private sprites: Sprite[];
 
   constructor(roomIndex: number) {
     this.room = this.getRoom(roomIndex);
@@ -113,60 +114,6 @@ export default class SMap {
     };
   }
 
-  private generateBackgroundData(): void {
-    this.map.data = new Uint16Array(this.map.width * this.map.height * 0x4);
-
-    const sections = this.map.width / 0x20;
-
-    let offset = 0x0;
-
-    // prettier-ignore
-    for (let i = 0x0; i < this.map.height; i += 0x1) {
-      for (let j = 0x0; j < this.map.width; j += 0x1) {
-        const chunkIndex = getIntFromArray(this.map.chunks, offset, "uint16", true);
-        const chunkOffset = chunkIndex * 0x8;
-        const offsetRow1 = sections * i * 0x80 + j * 0x2;
-        const offsetRow2 = offsetRow1 + 0x40 * sections;
-
-        this.map.data[offsetRow1] = getIntFromArray(this.map.tiles, chunkOffset, "uint16", true);
-        this.map.data[offsetRow1 + 0x1] = getIntFromArray(this.map.tiles, chunkOffset + 0x2, "uint16", true);
-        this.map.data[offsetRow2] = getIntFromArray(this.map.tiles, chunkOffset + 0x4, "uint16", true);
-        this.map.data[offsetRow2 + 0x1] = getIntFromArray(this.map.tiles, chunkOffset + 0x6, "uint16", true);
-
-        offset += 0x2;
-      }
-    }
-  }
-
-  private getPalettes(): Palette[] {
-    const palettes: Palette[] = [];
-
-    this.room.paletteIndexes.forEach((index) => {
-      const palette: Palette = [];
-
-      for (let j = 0x0; j < 0x10; j += 0x1) {
-        const encoded = getInt(
-          PALETTES_OFFSET + index * 0x20 + j * 0x2,
-          "uint16",
-          { bigEndian: true },
-        );
-
-        const rawColor =
-          (((encoded & 0x3e) >> 0x3) << 0x9) |
-          ((encoded >> 0xd) << 0x5) |
-          (((encoded & 0x7c0) >> 0x8) << 0x1);
-
-        const color = getColor(rawColor, "BGR333");
-
-        palette.push(color);
-      }
-
-      palettes.push(palette);
-    });
-
-    return palettes;
-  }
-
   private getSprites(): Sprite[] {
     const sprites = [];
 
@@ -203,33 +150,91 @@ export default class SMap {
     return sprites;
   }
 
+  private generateBackgroundData(): void {
+    this.map.data = new Uint16Array(this.map.width * this.map.height * 0x4);
+
+    const sections = this.map.width / 0x20;
+
+    let offset = 0x0;
+
+    // prettier-ignore
+    for (let i = 0x0; i < this.map.height; i += 0x1) {
+      for (let j = 0x0; j < this.map.width; j += 0x1) {
+        const chunkIndex = getIntFromArray(this.map.chunks, offset, "uint16", true);
+        
+        const chunkOffset = chunkIndex * 0x8;
+        const row1Offset = sections * i * 0x80 + j * 0x2;
+        const row2Offset = row1Offset + 0x40 * sections;
+
+        this.map.data[row1Offset] = getIntFromArray(this.map.tiles, chunkOffset, "uint16", true);
+        this.map.data[row1Offset + 0x1] = getIntFromArray(this.map.tiles, chunkOffset + 0x2, "uint16", true);
+        this.map.data[row2Offset] = getIntFromArray(this.map.tiles, chunkOffset + 0x4, "uint16", true);
+        this.map.data[row2Offset + 0x1] = getIntFromArray(this.map.tiles, chunkOffset + 0x6, "uint16", true);
+
+        offset += 0x2;
+      }
+    }
+  }
+
+  private getPalettes(): Palette[] {
+    const palettes: Palette[] = [];
+
+    this.room.paletteIndexes.forEach((index) => {
+      const palette: Palette = [];
+
+      for (let j = 0x0; j < 0x10; j += 0x1) {
+        const encoded = getInt(
+          PALETTES_OFFSET + index * 0x20 + j * 0x2,
+          "uint16",
+          { bigEndian: true },
+        );
+
+        const rawColor =
+          (((encoded & 0x3e) >> 0x3) << 0x9) |
+          ((encoded >> 0xd) << 0x5) |
+          (((encoded & 0x7c0) >> 0x8) << 0x1);
+
+        const color = getColor(rawColor, "BGR333");
+
+        palette.push(color);
+      }
+
+      palettes.push(palette);
+    });
+
+    return palettes;
+  }
+
   private generateTilesData(): number[][] {
-    const tilesData: number[][] = [];
+    const tilesData = initTilesData(0x800);
+
+    let tileIndex = 0x0;
 
     // UI
-    tilesData.push(...this.getTilesData(UI_TILESET_OFFSET + 0x4));
+
+    this.getTilesData(UI_TILESET_OFFSET + 0x4).forEach((tileData) => {
+      tilesData[tileIndex++] = tileData;
+    });
 
     // Background
+
     this.room.bgTilesetSetIndexes.forEach((index) => {
       if (index !== -1) {
         const offset = getOffset(MAP_TILESET_OFFSET, index * 0x4);
 
-        tilesData.push(...this.getTilesData(offset + 0x4));
+        this.getTilesData(offset + 0x4).forEach((tileData) => {
+          tilesData[tileIndex++] = tileData;
+        });
       }
     });
 
-    // Fill with black tiles
-    while (tilesData.length < 0x6ba) {
-      tilesData.push(Array(0x40).fill(0x0));
-    }
-
     // Hero Sprite
-    tilesData.push(...this.getTilesData(HERO_TILESET_OFFSET + 0x4));
 
-    // Fill with black tiles
-    while (tilesData.length < 0x800) {
-      tilesData.push(Array(0x40).fill(0x0));
-    }
+    tileIndex = 0x6ba;
+
+    this.getTilesData(HERO_TILESET_OFFSET + 0x4).forEach((tileData) => {
+      tilesData[tileIndex++] = tileData;
+    });
 
     return tilesData;
   }
@@ -260,7 +265,7 @@ export default class SMap {
   }
 
   public renderDebugTiles(canvas: Canvas): void {
-    renderDebugTiles(0x10, 0x80, this.tilesData, this.palettes[0], canvas);
+    renderDebugTiles(this.tilesData, this.palettes[0], canvas);
   }
 
   public renderMap(canvas: Canvas): void {
@@ -271,12 +276,12 @@ export default class SMap {
 
     for (let row = 0x0; row < rows; row += 0x1) {
       for (let column = 0x0; column < columns; column += 0x1) {
-        const flags = this.map.data[row * columns + column];
+        const rawTile = this.map.data[row * columns + column];
 
-        const tileIndex = flags & 0x7ff;
-        const paletteIndex = (flags & 0x6000) >> 0xd;
-        const flipX = (flags & 0x800) >> 0xb;
-        const flipY = (flags & 0x1000) >> 0xc;
+        const tileIndex = rawTile & 0x7ff;
+        const paletteIndex = (rawTile & 0x6000) >> 0xd;
+        const flipX = (rawTile & 0x800) >> 0xb;
+        const flipY = (rawTile & 0x1000) >> 0xc;
 
         let tileData = this.tilesData[tileIndex];
 

@@ -540,9 +540,9 @@ export function getAccessoryResourceGroups(): ResourceGroups {
 }
 
 export function getArtifactNames(): Resource {
-  const nameItem = getItem("artifactName-0-1") as ItemString;
-
   const names: Resource = {};
+
+  const nameItem = getItem("artifactName-0-1") as ItemString;
 
   if (nameItem) {
     for (let i = 0x0; i < 0x14; i += 0x1) {
@@ -568,9 +568,9 @@ export function getArtifactBonusesNames(): Resource {
 export function getFriendCardNames(): Resource {
   const $gameRegion = get(gameRegion);
 
-  const nameItem = getItem("friendCardName-0") as ItemString;
-
   const names: Resource = {};
+
+  const nameItem = getItem("friendCardName-0") as ItemString;
 
   if (nameItem) {
     for (let i = 0x0; i < 0x19; i += 0x1) {
@@ -709,9 +709,9 @@ export function getWeaponResourceGroups(): ResourceGroups {
 }
 
 export function getPartySettingsNames(): Resource {
-  const nameItem = getItem("partySettingsName-0") as ItemString;
-
   const names: Resource = {};
+
+  const nameItem = getItem("partySettingsName-0") as ItemString;
 
   if (nameItem) {
     for (let i = 0x0; i < 0x5; i += 0x1) {
@@ -725,9 +725,9 @@ export function getPartySettingsNames(): Resource {
 }
 
 export function getRuleNames(): Resource {
-  const nameItem = getItem("ruleName-0") as ItemString;
-
   const names: Resource = {};
+
+  const nameItem = getItem("ruleName-0") as ItemString;
 
   if (nameItem) {
     for (let i = 0x0; i < 0x5; i += 0x1) {

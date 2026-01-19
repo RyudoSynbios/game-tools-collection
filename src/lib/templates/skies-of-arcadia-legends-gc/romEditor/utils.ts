@@ -376,9 +376,9 @@ export function generatePatch(): Patch<PatchData> {
 }
 
 export function getAssetNames(type: string): Resource {
-  const files = getFilteredFiles(type);
-
   const names: Resource = {};
+
+  const files = getFilteredFiles(type);
 
   files.forEach((file, index) => {
     names[index] = file.name;
@@ -624,9 +624,9 @@ export function getNames(type: string, relative: string): Resource {
 export function getEnemyEventGroupNames(): Resource {
   const $dataViewAlt = get(dataViewAlt);
 
-  const enemies = getResource("enemies") as Resource;
-
   const names: Resource = {};
+
+  const enemies = getResource("enemies") as Resource;
 
   // prettier-ignore
   for (let i = 0x0; i < 0x100; i += 0x1) {
@@ -679,9 +679,9 @@ function getShopName(offset: number, item: ItemString): string {
 export function getShopNames(): Resource {
   const $dataViewAlt = get(dataViewAlt);
 
-  const item = getItem("shop-name-0") as ItemString;
-
   const names: Resource = {};
+
+  const item = getItem("shop-name-0") as ItemString;
 
   for (let i = 0x0; i < mainDolModels.shops.count; i += 0x1) {
     const offset = item.offset + i * mainDolModels.shops.length;

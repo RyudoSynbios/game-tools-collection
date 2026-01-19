@@ -803,7 +803,6 @@
   onMount(() => {
     canvas = new Canvas({
       canvasEl,
-      backgroundAlpha: 1,
     });
 
     canvas.addLayer("background", "tilingSprite", { width: 16, height: 16 });

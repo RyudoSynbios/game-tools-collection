@@ -132,9 +132,9 @@ export function generateChecksum(item: ItemChecksum): number {
 export function getInventoryNames(): Resource {
   const $dataViewAlt = get(dataViewAlt);
 
-  const itemTypes = getResource("itemTypes") as Resource;
-
   const names: Resource = {};
+
+  const itemTypes = getResource("itemTypes") as Resource;
 
   // prettier-ignore
   for (let i = 0x0; i < getItemCount(); i += 0x1) {

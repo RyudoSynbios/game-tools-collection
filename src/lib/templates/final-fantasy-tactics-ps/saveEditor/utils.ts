@@ -458,8 +458,6 @@ export function getPropositionNames(slotIndex: number): Resource {
 }
 
 export function getUnitNames(slotIndex: number): Resource {
-  const $gameRegion = get(gameRegion);
-
   if (typeof slotIndex === "string") {
     return {};
   }

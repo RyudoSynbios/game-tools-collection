@@ -49,9 +49,9 @@
           }
         }
 
-        const data = applyPalette(tileData, palette);
+        const tile = applyPalette(tileData, palette);
 
-        canvas.addGraphic("background", data, 8, 8, column * 8, row * 8);
+        canvas.addGraphic("background", tile, 8, 8, column * 8, row * 8);
       }
     }
 

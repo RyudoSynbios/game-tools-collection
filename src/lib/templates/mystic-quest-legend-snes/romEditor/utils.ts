@@ -211,9 +211,9 @@ export function pointerToOffset(
 }
 
 export function getCharacterNames(): Resource {
-  const offset = pointerToOffset(CHARACTER_NAMES_POINTER);
-
   const names: Resource = {};
+
+  const offset = pointerToOffset(CHARACTER_NAMES_POINTER);
 
   for (let i = 0x0; i < 0x9; i += 0x1) {
     names[i] = getText(offset + i * 0x50, 0x10);
@@ -226,10 +226,10 @@ export function getCharacterNames(): Resource {
 
 // TODO: Pointers
 export function getLocationNames(): Resource {
+  const names: Resource = {};
+
   const offset = 0x635eb;
   const length = 15;
-
-  const names: Resource = {};
 
   for (let i = 0x0; i < 0x25; i += 0x1) {
     names[i] = getText(offset + i * length, length);
@@ -241,12 +241,12 @@ export function getLocationNames(): Resource {
 }
 
 export function getMonsterGroupNames(): Resource {
+  const names: Resource = {};
+
   const monsterGroupsOffset = pointerToOffset(MONSTER_GROUPS_POINTER);
 
   const offset = pointerToOffset(MONSTER_NAMES_POINTER);
   const length = getRegionArray(MONSTER_NAMES_LENGTH);
-
-  const names: Resource = {};
 
   for (let i = 0x0; i < 0xea; i += 0x1) {
     const index = getInt(monsterGroupsOffset + i * 0x4, "uint8");
@@ -260,10 +260,10 @@ export function getMonsterGroupNames(): Resource {
 }
 
 export function getMonsterNames(): Resource {
+  const names: Resource = {};
+
   const offset = pointerToOffset(MONSTER_NAMES_POINTER);
   const length = getRegionArray(MONSTER_NAMES_LENGTH);
-
-  const names: Resource = {};
 
   for (let i = 0x0; i < 0x51; i += 0x1) {
     names[i] = getText(offset + i * length, length);

@@ -548,7 +548,7 @@ const template: GameJson = {
                   type: "section",
                   items: [
                     {
-                      name: "Tilsets",
+                      name: "Tilesets",
                       type: "section",
                       flex: true,
                       items: [

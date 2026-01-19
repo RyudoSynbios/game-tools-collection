@@ -269,9 +269,9 @@ export function onReset(): void {
 }
 
 export function getProfileNames(): Resource {
-  const profileCountItem = getItem("profileCount") as ItemInt;
-
   const names: Resource = {};
+
+  const profileCountItem = getItem("profileCount") as ItemInt;
 
   for (let i = 0x0; i < 0x10; i += 0x1) {
     names[i] = getString(

@@ -30,7 +30,7 @@ const template: GameJson = {
       type: "tabs",
       items: [
         {
-          name: "Monsters",
+          name: "Enemies",
           items: [
             {
               pointer: [0x134c8, 0x134c8, 0x13348],
@@ -39,7 +39,7 @@ const template: GameJson = {
               type: "container",
               instanceType: "tabs",
               instances: 142,
-              resource: "monsterNames",
+              resource: "enemyNames",
               vertical: true,
               items: [
                 {
@@ -176,6 +176,7 @@ const template: GameJson = {
     },
   ],
   resources: {
+    enemyNames: "getEnemyNames()",
     itemNames: "getItemNames()",
     letters: [
       // Europe
@@ -522,7 +523,6 @@ const template: GameJson = {
       },
     ],
     mapNames: "getMapNames()",
-    monsterNames: "getMonsterNames()",
   },
 };
 

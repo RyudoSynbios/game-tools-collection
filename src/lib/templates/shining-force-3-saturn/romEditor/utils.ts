@@ -247,9 +247,9 @@ export function overrideGetInt(
   } else if ("id" in item && item.id?.match(/iDescription-/)) {
     const [index] = item.id.splitInt();
 
-    const names = getItemDescriptions();
+    const descriptions = getItemDescriptions();
 
-    return [true, names[index] || "???"];
+    return [true, descriptions[index] || "???"];
   } else if ("id" in item && item.id?.match(/eName-/)) {
     const [index] = item.id.splitInt();
 
@@ -366,9 +366,9 @@ export function generatePatch(): Patch<PatchData> {
 }
 
 export function getAssetNames(type: string): Resource {
-  const files = getFilteredFiles(type);
-
   const names: Resource = {};
+
+  const files = getFilteredFiles(type);
 
   files.forEach((file, index) => {
     names[index] = file.name;
@@ -380,10 +380,10 @@ export function getAssetNames(type: string): Resource {
 export function getCharacterNames(): Resource {
   const $dataViewAlt = get(dataViewAlt);
 
+  const names: Resource = {};
+
   const characterNamesStartIndex = getRegionArray(CHARACTER_NAMES_START_INDEX);
   const count = getRegionArray(CHARACTER_COUNT);
-
-  const names: Resource = {};
 
   const shifts = getCharacterShifts();
 
@@ -410,9 +410,9 @@ export function getCharacterNames(): Resource {
 }
 
 export function getClassesNames(): Resource {
-  const classNamesStartIndex = getRegionArray(CLASS_NAMES_START_INDEX);
-
   const names: Resource = {};
+
+  const classNamesStartIndex = getRegionArray(CLASS_NAMES_START_INDEX);
 
   for (let i = 0x0; i < 0x46; i += 0x1) {
     names[i] = getText(classNamesStartIndex + i);
@@ -422,10 +422,10 @@ export function getClassesNames(): Resource {
 }
 
 export function getEnemyNames(): Resource {
+  const names: Resource = {};
+
   const enemyNamesStartIndex = getRegionArray(ENEMY_NAMES_START_INDEX);
   const count = getRegionArray(ENEMY_COUNT);
-
-  const names: Resource = {};
 
   for (let i = 0x0; i < count; i += 0x1) {
     names[i] = getText(enemyNamesStartIndex + i);
@@ -437,23 +437,25 @@ export function getEnemyNames(): Resource {
 }
 
 export function getItemDescriptions(): Resource {
+  const descriptions: Resource = {};
+
   const itemDescriptionStartIndex = getRegionArray(
     ITEM_DESCRIPTIONS_START_INDEX,
   );
   const count = getRegionArray(ITEM_COUNT);
 
-  const names: Resource = {};
-
   for (let i = 0x0; i < count; i += 0x1) {
-    names[i] = getText(itemDescriptionStartIndex + i);
+    descriptions[i] = getText(itemDescriptionStartIndex + i);
   }
 
-  names[0x0] = "-";
+  descriptions[0x0] = "-";
 
-  return names;
+  return descriptions;
 }
 
 export function getItemEffectSpells(): Resource {
+  const names: Resource = {};
+
   const scenario = getScenario();
   const spellNames = getSpellNames();
 
@@ -476,8 +478,6 @@ export function getItemEffectSpells(): Resource {
       break;
   }
 
-  const names: Resource = {};
-
   spells.forEach((spell, index) => {
     if (index === 0 || spell !== 0x0) {
       names[index] = spellNames[spell];
@@ -490,10 +490,10 @@ export function getItemEffectSpells(): Resource {
 }
 
 export function getItemNames(): Resource {
+  const names: Resource = {};
+
   const itemNamesStartIndex = getRegionArray(ITEM_NAMES_START_INDEX);
   const count = getRegionArray(ITEM_COUNT);
-
-  const names: Resource = {};
 
   for (let i = 0x0; i < count; i += 0x1) {
     names[i] = getText(itemNamesStartIndex + i);
@@ -505,6 +505,8 @@ export function getItemNames(): Resource {
 }
 
 export function getItemTypes(): Resource {
+  const names: Resource = {};
+
   const itemTypesStartIndex = getRegionArray(ITEM_TYPES_START_INDEX);
 
   const scenario = getScenario();
@@ -525,8 +527,6 @@ export function getItemTypes(): Resource {
       break;
   }
 
-  const names: Resource = {};
-
   types.forEach((type) => {
     names[type] = getText(itemTypesStartIndex + type);
   });
@@ -542,12 +542,12 @@ export function getItemTypes(): Resource {
 }
 
 export function getSpecialAttackNames(): Resource {
+  const names: Resource = {};
+
   const specialAttackNamesStartIndex = getRegionArray(
     SPECIAL_ATTACK_NAMES_START_INDEX,
   );
   const count = getRegionArray(SPECIAL_ATTACK_COUNT);
-
-  const names: Resource = {};
 
   for (let i = 0x0; i < count; i += 0x1) {
     names[i] = getText(specialAttackNamesStartIndex + i);
@@ -559,10 +559,10 @@ export function getSpecialAttackNames(): Resource {
 }
 
 export function getSpellNames(): Resource {
+  const names: Resource = {};
+
   const spellNamesStartIndex = getRegionArray(SPELL_NAMES_START_INDEX);
   const count = getRegionArray(SPELL_COUNT);
-
-  const names: Resource = {};
 
   for (let i = 0x0; i < count; i += 0x1) {
     names[i] = getText(spellNamesStartIndex + i);

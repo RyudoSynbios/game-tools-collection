@@ -37,7 +37,7 @@ export function overrideGetInt(item: Item): [boolean, string | undefined] {
   if ("id" in item && item.id?.match(/mName-/)) {
     const [index] = item.id.splitInt();
 
-    const names = getMonsterNames();
+    const names = getEnemyNames();
 
     return [true, names[index]];
   }
@@ -497,10 +497,10 @@ export function getMapNames(): Resource {
   return names;
 }
 
-export function getMonsterNames(): Resource {
-  const offset = getInt(getRegionArray(MONSTER_TEXTS_POINTER), "uint24");
-
+export function getEnemyNames(): Resource {
   const names: Resource = {};
+
+  const offset = getInt(getRegionArray(ENEMY_TEXTS_POINTER), "uint24");
 
   for (let i = 0x0; i < 0x8e; i += 0x1) {
     names[i] = getText(getInt(offset + i * 0x4, "uint16"));
