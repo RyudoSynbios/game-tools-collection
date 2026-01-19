@@ -6,7 +6,7 @@
   import { getRegionArray } from "$lib/utils/format";
   import { applyPalette, getPalette } from "$lib/utils/graphics";
 
-  import { getDecompressedGraphic } from "../utils";
+  import { getTilesData } from "../utils";
   import { DSS_CARDS_TILESET_POINTER } from "../utils/constants";
 
   let canvasEl: HTMLDivElement;
@@ -31,12 +31,12 @@
         "uint24",
       );
 
-      const graphic = getDecompressedGraphic(tilesetOffset);
+      const tilesData = getTilesData(tilesetOffset);
       const palette = getPalette("BGR555", paletteOffset, 0x10, {
         firstTransparent: true,
       });
 
-      graphic.forEach((tileData, index) => {
+      tilesData.forEach((tileData, index) => {
         const tile = applyPalette(tileData, palette);
 
         const x = (i % 0xa) * 0x40 + (index % 0x8) * 0x8;

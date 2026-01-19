@@ -1,27 +1,23 @@
 import { get } from "svelte/store";
 
 import { gameJson } from "$lib/stores";
-import { extractBinary, extractBit, getInt } from "$lib/utils/bytes";
-import type Canvas from "$lib/utils/canvas";
+import { getInt } from "$lib/utils/bytes";
 import debug from "$lib/utils/debug";
 import { getRegionArray } from "$lib/utils/format";
-import { applyPalette, flipTileData } from "$lib/utils/graphics";
 import { getResource } from "$lib/utils/parser";
 
-import type { Item, Palette, Resource } from "$lib/types";
+import type { Item, Resource } from "$lib/types";
 
 import Debug from "./components/Debug.svelte";
 import MapViewer from "./components/MapViewer.svelte";
 import {
+  ENEMY_TEXTS_POINTER,
   ITEM_TEXTS_POINTER,
-  MAP_TABLE_POINTER,
   MAP_TEXTS_POINTER,
-  MONSTER_TEXTS_POINTER,
-  SHINY_ARMOR_TILES_OFFSET,
   TEXTS_POINTER,
 } from "./utils/constants";
+import { getSectionsRoomCount } from "./utils/map";
 import { dssCards } from "./utils/resource";
-import { getMonsterSpriteInfos, getSpriteFrameOffset } from "./utils/sprite";
 
 export function getComponent(
   component: string,
@@ -45,316 +41,17 @@ export function overrideGetInt(item: Item): [boolean, string | undefined] {
   return [false, undefined];
 }
 
-export function generateMap(
-  canvas: Canvas,
-  layer: string,
-  tileset: number[][],
-  palettes: Palette[],
-  tilesColisions: number[][],
-  paletteColisions: Palette,
-  roomInfosOffset: number,
-  roomOffset: number,
-): void {
-  const blocks: Uint8Array[][] = [];
-  const blocksColisions: Uint8Array[][] = [];
-
-  const blocksOffset = getInt(roomInfosOffset + 0x4, "uint24");
-  const colisions = getInt(roomInfosOffset + 0x8, "uint24");
-  const roomWidth = getInt(roomInfosOffset + 0x10, "uint16");
-  const roomHeight = getInt(roomInfosOffset + 0x12, "uint16");
-
-  for (let i = 0; i < roomWidth * roomHeight * 0x2; i += 0x2) {
-    const blockX = ((i / 2) % roomWidth) * 32;
-    const blockY = Math.floor(i / 2 / roomWidth) * 32;
-
-    const blockIndex = getInt(roomOffset + i, "uint16");
-
-    if (!blocks[blockIndex]) {
-      const tiles: number[] = [];
-      const collisionsTiles: number[] = [];
-
-      for (let j = 0x0; j < 0x10; j += 0x1) {
-        tiles.push(
-          getInt(blocksOffset + (blockIndex * 0x10 * 0x2 + j * 0x2), "uint16"),
-        );
-
-        if (colisions) {
-          collisionsTiles.push(
-            getInt(colisions + (blockIndex * 0x10 + j), "uint8"),
-          );
-        }
-      }
-
-      blocks[blockIndex] = getBlock(tiles, tileset, palettes);
-
-      if (colisions) {
-        blocksColisions[blockIndex] = getBlock(
-          collisionsTiles,
-          tilesColisions,
-          [paletteColisions],
-        );
-      }
-    }
-
-    blocks[blockIndex].forEach((tile, index) => {
-      const x = blockX + (index % 0x4) * 0x8;
-      const y = blockY + Math.floor(index / 0x4) * 0x8;
-
-      canvas.addGraphic(layer, tile, 8, 8, x, y);
-    });
-
-    if (colisions) {
-      blocksColisions[blockIndex].forEach((tile, index) => {
-        const x = blockX + (index % 0x4) * 0x8;
-        const y = blockY + Math.floor(index / 0x4) * 0x8;
-
-        canvas.addGraphic("collisions", tile, 8, 8, x, y);
-      });
-    }
-  }
-}
-
-export function generateSprites(
-  canvas: Canvas,
-  offset: number,
-  spriteSet: number[][],
-  palettes: Palette[],
-  monsters: { index: number; firstTile: number }[],
-  spriteSpecial: number,
-): void {
-  while (true) {
-    if (getInt(offset + 0xb, "uint8") === 0x80) {
-      break;
-    }
-
-    const blockX = getInt(offset, "uint16");
-    const blockY = getInt(offset + 0x2, "uint16");
-    const type = getInt(offset + 0x4, "uint16");
-    const spriteId = getInt(offset + 0x6, "uint16");
-    // const unknown = getInt(offset + 0x8, "uint16");
-    // const event = getInt(offset + 0xb, "uint8");
-
-    const handledSprites = [
-      0x1de, 0x1df, 0x1e4, 0x1e6, 0x1e7, 0x1e8, 0x1ea, 0x1eb, 0x1ec, 0x1ed,
-      0x1ee, 0x1f1, 0x1f4, 0x1f5, 0x1f6, 0x1f7, 0x1f9, 0x1fa, 0x1fd,
-    ];
-
-    let frameSkip = 0;
-
-    const monster = getMonsterSpriteInfos(type, monsters);
-
-    if (monster) {
-      frameSkip = monster.frameSkip;
-    }
-
-    if (monster || handledSprites.includes(type)) {
-      let offset = getSpriteFrameOffset(type, spriteId, spriteSpecial, monster);
-
-      while (true) {
-        const anchorX = getInt(offset, "int16");
-        const anchorY = getInt(offset + 0x2, "int16");
-        let tileIndex = getInt(offset + 0x4, "uint16") & 0xfff;
-        let paletteIndex = getInt(offset + 0x4, "uint16") >> 0xc;
-        const effects1 = getInt(offset + 0x6, "uint8");
-        const effects2 = getInt(offset + 0x7, "uint8");
-
-        let stop = extractBit(effects1, 0);
-        const flipX = extractBit(effects1, 4);
-        const flipY = extractBit(effects1, 5);
-        const size1 = extractBit(effects1, 6);
-        const size2 = extractBit(effects1, 7);
-
-        const layout1 = extractBit(effects2, 6);
-        const layout2 = extractBit(effects2, 7);
-
-        if (frameSkip > 0) {
-          if (stop) {
-            frameSkip -= 1;
-            stop = false;
-          }
-        } else {
-          if (monster) {
-            tileIndex += 0x200 + monster.firstTile;
-            paletteIndex += monsters.findIndex(
-              (m) => m.index === monster.index,
-            );
-
-            if (!monster.isBoss) {
-              paletteIndex += 0x8;
-            }
-          }
-
-          if (type === 0x1e7) {
-            getSpriteData(
-              getRegionArray(SHINY_ARMOR_TILES_OFFSET) + tileIndex * 0x20,
-              0x80,
-            ).forEach((tile, index) => {
-              spriteSet[0x3e0 + index] = tile;
-            });
-
-            tileIndex = 0x3e0;
-          }
-
-          let width = 1;
-          let height = 1;
-
-          if (size1) {
-            width *= 2;
-            height *= 2;
-          }
-
-          if (size2) {
-            width *= 4;
-            height *= 4;
-          }
-
-          if (layout1) {
-            height = Math.max(1, height / 2);
-
-            if (!size2) {
-              width *= 2;
-            }
-          }
-
-          if (layout2) {
-            width = Math.max(1, width / 2);
-
-            if (!size2) {
-              height *= 2;
-            }
-          }
-
-          for (let h = 0; h < height; h += 1) {
-            for (let w = 0; w < width; w += 1) {
-              let x = blockX + anchorX + w * 8;
-              let y = blockY + anchorY + 1 + h * 8;
-
-              let tileData = spriteSet[tileIndex + h * width + w];
-
-              if (flipX) {
-                tileData = flipTileData(tileData, 8, "x");
-
-                if (width === 2) {
-                  if (w === 0) {
-                    x += 0x8;
-                  } else {
-                    x -= 0x8;
-                  }
-                } else if (width === 4) {
-                  if (w === 0) {
-                    x += 0x18;
-                  } else if (w === 1) {
-                    x += 0x8;
-                  } else if (w === 2) {
-                    x -= 0x8;
-                  } else {
-                    x -= 0x18;
-                  }
-                }
-              }
-
-              if (flipY) {
-                tileData = flipTileData(tileData, 8, "y");
-
-                if (height === 2) {
-                  if (h === 0) {
-                    y += 0x8;
-                  } else {
-                    y -= 0x8;
-                  }
-                } else if (height === 4) {
-                  if (h === 0) {
-                    y += 0x18;
-                  } else if (h === 1) {
-                    y += 0x8;
-                  } else if (h === 2) {
-                    y -= 0x8;
-                  } else {
-                    y -= 0x18;
-                  }
-                }
-              }
-
-              const tile = applyPalette(tileData, palettes[paletteIndex]);
-
-              canvas.addGraphic(
-                monster ? "monsters" : "sprites",
-                tile,
-                8,
-                8,
-                x,
-                y,
-              );
-            }
-          }
-        }
-
-        offset += 0x8;
-
-        if (stop) {
-          break;
-        }
-      }
-    }
-
-    offset += 0xc;
-  }
-}
-
-export function getBlock(
-  tiles: number[],
-  tileset: number[][],
-  palettes: Palette[],
-): Uint8Array[] {
-  const block: Uint8Array[] = [];
-
-  tiles.forEach((rawTile: number) => {
-    const tileIndex = rawTile & 0x3ff;
-
-    const effects = rawTile >> 0x8;
-
-    const flipX = extractBit(effects, 2);
-    const flipY = extractBit(effects, 3);
-
-    const paletteIndex = extractBinary(effects, 4, 3);
-    const paletteSet = effects >> 0x7;
-
-    if (effects) {
-      if (paletteSet === 0) {
-        debug.warn("Use paletteSet 0");
-      }
-    }
-
-    let tileData = tileset[tileIndex];
-
-    if (flipX) {
-      tileData = flipTileData(tileData, 8, "x");
-    }
-
-    if (flipY) {
-      tileData = flipTileData(tileData, 8, "y");
-    }
-
-    const tile = applyPalette(tileData, palettes[paletteIndex]);
-
-    block.push(tile);
-  });
-
-  return block;
-}
-
-export function getDecompressedData(offset: number): number[][] {
-  const header = getInt(offset, "uint24");
-  const magic = header & 0xff;
-  const decompressedLength = header >> 0x8;
+export function getDecompressedData(offset: number): Uint8Array {
+  const magic = getInt(offset, "uint8");
+  const decompressedLength = getInt(offset + 0x1, "uint16");
 
   if (magic !== 0x10) {
     debug.warn(`Image in offet 0x${offset.toHex()} is not LZSS compressed.`);
 
-    return [];
+    return new Uint8Array(0);
   }
 
-  const decompressedData: number[] = [];
+  const decompressedData = new Uint8Array(decompressedLength);
 
   let index = 0x0;
 
@@ -362,6 +59,7 @@ export function getDecompressedData(offset: number): number[][] {
 
   while (index < decompressedLength) {
     const flags = getInt(offset++, "uint8");
+
     let mask = 0x80;
 
     while (mask > 0x0) {
@@ -385,35 +83,41 @@ export function getDecompressedData(offset: number): number[][] {
     }
   }
 
-  const blocks: number[][] = [];
-
-  for (let i = 0x0; i < decompressedData.length / 0x20; i += 0x1) {
-    blocks.push(decompressedData.slice(i * 0x20, (i + 0x1) * 0x20));
-  }
-
-  return blocks;
+  return decompressedData;
 }
 
-export function getDecompressedGraphic(offset: number): number[][] {
-  const decompressedData = getDecompressedData(offset);
+export function getTilesData(offset: number, length?: number): number[][] {
+  const tilesData: number[][] = [];
 
-  const graphic: number[][] = [];
+  const isCompressed = getInt(offset, "uint8") === 0x10 || !length;
 
-  decompressedData.forEach((block, index) => {
-    graphic[index] = [];
+  let data: Uint8Array;
 
-    block.forEach((value) => {
-      graphic[index].push(value & 0xf, (value & 0xf0) >> 0x4);
+  if (isCompressed) {
+    data = getDecompressedData(offset);
+  } else {
+    data = new Uint8Array(length);
+
+    for (let i = 0x0; i < length; i += 0x1) {
+      data[i] = getInt(offset + i, "uint8");
+    }
+  }
+
+  for (let i = 0x0; i < data.length / 0x20; i += 0x1) {
+    tilesData[i] = [];
+
+    data.slice(i * 0x20, (i + 0x1) * 0x20).forEach((value) => {
+      tilesData[i].push(value & 0xf, (value & 0xf0) >> 0x4);
     });
-  });
+  }
 
-  return graphic;
+  return tilesData;
 }
 
 export function getItemNames(): Resource {
-  const offset = getInt(getRegionArray(ITEM_TEXTS_POINTER), "uint24");
-
   const names: Resource = {};
+
+  const offset = getInt(getRegionArray(ITEM_TEXTS_POINTER), "uint24");
 
   for (let i = 0x0; i < 0x37; i += 0x1) {
     names[i] = getText(getInt(offset + i * 0x2, "uint16"));
@@ -430,68 +134,29 @@ export function getItemNames(): Resource {
   return names;
 }
 
-export function getMapsInfos(): {
-  index: number;
-  name: string;
-  pointer: number;
-}[] {
-  const mapsPointers = getRegionArray(MAP_TABLE_POINTER);
-
-  const maps = [];
-
-  const lastMapPointer = getInt(mapsPointers + 0xf * 0x4, "uint24");
-
-  for (let section = 0x0; section < 0xf; section += 0x1) {
-    let pointer = getInt(mapsPointers + section * 0x4, "uint24");
-
-    const nextPointer = getInt(
-      getInt(mapsPointers + section * 0x4 + 0x4, "uint24") + 0x5c,
-      "uint24",
-    );
-
-    const sectionNameOffset = getInt(
-      getRegionArray(MAP_TEXTS_POINTER),
-      "uint24",
-    );
-
-    const sectionName = getText(
-      getInt(sectionNameOffset + section * 0x4 + 0x2, "uint16"),
-    );
-
-    let room = 0;
-
-    while (true) {
-      maps.push({
-        index: maps.length,
-        name: `${sectionName} ${room}`,
-        pointer,
-      });
-
-      pointer += 0x60;
-      room += 1;
-
-      if (pointer === nextPointer || pointer === lastMapPointer) {
-        break;
-      }
-    }
-  }
-
-  maps.push({
-    index: maps.length,
-    name: "?????????? 00",
-    pointer: lastMapPointer,
-  });
-
-  return maps;
-}
-
 export function getMapNames(): Resource {
-  const mapInfos = getMapsInfos();
-
   const names: Resource = {};
 
-  mapInfos.forEach((map) => {
-    names[map.index] = map.name;
+  const pointer = getRegionArray(MAP_TEXTS_POINTER);
+  const offset = getInt(pointer, "uint24");
+
+  const sections = getSectionsRoomCount();
+
+  let total = 0;
+
+  sections.forEach((count, index) => {
+    if (index === 0xf) {
+      names[total] = "??????????";
+      return;
+    }
+
+    const name = getText(getInt(offset + index * 0x4 + 0x2, "uint16"));
+
+    for (let i = 0; i < count; i += 1) {
+      names[total + i] = `${name} ${i + 1}`;
+    }
+
+    total += count;
   });
 
   return names;
@@ -549,24 +214,4 @@ export function getText(index: number): string {
   }
 
   return text.replace(/\{.*?\}/g, "");
-}
-
-export function getSpriteData(offset: number, length: number): number[][] {
-  const spriteData: number[][] = [];
-
-  let tileData = [];
-
-  for (let i = 0x0; i < length; i += 0x1) {
-    const value = getInt(offset + i, "uint8");
-
-    tileData.push(value & 0xf, (value & 0xf0) >> 0x4);
-
-    if (tileData.length === 0x40) {
-      spriteData.push(tileData);
-
-      tileData = [];
-    }
-  }
-
-  return spriteData;
 }

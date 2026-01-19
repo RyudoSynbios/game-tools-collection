@@ -6,405 +6,526 @@ import { getRegionArray } from "$lib/utils/format";
 
 import { EVENT_TABLE_OFFSET } from "./constants";
 
-interface MonsterSprite {
+export enum SpriteType {
+  Devil = 0x86,
+  FlameDemon = 0x94,
+  IceDemon = 0x98,
+  ThunderDemon = 0x9b,
+  WindDemon = 0x9e,
+  EeathDemon = 0xa1,
+  BeastDemon = 0xa4,
+  ArchDemon = 0xa5,
+  DemonLord = 0xa6,
+  Succubus = 0xa9,
+  FallenAngel = 0xac,
+  Nightmare = 0xad,
+  Lilim = 0xae,
+  Lilith = 0xaf,
+  Witch = 0xb3,
+  MedusaHead = 0xb8,
+  Imp = 0xb9,
+  Zombie = 0xbe,
+  Ghoul = 0xbf,
+  Wight = 0xc0,
+  ClinkingMan = 0xc1,
+  ZombieThief = 0xc2,
+  Skeleton = 0xc3,
+  SkeletonBomber = 0xc6,
+  ElectricSkeleton = 0xc9,
+  SkeletonSpear = 0xcc,
+  SkeletonAthlete = 0xcf,
+  SkeletonMedalist = 0xd2,
+  SkeletonBoomerang = 0xd5,
+  SkeletonSoldier = 0xd7,
+  SkeletonKnight = 0xd8,
+  BoneTower = 0xd9,
+  BoneHead = 0xda,
+  AxeArmor = 0xde,
+  FlameArmor = 0xe0,
+  IceArmor = 0xe2,
+  ThunderArmor = 0xe4,
+  WindArmor = 0xe6,
+  EarthArmor = 0xe8,
+  PoisonArmor = 0xea,
+  ForestArmor = 0xec,
+  StoneArmor = 0xed,
+  HolyArmor = 0xef,
+  DarkArmor = 0xf2,
+  Dullahan = 0xf9,
+  Golem = 0xfa,
+  Mudman = 0xfe,
+  Fleaman = 0xff,
+  Hopper = 0x100,
+  Franken = 0x101,
+  Mummy = 0x103,
+  FrozenShade = 0x105,
+  HeatShade = 0x107,
+  WereWolf = 0x109,
+  WerePanther = 0x10c,
+  WereJaguar = 0x10d,
+  WereBear = 0x10f,
+  Hyena = 0x110,
+  Grizzly = 0x115,
+  FoxArcher = 0x116,
+  FoxHunter = 0x117,
+  Merman = 0x11c,
+  Lizardman = 0x11d,
+  Minotaur = 0x11e,
+  WereHorse = 0x120,
+  Arachne = 0x124,
+  Harpy = 0x127,
+  Siren = 0x128,
+  Gargoyle = 0x12c,
+  Gremlin = 0x12f,
+  Bat = 0x131,
+  Gorgon = 0x132,
+  Catoblepas = 0x133,
+  Hipogriff = 0x136,
+  Spearfish = 0x139,
+  Fishhead = 0x13a,
+  DeathMantis = 0x13c,
+  KingMoth = 0x13d,
+  KillerBee = 0x13f,
+  Alraune = 0x140,
+  ManEater = 0x143,
+  Myconid = 0x149,
+  Dryad = 0x14a,
+  MimicCandle = 0x14c,
+  ScaryCandle = 0x14d,
+  TrickCandle = 0x14e,
+  DevilTower = 0x14f,
+  EvilPillar = 0x150,
+  Marionette = 0x155,
+  Poltergeist = 0x158,
+  BloodySword = 0x15c,
+  PoisonWorm = 0x160,
+  Abiondarg = 0x163,
+  Slime = 0x165,
+  EvilHand = 0x168,
+  BrainFloat = 0x169,
+  Spirit = 0x16e,
+  Ectoplasm = 0x16f,
+  Specter = 0x170,
+  WillOWisp = 0x171,
+  Legion = 0x172,
+  // Cerberus = 0x174,
+  // Necromancer = 0x17f,
+  // IronGolem = 0x18a,
+  // Adramelech = 0x191,
+  // DragonZombie = 0x199,
+  // Death = 0x1a6,
+  // Camilla = 0x1b7,
+  // Hugh = 0x1bf,
+  Dracula1stform = 0x1ca,
+  MorrisBaldwin = 0x1d0,
+  Chandelier = 0x1de,
+  Torch = 0x1df,
+  StatsContainer = 0x1e4,
+  DSSCard = 0x1e6,
+  ShiningArmor = 0x1e7,
+  MagicItem = 0x1e8,
+  MovingBox = 0x1ea,
+  DestructibleBlock = 0x1eb,
+  Door = 0x1ec,
+  Switch1 = 0x1ed,
+  BlueBlock = 0x1ee,
+  Switch2 = 0x1f1,
+  BossDoor = 0x1f4,
+  DestructiblePlatform1 = 0x1f5,
+  DestructiblePlatform2 = 0x1f6,
+  CollapsingPlatform = 0x1f7,
+  HorizontalMovingPlatform = 0x1f9,
+  VerticalMovingPlatform = 0x1fa,
+  LastDoor = 0x1fd,
+}
+
+interface EnemySprite {
   index: number;
-  firstTile: number;
   isBoss: boolean;
   frameSkip: number;
 }
 
-export function getMonsterSpriteInfos(
-  type: number,
-  monsters: { index: number; firstTile: number }[],
-): MonsterSprite | false {
-  let monsterId = -1;
+export function getEnemySpriteInfos(type: number): EnemySprite | undefined {
+  let index = -1;
   let isBoss = false;
   let frameSkip = 0;
 
   switch (type) {
-    case 0x86: // Devil
-      monsterId = 0x55;
+    case SpriteType.Devil:
+      index = 0x55;
       break;
-    case 0x94: // Flame Demon
-      monsterId = 0x16;
+    case SpriteType.FlameDemon:
+      index = 0x16;
       break;
-    case 0x98: // Ice Demon
-      monsterId = 0x1e;
+    case SpriteType.IceDemon:
+      index = 0x1e;
       break;
-    case 0x9b: // Thunder Demon
-      monsterId = 0x20;
+    case SpriteType.ThunderDemon:
+      index = 0x20;
       break;
-    case 0x9e: // Wind Demon
-      monsterId = 0x22;
+    case SpriteType.WindDemon:
+      index = 0x22;
       break;
-    case 0xa1: // Eeath Demon
-      monsterId = 0x25;
+    case SpriteType.EeathDemon:
+      index = 0x25;
       break;
-    case 0xa4: // Beast Demon
-      monsterId = 0x45;
+    case SpriteType.BeastDemon:
+      index = 0x45;
       break;
-    case 0xa5: // Arch Demon
-      monsterId = 0x46;
+    case SpriteType.ArchDemon:
+      index = 0x46;
       break;
-    case 0xa6: // Demon Lord
-      monsterId = 0x47;
+    case SpriteType.DemonLord:
+      index = 0x47;
       break;
-    case 0xa9: // Succubus
-      monsterId = 0x4a;
+    case SpriteType.Succubus:
+      index = 0x4a;
       break;
-    case 0xac: // Fallen Angel
-      monsterId = 0x4b;
+    case SpriteType.FallenAngel:
+      index = 0x4b;
       break;
-    case 0xad: // Nightmare
-      monsterId = 0x8a;
+    case SpriteType.Nightmare:
+      index = 0x8a;
       break;
-    case 0xae: // Lilim
-      monsterId = 0x8b;
+    case SpriteType.Lilim:
+      index = 0x8b;
       break;
-    case 0xaf: // Lilith
-      monsterId = 0x8c;
+    case SpriteType.Lilith:
+      index = 0x8c;
       break;
-    case 0xb3: // Witch
-      monsterId = 0x56;
+    case SpriteType.Witch:
+      index = 0x56;
       break;
-    case 0xb8: // Medusa Head
-      monsterId = 0x0;
+    case SpriteType.MedusaHead:
+      index = 0x0;
       break;
-    case 0xb9: // Imp
-      monsterId = 0x2c;
+    case SpriteType.Imp:
+      index = 0x2c;
       break;
-    case 0xbe: // Zombie
-      monsterId = 0x1;
+    case SpriteType.Zombie:
+      index = 0x1;
       break;
-    case 0xbf: // Ghoul
-      monsterId = 0x2;
+    case SpriteType.Ghoul:
+      index = 0x2;
       break;
-    case 0xc0: // Wight
-      monsterId = 0x3;
+    case SpriteType.Wight:
+      index = 0x3;
       break;
-    case 0xc1: // Clinking Man
-      monsterId = 0x4;
+    case SpriteType.ClinkingMan:
+      index = 0x4;
       break;
-    case 0xc2: // Zombie Thief
-      monsterId = 0x5;
+    case SpriteType.ZombieThief:
+      index = 0x5;
       break;
-    case 0xc3: // Skeleton
-      monsterId = 0x6;
+    case SpriteType.Skeleton:
+      index = 0x6;
       break;
-    case 0xc6: // Skeleton Bomber
-      monsterId = 0x7;
+    case SpriteType.SkeletonBomber:
+      index = 0x7;
       break;
-    case 0xc9: // Electric Skeleton
-      monsterId = 0x8;
+    case SpriteType.ElectricSkeleton:
+      index = 0x8;
       break;
-    case 0xcc: // Skeleton Spear
-      monsterId = 0x9;
+    case SpriteType.SkeletonSpear:
+      index = 0x9;
       break;
-    case 0xcf: // Skeleton Athlete
-      monsterId = 0x29;
+    case SpriteType.SkeletonAthlete:
+      index = 0x29;
       break;
-    case 0xd2: // Skeleton Medalist
-      monsterId = 0x69;
+    case SpriteType.SkeletonMedalist:
+      index = 0x69;
       break;
-    case 0xd5: // Skeleton Boomerang
-      monsterId = 0xa;
+    case SpriteType.SkeletonBoomerang:
+      index = 0xa;
       break;
-    case 0xd7: // Skeleton Soldier
-      monsterId = 0xb;
+    case SpriteType.SkeletonSoldier:
+      index = 0xb;
       break;
-    case 0xd8: // Skeleton Knight
-      monsterId = 0xc;
+    case SpriteType.SkeletonKnight:
+      index = 0xc;
       break;
-    case 0xd9: // Bone Tower
-      monsterId = 0xd;
+    case SpriteType.BoneTower:
+      index = 0xd;
       break;
-    case 0xda: // Bone Head
-      monsterId = 0x3f;
+    case SpriteType.BoneHead:
+      index = 0x3f;
       break;
-    case 0xde: // Axe Armor
-      monsterId = 0x14;
+    case SpriteType.AxeArmor:
+      index = 0x14;
       break;
-    case 0xe0: // Flame Armor
-      monsterId = 0x15;
+    case SpriteType.FlameArmor:
+      index = 0x15;
       break;
-    case 0xe2: // Ice Armor
-      monsterId = 0x17;
+    case SpriteType.IceArmor:
+      index = 0x17;
       break;
-    case 0xe4: // Thunder Armor
-      monsterId = 0x18;
+    case SpriteType.ThunderArmor:
+      index = 0x18;
       break;
-    case 0xe6: // Wind Armor
-      monsterId = 0x19;
+    case SpriteType.WindArmor:
+      index = 0x19;
       break;
-    case 0xe8: // Earth Armor
-      monsterId = 0x1a;
+    case SpriteType.EarthArmor:
+      index = 0x1a;
       break;
-    case 0xea: // Poison Armor
-      monsterId = 0x1b;
+    case SpriteType.PoisonArmor:
+      index = 0x1b;
       break;
-    case 0xec: // Forest Armor
-      monsterId = 0x1c;
+    case SpriteType.ForestArmor:
+      index = 0x1c;
       break;
-    case 0xed: // Stone Armor
-      monsterId = 0x1d;
+    case SpriteType.StoneArmor:
+      index = 0x1d;
       break;
-    case 0xef: // Holy Armor
-      monsterId = 0x1f;
+    case SpriteType.HolyArmor:
+      index = 0x1f;
       break;
-    case 0xf2: // Dark Armor
-      monsterId = 0x21;
+    case SpriteType.DarkArmor:
+      index = 0x21;
       break;
-    case 0xf9: // Dullahan
-      monsterId = 0x63;
+    case SpriteType.Dullahan:
+      index = 0x63;
       break;
-    case 0xfa: // Golem
-      monsterId = 0x24;
+    case SpriteType.Golem:
+      index = 0x24;
       break;
-    case 0xfe: // Mudman
-      monsterId = 0x2d;
+    case SpriteType.Mudman:
+      index = 0x2d;
       break;
-    case 0xff: // Fleaman
-      monsterId = 0xe;
+    case SpriteType.Fleaman:
+      index = 0xe;
       break;
-    case 0x100: // Hopper
-      monsterId = 0x3b;
+    case SpriteType.Hopper:
+      index = 0x3b;
       break;
-    case 0x101: // Franken
-      monsterId = 0x61;
+    case SpriteType.Franken:
+      index = 0x61;
       break;
-    case 0x103: // Mummy
-      monsterId = 0x57;
+    case SpriteType.Mummy:
+      index = 0x57;
       frameSkip = 3;
       break;
-    case 0x105: // Frozen Shade
-      monsterId = 0x30;
+    case SpriteType.FrozenShade:
+      index = 0x30;
       break;
-    case 0x107: // Heat Shade
-      monsterId = 0x31;
+    case SpriteType.HeatShade:
+      index = 0x31;
       break;
-    case 0x109: // Were-wolf
-      monsterId = 0x26;
+    case SpriteType.WereWolf:
+      index = 0x26;
       break;
-    case 0x10c: // Were-panther
-      monsterId = 0x3d;
+    case SpriteType.WerePanther:
+      index = 0x3d;
       break;
-    case 0x10d: // Were-jaguar
-      monsterId = 0x3e;
+    case SpriteType.WereJaguar:
+      index = 0x3e;
       break;
-    case 0x10f: // Were-bear
-      monsterId = 0x42;
+    case SpriteType.WereBear:
+      index = 0x42;
       break;
-    case 0x110: // Hyena
-      monsterId = 0x4d;
+    case SpriteType.Hyena:
+      index = 0x4d;
       break;
-    case 0x115: // Grizzly
-      monsterId = 0x43;
+    case SpriteType.Grizzly:
+      index = 0x43;
       break;
-    case 0x116: // Fox Archer
-      monsterId = 0x40;
+    case SpriteType.FoxArcher:
+      index = 0x40;
       break;
-    case 0x117: // Fox Hunter
-      monsterId = 0x41;
+    case SpriteType.FoxHunter:
+      index = 0x41;
       break;
-    case 0x11c: // Merman
-      monsterId = 0x36;
+    case SpriteType.Merman:
+      index = 0x36;
       break;
-    case 0x11d: // Lizardman
-      monsterId = 0x60;
+    case SpriteType.Lizardman:
+      index = 0x60;
       break;
-    case 0x11e: // Minotaur
-      monsterId = 0x37;
+    case SpriteType.Minotaur:
+      index = 0x37;
       break;
-    case 0x120: // Were-horse
-      monsterId = 0x38;
+    case SpriteType.WereHorse:
+      index = 0x38;
       break;
-    case 0x124: // Arachne
-      monsterId = 0x5a;
+    case SpriteType.Arachne:
+      index = 0x5a;
       break;
-    case 0x127: // Harpy
-      monsterId = 0x2a;
+    case SpriteType.Harpy:
+      index = 0x2a;
       break;
-    case 0x128: // Siren
-      monsterId = 0x2b;
+    case SpriteType.Siren:
+      index = 0x2b;
       break;
-    case 0x12c: // Gargoyle
-      monsterId = 0x2e;
+    case SpriteType.Gargoyle:
+      index = 0x2e;
       break;
-    case 0x12f: // Gremlin
-      monsterId = 0x3a;
+    case SpriteType.Gremlin:
+      index = 0x3a;
       break;
-    case 0x131: // Bat
-      monsterId = 0x10;
+    case SpriteType.Bat:
+      index = 0x10;
       break;
-    case 0x132: // Gorgon
-      monsterId = 0x48;
+    case SpriteType.Gorgon:
+      index = 0x48;
       break;
-    case 0x133: // Catoblepas
-      monsterId = 0x49;
+    case SpriteType.Catoblepas:
+      index = 0x49;
       break;
-    case 0x136: // Hipogriff
-      monsterId = 0x58;
+    case SpriteType.Hipogriff:
+      index = 0x58;
       break;
-    case 0x139: // Spearfish
-      monsterId = 0x35;
+    case SpriteType.Spearfish:
+      index = 0x35;
       break;
-    case 0x13a: // Fishhead
-      monsterId = 0x4e;
+    case SpriteType.Fishhead:
+      index = 0x4e;
       break;
-    case 0x13c: // Death Mantis
-      monsterId = 0x5b;
+    case SpriteType.DeathMantis:
+      index = 0x5b;
       break;
-    case 0x13d: // King Moth
-      monsterId = 0x5d;
+    case SpriteType.KingMoth:
+      index = 0x5d;
       break;
-    case 0x13f: // Killer Bee
-      monsterId = 0x5e;
+    case SpriteType.KillerBee:
+      index = 0x5e;
       break;
-    case 0x140: // Alraune
-      monsterId = 0x5c;
+    case SpriteType.Alraune:
+      index = 0x5c;
       frameSkip = 5;
       break;
-    case 0x143: // Man Eater
-      monsterId = 0x27;
+    case SpriteType.ManEater:
+      index = 0x27;
       break;
-    case 0x149: // Myconid
-      monsterId = 0x33;
+    case SpriteType.Myconid:
+      index = 0x33;
       frameSkip = 2;
       break;
-    case 0x14a: // Dryad
-      monsterId = 0x4f;
+    case SpriteType.Dryad:
+      index = 0x4f;
       break;
-    case 0x14c: // Mimic Candle
-      monsterId = 0x50;
+    case SpriteType.MimicCandle:
+      index = 0x50;
       break;
-    case 0x14d: // Scary Candle
-      monsterId = 0x88;
+    case SpriteType.ScaryCandle:
+      index = 0x88;
       break;
-    case 0x14e: // Trick Candle
-      monsterId = 0x89;
+    case SpriteType.TrickCandle:
+      index = 0x89;
       break;
-    case 0x14f: // Devil Tower
-      monsterId = 0x28;
+    case SpriteType.DevilTower:
+      index = 0x28;
       break;
-    case 0x150: // Evil Pillar
-      monsterId = 0x3c;
+    case SpriteType.EvilPillar:
+      index = 0x3c;
       break;
-    case 0x155: // Marionette
-      monsterId = 0x39;
+    case SpriteType.Marionette:
+      index = 0x39;
       break;
-    case 0x158: // Poltergeist
-      monsterId = 0xf;
+    case SpriteType.Poltergeist:
+      index = 0xf;
       frameSkip = 3;
       break;
-    case 0x15c: // Bloody Sword
-      monsterId = 0x23;
+    case SpriteType.BloodySword:
+      index = 0x23;
       break;
-    case 0x160: // Poison Worm
-      monsterId = 0x32;
+    case SpriteType.PoisonWorm:
+      index = 0x32;
       break;
-    case 0x163: // Abiondarg
-      monsterId = 0x53;
+    case SpriteType.Abiondarg:
+      index = 0x53;
       break;
-    case 0x165: // Slime
-      monsterId = 0x2f;
+    case SpriteType.Slime:
+      index = 0x2f;
       break;
-    case 0x168: // Evil Hand
-      monsterId = 0x52;
+    case SpriteType.EvilHand:
+      index = 0x52;
       break;
-    case 0x169: // Brain Float
-      monsterId = 0x51;
+    case SpriteType.BrainFloat:
+      index = 0x51;
       break;
-    case 0x16e: // Spirit
-      monsterId = 0x11;
+    case SpriteType.Spirit:
+      index = 0x11;
       frameSkip = 4;
       break;
-    case 0x16f: // Ectoplasm
-      monsterId = 0x12;
+    case SpriteType.Ectoplasm:
+      index = 0x12;
       frameSkip = 4;
       break;
-    case 0x170: // Specter
-      monsterId = 0x13;
+    case SpriteType.Specter:
+      index = 0x13;
       frameSkip = 4;
       break;
-    case 0x171: // Will O'Wisp
-      monsterId = 0x34;
+    case SpriteType.WillOWisp:
+      index = 0x34;
       break;
-    case 0x172: // Legion
-      monsterId = 0x62;
+    case SpriteType.Legion:
+      index = 0x62;
       break;
 
     // Battle Arena
-    // case 0x: monsterId = 0x6a; break; // Were-jaguar
-    // case 0x: monsterId = 0x6b; break; // Were-wolf
-    // case 0x: monsterId = 0x6c; break; // Catoblepas
-    // case 0x: monsterId = 0x6d; break; // Hipogriff
-    // case 0x: monsterId = 0x6e; break; // Wind Demon
-    // case 0x: monsterId = 0x6f; break; // Witch
-    // case 0x: monsterId = 0x70; break; // Stone Armor
-    // case 0x: monsterId = 0x71; break; // Devil Tower
-    // case 0x: monsterId = 0x72; break; // Skeleton
-    // case 0x: monsterId = 0x73; break; // Skeleton Bomber
-    // case 0x: monsterId = 0x74; break; // Electric Skeleton
-    // case 0x: monsterId = 0x75; break; // Skeleton Spear
-    // case 0x: monsterId = 0x76; break; // Flame Demon
-    // case 0x: monsterId = 0x77; break; // Bone Tower
-    // case 0x: monsterId = 0x78; break; // Fox Hunter
-    // case 0x: monsterId = 0x79; break; // Poison Armor
-    // case 0x: monsterId = 0x7a; break; // Bloody Sword
-    // case 0x: monsterId = 0x7b; break; // Abiondarg
-    // case 0x: monsterId = 0x7c; break; // Legion
-    // case 0x: monsterId = 0x7d; break; // Marionette
-    // case 0x: monsterId = 0x7e; break; // Minotaur
-    // case 0x: monsterId = 0x7f; break; // Arachne
-    // case 0x: monsterId = 0x80; break; // Succubus
-    // case 0x: monsterId = 0x81; break; // Demon Lord
-    // case 0x: monsterId = 0x82; break; // Alraune
-    // case 0x: monsterId = 0x83; break; // Hyena
-    // case 0x: monsterId = 0x84; break; // Devil Armor
-    // case 0x: monsterId = 0x85; break; // Evil Pillar
-    // case 0x: monsterId = 0x86; break; // White Armor
-    // case 0x: monsterId = 0x87; break; // Devil
+    // case 0x: index = 0x6a; break; // Were-jaguar
+    // case 0x: index = 0x6b; break; // Were-wolf
+    // case 0x: index = 0x6c; break; // Catoblepas
+    // case 0x: index = 0x6d; break; // Hipogriff
+    // case 0x: index = 0x6e; break; // Wind Demon
+    // case 0x: index = 0x6f; break; // Witch
+    // case 0x: index = 0x70; break; // Stone Armor
+    // case 0x: index = 0x71; break; // Devil Tower
+    // case 0x: index = 0x72; break; // Skeleton
+    // case 0x: index = 0x73; break; // Skeleton Bomber
+    // case 0x: index = 0x74; break; // Electric Skeleton
+    // case 0x: index = 0x75; break; // Skeleton Spear
+    // case 0x: index = 0x76; break; // Flame Demon
+    // case 0x: index = 0x77; break; // Bone Tower
+    // case 0x: index = 0x78; break; // Fox Hunter
+    // case 0x: index = 0x79; break; // Poison Armor
+    // case 0x: index = 0x7a; break; // Bloody Sword
+    // case 0x: index = 0x7b; break; // Abiondarg
+    // case 0x: index = 0x7c; break; // Legion
+    // case 0x: index = 0x7d; break; // Marionette
+    // case 0x: index = 0x7e; break; // Minotaur
+    // case 0x: index = 0x7f; break; // Arachne
+    // case 0x: index = 0x80; break; // Succubus
+    // case 0x: index = 0x81; break; // Demon Lord
+    // case 0x: index = 0x82; break; // Alraune
+    // case 0x: index = 0x83; break; // Hyena
+    // case 0x: index = 0x84; break; // Devil Armor
+    // case 0x: index = 0x85; break; // Evil Pillar
+    // case 0x: index = 0x86; break; // White Armor
+    // case 0x: index = 0x87; break; // Devil
 
     // Bosses
-    // case 0x174: monsterId = 0x44; isBoss = true; break; // Cerberus
-    // case 0x17f: monsterId = 0x4c; isBoss = true; break; // Necromancer
-    // case 0x18a: monsterId = 0x54; isBoss = true; break; // Iron Golem
-    // case 0x191: monsterId = 0x59; isBoss = true; break; // Adramelech
-    // case 0x199: monsterId = 0x5f; isBoss = true; break; // Dragon Zombie
-    // case 0x1a6: monsterId = 0x64; isBoss = true; break; // Death
-    // case 0x1b7: monsterId = 0x65; isBoss = true; break; // Camilla
-    // case 0x1bf: monsterId = 0x66; isBoss = true; break; // Hugh
-    // case 0x: monsterId = 0x68; break; // Dracula 2nd form
+    // case SpriteType.Cerberus: index = 0x44; isBoss = true; break; // Cerberus
+    // case SpriteType.Necromancer: index = 0x4c; isBoss = true; break; // Necromancer
+    // case SpriteType.IronGolem: index = 0x54; isBoss = true; break; // Iron Golem
+    // case SpriteType.Adramelech: index = 0x59; isBoss = true; break; // Adramelech
+    // case SpriteType.DragonZombie: index = 0x5f; isBoss = true; break; // Dragon Zombie
+    // case SpriteType.Death: index = 0x64; isBoss = true; break; // Death
+    // case SpriteType.Camilla: index = 0x65; isBoss = true; break; // Camilla
+    // case SpriteType.Hugh: index = 0x66; isBoss = true; break; // Hugh
+    // case 0x: index = 0x68; break; // Dracula 2nd form
 
-    case 0x1ca: // Dracula 1st form
-      monsterId = 0x67;
+    case SpriteType.Dracula1stform:
+      index = 0x67;
       isBoss = true;
       break;
-    case 0x1d0: // Morris Baldwin
-      monsterId = 0x67;
+    case SpriteType.MorrisBaldwin:
+      index = 0x67;
       isBoss = true;
       frameSkip = 22;
       break;
   }
 
-  const monsterIndex = monsters.findIndex(
-    (monster) => monster.index === monsterId,
-  );
-
-  const monster = monsterId !== -1 && monsters[monsterIndex];
-
-  if (monster) {
-    return { ...monster, isBoss, frameSkip };
+  if (index !== -1) {
+    return { index, isBoss, frameSkip };
   }
-
-  return false;
 }
 
 export function getSpriteFrameOffset(
   type: number,
-  spriteId: number,
-  spriteSpecial: number,
-  monster: MonsterSprite | false,
+  subtype: number,
+  objectSetIndex: number,
+  enemy?: EnemySprite,
 ): number {
   const $gameRegion = get(gameRegion);
 
@@ -413,21 +534,17 @@ export function getSpriteFrameOffset(
 
   let offset = 0x0;
 
-  if (monster) {
-    const pointer =
-      getInt(eventsTableOffset + 0x86 * 0x4, "uint24") +
-      0xf3 -
-      ($gameRegion === 0x2 ? 0x4 : 0x0);
-
+  if (enemy) {
+    const eventPointer = getInt(eventsTableOffset + 0x86 * 0x4, "uint24");
+    const pointer = eventPointer + 0xf3 - ($gameRegion === 0x2 ? 0x4 : 0x0);
     const framesInfosPointer = getInt(pointer, "uint24");
     const framesTable = getInt(
-      framesInfosPointer + monster.index * 0xc + 0x4,
+      framesInfosPointer + enemy.index * 0xc + 0x4,
       "uint24",
     );
 
     offset = framesTable;
-  } else if (type === 0x1de) {
-    // Chandelier
+  } else if (type === SpriteType.Chandelier) {
     const pointer = eventPointer + 0x103 - ($gameRegion === 0x2 ? 0x4 : 0x0);
     const framesInfosPointer = getInt(pointer, "uint24");
     const framesIndexTable = getInt(framesInfosPointer, "uint24");
@@ -439,8 +556,7 @@ export function getSpriteFrameOffset(
     );
 
     offset = framesTable + frameIndex * 0x8;
-  } else if (type === 0x1df) {
-    // Torch
+  } else if (type === SpriteType.Torch) {
     const pointer = eventPointer + 0xbb - ($gameRegion === 0x2 ? 0x4 : 0x0);
     const framesInfosPointer = getInt(pointer, "uint24");
     const framesIndexTable = getInt(framesInfosPointer, "uint24");
@@ -452,22 +568,20 @@ export function getSpriteFrameOffset(
     );
 
     offset = framesTable + frameIndex * 0x8;
-  } else if (type === 0x1e4) {
-    // Stats Container
+  } else if (type === SpriteType.StatsContainer) {
     const pointer = eventPointer + 0xdb - ($gameRegion === 0x2 ? 0x4 : 0x0);
     const framesInfosPointer = getInt(pointer, "uint24");
     const framesIndexTable = getInt(framesInfosPointer, "uint24");
     const framesTable = getInt(framesInfosPointer + 0x4, "uint24");
     const spriteIndexTable = getInt(pointer + 0x4, "uint24");
-    const spriteIndex = getInt(spriteIndexTable + spriteId * 0x2, "uint16");
+    const spriteIndex = getInt(spriteIndexTable + subtype * 0x2, "uint16");
     const frameIndex = getInt(
       framesIndexTable + spriteIndex * 0x4 + 0x2,
       "uint16",
     );
 
     offset = framesTable + frameIndex * 0x8;
-  } else if (type === 0x1e6) {
-    // DSS Card
+  } else if (type === SpriteType.DSSCard) {
     const framesInfosPointer = getInt(eventPointer + 0xbf, "uint24");
     const framesIndexTable = getInt(framesInfosPointer, "uint24");
     const framesTable = getInt(framesInfosPointer + 0x4, "uint24");
@@ -478,8 +592,7 @@ export function getSpriteFrameOffset(
     );
 
     offset = framesTable + frameIndex * 0x8;
-  } else if (type === 0x1e7) {
-    // Shining Armor
+  } else if (type === SpriteType.ShiningArmor) {
     const framesTable = getInt(eventPointer + 0x1f7, "uint24");
     const spriteIndexTable = getInt(eventPointer + 0x1f3, "uint24");
     const spriteIndex = 0xa;
@@ -489,20 +602,18 @@ export function getSpriteFrameOffset(
     );
 
     offset = framesTable + frameIndex * 0x8;
-  } else if (type === 0x1e8) {
-    // Magic Item
+  } else if (type === SpriteType.MagicItem) {
     const pointer = eventPointer + 0x1cb - ($gameRegion === 0x2 ? 0x4 : 0x0);
     const framesTable = getInt(pointer, "uint24");
     const spriteIndexTable = getInt(pointer + 0x4, "uint24");
-    const spriteIndex = spriteIndexTable + spriteId * 0x2;
+    const spriteIndex = spriteIndexTable + subtype * 0x2;
     const frameIndex = getInt(spriteIndex, "uint16");
 
     offset = framesTable + frameIndex * 0x8;
-  } else if (type === 0x1ea) {
-    // Moving Box
+  } else if (type === SpriteType.MovingBox) {
     let spriteIndex = 0x0;
 
-    switch (spriteSpecial) {
+    switch (objectSetIndex) {
       case 0x0:
       case 0x1:
         spriteIndex = 0x0;
@@ -528,11 +639,10 @@ export function getSpriteFrameOffset(
     const frameIndex = getInt(spriteIndexTable + spriteIndex * 0x2, "uint16");
 
     offset = framesTable + frameIndex * 0x8;
-  } else if (type === 0x1eb) {
-    // Destructible Block
+  } else if (type === SpriteType.DestructibleBlock) {
     let spriteIndex = 0x0;
 
-    switch (spriteSpecial) {
+    switch (objectSetIndex) {
       case 0x0:
       case 0x1:
       case 0x2:
@@ -559,11 +669,10 @@ export function getSpriteFrameOffset(
     const frameIndex = getInt(spriteIndexTable + spriteIndex * 0x2, "uint16");
 
     offset = framesTable + frameIndex * 0x8;
-  } else if (type === 0x1ec) {
-    // Door
+  } else if (type === SpriteType.Door) {
     let spriteIndex = 0x0;
 
-    switch (spriteSpecial) {
+    switch (objectSetIndex) {
       case 0x0:
         spriteIndex = 0x0;
         break;
@@ -607,8 +716,7 @@ export function getSpriteFrameOffset(
     const frameIndex = getInt(framesIndexTable + 0x2, "uint16");
 
     offset = framesTable + frameIndex * 0x8;
-  } else if (type === 0x1ed) {
-    // Switch
+  } else if (type === SpriteType.Switch1) {
     const pointer = eventPointer + 0x153 - ($gameRegion === 0x2 ? 0x4 : 0x0);
     const framesInfosPointer = getInt(pointer, "uint24");
     const framesIndexTable = getInt(framesInfosPointer + 0xc, "uint24");
@@ -616,25 +724,22 @@ export function getSpriteFrameOffset(
     const frameIndex = getInt(framesIndexTable + 0xd * 0x4 + 0x2, "uint16");
 
     offset = framesTable + frameIndex * 0x8;
-  } else if (type === 0x1ee) {
-    // Blue Block
+  } else if (type === SpriteType.BlueBlock) {
     const framesInfosPointer = getInt(eventPointer + 0x157, "uint24");
     const framesTable = getInt(framesInfosPointer + 0x4, "uint24");
 
     offset = framesTable + 0x9db * 0x8;
-  } else if (type === 0x1f1) {
-    // Switch
+  } else if (type === SpriteType.Switch2) {
     const framesInfosPointer = getInt(eventPointer + 0x1ff, "uint24");
     const framesIndexTable = getInt(eventPointer + 0x203, "uint24");
     const framesTable = getInt(framesInfosPointer + 0x4, "uint24");
     const frameIndex = getInt(framesIndexTable, "uint16");
 
     offset = framesTable + frameIndex * 0x8;
-  } else if (type === 0x1f4) {
-    // Boss Door
+  } else if (type === SpriteType.BossDoor) {
     let spriteIndex = 0x0;
 
-    switch (spriteSpecial - 0x3) {
+    switch (objectSetIndex - 0x3) {
       case 0x0:
         spriteIndex = 0x0;
         break;
@@ -671,8 +776,7 @@ export function getSpriteFrameOffset(
     );
 
     offset = framesTable + frameIndex * 0x8;
-  } else if (type === 0x1f5) {
-    // Destructible Platform
+  } else if (type === SpriteType.DestructiblePlatform1) {
     const pointer = eventPointer + 0x1e7 - ($gameRegion === 0x2 ? 0x4 : 0x0);
     const framesInfosPointer = getInt(pointer, "uint24");
     const framesIndexTable = getInt(pointer + 0x4, "uint24");
@@ -680,8 +784,7 @@ export function getSpriteFrameOffset(
     const frameIndex = getInt(framesIndexTable, "uint16");
 
     offset = framesTable + frameIndex * 0x8;
-  } else if (type === 0x1f6) {
-    // Destructible Platform
+  } else if (type === SpriteType.DestructiblePlatform2) {
     const pointer = eventPointer + 0x1e3 - ($gameRegion === 0x2 ? 0x8 : 0x0);
     const framesInfosPointer = getInt(pointer, "uint24");
     const framesIndexTable = getInt(pointer + 0x4, "uint24");
@@ -689,7 +792,7 @@ export function getSpriteFrameOffset(
     const frameIndex = getInt(framesIndexTable, "uint16");
 
     offset = framesTable + frameIndex * 0x8;
-  } else if (type === 0x1f7) {
+  } else if (type === SpriteType.CollapsingPlatform) {
     // Collapsing Platform
     const pointer = eventPointer + 0x1e3 - ($gameRegion === 0x2 ? 0x8 : 0x0);
     const framesInfosPointer = getInt(pointer, "uint24");
@@ -698,8 +801,7 @@ export function getSpriteFrameOffset(
     const frameIndex = getInt(framesIndexTable, "uint16");
 
     offset = framesTable + frameIndex * 0x8;
-  } else if (type === 0x1f9) {
-    // Horizontal Moving Platform
+  } else if (type === SpriteType.HorizontalMovingPlatform) {
     const pointer = eventPointer + 0xff - ($gameRegion === 0x2 ? 0x4 : 0x0);
     const framesInfosPointer = getInt(pointer, "uint24");
     const framesIndexTable = getInt(framesInfosPointer, "uint24");
@@ -715,8 +817,7 @@ export function getSpriteFrameOffset(
     );
 
     offset = framesTable + frameIndex * 0x8;
-  } else if (type === 0x1fa) {
-    // Vertical Moving Platform
+  } else if (type === SpriteType.VerticalMovingPlatform) {
     const pointer = eventPointer + 0x20f - ($gameRegion === 0x2 ? 0x8 : 0x0);
     const framesInfosPointer = getInt(pointer, "uint24");
     const framesIndexTable = getInt(pointer + 0x4, "uint24");
@@ -724,8 +825,7 @@ export function getSpriteFrameOffset(
     const frameIndex = getInt(framesIndexTable, "uint16");
 
     offset = framesTable + frameIndex * 0x8;
-  } else if (type === 0x1fd) {
-    // Last Door
+  } else if (type === SpriteType.LastDoor) {
     const pointer = eventPointer + 0x13b + ($gameRegion === 0x2 ? 0x4 : 0x0);
     const framesInfosPointer = getInt(pointer, "uint24");
     const framesIndexTable = getInt(framesInfosPointer, "uint24");
