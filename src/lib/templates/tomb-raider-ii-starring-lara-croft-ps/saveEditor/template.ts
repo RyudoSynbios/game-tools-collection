@@ -1,4 +1,4 @@
-import type { GameJson, Resource } from "$lib/types";
+import type { GameJson } from "$lib/types";
 
 const template: GameJson = {
   validator: {

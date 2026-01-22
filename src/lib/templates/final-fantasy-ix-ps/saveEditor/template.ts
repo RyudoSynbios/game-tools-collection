@@ -382,7 +382,7 @@ const template: GameJson = {
                                       dataType: "int24",
                                     },
                                     {
-                                      name: "Rotation Y",
+                                      name: "Orientation",
                                       offset: 0x208,
                                       type: "variable",
                                       dataType: "int8",
@@ -414,7 +414,7 @@ const template: GameJson = {
                                       dataType: "int24",
                                     },
                                     {
-                                      name: "Rotation Y",
+                                      name: "Orientation",
                                       offset: 0x212,
                                       type: "variable",
                                       dataType: "int8",
@@ -446,7 +446,7 @@ const template: GameJson = {
                                       dataType: "int24",
                                     },
                                     {
-                                      name: "Rotation Y",
+                                      name: "Orientation",
                                       offset: 0x21b,
                                       type: "variable",
                                       dataType: "int8",

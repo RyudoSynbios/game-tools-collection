@@ -268,7 +268,7 @@ const template: GameJson = {
                       hidden: true,
                     },
                     {
-                      name: "Rotation Y",
+                      name: "Orientation",
                       offset: 0x314,
                       type: "variable",
                       dataType: "int8",
