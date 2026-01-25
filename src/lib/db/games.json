@@ -965,6 +965,17 @@
     }
   },
   {
+    "id": "solatorobo-red-the-hunter-ds",
+    "name": "Solatorobo: Red the Hunter",
+    "consoleId": "nintendo-ds",
+    "tools": {
+      "saveEditor": {
+        "createdAt": "2026-01-25",
+        "regions": ["🇪🇺", "🇺🇸", "🇯🇵"]
+      }
+    }
+  },
+  {
     "id": "soleil-md",
     "name": "Soleil",
     "metaName": "Soleil (Crusader of Centy)",
