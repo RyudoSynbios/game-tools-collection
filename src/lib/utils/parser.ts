@@ -132,36 +132,19 @@ export function parseItem(
 
   let newItem = clone(item) as any;
 
-  const parentIndex = parents[parents.length - 2]?.index || 0;
-  const instanceIndex = parents[parents.length - 1]?.index || 0;
-
-  if (newItem.id !== undefined) {
-    newItem.id = newItem.id
-      .replace("%parent%", parentIndex)
-      .replace("%index%", instanceIndex);
-  }
-
-  if (newItem.dataViewAltKey !== undefined) {
-    newItem.dataViewAltKey = newItem.dataViewAltKey
-      .replace("%parent%", parentIndex)
-      .replace("%index%", instanceIndex);
-  }
-
-  if (newItem.resource !== undefined) {
-    newItem.resource = newItem.resource
-      .replace("%parent%", parentIndex)
-      .replace("%index%", instanceIndex);
-  }
+  ["id", "dataViewAltKey", "resource"].forEach((key) => {
+    regexReplace(newItem, key, parents);
+  });
 
   if (newItem.button?.action !== undefined) {
-    newItem.button.action = newItem.button.action
-      .replace("%parent%", parentIndex)
-      .replace("%index%", instanceIndex);
+    regexReplace(newItem.button, "action", parents);
   }
 
   if ("uncontrolled" in item && item.id === undefined) {
     newItem.id = generateUUID();
   }
+
+  const instanceIndex = parents[parents.length - 1]?.index || 0;
 
   if (utilsExists("overrideParseItem")) {
     newItem = $gameUtils.overrideParseItem(newItem, instanceIndex);
@@ -454,7 +437,7 @@ export function parseContainer(
   return parsedItem;
 }
 
-export function checkMissingFields(item: Item): void {
+function checkMissingFields(item: Item): void {
   const $isDebug = get(isDebug);
 
   const errors = [];
@@ -544,6 +527,29 @@ export function checkMissingFields(item: Item): void {
         }' type but missing the '${error}' field`,
       );
     });
+  }
+}
+
+function regexReplace(item: any, key: string, parents: ItemParent[]): void {
+  if (item[key] === undefined || !item[key].match(/%/)) {
+    return;
+  }
+
+  if (item[key].match(/%index%/)) {
+    const instanceIndex = parents.at(-1)?.index || 0;
+
+    item[key] = item[key].replace("%index%", `${instanceIndex}`);
+  }
+
+  if (item[key].match(/%parent(\d|)%/)) {
+    let match;
+
+    while ((match = /%parent(\d|)%/.exec(item[key]))) {
+      const n = 2 + (parseInt(match[1]) || 0);
+      const parentIndex = parents.at(-n)?.index || 0;
+
+      item[key] = item[key].replace(match[0], `${parentIndex}`);
+    }
   }
 }
 
