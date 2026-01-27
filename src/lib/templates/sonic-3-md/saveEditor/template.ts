@@ -167,7 +167,7 @@ const template: GameJson = {
                         { offset: 0xba, bit: 4, label: "Blue" },
                         { offset: 0xba, bit: 3, label: "White" },
                         { offset: 0xba, bit: 2, label: "Red" },
-                        { offset: 0xba, bit: 1, label: "Turquoise" },
+                        { offset: 0xba, bit: 1, label: "Cyan" },
                       ],
                     },
                     {
@@ -258,7 +258,7 @@ const template: GameJson = {
                       dataType: "uint8",
                     },
                     {
-                      name: "Number of Chaos Emerald?",
+                      name: "Number of Chaos Emeralds?",
                       offset: 0x142,
                       type: "variable",
                       dataType: "lower4",
