@@ -117,7 +117,7 @@
     label = item.name || "";
 
     if ($isDebug && $debugOptions.showInputOffsets) {
-      label = `[0x${item.offset.toHex()}] ${label}`;
+      label = `[0x${item.offset.toHex()}]${item.bit !== undefined ? ` [${item.bit}]` : ""} ${label}`;
     }
 
     min = getIntMin(item);
