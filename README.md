@@ -94,6 +94,7 @@ Link to the website: [https://game-tools-collection.com](https://game-tools-coll
 | Soleil                                       | MD       | Save / Rom              | EUR / USA / JAP / FRA / GER / SPA / KOR       |
 | Sonic 3                                      | MD       | Save                    | EUR / USA / JAP                               |
 | Sonic Adventure 2: Battle                    | GC       | Save                    | EUR / USA / JAP                               |
+| Sonic Rush                                   | DS       | Save                    | EUR / USA / JAP                               |
 | Super Mario 64                               | N64      | Save                    | EUR / USA / JAP                               |
 | Super Mario Galaxy                           | WII      | Save                    | EUR / USA / JAP / AUS / KOR                   |
 | Super Mario Galaxy 2                         | WII      | Save                    | EUR / USA / JAP / KOR                         |
