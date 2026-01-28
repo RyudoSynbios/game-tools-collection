@@ -17,55 +17,38 @@ export function initShifts(shifts: number[]): number[] {
   const shift = getShift(shifts);
 
   let section = 0;
+  let bestSaveCount = 0;
 
-  for (let i = 0x1; i < 0xa; i += 0x1) {
+  for (let i = 0x0; i < 0xa; i += 0x1) {
     const magic = getString(shift + i * 0x1000, 0x4, "uint8");
+    const saveCount = getInt(shift + i * 0x1000 + 0x4, "uint32");
 
-    if (magic !== "PIRO") {
-      break;
+    if (magic === "MGGE" && saveCount > bestSaveCount) {
+      section = i;
+      bestSaveCount = saveCount;
     }
-
-    section = i;
   }
 
   return [...shifts, section * 0x1000];
-}
-
-export function overrideParseItem(item: Item): Item {
-  const $gameRegion = get(gameRegion);
-
-  if (
-    "id" in item &&
-    item.id?.match(/language-chaos|option/) &&
-    $gameRegion !== 0
-  ) {
-    const itemInt = item as ItemInt;
-
-    itemInt.offset -= 0x1;
-
-    return itemInt;
-  }
-
-  return item;
 }
 
 export function overrideGetInt(item: Item): [boolean, number | undefined] {
   if ("id" in item && item.id === "time") {
     const itemInt = item as ItemInt;
 
-    const time = getInt(itemInt.offset, "uint32");
+    const time = getInt(itemInt.offset, "uint16");
 
     if (time === 36000) {
       return [true, makeOperations(time - 1, itemInt.operations)];
     }
-  } else if ("id" in item && item.id === "vsResult-0") {
-    const itemInt = item as ItemInt;
+    // } else if ("id" in item && item.id === "vsResult-0") {
+    //   const itemInt = item as ItemInt;
 
-    const wins = getInt(itemInt.offset, "uint8");
+    //   const wins = getInt(itemInt.offset, "uint8");
 
-    if (wins === 0xff) {
-      return [true, 0x0];
-    }
+    //   if (wins === 0xff) {
+    //     return [true, 0x0];
+    //   }
   }
 
   return [false, undefined];
@@ -75,7 +58,7 @@ export function overrideSetInt(item: Item, value: string): boolean {
   if ("id" in item && item.id === "time") {
     const itemInt = item as ItemInt;
 
-    const oldInt = getInt(itemInt.offset, "uint32");
+    const oldInt = getInt(itemInt.offset, "uint16");
 
     let int = makeOperations(parseInt(value), itemInt.operations, true);
     int = getPartialValue(oldInt, int, itemInt.operations!);
@@ -86,7 +69,7 @@ export function overrideSetInt(item: Item, value: string): boolean {
       int = Math.min(int, 35994);
     }
 
-    setInt(itemInt.offset, "uint32", int);
+    setInt(itemInt.offset, "uint16", int);
 
     return true;
   }
@@ -94,41 +77,41 @@ export function overrideSetInt(item: Item, value: string): boolean {
   return false;
 }
 
-export function afterSetInt(item: Item): void {
-  if ("id" in item && item.id === "progression") {
-    const itemInt = item as ItemInt;
+// export function afterSetInt(item: Item): void {
+//   if ("id" in item && item.id === "progression") {
+//     const itemInt = item as ItemInt;
 
-    const clear = getInt(itemInt.offset, "uint16") === 0xf ? 1 : 0;
+//     const clear = getInt(itemInt.offset, "uint16") === 0xf ? 1 : 0;
 
-    setInt(itemInt.offset + 0x41c, "bit", clear, { bit: 0 });
-  } else if ("id" in item && item.id?.match(/vsResult-/)) {
-    const itemInt = item as ItemInt;
+//     setInt(itemInt.offset + 0x41c, "bit", clear, { bit: 0 });
+//   } else if ("id" in item && item.id?.match(/vsResult-/)) {
+//     const itemInt = item as ItemInt;
 
-    const [shift] = item.id.splitInt();
+//     const [shift] = item.id.splitInt();
 
-    const offset = itemInt.offset - shift;
+//     const offset = itemInt.offset - shift;
 
-    let wins = getInt(offset, "uint8");
-    const losses = getInt(offset + 0x1, "uint8");
-    const draws = getInt(offset + 0x2, "uint8");
+//     let wins = getInt(offset, "uint8");
+//     const losses = getInt(offset + 0x1, "uint8");
+//     const draws = getInt(offset + 0x2, "uint8");
 
-    if (wins + losses + draws === 0) {
-      wins = 0xff;
-    } else if (wins === 0xff) {
-      wins = 0x0;
-    }
+//     if (wins + losses + draws === 0) {
+//       wins = 0xff;
+//     } else if (wins === 0xff) {
+//       wins = 0x0;
+//     }
 
-    setInt(offset, "uint8", wins);
-  } else if ("id" in item && item.id === "language-chaos") {
-    const itemInt = item as ItemInt;
+//     setInt(offset, "uint8", wins);
+//   } else if ("id" in item && item.id === "language-chaos") {
+//     const itemInt = item as ItemInt;
 
-    const language = getInt(itemInt.offset, "uint8");
+//     const language = getInt(itemInt.offset, "uint8");
 
-    const menu = language === 0x0 ? 0x0 : 0x1;
+//     const menu = language === 0x0 ? 0x0 : 0x1;
 
-    setInt(itemInt.offset - 0x1, "uint8", menu);
-  }
-}
+//     setInt(itemInt.offset - 0x1, "uint8", menu);
+//   }
+// }
 
 export function generateChecksum(item: ItemChecksum): number {
   let checksum = 0x0;

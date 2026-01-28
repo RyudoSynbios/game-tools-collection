@@ -29,14 +29,14 @@ test.describe(game, () => {
 
   // prettier-ignore
   const tests: Test[] = [
-    ["should load a standard save (Europe)"        ,     "europe.sav", ["r|europe", "c|0xd24d416b", "i|84", "w|85", "c|0xd24d416c"]],
-    ["should load a standard save (USA)"           ,        "usa.sav", ["r|usa"   , "c|0xd24c414b", "i|52", "w|53", "c|0xd24c414c"]],
-    ["should load a standard save (Japan)"         ,      "japan.sav", ["r|japan" , "c|0xd24c4051", "i|58", "w|59", "c|0xd24c4052"]],
-    ["should load a standard save (Japan) (Rev 1)" , "japan-rev1.sav", ["r|japan" , "c|0xd24c406d", "i|86", "w|87", "c|0xd24c406e"]],
-    ["should load a GameShark save (Europe)"       ,     "europe.sps", ["r|europe", "c|0xd24d416b", "i|84", "w|85", "c|0xd24d416c"]],
-    ["should load a GameShark save (USA)"          ,        "usa.sps", ["r|usa"   , "c|0xd24c414b", "i|52", "w|53", "c|0xd24c414c"]],
-    ["should load a GameShark save (Japan)"        ,      "japan.sps", ["r|japan" , "c|0xd24c4051", "i|58", "w|59", "c|0xd24c4052"]],
-    ["should load a GameShark save (Japan) (Rev 1)", "japan-rev1.sps", ["r|japan" , "c|0xd24c406d", "i|86", "w|87", "c|0xd24c406e"]],
+    ["should load a standard save (Europe)"        ,     "europe.sav", ["r|europe", "s|4", "c|0xd24d416b", "i|84", "w|85", "c|0xd24d416c"]],
+    ["should load a standard save (USA)"           ,        "usa.sav", ["r|usa"   , "s|4", "c|0xd24c414b", "i|52", "w|53", "c|0xd24c414c"]],
+    ["should load a standard save (Japan)"         ,      "japan.sav", ["r|japan" , "s|4", "c|0xd24c4051", "i|58", "w|59", "c|0xd24c4052"]],
+    ["should load a standard save (Japan) (Rev 1)" , "japan-rev1.sav", ["r|japan" , "s|4", "c|0xd24c406d", "i|86", "w|87", "c|0xd24c406e"]],
+    ["should load a GameShark save (Europe)"       ,     "europe.sps", ["r|europe", "s|4", "c|0xd24d416b", "i|84", "w|85", "c|0xd24d416c"]],
+    ["should load a GameShark save (USA)"          ,        "usa.sps", ["r|usa"   , "s|4", "c|0xd24c414b", "i|52", "w|53", "c|0xd24c414c"]],
+    ["should load a GameShark save (Japan)"        ,      "japan.sps", ["r|japan" , "s|4", "c|0xd24c4051", "i|58", "w|59", "c|0xd24c4052"]],
+    ["should load a GameShark save (Japan) (Rev 1)", "japan-rev1.sps", ["r|japan" , "s|4", "c|0xd24c406d", "i|86", "w|87", "c|0xd24c406e"]],
   ];
 
   tests.forEach(([title, saveFilePath, args]) => {

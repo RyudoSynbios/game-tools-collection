@@ -91,6 +91,7 @@ const template: GameJson = {
                             {
                               type: "section",
                               flex: true,
+                              noMargin: true,
                               items: [
                                 {
                                   id: "progression-sonic",
@@ -188,6 +189,7 @@ const template: GameJson = {
                             {
                               type: "section",
                               flex: true,
+                              noMargin: true,
                               items: [
                                 {
                                   id: "progression-blaze",
@@ -604,23 +606,23 @@ const template: GameJson = {
   },
   resourcesLabels: {
     blazeProgressions: {
-      0x0: "Zone 1",
-      0x5: "Zone 2",
-      0x8: "Zone 3",
-      0xb: "Zone 4",
-      0xf: "Zone 5",
-      0x13: "Zone 6",
-      0x17: "Zone 7",
+      0x0: "Zone 1: Night Carnival",
+      0x5: "Zone 2: Leaf Storm",
+      0x8: "Zone 3: Mirage Road",
+      0xb: "Zone 4: Water Palace",
+      0xf: "Zone 5: Altitude Limit",
+      0x13: "Zone 6: Huge Crisis",
+      0x17: "Zone 7: Dead Line",
       0x1b: "Final Zone",
     },
     sonicProgressions: {
-      0x0: "Zone 1",
-      0x3: "Zone 2",
-      0x7: "Zone 3",
-      0xb: "Zone 4",
-      0xe: "Zone 5",
-      0x12: "Zone 6",
-      0x16: "Zone 7",
+      0x0: "Zone 1: Leaf Storm",
+      0x5: "Zone 2: Water Palace",
+      0x8: "Zone 3: Mirage Road",
+      0xb: "Zone 4: Night Carnival",
+      0xf: "Zone 5: Huge Crisis",
+      0x13: "Zone 6: Altitude Limit",
+      0x17: "Zone 7: Dead Line",
       0x19: "Final Zone",
     },
   },
