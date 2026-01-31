@@ -1014,6 +1014,17 @@
     }
   },
   {
+    "id": "sonic-rush-ds",
+    "name": "Sonic Rush",
+    "consoleId": "nintendo-ds",
+    "tools": {
+      "saveEditor": {
+        "createdAt": "2026-01-31",
+        "regions": ["🇪🇺", "🇺🇸", "🇯🇵"]
+      }
+    }
+  },
+  {
     "id": "super-mario-64-n64",
     "name": "Super Mario 64",
     "consoleId": "nintendo-64",
