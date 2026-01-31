@@ -95,6 +95,7 @@ Link to the website: [https://game-tools-collection.com](https://game-tools-coll
 | Sonic 3                                      | MD       | Save                    | EUR / USA / JAP                               |
 | Sonic Advance                                | GBA      | Save                    | EUR / USA / JAP                               |
 | Sonic Advance 2                              | GBA      | Save                    | EUR / USA / JAP                               |
+| Sonic Advance 3                              | GBA      | Save                    | EUR / USA / JAP                               |
 | Sonic Adventure 2: Battle                    | GC       | Save                    | EUR / USA / JAP                               |
 | Sonic Rush                                   | DS       | Save                    | EUR / USA / JAP                               |
 | Super Mario 64                               | N64      | Save                    | EUR / USA / JAP                               |
