@@ -1014,6 +1014,17 @@
     }
   },
   {
+    "id": "sonic-advance-2-gba",
+    "name": "Sonic Advance 2",
+    "consoleId": "game-boy-advance",
+    "tools": {
+      "saveEditor": {
+        "createdAt": "2026-01-31",
+        "regions": ["🇪🇺", "🇺🇸", "🇯🇵"]
+      }
+    }
+  },
+  {
     "id": "sonic-adventure-2-battle-gc",
     "name": "Sonic Adventure 2: Battle",
     "consoleId": "gamecube",
