@@ -1,7 +1,7 @@
 import { get } from "svelte/store";
 
 import { gameRegion, gameTemplate } from "$lib/stores";
-import { getInt, setInt } from "$lib/utils/bytes";
+import { getInt, getString, setInt } from "$lib/utils/bytes";
 import { formatChecksum } from "$lib/utils/checksum";
 
 import type { Item, ItemChecksum, ItemInt, ItemString } from "$lib/types";
@@ -74,11 +74,11 @@ export function overrideGetInt(item: Item): [boolean, number | undefined] {
   if ("id" in item && item.id === "professionalMode") {
     const itemInt = item as ItemInt;
 
-    const magic = getInt(itemInt.offset, "uint24", { bigEndian: true });
+    const magic = getString(itemInt.offset, 0x3, "uint8");
 
-    const isUnlocked = magic === 0x414354;
+    const isUnlocked = magic === "ACT" ? 1 : 0;
 
-    return [true, isUnlocked ? 1 : 0];
+    return [true, isUnlocked];
   } else if ("id" in item && item.id === "areaProgression") {
     const itemInt = item as ItemInt;
 
