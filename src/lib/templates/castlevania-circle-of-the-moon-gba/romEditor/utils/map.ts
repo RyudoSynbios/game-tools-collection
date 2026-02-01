@@ -260,7 +260,7 @@ export default class CCOTMMap {
 
               background.data[rowOffset] = getInt(chunkOffset, "uint16");
 
-              if (background.collisions.byteLength > 0) {
+              if (background.collisions.length > 0) {
                 background.collisions[rowOffset] = getInt(collisionOffset++, "uint8");
               }
 

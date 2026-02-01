@@ -245,7 +245,7 @@ export function setLocalStorage(key: string, value: number | string): void {
 
 export function mergeUint8Arrays(...uint8Arrays: Uint8Array[]): Uint8Array {
   const length = uint8Arrays.reduce(
-    (length, uint8Array) => (length += uint8Array.byteLength),
+    (length, uint8Array) => (length += uint8Array.length),
     0,
   );
 
@@ -256,7 +256,7 @@ export function mergeUint8Arrays(...uint8Arrays: Uint8Array[]): Uint8Array {
   uint8Arrays.forEach((array) => {
     uint8Array.set(array, offset);
 
-    offset += array.byteLength;
+    offset += array.length;
   });
 
   return uint8Array;

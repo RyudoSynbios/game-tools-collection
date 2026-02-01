@@ -283,7 +283,7 @@
             if (parent) {
               parent.add(group);
             } else {
-              debug.warn("parent not found");
+              debug.warn("parent not found.");
               mainGroup.add(group);
             }
           }

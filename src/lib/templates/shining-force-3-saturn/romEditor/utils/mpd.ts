@@ -348,7 +348,9 @@ function getTextures(offset: number, dataView: DataView): Texture[] {
   const textureCount = getIntFromArray(decompressedData, 0x0, "uint16", true);
 
   if (textureCount > 200) {
-    debug.warn("Texture count", offset.toHex(), textureCount);
+    debug.warn(
+      `Texture count at "0x${offset.toHex(0, true)}" is > 200 (${textureCount})`,
+    );
   } else {
     for (let i = 0x0; i < textureCount; i += 0x1) {
       const width = decompressedData[0x4 + i * 0x4];

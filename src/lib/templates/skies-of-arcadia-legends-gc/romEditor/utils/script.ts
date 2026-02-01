@@ -3951,7 +3951,7 @@ export default class Script {
 
     if (variables.length === 2) {
       debug.warn(
-        `Weird variables length: ${variables.length}, ${texts.join("")} (${JSON.stringify(action)})`,
+        `Weird variables length: ${variables.length}, ${texts.join("")} (${JSON.stringify(action)}).`,
       );
     }
 

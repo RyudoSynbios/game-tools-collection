@@ -221,7 +221,7 @@ function writeNote(note: Note, blob: ArrayBuffer): void {
 
     mpkRawTmp.set(part, mpk.allocOffset + clusterIndex * mpk.pageLength);
 
-    offset += part.byteLength;
+    offset += part.length;
   });
 
   mpkRaw = new DataView(mpkRawTmp.buffer);
@@ -274,7 +274,7 @@ export function unpackMpk(dataView: DataView, shift: number): DataView {
 
             saves.push({ note, offset });
 
-            offset += binary.byteLength;
+            offset += binary.length;
           }
         });
       }

@@ -44,7 +44,7 @@ export function compressRemasteredSave(): ArrayBufferLike {
 
   const size = new Uint8Array(0x4);
 
-  size.set(intToArray(compressedData.byteLength, "uint32"));
+  size.set(intToArray(compressedData.length, "uint32"));
 
   const uint8Array = mergeUint8Arrays(size, compressedData);
 

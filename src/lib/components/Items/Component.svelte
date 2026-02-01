@@ -16,7 +16,7 @@
       component = $gameUtils.getComponent(item.component);
 
       if (!component) {
-        debug.warn(`Component '${item.component}' not found`);
+        debug.warn(`Component '${item.component}' not found.`);
       }
     }
   }

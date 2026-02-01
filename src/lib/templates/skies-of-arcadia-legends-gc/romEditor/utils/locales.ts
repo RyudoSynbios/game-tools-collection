@@ -264,11 +264,11 @@ export function writeEuropeLocales(): void {
 
     Object.values(sotSections).forEach((data, index) => {
       header.set(intToArray(offset, "uint32"), 0x30 + index * 0x30);
-      header.set(intToArray(data.byteLength, "uint32"), 0x3c + index * 0x30);
+      header.set(intToArray(data.length, "uint32"), 0x3c + index * 0x30);
 
       uint8Arrays.push(data);
 
-      offset += data.byteLength;
+      offset += data.length;
     });
 
     const data = mergeUint8Arrays(header, ...uint8Arrays);

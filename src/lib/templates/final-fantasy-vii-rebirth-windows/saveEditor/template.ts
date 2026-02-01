@@ -1255,7 +1255,7 @@ const template: GameJson = {
                       hidden: true,
                     },
                     {
-                      name: "Id",
+                      name: "ID",
                       offset: 0x60a6c,
                       type: "variable",
                       dataType: "uint32",
@@ -1311,7 +1311,7 @@ const template: GameJson = {
                   flex: true,
                   items: [
                     {
-                      name: "Id",
+                      name: "ID",
                       offset: 0xbfa68,
                       type: "variable",
                       dataType: "uint32",
@@ -1444,7 +1444,7 @@ const template: GameJson = {
                       hidden: true,
                     },
                     {
-                      name: "Id",
+                      name: "ID",
                       offset: 0x5fa6c,
                       type: "variable",
                       dataType: "uint32",
@@ -1500,7 +1500,7 @@ const template: GameJson = {
                   flex: true,
                   items: [
                     {
-                      name: "Id",
+                      name: "ID",
                       offset: 0xb3a68,
                       type: "variable",
                       dataType: "uint32",
@@ -1760,7 +1760,7 @@ const template: GameJson = {
                       hidden: true,
                     },
                     {
-                      name: "Id",
+                      name: "ID",
                       offset: 0x4fa6c,
                       type: "variable",
                       dataType: "uint32",

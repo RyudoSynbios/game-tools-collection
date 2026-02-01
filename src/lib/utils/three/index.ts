@@ -832,10 +832,10 @@ export default class Three {
 
         return mesh;
       } else {
-        debug.warn(`Mesh ${id} is cached but couldn't be find in scene`);
+        debug.warn(`Mesh ${id} is cached but couldn't be find in scene.`);
       }
     } else {
-      debug.warn(`Mesh ${id} is not cached`);
+      debug.warn(`Mesh ${id} is not cached.`);
     }
 
     return null;

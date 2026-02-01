@@ -323,7 +323,7 @@ function readFile(
 
       uint8Arrays.push(part);
 
-      fileSize += part.byteLength;
+      fileSize += part.length;
 
       if (fileSize >= file.size) {
         break;
@@ -383,7 +383,7 @@ function writeFile(file: File, blob: ArrayBuffer): void {
         }
       }
 
-      fileSize += part.byteLength;
+      fileSize += part.length;
 
       if (fileSize >= file.size) {
         break;
@@ -477,7 +477,7 @@ export function unpackMemoryCard(dataView: DataView): DataView {
 
               uint8Arrays.push(file);
 
-              offsetTmp += uint8Arrays[uint8Arrays.length - 1].byteLength;
+              offsetTmp += uint8Arrays[uint8Arrays.length - 1].length;
             }
           });
 

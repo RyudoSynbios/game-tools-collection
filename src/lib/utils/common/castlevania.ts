@@ -75,7 +75,7 @@ export function extractCastlevaniaCollectionSaves(
         saveLengths.push(decompressedData.length);
         uint8Arrays.push(decompressedData);
 
-        saveOffset += decompressedData.byteLength;
+        saveOffset += decompressedData.length;
       }
     }
   });

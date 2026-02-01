@@ -44,7 +44,7 @@ export function getDecompressedData(offset: number): Uint8Array {
   const size = getInt(offset, "uint32", { bigEndian: true });
 
   if (getInt(offset + 0x5, "uint8") !== 0x36) {
-    debug.warn("Not an asset file");
+    debug.warn("Not an asset file.");
 
     return new Uint8Array();
   }
@@ -103,7 +103,7 @@ export function setMesh(
   const offset = getIntFromArray(data, i + 0x5, "uint24", true);
 
   if (offset > decompressedData.length) {
-    debug.warn(`Offset 0x${offset.toHex()} is out of decompressedData length`);
+    debug.warn(`Offset 0x${offset.toHex()} is out of decompressedData length.`);
 
     return;
   }
@@ -206,7 +206,7 @@ export function setTextureOffsets(
 
     debug.color(`texture pixels: 0x${offset.toHex()}`, "purple");
   } else {
-    debug.warn(`Unknown texture type ${type.toHex(6)}`);
+    debug.warn(`Unknown texture type ${type.toHex(6)}.`);
   }
 }
 

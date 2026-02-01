@@ -101,7 +101,7 @@ function base64ToBytes(string: string): Buffer {
 
   const buffer = new Uint8Array(decoded.length) as Buffer;
 
-  for (let i = 0x0; i < buffer.byteLength; i += 0x1) {
+  for (let i = 0x0; i < buffer.length; i += 0x1) {
     buffer[i] = decoded.charCodeAt(i);
   }
 

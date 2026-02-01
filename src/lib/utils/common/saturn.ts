@@ -229,7 +229,7 @@ function writeFile(file: File, blob: ArrayBuffer): void {
       clusterIndex * memorySystem.blockSize + shift + indexesToSkip,
     );
 
-    offset += part.byteLength;
+    offset += part.length;
 
     indexesToSkip = Math.max(0, indexesToSkip - (memorySystem.blockSize - shift)); // prettier-ignore
   });
@@ -286,7 +286,7 @@ export function unpackMemorySystem(dataView: DataView): DataView {
 
           saves.push({ file, offset });
 
-          offset += binary.byteLength;
+          offset += binary.length;
         }
       });
     });

@@ -44,7 +44,7 @@ export function isDataViewAltExists(key: string): boolean {
   const exists = Boolean(key && $dataViewAlt[key]);
 
   if (key && !exists) {
-    debug.error(`dataViewAlt ${key} is not initialized`);
+    debug.error(`dataViewAlt ${key} is not initialized.`);
   }
 
   return exists;
@@ -292,7 +292,7 @@ export function extractBinary(
 
   const mask = base >>> shift;
 
-  return (number & mask) >> bitStart;
+  return (number & mask) >>> bitStart;
 }
 
 export function injectBinary(
@@ -461,7 +461,7 @@ export function getInt(
   const $dataView = getDataView(dataView);
 
   if (offset < 0x0) {
-    debug.error("Tried to read a negative offset");
+    debug.error("Tried to read a negative offset.");
 
     return 0x0;
   } else if (
@@ -469,7 +469,7 @@ export function getInt(
     offset + dataTypeToLength(dataType) - 1 > $dataView.byteLength - 1
   ) {
     debug.error(
-      `Tried to read bytes past the end of a buffer at offset 0x${offset.toHex()} of 0x${$dataView.byteLength.toHex()}`,
+      `Tried to read bytes past the end of a buffer at offset 0x${offset.toHex()} of 0x${$dataView.byteLength.toHex()}.`,
     );
 
     return 0x0;
@@ -550,7 +550,7 @@ export function setInt(
   }
 
   if (offset < 0x0) {
-    debug.error("Tried to write to a negative offset");
+    debug.error("Tried to write to a negative offset.");
 
     return;
   } else if (
@@ -558,7 +558,7 @@ export function setInt(
     offset + dataTypeToLength(dataType) - 1 > $dataView.byteLength - 1
   ) {
     debug.error(
-      `Tried to write bytes past the end of a buffer at offset 0x${offset.toHex()} of 0x${$dataView.byteLength.toHex()}`,
+      `Tried to write bytes past the end of a buffer at offset 0x${offset.toHex()} of 0x${$dataView.byteLength.toHex()}.`,
     );
 
     return;
@@ -687,7 +687,7 @@ export function getBigInt(
   const $dataView = getDataView(dataView);
 
   if (offset < 0x0) {
-    debug.error("Tried to read a negative offset");
+    debug.error("Tried to read a negative offset.");
 
     return BigInt(0x0);
   } else if (
@@ -695,7 +695,7 @@ export function getBigInt(
     offset + dataTypeToLength(dataType) - 1 > $dataView.byteLength - 1
   ) {
     debug.error(
-      `Tried to read bytes past the end of a buffer at offset 0x${offset.toHex()} of 0x${$dataView.byteLength.toHex()}`,
+      `Tried to read bytes past the end of a buffer at offset 0x${offset.toHex()} of 0x${$dataView.byteLength.toHex()}.`,
     );
 
     return BigInt(0x0);
@@ -732,7 +732,7 @@ export function setBigInt(
   }
 
   if (offset < 0x0) {
-    debug.error("Tried to write to a negative offset");
+    debug.error("Tried to write to a negative offset.");
 
     return;
   } else if (
@@ -740,7 +740,7 @@ export function setBigInt(
     offset + dataTypeToLength(dataType) - 1 > $dataView.byteLength - 1
   ) {
     debug.error(
-      `Tried to write bytes past the end of a buffer at offset 0x${offset.toHex()} of 0x${$dataView.byteLength.toHex()}`,
+      `Tried to write bytes past the end of a buffer at offset 0x${offset.toHex()} of 0x${$dataView.byteLength.toHex()}.`,
     );
 
     return;

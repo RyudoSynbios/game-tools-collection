@@ -323,17 +323,17 @@ export function exportDataViewAlt(): ArrayBufferLike {
             name.push(char.charCodeAt(0));
           });
 
-        const heaader = new Uint8Array(0x20);
+        const header = new Uint8Array(0x20);
 
-        heaader.set(name, 0x0);
-        heaader.set(intToArray(a099aDataOffset, "uint32", true), 0x14);
-        heaader.set(intToArray(uint8Array.byteLength, "uint32", true), 0x18);
-        heaader.set(intToArray(0xffffffff, "uint32", true), 0x1c);
+        header.set(name, 0x0);
+        header.set(intToArray(a099aDataOffset, "uint32", true), 0x14);
+        header.set(intToArray(uint8Array.length, "uint32", true), 0x18);
+        header.set(intToArray(0xffffffff, "uint32", true), 0x1c);
 
-        a099aHeadersUint8Arrays.push(heaader);
+        a099aHeadersUint8Arrays.push(header);
         a099aDataUint8Arrays.push(uint8Array);
 
-        a099aDataOffset += uint8Array.byteLength;
+        a099aDataOffset += uint8Array.length;
       }
 
       const compressedData = getCompressedData(new DataView(uint8Array.buffer));

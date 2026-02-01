@@ -390,10 +390,10 @@ export function getAssetNames(type: string): Resource {
 export function getCompressedData(dataView: DataView): Uint8Array {
   const data = new Uint8Array(dataView.buffer);
 
-  const s1 = (data.byteLength >> 0x18) & 0xff;
-  const s2 = (data.byteLength >> 0x10) & 0xff;
-  const s3 = (data.byteLength >> 0x8) & 0xff;
-  const s4 = data.byteLength & 0xff;
+  const s1 = (data.length >> 0x18) & 0xff;
+  const s2 = (data.length >> 0x10) & 0xff;
+  const s3 = (data.length >> 0x8) & 0xff;
+  const s4 = data.length & 0xff;
 
   // prettier-ignore
   const header = new Uint8Array([0x41, 0x4b, 0x4c, 0x5a, 0x7e, 0x3f, 0x51, 0x64, 0x3d, 0xcc, 0xcc, 0xcd, s1, s2, s3, s4]);

@@ -45,8 +45,8 @@ extensions.add(Extract);
 
 export default class Canvas {
   private app: Application;
-  private width_: number;
-  private height_: number;
+  private _width: number;
+  private _height: number;
   private scale: number;
   private animation: boolean;
   private filter: boolean;
@@ -71,8 +71,8 @@ export default class Canvas {
       options?.animation !== undefined ? options?.animation : true;
     const filter = options?.filter !== undefined ? options?.filter : false;
 
-    this.width_ = width;
-    this.height_ = height;
+    this._width = width;
+    this._height = height;
     this.scale = scale;
     this.layers = {};
     this.animation = animation;
@@ -109,11 +109,11 @@ export default class Canvas {
   }
 
   get width() {
-    return this.width_;
+    return this._width;
   }
 
   get height() {
-    return this.height_;
+    return this._height;
   }
 
   public addLayer(
@@ -128,7 +128,7 @@ export default class Canvas {
     },
   ): void {
     if (!["image", "sprites", "tilingSprite"].includes(type)) {
-      debug.warn(`The type '${type}' is not available`);
+      debug.warn(`The type '${type}' is not available.`);
       return;
     }
 
@@ -148,9 +148,9 @@ export default class Canvas {
 
       this.layers[key] = {
         type,
-        width: this.width_,
-        height: this.height_,
-        datas: [new Uint8Array(this.width_ * this.height_ * 4)],
+        width: this._width,
+        height: this._height,
+        datas: [new Uint8Array(this._width * this._height * 4)],
         container,
         animation,
       };
@@ -165,7 +165,7 @@ export default class Canvas {
       };
     } else if (type === "tilingSprite") {
       container.addChild(
-        new TilingSprite(Texture.EMPTY, this.width_, this.height_),
+        new TilingSprite(Texture.EMPTY, this._width, this._height),
       );
 
       this.layers[key] = {
@@ -249,7 +249,7 @@ export default class Canvas {
     y = 0,
   ): void {
     if (!data || data.length === 0) {
-      debug.error("Data field is empty");
+      debug.error("Data field is empty.");
       return;
     }
 
@@ -260,7 +260,7 @@ export default class Canvas {
     const spriteIndex = split[1] ? parseInt(split[1]) : 0;
 
     if (!this.layers[layer]) {
-      debug.error("This layer doesn't exists");
+      debug.error("This layer doesn't exists.");
       return;
     }
 
@@ -286,7 +286,7 @@ export default class Canvas {
       debug.warn(
         `Tried to draw outside of width bounds: ${
           x < 0 ? x : x + width
-        }px > ${graphicWidth}px`,
+        }px > ${graphicWidth}px.`,
       );
 
       truncateStartX = Math.abs(Math.min(x, 0));
@@ -297,7 +297,7 @@ export default class Canvas {
       debug.warn(
         `Tried to draw outside of height bounds: ${
           y < 0 ? y : y + height
-        }px > ${graphicHeight}px`,
+        }px > ${graphicHeight}px.`,
       );
 
       truncateStartY = Math.abs(Math.min(y, 0));
@@ -337,12 +337,12 @@ export default class Canvas {
     events?: { [key: string]: () => void },
   ) {
     if (!this.layers[layer]) {
-      debug.error("This layer doesn't exists");
+      debug.error("This layer doesn't exists.");
       return;
     }
 
     if (this.layers[layer].type !== "sprites") {
-      debug.error("This layer is not a sprites type");
+      debug.error("This layer is not a sprites type.");
       return;
     }
 
@@ -412,14 +412,14 @@ export default class Canvas {
     Object.values(this.layers).forEach((layer) => {
       switch (layer.type) {
         case "image":
-          layer.width = this.width_;
-          layer.height = this.height_;
-          layer.datas = [new Uint8Array(this.width_ * this.height_ * 4)];
+          layer.width = this._width;
+          layer.height = this._height;
+          layer.datas = [new Uint8Array(this._width * this._height * 4)];
           break;
 
         case "sprites":
-          layer.width = this.width_;
-          layer.height = this.height_;
+          layer.width = this._width;
+          layer.height = this._height;
           layer.datas = [];
           layer.container.children.forEach((child) => child.destroy());
           break;
@@ -429,8 +429,8 @@ export default class Canvas {
 
           const tilingSprite = layer.container.getChildAt(0) as TilingSprite;
 
-          tilingSprite.width = this.width_;
-          tilingSprite.height = this.height_;
+          tilingSprite.width = this._width;
+          tilingSprite.height = this._height;
           break;
       }
     });
@@ -438,7 +438,7 @@ export default class Canvas {
 
   public exportGraphicData(layer: string): Uint8Array {
     if (!this.layers[layer]) {
-      debug.error("This layer doesn't exists");
+      debug.error("This layer doesn't exists.");
       return new Uint8Array();
     }
 
@@ -446,8 +446,8 @@ export default class Canvas {
   }
 
   public resize(width: number, height: number) {
-    this.width_ = width || 1;
-    this.height_ = height || 1;
+    this._width = width || 1;
+    this._height = height || 1;
 
     this.reset();
 

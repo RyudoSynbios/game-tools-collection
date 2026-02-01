@@ -125,7 +125,7 @@
     const filteredHeadersOffsets = headersOffsets.filter((header) => {
       if (header.type === 0x4) {
         debug.warn(
-          `Header has an unknown type beahviour: ${JSON.stringify(header)}`,
+          `Header has an unknown type beahviour: ${JSON.stringify(header)}.`,
         );
 
         return false;
@@ -222,7 +222,7 @@
           "grey",
         );
 
-        for (let i = 0x0; i < data.byteLength - 0x7; i += 0x8) {
+        for (let i = 0x0; i < data.length - 0x7; i += 0x8) {
           const key = data[i];
           const unknown1 = getIntFromArray(data, i + 0x1, "uint24", true);
           const unknown2 = getIntFromArray(data, i + 0x4, "uint32", true);
@@ -367,7 +367,7 @@
           "orange",
         );
       } else {
-        debug.warn("Not a handled asset header");
+        debug.warn("Not a handled asset header.");
       }
 
       three.updateLoadingProgression((index + 1) / headers.length, instanceId);

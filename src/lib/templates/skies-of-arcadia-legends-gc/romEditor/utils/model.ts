@@ -522,7 +522,7 @@ export function addMeshs(
           );
       } else {
         debug.warn(
-          `Texture not found on entity ${entity.index}: ${textureIndex}`,
+          `Texture not found on entity ${entity.index}: ${textureIndex}.`,
           textures,
         );
       }

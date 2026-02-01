@@ -183,7 +183,7 @@
         }
 
         if (paletteIndex > 7) {
-          debug.warn(`Palette ${paletteIndex} is out of range`);
+          debug.warn(`Palette ${paletteIndex} is out of range.`);
 
           paletteIndex = 0;
         }
@@ -448,7 +448,7 @@
 
           if (0x48 + position + 0x8 > array.length) {
             debug.warn(
-              `Sprite offset ${0x48 + position + 0x8} is out of range`,
+              `Sprite offset ${0x48 + position + 0x8} is out of range.`,
             );
 
             position = 0;
@@ -670,7 +670,7 @@
 
         // TODO:
         if (paletteIndex >= 6) {
-          debug.warn(`paletteIndex ${paletteIndex} is out of range`);
+          debug.warn(`paletteIndex ${paletteIndex} is out of range.`);
 
           paletteIndex = 0;
         }

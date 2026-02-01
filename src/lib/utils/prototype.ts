@@ -12,12 +12,12 @@ const bigEndian24 = [2, 1, 0];
 
 function boundsCheck(offset: number, size: number, max: number): boolean {
   if (offset < 0x0) {
-    debug.error("Tried to write to a negative offset");
+    debug.error("Tried to write to a negative offset.");
 
     return false;
   } else if (offset + size > max) {
     debug.error(
-      `Tried to write ${size} bytes past the end of a buffer at offset 0x${offset.toHex()} of 0x${max.toHex()}`,
+      `Tried to write ${size} bytes past the end of a buffer at offset 0x${offset.toHex()} of 0x${max.toHex()}.`,
     );
 
     return false;

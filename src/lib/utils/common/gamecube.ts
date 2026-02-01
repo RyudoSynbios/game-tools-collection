@@ -298,7 +298,7 @@ export function rebuildGcm(): void {
   files.forEach((file, index) => {
     let data = new Uint8Array(file.dataView.buffer);
 
-    if (data.byteLength === 0) {
+    if (data.length === 0) {
       const offset = fileOffsets[index].previous;
 
       data = new Uint8Array($dataView.buffer.slice(offset, offset + file.size));
