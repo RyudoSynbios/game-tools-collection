@@ -262,6 +262,25 @@ export function mergeUint8Arrays(...uint8Arrays: Uint8Array[]): Uint8Array {
   return uint8Array;
 }
 
+export function mergeUint32Arrays(...uint32Arrays: Uint32Array[]): Uint32Array {
+  const length = uint32Arrays.reduce(
+    (length, uint32Array) => (length += uint32Array.length),
+    0,
+  );
+
+  const uint32Array = new Uint32Array(length);
+
+  let offset = 0x0;
+
+  uint32Arrays.forEach((array) => {
+    uint32Array.set(array, offset);
+
+    offset += array.length;
+  });
+
+  return uint32Array;
+}
+
 export function numberArrayToString(array: number[]): string {
   if (!Array.isArray(array)) {
     return "";
