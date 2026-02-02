@@ -15,31 +15,20 @@ import type {
   Resource,
 } from "$lib/types";
 
-import {
-  getItemCount,
-  getItemLength,
-  loadHeroStats,
-  loadInventory,
-  updateHeroStats,
-} from "./utils/compression";
+import { ITEM_LENGTH } from "./utils/constants";
+import Data from "./utils/data";
+
+let data: Data;
 
 export function beforeItemsParsing(): void {
-  const $dataView = get(dataView);
   const $dataViewAlt = get(dataViewAlt);
 
-  let offset = 0x2ff;
+  data = new Data();
 
-  offset = loadHeroStats(offset);
-
-  $dataViewAlt.heroSkills = new DataView(
-    $dataView.buffer.slice(offset, offset + 0x20),
-  );
-
-  $dataViewAlt.temporary = new DataView($dataView.buffer.slice(offset + 0x20));
-
-  offset += 0x20;
-
-  loadInventory(offset);
+  $dataViewAlt.heroStatus = new DataView(data.heroStatus.buffer);
+  $dataViewAlt.heroSkills = new DataView(data.heroSkills.buffer);
+  $dataViewAlt.inventory = new DataView(data.inventory.buffer);
+  $dataViewAlt.temporary = new DataView(data.temporary.buffer);
 }
 
 export function overrideParseItem(item: Item): Item | ItemTab {
@@ -60,7 +49,7 @@ export function overrideParseItem(item: Item): Item | ItemTab {
   } else if ("id" in item && item.id === "inventory") {
     const itemContainer = item as ItemContainer;
 
-    itemContainer.instances = getItemCount();
+    itemContainer.instances = data.itemCount;
   }
 
   return item;
@@ -72,36 +61,36 @@ export function afterSetInt(item: Item): void {
   if ("id" in item && item.id === "level") {
     const itemInt = item as ItemInt;
 
-    const value = getInt(itemInt.offset, "uint32", {}, $dataViewAlt.heroStats);
+    const value = getInt(itemInt.offset, "uint32", {}, $dataViewAlt.heroStatus);
 
     setInt(0x2b, "uint8", value);
 
-    let gold = getInt(itemInt.offset + 0x8, "uint32", {}, $dataViewAlt.heroStats); // prettier-ignore
+    let gold = getInt(itemInt.offset + 0x8, "uint32", {}, $dataViewAlt.heroStatus); // prettier-ignore
 
     gold = Math.min(gold, value * 10000);
 
-    setInt(itemInt.offset + 0x8, "uint32", gold, {}, "heroStats");
+    setInt(itemInt.offset + 0x8, "uint32", gold, {}, "heroStatus");
   } else if ("id" in item && item.id === "gold") {
     const itemInt = item as ItemInt;
 
-    let gold = getInt(itemInt.offset, "uint32", {}, $dataViewAlt.heroStats);
-    const level = getInt(itemInt.offset - 0x8, "uint32", {}, $dataViewAlt.heroStats); // prettier-ignore
+    let gold = getInt(itemInt.offset, "uint32", {}, $dataViewAlt.heroStatus);
+    const level = getInt(itemInt.offset - 0x8, "uint32", {}, $dataViewAlt.heroStatus); // prettier-ignore
 
     gold = Math.min(gold, level * 10000);
 
-    setInt(itemInt.offset, "uint32", gold, {}, "heroStats");
-  } else if ("id" in item && item.id === "itemType") {
+    setInt(itemInt.offset, "uint32", gold, {}, "heroStatus");
+  } else if ("id" in item && item.id === "itemCode") {
     updateResources("inventoryNames");
   }
 }
 
 export function beforeChecksum(): void {
+  const $dataView = get(dataView);
   const $dataViewAlt = get(dataViewAlt);
 
-  updateHeroStats();
-
   const uint8Array = mergeUint8Arrays(
-    new Uint8Array(get(dataView).buffer),
+    new Uint8Array($dataView.buffer.slice(0x0, 0x2ff)),
+    data.compressHeroStatus(),
     new Uint8Array($dataViewAlt.heroSkills.buffer),
     new Uint8Array($dataViewAlt.temporary.buffer),
   );
@@ -109,17 +98,15 @@ export function beforeChecksum(): void {
   dataView.set(new DataView(uint8Array.buffer));
 
   // Update file size
-  setInt(0x8, "uint32", uint8Array.byteLength);
+  setInt(0x8, "uint32", uint8Array.length);
 }
 
 export function generateChecksum(item: ItemChecksum): number {
+  const $dataView = get(dataView);
+
   let checksum = 0x0;
 
-  for (
-    let i = item.control.offsetStart;
-    i < get(dataView).byteLength;
-    i += 0x1
-  ) {
+  for (let i = item.control.offsetStart; i < $dataView.byteLength; i += 0x1) {
     const carry = checksum < 0x0 ? 0x1 : 0x0;
 
     checksum = (checksum << 0x1) & 0xffffffff;
@@ -134,13 +121,13 @@ export function getInventoryNames(): Resource {
 
   const names: Resource = {};
 
-  const itemTypes = getResource("itemTypes") as Resource;
+  const itemCodes = getResource("itemCodes") as Resource;
 
   // prettier-ignore
-  for (let i = 0x0; i < getItemCount(); i += 0x1) {
-    const int = getInt(0x5c + i * getItemLength(), "uint32", {}, $dataViewAlt.inventory);
+  for (let i = 0x0; i < data.itemCount; i += 0x1) {
+    const int = getInt(0x5c + i * ITEM_LENGTH * 0x4, "uint32", {}, $dataViewAlt.inventory);
 
-    names[i] = itemTypes[int];
+    names[i] = itemCodes[int];
   }
 
   return names;
