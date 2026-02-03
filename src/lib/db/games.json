@@ -1201,6 +1201,18 @@
     }
   },
   {
+    "id": "tony-hawk-s-skateboarding-ps",
+    "name": "Tony Hawk's Skateboarding",
+    "metaName": "Tony Hawk's Skateboarding (Tony Hawk's Pro Skater)",
+    "consoleId": "playstation",
+    "tools": {
+      "saveEditor": {
+        "createdAt": "2026-02-09",
+        "regions": ["🇪🇺", "🇺🇸", "🇯🇵"]
+      }
+    }
+  },
+  {
     "id": "wario-land-super-mario-land-3-gb",
     "name": "Wario Land: Super Mario Land 3",
     "consoleId": "game-boy",

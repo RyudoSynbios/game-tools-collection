@@ -111,6 +111,7 @@ Link to the website: [https://game-tools-collection.com](https://game-tools-coll
 | Theatrhythm Final Fantasy: Curtain Call      | 3DS      | Save                    | EUR / USA / JAP                               |
 | TimeSplitters 2                              | PS2      | Save                    | EUR / USA / JAP                               |
 | Tomb Raider II: Starring Lara Croft          | PS       | Save                    | EUR / USA / JAP / FRA / GER / ITA             |
+| Tony Hawk's Skateboarding                    | PS       | Save                    | EUR / USA / JAP                               |
 | Wario Land: Super Mario Land 3               | GB       | Save                    | WORLD                                         |
 | Wario Land 3                                 | GBC      | Save                    | WORLD                                         |
 
