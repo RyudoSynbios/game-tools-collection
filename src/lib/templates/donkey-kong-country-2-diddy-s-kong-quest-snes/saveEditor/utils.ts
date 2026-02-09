@@ -267,6 +267,7 @@ function updateCompletionRate(slotIndex: number, playerIndex: number): void {
   const completionRateItem = getItem(
     `completionRate-${slotIndex}-${playerIndex}`,
   ) as ItemInt;
+
   const offset = completionRateItem.offset + 0x49;
 
   let percent = 0;
@@ -313,6 +314,7 @@ function updateHeroCoins(slotIndex: number, playerIndex: number): void {
   const completionRateItem = getItem(
     `completionRate-${slotIndex}-${playerIndex}`,
   ) as ItemInt;
+
   const offset = completionRateItem.offset + 0x69;
 
   let count = 0;
