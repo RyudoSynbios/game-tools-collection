@@ -86,6 +86,7 @@ Link to the website: [https://game-tools-collection.com](https://game-tools-coll
 | Pokémon Red, Blue and Yellow                 | GB       | Save                    | EUR / USA / JAP / FRA / GER / ITA / SPA       |
 | Pokémon Trading Card Game                    | GBC      | Save                    | EUR / USA / JAP / AUS                         |
 | Rayman                                       | PS       | Save                    | EUR / USA / JAP                               |
+| Rayman 2: The Great Escape                   | N64      | Save                    | EUR / USA                                     |
 | Resident Evil                                | PS       | Save                    | EUR / USA / JAP / FRA / GER                   |
 | Rogue Legacy                                 | WIN      | Save                    | WORLD                                         |
 | Shining Force 3                              | SATURN   | Save / Rom              | EUR / USA / JAP                               |

@@ -909,6 +909,17 @@
     }
   },
   {
+    "id": "rayman-2-the-great-escape-n64",
+    "name": "Rayman 2: The Great Escape",
+    "consoleId": "nintendo-64",
+    "tools": {
+      "saveEditor": {
+        "createdAt": "2026-02-10",
+        "regions": ["🇪🇺", "🇺🇸"]
+      }
+    }
+  },
+  {
     "id": "resident-evil-ps",
     "name": "Resident Evil",
     "consoleId": "playstation",
