@@ -957,6 +957,17 @@
     }
   },
   {
+    "id": "shining-the-holy-ark-saturn",
+    "name": "Shining the Holy Ark",
+    "consoleId": "saturn",
+    "tools": {
+      "saveEditor": {
+        "createdAt": "2026-02-11",
+        "regions": ["🇪🇺", "🇺🇸", "🇯🇵"]
+      }
+    }
+  },
+  {
     "id": "skies-of-arcadia-legends-gc",
     "name": "Skies of Arcadia Legends",
     "consoleId": "gamecube",
