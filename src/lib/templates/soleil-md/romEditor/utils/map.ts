@@ -161,7 +161,7 @@ export default class SMap {
     for (let i = 0x0; i < this.map.height; i += 0x1) {
       for (let j = 0x0; j < this.map.width; j += 0x1) {
         const chunkIndex = getIntFromArray(this.map.chunks, offset, "uint16", true);
-        
+
         const chunkOffset = chunkIndex * 0x8;
         const row1Offset = sections * i * 0x80 + j * 0x2;
         const row2Offset = row1Offset + 0x40 * sections;

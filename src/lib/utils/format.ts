@@ -439,8 +439,8 @@ export function generateUUID(): string {
   const d1 = Math.random() * 4294967295 | 0;
   const d2 = Math.random() * 4294967295 | 0;
   const d3 = Math.random() * 4294967295 | 0;
-  
+
   const uuid = _lut[d0 & 255] + _lut[d0 >> 8 & 255] + _lut[d0 >> 16 & 255] + _lut[d0 >> 24 & 255] + "-" + _lut[d1 & 255] + _lut[d1 >> 8 & 255] + "-" + _lut[d1 >> 16 & 15 | 64] + _lut[d1 >> 24 & 255] + "-" + _lut[d2 & 63 | 128] + _lut[d2 >> 8 & 255] + "-" + _lut[d2 >> 16 & 255] + _lut[d2 >> 24 & 255] + _lut[d3 & 255] + _lut[d3 >> 8 & 255] + _lut[d3 >> 16 & 255] + _lut[d3 >> 24 & 255];
-  
+
   return uuid.toLowerCase();
 }

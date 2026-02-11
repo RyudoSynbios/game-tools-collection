@@ -17,11 +17,11 @@ export function getVertices(
       let x = -getInt(offset + i * 0xc, "int16", { bigEndian: true }, dataView);
       let y = -getInt(offset + i * 0xc + 0x4, "int16", { bigEndian: true }, dataView);
       let z = getInt(offset + i * 0xc + 0x8, "int16", { bigEndian: true }, dataView);
-  
+
       x += -getInt(offset + i * 0xc + 0x2, "uint16", { bigEndian: true }, dataView) / 0x10000;
       y += -getInt(offset + i * 0xc + 0x6, "uint16", { bigEndian: true }, dataView) / 0x10000;
       z += getInt(offset + i * 0xc + 0xa, "uint16", { bigEndian: true }, dataView) / 0x10000;
-  
+
       vertices.push(x, y, z);
     }
 

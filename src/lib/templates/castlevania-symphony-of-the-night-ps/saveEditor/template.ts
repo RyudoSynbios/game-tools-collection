@@ -1025,7 +1025,7 @@ const template: GameJson = {
                   vertical: true,
                   items: [
                     {
-                      name: "Button settings",
+                      name: "Button Settings",
                       items: [
                         {
                           type: "section",
@@ -1244,7 +1244,7 @@ const template: GameJson = {
                       ],
                     },
                     {
-                      name: "Window color",
+                      name: "Window Color",
                       flex: true,
                       items: [
                         {
@@ -1283,7 +1283,7 @@ const template: GameJson = {
                       ],
                     },
                     {
-                      name: "Time attack",
+                      name: "Time Attack",
                       flex: true,
                       items: [
                         {
