@@ -105,7 +105,7 @@
   <Spoiler title="My save file from an Everdrive won't load (Nintendo 64)">
     <p>Everdrive save files can be byteswapped. You can follow those steps:</p>
     <p>
-      Open this <a href="/tools/byteswap" target="_blank">page</a> and upload you're
+      Open this <a href="/tools/byteswap" target="_blank">page</a> and upload your
       save file. Your file will be converted and downloaded automatically.
     </p>
     <p>
@@ -142,7 +142,7 @@
       PSP save files are encrypted by default when exported from a PSP or
       generated with PPSSPP. You need to decrypt your save in order to edit it.
     </p>
-    <p>If you're save has been generated with PPSSPP, follow those steps:</p>
+    <p>If your save has been generated with PPSSPP, follow those steps:</p>
     <p>
       Open the <strong>memstick</strong>
       folder (on the root of the PPSSPP folder by default).

@@ -8,7 +8,7 @@ const template: GameJson = {
       japan: { 0x0: [0x48, 0x55, 0x44, 0x53, 0x4f, 0x4e] }, // "HUDSON"
     },
     text: "Drag 'n' drop here or click to add a save file.",
-    hint: "If you're having trouble loading a save file from an Everdrive cartridge, please see the FAQ.",
+    hint: "If you're having trouble loading a save file from an <b>Everdrive</b> cartridge, please see the FAQ.",
     error: "Not a valid save file.",
   },
   items: [
