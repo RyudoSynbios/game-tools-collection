@@ -1,0 +1,2597 @@
+import type { GameJson } from "$lib/types";
+
+import {
+  items,
+  itemsGroups,
+  locations,
+  locationsOrder,
+} from "./utils/resource";
+
+const template: GameJson = {
+  validator: {
+    regions: {
+      europe_usa_japan: {
+        0x0: [0x48, 0x4f, 0x4c, 0x59, 0x5f, 0x41, 0x52, 0x4b, 0x5f], // "HOLY_ARK_"
+      },
+    },
+    text: "Drag 'n' drop here or click to add a save file.",
+    hint: "If you're having trouble loading a .bcr file, please see the FAQ.",
+    error: "Not a valid save file.",
+  },
+  items: [
+    {
+      id: "slots",
+      length: 0x0,
+      type: "container",
+      instanceType: "tabs",
+      instances: 1,
+      enumeration: "Slot %d",
+      items: [
+        {
+          id: "checksum",
+          name: "Checksum",
+          offset: 0xbd8,
+          type: "checksum",
+          dataType: "uint32",
+          bigEndian: true,
+          control: {
+            offsetStart: 0x20,
+            offsetEnd: 0xbd8,
+          },
+        },
+        {
+          type: "tabs",
+          items: [
+            {
+              name: "General",
+              items: [
+                {
+                  type: "section",
+                  flex: true,
+                  items: [
+                    {
+                      name: "Filename",
+                      offset: 0x10,
+                      length: 0x6,
+                      type: "variable",
+                      dataType: "string",
+                      letterDataType: "uint8",
+                      fallback: 0x20,
+                      endCode: 0x0,
+                      resource: "letters",
+                    },
+                    {
+                      id: "itemCollectionRatio",
+                      name: "Item Completion Ratio",
+                      offset: 0x740,
+                      type: "variable",
+                      dataType: "uint8",
+                      suffix: "%",
+                      disabled: true,
+                    },
+                    {
+                      name: "Playtime",
+                      type: "group",
+                      mode: "time",
+                      items: [
+                        {
+                          offset: 0xb84,
+                          type: "variable",
+                          dataType: "uint32",
+                          operations: [
+                            { "/": 60 },
+                            { convert: { from: "seconds", to: "hours" } },
+                          ],
+                          max: 99,
+                          bigEndian: true,
+                        },
+                        {
+                          offset: 0xb84,
+                          type: "variable",
+                          dataType: "uint32",
+                          operations: [
+                            { "/": 60 },
+                            { convert: { from: "seconds", to: "minutes" } },
+                          ],
+                          leadingZeros: 1,
+                          max: 59,
+                          bigEndian: true,
+                        },
+                        {
+                          offset: 0xb84,
+                          type: "variable",
+                          dataType: "uint32",
+                          operations: [
+                            { "/": 60 },
+                            { convert: { from: "seconds", to: "seconds" } },
+                          ],
+                          leadingZeros: 1,
+                          max: 59,
+                          bigEndian: true,
+                        },
+                      ],
+                    },
+                  ],
+                },
+                {
+                  type: "section",
+                  flex: true,
+                  items: [
+                    {
+                      id: "location",
+                      name: "Location",
+                      offset: 0xb88,
+                      type: "variable",
+                      dataType: "uint16",
+                      bigEndian: true,
+                      resource: "locations",
+                      autocomplete: true,
+                    },
+                    {
+                      name: "Unknown 1",
+                      offset: 0x690,
+                      type: "variable",
+                      dataType: "uint8",
+                      hidden: true,
+                    },
+                    {
+                      name: "Unknown 2",
+                      offset: 0xb8c,
+                      type: "variable",
+                      dataType: "uint16",
+                      bigEndian: true,
+                      hidden: true,
+                    },
+                    {
+                      name: "Unknown 3",
+                      offset: 0xb90,
+                      type: "variable",
+                      dataType: "uint16",
+                      bigEndian: true,
+                      hidden: true,
+                    },
+                    {
+                      name: "Unknown 4",
+                      offset: 0xb94,
+                      type: "variable",
+                      dataType: "uint16",
+                      bigEndian: true,
+                      hidden: true,
+                    },
+                    {
+                      name: "Gold",
+                      offset: 0xb80,
+                      type: "variable",
+                      dataType: "uint32",
+                      bigEndian: true,
+                      max: 999999,
+                    },
+                  ],
+                },
+              ],
+            },
+            {
+              name: "Party",
+              items: [
+                {
+                  length: 0xcc,
+                  type: "container",
+                  instanceType: "tabs",
+                  instances: 8,
+                  resource: "characters",
+                  vertical: true,
+                  items: [
+                    {
+                      type: "tabs",
+                      items: [
+                        {
+                          name: "Status",
+                          items: [
+                            {
+                              type: "section",
+                              flex: true,
+                              items: [
+                                {
+                                  name: "Name",
+                                  offset: 0x20,
+                                  length: 0x6,
+                                  type: "variable",
+                                  dataType: "string",
+                                  letterDataType: "uint8",
+                                  endCode: 0x0,
+                                  resource: "letters",
+                                  test: true,
+                                },
+                                {
+                                  name: "Class",
+                                  offset: 0xbc,
+                                  type: "variable",
+                                  dataType: "uint16",
+                                  bigEndian: true,
+                                  resource: "classes",
+                                  autocomplete: true,
+                                },
+                                {
+                                  name: "Command",
+                                  offset: 0x49,
+                                  type: "variable",
+                                  dataType: "uint8",
+                                  resource: "commands",
+                                },
+                              ],
+                            },
+                            {
+                              type: "section",
+                              flex: true,
+                              items: [
+                                {
+                                  name: "Cumulated Level",
+                                  offset: 0x46,
+                                  type: "variable",
+                                  dataType: "uint16",
+                                  bigEndian: true,
+                                  hidden: true,
+                                },
+                                {
+                                  id: "level",
+                                  name: "Level",
+                                  offset: 0xba,
+                                  type: "variable",
+                                  dataType: "uint16",
+                                  bigEndian: true,
+                                  min: 1,
+                                  max: 99,
+                                },
+                                {
+                                  id: "experience",
+                                  name: "Experience",
+                                  offset: 0xc8,
+                                  type: "variable",
+                                  dataType: "uint32",
+                                  bigEndian: true,
+                                },
+                                {
+                                  name: "Base Next Experience",
+                                  offset: 0xc4,
+                                  type: "variable",
+                                  dataType: "uint32",
+                                  bigEndian: true,
+                                  hidden: true,
+                                },
+                                {
+                                  name: "Next Experience",
+                                  offset: 0xc0,
+                                  type: "variable",
+                                  dataType: "uint32",
+                                  bigEndian: true,
+                                  hidden: true,
+                                },
+                              ],
+                            },
+                            {
+                              type: "section",
+                              flex: true,
+                              items: [
+                                {
+                                  name: "HP",
+                                  type: "group",
+                                  mode: "fraction",
+                                  items: [
+                                    {
+                                      offset: 0xa0,
+                                      type: "variable",
+                                      dataType: "uint16",
+                                      bigEndian: true,
+                                      max: 999,
+                                    },
+                                    {
+                                      offset: 0x2c,
+                                      type: "variable",
+                                      dataType: "uint16",
+                                      bigEndian: true,
+                                      min: 1,
+                                      max: 999,
+                                    },
+                                  ],
+                                },
+                                {
+                                  name: "MP",
+                                  type: "group",
+                                  mode: "fraction",
+                                  items: [
+                                    {
+                                      offset: 0xa2,
+                                      type: "variable",
+                                      dataType: "uint16",
+                                      bigEndian: true,
+                                      max: 999,
+                                    },
+                                    {
+                                      offset: 0x2e,
+                                      type: "variable",
+                                      dataType: "uint16",
+                                      bigEndian: true,
+                                      max: 999,
+                                    },
+                                  ],
+                                },
+                              ],
+                            },
+                            {
+                              type: "section",
+                              flex: true,
+                              items: [
+                                {
+                                  name: "Attack",
+                                  offset: 0x30,
+                                  type: "variable",
+                                  dataType: "uint16",
+                                  bigEndian: true,
+                                  max: 999,
+                                },
+                                {
+                                  name: "Defense",
+                                  offset: 0x32,
+                                  type: "variable",
+                                  dataType: "uint16",
+                                  bigEndian: true,
+                                  max: 999,
+                                },
+                                {
+                                  name: "Agility",
+                                  offset: 0x34,
+                                  type: "variable",
+                                  dataType: "uint16",
+                                  bigEndian: true,
+                                  max: 999,
+                                },
+                                {
+                                  name: "Critical",
+                                  offset: 0x36,
+                                  type: "variable",
+                                  dataType: "uint16",
+                                  bigEndian: true,
+                                  max: 999,
+                                },
+                                {
+                                  name: "Technique",
+                                  offset: 0x38,
+                                  type: "variable",
+                                  dataType: "uint16",
+                                  bigEndian: true,
+                                  max: 999,
+                                },
+                                {
+                                  name: "Luck",
+                                  offset: 0x3a,
+                                  type: "variable",
+                                  dataType: "uint16",
+                                  bigEndian: true,
+                                  max: 999,
+                                },
+                                {
+                                  name: "Magic Defense",
+                                  offset: 0x3c,
+                                  type: "variable",
+                                  dataType: "uint16",
+                                  bigEndian: true,
+                                  max: 999,
+                                },
+                                {
+                                  name: "Breath Defense",
+                                  offset: 0x3e,
+                                  type: "variable",
+                                  dataType: "uint16",
+                                  bigEndian: true,
+                                  max: 999,
+                                },
+                              ],
+                            },
+                          ],
+                        },
+                        {
+                          name: "Magic",
+                          items: [
+                            {
+                              length: 0x1,
+                              type: "container",
+                              instanceType: "section",
+                              instances: 8,
+                              flex: true,
+                              noMargin: true,
+                              items: [
+                                {
+                                  name: "Spell %d",
+                                  offset: 0x90,
+                                  type: "variable",
+                                  dataType: "uint8",
+                                  resource: "spells",
+                                  autocomplete: true,
+                                },
+                                {
+                                  name: "Level",
+                                  offset: 0x98,
+                                  type: "variable",
+                                  dataType: "uint8",
+                                  operations: [{ "+": 1 }],
+                                  min: 1,
+                                  max: 4,
+                                },
+                              ],
+                            },
+                          ],
+                        },
+                        {
+                          name: "Items",
+                          items: [
+                            {
+                              length: 0x2,
+                              type: "container",
+                              instanceType: "section",
+                              instances: 16,
+                              flex: true,
+                              noMargin: true,
+                              items: [
+                                {
+                                  id: "item",
+                                  name: "Item %d",
+                                  offset: 0x70,
+                                  type: "variable",
+                                  dataType: "uint16",
+                                  bigEndian: true,
+                                  binary: {
+                                    bitStart: 0,
+                                    bitLength: 12,
+                                  },
+                                  resource: "items",
+                                  autocomplete: true,
+                                },
+                                {
+                                  id: "itemStatus",
+                                  name: "Status",
+                                  offset: 0x70,
+                                  type: "variable",
+                                  dataType: "uint8",
+                                  binary: {
+                                    bitStart: 6,
+                                    bitLength: 2,
+                                  },
+                                  resource: "itemStatus",
+                                },
+                              ],
+                            },
+                          ],
+                        },
+                      ],
+                    },
+                  ],
+                },
+              ],
+            },
+            {
+              name: "Formation",
+              items: [
+                {
+                  type: "section",
+                  flex: true,
+                  noMargin: true,
+                  items: [
+                    {
+                      id: "formation",
+                      name: "Arthur",
+                      offset: 0x680,
+                      type: "variable",
+                      dataType: "bit",
+                      bit: 0,
+                      resource: "formations",
+                    },
+                    {
+                      id: "formation",
+                      name: "Melody",
+                      offset: 0x680,
+                      type: "variable",
+                      dataType: "bit",
+                      bit: 1,
+                      resource: "formations",
+                    },
+                    {
+                      id: "formation",
+                      name: "Rodi",
+                      offset: 0x680,
+                      type: "variable",
+                      dataType: "bit",
+                      bit: 2,
+                      resource: "formations",
+                    },
+                    {
+                      id: "formation",
+                      name: "Basso",
+                      offset: 0x680,
+                      type: "variable",
+                      dataType: "bit",
+                      bit: 3,
+                      resource: "formations",
+                    },
+                  ],
+                },
+                {
+                  type: "section",
+                  flex: true,
+                  items: [
+                    {
+                      id: "formation",
+                      name: "Akane",
+                      offset: 0x680,
+                      type: "variable",
+                      dataType: "bit",
+                      bit: 4,
+                      resource: "formations",
+                    },
+                    {
+                      id: "formation",
+                      name: "Forte",
+                      offset: 0x680,
+                      type: "variable",
+                      dataType: "bit",
+                      bit: 5,
+                      resource: "formations",
+                    },
+                    {
+                      id: "formation",
+                      name: "Doyle",
+                      offset: 0x680,
+                      type: "variable",
+                      dataType: "bit",
+                      bit: 6,
+                      resource: "formations",
+                    },
+                    {
+                      id: "formation",
+                      name: "Lisa",
+                      offset: 0x680,
+                      type: "variable",
+                      dataType: "bit",
+                      bit: 7,
+                      resource: "formations",
+                    },
+                  ],
+                },
+                {
+                  type: "section",
+                  flex: true,
+                  hidden: true,
+                  items: [
+                    {
+                      name: "Joined",
+                      type: "bitflags",
+                      flags: [
+                        { offset: 0x680, bit: 0, label: "Arthur" },
+                        { offset: 0x680, bit: 1, label: "Melody" },
+                        { offset: 0x680, bit: 2, label: "Rodi" },
+                        { offset: 0x680, bit: 3, label: "Basso" },
+                        { offset: 0x680, bit: 4, label: "Akane" },
+                        { offset: 0x680, bit: 5, label: "Forte" },
+                        { offset: 0x680, bit: 6, label: "Doyle" },
+                        { offset: 0x680, bit: 7, label: "Lisa" },
+                      ],
+                    },
+                    {
+                      name: "Lead Team",
+                      type: "bitflags",
+                      flags: [
+                        { offset: 0x682, bit: 0, label: "Arthur" },
+                        { offset: 0x682, bit: 1, label: "Melody" },
+                        { offset: 0x682, bit: 2, label: "Rodi" },
+                        { offset: 0x682, bit: 3, label: "Basso" },
+                        { offset: 0x682, bit: 4, label: "Akane" },
+                        { offset: 0x682, bit: 5, label: "Forte" },
+                        { offset: 0x682, bit: 6, label: "Doyle" },
+                        { offset: 0x682, bit: 7, label: "Lisa" },
+                      ],
+                    },
+                  ],
+                },
+              ],
+            },
+            {
+              name: "Pixies",
+              flex: true,
+              items: [
+                {
+                  name: "Pixie",
+                  type: "bitflags",
+                  flags: [
+                    { offset: 0x759, bit: 6, label: "Maple" },
+                    { offset: 0x759, bit: 7, label: "Cherry" },
+                    { offset: 0x75a, bit: 0, label: "Willow" },
+                    { offset: 0x75a, bit: 1, label: "Cedar" },
+                    { offset: 0x75a, bit: 2, label: "Palm" },
+                    { offset: 0x75a, bit: 3, label: "Apple" },
+                    { offset: 0x75a, bit: 4, label: "Lime" },
+                    { offset: 0x75a, bit: 5, label: "Pear" },
+                    { offset: 0x75a, bit: 6, label: "Plum" },
+                    { offset: 0x75a, bit: 7, label: "Baldric" },
+                  ],
+                },
+                {
+                  name: "Fairy",
+                  type: "bitflags",
+                  flags: [
+                    { offset: 0x75b, bit: 0, label: "Daisy" },
+                    { offset: 0x75b, bit: 1, label: "Iris" },
+                    { offset: 0x75b, bit: 2, label: "Camellia" },
+                    { offset: 0x75b, bit: 3, label: "Peony" },
+                    { offset: 0x75b, bit: 4, label: "Lily" },
+                    { offset: 0x75b, bit: 5, label: "Azalea" },
+                    { offset: 0x75b, bit: 6, label: "Sisal" },
+                    { offset: 0x75b, bit: 7, label: "Mimosa" },
+                    { offset: 0x75c, bit: 0, label: "Primrose" },
+                    { offset: 0x75c, bit: 1, label: "Clyde" },
+                  ],
+                },
+                {
+                  name: "Succubus",
+                  type: "bitflags",
+                  flags: [
+                    { offset: 0x75c, bit: 2, label: "Muran" },
+                    { offset: 0x75c, bit: 3, label: "Dahlia" },
+                    { offset: 0x75c, bit: 4, label: "Roberia" },
+                    { offset: 0x75c, bit: 5, label: "Lacey" },
+                    { offset: 0x75c, bit: 6, label: "Orlea" },
+                    { offset: 0x75c, bit: 7, label: "Ripanos" },
+                    { offset: 0x75d, bit: 0, label: "Kathorea" },
+                    { offset: 0x75d, bit: 1, label: "Viola" },
+                    { offset: 0x75d, bit: 2, label: "Lunaria" },
+                    { offset: 0x75d, bit: 3, label: "Natasha" },
+                  ],
+                },
+                {
+                  name: "Incubus",
+                  type: "bitflags",
+                  flags: [
+                    { offset: 0x75d, bit: 4, label: "Lantano" },
+                    { offset: 0x75d, bit: 5, label: "Enjewel" },
+                    { offset: 0x75d, bit: 6, label: "Masakari" },
+                    { offset: 0x75d, bit: 7, label: "Krupis" },
+                    { offset: 0x75e, bit: 0, label: "Liknis" },
+                    { offset: 0x75e, bit: 1, label: "Cypress" },
+                    { offset: 0x75e, bit: 2, label: "Aster" },
+                    { offset: 0x75e, bit: 3, label: "Adonis" },
+                    { offset: 0x75e, bit: 4, label: "Croton" },
+                    { offset: 0x75e, bit: 5, label: "Boris" },
+                  ],
+                },
+                {
+                  name: "Leprechaun",
+                  type: "bitflags",
+                  flags: [
+                    { offset: 0x75e, bit: 6, label: "Dana" },
+                    { offset: 0x75e, bit: 7, label: "Tak" },
+                    { offset: 0x75f, bit: 0, label: "Morgan" },
+                    { offset: 0x75f, bit: 1, label: "Kokus" },
+                    { offset: 0x75f, bit: 2, label: "Zircon" },
+                    { offset: 0x75f, bit: 3, label: "Mangus" },
+                    { offset: 0x75f, bit: 4, label: "Darbie" },
+                    { offset: 0x75f, bit: 5, label: "Solo" },
+                    { offset: 0x75f, bit: 6, label: "Stilt" },
+                    { offset: 0x75f, bit: 7, label: "Eric" },
+                  ],
+                },
+              ],
+            },
+            { name: "Shops", planned: true, items: [] },
+            {
+              name: "Events",
+              items: [
+                {
+                  type: "tabs",
+                  vertical: true,
+                  items: [
+                    {
+                      name: "Desire Mine",
+                      items: [
+                        {
+                          name: "Desire Mine",
+                          type: "section",
+                          flex: true,
+                          items: [
+                            {
+                              name: "Pixies",
+                              type: "bitflags",
+                              flags: [
+                                { offset: 0x75e, bit: 6, label: "<b>Leprechaun:</b> Dana" },
+                              ],
+                            },
+                            {
+                              name: "Events",
+                              type: "bitflags",
+                              flags: [
+                                { offset: 0x6c9, bit: 6, label: "Introduction seen" },
+                              ],
+                            },
+                          ],
+                        },
+                        {
+                          name: "Desire Mine B1",
+                          type: "section",
+                          flex: true,
+                          items: [
+                            {
+                              name: "Items",
+                              type: "bitflags",
+                              flags: [
+                                { offset: 0x740, bit: 4, label: "Iron Circlet" },
+                                { offset: 0x740, bit: 5, label: "Herb" },
+                                { offset: 0x741, bit: 1, label: "Herb" },
+                                { offset: 0x755, bit: 3, label: "60 Gold Coins" },
+                                { offset: 0x755, bit: 4, label: "40 Gold Coins" },
+                                { offset: 0x755, bit: 5, label: "40 Gold Coins" },
+                              ],
+                            },
+                          ],
+                        },
+                        {
+                          name: "Desire Mine 1F",
+                          type: "section",
+                          flex: true,
+                          items: [
+                            {
+                              name: "Items",
+                              type: "bitflags",
+                              flags: [
+                                { offset: 0x740, bit: 0, label: "Herb" },
+                                { offset: 0x740, bit: 1, label: "Herb" },
+                                { offset: 0x740, bit: 2, label: "Leather Glove" },
+                                { offset: 0x741, bit: 0, label: "20 Gold Coins", separator: true },
+                                { offset: 0x74f, bit: 5, label: "Potion" },
+                                { offset: 0x74f, bit: 6, label: "Royal Circlet" },
+                                { offset: 0x750, bit: 2, label: "Mithril Ingot" },
+                              ],
+                            },
+                            {
+                              name: "Pixies",
+                              type: "bitflags",
+                              flags: [
+                                { offset: 0x75c, bit: 2, label: "<b>Succubus:</b> Muran" },
+                              ],
+                            },
+                            {
+                              name: "Events",
+                              type: "bitflags",
+                              flags: [
+                                { offset: 0x6c9, bit: 7, label: "Rodi defeated?", hidden: true },
+                                { offset: 0x6cd, bit: 6, label: "Inferno emblem destroyed" },
+                              ],
+                            },
+                          ],
+                        },
+                        {
+                          name: "Desire Mine 2F",
+                          type: "section",
+                          flex: true,
+                          items: [
+                            {
+                              name: "Items",
+                              type: "bitflags",
+                              flags: [
+                                { offset: 0x74f, bit: 1, label: "Elixir" },
+                                { offset: 0x74f, bit: 3, label: "Demon Claw" },
+                                { offset: 0x74f, bit: 7, label: "Elixir" },
+                                { offset: 0x750, bit: 1, label: "Mithril Ingot" },
+                              ],
+                            },
+                            {
+                              name: "Pixies",
+                              type: "bitflags",
+                              flags: [
+                                { offset: 0x75c, bit: 1, label: "<b>Fairy:</b> Clyde" },
+                                { offset: 0x75d, bit: 3, label: "<b>Succubus:</b> Natasha" },
+                                { offset: 0x75e, bit: 5, label: "<b>Incubus:</b> Boris" },
+                              ],
+                            },
+                            {
+                              name: "Events",
+                              type: "bitflags",
+                              flags: [
+                                { offset: 0x752, bit: 1, label: "Ifrit defeated" },
+                                { offset: 0x759, bit: 5, label: "Ifrit defeated" },
+                              ],
+                            },
+                          ],
+                        },
+                        {
+                          name: "Desire Mine 3F",
+                          type: "section",
+                          flex: true,
+                          items: [
+                            {
+                              name: "Items",
+                              type: "bitflags",
+                              flags: [
+                                { offset: 0x74f, bit: 0, label: "Shining Sword" },
+                                { offset: 0x74f, bit: 2, label: "Demon Staff" },
+                                { offset: 0x74f, bit: 4, label: "Goddess Tears" },
+                                { offset: 0x750, bit: 0, label: "Mithril Ingot" },
+                                { offset: 0x750, bit: 3, label: "Elixir" },
+                              ],
+                            },
+                            {
+                              name: "Pixies",
+                              type: "bitflags",
+                              flags: [
+                                { offset: 0x75a, bit: 7, label: "<b>Pixie:</b> Baldric" },
+                              ],
+                            },
+                            {
+                              name: "Events",
+                              type: "bitflags",
+                              flags: [
+                                { offset: 0x752, bit: 3, label: "Ifrit defeated" },
+                                { offset: 0x752, bit: 4, label: "Ifrit defeated" },
+                              ],
+                            },
+                          ],
+                        },
+                      ],
+                    },
+                    {
+                      name: "Desire Village",
+                      flex: true,
+                      items: [
+                        {
+                          name: "Items",
+                          type: "bitflags",
+                          flags: [
+                            { offset: 0x6a1, bit: 5, label: "1 Gold Coin" },
+                            { offset: 0x750, bit: 5, label: "Quick Chicken" },
+                            { offset: 0x750, bit: 7, label: "Arcane Garlic" },
+                          ],
+                        },
+                        {
+                          name: "Pixies",
+                          type: "bitflags",
+                          flags: [
+                            { offset: 0x759, bit: 7, label: "<b>Pixie:</b> Cherry" },
+                            { offset: 0x75d, bit: 4, label: "<b>Incubus:</b> Lantano" },
+                          ],
+                        },
+                        {
+                          name: "Events",
+                          type: "bitflags",
+                          flags: [
+                            { offset: 0x6a1, bit: 7, label: "Lost dog quest accepted" },
+                          ],
+                        },
+                      ],
+                    },
+                    {
+                      name: "Forest of Confusion",
+                      flex: true,
+                      items: [
+                        {
+                          name: "Items",
+                          type: "bitflags",
+                          flags: [
+                            { offset: 0x741, bit: 2, label: "Herb" },
+                            { offset: 0x741, bit: 3, label: "Bronze Shell" },
+                            { offset: 0x741, bit: 4, label: "Wooden Staff" },
+                            { offset: 0x741, bit: 5, label: "Herb" },
+                            { offset: 0x741, bit: 6, label: "Energy Bread" },
+                            { offset: 0x741, bit: 7, label: "Angel Wing" },
+                            { offset: 0x742, bit: 0, label: "Middle Shield" },
+                            { offset: 0x742, bit: 1, label: "Lucky Cookie" },
+                            { offset: 0x742, bit: 2, label: "Angel Wing", separator: true },
+                            { offset: 0x6d2, bit: 3, label: "Pixie Bell" },
+                          ],
+                        },
+                        {
+                          name: "Pixies",
+                          type: "bitflags",
+                          flags: [
+                            { offset: 0x759, bit: 6, label: "<b>Pixie:</b> Maple" },
+                            { offset: 0x75b, bit: 0, label: "<b>Fairy:</b> Daisy" },
+                          ],
+                        },
+                        {
+                          name: "Events",
+                          type: "bitflags",
+                          flags: [
+                            { offset: 0x6a9, bit: 2, label: "Lost dog present" },
+                            { offset: 0x6a2, bit: 0, label: "Lost dog found", separator: true },
+                            { offset: 0x6d1, bit: 2, label: "Wraith defeated" },
+                          ],
+                        },
+                      ],
+                    },
+                    {
+                      name: "Forest Cave",
+                      items: [
+                        {
+                          name: "Forest Cave B2",
+                          type: "section",
+                          flex: true,
+                          items: [
+                            {
+                              name: "Items",
+                              type: "bitflags",
+                              flags: [
+                                { offset: 0x742, bit: 7, label: "Feather Robe" },
+                                { offset: 0x743, bit: 0, label: "Bronze Brace" },
+                                { offset: 0x743, bit: 1, label: "Magic Nectar" },
+                                { offset: 0x743, bit: 2, label: "Herb" },
+                              ],
+                            },
+                            {
+                              name: "Pixies",
+                              type: "bitflags",
+                              flags: [
+                                { offset: 0x75d, bit: 5, label: "<b>Incubus:</b> Enjewel" },
+                                { offset: 0x75e, bit: 7, label: "<b>Leprechaun:</b> Tak" },
+                              ],
+                            },
+                          ],
+                        },
+                        {
+                          name: "Forest Cave B1 North side",
+                          type: "section",
+                          flex: true,
+                          items: [
+                            {
+                              name: "Items",
+                              type: "bitflags",
+                              flags: [
+                                { offset: 0x742, bit: 4, label: "Herb" },
+                                { offset: 0x742, bit: 5, label: "Bronze Staff" },
+                                { offset: 0x742, bit: 6, label: "Antidote Herb" },
+                              ],
+                            },
+                            {
+                              name: "Pixies",
+                              type: "bitflags",
+                              flags: [
+                                { offset: 0x75b, bit: 1, label: "<b>Fairy:</b> Iris" },
+                              ],
+                            },
+                          ],
+                        },
+                        {
+                          name: "Forest Cave B1 South side",
+                          type: "section",
+                          flex: true,
+                          items: [
+                            {
+                              name: "Items",
+                              type: "bitflags",
+                              flags: [
+                                { offset: 0x743, bit: 3, label: "Antidote Herb" },
+                                { offset: 0x743, bit: 4, label: "Mithril Ore" },
+                                { offset: 0x743, bit: 5, label: "Scale Suit" },
+                                { offset: 0x752, bit: 7, label: "Angel Wing" },
+                              ],
+                            },
+                            {
+                              name: "Pixies",
+                              type: "bitflags",
+                              flags: [
+                                { offset: 0x75a, bit: 0, label: "<b>Pixie:</b> Willow" },
+                              ],
+                            },
+                          ],
+                        },
+                      ],
+                    },
+                    {
+                      name: "Town of Enrich",
+                      items: [
+                        {
+                          name: "Town of Enrich",
+                          type: "section",
+                          flex: true,
+                          items: [
+                            {
+                              name: "Pixies",
+                              type: "bitflags",
+                              flags: [
+                                { offset: 0x75c, bit: 3, label: "<b>Succubus:</b> Dahlia" },
+                                { offset: 0x75d, bit: 6, label: "<b>Incubus:</b> Masakari" },
+                              ],
+                            },
+                          ],
+                        },
+                        {
+                          name: "Town Well",
+                          type: "section",
+                          flex: true,
+                          items: [
+                            {
+                              name: "Pixies",
+                              type: "bitflags",
+                              flags: [
+                                { offset: 0x75c, bit: 4, label: "<b>Succubus:</b> Roberia" },
+                              ],
+                            },
+                            {
+                              name: "Events",
+                              type: "bitflags",
+                              flags: [
+                                { offset: 0x6c5, bit: 7, label: "Door to Enrich Dungeon B2 unlocked" },
+                              ],
+                            },
+                          ],
+                        },
+                        {
+                          name: "Enrich Castle",
+                          type: "section",
+                          flex: true,
+                          items: [
+                            {
+                              name: "Items",
+                              type: "bitflags",
+                              flags: [
+                                { offset: 0x751, bit: 2, label: "Stamina Onion" },
+                              ],
+                            },
+                            {
+                              name: "Events",
+                              type: "bitflags",
+                              flags: [
+                                { offset: 0x6ae, bit: 7, label: "Trapped by Rilix", separator: true },
+                                { offset: 0x6af, bit: 2, label: "Related to Evil Spirits defeated", hidden: true },
+                                { offset: 0x6af, bit: 3, label: "Related to Rilix defeated", hidden: true },
+                                { offset: 0x6af, bit: 4, label: "Rilix defeated" },
+                              ],
+                            },
+                          ],
+                        },
+                        {
+                          name: "Dungeon",
+                          type: "section",
+                          flex: true,
+                          items: [
+                            {
+                              name: "Items",
+                              type: "bitflags",
+                              flags: [
+                                { offset: 0x754, bit: 1, label: "Herb" },
+                                { offset: 0x754, bit: 2, label: "Fairy Powder", separator: true },
+                                { offset: 0x754, bit: 3, label: "Light Of Hope" },
+                              ],
+                            },
+                          ],
+                        },
+                        {
+                          name: "Dungeon Well",
+                          type: "section",
+                          flex: true,
+                          items: [
+                            {
+                              name: "Items",
+                              type: "bitflags",
+                              flags: [
+                                { offset: 0x744, bit: 3, label: "Crystal Key" },
+                              ],
+                            },
+                            {
+                              name: "Pixies",
+                              type: "bitflags",
+                              flags: [
+                                { offset: 0x75a, bit: 1, label: "<b>Pixie:</b> Cedar" },
+                              ],
+                            },
+                            {
+                              name: "Events",
+                              type: "bitflags",
+                              flags: [
+                                { offset: 0x6b1, bit: 3, label: "Meet Sabato", hidden: true },
+                                { offset: 0x6c5, bit: 4, label: "Door to Enrich Dungeon B2 unlocked" },
+                                { offset: 0x6c5, bit: 5, label: "Door to Enrich Dungeon B2 unlocked" },
+                              ],
+                            },
+                          ],
+                        },
+                      ],
+                    },
+                    {
+                      name: "Enrich Dungeon",
+                      items: [
+                        {
+                          name: "Enrich Dungeon B2",
+                          type: "section",
+                          flex: true,
+                          items: [
+                            {
+                              name: "Items",
+                              type: "bitflags",
+                              flags: [
+                                { offset: 0x743, bit: 6, label: "Critical Juice" },
+                                { offset: 0x743, bit: 7, label: "Slash Dagger" },
+                                { offset: 0x744, bit: 0, label: "Antidote Herb" },
+                                { offset: 0x744, bit: 1, label: "Potion" },
+                                { offset: 0x744, bit: 2, label: "Iron Brace" },
+                                { offset: 0x744, bit: 4, label: "Snake Crest" },
+                                { offset: 0x744, bit: 5, label: "Goat Crest" },
+                                { offset: 0x744, bit: 6, label: "Eagle Crest" },
+                                { offset: 0x744, bit: 7, label: "Gold Key", separator: true },
+                                { offset: 0x74a, bit: 3, label: "Life Candle" },
+                              ],
+                            },
+                            {
+                              name: "Pixies",
+                              type: "bitflags",
+                              flags: [
+                                { offset: 0x75b, bit: 2, label: "<b>Fairy:</b> Camellia" },
+                                { offset: 0x75f, bit: 0, label: "<b>Leprechaun:</b> Morgan", separator: true },
+                                { offset: 0x75e, bit: 2, label: "<b>Incubus:</b> Aster" },
+                              ],
+                            },
+                            {
+                              name: "Events",
+                              type: "bitflags",
+                              flags: [
+                                { offset: 0x6c5, bit: 0, label: "Goat Crest placed" },
+                                { offset: 0x6c4, bit: 7, label: "Snake Crest placed" },
+                                { offset: 0x6c5, bit: 1, label: "Eagle Crest placed", separator: true },
+                                { offset: 0x759, bit: 0, label: "Chest Ghost defeated" },
+                              ],
+                            },
+                          ],
+                        },
+                        {
+                          name: "Enrich Dungeon B1",
+                          type: "section",
+                          flex: true,
+                          items: [
+                            {
+                              name: "Items",
+                              type: "bitflags",
+                              flags: [
+                                { offset: 0x74a, bit: 4, label: "Brave Apple" },
+                              ],
+                            },
+                            {
+                              name: "Pixies",
+                              type: "bitflags",
+                              flags: [
+                                { offset: 0x75a, bit: 4, label: "<b>Pixie:</b> Lime" },
+                              ],
+                            },
+                            {
+                              name: "Events",
+                              type: "bitflags",
+                              flags: [
+                                { offset: 0x759, bit: 4, label: "Chest Ghost defeated" },
+                              ],
+                            },
+                          ],
+                        },
+                        {
+                          name: "Enrich Dungeon 1F",
+                          type: "section",
+                          flex: true,
+                          items: [
+                            {
+                              name: "Items",
+                              type: "bitflags",
+                              flags: [
+                                { offset: 0x74a, bit: 6, label: "Mithril Ore" },
+                                { offset: 0x74a, bit: 7, label: "Potion" },
+                              ],
+                            },
+                          ],
+                        },
+                      ],
+                    },
+                    {
+                      name: "Forest of Aborigine",
+                      flex: true,
+                      items: [
+                        {
+                          name: "Items",
+                          type: "bitflags",
+                          flags: [
+                            { offset: 0x745, bit: 0, label: "Steel Sword" },
+                            { offset: 0x745, bit: 1, label: "Power Shield" },
+                            { offset: 0x745, bit: 6, label: "Angel Wing" },
+                            { offset: 0x745, bit: 7, label: "Chain Mail" },
+                          ],
+                        },
+                        {
+                          name: "Pixies",
+                          type: "bitflags",
+                          flags: [
+                            { offset: 0x75b, bit: 3, label: "<b>Fairy:</b> Peony" },
+                            { offset: 0x75d, bit: 7, label: "<b>Incubus:</b> Krupis" },
+                            { offset: 0x75f, bit: 1, label: "<b>Leprechaun:</b> Kokus" },
+                          ],
+                        },
+                      ],
+                    },
+                    {
+                      name: "Aborigine Mansion",
+                      items: [
+                        {
+                          name: "Aborigine Mansion 1F",
+                          type: "section",
+                          flex: true,
+                          items: [
+                            {
+                              name: "Items",
+                              type: "bitflags",
+                              flags: [
+                                { offset: 0x746, bit: 0, label: "Iron Shell" },
+                                { offset: 0x746, bit: 1, label: "Old Key" },
+                                { offset: 0x746, bit: 2, label: "Broadsword" },
+                                { offset: 0x746, bit: 4, label: "Druid's Robe" },
+                                { offset: 0x746, bit: 6, label: "Potion" },
+                                { offset: 0x746, bit: 7, label: "Fairy Powder" },
+                                { offset: 0x747, bit: 1, label: "Royal Crest" },
+                                { offset: 0x6c7, bit: 0, label: "Arcane Book", separator: true },
+                                { offset: 0x756, bit: 5, label: "Gravity Stone" },
+                              ],
+                            },
+                            {
+                              name: "Pixies",
+                              type: "bitflags",
+                              flags: [
+                                { offset: 0x75c, bit: 6, label: "<b>Succubus:</b> Orlea" },
+                                { offset: 0x75f, bit: 2, label: "<b>Leprechaun:</b> Zircon" },
+                              ],
+                            },
+                            {
+                              name: "Events",
+                              type: "bitflags",
+                              flags: [
+                                { offset: 0x6c6, bit: 0, label: "Cutscene seen", hidden: true },
+                                { offset: 0x6c6, bit: 3, label: "Entrance door unlocked" },
+                                { offset: 0x6c6, bit: 5, label: "Cutscene with animated objects seen", hidden: true },
+                                { offset: 0x6c8, bit: 2, label: "Holy Water used", separator: true },
+                                { offset: 0x757, bit: 6, label: "Chest Ghost defeated" },
+                                { offset: 0x758, bit: 0, label: "Chest Ghost defeated" },
+                                { offset: 0x6c8, bit: 5, label: "Vampire defeated" },
+                              ],
+                            },
+                          ],
+                        },
+                        {
+                          name: "Aborigine Mansion 2F",
+                          type: "section",
+                          flex: true,
+                          items: [
+                            {
+                              name: "Items",
+                              type: "bitflags",
+                              flags: [
+                                { offset: 0x746, bit: 3, label: "Power Staff" },
+                                { offset: 0x746, bit: 5, label: "Steel Suit" },
+                                { offset: 0x747, bit: 0, label: "Mithril Ore" },
+                                { offset: 0x747, bit: 2, label: "Clock Key" },
+                                { offset: 0x747, bit: 3, label: "Silver Tiara" },
+                                { offset: 0x6c8, bit: 6, label: "Holy Water" },
+                              ],
+                            },
+                            {
+                              name: "Pixies",
+                              type: "bitflags",
+                              flags: [
+                                { offset: 0x75e, bit: 0, label: "<b>Incubus:</b> Liknis" },
+                              ],
+                            },
+                            {
+                              name: "Events",
+                              type: "bitflags",
+                              flags: [
+                                { offset: 0x6c7, bit: 2, label: "Broken knob door destroyed", hidden: true },
+                                { offset: 0x6c9, bit: 3, label: "Red door unlocked", hidden: true },
+                                { offset: 0x6c7, bit: 7, label: "Clock key inserted" },
+                                { offset: 0x6c6, bit: 7, label: "Bridge deployed" },
+                                { offset: 0x6c8, bit: 3, label: "Catacombs door lever pulled", separator: true },
+                                { offset: 0x757, bit: 7, label: "Chest Ghost defeated" },
+                                { offset: 0x758, bit: 1, label: "Chest Ghost defeated" },
+                                { offset: 0x6c6, bit: 4, label: "Time Warrior defeated" },
+                              ],
+                            },
+                          ],
+                        },
+                      ],
+                    },
+                    {
+                      name: "Graveyard Catacombs",
+                      flex: true,
+                      items: [
+                        {
+                          name: "Items",
+                          type: "bitflags",
+                          flags: [
+                            { offset: 0x745, bit: 2, label: "Haste Ring" },
+                            { offset: 0x745, bit: 3, label: "Protect Milk" },
+                            { offset: 0x745, bit: 4, label: "Quick Chicken" },
+                            { offset: 0x745, bit: 5, label: "Potion" },
+                            { offset: 0x755, bit: 7, label: "Lucky Cookie" },
+                            { offset: 0x756, bit: 0, label: "Fairy Powder" },
+                          ],
+                        },
+                        {
+                          name: "Pixies",
+                          type: "bitflags",
+                          flags: [
+                            { offset: 0x75c, bit: 5, label: "<b>Succubus:</b> Lacey" },
+                          ],
+                        },
+                        {
+                          name: "Events",
+                          type: "bitflags",
+                          flags: [
+                            { offset: 0x6c8, bit: 3, label: "Entrance door unlocked" },
+                          ],
+                        },
+                      ],
+                    },
+                    {
+                      name: "Mountain Cave",
+                      items: [
+                        {
+                          name: "Mountain Cave",
+                          type: "section",
+                          flex: true,
+                          items: [
+                            {
+                              name: "Items",
+                              type: "bitflags",
+                              flags: [
+                                { offset: 0x747, bit: 7, label: "Power Brace", separator: true },
+                                { offset: 0x747, bit: 6, label: "Mithril Ore" },
+                              ],
+                            },
+                            {
+                              name: "Pixies",
+                              type: "bitflags",
+                              flags: [
+                                { offset: 0x75f, bit: 3, label: "<b>Leprechaun:</b> Mangus" },
+                              ],
+                            },
+                          ],
+                        },
+                        {
+                          name: "Mountain Cave B1",
+                          type: "section",
+                          flex: true,
+                          items: [
+                            {
+                              name: "Items",
+                              type: "bitflags",
+                              flags: [
+                                { offset: 0x748, bit: 0, label: "Magic Nectar" },
+                                { offset: 0x748, bit: 1, label: "Potion" },
+                              ],
+                            },
+                            {
+                              name: "Pixies",
+                              type: "bitflags",
+                              flags: [
+                                { offset: 0x75a, bit: 2, label: "<b>Pixie:</b> Palm" },
+                                { offset: 0x75c, bit: 7, label: "<b>Succubus:</b> Ripanos" },
+                              ],
+                            },
+                            {
+                              name: "Events",
+                              type: "bitflags",
+                              flags: [
+                                { offset: 0x759, bit: 1, label: "Chest Ghost defeated" },
+                                { offset: 0x759, bit: 2, label: "Chest Ghost defeated" },
+                              ],
+                            },
+                          ],
+                        },
+                        {
+                          name: "Mountain Cave 1F",
+                          type: "section",
+                          flex: true,
+                          items: [
+                            {
+                              name: "Items",
+                              type: "bitflags",
+                              flags: [
+                                { offset: 0x747, bit: 4, label: "Lucky Cookie" },
+                                { offset: 0x747, bit: 5, label: "Life Ring" },
+                              ],
+                            },
+                            {
+                              name: "Pixies",
+                              type: "bitflags",
+                              flags: [
+                                { offset: 0x75b, bit: 4, label: "<b>Fairy:</b> Lily" },
+                              ],
+                            },
+                            {
+                              name: "Events",
+                              type: "bitflags",
+                              flags: [
+                                { offset: 0x6cb, bit: 2, label: "Path blocked by Tail Viper", hidden: true },
+                                { offset: 0x6cb, bit: 3, label: "Tail Viper defeated" },
+                                { offset: 0x6cb, bit: 4, label: "Path blocked by Tail Viper", hidden: true },
+                                { offset: 0x6cb, bit: 5, label: "Tail Viper defeated" },
+                                { offset: 0x6cb, bit: 6, label: "Path blocked by Tail Viper", hidden: true },
+                                { offset: 0x6cb, bit: 7, label: "Tail Viper defeated" },
+                                { offset: 0x6cb, bit: 7, label: "Head Viper defeated" },
+                              ],
+                            },
+                          ],
+                        },
+                      ],
+                    },
+                    {
+                      name: "Far East Village",
+                      flex: true,
+                      items: [
+                        {
+                          name: "Items",
+                          type: "bitflags",
+                          flags: [
+                            { offset: 0x750, bit: 6, label: "Turbo Boots" },
+                          ],
+                        },
+                        {
+                          name: "Pixies",
+                          type: "bitflags",
+                          flags: [
+                            { offset: 0x75a, bit: 3, label: "<b>Pixie:</b> Apple" },
+                            { offset: 0x75b, bit: 5, label: "<b>Fairy:</b> Azalea" },
+                          ],
+                        },
+                        {
+                          name: "Events",
+                          type: "bitflags",
+                          hidden: true,
+                          flags: [
+                            { offset: 0x6b9, bit: 6, label: "Hagane joined", hidden: true },
+                          ],
+                        },
+                      ],
+                    },
+                    {
+                      name: "South Shrine",
+                      items: [
+                        {
+                          name: "South Shrine B2 East side",
+                          type: "section",
+                          flex: true,
+                          items: [
+                            {
+                              name: "Items",
+                              type: "bitflags",
+                              flags: [
+                                { offset: 0x749, bit: 2, label: "Energy Bread" },
+                                { offset: 0x749, bit: 6, label: "Magic Mattock" },
+                              ],
+                            },
+                          ],
+                        },
+                        {
+                          name: "South Shrine B2 West side",
+                          type: "section",
+                          flex: true,
+                          items: [
+                            {
+                              name: "Items",
+                              type: "bitflags",
+                              flags: [
+                                { offset: 0x749, bit: 1, label: "Arcane Garlic" },
+                                { offset: 0x754, bit: 0, label: "Critical Juice" },
+                              ],
+                            },
+                          ],
+                        },
+                        {
+                          name: "South Shrine B1 North side",
+                          type: "section",
+                          flex: true,
+                          items: [
+                            {
+                              name: "Items",
+                              type: "bitflags",
+                              flags: [
+                                { offset: 0x749, bit: 0, label: "Power Juice" },
+                                { offset: 0x753, bit: 6, label: "Potion" },
+                              ],
+                            },
+                          ],
+                        },
+                        {
+                          name: "South Shrine B1 South side",
+                          type: "section",
+                          flex: true,
+                          items: [
+                            {
+                              name: "Items",
+                              type: "bitflags",
+                              flags: [
+                                { offset: 0x748, bit: 6, label: "Dragon Orb" },
+                                { offset: 0x748, bit: 7, label: "Mithril Ore" },
+                                { offset: 0x753, bit: 0, label: "Stone Key" },
+                                { offset: 0x753, bit: 7, label: "Quick Chicken" },
+                              ],
+                            },
+                            {
+                              name: "Pixies",
+                              type: "bitflags",
+                              flags: [
+                                { offset: 0x75f, bit: 4, label: "<b>Leprechaun:</b> Darbie" },
+                              ],
+                            },
+                          ],
+                        },
+                        {
+                          name: "South Shrine B1 Center",
+                          type: "section",
+                          flex: true,
+                          items: [
+                            {
+                              name: "Items",
+                              type: "bitflags",
+                              flags: [
+                                { offset: 0x6d6, bit: 2, label: "Aquamarine" },
+                                { offset: 0x6d6, bit: 3, label: "Onyx" },
+                                { offset: 0x6d6, bit: 4, label: "Opal" },
+                                { offset: 0x6d6, bit: 5, label: "Ruby" },
+                                { offset: 0x6d6, bit: 6, label: "Sapphire" },
+                                { offset: 0x6d6, bit: 7, label: "Emerald" },
+                                { offset: 0x6d7, bit: 0, label: "Diamond", separator: true },
+                                { offset: 0x6e4, bit: 0, label: "Sacred Sword" },
+                              ],
+                            },
+                            {
+                              name: "Events",
+                              type: "bitflags",
+                              flags: [
+                                { offset: 0x6d7, bit: 1, label: "Aquamarine offered to the left statue" },
+                                { offset: 0x6d7, bit: 2, label: "Black Onyx offered to the left statue" },
+                                { offset: 0x6d7, bit: 3, label: "Opal offered to the left statue" },
+                                { offset: 0x6d7, bit: 4, label: "Ruby offered to the left statue" },
+                                { offset: 0x6d7, bit: 5, label: "Sapphire offered to the left statue" },
+                                { offset: 0x6d7, bit: 6, label: "Emerald offered to the left statue" },
+                                { offset: 0x6d7, bit: 7, label: "Diamond offered to the left statue", separator: true },
+                                { offset: 0x6d8, bit: 0, label: "Aquamarine offered to the right statue" },
+                                { offset: 0x6d8, bit: 1, label: "Black Onyx offered to the right statue" },
+                                { offset: 0x6d8, bit: 2, label: "Opal offered to the right statue" },
+                                { offset: 0x6d8, bit: 3, label: "Ruby offered to the right statue" },
+                                { offset: 0x6d8, bit: 4, label: "Sapphire offered to the right statue" },
+                                { offset: 0x6d8, bit: 5, label: "Emerald offered to the right statue" },
+                                { offset: 0x6d8, bit: 6, label: "Diamond offered to the right statue", separator: true },
+                                { offset: 0x6d6, bit: 1, label: "Puzzle completed", separator: true },
+                                { offset: 0x6d6, bit: 0, label: "Witch defeated" },
+                              ],
+                            },
+                          ],
+                        },
+                        {
+                          name: "South Shrine 1F North side",
+                          type: "section",
+                          flex: true,
+                          items: [
+                            {
+                              name: "Items",
+                              type: "bitflags",
+                              flags: [
+                                { offset: 0x748, bit: 3, label: "Elixir" },
+                                { offset: 0x749, bit: 7, label: "Shield Tiara" },
+                              ],
+                            },
+                            {
+                              name: "Pixies",
+                              type: "bitflags",
+                              flags: [
+                                { offset: 0x75d, bit: 0, label: "<b>Succubus:</b> Kathorea" },
+                              ],
+                            },
+                          ],
+                        },
+                        {
+                          name: "South Shrine 1F South side",
+                          type: "section",
+                          flex: true,
+                          items: [
+                            {
+                              name: "Items",
+                              type: "bitflags",
+                              flags: [
+                                { offset: 0x749, bit: 3, label: "Potion" },
+                                { offset: 0x749, bit: 4, label: "Angel Wing" },
+                                { offset: 0x753, bit: 3, label: "Protect Milk" },
+                                { offset: 0x753, bit: 4, label: "Magic Nectar" },
+                              ],
+                            },
+                            {
+                              name: "Pixies",
+                              type: "bitflags",
+                              flags: [
+                                { offset: 0x75e, bit: 1, label: "<b>Incubus:</b> Cypress" },
+                              ],
+                            },
+                          ],
+                        },
+                      ],
+                    },
+                    {
+                      name: "West Shrine",
+                      items: [
+                        {
+                          name: "West Shrine 1F East side",
+                          type: "section",
+                          flex: true,
+                          items: [
+                            {
+                              name: "Items",
+                              type: "bitflags",
+                              flags: [
+                                { offset: 0x74b, bit: 2, label: "Heat Axe" },
+                                { offset: 0x74b, bit: 3, label: "Battle Armor" },
+                                { offset: 0x74b, bit: 6, label: "Goddess Tears" },
+                                { offset: 0x74b, bit: 7, label: "Potion" },
+                                { offset: 0x74c, bit: 2, label: "Mithril Ore" },
+                                { offset: 0x6db, bit: 4, label: "Turtle Snacks" },
+                                { offset: 0x6db, bit: 5, label: "Turtle Snacks" },
+                                { offset: 0x6db, bit: 6, label: "Turtle Snacks", separator: true },
+                                { offset: 0x6e4, bit: 1, label: "Sacred Mirror" },
+                              ],
+                            },
+                            {
+                              name: "Pixies",
+                              type: "bitflags",
+                              flags: [
+                                { offset: 0x75a, bit: 5, label: "<b>Pixie:</b> Pear" },
+                              ],
+                            },
+                            {
+                              name: "Events",
+                              type: "bitflags",
+                              flags: [
+                                { offset: 0x6df, bit: 2, label: "Sacred Sword emblem destroyed" },
+                                { offset: 0x6da, bit: 0, label: "Turtle fed" },
+                                { offset: 0x6da, bit: 1, label: "Turtle fed" },
+                                { offset: 0x6dc, bit: 1, label: "Eyes of Truth used", separator: true },
+                                { offset: 0x6de, bit: 0, label: "Wooden bridge destroyed by Tentacle", hidden: true },
+                                { offset: 0x6df, bit: 1, label: "King Snail defeated" },
+                                { offset: 0x6e6, bit: 4, label: "Lisa joined", hidden: true },
+                              ],
+                            },
+                          ],
+                        },
+                        {
+                          name: "West Shrine 1F West side",
+                          type: "section",
+                          flex: true,
+                          items: [
+                            {
+                              name: "Items",
+                              type: "bitflags",
+                              flags: [
+                                { offset: 0x74b, bit: 5, label: "Mithril Ingot" },
+                                { offset: 0x74c, bit: 0, label: "Potion" },
+                                { offset: 0x74c, bit: 1, label: "Elixir" },
+                                { offset: 0x6dc, bit: 0, label: "Turtle Snacks" },
+                              ],
+                            },
+                            {
+                              name: "Pixies",
+                              type: "bitflags",
+                              flags: [
+                                { offset: 0x75b, bit: 6, label: "<b>Fairy:</b> Sisal" },
+                              ],
+                            },
+                            {
+                              name: "Events",
+                              type: "bitflags",
+                              flags: [
+                                { offset: 0x6da, bit: 2, label: "Turtle fed" },
+                                { offset: 0x6da, bit: 3, label: "Turtle fed" },
+                                { offset: 0x6de, bit: 2, label: "Wooden bridge destroyed by Tentacle", hidden: true },
+                                { offset: 0x6de, bit: 3, label: "Wooden bridge destroyed by Tentacle", hidden: true },
+                                { offset: 0x6de, bit: 4, label: "Wooden bridge destroyed by Tentacle", hidden: true },
+                                { offset: 0x6de, bit: 5, label: "Wooden bridge destroyed by Tentacle", hidden: true },
+                                { offset: 0x6de, bit: 6, label: "Wooden bridge destroyed by Tentacle", hidden: true },
+                                { offset: 0x6de, bit: 7, label: "Wooden bridge destroyed by Tentacle", hidden: true },
+                              ],
+                            },
+                          ],
+                        },
+                        {
+                          name: "West Shrine 2F",
+                          type: "section",
+                          flex: true,
+                          items: [
+                            {
+                              name: "Items",
+                              type: "bitflags",
+                              flags: [
+                                { offset: 0x74b, bit: 4, label: "Evil Ring" },
+                                { offset: 0x6db, bit: 7, label: "Turtle Snacks" },
+                                { offset: 0x6dd, bit: 1, label: "Eyes Of Truth" },
+                              ],
+                            },
+                            {
+                              name: "Pixies",
+                              type: "bitflags",
+                              flags: [
+                                { offset: 0x75e, bit: 3, label: "<b>Incubus:</b> Adonis" },
+                              ],
+                            },
+                            {
+                              name: "Events",
+                              type: "bitflags",
+                              flags: [
+                                { offset: 0x6da, bit: 4, label: "Turtle fed" },
+                                { offset: 0x6dd, bit: 2, label: "Wall destroyed", hidden: true },
+                                { offset: 0x6dd, bit: 3, label: "Wall destroyed", hidden: true },
+                                { offset: 0x6dd, bit: 4, label: "Wall destroyed", hidden: true },
+                                { offset: 0x6dd, bit: 5, label: "Wall destroyed", hidden: true },
+                                { offset: 0x6dd, bit: 6, label: "Wall destroyed", hidden: true },
+                                { offset: 0x6de, bit: 1, label: "Wall destroyed", hidden: true },
+                              ],
+                            },
+                          ],
+                        },
+                      ],
+                    },
+                    {
+                      name: "East Shrine",
+                      items: [
+                        {
+                          name: "East Shrine 1F",
+                          type: "section",
+                          flex: true,
+                          items: [
+                            {
+                              name: "Items",
+                              type: "bitflags",
+                              flags: [
+                                { offset: 0x74c, bit: 7, label: "Goddess Tears" },
+                                { offset: 0x74d, bit: 4, label: "Holy Rain" },
+                                { offset: 0x756, bit: 1, label: "Fairy Powder" },
+                                { offset: 0x6e1, bit: 5, label: "Crystal Guard" },
+                                { offset: 0x6e1, bit: 1, label: "Crystal Scale" },
+                                { offset: 0x6e1, bit: 7, label: "Crystal Staff" },
+                              ],
+                            },
+                            {
+                              name: "Pixies",
+                              type: "bitflags",
+                              flags: [
+                                { offset: 0x75a, bit: 6, label: "<b>Pixie:</b> Plum" },
+                                { offset: 0x75b, bit: 7, label: "<b>Fairy:</b> Mimosa" },
+                              ],
+                            },
+                            {
+                              name: "Events",
+                              type: "bitflags",
+                              flags: [
+                                { offset: 0x6e3, bit: 2, label: "Sacred Mirror emblem destroyed" },
+                                { offset: 0x6e1, bit: 4, label: "Crystal Eyes placed" },
+                                { offset: 0x6e1, bit: 6, label: "Crystal Guard placed" },
+                                { offset: 0x6e1, bit: 2, label: "Crystal Scale placed" },
+                                { offset: 0x6e2, bit: 0, label: "Crystal Staff placed", separator: true },
+                                { offset: 0x6e2, bit: 7, label: "Gargoyles defeated" },
+                                { offset: 0x6e0, bit: 2, label: "Mandragon defeated" },
+                                { offset: 0x6e0, bit: 3, label: "Mandragon defeated" },
+                                { offset: 0x6e0, bit: 4, label: "Mandragon defeated" },
+                                { offset: 0x6e0, bit: 5, label: "Mandragon defeated" },
+                                { offset: 0x6e0, bit: 6, label: "Mandragon defeated" },
+                                { offset: 0x6e0, bit: 7, label: "Mandragon defeated" },
+                                { offset: 0x6e1, bit: 0, label: "Mandragon defeated" },
+                              ],
+                            },
+                          ],
+                        },
+                        {
+                          name: "East Shrine 2F",
+                          type: "section",
+                          flex: true,
+                          items: [
+                            {
+                              name: "Items",
+                              type: "bitflags",
+                              flags: [
+                                { offset: 0x74c, bit: 4, label: "Holy Crest" },
+                                { offset: 0x74c, bit: 6, label: "Mithril Ingot" },
+                                { offset: 0x74d, bit: 2, label: "Life Candle" },
+                                { offset: 0x74d, bit: 5, label: "Mithril Ore" },
+                                { offset: 0x753, bit: 2, label: "Lucky Cookie" },
+                                { offset: 0x756, bit: 2, label: "Goddess Tears" },
+                                { offset: 0x6e1, bit: 3, label: "Crystal Eyes" },
+                              ],
+                            },
+                            {
+                              name: "Events",
+                              type: "bitflags",
+                              flags: [
+                                { offset: 0x6e2, bit: 6, label: "Water of life flowing" },
+                                { offset: 0x6e2, bit: 2, label: "Water of life scooped", separator: true },
+                                { offset: 0x758, bit: 4, label: "Chesthead defeated" },
+                                { offset: 0x758, bit: 5, label: "Chesthead defeated" },
+                                { offset: 0x758, bit: 6, label: "Chesthead defeated" },
+                                { offset: 0x758, bit: 7, label: "Chesthead defeated" },
+                                { offset: 0x6e3, bit: 4, label: "Gargoyles defeated" },
+                                { offset: 0x6e2, bit: 3, label: "Taros defeated" },
+                              ],
+                            },
+                          ],
+                        },
+                        {
+                          name: "East Shrine 3F",
+                          type: "section",
+                          flex: true,
+                          items: [
+                            {
+                              name: "Items",
+                              type: "bitflags",
+                              flags: [
+                                { offset: 0x74c, bit: 5, label: "Mithril Ingot" },
+                                { offset: 0x74d, bit: 0, label: "Power Juice" },
+                                { offset: 0x74d, bit: 1, label: "Elixir" },
+                                { offset: 0x74d, bit: 3, label: "Elixir" },
+                                { offset: 0x6e2, bit: 1, label: "Crystal Jug" },
+                              ],
+                            },
+                            {
+                              name: "Pixies",
+                              type: "bitflags",
+                              flags: [
+                                { offset: 0x75f, bit: 5, label: "<b>Leprechaun:</b> Solo" },
+                              ],
+                            },
+                            {
+                              name: "Events",
+                              type: "bitflags",
+                              flags: [
+                                { offset: 0x758, bit: 2, label: "Chesthead defeated" },
+                                { offset: 0x758, bit: 3, label: "Chesthead defeated" },
+                                { offset: 0x6e3, bit: 0, label: "Gargoyles defeated" },
+                                { offset: 0x6e2, bit: 4, label: "Taros defeated" },
+                                { offset: 0x6e2, bit: 5, label: "Taros defeated" },
+                              ],
+                            },
+                          ],
+                        },
+                        {
+                          name: "East Shrine 4F",
+                          type: "section",
+                          flex: true,
+                          items: [
+                            {
+                              name: "Items",
+                              type: "bitflags",
+                              flags: [
+                                { offset: 0x6e4, bit: 2, label: "Holy Pendant" },
+                              ],
+                            },
+                            {
+                              name: "Events",
+                              type: "bitflags",
+                              flags: [
+                                { offset: 0x6e3, bit: 1, label: "Mad Blossom defeated" },
+                              ],
+                            },
+                          ],
+                        },
+                      ],
+                    },
+                    {
+                      name: "Mirage Village",
+                      flex: true,
+                      items: [
+                        {
+                          name: "Items",
+                          type: "bitflags",
+                          flags: [
+                            { offset: 0x751, bit: 0, label: "Stamina Onion" },
+                            { offset: 0x751, bit: 1, label: "Protect Milk" },
+                            { offset: 0x755, bit: 1, label: "Elixir" },
+                          ],
+                        },
+                        {
+                          name: "Pixies",
+                          type: "bitflags",
+                          flags: [
+                            { offset: 0x75d, bit: 1, label: "<b>Succubus:</b> Viola" },
+                            { offset: 0x75f, bit: 6, label: "<b>Leprechaun:</b> Stilt" },
+                          ],
+                        },
+                        {
+                          name: "Events",
+                          type: "bitflags",
+                          flags: [
+                            { offset: 0x6b2, bit: 1, label: "Slate activated" },
+                            { offset: 0x6b2, bit: 2, label: "Slate activated" },
+                            { offset: 0x6b2, bit: 3, label: "Slate activated" },
+                            { offset: 0x6b2, bit: 4, label: "All slates activated" },
+                          ],
+                        },
+                      ],
+                    },
+                    {
+                      name: "Tower of Illusion",
+                      items: [
+                        {
+                          name: "Tower of Illusion 1F",
+                          type: "section",
+                          flex: true,
+                          items: [
+                            {
+                              name: "Items",
+                              type: "bitflags",
+                              flags: [
+                                { offset: 0x74d, bit: 7, label: "Force Blade" },
+                                { offset: 0x74e, bit: 5, label: "Mithril Ingot" },
+                                { offset: 0x754, bit: 5, label: "Elixir" },
+                              ],
+                            },
+                            {
+                              name: "Pixies",
+                              type: "bitflags",
+                              flags: [
+                                { offset: 0x75d, bit: 2, label: "<b>Succubus:</b> Lunaria" },
+                                { offset: 0x75e, bit: 4, label: "<b>Incubus:</b> Croton" },
+                              ],
+                            },
+                            {
+                              name: "Events",
+                              type: "bitflags",
+                              flags: [
+                                { offset: 0x6ce, bit: 1, label: "Stairs to Tower of Illusion 2F accessible" },
+                                { offset: 0x6ce, bit: 2, label: "Stairs to Tower of Illusion 2F accessible", separator: true },
+                                { offset: 0x74e, bit: 7, label: "Chesthead defeated" },
+                              ],
+                            },
+                          ],
+                        },
+                        {
+                          name: "Tower of Illusion 2F",
+                          type: "section",
+                          flex: true,
+                          items: [
+                            {
+                              name: "Items",
+                              type: "bitflags",
+                              flags: [
+                                { offset: 0x74e, bit: 1, label: "Shining Mail" },
+                                { offset: 0x74e, bit: 4, label: "Elemental Orb" },
+                                { offset: 0x6ce, bit: 3, label: "Lunard Shard" },
+                              ],
+                            },
+                            {
+                              name: "Events",
+                              type: "bitflags",
+                              flags: [
+                                { offset: 0x6ce, bit: 6, label: "Solar Shard placed" },
+                                { offset: 0x6ce, bit: 7, label: "Stairs to Tower of Illusion 3F accessible" },
+                              ],
+                            },
+                          ],
+                        },
+                        {
+                          name: "Tower of Illusion 3F",
+                          type: "section",
+                          flex: true,
+                          items: [
+                            {
+                              name: "Items",
+                              type: "bitflags",
+                              flags: [
+                                { offset: 0x74e, bit: 0, label: "Dragon Mail" },
+                                { offset: 0x74e, bit: 6, label: "Light Of Hope" },
+                                { offset: 0x754, bit: 4, label: "Potion" },
+                                { offset: 0x754, bit: 6, label: "Protect Milk" },
+                                { offset: 0x755, bit: 0, label: "Power Juice" },
+                              ],
+                            },
+                            {
+                              name: "Events",
+                              type: "bitflags",
+                              flags: [
+                                { offset: 0x6cf, bit: 0, label: "Stairs to Tower of Illusion 4F accessible", separator: true },
+                                { offset: 0x748, bit: 4, label: "Chesthead defeated" },
+                                { offset: 0x748, bit: 5, label: "Chesthead defeated" },
+                              ],
+                            },
+                          ],
+                        },
+                        {
+                          name: "Tower of Illusion 4F",
+                          type: "section",
+                          flex: true,
+                          items: [
+                            {
+                              name: "Items",
+                              type: "bitflags",
+                              flags: [
+                                { offset: 0x74e, bit: 2, label: "Angel's Robe" },
+                                { offset: 0x74e, bit: 3, label: "Elixir" },
+                              ],
+                            },
+                            {
+                              name: "Pixies",
+                              type: "bitflags",
+                              flags: [
+                                { offset: 0x75c, bit: 0, label: "<b>Fairy:</b> Primrose" },
+                              ],
+                            },
+                            {
+                              name: "Events",
+                              type: "bitflags",
+                              flags: [
+                                { offset: 0x6cf, bit: 1, label: "Stairs to Tower of Illusion 5F accessible" },
+                              ],
+                            },
+                          ],
+                        },
+                        {
+                          name: "Tower of Illusion 5F",
+                          type: "section",
+                          flex: true,
+                          items: [
+                            {
+                              name: "Items",
+                              type: "bitflags",
+                              flags: [
+                                { offset: 0x74d, bit: 6, label: "Holy Rain" },
+                                { offset: 0x754, bit: 7, label: "Energy Bread" },
+                              ],
+                            },
+                            {
+                              name: "Pixies",
+                              type: "bitflags",
+                              flags: [
+                                { offset: 0x75f, bit: 7, label: "<b>Leprechaun:</b> Eric" },
+                              ],
+                            },
+                            {
+                              name: "Events",
+                              type: "bitflags",
+                              flags: [
+                                { offset: 0x6ce, bit: 5, label: "Lunar Shard placed" },
+                                { offset: 0x6cf, bit: 2, label: "Stairs to Tower of Illusion 6F accessible" },
+                              ],
+                            },
+                          ],
+                        },
+                        {
+                          name: "Tower of Illusion 6F",
+                          type: "section",
+                          flex: true,
+                          items: [
+                            {
+                              name: "Items",
+                              type: "bitflags",
+                              flags: [
+                                { offset: 0x6ce, bit: 4, label: "Solar Shard" },
+                              ],
+                            },
+                            {
+                              name: "Events",
+                              type: "bitflags",
+                              flags: [
+                                { offset: 0x6d0, bit: 0, label: "Blader defeated" },
+                              ],
+                            },
+                          ],
+                        },
+                        {
+                          name: "Tower of Illusion 7F",
+                          type: "section",
+                          flex: true,
+                          items: [
+                            {
+                              name: "Events",
+                              type: "bitflags",
+                              flags: [
+                                { offset: 0x6d0, bit: 5, label: "Party became Innovators" },
+                              ],
+                            },
+                          ],
+                        },
+                      ],
+                    },
+                    {
+                      name: "Godspeak",
+                      flex: true,
+                      items: [
+                        {
+                          name: "Items",
+                          type: "bitflags",
+                          flags: [
+                            { offset: 0x751, bit: 4, label: "Force Shield" },
+                            { offset: 0x751, bit: 5, label: "Goddess Tears" },
+                            { offset: 0x751, bit: 6, label: "Mithril Ingot" },
+                            { offset: 0x751, bit: 7, label: "Evil Orb" },
+                            { offset: 0x752, bit: 0, label: "Elixir" },
+                          ],
+                        },
+                        {
+                          name: "Events",
+                          type: "bitflags",
+                          flags: [
+                            { offset: 0x759, bit: 3, label: "Ifrit defeated" },
+                          ],
+                        },
+                      ],
+                    },
+                    {
+                      name: "Unknown",
+                      flex: true,
+                      hidden: true,
+                      items: [
+                        {
+                          name: "Count for Item Completion Ratio",
+                          type: "bitflags",
+                          flags: [
+                            { offset: 0x740, bit: 3, label: "???", hidden: true },
+                            { offset: 0x740, bit: 6, label: "???", hidden: true },
+                            { offset: 0x740, bit: 7, label: "???", hidden: true },
+                            { offset: 0x742, bit: 3, label: "???", hidden: true },
+                            { offset: 0x748, bit: 2, label: "???", hidden: true },
+                            { offset: 0x749, bit: 5, label: "???", hidden: true },
+                            { offset: 0x74a, bit: 0, label: "???", hidden: true },
+                            { offset: 0x74a, bit: 1, label: "???", hidden: true },
+                            { offset: 0x74a, bit: 2, label: "???", hidden: true },
+                            { offset: 0x74a, bit: 5, label: "???", hidden: true },
+                            { offset: 0x74b, bit: 0, label: "???", hidden: true },
+                            { offset: 0x74b, bit: 1, label: "???", hidden: true },
+                            { offset: 0x74c, bit: 3, label: "???", hidden: true },
+                            { offset: 0x750, bit: 4, label: "???", hidden: true },
+                            { offset: 0x751, bit: 3, label: "???", hidden: true },
+                            { offset: 0x752, bit: 2, label: "???", hidden: true },
+                            { offset: 0x752, bit: 5, label: "???", hidden: true },
+                            { offset: 0x752, bit: 6, label: "???", hidden: true },
+                            { offset: 0x753, bit: 1, label: "???", hidden: true },
+                            { offset: 0x753, bit: 5, label: "???", hidden: true },
+                            { offset: 0x755, bit: 2, label: "???", hidden: true },
+                            { offset: 0x755, bit: 6, label: "???", hidden: true },
+                            { offset: 0x756, bit: 3, label: "???", hidden: true },
+                            { offset: 0x756, bit: 4, label: "???", hidden: true },
+                            { offset: 0x756, bit: 6, label: "???", hidden: true },
+                            { offset: 0x756, bit: 7, label: "???", hidden: true },
+                            { offset: 0x757, bit: 0, label: "???", hidden: true },
+                            { offset: 0x757, bit: 1, label: "???", hidden: true },
+                            { offset: 0x757, bit: 2, label: "???", hidden: true },
+                            { offset: 0x757, bit: 3, label: "???", hidden: true },
+                            { offset: 0x757, bit: 4, label: "???", hidden: true },
+                            { offset: 0x757, bit: 5, label: "???", hidden: true },
+                          ],
+                        },
+                      ],
+                    },
+                  ],
+                },
+              ],
+            },
+            {
+              name: "Options",
+              items: [
+                {
+                  type: "section",
+                  flex: true,
+                  items: [
+                    {
+                      name: "Message Speed",
+                      offset: 0xba0,
+                      type: "variable",
+                      dataType: "uint8",
+                      resource: "messageSpeeds",
+                    },
+                    {
+                      name: "Sound Mode",
+                      offset: 0xba1,
+                      type: "variable",
+                      dataType: "uint8",
+                      resource: "soundModes",
+                    },
+                  ],
+                },
+                {
+                  type: "section",
+                  flex: true,
+                  items: [
+                    {
+                      name: "Window Depth",
+                      offset: 0xb9b,
+                      type: "variable",
+                      dataType: "uint8",
+                      max: 2,
+                    },
+                  ],
+                },
+                {
+                  name: "Window Color",
+                  type: "section",
+                  flex: true,
+                  items: [
+                    {
+                      name: "Red",
+                      offset: 0xb9d,
+                      type: "variable",
+                      dataType: "uint8",
+                      binary: {
+                        bitStart: 0,
+                        bitLength: 5,
+                      },
+                      max: 15,
+                    },
+                    {
+                      name: "Green",
+                      offset: 0xb9c,
+                      type: "variable",
+                      dataType: "uint16",
+                      bigEndian: true,
+                      binary: {
+                        bitStart: 5,
+                        bitLength: 5,
+                      },
+                      max: 15,
+                    },
+                    {
+                      name: "Blue",
+                      offset: 0xb9c,
+                      type: "variable",
+                      dataType: "uint8",
+                      binary: {
+                        bitStart: 2,
+                        bitLength: 5,
+                      },
+                      max: 15,
+                    },
+                  ],
+                },
+                {
+                  name: "Frame Color",
+                  type: "section",
+                  flex: true,
+                  items: [
+                    {
+                      name: "Red",
+                      offset: 0xb9f,
+                      type: "variable",
+                      dataType: "uint8",
+                      binary: {
+                        bitStart: 1,
+                        bitLength: 4,
+                      },
+                      max: 15,
+                    },
+                    {
+                      name: "Green",
+                      offset: 0xb9e,
+                      type: "variable",
+                      dataType: "uint16",
+                      bigEndian: true,
+                      binary: {
+                        bitStart: 6,
+                        bitLength: 4,
+                      },
+                      max: 15,
+                    },
+                    {
+                      name: "Blue",
+                      offset: 0xb9e,
+                      type: "variable",
+                      dataType: "uint8",
+                      binary: {
+                        bitStart: 3,
+                        bitLength: 4,
+                      },
+                      max: 15,
+                    },
+                  ],
+                },
+              ],
+            },
+          ],
+        },
+      ],
+    },
+  ],
+  resources: {
+    characters: {
+      0x0: "Arthur",
+      0x1: "Melody",
+      0x2: "Rodi",
+      0x3: "Basso",
+      0x4: "Akane",
+      0x5: "Forte",
+      0x6: "Doyle",
+      0x7: "Lisa",
+    },
+    classes: {
+      0x0: "Swordsman",
+      0x1: "Shaman",
+      0x2: "Ninja",
+      0x3: "Dragon Warrior",
+      0x4: "Kunoichi",
+      0x5: "Magician",
+      0x6: "Halfling",
+      0x7: "Knight",
+      0x8: "Champion",
+      0x9: "Summoner",
+      0xa: "Master Ninja",
+      0xb: "Dragon Knight",
+      0xc: "Chief Kunoichi",
+      0xd: "Sorcerer",
+      0xe: "Berserker",
+      0xf: "Paladin",
+    },
+    commands: {
+      0x0: "Manual",
+      0x1: "Auto",
+    },
+    formations: {
+      0x0: "-",
+      0x1: "Reserve Team",
+      0x3: "Lead Team",
+    },
+    itemStatus: {
+      0x0: "-",
+      0x1: "Broken",
+      0x2: "Equipped",
+      0x3: "Broken + Equipped",
+    },
+    items: {
+      ...items,
+      0xfff: "-",
+    },
+    letters: {
+      0x20: " ",
+      0x21: "!",
+      0x23: "#",
+      0x26: "&",
+      0x27: "'",
+      0x2b: "+",
+      0x2c: ",",
+      0x2e: ".",
+      0x2f: "/",
+      0x30: "0",
+      0x31: "1",
+      0x32: "2",
+      0x33: "3",
+      0x34: "4",
+      0x35: "5",
+      0x36: "6",
+      0x37: "7",
+      0x38: "8",
+      0x39: "9",
+      0x3a: ":",
+      0x3b: ";",
+      0x3f: "?",
+      0x41: "A",
+      0x42: "B",
+      0x43: "C",
+      0x44: "D",
+      0x45: "E",
+      0x46: "F",
+      0x47: "G",
+      0x48: "H",
+      0x49: "I",
+      0x4a: "J",
+      0x4b: "K",
+      0x4c: "L",
+      0x4d: "M",
+      0x4e: "N",
+      0x4f: "O",
+      0x50: "P",
+      0x51: "Q",
+      0x52: "R",
+      0x53: "S",
+      0x54: "T",
+      0x55: "U",
+      0x56: "V",
+      0x57: "W",
+      0x58: "X",
+      0x59: "Y",
+      0x5a: "Z",
+      0x61: "a",
+      0x62: "b",
+      0x63: "c",
+      0x64: "d",
+      0x65: "e",
+      0x66: "f",
+      0x67: "g",
+      0x68: "h",
+      0x69: "i",
+      0x6a: "j",
+      0x6b: "k",
+      0x6c: "l",
+      0x6d: "m",
+      0x6e: "n",
+      0x6f: "o",
+      0x70: "p",
+      0x71: "q",
+      0x72: "r",
+      0x73: "s",
+      0x74: "t",
+      0x75: "u",
+      0x76: "v",
+      0x77: "w",
+      0x78: "x",
+      0x79: "y",
+      0x7a: "z",
+      0x86: "を",
+      0x87: "ぁ",
+      0x88: "ぃ",
+      0x89: "ぅ",
+      0x8a: "ぇ",
+      0x8b: "ぉ",
+      0x8c: "ゃ",
+      0x8d: "ゅ",
+      0x8e: "ょ",
+      0x8f: "っ",
+      0x91: "あ",
+      0x92: "い",
+      0x93: "う",
+      0x94: "え",
+      0x95: "お",
+      0x96: "か",
+      0x97: "き",
+      0x98: "く",
+      0x99: "け",
+      0x9a: "こ",
+      0x9b: "さ",
+      0x9c: "し",
+      0x9d: "す",
+      0x9e: "せ",
+      0x9f: "そ",
+      0xa1: "。",
+      0xa4: "、",
+      0xa6: "ヲ",
+      0xa7: "ァ",
+      0xa8: "ィ",
+      0xa9: "ゥ",
+      0xaa: "ェ",
+      0xab: "ォ",
+      0xac: "ャ",
+      0xad: "ュ",
+      0xae: "ョ",
+      0xaf: "ッ",
+      0xb0: "ー",
+      0xb1: "ア",
+      0xb2: "イ",
+      0xb3: "ウ",
+      0xb4: "エ",
+      0xb5: "オ",
+      0xb6: "カ",
+      0xb7: "キ",
+      0xb8: "ク",
+      0xb9: "ケ",
+      0xba: "コ",
+      0xbb: "サ",
+      0xbc: "シ",
+      0xbd: "ス",
+      0xbe: "セ",
+      0xbf: "ソ",
+      0xc0: "タ",
+      0xc1: "チ",
+      0xc2: "ツ",
+      0xc3: "テ",
+      0xc4: "ト",
+      0xc5: "ナ",
+      0xc6: "ニ",
+      0xc7: "ヌ",
+      0xc8: "ネ",
+      0xc9: "ノ",
+      0xca: "ハ",
+      0xcb: "ヒ",
+      0xcc: "フ",
+      0xcd: "ヘ",
+      0xce: "ホ",
+      0xcf: "マ",
+      0xd0: "ミ",
+      0xd1: "ム",
+      0xd2: "メ",
+      0xd3: "モ",
+      0xd4: "ヤ",
+      0xd5: "ユ",
+      0xd6: "ヨ",
+      0xd7: "ラ",
+      0xd8: "リ",
+      0xd9: "ル",
+      0xda: "レ",
+      0xdb: "ロ",
+      0xdc: "ワ",
+      0xdd: "ン",
+      0xde: "ﾞ",
+      0xdf: "ﾟ",
+      0xe0: "た",
+      0xe1: "ち",
+      0xe2: "つ",
+      0xe3: "て",
+      0xe4: "と",
+      0xe5: "な",
+      0xe6: "に",
+      0xe7: "ぬ",
+      0xe8: "ね",
+      0xe9: "の",
+      0xea: "は",
+      0xeb: "ひ",
+      0xec: "ふ",
+      0xed: "へ",
+      0xee: "ほ",
+      0xef: "ま",
+      0xf0: "み",
+      0xf1: "む",
+      0xf2: "め",
+      0xf3: "も",
+      0xf4: "や",
+      0xf5: "ゆ",
+      0xf6: "よ",
+      0xf7: "ら",
+      0xf8: "り",
+      0xf9: "る",
+      0xfa: "れ",
+      0xfb: "ろ",
+      0xfc: "わ",
+      0xfd: "ん",
+    },
+    locations,
+    messageSpeeds: {
+      0x0: "Turbo",
+      0x1: "Fast",
+      0x2: "Normal",
+      0x3: "Slow",
+    },
+    soundModes: {
+      0x0: "Stereo",
+      0x1: "Mono",
+    },
+    spells: {
+      0x0: "Blaze",
+      0x1: "Freeze",
+      0x2: "Spark",
+      0x3: "Hell Blast",
+      0x4: "Inferno",
+      0x5: "Elemental",
+      0x6: "Brutal Fire",
+      0x7: "Lightning",
+      0x8: "Weasel Slash",
+      0x9: "Support",
+      0xa: "Slow",
+      0xb: "Attack",
+      0xc: "Elude",
+      0xd: "Confuse",
+      0xe: "Sleep",
+      0xf: "Soul Steal",
+      0x10: "Anti-Spell",
+      0x11: "Shield",
+      0x12: "Barrier",
+      0x13: "Negate",
+      0x14: "Swift Wind",
+      0x15: "Spider Thread",
+      0x16: "Ferocity",
+      0x17: "Ayakashi",
+      0x18: "Madness",
+      0x19: "Illusion",
+      0x1a: "Spiritual",
+      0x1b: "Talisman",
+      0x1c: "God's Wind",
+      0x1d: "Heal",
+      0x1e: "Aura",
+      0x1f: "Restore",
+      0x20: "Raise",
+      0x21: "Antidote",
+      0x22: "Healing",
+      0x23: "Praying",
+      0x24: "Revival",
+      0x25: "Antidote",
+      0x26: "Return",
+      0x27: "Suppress",
+      0xff: "-",
+    },
+  },
+  resourcesGroups: {
+    items: itemsGroups,
+  },
+  resourcesOrder: {
+    items: [0xfff],
+    locations: locationsOrder,
+    messageSpeeds: [0x3, 0x2, 0x1, 0x0],
+    soundModes: [0x1, 0x0],
+    spells: [0xff],
+  },
+};
+
+export default template;
