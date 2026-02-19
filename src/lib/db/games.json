@@ -512,6 +512,17 @@
     }
   },
   {
+    "id": "gex-64-enter-the-gecko-n64",
+    "name": "Gex 64: Enter the Gecko",
+    "consoleId": "nintendo-64",
+    "tools": {
+      "saveEditor": {
+        "createdAt": "2026-02-20",
+        "regions": ["🇪🇺", "🇺🇸"]
+      }
+    }
+  },
+  {
     "id": "golden-sun-gba",
     "name": "Golden Sun",
     "consoleId": "game-boy-advance",
