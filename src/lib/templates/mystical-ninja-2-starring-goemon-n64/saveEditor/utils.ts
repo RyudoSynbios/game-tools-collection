@@ -3,18 +3,17 @@ import { get } from "svelte/store";
 import { gameRegion, gameTemplate } from "$lib/stores";
 import { getInt, setBitflag, setBoolean, setInt } from "$lib/utils/bytes";
 import { formatChecksum } from "$lib/utils/checksum";
+import { byteswapDataView, getHeaderShift } from "$lib/utils/common/nintendo64";
 import {
-  byteswapDataView,
-  getHeaderShift,
   getMpkNoteShift,
   getRegionsFromMpk,
   isMpk,
-  isSrmMpk,
   isUnpackedMpk,
   repackMpk,
   resetMpk,
   unpackMpk,
-} from "$lib/utils/common/nintendo64";
+} from "$lib/utils/common/nintendo64/mpk";
+import { isSrmMpk } from "$lib/utils/common/nintendo64/srm";
 import { clone } from "$lib/utils/format";
 import { getItem } from "$lib/utils/parser";
 

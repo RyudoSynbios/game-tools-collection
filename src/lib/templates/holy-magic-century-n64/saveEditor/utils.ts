@@ -1,13 +1,13 @@
 import { getInt, setInt } from "$lib/utils/bytes";
+import { getHeaderShift } from "$lib/utils/common/nintendo64";
 import {
-  getHeaderShift,
   getMpkNoteShift,
   getRegionsFromMpk,
   getSaves,
   repackMpk,
   resetMpk,
   unpackMpk,
-} from "$lib/utils/common/nintendo64";
+} from "$lib/utils/common/nintendo64/mpk";
 
 import type { Item, ItemContainer, ItemInt } from "$lib/types";
 

@@ -1,14 +1,14 @@
 import { copyInt, getInt, setInt, setString } from "$lib/utils/bytes";
 import { formatChecksum } from "$lib/utils/checksum";
+import { getHeaderShift } from "$lib/utils/common/nintendo64";
 import {
-  getHeaderShift,
   getMpkNoteShift,
   getRegionsFromMpk,
   getSaves,
   repackMpk,
   resetMpk,
   unpackMpk,
-} from "$lib/utils/common/nintendo64";
+} from "$lib/utils/common/nintendo64/mpk";
 import { getPartialValue, makeOperations } from "$lib/utils/format";
 
 import type {

@@ -1,12 +1,13 @@
-import Long from "long";
 import { get } from "svelte/store";
 
 import { dataView, gameTemplate } from "$lib/stores";
-import { byteswap, getDataView, getInt, getString } from "$lib/utils/bytes";
+import { getInt, getString } from "$lib/utils/bytes";
 import { mergeUint8Arrays, numberArrayToString } from "$lib/utils/format";
-import { checkValidator, getRegionValidator } from "$lib/utils/validator";
+import { getRegionValidator } from "$lib/utils/validator";
 
-import type { DataViewABL, ItemChecksum } from "$lib/types";
+import type { DataViewABL } from "$lib/types";
+
+import { isDexDriveHeader } from "./dexDrive";
 
 interface Mpk {
   pageLength: number;
@@ -27,95 +28,6 @@ interface Note {
 interface Save {
   note: Note;
   offset: number;
-}
-
-export function isDexDriveHeader(dataView: DataView): boolean {
-  const validator = [
-    0x31, 0x32, 0x33, 0x2d, 0x34, 0x35, 0x36, 0x2d, 0x53, 0x54, 0x44,
-  ]; // "123-456-STD"
-
-  return checkValidator(validator, 0x0, dataView);
-}
-
-export function getDexDriveHeaderShift(): number {
-  return 0x1040;
-}
-
-export function isSrm(dataView: DataView): boolean {
-  return dataView.byteLength === 0x48800;
-}
-
-export function isSrmMpk(dataView: DataView): boolean {
-  if (isSrm(dataView)) {
-    for (let i = 0x0; i < 0x10; i += 0x1) {
-      if (getInt(0xb00 + i * 0x20, "uint8", {}, dataView) !== 0x0) {
-        return true;
-      }
-    }
-  }
-
-  return false;
-}
-
-type SaveFormat = "eep" | "fla" | "mpk" | "sra";
-
-export function getSrmHeaderShift(format: SaveFormat): number {
-  switch (format) {
-    case "eep":
-      return 0x0;
-    case "mpk":
-      return 0x800;
-    case "sra":
-      return 0x20800;
-    case "fla":
-      return 0x28800;
-  }
-}
-
-export function getSrmHeaderEnd(format: SaveFormat): number {
-  switch (format) {
-    case "eep":
-      return 0x800;
-    case "mpk":
-      return 0x20800;
-    case "sra":
-      return 0x28800;
-    case "fla":
-      return 0x48800;
-  }
-}
-
-export function getHeaderShift(dataView: DataView, format: SaveFormat): number {
-  if (isSrm(dataView)) {
-    return getSrmHeaderShift(format);
-  } else if (isDexDriveHeader(dataView)) {
-    return getDexDriveHeaderShift();
-  }
-
-  return 0x0;
-}
-
-export function byteswapDataView(
-  format: SaveFormat,
-  dataView?: DataView,
-): DataView {
-  const $dataView = getDataView(dataView);
-
-  if (format === "eep") {
-    return $dataView;
-  }
-
-  if (isSrm($dataView)) {
-    return byteswap(
-      $dataView,
-      getSrmHeaderShift(format),
-      getSrmHeaderEnd(format),
-    );
-  } else if (!isMpk($dataView)) {
-    return byteswap($dataView);
-  }
-
-  return $dataView;
 }
 
 // Global objects
@@ -355,60 +267,4 @@ export function getMpkNoteShift(): number[] {
   }
 
   return [0x0];
-}
-
-function getHash(int: number, polynormal: Long, shift: number): Long {
-  const hash1 = polynormal
-    .add(long(int).shiftLeft(long(shift).and(long(0xf))))
-    .and(long(0x1ffffffff));
-
-  const hash2 = hash1
-    .shiftLeft(0x3f)
-    .shiftRightUnsigned(0x1f)
-    .or(hash1.shiftRightUnsigned(1))
-    .xor(hash1.shiftLeft(0x2c).shiftRightUnsigned(0x20));
-
-  return hash2.shiftRightUnsigned(0x14).and(long(0xfff)).xor(hash2);
-}
-
-function long(value: number): Long {
-  return Long.fromNumber(value);
-}
-
-// Adapted from https://github.com/bryc/rare-n64-chksm
-export function generateRareChecksum(
-  item: ItemChecksum,
-  dataView?: DataView,
-): [Long, Long] {
-  let checksum1 = long(0x0);
-  let polynormal = long(0x13108b3c1);
-  let shift = 0;
-
-  for (
-    let i = item.control.offsetStart;
-    i < item.control.offsetEnd;
-    i += 0x1, shift += 7
-  ) {
-    const int = getInt(i, "uint8", {}, dataView);
-
-    polynormal = getHash(int, polynormal, shift);
-
-    checksum1 = checksum1.xor(polynormal);
-  }
-
-  let checksum2 = checksum1;
-
-  for (
-    let i = item.control.offsetEnd - 1;
-    i >= item.control.offsetStart;
-    i -= 0x1, shift += 3
-  ) {
-    const int = getInt(i, "uint8", {}, dataView);
-
-    polynormal = getHash(int, polynormal, shift);
-
-    checksum2 = checksum2.xor(polynormal);
-  }
-
-  return [checksum1, checksum2];
 }

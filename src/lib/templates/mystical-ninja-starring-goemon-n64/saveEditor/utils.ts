@@ -1,13 +1,13 @@
 import { extractBinary, getInt, setInt } from "$lib/utils/bytes";
 import { formatChecksum } from "$lib/utils/checksum";
+import { getHeaderShift } from "$lib/utils/common/nintendo64";
 import {
-  getHeaderShift,
   getMpkNoteShift,
   getRegionsFromMpk,
   repackMpk,
   resetMpk,
   unpackMpk,
-} from "$lib/utils/common/nintendo64";
+} from "$lib/utils/common/nintendo64/mpk";
 import { getItem } from "$lib/utils/parser";
 
 import type {
