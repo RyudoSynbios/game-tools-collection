@@ -18,7 +18,7 @@ import { generateUUID } from "../format";
 // Adapted from https://github.com/mrdoob/three.js/blob/dev/examples/jsm/exporters/OBJExporter.js
 export default class OBJExporter {
   parse(
-    object: Object3D,
+    objects: Object3D[],
     textureFlipY: boolean,
   ): { obj: string; mtl: string; textures: { [name: string]: string } } {
     let obj = "mtllib object.mtl\n\n";
@@ -53,12 +53,18 @@ export default class OBJExporter {
 
       obj += `o ${mesh.name}\n`;
 
-      if (mesh.material && !Array.isArray(mesh.material)) {
-        const material = mesh.material as MeshLambertMaterial;
+      const materialNames: string[] = [];
 
+      let materials: MeshLambertMaterial[];
+
+      if (!Array.isArray(mesh.material)) {
+        materials = [mesh.material as MeshLambertMaterial];
+      } else {
+        materials = mesh.material as MeshLambertMaterial[];
+      }
+
+      materials.forEach((material) => {
         const name = `material.${generateUUID()}`;
-
-        obj += `usemtl ${name}\n`;
 
         mtl += `\nnewmtl ${name}\n`;
         mtl += "Ns 100\n";
@@ -78,10 +84,12 @@ export default class OBJExporter {
             "",
           );
         }
-      }
+
+        materialNames.push(name);
+      });
 
       if (vertices !== undefined) {
-        for (let i = 0, l = vertices.count; i < l; i++, nbVertex++) {
+        for (let i = 0, l = vertices.count; i < l; i += 1, nbVertex += 1) {
           vertex.fromBufferAttribute(vertices, i);
 
           vertex.applyMatrix4(mesh.matrixWorld);
@@ -91,7 +99,7 @@ export default class OBJExporter {
       }
 
       if (uvs !== undefined) {
-        for (let i = 0, l = uvs.count; i < l; i++, nbVertexUvs++) {
+        for (let i = 0, l = uvs.count; i < l; i += 1, nbVertexUvs += 1) {
           uv.fromBufferAttribute(uvs as BufferAttribute, i);
 
           if (!textureFlipY) {
@@ -106,7 +114,7 @@ export default class OBJExporter {
       if (normals !== undefined) {
         normalMatrixWorld.getNormalMatrix(mesh.matrixWorld);
 
-        for (let i = 0, l = normals.count; i < l; i++, nbNormals++) {
+        for (let i = 0, l = normals.count; i < l; i += 1, nbNormals += 1) {
           normal.fromBufferAttribute(normals, i);
 
           normal.applyMatrix3(normalMatrixWorld).normalize();
@@ -115,40 +123,43 @@ export default class OBJExporter {
         }
       }
 
+      if (geometry.groups.length === 0) {
+        obj += `usemtl ${materialNames[0]}\n`;
+      }
+
+      let count = vertices.count;
+
       if (indices !== null) {
-        for (let i = 0, l = indices.count; i < l; i += 3) {
-          for (let m = 0; m < 3; m++) {
-            const j = indices.getX(i + m) + 1;
+        count = indices.count;
+      }
 
-            face[m] =
-              indexVertex +
-              j +
-              (normals || uvs
-                ? "/" +
-                  (uvs ? indexVertexUvs + j : "") +
-                  (normals ? `/${indexNormals + j}` : "")
-                : "");
+      for (let i = 0, l = count; i < l; i += 3) {
+        for (let m = 0; m < 3; m += 1) {
+          let j = i + m + 1;
+
+          if (indices !== null) {
+            j = indices.getX(i + m) + 1;
           }
 
-          obj += `f ${face.join(" ")}\n`;
-        }
-      } else {
-        for (let i = 0, l = vertices.count; i < l; i += 3) {
-          for (let m = 0; m < 3; m++) {
-            const j = i + m + 1;
+          face[m] = `${indexVertex + j}`;
 
-            face[m] =
-              indexVertex +
-              j +
-              (normals || uvs
-                ? "/" +
-                  (uvs ? indexVertexUvs + j : "") +
-                  (normals ? `/${indexNormals + j}` : "")
-                : "");
+          if (uvs) {
+            face[m] += `/${indexVertexUvs + j}`;
           }
 
-          obj += `f ${face.join(" ")}\n`;
+          if (normals) {
+            face[m] += `/${indexNormals + j}`;
+          }
         }
+
+        if (geometry.groups.length > 0) {
+          const group = geometry.groups.find((group) => group.start === i);
+
+          if (group?.materialIndex !== undefined) {
+            obj += `usemtl ${materialNames[group.materialIndex]}\n`;
+          }
+        }
+        obj += `f ${face.join(" ")}\n`;
       }
 
       indexVertex += nbVertex;
@@ -167,7 +178,7 @@ export default class OBJExporter {
       obj += `\no ${line.name}\n`;
 
       if (vertices !== undefined) {
-        for (let i = 0, l = vertices.count; i < l; i++, nbVertex++) {
+        for (let i = 0, l = vertices.count; i < l; i += 1, nbVertex += 1) {
           vertex.fromBufferAttribute(vertices, i);
 
           vertex.applyMatrix4(line.matrixWorld);
@@ -179,7 +190,7 @@ export default class OBJExporter {
       if (type === "Line") {
         obj += "l ";
 
-        for (let j = 1, l = vertices.count; j <= l; j++) {
+        for (let j = 1, l = vertices.count; j <= l; j += 1) {
           obj += `${indexVertex + j} `;
         }
 
@@ -210,7 +221,7 @@ export default class OBJExporter {
       obj += `\no ${points.name}\n`;
 
       if (vertices !== undefined) {
-        for (let i = 0, l = vertices.count; i < l; i++, nbVertex++) {
+        for (let i = 0, l = vertices.count; i < l; i += 1, nbVertex += 1) {
           vertex.fromBufferAttribute(vertices, i);
           vertex.applyMatrix4(points.matrixWorld);
 
@@ -229,7 +240,7 @@ export default class OBJExporter {
 
         obj += "p ";
 
-        for (let j = 1, l = vertices.count; j <= l; j++) {
+        for (let j = 1, l = vertices.count; j <= l; j += 1) {
           obj += `${indexVertex + j} `;
         }
 
@@ -239,18 +250,20 @@ export default class OBJExporter {
       indexVertex += nbVertex;
     }
 
-    object.traverse((child) => {
-      if ("isMesh" in child) {
-        parseMesh(child as Mesh);
-      }
+    objects.forEach((object) => {
+      object.traverse((child) => {
+        if ("isMesh" in child) {
+          parseMesh(child as Mesh);
+        }
 
-      if ("isLine" in child) {
-        parseLine(child as Line);
-      }
+        if ("isLine" in child) {
+          parseLine(child as Line);
+        }
 
-      if ("isPoints" in child) {
-        parsePoints(child as Points);
-      }
+        if ("isPoints" in child) {
+          parsePoints(child as Points);
+        }
+      });
     });
 
     return { obj, mtl, textures };

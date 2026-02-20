@@ -1,5 +1,6 @@
 import { extractBit, getInt, getIntFromArray } from "$lib/utils/bytes";
 import Canvas from "$lib/utils/canvas";
+import { generateUUID } from "$lib/utils/format";
 import { flipUvs, getColor } from "$lib/utils/graphics";
 import type { MaterialOptions } from "$lib/utils/three";
 
@@ -128,6 +129,7 @@ export async function getMaterials(
       side: (textureType & 0x100) !== 0x0 ? "double" : "front",
       opacity: overrideOptions.opacity || 1,
       texture: {
+        name: generateUUID(),
         base64:
           overrideOptions?.texture?.base64 !== undefined
             ? overrideOptions.texture.base64

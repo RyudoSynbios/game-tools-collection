@@ -2,6 +2,7 @@ import type { Mesh } from "three";
 
 import { getInt } from "$lib/utils/bytes";
 import type Canvas from "$lib/utils/canvas";
+import { generateUUID } from "$lib/utils/format";
 import { applyPalette, flipTileData, getPalette } from "$lib/utils/graphics";
 import type Three from "$lib/utils/three";
 
@@ -65,6 +66,7 @@ export function addFloor(texture: string, three: Three, instanceId: string) {
   const material = three.generateMaterial({
     color: 0x0,
     texture: {
+      name: generateUUID(),
       base64: texture,
       repeatX: true,
       repeatY: true,

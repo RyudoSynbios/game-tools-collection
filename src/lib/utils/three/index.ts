@@ -934,7 +934,10 @@ export default class Three {
   public exportObj(): void {
     const exporter = new OBJExporter();
 
-    const files = exporter.parse(this.group, this.textureFlipY);
+    const files = exporter.parse(
+      [this.group, this.groupLocked],
+      this.textureFlipY,
+    );
 
     const obj = new Blob([files.obj], {
       type: "application/octet-stream",

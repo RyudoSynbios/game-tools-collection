@@ -3,6 +3,7 @@ import type { Group, Mesh } from "three";
 import { getInt, getIntFromArray } from "$lib/utils/bytes";
 import type Canvas from "$lib/utils/canvas";
 import debug from "$lib/utils/debug";
+import { generateUUID } from "$lib/utils/format";
 import {
   applyPalette,
   flipUvs,
@@ -151,6 +152,7 @@ export async function addBattlefieldFloor(
               const material = three.generateMaterial({
                 color: 0x0,
                 texture: {
+                  name: generateUUID(),
                   base64,
                 },
               });
@@ -200,6 +202,7 @@ export function addFloor(
     color: 0x0,
     depthTest: false,
     texture: {
+      name: generateUUID(),
       base64: texture,
       repeatX: true,
       repeatY: true,
