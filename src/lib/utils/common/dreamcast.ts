@@ -76,7 +76,7 @@ export function vmuToDataView(dataView: DataView): DataView {
 
   const blocks = dataView.byteLength / 0x200;
 
-  if (blocks !== 256) {
+  if (blocks !== 0x100) {
     return dataView;
   }
 
