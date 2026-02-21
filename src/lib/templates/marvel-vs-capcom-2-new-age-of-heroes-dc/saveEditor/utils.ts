@@ -1,63 +1,49 @@
 import { get } from "svelte/store";
 
-import { dataView, gameRegion, gameTemplate } from "$lib/stores";
+import { gameRegion } from "$lib/stores";
 import { getInt, setInt } from "$lib/utils/bytes";
 import { formatChecksum } from "$lib/utils/checksum";
-import {
-  byteswapDataView,
-  generateVmuChecksum,
-  isDciFile,
-} from "$lib/utils/common/dreamcast";
-import { getObjKey } from "$lib/utils/format";
+import { initDataView, saveDataView } from "$lib/utils/common/dreamcast";
+import { isDciFile } from "$lib/utils/common/dreamcast/dci";
+import VMU, { isVmuFile } from "$lib/utils/common/dreamcast/vmu";
+import { getRegions } from "$lib/utils/validator";
 
-import type {
-  Item,
-  ItemChecksum,
-  ItemInt,
-  LogicalOperator,
-  Validator,
-} from "$lib/types";
+import type { Item, ItemChecksum, ItemInt } from "$lib/types";
+
+let vmu: VMU;
 
 export function beforeInitDataView(dataView: DataView): DataView {
-  return byteswapDataView(dataView);
+  if (isVmuFile(dataView)) {
+    vmu = new VMU(dataView);
+
+    return vmu.unpack();
+  }
+
+  return initDataView(dataView);
+}
+
+export function overrideGetRegions(
+  dataView: DataView,
+  shift: number,
+): string[] {
+  if (vmu?.isInitialized()) {
+    return vmu.getRegions();
+  }
+
+  return getRegions(dataView, shift);
+}
+
+export function onInitFailed(): void {
+  if (vmu?.isInitialized()) {
+    vmu.destroy();
+  }
 }
 
 export function initShifts(shifts: number[]): number[] {
-  const $dataView = get(dataView);
-  const $gameRegion = get(gameRegion);
-  const $gameTemplate = get(gameTemplate);
-
-  if (isDciFile()) {
+  if (vmu?.isInitialized()) {
+    return vmu.getShift();
+  } else if (isDciFile()) {
     return [...shifts, 0x20];
-  }
-
-  const region = Object.values($gameTemplate.validator.regions)[
-    $gameRegion
-  ] as LogicalOperator<Validator>;
-
-  const save = region.$or!.find((condition: any) => {
-    const offset = parseInt(getObjKey(condition, 0));
-    const array = condition[offset];
-    const length = array.length;
-
-    for (let i = offset; i < offset + length; i += 0x1) {
-      if (i >= $dataView.byteLength) {
-        return false;
-      }
-
-      if (getInt(i, "uint8") !== array[i - offset]) {
-        return false;
-      }
-    }
-
-    return true;
-  });
-
-  if (save) {
-    const saveOffset = parseInt(getObjKey(save, 0));
-    const offset = (0xff - getInt(saveOffset - 0x2, "uint16")) * 0x200;
-
-    return [...shifts, offset];
   }
 
   return shifts;
@@ -120,10 +106,6 @@ export function overrideSetInt(item: Item, value: string): boolean {
 }
 
 export function generateChecksum(item: ItemChecksum): number {
-  if ("id" in item && item.id === "checksumVmu") {
-    return generateVmuChecksum(item);
-  }
-
   let checksum1 = 0x0;
   let checksum2 = 0x0;
 
@@ -141,5 +123,15 @@ export function generateChecksum(item: ItemChecksum): number {
 }
 
 export function beforeSaving(): ArrayBufferLike {
-  return byteswapDataView().buffer;
+  if (vmu?.isInitialized()) {
+    return vmu.repack();
+  }
+
+  return saveDataView();
+}
+
+export function onReset(): void {
+  if (vmu?.isInitialized()) {
+    vmu.destroy();
+  }
 }
