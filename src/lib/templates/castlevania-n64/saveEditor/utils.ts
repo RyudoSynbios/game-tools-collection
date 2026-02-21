@@ -39,9 +39,9 @@ export function beforeInitDataView(
 ): DataView {
   if (isMpk(dataView, shift)) {
     return unpackMpk(dataView, shift);
-  } else {
-    return byteswapDataView("eep", dataView);
   }
+
+  return byteswapDataView("eep", dataView);
 }
 
 export function overrideGetRegions(

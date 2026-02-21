@@ -37,10 +37,11 @@ import {
 export function getComponent(
   component: string,
 ): typeof MapViewer | typeof PartyPortraitSelector | undefined {
-  if (component === "PartyPortraitSelector") {
-    return PartyPortraitSelector;
-  } else if (component === "MapViewer") {
-    return MapViewer;
+  switch (component) {
+    case "PartyPortraitSelector":
+      return PartyPortraitSelector;
+    case "MapViewer":
+      return MapViewer;
   }
 }
 

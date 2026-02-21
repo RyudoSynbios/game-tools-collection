@@ -125,7 +125,7 @@ function setCharacterNames(
 
       char = ((char - 0xf7) << 0x8) | nextChar;
 
-      offset += 1;
+      offset += 0x1;
     }
 
     setBits(char, length);

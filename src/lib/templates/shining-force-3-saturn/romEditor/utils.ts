@@ -12,7 +12,6 @@ import Iso9660, {
   hasSectors,
   type File,
 } from "$lib/utils/common/iso9660";
-import { decodeChar, isCharUint16 } from "$lib/utils/encoding";
 import { getRegionArray } from "$lib/utils/format";
 import { getItem, updateResources } from "$lib/utils/parser";
 import {
@@ -47,14 +46,7 @@ import {
   SPELL_COUNT,
   SPELL_NAMES_START_INDEX,
 } from "./utils/constants";
-import { decodeKanji } from "./utils/encoding";
-
-export function overrideGetRegions(
-  dataView: DataView,
-  shift: number,
-): string[] {
-  return customGetRegions(dataView, shift);
-}
+import { getText } from "./utils/encoding";
 
 export let iso: Iso9660;
 
@@ -64,6 +56,58 @@ const dataViews = [
   { name: "x023", fileName: "X023.BIN" }, // Shops
   { name: "x033", fileName: "X033.BIN" }, // Party
 ];
+
+export let cache: {
+  partyStatsBaseOffset: number;
+  partyMiscBaseOffset: number;
+  itemsBaseOffset: number;
+  enemiesBaseOffset: number;
+  dummyTextFile: DataView;
+  texts: string[];
+} = {
+  partyStatsBaseOffset: 0x0,
+  partyMiscBaseOffset: 0x0,
+  itemsBaseOffset: 0x0,
+  enemiesBaseOffset: 0x0,
+  dummyTextFile: new DataView(new ArrayBuffer(0)),
+  texts: [],
+};
+
+export function getComponent(
+  component: string,
+):
+  | typeof FileList
+  | typeof ImageViewer
+  | typeof ModelViewer
+  | typeof Shops
+  | typeof TextViewer
+  | typeof TxtViewer
+  | typeof VideoViewer
+  | undefined {
+  switch (component) {
+    case "FileList":
+      return FileList;
+    case "ImageViewer":
+      return ImageViewer;
+    case "ModelViewer":
+      return ModelViewer;
+    case "Shops":
+      return Shops;
+    case "TextViewer":
+      return TextViewer;
+    case "TxtViewer":
+      return TxtViewer;
+    case "VideoViewer":
+      return VideoViewer;
+  }
+}
+
+export function overrideGetRegions(
+  dataView: DataView,
+  shift: number,
+): string[] {
+  return customGetRegions(dataView, shift);
+}
 
 export function beforeItemsParsing(): void {
   const $dataView = get(dataView);
@@ -166,22 +210,6 @@ export function overrideParseItem(item: Item): Item {
 export function onReady(): void {
   updateResources("characterNames");
 }
-
-let cache: {
-  partyStatsBaseOffset: number;
-  partyMiscBaseOffset: number;
-  itemsBaseOffset: number;
-  enemiesBaseOffset: number;
-  dummyTextFile: DataView;
-  texts: string[];
-} = {
-  partyStatsBaseOffset: 0x0,
-  partyMiscBaseOffset: 0x0,
-  itemsBaseOffset: 0x0,
-  enemiesBaseOffset: 0x0,
-  dummyTextFile: new DataView(new ArrayBuffer(0)),
-  texts: [],
-};
 
 export function overrideItem(item: Item): Item {
   const $dataViewAlt = get(dataViewAlt);
@@ -303,34 +331,6 @@ export function afterSetInt(item: Item): void {
   }
 }
 
-export function getComponent(
-  component: string,
-):
-  | typeof FileList
-  | typeof ImageViewer
-  | typeof ModelViewer
-  | typeof Shops
-  | typeof TextViewer
-  | typeof TxtViewer
-  | typeof VideoViewer
-  | undefined {
-  if (component === "FileList") {
-    return FileList;
-  } else if (component === "ImageViewer") {
-    return ImageViewer;
-  } else if (component === "ModelViewer") {
-    return ModelViewer;
-  } else if (component === "Shops") {
-    return Shops;
-  } else if (component === "TextViewer") {
-    return TextViewer;
-  } else if (component === "TxtViewer") {
-    return TxtViewer;
-  } else if (component === "VideoViewer") {
-    return VideoViewer;
-  }
-}
-
 export function beforeSaving(): ArrayBufferLike {
   const $dataViewAlt = get(dataViewAlt);
   const $dataViewAltMetas = get(dataViewAltMetas);
@@ -409,7 +409,7 @@ export function getCharacterNames(): Resource {
   return names;
 }
 
-export function getClassesNames(): Resource {
+export function getClassNames(): Resource {
   const names: Resource = {};
 
   const classNamesStartIndex = getRegionArray(CLASS_NAMES_START_INDEX);
@@ -504,7 +504,7 @@ export function getItemNames(): Resource {
   return names;
 }
 
-export function getItemTypes(): Resource {
+export function getItemTypeNames(): Resource {
   const names: Resource = {};
 
   const itemTypesStartIndex = getRegionArray(ITEM_TYPES_START_INDEX);
@@ -652,7 +652,7 @@ export function getDecompressedData(
       decompressedData.push(value);
 
       count -= 1;
-      offset += 1;
+      offset += 0x1;
     }
   }
 }
@@ -710,6 +710,7 @@ export function getFilteredFiles(type: string): File[] {
   });
 }
 
+// prettier-ignore
 export function getFileOffset(
   identifier: string,
   offset: number,
@@ -718,12 +719,7 @@ export function getFileOffset(
 ): number {
   const scenario = getScenario();
 
-  const absoluteOffset = getInt(
-    offset,
-    "uint32",
-    { bigEndian: true },
-    dataView,
-  );
+  const absoluteOffset = getInt(offset, "uint32", { bigEndian: true }, dataView);
 
   if (identifier === "x002") {
     if (scenario === "1") {
@@ -776,7 +772,7 @@ export function isDummy(offset: number, dataView: DataView): boolean {
   return checkValidator(validator, offset, dataView);
 }
 
-function isPatched(): boolean {
+export function isPatched(): boolean {
   const $dataView = get(dataView);
 
   const validator = [0x53, 0x46, 0x33, 0x54, 0x52, 0x41, 0x4e, 0x53]; // "SF3TRANS"
@@ -784,176 +780,4 @@ function isPatched(): boolean {
   const offset = hasSectors($dataView) ? 0x30 : 0x20;
 
   return checkValidator(validator, offset);
-}
-
-export function getText(
-  index: number,
-  format = true,
-  dataView?: DataView,
-): string {
-  let text = "";
-
-  if (cache.dummyTextFile.byteLength === 0) {
-    const files = getFilteredFiles("text");
-
-    if (files.length > 0) {
-      const file = iso.getFile("X5SHOP_T.BIN");
-
-      if (file) {
-        cache.dummyTextFile = file.dataView;
-      }
-    }
-  }
-
-  if (dataView) {
-    text = decodeText(index, dataView);
-  } else {
-    if (!cache.texts[index]) {
-      cache.texts[index] = decodeText(index, cache.dummyTextFile);
-    }
-
-    text = cache.texts[index];
-  }
-
-  if (format) {
-    return text.replace(/\{.*?\}/g, "");
-  }
-
-  return text;
-}
-
-export const decodeTextError = "DECODE ERROR!";
-
-function decodeText(index: number, dataView: DataView): string {
-  const $gameRegion = get(gameRegion);
-
-  const scenario = getScenario();
-  const patched = isPatched();
-
-  if (dataView.byteLength > 0) {
-    const treesPointerOffset = scenario === "1" && !patched ? 0xc : 0x18;
-    const treesOffset = getFileOffset("x5", treesPointerOffset, dataView);
-
-    const pagesPointerOffset = scenario === "1" && !patched ? 0x18 : 0x24;
-
-    const page = Math.floor(index / 0x100);
-
-    index -= page * 0x100;
-
-    const pagesOffset = getFileOffset("x5", pagesPointerOffset, dataView);
-
-    if (pagesOffset + page * 0x4 >= dataView.byteLength) {
-      return decodeTextError;
-    }
-
-    let wordOffset = getFileOffset("x5", pagesOffset + page * 0x4, dataView);
-
-    for (let i = 0x0; i < index; i += 0x1) {
-      wordOffset += getInt(wordOffset, "uint8", {}, dataView) + 0x1;
-
-      const size = getInt(wordOffset, "uint8", {}, dataView);
-
-      if (size === 0x0) {
-        if ((i & 0xff) === 0xff) {
-          i -= 0x1;
-        } else {
-          return decodeTextError;
-        }
-      }
-    }
-
-    wordOffset += 0x1;
-
-    let text = "";
-
-    let letter = 0xffff;
-    let lastLetter = 0x0;
-
-    let treeIndex = 0x0;
-    let local10 = 0x80;
-
-    while (letter !== 0x0) {
-      letter = 0x0;
-
-      for (let i = 0x0; i < 0x2; i += 0x1) {
-        let mask = 0x80;
-
-        const treeOffset = treesOffset + (treeIndex << 0x2) * 0x2;
-        const lettersOffset = getFileOffset("x5", treeOffset, dataView);
-
-        let local1c = getFileOffset("x5", treeOffset + 0x4, dataView);
-        let leaf = 0x0;
-
-        while (true) {
-          let bVar1 = getInt(local1c, "uint8", {}, dataView) & mask;
-
-          mask >>= 0x1;
-
-          if (mask === 0x0) {
-            local1c += 0x1;
-            mask = 0x80;
-          }
-
-          if (bVar1 !== 0x0) {
-            break;
-          }
-
-          bVar1 = getInt(wordOffset, "uint8", {}, dataView) & local10;
-
-          local10 >>= 0x1;
-
-          if (local10 === 0x0) {
-            wordOffset += 0x1;
-            local10 = 0x80;
-          }
-
-          if (bVar1 !== 0x0) {
-            let iVar3 = 0x0;
-
-            while (iVar3 >= 0x0) {
-              if ((getInt(local1c, "uint8", {}, dataView) & mask) === 0x0) {
-                iVar3 += 0x1;
-              } else {
-                leaf += 0x1;
-                iVar3 -= 0x1;
-              }
-
-              mask >>= 0x1;
-
-              if (mask === 0x0) {
-                local1c += 0x1;
-                mask = 0x80;
-              }
-            }
-          }
-        }
-
-        const leafValue = getInt(lettersOffset + leaf, "uint8", {}, dataView);
-
-        letter = (letter << 0x8) | leafValue;
-        treeIndex = leafValue;
-      }
-
-      if (letter < 0x20) {
-        text += `{${letter.toHex(2)}}`;
-      } else if ($gameRegion === 0) {
-        text += String.fromCharCode(letter);
-      } else {
-        if (letter >= 0x100) {
-          text += decodeKanji(scenario, letter);
-        } else if ([0xde, 0xdf].includes(letter)) {
-          text = text.slice(0, -1);
-          text += decodeChar((letter << 0x8) | lastLetter, "shiftJis");
-        } else {
-          text += decodeChar(letter, "shiftJis");
-        }
-      }
-
-      lastLetter = letter;
-    }
-
-    return text;
-  }
-
-  return decodeTextError;
 }

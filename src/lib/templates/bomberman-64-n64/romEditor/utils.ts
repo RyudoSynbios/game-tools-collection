@@ -33,8 +33,9 @@ export interface Texture {
 export function getComponent(
   component: string,
 ): typeof AssetViewer | undefined {
-  if (component === "AssetViewer") {
-    return AssetViewer;
+  switch (component) {
+    case "AssetViewer":
+      return AssetViewer;
   }
 }
 

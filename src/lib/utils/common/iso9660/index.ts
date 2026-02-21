@@ -312,7 +312,7 @@ export default class Iso9660 {
     }, []);
   }
 
-  public getFile(path: string): (File & { dataView: DataView }) | undefined {
+  public getFile(path: string): File | undefined {
     const file = this.getFiles().find((file) => file.path === path);
 
     if (file) {

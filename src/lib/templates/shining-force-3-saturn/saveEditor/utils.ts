@@ -143,7 +143,7 @@ export function overrideParseItem(
       const newItemInt = clone(itemInt);
 
       if (i > 0 && (!characterIndexReached || i === instanceIndex)) {
-        offset += 1;
+        offset += 0x1;
       }
 
       if (characterIndexReached) {

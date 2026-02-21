@@ -22,10 +22,11 @@ import { dssCards } from "./utils/resource";
 export function getComponent(
   component: string,
 ): typeof Debug | typeof MapViewer | undefined {
-  if (component === "Debug") {
-    return Debug;
-  } else if (component === "MapViewer") {
-    return MapViewer;
+  switch (component) {
+    case "Debug":
+      return Debug;
+    case "MapViewer":
+      return MapViewer;
   }
 }
 

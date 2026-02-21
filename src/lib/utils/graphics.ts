@@ -280,7 +280,7 @@ interface Coordinates {
 
 export function generateGraphicsSheet(
   width: number,
-  images: { width: number; height: number }[],
+  images: { width: number; height: number; group?: number }[],
 ): GraphicsSheet {
   const sheet: GraphicsSheet = {
     width,
@@ -289,13 +289,14 @@ export function generateGraphicsSheet(
   };
 
   let previousY = 0;
+  let previousGroup = images.at(0)?.group;
 
   images.forEach((image, index) => {
     let x =
       index > 0 ? sheet.coordinates[index - 1].x + images[index - 1].width : 0;
     let y = previousY;
 
-    if (x + image.width > sheet.width) {
+    if (x + image.width > sheet.width || previousGroup !== image.group) {
       x = 0;
       y = sheet.height;
       previousY = sheet.height;
@@ -310,6 +311,8 @@ export function generateGraphicsSheet(
     if (y + image.height > sheet.height) {
       sheet.height = y + image.height;
     }
+
+    previousGroup = image.group;
   });
 
   return sheet;

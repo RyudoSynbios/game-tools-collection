@@ -212,7 +212,6 @@ export function overrideGetInt(
           } else {
             location = 0x34; // Link's House
           }
-          break;
       }
     }
 
@@ -382,7 +381,6 @@ export function afterSetInt(item: Item, flag: ItemBitflag): void {
         break;
       default:
         equippedSword = 0x3d;
-        break;
     }
 
     setInt(itemInt.offset - 0x9, "uint8", equippedSword);

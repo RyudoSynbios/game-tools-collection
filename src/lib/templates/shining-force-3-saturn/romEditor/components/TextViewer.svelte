@@ -4,17 +4,12 @@
 
   import type { Resource } from "$lib/types";
 
-  import {
-    decodeTextError,
-    getFileData,
-    getFilteredFiles,
-    getScenario,
-    getText,
-  } from "../utils";
+  import { getFileData, getFilteredFiles, getScenario } from "../utils";
   import {
     CHARACTER_NAMES_START_INDEX,
     DIALOGS_START_INDEX,
   } from "../utils/constants";
+  import { decodeTextError, getText } from "../utils/encoding";
 
   export let assetIndex: number;
 

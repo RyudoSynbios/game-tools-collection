@@ -4,9 +4,9 @@ import { dataView, gameTemplate } from "$lib/stores";
 
 import type { DataViewABL } from "$lib/types";
 
-import { addPadding, getInt, getString, removePadding } from "../bytes";
-import { mergeUint8Arrays, numberArrayToString } from "../format";
-import { checkValidator, getRegionValidator } from "../validator";
+import { addPadding, getInt, getString, removePadding } from "../../bytes";
+import { mergeUint8Arrays, numberArrayToString } from "../../format";
+import { checkValidator, getRegionValidator } from "../../validator";
 
 interface File {
   name: string;

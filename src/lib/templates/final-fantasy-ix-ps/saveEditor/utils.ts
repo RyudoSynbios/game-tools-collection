@@ -26,6 +26,13 @@ import type {
 import Abilities from "./components/Abilities.svelte";
 import { mognetLetters } from "./utils/resource";
 
+export function getComponent(component: string): typeof Abilities | undefined {
+  switch (component) {
+    case "Abilities":
+      return Abilities;
+  }
+}
+
 export function initHeaderShift(dataView: DataView): number {
   return getHeaderShift(dataView);
 }
@@ -43,12 +50,6 @@ export function initShifts(shifts: number[]): number[] {
   }
 
   return shifts;
-}
-
-export function getComponent(component: string): typeof Abilities | undefined {
-  if (component === "Abilities") {
-    return Abilities;
-  }
 }
 
 export function overrideParseItem(item: Item): Item {

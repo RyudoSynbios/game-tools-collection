@@ -3316,7 +3316,6 @@ export default class Script {
             break;
           default:
             text = "If: ";
-            break;
         }
         break;
       case "jumpToLabel":

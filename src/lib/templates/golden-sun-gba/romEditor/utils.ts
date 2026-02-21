@@ -37,12 +37,13 @@ export function getComponent(
   | typeof ItemIconSelector
   | typeof PartyPortraitSelector
   | undefined {
-  if (component === "AbilityIconSelector") {
-    return AbilityIconSelector;
-  } else if (component === "ItemIconSelector") {
-    return ItemIconSelector;
-  } else if (component === "PartyPortraitSelector") {
-    return PartyPortraitSelector;
+  switch (component) {
+    case "AbilityIconSelector":
+      return AbilityIconSelector;
+    case "ItemIconSelector":
+      return ItemIconSelector;
+    case "PartyPortraitSelector":
+      return PartyPortraitSelector;
   }
 }
 
