@@ -12,7 +12,7 @@ import Iso9660, {
   hasSectors,
   type File,
 } from "$lib/utils/common/iso9660";
-import { decodeChar, isCharUint16 } from "$lib/utils/encoding";
+import { decodeChar } from "$lib/utils/encoding";
 import { getRegionArray } from "$lib/utils/format";
 import { getItem, updateResources } from "$lib/utils/parser";
 import {

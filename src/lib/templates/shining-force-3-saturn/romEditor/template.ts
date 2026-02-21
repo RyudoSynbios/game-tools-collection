@@ -89,6 +89,7 @@ const template: GameJson = {
       },
     },
     text: "Drag 'n' drop here or click to add a rom file.",
+    hint: "Only works with .bin (merged) and .iso files.",
     error: "Not a valid rom file.",
   },
   items: [

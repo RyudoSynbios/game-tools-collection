@@ -174,6 +174,10 @@ export default class VMU {
     return this.root.length > 0;
   }
 
+  public getFiles(): File[] {
+    return this.root;
+  }
+
   public unpack(): DataView {
     const $gameTemplate = get(gameTemplate);
 

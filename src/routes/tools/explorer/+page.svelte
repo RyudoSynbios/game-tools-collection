@@ -3,11 +3,13 @@
 
   import { page } from "$app/state";
   import Dropzone from "$lib/components/Dropzone.svelte";
+  import VMU, { isVmuFile } from "$lib/utils/common/dreamcast/vmu";
   import Iso9660, { isIso9660Valid } from "$lib/utils/common/iso9660";
 
   let typeEl: HTMLSelectElement;
 
   let iso: Iso9660 | undefined;
+  let vmu: VMU | undefined;
 
   function handleExportFile(event: Event): void {
     if (iso === undefined) {
@@ -41,6 +43,15 @@
     }
   }
 
+  function handleVMU(dataView: DataView): void {
+    if (!isVmuFile(dataView)) {
+      vmu = undefined;
+    } else {
+      vmu = new VMU(dataView);
+      console.log(vmu.getFiles());
+    }
+  }
+
   function handleOffsetChange(event: Event): void {
     if (iso === undefined) {
       return;
@@ -68,6 +79,9 @@
       case "iso9660":
         handleIso9660(dataView);
         break;
+      case "vmu":
+        handleVMU(dataView);
+        break;
     }
   }
 </script>
@@ -84,6 +98,7 @@
     <div class="gtc-explorer-form">
       <select bind:this={typeEl} on:click|stopPropagation>
         <option value="iso9660">ISO 9660</option>
+        <option value="vmu">VMU</option>
       </select>
       {#if iso !== undefined}
         <input

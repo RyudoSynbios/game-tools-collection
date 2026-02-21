@@ -39,9 +39,9 @@ export function overrideParseContainerItemsShifts(
   shifts: number[],
   index: number,
 ): [boolean, number[] | undefined] {
-  const saves = getSaves();
-
   if (item.id === "slots") {
+    const saves = getSaves();
+
     if (index > saves.length - 1) {
       return [true, [-1]];
     }

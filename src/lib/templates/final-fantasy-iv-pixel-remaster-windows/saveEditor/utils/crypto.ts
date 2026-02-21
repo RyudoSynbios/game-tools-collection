@@ -3,7 +3,7 @@ import Rijndael from "rijndael-js";
 
 // Source from https://github.com/Anub1sR0cks/FFPRSaveEditor/blob/master/FFPRSaveEditor.Common/SaveGame.cs
 
-const BLOCK_SIZE = 32;
+const BLOCK_SIZE = 0x20;
 
 const PASSWORD = "TKX73OHHK1qMonoICbpVT0hIDGe7SkW0";
 const SALTWORD = "71Ba2p0ULBGaE6oJ7TjCqwsls1jBKmRL";
