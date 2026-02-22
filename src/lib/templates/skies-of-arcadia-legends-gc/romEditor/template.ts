@@ -4103,8 +4103,8 @@ const template: GameJson = {
                                       hidden: true,
                                     },
                                     {
-                                      type: "bitflags",
                                       dataViewAltKey: "enemyEventGroups",
+                                      type: "bitflags",
                                       flags: [
                                         { offset: 0xc3, bit: 0, label: "Can try again" },
                                         { offset: 0xc4, bit: 0, label: "Can escape", reversed: true },

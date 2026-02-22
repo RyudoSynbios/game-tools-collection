@@ -7,8 +7,9 @@ import type { ItemChecksum } from "$lib/types";
 import MapViewer from "./components/MapViewer.svelte";
 
 export function getComponent(component: string): typeof MapViewer | undefined {
-  if (component === "MapViewer") {
-    return MapViewer;
+  switch (component) {
+    case "MapViewer":
+      return MapViewer;
   }
 }
 

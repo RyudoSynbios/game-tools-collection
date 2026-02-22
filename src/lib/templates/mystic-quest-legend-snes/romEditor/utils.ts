@@ -50,16 +50,17 @@ export function getComponent(
   | typeof MonsterCanvas
   | typeof Monsters
   | undefined {
-  if (component === "BattleBackgroundCanvas") {
-    return BattleBackgroundCanvas;
-  } else if (component === "Debug") {
-    return Debug;
-  } else if (component === "MapViewer") {
-    return MapViewer;
-  } else if (component === "MonsterCanvas") {
-    return MonsterCanvas;
-  } else if (component === "Monsters") {
-    return Monsters;
+  switch (component) {
+    case "BattleBackgroundCanvas":
+      return BattleBackgroundCanvas;
+    case "Debug":
+      return Debug;
+    case "MapViewer":
+      return MapViewer;
+    case "MonsterCanvas":
+      return MonsterCanvas;
+    case "Monsters":
+      return Monsters;
   }
 }
 

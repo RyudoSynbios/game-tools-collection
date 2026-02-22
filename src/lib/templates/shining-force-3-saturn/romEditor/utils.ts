@@ -80,6 +80,22 @@ export function beforeItemsParsing(): void {
   });
 }
 
+let cache: {
+  partyStatsBaseOffset: number;
+  partyMiscBaseOffset: number;
+  itemsBaseOffset: number;
+  enemiesBaseOffset: number;
+  dummyTextFile: DataView;
+  texts: string[];
+} = {
+  partyStatsBaseOffset: 0x0,
+  partyMiscBaseOffset: 0x0,
+  itemsBaseOffset: 0x0,
+  enemiesBaseOffset: 0x0,
+  dummyTextFile: new DataView(new ArrayBuffer(0)),
+  texts: [],
+};
+
 export function overrideParseItem(item: Item): Item {
   const $dataViewAlt = get(dataViewAlt);
 
@@ -167,21 +183,34 @@ export function onReady(): void {
   updateResources("characterNames");
 }
 
-let cache: {
-  partyStatsBaseOffset: number;
-  partyMiscBaseOffset: number;
-  itemsBaseOffset: number;
-  enemiesBaseOffset: number;
-  dummyTextFile: DataView;
-  texts: string[];
-} = {
-  partyStatsBaseOffset: 0x0,
-  partyMiscBaseOffset: 0x0,
-  itemsBaseOffset: 0x0,
-  enemiesBaseOffset: 0x0,
-  dummyTextFile: new DataView(new ArrayBuffer(0)),
-  texts: [],
-};
+export function getComponent(
+  component: string,
+):
+  | typeof FileList
+  | typeof ImageViewer
+  | typeof ModelViewer
+  | typeof Shops
+  | typeof TextViewer
+  | typeof TxtViewer
+  | typeof VideoViewer
+  | undefined {
+  switch (component) {
+    case "FileList":
+      return FileList;
+    case "ImageViewer":
+      return ImageViewer;
+    case "ModelViewer":
+      return ModelViewer;
+    case "Shops":
+      return Shops;
+    case "TextViewer":
+      return TextViewer;
+    case "TxtViewer":
+      return TxtViewer;
+    case "VideoViewer":
+      return VideoViewer;
+  }
+}
 
 export function overrideItem(item: Item): Item {
   const $dataViewAlt = get(dataViewAlt);
@@ -300,34 +329,6 @@ export function afterSetInt(item: Item): void {
     if (int === 0x11 || int === 0x12) {
       setInt(itemInt.offset + 0x1, "uint8", 0x0, {}, "x002");
     }
-  }
-}
-
-export function getComponent(
-  component: string,
-):
-  | typeof FileList
-  | typeof ImageViewer
-  | typeof ModelViewer
-  | typeof Shops
-  | typeof TextViewer
-  | typeof TxtViewer
-  | typeof VideoViewer
-  | undefined {
-  if (component === "FileList") {
-    return FileList;
-  } else if (component === "ImageViewer") {
-    return ImageViewer;
-  } else if (component === "ModelViewer") {
-    return ModelViewer;
-  } else if (component === "Shops") {
-    return Shops;
-  } else if (component === "TextViewer") {
-    return TextViewer;
-  } else if (component === "TxtViewer") {
-    return TxtViewer;
-  } else if (component === "VideoViewer") {
-    return VideoViewer;
   }
 }
 

@@ -72,6 +72,26 @@ export function overrideParseItem(item: Item): Item {
   return item;
 }
 
+export function getComponent(
+  component: string,
+):
+  | typeof ImageViewer
+  | typeof ModelViewer
+  | typeof ScriptViewer
+  | typeof Texture
+  | undefined {
+  switch (component) {
+    case "ImageViewer":
+      return ImageViewer;
+    case "ModelViewer":
+      return ModelViewer;
+    case "ScriptViewer":
+      return ScriptViewer;
+    case "Texture":
+      return Texture;
+  }
+}
+
 export function overrideItem(item: Item): Item {
   const $dataViewAlt = get(dataViewAlt);
   const $gameRegion = get(gameRegion);
@@ -337,25 +357,6 @@ export function afterSetInt(item: Item): void {
     setInt(itemInt.offset - 0x2, "uint16", value, { bigEndian: true }, "enemies"); // prettier-ignore
   } else if ("id" in item && item.id?.match(/weaponCondition/)) {
     updateResources("weaponConditionNames");
-  }
-}
-
-export function getComponent(
-  component: string,
-):
-  | typeof ImageViewer
-  | typeof ModelViewer
-  | typeof ScriptViewer
-  | typeof Texture
-  | undefined {
-  if (component === "ImageViewer") {
-    return ImageViewer;
-  } else if (component === "ModelViewer") {
-    return ModelViewer;
-  } else if (component === "ScriptViewer") {
-    return ScriptViewer;
-  } else if (component === "Texture") {
-    return Texture;
   }
 }
 

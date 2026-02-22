@@ -34,6 +34,13 @@ import { inventoryList, propositionList } from "./utils/resource";
 
 const BASE_TIME = "1970-01-01 00:00:00";
 
+export function getComponent(component: string): typeof Abilities | undefined {
+  switch (component) {
+    case "Abilities":
+      return Abilities;
+  }
+}
+
 export function initHeaderShift(dataView: DataView): number {
   return getHeaderShift(dataView);
 }
@@ -51,12 +58,6 @@ export function initShifts(shifts: number[]): number[] {
   }
 
   return shifts;
-}
-
-export function getComponent(component: string): typeof Abilities | undefined {
-  if (component === "Abilities") {
-    return Abilities;
-  }
 }
 
 export function overrideParseItem(item: Item): Item {

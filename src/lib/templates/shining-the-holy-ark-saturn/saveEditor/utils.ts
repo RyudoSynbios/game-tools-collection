@@ -191,12 +191,12 @@ export function overrideSetInt(item: Item, value: string): boolean {
 
     const previous = getInt(itemInt.offset, "uint8");
 
-    if (previous === 0xff) {
-      setInt(itemInt.offset, "uint8", 0x0, {
+    if (int === 0xfff) {
+      setInt(itemInt.offset, "uint8", 0xf, {
         binary: { bitStart: 4, bitLength: 4 },
       });
-    } else if (int === 0xfff) {
-      setInt(itemInt.offset, "uint8", 0xf, {
+    } else if (previous === 0xff) {
+      setInt(itemInt.offset, "uint8", 0x0, {
         binary: { bitStart: 4, bitLength: 4 },
       });
     }

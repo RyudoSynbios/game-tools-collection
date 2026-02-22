@@ -11,8 +11,9 @@ import PhotoCanvas from "./components/PhotoCanvas.svelte";
 export function getComponent(
   component: string,
 ): typeof PhotoCanvas | undefined {
-  if (component === "PhotoCanvas") {
-    return PhotoCanvas;
+  switch (component) {
+    case "PhotoCanvas":
+      return PhotoCanvas;
   }
 }
 
