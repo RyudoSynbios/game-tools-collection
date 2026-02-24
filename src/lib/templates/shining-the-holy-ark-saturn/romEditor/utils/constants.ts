@@ -1,0 +1,6 @@
+export const CHARACTER_NAMES_START_INDEX = 0x2a8;
+export const CLASS_NAMES_START_INDEX = 0x2c2;
+export const ENEMY_NAMES_START_INDEX = 0x5a7;
+export const ITEM_DESCRIPTIONS_START_INDEX = 0x3bb;
+export const ITEM_NAMES_START_INDEX = 0x48d;
+export const ITEM_TYPES_START_INDEX = 0x333;
