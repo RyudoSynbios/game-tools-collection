@@ -52,11 +52,11 @@ export function overrideParseItem(item: Item): Item {
 
     return itemString;
   } else if ("id" in item && item.id?.match(/assetViewer-/)) {
+    const itemContainer = item as ItemContainer;
+
     const [, type] = item.id.split("-");
 
     const files = getFilteredFiles(type);
-
-    const itemContainer = item as ItemContainer;
 
     itemContainer.instances = files.length;
   } else if ("id" in item && item.id === "randomEncounterRate") {

@@ -195,11 +195,11 @@ export function overrideParseItem(item: Item): Item {
       item.offset += cache.enemiesBaseOffset;
     }
   } else if ("id" in item && item.id?.match(/assetViewer-/)) {
+    const itemContainer = item as ItemContainer;
+
     const [, type] = item.id.split("-");
 
     const files = getFilteredFiles(type);
-
-    const itemContainer = item as ItemContainer;
 
     itemContainer.instances = files.length;
   }

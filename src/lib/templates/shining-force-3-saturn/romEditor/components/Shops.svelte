@@ -91,7 +91,7 @@
           };
 
           const flag: Item = {
-            name: `Flag (0x${itemFlag.toHex()})`,
+            name: `Flag (${itemFlag.toHex(0, true)})`,
             dataViewAltKey: "x023",
             offset: itemOffset,
             type: "variable",

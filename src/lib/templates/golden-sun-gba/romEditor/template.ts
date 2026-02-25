@@ -2102,16 +2102,22 @@ const template: GameJson = {
               vertical: true,
               items: [
                 {
-                  id: "shType",
-                  name: "Type",
-                  offset: 0x40,
-                  type: "variable",
-                  dataType: "uint8",
-                  resource: "shopTypes",
-                },
-                {
                   type: "tabs",
                   items: [
+                    {
+                      name: "General",
+                      flex: true,
+                      items: [
+                        {
+                          id: "shType",
+                          name: "Type",
+                          offset: 0x40,
+                          type: "variable",
+                          dataType: "uint8",
+                          resource: "shopTypes",
+                        },
+                      ],
+                    },
                     {
                       name: "Items",
                       flex: true,

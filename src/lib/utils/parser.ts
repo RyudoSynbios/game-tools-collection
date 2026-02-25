@@ -8,7 +8,7 @@ import {
   gameUtils,
   isDebug,
 } from "$lib/stores";
-import { getDataView, getInt } from "$lib/utils/bytes";
+import { getInt } from "$lib/utils/bytes";
 import {
   clone,
   generateUUID,
