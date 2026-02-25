@@ -1,5 +1,7 @@
 import type { GameJson } from "$lib/types";
 
+import { X09_POINTERS } from "./utils/constants";
+
 const template: GameJson = {
   validator: {
     regions: {
@@ -18,7 +20,7 @@ const template: GameJson = {
           name: "Party",
           items: [
             {
-              id: "party",
+              pointer: X09_POINTERS.party,
               length: 0x20,
               type: "container",
               instanceType: "tabs",
@@ -131,10 +133,75 @@ const template: GameJson = {
           ],
         },
         {
+          name: "Magic",
+          items: [
+            {
+              pointer: X09_POINTERS.magic,
+              length: 0x3c,
+              type: "container",
+              instanceType: "tabs",
+              instances: 14,
+              enumeration: "Page %d",
+              vertical: true,
+              items: [
+                {
+                  length: 0x6,
+                  type: "container",
+                  instanceType: "section",
+                  instances: 10,
+                  noMargin: true,
+                  flex: true,
+                  items: [
+                    {
+                      name: "Class",
+                      dataViewAltKey: "x09",
+                      offset: 0x0,
+                      type: "variable",
+                      dataType: "uint16",
+                      bigEndian: true,
+                      resource: "classNames",
+                      autocomplete: true,
+                    },
+                    {
+                      name: "Required Level",
+                      dataViewAltKey: "x09",
+                      offset: 0x2,
+                      type: "variable",
+                      dataType: "uint16",
+                      bigEndian: true,
+                      min: 1,
+                      max: 99,
+                    },
+                    {
+                      name: "Spell",
+                      dataViewAltKey: "x09",
+                      offset: 0x4,
+                      type: "variable",
+                      dataType: "uint8",
+                      resource: "spellNames",
+                      autocomplete: true,
+                    },
+                    {
+                      name: "Level",
+                      dataViewAltKey: "x09",
+                      offset: 0x5,
+                      type: "variable",
+                      dataType: "uint8",
+                      operations: [{ "+": 1 }],
+                      min: 1,
+                      max: 4,
+                    },
+                  ],
+                },
+              ],
+            },
+          ],
+        },
+        {
           name: "Items",
           items: [
             {
-              id: "items",
+              pointer: X09_POINTERS.items,
               length: 0x10,
               type: "container",
               instanceType: "tabs",
@@ -300,7 +367,7 @@ const template: GameJson = {
           name: "Enemies",
           items: [
             {
-              id: "enemies",
+              pointer: X09_POINTERS.enemies,
               length: 0x50,
               type: "container",
               instanceType: "tabs",
@@ -586,6 +653,266 @@ const template: GameJson = {
           ],
         },
         {
+          name: "Shops",
+          items: [
+            {
+              type: "tabs",
+              items: [
+                {
+                  name: "Purchasable Items",
+                  items: [
+                    {
+                      id: "shops",
+                      pointer: X09_POINTERS.shops,
+                      length: 0x0,
+                      type: "container",
+                      instanceType: "tabs",
+                      instances: 0,
+                      enumeration: "Shop %d",
+                      vertical: true,
+                      items: [...Array(20).keys()].map((index) => ({
+                        id: `shopItemSection-%index%-${index}`,
+                        type: "section",
+                        flex: true,
+                        noMargin: true,
+                        items: [
+                          {
+                            id: `shopItem-%index%-${index}-item`,
+                            name: `Item ${index + 1}`,
+                            dataViewAltKey: "x09",
+                            offset: 0x0,
+                            type: "variable",
+                            dataType: "uint16",
+                            bigEndian: true,
+                            resource: "itemNames",
+                            autocomplete: true,
+                          },
+                          {
+                            id: `shopItem-%index%-${index}-type`,
+                            name: "Type",
+                            dataViewAltKey: "x09",
+                            offset: 0x0,
+                            type: "variable",
+                            dataType: "uint16",
+                            bigEndian: true,
+                            resource: "saleType",
+                            disabled: true,
+                          },
+                          {
+                            id: `shopItem-%index%-${index}-flag`,
+                            name: "Flag",
+                            dataViewAltKey: "x09",
+                            offset: 0x2,
+                            type: "variable",
+                            dataType: "uint16",
+                            bigEndian: true,
+                          },
+                        ],
+                      })),
+                    },
+                  ],
+                },
+                {
+                  name: "Sellable Items",
+                  items: [
+                    {
+                      pointer: X09_POINTERS.blacksmith,
+                      length: 0x0,
+                      type: "container",
+                      instanceType: "section",
+                      instances: 1,
+                      flex: true,
+                      items: [...Array(116).keys()].map((index) => ({
+                        name: `Item ${index + 1}`,
+                        dataViewAltKey: "x09",
+                        offset: index * 0x2,
+                        type: "variable",
+                        dataType: "uint16",
+                        bigEndian: true,
+                        resource: "dropItems",
+                        autocomplete: true,
+                      })),
+                    },
+                  ],
+                },
+              ],
+            },
+          ],
+        },
+        {
+          name: "Blacksmith",
+          items: [
+            {
+              pointer: X09_POINTERS.blacksmith,
+              length: 0x0,
+              type: "container",
+              instanceType: "section",
+              instances: 1,
+              items: [
+                {
+                  type: "tabs",
+                  items: [
+                    {
+                      name: "Mithril Ingot",
+                      items: [
+                        {
+                          length: 0x8,
+                          type: "container",
+                          instanceType: "section",
+                          instances: 8,
+                          resource: "characters",
+                          flex: true,
+                          items: [
+                            {
+                              name: "Item 1",
+                              dataViewAltKey: "x09",
+                              offset: 0x180,
+                              type: "variable",
+                              dataType: "uint16",
+                              bigEndian: true,
+                              resource: "dropItems",
+                              autocomplete: true,
+                            },
+                            {
+                              name: "Item 2",
+                              dataViewAltKey: "x09",
+                              offset: 0x182,
+                              type: "variable",
+                              dataType: "uint16",
+                              bigEndian: true,
+                              resource: "dropItems",
+                              autocomplete: true,
+                            },
+                            {
+                              name: "Item 3",
+                              dataViewAltKey: "x09",
+                              offset: 0x184,
+                              type: "variable",
+                              dataType: "uint16",
+                              bigEndian: true,
+                              resource: "dropItems",
+                              autocomplete: true,
+                            },
+                            {
+                              name: "Item 4",
+                              dataViewAltKey: "x09",
+                              offset: 0x186,
+                              type: "variable",
+                              dataType: "uint16",
+                              bigEndian: true,
+                              resource: "dropItems",
+                              autocomplete: true,
+                            },
+                          ],
+                        },
+                      ],
+                    },
+                    {
+                      name: "Mithril Ore",
+                      items: [
+                        {
+                          type: "section",
+                          flex: true,
+                          noMargin: true,
+                          items: [
+                            {
+                              name: "Item 1",
+                              dataViewAltKey: "x09",
+                              offset: 0x1c0,
+                              type: "variable",
+                              dataType: "uint16",
+                              bigEndian: true,
+                              resource: "dropItems",
+                              autocomplete: true,
+                            },
+                            {
+                              name: "Item 2",
+                              dataViewAltKey: "x09",
+                              offset: 0x1c2,
+                              type: "variable",
+                              dataType: "uint16",
+                              bigEndian: true,
+                              resource: "dropItems",
+                              autocomplete: true,
+                            },
+                            {
+                              name: "Item 3",
+                              dataViewAltKey: "x09",
+                              offset: 0x1c4,
+                              type: "variable",
+                              dataType: "uint16",
+                              bigEndian: true,
+                              resource: "dropItems",
+                              autocomplete: true,
+                            },
+                            {
+                              name: "Item 4",
+                              dataViewAltKey: "x09",
+                              offset: 0x1c6,
+                              type: "variable",
+                              dataType: "uint16",
+                              bigEndian: true,
+                              resource: "dropItems",
+                              autocomplete: true,
+                            },
+                          ],
+                        },
+                        {
+                          type: "section",
+                          flex: true,
+                          noMargin: true,
+                          items: [
+                            {
+                              name: "Item 5",
+                              dataViewAltKey: "x09",
+                              offset: 0x1c8,
+                              type: "variable",
+                              dataType: "uint16",
+                              bigEndian: true,
+                              resource: "dropItems",
+                              autocomplete: true,
+                            },
+                            {
+                              name: "Item 6",
+                              dataViewAltKey: "x09",
+                              offset: 0x1ca,
+                              type: "variable",
+                              dataType: "uint16",
+                              bigEndian: true,
+                              resource: "dropItems",
+                              autocomplete: true,
+                            },
+                            {
+                              name: "Item 7",
+                              dataViewAltKey: "x09",
+                              offset: 0x1cc,
+                              type: "variable",
+                              dataType: "uint16",
+                              bigEndian: true,
+                              resource: "dropItems",
+                              autocomplete: true,
+                            },
+                            {
+                              name: "Item 8",
+                              dataViewAltKey: "x09",
+                              offset: 0x1ce,
+                              type: "variable",
+                              dataType: "uint16",
+                              bigEndian: true,
+                              resource: "dropItems",
+                              autocomplete: true,
+                            },
+                          ],
+                        },
+                      ],
+                    },
+                  ],
+                },
+              ],
+            },
+          ],
+        },
+        {
           name: "Asset Viewer",
           items: [
             {
@@ -672,6 +999,16 @@ const template: GameJson = {
     assetImageNames: "getAssetNames('image')",
     assetSpriteNames: "getAssetNames('sprite')",
     characterNames: "getCharacterNames()",
+    characters: {
+      0x0: "Arthur",
+      0x1: "Melody",
+      0x2: "Rodi",
+      0x3: "Basso",
+      0x4: "Akane",
+      0x5: "Forte",
+      0x6: "Doyle",
+      0x7: "Lisa",
+    },
     classNames: "getClassNames()",
     dropItems: "getItemNames(true)",
     enemyDropRates: {
@@ -721,6 +1058,12 @@ const template: GameJson = {
       0x3: "Broken + Equipped",
     },
     itemTypeNames: "getItemTypeNames()",
+    saleType: {
+      0x0: "Sale",
+      0x1: "???",
+      0x2: "Haggle",
+    },
+    spellNames: "getSpellNames()",
   },
   resourcesOrder: {
     dropItems: [0xffff],

@@ -7,9 +7,10 @@ import {
   ImagesCanvas,
   parseCHRFile,
 } from "$lib/utils/common/saturn/shining";
-import { getColor } from "$lib/utils/graphics";
+import { applyPalette, getColor, getPalette } from "$lib/utils/graphics";
 
 import { getFileOffset, getFilteredFiles, iso } from "../utils";
+import { X09_POINTERS } from "./constants";
 
 export function getImagesCanvas(
   index: number,
@@ -38,6 +39,11 @@ export function getImagesCanvas(
     case "NOWLOAD.SPR":
       imagesCanvas.width = 192;
       imagesCanvas.images.push(getImage(192, 34, file.dataView));
+      break;
+
+    case "X09.BIN":
+      imagesCanvas.width = 800;
+      imagesCanvas.images = parseX09File(file);
       break;
 
     case "EVFACES.SPR":
@@ -103,6 +109,59 @@ function parseWiFacesFile(file: File): Image[] {
 
     images.push({ width: 56, height: 64, data: spriteData });
   }
+
+  return images;
+}
+
+// prettier-ignore
+function parseX09File(file: File): Image[] {
+  const images: Image[] = [];
+
+  const paletteOffset = getFileOffset("x09", X09_POINTERS.palette, file.dataView);
+
+  const palette = getPalette("BGR555", paletteOffset, 0x100, {
+    firstTransparent: true,
+    bigEndian: true,
+    dataView: file.dataView,
+  });
+
+  const icons = [
+    { offset: X09_POINTERS.icons1a, shift: 0x0, width: 16, height: 8, count: 2 },
+    { offset: X09_POINTERS.icons2, shift: 0x0, width: 24, height: 24, count: 10 },
+    { offset: X09_POINTERS.icons3, shift: 0x0, width: 8, height: 8, count: 28 },
+    { offset: X09_POINTERS.icons4, shift: 0x0, width: 32, height: 8, count: 4 },
+    { offset: X09_POINTERS.icons5, shift: 0x0, width: 8, height: 8, count: 5 },
+    { offset: X09_POINTERS.icons5, shift: 0x140, width: 32, height: 8, count: 2 },
+    { offset: X09_POINTERS.icons6, shift: 0x0, width: 16, height: 8, count: 2 },
+    { offset: X09_POINTERS.icons6, shift: 0x100, width: 24, height: 24, count: 1 },
+    { offset: X09_POINTERS.icons6, shift: 0x340, width: 32, height: 24, count: 1 },
+    { offset: X09_POINTERS.icons7, shift: 0x0, width: 32, height: 24, count: 29 },
+    { offset: X09_POINTERS.icons8, shift: 0x0, width: 32, height: 24, count: 29 },
+    { offset: X09_POINTERS.icons9, shift: 0x0, width: 48, height: 80, count: 4 },
+    { offset: X09_POINTERS.icons10, shift: 0x0, width: 32, height: 24, count: 4 },
+  ];
+
+  icons.forEach((icon, index) => {
+    let offset = getFileOffset("x09", icon.offset, file.dataView) + icon.shift;
+    const length = icon.width * icon.height;
+
+    for (let i = 0x0; i < icon.count; i += 0x1) {
+      const data = new Uint8Array(
+        file.dataView.buffer.slice(offset, offset + length),
+      );
+
+      const image = applyPalette(data, palette);
+
+      images.push({
+        width: icon.width,
+        height: icon.height,
+        data: image,
+        group: index,
+      });
+
+      offset += length;
+    }
+  });
 
   return images;
 }
