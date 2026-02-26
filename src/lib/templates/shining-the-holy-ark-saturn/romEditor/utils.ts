@@ -19,10 +19,12 @@ import type {
   ItemContainer,
   ItemInt,
   ItemSection,
+  Palette,
   Patch,
   Resource,
 } from "$lib/types";
 
+import IconCanvas from "./components/IconCanvas.svelte";
 import ImageViewer from "./components/ImageViewer.svelte";
 import TxtViewer from "./components/TxtViewer.svelte";
 import {
@@ -36,6 +38,7 @@ import {
   X09_POINTERS,
 } from "./utils/constants";
 import { getText } from "./utils/encoding";
+import { getMainPalette } from "./utils/image";
 
 export let iso: Iso9660;
 
@@ -43,18 +46,22 @@ const dataViews = [{ name: "x09", fileName: "X09.BIN" }];
 
 export let cache: {
   dummyTextFile: DataView;
+  mainPalette: Palette;
   shops: number[][];
   texts: string[];
 } = {
   dummyTextFile: new DataView(new ArrayBuffer(0)),
+  mainPalette: [],
   shops: [],
   texts: [],
 };
 
 export function getComponent(
   component: string,
-): typeof ImageViewer | typeof TxtViewer | undefined {
+): typeof IconCanvas | typeof ImageViewer | typeof TxtViewer | undefined {
   switch (component) {
+    case "IconCanvas":
+      return IconCanvas;
     case "ImageViewer":
       return ImageViewer;
     case "TxtViewer":
@@ -83,6 +90,7 @@ export function beforeItemsParsing(): void {
     }
   });
 
+  cache.mainPalette = getMainPalette();
   cache.shops = generateShops();
 }
 
@@ -297,6 +305,7 @@ export function beforeSaving(): ArrayBufferLike {
 export function onReset(): void {
   cache = {
     dummyTextFile: new DataView(new ArrayBuffer(0)),
+    mainPalette: [],
     shops: [],
     texts: [],
   };
@@ -422,6 +431,7 @@ export function getFilteredFiles(type: string): File[] {
     if (file.name.match(/.CHR$/)) {
       return type === "sprite";
     } else if (
+      file.name === "X07.BIN" ||
       file.name === "X09.BIN" ||
       file.name.match(/.FNT$/) ||
       file.name.match(/.SPR$/)
@@ -444,16 +454,18 @@ export function getFileOffset(
   const absoluteOffset = getInt(offset, "uint32", { bigEndian: true }, dataView);
 
   switch (identifier) {
-    case "x09":
-      return absoluteOffset - 0x200000
-    case "mdx":
-      return absoluteOffset - 0x217800;
     case "chr1":
       return absoluteOffset - 0x280000;
     case "chr2":
       return absoluteOffset - 0x290000;
     case "chr3":
       return absoluteOffset - 0x2fe000;
+    case "mdx":
+      return absoluteOffset - 0x217800;
+    case "x07":
+      return absoluteOffset - 0x609d000;
+    case "x09":
+      return absoluteOffset - 0x200000
   }
 
   return absoluteOffset;

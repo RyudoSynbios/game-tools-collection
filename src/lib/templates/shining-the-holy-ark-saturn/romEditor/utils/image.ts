@@ -1,6 +1,7 @@
 import { getInt } from "$lib/utils/bytes";
 import { File } from "$lib/utils/common/iso9660";
 import {
+  getDecompressedIconData,
   getDecompressedSpriteData,
   getImage,
   Image,
@@ -9,7 +10,9 @@ import {
 } from "$lib/utils/common/saturn/shining";
 import { applyPalette, getColor, getPalette } from "$lib/utils/graphics";
 
-import { getFileOffset, getFilteredFiles, iso } from "../utils";
+import type { Palette } from "$lib/types";
+
+import { cache, getFileOffset, getFilteredFiles, iso } from "../utils";
 import { X09_POINTERS } from "./constants";
 
 export function getImagesCanvas(
@@ -39,6 +42,11 @@ export function getImagesCanvas(
     case "NOWLOAD.SPR":
       imagesCanvas.width = 192;
       imagesCanvas.images.push(getImage(192, 34, file.dataView));
+      break;
+
+    case "X07.BIN":
+      imagesCanvas.width = 800;
+      imagesCanvas.images = getX07Icons();
       break;
 
     case "X09.BIN":
@@ -88,6 +96,31 @@ export function getImagesCanvas(
   return imagesCanvas;
 }
 
+export function getIcon(type: "item" | "spell", index: number): Uint8Array {
+  const file = iso.getFile("X07.BIN") as File;
+
+  const pointerIndex = type === "item" ? 0x0 : 0x4;
+
+  const pointer = getFileOffset("x07", pointerIndex, file.dataView);
+  const offset = getFileOffset("x07", pointer + index * 0x4, file.dataView);
+
+  const data = getDecompressedIconData(offset, 0x120, file.dataView);
+
+  return applyPalette(data, cache.mainPalette);
+}
+
+export function getMainPalette(): Palette {
+  const file = iso.getFile("X09.BIN") as File;
+
+  const offset = getFileOffset("x09", X09_POINTERS.palette, file.dataView);
+
+  return getPalette("BGR555", offset, 0x100, {
+    firstTransparent: true,
+    bigEndian: true,
+    dataView: file.dataView,
+  });
+}
+
 function parseWiFacesFile(file: File): Image[] {
   const images: Image[] = [];
 
@@ -113,17 +146,33 @@ function parseWiFacesFile(file: File): Image[] {
   return images;
 }
 
+function getX07Icons(): Image[] {
+  const images: Image[] = [];
+
+  for (let i = 0x0; i < 0xd3; i += 0x1) {
+    images.push({
+      width: 24,
+      height: 24,
+      data: getIcon("item", i),
+      group: 0,
+    });
+  }
+
+  for (let i = 0x0; i < 0x28; i += 0x1) {
+    images.push({
+      width: 24,
+      height: 24,
+      data: getIcon("spell", i),
+      group: 1,
+    });
+  }
+
+  return images;
+}
+
 // prettier-ignore
 function parseX09File(file: File): Image[] {
   const images: Image[] = [];
-
-  const paletteOffset = getFileOffset("x09", X09_POINTERS.palette, file.dataView);
-
-  const palette = getPalette("BGR555", paletteOffset, 0x100, {
-    firstTransparent: true,
-    bigEndian: true,
-    dataView: file.dataView,
-  });
 
   const icons = [
     { offset: X09_POINTERS.icons1a, shift: 0x0, width: 16, height: 8, count: 2 },
@@ -150,7 +199,7 @@ function parseX09File(file: File): Image[] {
         file.dataView.buffer.slice(offset, offset + length),
       );
 
-      const image = applyPalette(data, palette);
+      const image = applyPalette(data, cache.mainPalette);
 
       images.push({
         width: icon.width,

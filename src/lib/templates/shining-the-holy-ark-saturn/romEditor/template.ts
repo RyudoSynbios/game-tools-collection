@@ -202,6 +202,7 @@ const template: GameJson = {
           items: [
             {
               pointer: X09_POINTERS.items,
+              instanceId: "items",
               length: 0x10,
               type: "container",
               instanceType: "tabs",
@@ -213,6 +214,11 @@ const template: GameJson = {
                   type: "section",
                   flex: true,
                   items: [
+                    {
+                      type: "component",
+                      component: "IconCanvas",
+                      props: { itemIndex: "items" },
+                    },
                     {
                       id: "iName-%index%",
                       name: "Name",

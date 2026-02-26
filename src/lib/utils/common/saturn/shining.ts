@@ -1,4 +1,4 @@
-import { getInt } from "$lib/utils/bytes";
+import { byteswap16, getInt } from "$lib/utils/bytes";
 import { getColor } from "$lib/utils/graphics";
 
 import { ColorType } from "$lib/types";
@@ -41,6 +41,57 @@ export function getImage(
     height,
     data: new Uint8Array(imageData),
   };
+}
+
+export function getDecompressedIconData(
+  offset: number,
+  size: number,
+  dataView: DataView,
+): Uint8Array {
+  const buffer = new Uint16Array(size);
+
+  let bufferIndex = 0x0;
+
+  let int = getInt(offset, "uint16", { bigEndian: true }, dataView);
+
+  offset += 0x2;
+
+  while (true) {
+    let flags = (int << 0x10) | 0x8000;
+
+    while (true) {
+      while (true) {
+        int = getInt(offset, "uint16", { bigEndian: true }, dataView);
+
+        offset += 0x2;
+
+        if (flags >> 0x1f) {
+          break;
+        }
+
+        buffer[bufferIndex++] = byteswap16(int);
+
+        flags <<= 0x1;
+      }
+
+      flags <<= 0x1;
+
+      if (flags === 0x0) {
+        break;
+      }
+
+      if (int === 0x0) {
+        return new Uint8Array(buffer.buffer);
+      }
+
+      const count = (int & 0x1f) + 0x2;
+      let position = bufferIndex - (int >> 0x5);
+
+      for (let i = 0x0; i < count; i += 0x1) {
+        buffer[bufferIndex++] = buffer[position++];
+      }
+    }
+  }
 }
 
 export function getDecompressedSpriteData(
