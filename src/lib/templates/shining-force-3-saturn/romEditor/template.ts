@@ -1443,6 +1443,7 @@ const template: GameJson = {
           items: [
             {
               id: "items",
+              instanceId: "items",
               length: 0x18,
               type: "container",
               instanceType: "tabs",
@@ -1460,6 +1461,11 @@ const template: GameJson = {
                           type: "section",
                           flex: true,
                           items: [
+                            {
+                              type: "component",
+                              component: "IconCanvas",
+                              props: { itemIndex: "items" },
+                            },
                             {
                               id: "iName-%index%",
                               name: "Name",

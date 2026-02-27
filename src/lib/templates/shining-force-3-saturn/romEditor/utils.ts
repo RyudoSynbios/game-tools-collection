@@ -21,9 +21,17 @@ import {
 } from "$lib/utils/patch";
 import { checkValidator, getRegionName } from "$lib/utils/validator";
 
-import type { Item, ItemContainer, ItemInt, Patch, Resource } from "$lib/types";
+import type {
+  Item,
+  ItemContainer,
+  ItemInt,
+  Palette,
+  Patch,
+  Resource,
+} from "$lib/types";
 
 import FileList from "./components/FileList.svelte";
+import IconCanvas from "./components/IconCanvas.svelte";
 import ImageViewer from "./components/ImageViewer.svelte";
 import ModelViewer from "./components/ModelViewer.svelte";
 import Shops from "./components/Shops.svelte";
@@ -47,6 +55,7 @@ import {
   SPELL_NAMES_START_INDEX,
 } from "./utils/constants";
 import { getText } from "./utils/encoding";
+import { getMainPalette } from "./utils/image";
 
 export let iso: Iso9660;
 
@@ -64,6 +73,7 @@ export let cache: {
   enemiesBaseOffset: number;
   dummyTextFile: DataView;
   texts: string[];
+  mainPalette: Palette;
 } = {
   partyStatsBaseOffset: 0x0,
   partyMiscBaseOffset: 0x0,
@@ -71,12 +81,14 @@ export let cache: {
   enemiesBaseOffset: 0x0,
   dummyTextFile: new DataView(new ArrayBuffer(0)),
   texts: [],
+  mainPalette: [],
 };
 
 export function getComponent(
   component: string,
 ):
   | typeof FileList
+  | typeof IconCanvas
   | typeof ImageViewer
   | typeof ModelViewer
   | typeof Shops
@@ -87,6 +99,8 @@ export function getComponent(
   switch (component) {
     case "FileList":
       return FileList;
+    case "IconCanvas":
+      return IconCanvas;
     case "ImageViewer":
       return ImageViewer;
     case "ModelViewer":
@@ -122,6 +136,8 @@ export function beforeItemsParsing(): void {
       $dataViewAlt[dataView.name] = file.dataView;
     }
   });
+
+  cache.mainPalette = getMainPalette();
 }
 
 export function overrideParseItem(item: Item): Item {
@@ -352,6 +368,7 @@ export function onReset(): void {
     enemiesBaseOffset: 0x0,
     dummyTextFile: new DataView(new ArrayBuffer(0)),
     texts: [],
+    mainPalette: [],
   };
 }
 
@@ -682,6 +699,7 @@ export function getFilteredFiles(type: string): File[] {
     ) {
       return type === "face";
     } else if (
+      file.name === "ITEM_CG.DAT" ||
       file.name === "LOGOBG.BIN" ||
       file.name === "LOGOBLK.BIN" ||
       file.name === "LOGONEW.BIN" ||
@@ -717,6 +735,8 @@ export function getFileOffset(
   dataView: DataView,
   subOffset = 0x0,
 ): number {
+  const $gameRegion = get(gameRegion);
+
   const scenario = getScenario();
 
   const absoluteOffset = getInt(offset, "uint32", { bigEndian: true }, dataView);
@@ -727,8 +747,22 @@ export function getFileOffset(
     }
 
     return absoluteOffset - 0x602a000;
+  } else if (identifier === "x003") {
+    switch ($gameRegion) {
+    case 0:
+      return absoluteOffset - 0x6034b00;
+    case 1:
+      return absoluteOffset - 0x6034c00;
+    case 2:
+      return absoluteOffset - 0x6036000;
+    case 3:
+    case 4:
+      return absoluteOffset - 0x6036800;
+    }
   } else if (identifier === "x019") {
     return absoluteOffset - 0x60a0000;
+  } else if (identifier === "x021") {
+    return absoluteOffset - 0x6068000;
   } else if (identifier === "x023") {
     return absoluteOffset - 0x6078000;
   } else if (identifier === "x033") {
