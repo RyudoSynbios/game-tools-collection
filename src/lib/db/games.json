@@ -898,6 +898,17 @@
     }
   },
   {
+    "id": "pokemon-snap-n64",
+    "name": "Pokémon Snap",
+    "consoleId": "nintendo-64",
+    "tools": {
+      "saveEditor": {
+        "createdAt": "2026-03-05",
+        "regions": ["🇪🇺", "🇺🇸", "🇯🇵", "🇫🇷", "🇩🇪", "🇮🇹", "🇪🇸", "🇦🇺"]
+      }
+    }
+  },
+  {
     "id": "pokemon-trading-card-game-gbc",
     "name": "Pokémon Trading Card Game",
     "consoleId": "game-boy-color",
