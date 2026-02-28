@@ -2,7 +2,7 @@
   import { selectedView } from "$lib/stores/fileVisualizer";
 
   import InspectorDataView from "./InspectorDataView.svelte";
-  import InspectorFilename from "./InspectorFileName.svelte";
+  import InspectorFileName from "./InspectorFileName.svelte";
   import InspectorSearch from "./InspectorSearch.svelte";
 
   function handleViewClick() {
@@ -12,7 +12,7 @@
 
 <!-- svelte-ignore a11y-no-static-element-interactions -->
 <div class="gtc-filevisualizer-inspector" on:mousedown={handleViewClick}>
-  <InspectorFilename />
+  <InspectorFileName />
   <InspectorDataView />
   <InspectorSearch />
 </div>

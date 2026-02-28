@@ -2,8 +2,6 @@ import { get } from "svelte/store";
 
 import { dataView, gameTemplate } from "$lib/stores";
 
-import type { DataViewABL } from "$lib/types";
-
 import { addPadding, getInt, getString, removePadding } from "../../bytes";
 import { mergeUint8Arrays, numberArrayToString } from "../../format";
 import { checkValidator, getRegionValidator } from "../../validator";
@@ -31,7 +29,7 @@ interface Save {
 // Global objects
 
 let memorySystem = {} as MemorySystem;
-let memorySystemRaw: DataViewABL = new DataView(new ArrayBuffer(0));
+let memorySystemRaw: DataView = new DataView(new ArrayBuffer(0));
 let saves: Save[] = [];
 let filteredSaves: Save[] = [];
 

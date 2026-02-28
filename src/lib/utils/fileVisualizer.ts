@@ -71,6 +71,10 @@ export function scrollDataView(value: number): void {
 export function parseGameJson(): void {
   const $gameJson = get(gameJson);
 
+  if (!$gameJson.items) {
+    return;
+  }
+
   Object.values($gameJson.items).forEach((item) => {
     parseItem(item);
   });

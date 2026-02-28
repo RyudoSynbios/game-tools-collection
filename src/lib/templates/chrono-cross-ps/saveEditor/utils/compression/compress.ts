@@ -3,12 +3,10 @@ import { get } from "svelte/store";
 import { dataViewAlt } from "$lib/stores";
 import { getInt, setInt } from "$lib/utils/bytes";
 
-import type { DataViewABL } from "$lib/types";
-
 import { compressSteps } from "../resource";
 
 let bitPosition = 0x0;
-let dataViewDecmp: DataViewABL = new DataView(new ArrayBuffer(0));
+let dataViewDecmp: DataView = new DataView(new ArrayBuffer(0));
 
 export function getCompressedData(dataView: DataView): Uint8Array {
   const $dataViewAlt = get(dataViewAlt);

@@ -47,8 +47,6 @@
 
 <style lang="postcss">
   .gtc-iconcanvas {
-    @apply mr-4 w-fit self-start rounded bg-primary-700;
-
-    padding: 14px;
+    @apply mr-4 w-fit self-start rounded bg-primary-700 p-3.5;
   }
 </style>

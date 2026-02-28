@@ -115,137 +115,107 @@ export function getDecompressedSpriteData(
 
   offset += 0x4;
 
-  let mask = 0x0;
+  let flags = 0x0;
 
   if ((offsetEnd & 0x1) !== 0x0) {
-    mask = 0x80000000;
+    flags = 0x80000000;
   } else {
-    mask = getInt(offset2++, "uint8", {}, dataView);
-    mask = (mask << 0x18) | 0x800000;
+    flags = getInt(offset2++, "uint8", {}, dataView);
+    flags = (flags << 0x18) | 0x800000;
   }
 
   // Set end of buffer that will not be erased
-  buffer.set([0x0000], bufferSize);
-  buffer.set([0x8000], bufferSize + 0x1);
-  buffer.set([0x7fff], bufferSize + 0x2);
+  buffer[bufferSize] = 0x0;
+  buffer[bufferSize + 0x1] = 0x8000;
+  buffer[bufferSize + 0x2] = 0x7fff;
 
   while (offset < offsetEnd) {
     let byte1 = getInt(offset++, "uint8", {}, dataView);
     let byte2 = 0x0;
 
-    if (byte1 < 0x80) {
-      byte2 = buffer[byte1];
-    } else {
+    if (byte1 >> 0x7) {
       byte2 = (byte1 << 0x8) | getInt(offset++, "uint8", {}, dataView);
 
-      buffer.set([byte2], bufferIndex++);
+      buffer[bufferIndex++] = byte2;
 
       bufferIndex %= bufferSize;
+    } else {
+      byte2 = buffer[byte1];
     }
 
-    let next = false;
+    let stop = false;
 
-    while (!next) {
-      let condition = (mask & 0x80000000) !== 0x0;
-
-      mask <<= 0x1;
-
-      if (condition) {
+    while (!stop) {
+      if (flags >> 0x1f) {
         let unknown = 0x1;
 
-        if (mask !== 0x0) {
-          while (!next) {
-            condition = (mask & 0x80000000) === 0x0;
+        flags <<= 0x1;
 
-            mask <<= 0x1;
-
-            if (condition) {
+        if (flags !== 0x0) {
+          while (!stop) {
+            if (flags >> 0x1f === 0x0) {
               byte1 = 0x1;
 
-              while (!next) {
-                byte1 *= 0x2;
+              flags <<= 0x1;
 
-                if ((mask & 0x80000000) !== 0x0) {
+              while (!stop) {
+                byte1 <<= 0x1;
+
+                if (flags >> 0x1f) {
                   byte1 += 0x1;
                 }
 
-                mask <<= 0x1;
-
+                flags <<= 0x1;
                 unknown -= 0x1;
 
-                if (mask !== 0x0) {
+                if (flags !== 0x0) {
                   if (unknown === 0x0) {
-                    if ((mask & 0x80000000) !== 0x0) {
-                      mask |= 0x80000000;
+                    if (flags >> 0x1f) {
+                      flags |= 0x80000000;
                     } else {
-                      mask &= 0x7fffffff;
+                      flags &= 0x7fffffff;
                     }
 
-                    unknown = 0x2;
-
-                    decompressedData.set([byte2], dataIndex++);
-
-                    if (byte1 !== unknown) {
-                      byte1 -= 0x1;
-
-                      const count = (byte1 >> 2) * 2;
-
-                      if ((byte1 & 0x2) !== 0x0) {
-                        decompressedData.set([byte2], dataIndex++);
-                        decompressedData.set([byte2], dataIndex++);
-                      }
-
-                      for (let i = 0x0; i < count; i += 0x1) {
-                        decompressedData.set([byte2], dataIndex++);
-                        decompressedData.set([byte2], dataIndex++);
-                      }
-
-                      if ((byte1 & 0x1) !== 0x0) {
-                        decompressedData.set([byte2], dataIndex++);
-                      }
-                    } else {
-                      decompressedData.set([byte2], dataIndex++);
+                    for (let i = 0x0; i < byte1; i += 0x1) {
+                      decompressedData[dataIndex++] = byte2;
                     }
 
-                    next = true;
+                    stop = true;
                   }
                 } else {
-                  unknown += 0x1;
+                  flags = getInt(offset2, "uint16", { bigEndian: true }, dataView); // prettier-ignore
+                  flags = (flags << 0x10) | 0x8000;
 
-                  mask = getInt(offset2, "uint16", { bigEndian: true }, dataView); // prettier-ignore
-
+                  byte1 >>= 0x1;
                   offset2 += 0x2;
-
-                  byte1 >>= 1;
-
-                  mask = (mask << 0x10) | 0x8000;
+                  unknown += 0x1;
                 }
               }
+            } else {
+              flags <<= 0x1;
             }
 
-            if (mask === 0x0) {
-              mask = getInt(offset2, "uint16", { bigEndian: true }, dataView);
+            if (flags === 0x0) {
+              flags = getInt(offset2, "uint16", { bigEndian: true }, dataView);
+              flags = (flags << 0x10) | 0x8000;
 
               offset2 += 0x2;
-
-              mask = (mask << 0x10) | 0x8000;
             } else {
               unknown += 0x1;
             }
           }
         }
 
-        if (!next) {
-          mask = getInt(offset2, "uint16", { bigEndian: true }, dataView);
+        if (!stop) {
+          flags = getInt(offset2, "uint16", { bigEndian: true }, dataView);
+          flags = (flags << 0x10) | 0x8000;
 
           offset2 += 0x2;
-
-          mask = (mask << 0x10) | 0x8000;
         }
       } else {
-        decompressedData.set([byte2], dataIndex++);
-
-        next = true;
+        decompressedData[dataIndex++] = byte2;
+        flags <<= 0x1;
+        break;
       }
     }
   }

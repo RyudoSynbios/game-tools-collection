@@ -8,7 +8,7 @@ export const SPELL_NAMES_START_INDEX = 0x55f;
 
 export const X09_POINTERS = {
   palette: 0x0,
-  fairySpritePointers: 0x4,
+  fairyPointers: 0x4,
   icons1a: 0x8,
   icons1b: 0xc,
   icons2: 0x10,
@@ -25,7 +25,7 @@ export const X09_POINTERS = {
   items: 0x3c,
   party: 0x40,
   magic: 0x44,
-  unknown12: 0x48,
+  classes: 0x48,
   unknown13: 0x4c,
   unknown14: 0x50,
   blacksmith: 0x54,

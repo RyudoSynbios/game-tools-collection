@@ -10,7 +10,7 @@ import { generateChecksum, type FileType } from ".";
 const BLOCK_SIZE = 0x200;
 const VMU_SIZE = 0x100 * BLOCK_SIZE;
 
-interface File {
+export interface File {
   type: FileType;
   copyDisabled: number;
   name: string;
@@ -54,14 +54,18 @@ interface Save {
 export default class VMU {
   private dataView: DataView;
   private management: Management;
-  private root: File[];
+  private _root: File[];
   private saves: Save[];
 
   constructor(dataView: DataView) {
     this.dataView = dataView;
     this.management = this.generateManagement();
-    this.root = this.generateRoot();
+    this._root = this.generateRoot();
     this.saves = [];
+  }
+
+  get root() {
+    return this._root;
   }
 
   private generateManagement(): Management {
@@ -135,7 +139,7 @@ export default class VMU {
     return files;
   }
 
-  private readFile(file: File): Uint8Array {
+  public getFile(file: File): Uint8Array {
     const buffer = new Uint8Array(this.dataView.buffer);
     const uint8Arrays: Uint8Array[] = [];
 
@@ -150,7 +154,7 @@ export default class VMU {
     return mergeUint8Arrays(...uint8Arrays);
   }
 
-  private writeFile(file: File, binary: Uint8Array): void {
+  public writeFile(file: File, binary: Uint8Array): void {
     const buffer = new Uint8Array(this.dataView.buffer);
 
     file.blocks.forEach((blockIndex, index) => {
@@ -171,11 +175,7 @@ export default class VMU {
   }
 
   public isInitialized(): boolean {
-    return this.root.length > 0;
-  }
-
-  public getFiles(): File[] {
-    return this.root;
+    return this._root.length > 0;
   }
 
   public unpack(): DataView {
@@ -191,9 +191,9 @@ export default class VMU {
       if (validator) {
         const validatorStringified = numberArrayToString(validator);
 
-        this.root.forEach((file) => {
+        this._root.forEach((file) => {
           if (file.name === validatorStringified) {
-            const binary = this.readFile(file);
+            const binary = this.getFile(file);
 
             uint8Arrays.push(binary);
 
@@ -222,8 +222,6 @@ export default class VMU {
           save.offset + save.file.size * BLOCK_SIZE,
         ),
       );
-
-      console.log(binary);
 
       this.writeFile(save.file, binary);
     });
@@ -271,7 +269,7 @@ export default class VMU {
   public destroy(): void {
     this.dataView = new DataView(new ArrayBuffer(0));
     this.management = {} as Management;
-    this.root = [];
+    this._root = [];
     this.saves = [];
   }
 }
