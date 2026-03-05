@@ -13,6 +13,7 @@ import {
   isDirty,
   locale,
 } from "$lib/stores";
+import { onSave } from "$lib/stores/explorer";
 import {
   dataViewKey,
   editedOffsets,
@@ -57,4 +58,7 @@ export function reset(): void {
   searchType.set("uint8");
   selectedOffset.set(0x0);
   selectedView.set("hexview");
+
+  // Explorer
+  onSave.set(() => {});
 }
