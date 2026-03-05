@@ -174,6 +174,20 @@ function getX07Icons(): Image[] {
 function parseX09File(file: File): Image[] {
   const images: Image[] = [];
 
+  for (let i = 0x0; i < 0x14; i += 0x4) {
+    const pointer = getFileOffset("x09", X09_POINTERS.fairyPointers, file.dataView);
+    const offset = getFileOffset("x09", pointer + i, file.dataView);
+
+    const data = getDecompressedIconData(offset, 0x240, file.dataView);
+    const image = applyPalette(data, cache.mainPalette);
+
+    images.push({
+      width: 24,
+      height: 48,
+      data: image,
+    });
+  }
+
   const icons = [
     { offset: X09_POINTERS.icons1a, shift: 0x0, width: 16, height: 8, count: 2 },
     { offset: X09_POINTERS.icons2, shift: 0x0, width: 24, height: 24, count: 10 },

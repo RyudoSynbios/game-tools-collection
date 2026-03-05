@@ -8,7 +8,7 @@ export const SPELL_NAMES_START_INDEX = 0x55f;
 
 export const X09_POINTERS = {
   palette: 0x0,
-  fairySpritePointers: 0x4,
+  fairyPointers: 0x4,
   icons1a: 0x8,
   icons1b: 0xc,
   icons2: 0x10,
