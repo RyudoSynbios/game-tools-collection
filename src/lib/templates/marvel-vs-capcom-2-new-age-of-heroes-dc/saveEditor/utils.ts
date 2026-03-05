@@ -8,7 +8,7 @@ import { isDciFile } from "$lib/utils/common/dreamcast/dci";
 import VMU, { isVmuFile } from "$lib/utils/common/dreamcast/vmu";
 import { getRegions } from "$lib/utils/validator";
 
-import type { Item, ItemChecksum, ItemInt } from "$lib/types";
+import type { Item, ItemChecksum, ItemContainer, ItemInt } from "$lib/types";
 
 let vmu: VMU;
 
@@ -39,16 +39,6 @@ export function onInitFailed(): void {
   }
 }
 
-export function initShifts(shifts: number[]): number[] {
-  if (vmu?.isInitialized()) {
-    return vmu.getShift();
-  } else if (isDciFile()) {
-    return [...shifts, 0x20];
-  }
-
-  return shifts;
-}
-
 export function overrideParseItem(item: Item): Item {
   const $gameRegion = get(gameRegion);
 
@@ -67,6 +57,22 @@ export function overrideParseItem(item: Item): Item {
   }
 
   return item;
+}
+
+export function overrideParseContainerItemsShifts(
+  item: ItemContainer,
+  shifts: number[],
+  index: number,
+): [boolean, number[] | undefined] {
+  if (item.id === "slots") {
+    if (vmu?.isInitialized()) {
+      return vmu.getSlotShifts(0);
+    } else if (isDciFile()) {
+      return [true, [...shifts, 0x20]];
+    }
+  }
+
+  return [false, undefined];
 }
 
 export function overrideGetInt(item: Item): [boolean, number | undefined] {

@@ -25,7 +25,7 @@ export const X09_POINTERS = {
   items: 0x3c,
   party: 0x40,
   magic: 0x44,
-  unknown12: 0x48,
+  classes: 0x48,
   unknown13: 0x4c,
   unknown14: 0x50,
   blacksmith: 0x54,

@@ -1,17 +1,9 @@
 import { get } from "svelte/store";
 
-import { gameTemplate } from "$lib/stores";
+import { dataView, gameTemplate } from "$lib/stores";
 import { getInt, setInt } from "$lib/utils/bytes";
 import { formatChecksum } from "$lib/utils/checksum";
-import {
-  customGetRegions,
-  getSaves,
-  getSlotShifts,
-  isUnpackedMemorySystem,
-  repackMemorySystem,
-  resetMemorySystem,
-  unpackMemorySystem,
-} from "$lib/utils/common/saturn";
+import BackupRam, { isBackupRam } from "$lib/utils/common/saturn/backupRam";
 import { clone } from "$lib/utils/format";
 
 import type {
@@ -24,17 +16,23 @@ import type {
 
 import { locationList } from "./utils/resource";
 
+let backupRam: BackupRam;
+
 export function beforeInitDataView(dataView: DataView): DataView {
-  return unpackMemorySystem(dataView);
+  if (isBackupRam(dataView)) {
+    backupRam = new BackupRam(dataView);
+
+    return backupRam.unpack();
+  }
+
+  return dataView;
 }
 
 export function overrideGetRegions(dataView: DataView): string[] {
   const $gameTemplate = get(gameTemplate);
 
-  const regions = customGetRegions();
-
-  if (regions.length > 0) {
-    return regions;
+  if (backupRam?.isInitialized()) {
+    return backupRam.getRegions();
   }
 
   const itemContainer = $gameTemplate.items[0] as ItemContainer;
@@ -65,14 +63,16 @@ export function overrideGetRegions(dataView: DataView): string[] {
 }
 
 export function onInitFailed(): void {
-  resetMemorySystem();
+  if (backupRam?.isInitialized()) {
+    backupRam.destroy();
+  }
 }
 
 export function overrideParseItem(item: Item & ItemTab): Item | ItemTab {
-  if ("id" in item && item.id === "slots" && isUnpackedMemorySystem()) {
+  if ("id" in item && item.id === "slots" && backupRam?.isInitialized()) {
     const itemContainer = item as ItemContainer;
 
-    const saves = getSaves();
+    const saves = backupRam.getRegionSaves();
 
     itemContainer.instances = saves.length;
   }
@@ -86,8 +86,8 @@ export function overrideParseContainerItemsShifts(
   index: number,
 ): [boolean, number[] | undefined] {
   if (item.id === "slots") {
-    if (isUnpackedMemorySystem()) {
-      return getSlotShifts(index);
+    if (backupRam?.isInitialized()) {
+      return backupRam.getSlotShifts(index);
     }
 
     return [true, [-0x10]];
@@ -242,9 +242,17 @@ export function generateChecksum(
 }
 
 export function beforeSaving(): ArrayBufferLike {
-  return repackMemorySystem();
+  const $dataView = get(dataView);
+
+  if (backupRam?.isInitialized()) {
+    return backupRam.repack();
+  }
+
+  return $dataView.buffer;
 }
 
 export function onReset(): void {
-  resetMemorySystem();
+  if (backupRam?.isInitialized()) {
+    backupRam.destroy();
+  }
 }

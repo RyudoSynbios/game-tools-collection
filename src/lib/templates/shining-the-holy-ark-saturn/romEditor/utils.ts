@@ -173,8 +173,13 @@ export function overrideGetInt(
     const names = getCharacterNames();
 
     return [true, names[index] || "???"];
-  }
-  if ("id" in item && item.id === "cItemStatus") {
+  } else if ("id" in item && item.id?.match(/clName-/)) {
+    const [index] = item.id.splitInt();
+
+    const names = getClassNames("true");
+
+    return [true, names[index] || "???"];
+  } else if ("id" in item && item.id === "cItemStatus") {
     const itemInt = item as ItemInt;
 
     if (itemInt.disabled) {
@@ -347,11 +352,17 @@ export function getCharacterNames(): Resource {
   return names;
 }
 
-export function getClassNames(): Resource {
+export function getClassNames(reorder = "false"): Resource {
   const names: Resource = {};
 
   for (let i = 0x0; i < 0x10; i += 0x1) {
-    names[i] = getText(CLASS_NAMES_START_INDEX + i);
+    let index = i;
+
+    if (reorder === "true") {
+      index = Math.floor(i / 2) + (i % 2 ? 8 : 0);
+    }
+
+    names[i] = getText(CLASS_NAMES_START_INDEX + index);
   }
 
   return names;

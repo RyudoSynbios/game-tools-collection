@@ -16,13 +16,15 @@
   import { isVmuFile } from "$lib/utils/common/dreamcast/vmu";
   import { isGCMFile } from "$lib/utils/common/gamecube/gcm";
   import { isIso9660File } from "$lib/utils/common/iso9660";
+  import { isBackupRam } from "$lib/utils/common/saturn/backupRam";
   import { reset } from "$lib/utils/state";
 
+  import BackupRam from "./backupRam/index.svelte";
   import GCM from "./gcm/index.svelte";
   import Iso9660 from "./iso9660/index.svelte";
   import VMU from "./vmu/index.svelte";
 
-  type FileType = "gcm" | "iso9660" | "vmu";
+  type FileType = "backupRam" | "gcm" | "iso9660" | "vmu";
 
   let typeEl: HTMLSelectElement;
 
@@ -32,6 +34,7 @@
   let error = "";
 
   const types: { [key in FileType]: (dataView: DataView) => boolean } = {
+    backupRam: isBackupRam,
     gcm: isGCMFile,
     iso9660: isIso9660File,
     vmu: isVmuFile,
@@ -95,6 +98,7 @@
           <select bind:this={typeEl} on:click|stopPropagation>
             <option value="">Auto-detect</option>
             <option value="iso9660">ISO 9660</option>
+            <option value="backupRam">Backup Ram</option>
             <option value="gcm">GCM</option>
             <option value="vmu">VMU</option>
           </select>
@@ -129,7 +133,9 @@
         </div>
       </div>
       <div class="gtc-explorer-content">
-        {#if fileType === "gcm"}
+        {#if fileType === "backupRam"}
+          <BackupRam {fileName} {dataView} />
+        {:else if fileType === "gcm"}
           <GCM {fileName} {dataView} />
         {:else if fileType === "iso9660"}
           <Iso9660 {fileName} {dataView} />

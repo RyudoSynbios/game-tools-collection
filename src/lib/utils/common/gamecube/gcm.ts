@@ -57,7 +57,7 @@ export default class GCM {
   constructor(dataView: DataView) {
     this.dataView = dataView;
     this.header = this.generateHeader();
-    this._root = this.generateRoot();
+    this._root = [];
     this.tmp = {
       datas: [],
       names: [],
@@ -65,6 +65,8 @@ export default class GCM {
       fileOffset: 0x0,
       fileOffsets: [],
     };
+
+    this.generateRoot();
   }
 
   get root() {
@@ -87,57 +89,56 @@ export default class GCM {
   }
 
   // prettier-ignore
-  private generateRoot(): Entry[] {
-    const root: Entry[] = [
-      {
-        index: 0,
-        type: "directory",
-        path: "system",
-        name: "system",
-        content: [
-          {
-            index: 0,
-            type: "file",
-            path: "system/boot.bin",
-            name: "boot.bin",
-            offset: 0x0,
-            size: BOOT_SIZE,
-            dataView: new DataView(new ArrayBuffer(0)),
-            isDirty: false,
-          },
-          {
-            index: 0,
-            type: "file",
-            path: "system/apploader.img",
-            name: "apploader.img",
-            offset: BOOT_SIZE,
-            size: this.header.apploaderSize,
-            dataView: new DataView(new ArrayBuffer(0)),
-            isDirty: false,
-          },
-          {
-            index: 0,
-            type: "file",
-            path: "system/main.dol",
-            name: "main.dol",
-            offset: this.header.dolOffset,
-            size: this.header.fstOffset - this.header.dolOffset,
-            dataView: new DataView(new ArrayBuffer(0)),
-            isDirty: false,
-          },
-          {
-            index: 0,
-            type: "file",
-            path: "system/fst.bin",
-            name: "fst.bin",
-            offset: this.header.fstOffset,
-            size: this.header.fstSize,
-            dataView: new DataView(new ArrayBuffer(0)),
-            isDirty: false,
-          },
-        ],
-      },
-    ];
+  private generateRoot(): void {
+    
+    this._root.push({
+      index: 0,
+      type: "directory",
+      path: "system",
+      name: "system",
+      content: [
+        {
+          index: 0,
+          type: "file",
+          path: "system/boot.bin",
+          name: "boot.bin",
+          offset: 0x0,
+          size: BOOT_SIZE,
+          dataView: new DataView(new ArrayBuffer(0)),
+          isDirty: false,
+        },
+        {
+          index: 0,
+          type: "file",
+          path: "system/apploader.img",
+          name: "apploader.img",
+          offset: BOOT_SIZE,
+          size: this.header.apploaderSize,
+          dataView: new DataView(new ArrayBuffer(0)),
+          isDirty: false,
+        },
+        {
+          index: 0,
+          type: "file",
+          path: "system/main.dol",
+          name: "main.dol",
+          offset: this.header.dolOffset,
+          size: this.header.fstOffset - this.header.dolOffset,
+          dataView: new DataView(new ArrayBuffer(0)),
+          isDirty: false,
+        },
+        {
+          index: 0,
+          type: "file",
+          path: "system/fst.bin",
+          name: "fst.bin",
+          offset: this.header.fstOffset,
+          size: this.header.fstSize,
+          dataView: new DataView(new ArrayBuffer(0)),
+          isDirty: false,
+        },
+      ],
+    });
 
     const entryCount = getInt(this.header.fstOffset + 0x8, "uint32", { bigEndian: true }, this.dataView);
 
@@ -168,7 +169,7 @@ export default class GCM {
 
         nextEntryIndexes.push(nextEntryIndex);
 
-        let directory: Entry[] = root;
+        let directory: Entry[] = this._root;
 
         if (parentIndex !== 0) {
           const entry = directories.find(
@@ -196,7 +197,7 @@ export default class GCM {
         const fileOffset = getInt(offset + 0x4, "uint32", { bigEndian: true }, this.dataView);
         const fileSize = getInt(offset + 0x8, "uint32", { bigEndian: true }, this.dataView);
 
-        let directory: Entry[] = root;
+        let directory: Entry[] = this._root;
 
         if (directoryIndexes.length > 0) {
           const entry = directories.find(
@@ -222,8 +223,6 @@ export default class GCM {
         });
       }
     }
-
-    return root;
   }
 
   private buildFst(directory = this._root, parentIndex = 0): void {

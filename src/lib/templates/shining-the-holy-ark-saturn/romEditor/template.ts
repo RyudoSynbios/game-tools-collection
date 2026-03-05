@@ -49,7 +49,7 @@ const template: GameJson = {
                       type: "variable",
                       dataType: "uint16",
                       bigEndian: true,
-                      resource: "classNames",
+                      resource: "classes",
                       autocomplete: true,
                     },
                     {
@@ -133,6 +133,89 @@ const template: GameJson = {
           ],
         },
         {
+          name: "Classes",
+          planned: true,
+          items: [
+            {
+              pointer: X09_POINTERS.classes,
+              length: 0x50,
+              type: "container",
+              instanceType: "tabs",
+              instances: 16,
+              resource: "classNames",
+              vertical: true,
+              items: [
+                {
+                  type: "section",
+                  flex: true,
+                  items: [
+                    {
+                      id: "clName-%index%",
+                      name: "Name",
+                      offset: 0x0,
+                      length: 0x6,
+                      type: "variable",
+                      dataType: "string",
+                      letterDataType: "uint8",
+                      disabled: true,
+                    },
+                  ],
+                },
+                {
+                  length: 0x8,
+                  type: "container",
+                  instanceType: "section",
+                  instances: 10,
+                  resource: "stats",
+                  flex: true,
+                  items: [
+                    {
+                      name: "???",
+                      dataViewAltKey: "x09",
+                      offset: 0x0,
+                      type: "variable",
+                      dataType: "uint16",
+                      bigEndian: true,
+                      // min: 0
+                      // max: 0
+                    },
+                    {
+                      name: "???",
+                      dataViewAltKey: "x09",
+                      offset: 0x2,
+                      type: "variable",
+                      dataType: "uint16",
+                      bigEndian: true,
+                      // min: 0
+                      // max: 0
+                    },
+                    {
+                      name: "???",
+                      dataViewAltKey: "x09",
+                      offset: 0x4,
+                      type: "variable",
+                      dataType: "uint16",
+                      bigEndian: true,
+                      // min: 0
+                      // max: 0
+                    },
+                    {
+                      name: "???",
+                      dataViewAltKey: "x09",
+                      offset: 0x6,
+                      type: "variable",
+                      dataType: "uint16",
+                      bigEndian: true,
+                      // min: 0
+                      // max: 0
+                    },
+                  ],
+                },
+              ],
+            },
+          ],
+        },
+        {
           name: "Magic",
           items: [
             {
@@ -159,7 +242,7 @@ const template: GameJson = {
                       type: "variable",
                       dataType: "uint16",
                       bigEndian: true,
-                      resource: "classNames",
+                      resource: "classes",
                       autocomplete: true,
                     },
                     {
@@ -1015,7 +1098,8 @@ const template: GameJson = {
       0x6: "Doyle",
       0x7: "Lisa",
     },
-    classNames: "getClassNames()",
+    classNames: "getClassNames(true)",
+    classes: "getClassNames()",
     dropItems: "getItemNames(true)",
     enemyDropRates: {
       0x0: "-",
@@ -1070,6 +1154,18 @@ const template: GameJson = {
       0x2: "Haggle",
     },
     spellNames: "getSpellNames()",
+    stats: {
+      0x0: "Max HP",
+      0x1: "Max MP",
+      0x2: "Attack",
+      0x3: "Defense",
+      0x4: "Agility",
+      0x5: "Critical",
+      0x6: "Technique",
+      0x7: "Luck",
+      0x8: "Magic Defense",
+      0x9: "Breath Defense",
+    },
   },
   resourcesOrder: {
     dropItems: [0xffff],

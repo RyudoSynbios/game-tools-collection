@@ -27,7 +27,12 @@ export interface File {
   blocks: number[];
 }
 
-interface Management {
+interface Save {
+  file: File;
+  offset: number;
+}
+
+interface System {
   system: {
     block: number;
     size: number;
@@ -46,29 +51,26 @@ interface Management {
   };
 }
 
-interface Save {
-  file: File;
-  offset: number;
-}
-
 export default class VMU {
   private dataView: DataView;
-  private management: Management;
+  private system: System;
   private _root: File[];
   private saves: Save[];
 
   constructor(dataView: DataView) {
     this.dataView = dataView;
-    this.management = this.generateManagement();
-    this._root = this.generateRoot();
+    this.system = this.generateSystem();
+    this._root = [];
     this.saves = [];
+
+    this.generateRoot();
   }
 
   get root() {
     return this._root;
   }
 
-  private generateManagement(): Management {
+  private generateSystem(): System {
     const systemBlock = 0xff;
 
     return {
@@ -91,10 +93,8 @@ export default class VMU {
     };
   }
 
-  private generateRoot(): File[] {
-    const files: File[] = [];
-
-    const { block, size } = this.management.fileInformation;
+  private generateRoot(): void {
+    const { block, size } = this.system.fileInformation;
 
     // prettier-ignore
     for (let i = block; i >= block - size + 0x1; i -= 0x1) {
@@ -121,7 +121,7 @@ export default class VMU {
             blocks: [startBlock],
           };
 
-          const offset = this.management.fat.block * BLOCK_SIZE;
+          const offset = this.system.fat.block * BLOCK_SIZE;
 
           let blockIndex = file.blocks[0];
 
@@ -131,12 +131,18 @@ export default class VMU {
             file.blocks.push(blockIndex);
           }
 
-          files.push(file);
+          this._root.push(file);
         }
       }
     }
+  }
 
-    return files;
+  private getInt16(block: number, offset: number): number {
+    return getInt(block * BLOCK_SIZE + offset, "uint16", {}, this.dataView);
+  }
+
+  public isInitialized(): boolean {
+    return this._root.length > 0;
   }
 
   public getFile(file: File): Uint8Array {
@@ -168,14 +174,6 @@ export default class VMU {
     this.dataView = new DataView(buffer.buffer);
   }
 
-  private getInt16(block: number, offset: number): number {
-    return getInt(block * BLOCK_SIZE + offset, "uint16", {}, this.dataView);
-  }
-
-  public isInitialized(): boolean {
-    return this._root.length > 0;
-  }
-
   public unpack(): DataView {
     const $gameTemplate = get(gameTemplate);
 
@@ -190,7 +188,7 @@ export default class VMU {
         const validatorStringified = numberArrayToString(validator);
 
         this._root.forEach((file) => {
-          if (file.name === validatorStringified) {
+          if (file.name.includes(validatorStringified)) {
             const binary = this.getFile(file);
 
             uint8Arrays.push(binary);
@@ -239,7 +237,9 @@ export default class VMU {
         const validatorStringified = numberArrayToString(validator);
 
         if (
-          this.saves.some((save) => save.file.name === validatorStringified)
+          this.saves.some((save) =>
+            save.file.name.includes(validatorStringified),
+          )
         ) {
           regions.push(region);
         }
@@ -249,24 +249,28 @@ export default class VMU {
     return regions;
   }
 
-  public getShift(): number[] {
+  public getRegionSaves(): Save[] {
     const validator = getRegionValidator(0x4);
     const validatorStringified = numberArrayToString(validator);
 
-    const save = this.saves.find((save) =>
-      save.file.name.includes(validatorStringified),
-    );
+    return this.saves
+      .filter((save) => save.file.name.includes(validatorStringified))
+      .sort((a, b) => a.file.name.localeCompare(b.file.name));
+  }
 
-    if (save) {
-      return [save.offset];
+  public getSlotShifts(index: number): [boolean, number[] | undefined] {
+    const saves = this.getRegionSaves();
+
+    if (saves[index]) {
+      return [true, [saves[index].offset]];
     }
 
-    return [0x0];
+    return [true, [-1]];
   }
 
   public destroy(): void {
     this.dataView = new DataView(new ArrayBuffer(0));
-    this.management = {} as Management;
+    this.system = {} as System;
     this._root = [];
     this.saves = [];
   }
