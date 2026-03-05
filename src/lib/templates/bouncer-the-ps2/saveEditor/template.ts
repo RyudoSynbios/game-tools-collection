@@ -202,6 +202,7 @@ const template: GameJson = {
                               offset: 0x84,
                               type: "variable",
                               dataType: "float32",
+                              min: 0,
                               max: 99,
                             },
                             {

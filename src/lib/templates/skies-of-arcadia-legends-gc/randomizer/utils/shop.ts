@@ -143,7 +143,7 @@ export function randomizeShops(
 
     for (let j = 0x0; j < 0x30; j += 0x1) {
       if (j === count) {
-        items.push(...new Array(0x30 - j).fill(0xffff));
+        items.push(...Array(0x30 - j).fill(0xffff));
         break;
       }
 

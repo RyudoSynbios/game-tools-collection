@@ -42,8 +42,6 @@ export type DataTypeInt =
   | "uint64"
   | "float32";
 
-export type DataViewABL = DataView<ArrayBufferLike>;
-
 export type DebugOptions = {
   [key: string]: boolean;
 };

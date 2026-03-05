@@ -10,7 +10,7 @@ import { getObjKey, mergeUint8Arrays } from "../../format";
 import { checkValidator, getRegions, reduceConditions } from "../../validator";
 import { generateEcc } from "./ecc";
 
-type Entry = Directory | File;
+export type Entry = Directory | File;
 
 interface Volume {
   type: number;
@@ -69,6 +69,10 @@ export interface File {
   isDirty: boolean;
 }
 
+interface Options {
+  hideWorkingDirectories: boolean;
+}
+
 const SECTOR_HEADER_SIZE = 0x10;
 const SECTOR_XA_HEADER_SIZE = 0x8;
 const LOGICAL_BLOCK_SIZE = 0x800;
@@ -85,8 +89,9 @@ export default class Iso9660 {
   private blockSize: number;
   private eccSize: number;
   private volume: Volume;
+  private options: Options;
 
-  constructor(dataView: DataView) {
+  constructor(dataView: DataView, options?: Options) {
     this.dataView = dataView;
     this.hasSectors = hasSectors(this.dataView);
     this.hasXaSubheader = hasXaSubheader(this.dataView);
@@ -97,8 +102,11 @@ export default class Iso9660 {
     this.eccSize = this.hasSectors ? ECC_SIZE - this.sectorXaHeaderSize : 0x0;
     this.blockSize = this.sectorHeaderSize + LOGICAL_BLOCK_SIZE + this.eccSize;
     this.volume = {} as Volume;
+    this.options = {
+      hideWorkingDirectories: options?.hideWorkingDirectories || false,
+    };
 
-    if (!isIso9660Valid(dataView)) {
+    if (!isIso9660File(dataView)) {
       debug.error("Not a ISO9660 valid file.");
       return;
     }
@@ -106,7 +114,11 @@ export default class Iso9660 {
     this.init();
   }
 
-  private init() {
+  get root() {
+    return this.volume.root;
+  }
+
+  private init(): void {
     let offset = this.getSectorOffset(0x10);
 
     this.volume.type = getInt(offset, "uint8", {}, this.dataView); // prettier-ignore
@@ -262,7 +274,12 @@ export default class Iso9660 {
             this.readDirectory(sectorLE, fileSizeLE, path, directory.content);
           }
 
-          parentDirectory.push(directory);
+          if (
+            ![".", ".."].includes(name) ||
+            !this.options.hideWorkingDirectories
+          ) {
+            parentDirectory.push(directory);
+          }
         } else {
           parentDirectory.push({
             index: parentDirectory.length,
@@ -348,8 +365,8 @@ export default class Iso9660 {
     }
   }
 
-  public writeFile(name: string, dataView: DataView): void {
-    const file = this.getFile(name);
+  public writeFile(path: string, dataView: DataView): void {
+    const file = this.getFile(path);
 
     if (file) {
       const dataSrc = new Uint8Array(dataView.buffer);
@@ -390,7 +407,7 @@ export default class Iso9660 {
 
       this.dataView = new DataView(dataDst.buffer);
     } else {
-      debug.error(`File "${name}" not found.`);
+      debug.error(`File "${path}" not found.`);
     }
   }
 }
@@ -465,7 +482,7 @@ export function hasXaSubheader(dataView: DataView): boolean {
   return checkValidator(validator, 0x10, dataView);
 }
 
-export function isIso9660Valid(dataView: DataView): boolean {
+export function isIso9660File(dataView: DataView): boolean {
   const validator = [0x43, 0x44, 0x30, 0x30, 0x31];
 
   let offset = 0x8000;

@@ -86,7 +86,7 @@ export function randomizeAbilities(prng: Prng, options: Options): void {
     const ranks: number[][] = [];
 
     for (let i = 0; i < 6; i += 1) {
-      ranks[i] = [...new Array(6).keys()]
+      ranks[i] = [...Array(6).keys()]
         .map((index) => index + 1)
         .sort((a, b) => {
           const ar = prng.getInt(0, 100, `abilities_magicRanks_1_${a}_${i}`);

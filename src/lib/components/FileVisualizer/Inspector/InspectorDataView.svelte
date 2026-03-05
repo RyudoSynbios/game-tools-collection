@@ -4,7 +4,7 @@
 
   import Input from "$lib/components/Input.svelte";
   import Select from "$lib/components/Select.svelte";
-  import { dataView, dataViewAlt } from "$lib/stores";
+  import { dataView, dataViewAlt, fileName } from "$lib/stores";
   import {
     dataViewKey,
     rowsOffset,
@@ -40,7 +40,7 @@
       type: "application/octet-stream",
     });
 
-    FileSaver.saveAs(blob, $dataViewKey);
+    FileSaver.saveAs(blob, $dataViewKey || $fileName);
   }
 
   function handleGoto(): void {

@@ -2,8 +2,6 @@ import { get } from "svelte/store";
 
 import { dataView, gameTemplate } from "$lib/stores";
 
-import type { DataViewABL } from "$lib/types";
-
 import { addPadding, getInt, getString, removePadding } from "../../bytes";
 import { mergeUint8Arrays, numberArrayToString } from "../../format";
 import { checkValidator, getRegionValidator } from "../../validator";
@@ -31,11 +29,11 @@ interface Save {
 // Global objects
 
 let memorySystem = {} as MemorySystem;
-let memorySystemRaw: DataViewABL = new DataView(new ArrayBuffer(0));
+let memorySystemRaw: DataView = new DataView(new ArrayBuffer(0));
 let saves: Save[] = [];
 let filteredSaves: Save[] = [];
 
-const blockValidator = [...new Array(0x10).fill(0x0)];
+const blockValidator = [...Array(0x10).fill(0x0)];
 
 const memoryHeaderValidator = [
   0x42, 0x61, 0x63, 0x6b, 0x55, 0x70, 0x52, 0x61, 0x6d, 0x20, 0x46, 0x6f, 0x72,

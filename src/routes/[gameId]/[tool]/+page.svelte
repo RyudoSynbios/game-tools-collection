@@ -451,15 +451,15 @@
   .gtc-tool {
     @apply flex flex-1 flex-col;
 
-    .gtc-tool-hint {
+    & .gtc-tool-hint {
       @apply whitespace-pre-line text-center text-primary-400;
     }
 
-    .gtc-tool-error {
+    & .gtc-tool-error {
       @apply text-center text-primary-300;
     }
 
-    .gtc-tool-banner {
+    & .gtc-tool-banner {
       @apply mb-4 flex h-10 items-center justify-between;
 
       & img {
@@ -537,7 +537,7 @@
           }
         }
 
-        .gtc-tool-toolbar {
+        & .gtc-tool-toolbar {
           @apply absolute left-2 top-10 z-20 w-44 rounded bg-primary-500 py-1 text-xs;
 
           & li {

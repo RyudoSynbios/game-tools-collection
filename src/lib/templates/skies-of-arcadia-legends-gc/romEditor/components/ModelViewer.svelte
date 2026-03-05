@@ -10,8 +10,6 @@
   import debug from "$lib/utils/debug";
   import Three from "$lib/utils/three";
 
-  import type { DataViewABL } from "$lib/types";
-
   import {
     getDecompressedData,
     getFileData,
@@ -111,7 +109,7 @@
 
     three.setLoading(true);
 
-    let dataView: DataViewABL = new DataView(new ArrayBuffer(0));
+    let dataView: DataView = new DataView(new ArrayBuffer(0));
 
     let isShipBattle = false;
 

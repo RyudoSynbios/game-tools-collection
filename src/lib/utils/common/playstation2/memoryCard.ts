@@ -5,8 +5,6 @@ import { getInt, getString } from "$lib/utils/bytes";
 import { mergeUint8Arrays, numberArrayToString } from "$lib/utils/format";
 import { checkValidator } from "$lib/utils/validator";
 
-import type { DataViewABL } from "$lib/types";
-
 import {
   getEntryType,
   getFile,
@@ -53,7 +51,7 @@ interface Extras {
 // Global objects
 
 let memoryCard = {} as MemoryCard;
-let memoryCardRaw: DataViewABL = new DataView(new ArrayBuffer(0));
+let memoryCardRaw: DataView = new DataView(new ArrayBuffer(0));
 
 // ECC constants
 

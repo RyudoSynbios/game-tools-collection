@@ -323,7 +323,7 @@ export function afterSetInt(item: Item, flag: ItemBitflag): void {
 }
 
 let checksums: number[] = [];
-let buffer = new Uint32Array(0x100);
+let buffer = new Uint32Array(0x10);
 
 // It seems to be a SHA-1 hash generator
 export function generateChecksum(item: ItemChecksum): number {
@@ -345,22 +345,22 @@ export function generateChecksum(item: ItemChecksum): number {
 
   buffer[0xf] = byteswap32(length * 0x8);
 
-  const processedLength = length & 0xffffffc0;
+  while (offset + 0x40 <= item.control.offsetEnd) {
+    hash(offset);
 
-  hash(offset, processedLength);
+    offset += 0x40;
+    length -= 0x40;
+  }
 
-  offset += processedLength;
-  length -= processedLength;
+  const count = Math.floor(length / 0x4);
 
-  const max = Math.floor(length / 0x4);
-
-  for (let i = 0x0; i < max; i += 0x1) {
+  for (let i = 0x0; i < count; i += 0x1) {
     buffer[i] = getInt(offset + i * 0x4, "uint32");
   }
 
-  buffer[max] = 0x80 << ((length % 0x4) * 0x8);
+  buffer[count] = 0x80 << ((length % 0x4) * 0x8);
 
-  hash(0x0, 0x40, buffer);
+  hash(0x0, buffer);
 
   return formatChecksum(checksums[0], item.dataType);
 }
@@ -379,12 +379,20 @@ export function onReset(): void {
   resetState();
 }
 
+function getExperience(level: number): number {
+  let experience = 0;
+
+  if (level > 1 && level < 50) {
+    experience = level * (level + 1) * (level * 3 + 2);
+  } else if (level >= 50) {
+    experience = level * (level + 1) * (level * 6 - 145);
+  }
+
+  return experience;
+}
+
 // prettier-ignore
-function hash(
-  offset: number,
-  length: number,
-  buffer?: Uint32Array,
-): void {
+function hash(offset: number, buffer?: Uint32Array): void {
   const constants = [0x5a827999, 0x6ed9eba1, 0x8f1bbcdc, 0xca62c1d6];
   const mask = 0x00ff00ff;
 
@@ -397,98 +405,82 @@ function hash(
 
   const checksumTmp = clone(checksums);
 
-  while (length !== 0x0 && length >= 0x40) {
-    for (let i = 0x0; i < 0x10; i += 0x1) {
-      tmp1 = checksumTmp[0];
-      tmp3 = checksumTmp[3];
-      checksumTmp[3] = checksumTmp[2];
-      checksumTmp[2] = buffer ? buffer[Math.floor(offset / 0x4)] : getInt(offset, "uint32");
-      checksumTmp[2] = (mask & ((checksumTmp[2] >>> 0x18) | (checksumTmp[2] << 0x8))) | ((checksumTmp[2] & mask) >>> 0x8) | ((checksumTmp[2] & mask) << 0x18);
-      array[i] = checksumTmp[2];
-      array[i + 0x10] = checksumTmp[2];
-      checksumTmp[0] = constants[0] + checksumTmp[4] + ((tmp1 >>> 0x1b) | (tmp1 << 0x5)) + checksumTmp[2] + (((checksumTmp[3] ^ tmp3) & checksumTmp[1]) ^ tmp3);
-      checksumTmp[2] = (checksumTmp[1] >>> 0x2) | (checksumTmp[1] << 0x1e);
-      checksumTmp[1] = tmp1;
-      checksumTmp[4] = tmp3;
-      offset += 0x4;
-    }
-
-    for (let i = 0x0; i < 0x4; i += 0x1) {
-      checksumTmp[4] = checksumTmp[3];
-      checksumTmp[3] = checksumTmp[2];
-      checksumTmp[1] = checksumTmp[0];
-      checksumTmp[2] = array[i] ^ array[i + 0x2] ^ array[i + 0x8] ^ array[i + 0xd];
-      checksumTmp[2] = (checksumTmp[2] >>> 0x1f) | (checksumTmp[2] << 0x1);
-      array[i] = checksumTmp[2];
-      array[i + 0x10] = checksumTmp[2];
-      checksumTmp[0] = checksumTmp[2] + tmp3 + constants[0] + ((checksumTmp[1] >>> 0x1b) | (checksumTmp[1] << 0x5)) + (((checksumTmp[3] ^ checksumTmp[4]) & tmp1) ^ checksumTmp[4]);
-      checksumTmp[2] = (tmp1 >>> 0x2) | (tmp1 << 0x1e);
-      tmp1 = checksumTmp[1];
-      tmp3 = checksumTmp[4];
-    }
-
-    for (let i = 0x4; i < 0x18; i += 0x1) {
-      const iModulo = i % 0x10;
-
-      tmp1 = checksumTmp[0];
-      tmp3 = checksumTmp[3];
-      checksumTmp[3] = checksumTmp[2];
-      checksumTmp[2] = array[iModulo] ^ array[iModulo + 0x2] ^ array[iModulo + 0x8] ^ array[iModulo + 0xd];
-      checksumTmp[2] = (checksumTmp[2] >>> 0x1f) | (checksumTmp[2] << 0x1);
-      array[iModulo] = checksumTmp[2];
-      array[iModulo + 0x10] = checksumTmp[2];
-      checksumTmp[0] = checksumTmp[2] + checksumTmp[4] + constants[1] + ((tmp1 >>> 0x1b) | (tmp1 << 0x5)) + (checksumTmp[1] ^ checksumTmp[3] ^ tmp3);
-      checksumTmp[2] = (checksumTmp[1] >>> 0x2) | (checksumTmp[1] << 0x1e);
-      checksumTmp[1] = tmp1;
-      checksumTmp[4] = tmp3;
-    }
-
-    for (let i = 0x8; i < 0x1c; i += 0x1) {
-      const iModulo = i % 0x10;
-
-      tmp2 = checksumTmp[0];
-      tmp4 = checksumTmp[3];
-      checksumTmp[3] = checksumTmp[2];
-      checksumTmp[2] = array[iModulo] ^ array[iModulo + 0x2] ^ array[iModulo + 0x8] ^ array[iModulo + 0xd];
-      checksumTmp[2] = (checksumTmp[2] >>> 0x1f) | (checksumTmp[2] << 0x1);
-      array[iModulo] = checksumTmp[2];
-      array[iModulo + 0x10] = checksumTmp[2];
-      checksumTmp[0] = checksumTmp[2] + tmp3 + constants[2] + ((tmp2 >>> 0x1b) | (tmp2 << 0x5)) + (((tmp1 | checksumTmp[3]) & tmp4) | (tmp1 & checksumTmp[3]));
-      checksumTmp[2] = (tmp1 >>> 0x2) | (tmp1 << 0x1e);
-      tmp1 = tmp2;
-      tmp3 = tmp4;
-    }
-
-    for (let i = 0xc; i < 0x20; i += 0x1) {
-      checksumTmp[4] = checksumTmp[3];
-      checksumTmp[3] = checksumTmp[2];
-      checksumTmp[1] = checksumTmp[0];
-      checksumTmp[2] = array[i] ^ array[i + 0x2] ^ array[i + 0x8] ^ array[i + 0xd];
-      checksumTmp[2] = (checksumTmp[2] >>> 0x1f) | (checksumTmp[2] << 0x1);
-      array[i] = checksumTmp[2];
-      array[i + 0x10] = checksumTmp[2];
-      checksumTmp[0] = checksumTmp[2] + tmp4 + constants[3] + ((checksumTmp[1] >>> 0x1b) | (checksumTmp[1] << 0x5)) + (tmp2 ^ checksumTmp[3] ^ checksumTmp[4]);
-      checksumTmp[2] = (tmp2 >>> 0x2) | (tmp2 << 0x1e);
-      tmp2 = checksumTmp[1];
-      tmp4 = checksumTmp[4];
-    }
-
-    for (let i = 0x0; i < 0x5; i += 0x1) {
-      checksumTmp[i] = checksums[i] += checksumTmp[i];
-    }
-
-    length -= 0x40;
-  }
-}
-
-function getExperience(level: number): number {
-  let experience = 0;
-
-  if (level > 1 && level < 50) {
-    experience = level * (level + 1) * (level * 3 + 2);
-  } else if (level >= 50) {
-    experience = level * (level + 1) * (level * 6 - 145);
+  for (let i = 0x0; i < 0x10; i += 0x1) {
+    tmp1 = checksumTmp[0];
+    tmp3 = checksumTmp[3];
+    checksumTmp[3] = checksumTmp[2];
+    checksumTmp[2] = buffer ? buffer[offset] : getInt(offset, "uint32");
+    checksumTmp[2] = (mask & ((checksumTmp[2] >>> 0x18) | (checksumTmp[2] << 0x8))) | ((checksumTmp[2] & mask) >>> 0x8) | ((checksumTmp[2] & mask) << 0x18);
+    array[i] = checksumTmp[2];
+    array[i + 0x10] = checksumTmp[2];
+    checksumTmp[0] = constants[0] + checksumTmp[4] + ((tmp1 >>> 0x1b) | (tmp1 << 0x5)) + checksumTmp[2] + (((checksumTmp[3] ^ tmp3) & checksumTmp[1]) ^ tmp3);
+    checksumTmp[2] = (checksumTmp[1] >>> 0x2) | (checksumTmp[1] << 0x1e);
+    checksumTmp[1] = tmp1;
+    checksumTmp[4] = tmp3;
+    offset += buffer ? 0x1 : 0x4;
   }
 
-  return experience;
+  for (let i = 0x0; i < 0x4; i += 0x1) {
+    checksumTmp[4] = checksumTmp[3];
+    checksumTmp[3] = checksumTmp[2];
+    checksumTmp[1] = checksumTmp[0];
+    checksumTmp[2] = array[i] ^ array[i + 0x2] ^ array[i + 0x8] ^ array[i + 0xd];
+    checksumTmp[2] = (checksumTmp[2] >>> 0x1f) | (checksumTmp[2] << 0x1);
+    array[i] = checksumTmp[2];
+    array[i + 0x10] = checksumTmp[2];
+    checksumTmp[0] = checksumTmp[2] + tmp3 + constants[0] + ((checksumTmp[1] >>> 0x1b) | (checksumTmp[1] << 0x5)) + (((checksumTmp[3] ^ checksumTmp[4]) & tmp1) ^ checksumTmp[4]);
+    checksumTmp[2] = (tmp1 >>> 0x2) | (tmp1 << 0x1e);
+    tmp1 = checksumTmp[1];
+    tmp3 = checksumTmp[4];
+  }
+
+  for (let i = 0x4; i < 0x18; i += 0x1) {
+    const iModulo = i % 0x10;
+
+    tmp1 = checksumTmp[0];
+    tmp3 = checksumTmp[3];
+    checksumTmp[3] = checksumTmp[2];
+    checksumTmp[2] = array[iModulo] ^ array[iModulo + 0x2] ^ array[iModulo + 0x8] ^ array[iModulo + 0xd];
+    checksumTmp[2] = (checksumTmp[2] >>> 0x1f) | (checksumTmp[2] << 0x1);
+    array[iModulo] = checksumTmp[2];
+    array[iModulo + 0x10] = checksumTmp[2];
+    checksumTmp[0] = checksumTmp[2] + checksumTmp[4] + constants[1] + ((tmp1 >>> 0x1b) | (tmp1 << 0x5)) + (checksumTmp[1] ^ checksumTmp[3] ^ tmp3);
+    checksumTmp[2] = (checksumTmp[1] >>> 0x2) | (checksumTmp[1] << 0x1e);
+    checksumTmp[1] = tmp1;
+    checksumTmp[4] = tmp3;
+  }
+
+  for (let i = 0x8; i < 0x1c; i += 0x1) {
+    const iModulo = i % 0x10;
+
+    tmp2 = checksumTmp[0];
+    tmp4 = checksumTmp[3];
+    checksumTmp[3] = checksumTmp[2];
+    checksumTmp[2] = array[iModulo] ^ array[iModulo + 0x2] ^ array[iModulo + 0x8] ^ array[iModulo + 0xd];
+    checksumTmp[2] = (checksumTmp[2] >>> 0x1f) | (checksumTmp[2] << 0x1);
+    array[iModulo] = checksumTmp[2];
+    array[iModulo + 0x10] = checksumTmp[2];
+    checksumTmp[0] = checksumTmp[2] + tmp3 + constants[2] + ((tmp2 >>> 0x1b) | (tmp2 << 0x5)) + (((tmp1 | checksumTmp[3]) & tmp4) | (tmp1 & checksumTmp[3]));
+    checksumTmp[2] = (tmp1 >>> 0x2) | (tmp1 << 0x1e);
+    tmp1 = tmp2;
+    tmp3 = tmp4;
+  }
+
+  for (let i = 0xc; i < 0x20; i += 0x1) {
+    checksumTmp[4] = checksumTmp[3];
+    checksumTmp[3] = checksumTmp[2];
+    checksumTmp[1] = checksumTmp[0];
+    checksumTmp[2] = array[i] ^ array[i + 0x2] ^ array[i + 0x8] ^ array[i + 0xd];
+    checksumTmp[2] = (checksumTmp[2] >>> 0x1f) | (checksumTmp[2] << 0x1);
+    array[i] = checksumTmp[2];
+    array[i + 0x10] = checksumTmp[2];
+    checksumTmp[0] = checksumTmp[2] + tmp4 + constants[3] + ((checksumTmp[1] >>> 0x1b) | (checksumTmp[1] << 0x5)) + (tmp2 ^ checksumTmp[3] ^ checksumTmp[4]);
+    checksumTmp[2] = (tmp2 >>> 0x2) | (tmp2 << 0x1e);
+    tmp2 = checksumTmp[1];
+    tmp4 = checksumTmp[4];
+  }
+
+  for (let i = 0x0; i < 0x5; i += 0x1) {
+    checksums[i] += checksumTmp[i];
+  }
 }

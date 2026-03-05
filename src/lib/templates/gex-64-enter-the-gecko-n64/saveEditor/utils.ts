@@ -148,7 +148,7 @@ function encryptPassword(offset: number): void {
 
   offset *= 0x10;
 
-  let bufferIndex = 0;
+  let bufferIndex = 0x0;
   let bit = 0;
 
   for (let i = 0x0; i < 0x12; i += 0x1) {
@@ -162,7 +162,7 @@ function encryptPassword(offset: number): void {
       }
 
       if (bufferBit === 0) {
-        bufferIndex += 1;
+        bufferIndex += 0x1;
       }
 
       if (j !== 4) {
@@ -179,7 +179,7 @@ function encryptPassword(offset: number): void {
 function decryptPassword(offset: number): Uint8Array {
   const buffer = new Uint8Array(0xc);
 
-  let bufferIndex = 0;
+  let bufferIndex = 0x0;
   let bit = 0;
 
   while (bit < 90) {
@@ -193,7 +193,7 @@ function decryptPassword(offset: number): Uint8Array {
     }
 
     if (bufferBit === 0) {
-      bufferIndex += 1;
+      bufferIndex += 0x1;
     }
 
     if (letterBit === 0) {

@@ -5,8 +5,6 @@ import { getInt, getString } from "$lib/utils/bytes";
 import { mergeUint8Arrays, numberArrayToString } from "$lib/utils/format";
 import { getRegionValidator } from "$lib/utils/validator";
 
-import type { DataViewABL } from "$lib/types";
-
 import { isDexDriveHeader } from "./dexDrive";
 
 interface Mpk {
@@ -33,7 +31,7 @@ interface Save {
 // Global objects
 
 let mpk = {} as Mpk;
-let mpkRaw: DataViewABL = new DataView(new ArrayBuffer(0));
+let mpkRaw: DataView = new DataView(new ArrayBuffer(0));
 let saves: Save[] = [];
 
 export function generateMpk(dataView: DataView, shift: number): void {
