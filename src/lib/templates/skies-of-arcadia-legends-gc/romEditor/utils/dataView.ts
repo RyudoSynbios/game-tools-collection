@@ -7,14 +7,7 @@ import {
   gameRegion,
 } from "$lib/stores";
 import { getInt, intToArray } from "$lib/utils/bytes";
-import {
-  File,
-  getFile,
-  getFiles,
-  readGcm,
-  rebuildGcm,
-  writeFile,
-} from "$lib/utils/common/gamecube";
+import GCM, { type File } from "$lib/utils/common/gamecube/gcm";
 import { getRegionArray, mergeUint8Arrays } from "$lib/utils/format";
 
 import {
@@ -31,26 +24,31 @@ import {
 } from "./locales";
 import { mainDolModels, Model } from "./resource";
 
+export let gcm: GCM;
+
 function getEnemyGroupFiles(): File[] {
-  return getFiles().filter(
-    (file) =>
-      file.path !== "field/a099a_ep.enp" && file.path.match(/.(enp|evp)$/i),
-  );
+  return gcm
+    .getFiles()
+    .filter(
+      (file) =>
+        file.path !== "field/a099a_ep.enp" && file.path.match(/.(enp|evp)$/i),
+    );
 }
 
 export function initDataViewAlt(): void {
+  const $dataView = get(dataView);
   const $dataViewAlt = get(dataViewAlt);
   const $gameRegion = get(gameRegion);
 
-  readGcm();
+  gcm = new GCM($dataView);
 
   // Main
 
   let partyOffset = getRegionArray(MAIN_DOL_START_OFFSET);
 
-  const mainDol = getFile("system/main.dol")!;
-  const firstLmt = getFile("battle/first.lmt")!;
-  const enemiesBackup = getFile("enemies_backup.gct");
+  const mainDol = gcm.getFile("system/main.dol")!;
+  const firstLmt = gcm.getFile("battle/first.lmt")!;
+  const enemiesBackup = gcm.getFile("enemies_backup.gct");
 
   $dataViewAlt["main.dol"] = mainDol.dataView;
   $dataViewAlt.experienceCurves = firstLmt.dataView;
@@ -109,7 +107,7 @@ export function initDataViewAlt(): void {
   const files = getEnemyGroupFiles();
 
   files.forEach((file) => {
-    const fileTmp = getFile(file.path);
+    const fileTmp = gcm.getFile(file.path);
 
     const decompressedData = getDecompressedData(fileTmp!.dataView);
 
@@ -232,8 +230,8 @@ export function exportDataViewAlt(): ArrayBufferLike {
     writeNonEuropeLocales(data);
   }
 
-  writeFile("system/main.dol", new DataView(data.buffer));
-  writeFile("battle/first.lmt", $dataViewAlt.experienceCurves);
+  gcm.writeFile("system/main.dol", new DataView(data.buffer));
+  gcm.writeFile("battle/first.lmt", $dataViewAlt.experienceCurves);
 
   // Enemies
 
@@ -244,7 +242,7 @@ export function exportDataViewAlt(): ArrayBufferLike {
   ) {
     const enemiesData = new Uint8Array($dataViewAlt.enemies.buffer);
 
-    writeFile("enemies_backup.gct", $dataViewAlt.enemies);
+    gcm.writeFile("enemies_backup.gct", $dataViewAlt.enemies);
 
     const files = getEnemyGroupFiles();
 
@@ -338,7 +336,7 @@ export function exportDataViewAlt(): ArrayBufferLike {
 
       const compressedData = getCompressedData(new DataView(uint8Array.buffer));
 
-      writeFile(file.path, new DataView(compressedData.buffer));
+      gcm.writeFile(file.path, new DataView(compressedData.buffer));
     });
 
     // Writing a099a_ep.enp file
@@ -351,12 +349,10 @@ export function exportDataViewAlt(): ArrayBufferLike {
       new DataView(a099aUint8Array.buffer),
     );
 
-    writeFile("field/a099a_ep.enp", new DataView(compressedData.buffer));
+    gcm.writeFile("field/a099a_ep.enp", new DataView(compressedData.buffer));
   }
 
-  rebuildGcm();
-
-  return get(dataView).buffer;
+  return gcm.rebuild();
 }
 
 export function getModelShift(model: Model): number {

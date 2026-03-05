@@ -2,7 +2,7 @@ import { get } from "svelte/store";
 
 import { dataViewAlt, gameRegion, gameTemplate, locale } from "$lib/stores";
 import { getInt, getString, setInt } from "$lib/utils/bytes";
-import { File, getFile, getFiles, resetGcm } from "$lib/utils/common/gamecube";
+import { type File } from "$lib/utils/common/gamecube/gcm";
 import { getRegionArray, mergeUint8Arrays } from "$lib/utils/format";
 import Lzss from "$lib/utils/lzss";
 import { getItem, getResource, updateResources } from "$lib/utils/parser";
@@ -26,7 +26,7 @@ import ModelViewer from "./components/ModelViewer.svelte";
 import ScriptViewer from "./components/ScriptViewer.svelte";
 import Texture from "./components/Texture.svelte";
 import { RANDOM_ENCOUNTER_RATE_OFFSET } from "./utils/constants";
-import { exportDataViewAlt, initDataViewAlt } from "./utils/dataView";
+import { exportDataViewAlt, gcm, initDataViewAlt } from "./utils/dataView";
 import {
   DESCRIPTION_LENGTH_OFFSET,
   LOCALE_LENGTH,
@@ -365,7 +365,9 @@ export function beforeSaving(): ArrayBufferLike {
 }
 
 export function onReset(): void {
-  resetGcm();
+  if (gcm?.isInitialized()) {
+    gcm.destroy();
+  }
 }
 
 export function importPatch(patch: Patch<PatchData>): void {
@@ -471,7 +473,7 @@ export function getEnemyGroupDetails(index: number): {
 
 export function getFileData(type: string, index: number): DataView {
   const files = getFilteredFiles(type);
-  const file = getFile(files[index].path);
+  const file = gcm.getFile(files[index].path);
 
   if (file) {
     const magic = getString(0x0, 0x4, "uint8", {}, file.dataView);
@@ -487,7 +489,7 @@ export function getFileData(type: string, index: number): DataView {
 }
 
 export function getFilteredFiles(type: string): File[] {
-  const files = getFiles();
+  const files = gcm.getFiles();
 
   return files.filter((file) => {
     if (

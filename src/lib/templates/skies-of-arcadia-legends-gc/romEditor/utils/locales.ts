@@ -2,11 +2,10 @@ import { get } from "svelte/store";
 
 import { dataViewAlt, gameRegion } from "$lib/stores";
 import { getInt, intToArray } from "$lib/utils/bytes";
-import { getFile, writeFile } from "$lib/utils/common/gamecube";
 import { getRegionArray, mergeUint8Arrays } from "$lib/utils/format";
 
 import { DESCRIPTION_TABLE_OFFSET, MAIN_DOL_START_OFFSET } from "./constants";
-import { getModelShift } from "./dataView";
+import { gcm, getModelShift } from "./dataView";
 import { abilityTypes, mainDolModels } from "./resource";
 
 export const NAME_LENGTH = 0x20;
@@ -99,7 +98,7 @@ export function generateEuropeLocales(): void {
   const dataLocales: { [name: string]: Uint8Array } = {};
 
   sotFiles.forEach((sotFile, index) => {
-    const locale = getFile(sotFile);
+    const locale = gcm.getFile(sotFile);
 
     if (!locale) {
       return;
@@ -203,7 +202,7 @@ export function writeEuropeLocales(): void {
   const $dataViewAlt = get(dataViewAlt);
 
   sotFiles.forEach((sotFile, index) => {
-    const locale = getFile(sotFile);
+    const locale = gcm.getFile(sotFile);
 
     if (!locale) {
       return;
@@ -273,7 +272,7 @@ export function writeEuropeLocales(): void {
 
     const data = mergeUint8Arrays(header, ...uint8Arrays);
 
-    writeFile(sotFile, new DataView(data.buffer));
+    gcm.writeFile(sotFile, new DataView(data.buffer));
   });
 }
 

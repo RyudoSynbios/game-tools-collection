@@ -6,7 +6,6 @@
   import ModelViewer from "$lib/components/ModelViewer.svelte";
   import { dataViewAlt } from "$lib/stores";
   import Canvas from "$lib/utils/canvas";
-  import { getFile } from "$lib/utils/common/gamecube";
   import debug from "$lib/utils/debug";
   import Three from "$lib/utils/three";
 
@@ -17,6 +16,7 @@
     type Entity,
     type Model,
   } from "../utils";
+  import { gcm } from "../utils/dataView";
   import {
     addMeshs,
     getTextures,
@@ -123,7 +123,7 @@
         return;
       }
 
-      const file = getFile(files[fileIndex].path);
+      const file = gcm.getFile(files[fileIndex].path);
 
       const list: { [key: string]: number } = {};
 

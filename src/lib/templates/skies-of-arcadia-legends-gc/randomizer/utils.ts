@@ -2,7 +2,6 @@ import { get } from "svelte/store";
 
 import { dataViewAlt } from "$lib/stores";
 import { cloneDataView, getInt, setInt } from "$lib/utils/bytes";
-import { resetGcm } from "$lib/utils/common/gamecube";
 import { getRandomNumber } from "$lib/utils/format";
 import Prng from "$lib/utils/prng";
 
@@ -10,6 +9,7 @@ import { Item, ItemInt } from "$lib/types";
 
 import {
   exportDataViewAlt,
+  gcm,
   initDataViewAlt,
 } from "../romEditor/utils/dataView";
 import { randomizeAbilities } from "./utils/ability";
@@ -87,7 +87,9 @@ export function beforeSaving(): ArrayBufferLike {
 }
 
 export function onReset(): void {
-  resetGcm();
+  if (gcm?.isInitialized()) {
+    gcm.destroy();
+  }
 }
 
 export function generateSeed(): void {
