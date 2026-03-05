@@ -35,19 +35,6 @@
   let previousId = "";
   let previousTabIndex = -1;
 
-  beforeUpdate(() => {
-    const componentId = item.id || generateIdFromArray(tabs, "name");
-
-    if (componentId !== previousId) {
-      tabIndex = item.defaultIndex || 0;
-
-      checkTab();
-    }
-
-    previousId = componentId;
-    previousTabIndex = tabIndex;
-  });
-
   function checkTab(): void {
     if (tabIndex > tabs.length - 1) {
       tabIndex = 0;
@@ -207,7 +194,15 @@
     checkTab();
   }
 
-  $: {
+  beforeUpdate(() => {
+    const componentId = item.id || generateIdFromArray(tabs, "name");
+
+    if (componentId !== previousId) {
+      tabIndex = item.defaultIndex || 0;
+
+      checkTab();
+    }
+
     if (
       item.onTabChange &&
       ((item.id && item.id !== previousId) || tabIndex !== previousTabIndex)
@@ -216,7 +211,10 @@
         item.onTabChange.format(tabIndex).replace("%itemId%", `${item.id}`),
       );
     }
-  }
+
+    previousId = componentId;
+    previousTabIndex = tabIndex;
+  });
 </script>
 
 <svelte:window
