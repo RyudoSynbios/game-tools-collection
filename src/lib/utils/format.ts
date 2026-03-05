@@ -47,6 +47,8 @@ export function generateIdFromArray(array: any[], key: string): string {
 export function getIntMin(item: ItemInt): number {
   if (item.min !== undefined) {
     return item.min;
+  } else if (item.dataType === "float32") {
+    return -10000;
   } else if (
     item.dataType === "int8" ||
     item.dataType === "int16" ||
@@ -86,6 +88,8 @@ export function getIntMax(item: ItemInt): number {
     item.dataType === "int64"
   ) {
     return Math.floor(dataTypeToValue(item.dataType) / 2);
+  } else if (item.dataType === "float32") {
+    return 10000;
   } else if (
     item.dataType === "lower4" ||
     item.dataType === "upper4" ||
