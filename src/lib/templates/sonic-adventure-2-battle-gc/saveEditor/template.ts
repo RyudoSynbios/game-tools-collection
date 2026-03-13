@@ -2394,7 +2394,6 @@ const template: GameJson = {
                   items: [
                     {
                       type: "section",
-                      flex: true,
                       items: [
                         {
                           name: "Slots",
@@ -2469,7 +2468,6 @@ const template: GameJson = {
                   items: [
                     {
                       type: "section",
-                      flex: true,
                       items: [
                         {
                           name: "Slots",

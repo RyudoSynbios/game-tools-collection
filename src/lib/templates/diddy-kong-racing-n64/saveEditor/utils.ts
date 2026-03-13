@@ -191,7 +191,7 @@ export function afterSetInt(item: Item, flag: ItemBitflag): void {
 
     let offset = -shift;
 
-    if ("flags" in item) {
+    if (item.type === "bitflags") {
       const itemBitflags = item as ItemBitflags;
 
       offset += itemBitflags.flags[0].offset;

@@ -111,7 +111,7 @@ export function overrideParseContainerItemsShifts(
 
 export function overrideItem(item: Item): Item {
   if ("id" in item && item.id?.match(/pokemonUnset/)) {
-    if ("flags" in item) {
+    if (item.type === "bitflags") {
       const itemBitflags = item as ItemBitflags;
 
       const [shift] = item.id.splitInt();
@@ -186,6 +186,16 @@ export function overrideItem(item: Item): Item {
     itemInt.disabled = !Boolean(move);
 
     return itemInt;
+  } else if ("id" in item && item.id?.match(/item-/)) {
+    const itemInt = item as ItemInt;
+
+    const [index, shift] = item.id.splitInt();
+
+    const int = getInt(itemInt.offset - index * 0x2 - shift, "uint8");
+
+    itemInt.disabled = index >= int;
+
+    return itemInt;
   } else if ("id" in item && item.id?.match(/hallOfFame-/)) {
     const itemInt = item as ItemInt;
 
@@ -212,16 +222,6 @@ export function overrideItem(item: Item): Item {
     itemInt.disabled = disabled;
 
     return itemInt;
-  } else if ("id" in item && item.id?.match(/item-/)) {
-    const itemInt = item as ItemInt;
-
-    const [index, shift] = item.id.splitInt();
-
-    const int = getInt(itemInt.offset - 0x1 - index * 0x2 - shift, "uint8");
-
-    itemInt.disabled = index >= int;
-
-    return itemInt;
   } else if ("id" in item && item.id === "hallOfFameTabs") {
     const itemTabs = item as ItemTabs;
 
@@ -243,7 +243,7 @@ export function overrideGetInt(
   item: Item,
 ): [boolean, number | string | ItemBitflagChecked[] | undefined] {
   if ("id" in item && item.id?.match(/pokemonUnset/)) {
-    if ("flags" in item) {
+    if (item.type === "bitflags") {
       const itemBitflags = item as ItemBitflags;
 
       const flags = itemBitflags.flags.reduce(
@@ -371,9 +371,9 @@ export function overrideSetInt(item: Item, value: string): boolean {
     if (isDaycare) {
       const int = pokemonIndex === 0xff ? 0x0 : 0x1;
 
-      setInt(statsOffset - 0x17 + japanShift(0xa), "uint8", int); // Pokémon Deposited
+      setInt(statsOffset - 0x17 + japanShift(0xa), "uint8", int); // Is Deposited
     } else {
-      if (previous === 0xff) {
+      if (pokemonIndex !== 0xff && previous === 0xff) {
         setInt(itemInt.offset - index - 0x1, "uint8", index + 0x1); // Slots
         setInt(itemInt.offset + 0x1, "uint8", 0xff); // Next Pokémon
       } else if (pokemonIndex === 0xff) {
@@ -439,7 +439,7 @@ export function afterSetInt(item: Item): void {
         setInt(offset + 0x1, "uint8", 0x0);
       }
     }
-  } else if ("id" in item && item.id?.match(/item-(.*?)-0$/)) {
+  } else if ("id" in item && item.id?.match(/item-(.*?)-1$/)) {
     const itemInt = item as ItemInt;
 
     const itemIndex = getInt(itemInt.offset, "uint8");

@@ -21,8 +21,8 @@ export function pokemonStatsFragment(
               ...(type === "daycare"
                 ? [
                     {
-                      id: "pokemonDeposited",
-                      name: "Pokémon Deposited",
+                      id: "isDeposited",
+                      name: "Is Deposited",
                       offset: depositedOffset,
                       type: "variable",
                       dataType: "uint8",
@@ -134,6 +134,7 @@ export function pokemonStatsFragment(
           {
             type: "section",
             flex: true,
+            noMargin: type !== "party",
             items: [
               ...(type === "party"
                 ? [
@@ -181,6 +182,7 @@ export function pokemonStatsFragment(
                 type: "variable",
                 dataType: "uint16",
                 bigEndian: true,
+                hint: "This stat can be increased with vitamins.",
               },
             ],
           },

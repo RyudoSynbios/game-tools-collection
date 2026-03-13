@@ -1,5 +1,3 @@
-import type { Resource } from "$lib/types";
-
 export const gummiBlocks = [
   {
     name: "Cockpits",

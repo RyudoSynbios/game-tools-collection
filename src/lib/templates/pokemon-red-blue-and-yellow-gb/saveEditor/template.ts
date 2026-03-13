@@ -1,7 +1,15 @@
 import type { GameJson } from "$lib/types";
 
 import { pokemonStatsFragment } from "./utils/fragment";
-import { moves, pokemonList, pokemons, pokemonsOrder } from "./utils/resource";
+import {
+  items,
+  itemsGroups,
+  itemsOrder,
+  moves,
+  pokemonList,
+  pokemons,
+  pokemonsOrder,
+} from "./utils/resource";
 
 const template: GameJson = {
   validator: {
@@ -159,7 +167,7 @@ const template: GameJson = {
                       items: [
                         {
                           id: "japanShift",
-                          name: "Pokémon Dollar",
+                          name: "Money",
                           offset: 0x25f3,
                           type: "variable",
                           dataType: "uint24",
@@ -211,7 +219,6 @@ const template: GameJson = {
                 },
                 {
                   name: "Badges",
-                  flex: true,
                   items: [
                     {
                       type: "bitflags",
@@ -230,33 +237,51 @@ const template: GameJson = {
                 },
                 {
                   name: "Pokédex",
-                  flex: true,
                   items: [
                     {
-                      id: "japanShift",
-                      name: "Seen",
-                      type: "bitflags",
-                      flags: pokemonList.map((pokemon, index) => ({
-                        offset: Math.floor(0x25b6 + index / 0x8),
-                        bit: index % 8,
-                        label: pokemon.name,
-                      })),
+                      type: "section",
+                      flex: true,
+                      items: [
+                        {
+                          name: "Pokédex",
+                          offset: 0x29f7,
+                          type: "variable",
+                          dataType: "bit",
+                          bit: 5,
+                          resource: "booleanObtained",
+                        },
+                      ],
                     },
                     {
-                      id: "japanShift",
-                      name: "Owned",
-                      type: "bitflags",
-                      flags: pokemonList.map((pokemon, index) => ({
-                        offset: Math.floor(0x25a3 + index / 0x8),
-                        bit: index % 8,
-                        label: pokemon.name,
-                      })),
+                      type: "section",
+                      flex: true,
+                      items: [
+                        {
+                          id: "japanShift",
+                          name: "Seen",
+                          type: "bitflags",
+                          flags: pokemonList.map((pokemon, index) => ({
+                            offset: Math.floor(0x25b6 + index / 0x8),
+                            bit: index % 8,
+                            label: pokemon.name,
+                          })),
+                        },
+                        {
+                          id: "japanShift",
+                          name: "Owned",
+                          type: "bitflags",
+                          flags: pokemonList.map((pokemon, index) => ({
+                            offset: Math.floor(0x25a3 + index / 0x8),
+                            bit: index % 8,
+                            label: pokemon.name,
+                          })),
+                        },
+                      ],
                     },
                   ],
                 },
                 {
                   name: "Visited Places",
-                  flex: true,
                   items: [
                     {
                       type: "bitflags",
@@ -404,9 +429,10 @@ const template: GameJson = {
                       instances: 20,
                       vertical: true,
                       flex: true,
+                      noMargin: true,
                       items: [
                         {
-                          id: "item-%index%-0",
+                          id: "item-%index%-1",
                           name: "Item %d",
                           offset: 0x25ca,
                           type: "variable",
@@ -415,11 +441,13 @@ const template: GameJson = {
                           autocomplete: true,
                         },
                         {
-                          id: "item-%index%-1",
+                          id: "item-%index%-2",
                           name: "Quantity",
                           offset: 0x25cb,
                           type: "variable",
                           dataType: "uint8",
+                          min: 1,
+                          max: 99,
                         },
                       ],
                     },
@@ -443,9 +471,10 @@ const template: GameJson = {
                       instances: 50,
                       vertical: true,
                       flex: true,
+                      noMargin: true,
                       items: [
                         {
-                          id: "item-%index%-0",
+                          id: "item-%index%-1",
                           name: "Item %d",
                           offset: 0x27e7,
                           type: "variable",
@@ -454,11 +483,13 @@ const template: GameJson = {
                           autocomplete: true,
                         },
                         {
-                          id: "item-%index%-1",
+                          id: "item-%index%-2",
                           name: "Quantity",
                           offset: 0x27e8,
                           type: "variable",
                           dataType: "uint8",
+                          min: 1,
+                          max: 99,
                         },
                       ],
                     },
@@ -501,6 +532,7 @@ const template: GameJson = {
                   instanceType: "section",
                   instances: 6,
                   flex: true,
+                  noMargin: true,
                   items: [
                     {
                       id: "name-hallOfFame-%index%-2",
@@ -546,14 +578,6 @@ const template: GameJson = {
               flex: true,
               items: [
                 {
-                  name: "Pokédex",
-                  offset: 0x29f7,
-                  type: "variable",
-                  dataType: "bit",
-                  bit: 5,
-                  resource: "booleanObtained",
-                },
-                {
                   id: "yellowExclude",
                   name: "Trainer's Pokémon",
                   offset: 0x29c3,
@@ -569,20 +593,6 @@ const template: GameJson = {
                   dataType: "uint8",
                   resource: "starters",
                 },
-              ],
-            },
-            {
-              type: "bitflags",
-              hidden: true,
-              flags: [
-                { offset: 0x29f7, bit: 0, label: "???", hidden: true },
-                { offset: 0x29f7, bit: 1, label: "???", hidden: true },
-                { offset: 0x29f7, bit: 2, label: "???", hidden: true },
-                { offset: 0x29f7, bit: 3, label: "???", hidden: true },
-                { offset: 0x29f7, bit: 4, label: "???", hidden: true },
-                { offset: 0x29f7, bit: 5, label: "Pokédex obtained" },
-                { offset: 0x29f7, bit: 6, label: "???", hidden: true },
-                { offset: 0x29f7, bit: 7, label: "???", hidden: true },
               ],
             },
           ],
@@ -614,7 +624,7 @@ const template: GameJson = {
                   type: "variable",
                   dataType: "bit",
                   bit: 7,
-                  resource: "battleAnimations",
+                  resource: "optionBooleanReversed",
                 },
                 {
                   name: "Battle Style",
@@ -654,10 +664,6 @@ const template: GameJson = {
     },
   ],
   resources: {
-    battleAnimations: {
-      0x0: "On",
-      0x1: "Off",
-    },
     battleStyles: {
       0x0: "Shift",
       0x1: "Set",
@@ -668,148 +674,7 @@ const template: GameJson = {
     },
     items: {
       0x0: "-",
-      0x1: "Master Ball",
-      0x2: "Ultra Ball",
-      0x3: "Great Ball",
-      0x4: "Poké Ball",
-      0x5: "Town Map",
-      0x6: "Bicycle",
-      // 0x7: "Surf", // Unused
-      0x8: "Safari Ball",
-      // 0x9: "Pokédex", // Unused
-      0xa: "Moon Stone",
-      0xb: "Antidote",
-      0xc: "Burn Heal",
-      0xd: "Ice Heal",
-      0xe: "Awakening",
-      0xf: "Parlyz Heal",
-      0x10: "Full Restore",
-      0x11: "Max Potion",
-      0x12: "Hyper Potion",
-      0x13: "Super Potion",
-      0x14: "Potion",
-      // 0x15: "Boulder Badge", // Unused
-      // 0x16: "Cascade Badge", // Unused
-      // 0x17: "Thunder Badge", // Unused
-      // 0x18: "Rainbow Badge", // Unused
-      // 0x19: "Soul Badge", // Unused
-      // 0x1a: "Marsh Badge", // Unused
-      // 0x1b: "Volcano Badge", // Unused
-      // 0x1c: "Earth Badge", // Unused
-      0x1d: "Escape Rope",
-      0x1e: "Repel",
-      0x1f: "Old Amber",
-      0x20: "Fire Stone",
-      0x21: "Thunder Stone",
-      0x22: "Water Stone",
-      0x23: "HP Up",
-      0x24: "Protein",
-      0x25: "Iron",
-      0x26: "Carbos",
-      0x27: "Calcium",
-      0x28: "Rare Candy",
-      0x29: "Dome Fossil",
-      0x2a: "Helix Fossil",
-      0x2b: "Secret Key",
-      // 0x2c: "?????", // Unused
-      0x2d: "Bike Voucher",
-      0x2e: "X Accuracy",
-      0x2f: "Leaf Stone",
-      0x30: "Card Key",
-      0x31: "Nugget",
-      // 0x32: "PP Up", // Unused
-      0x33: "Poké Doll",
-      0x34: "Full Heal",
-      0x35: "Revive",
-      0x36: "Max Revive",
-      0x37: "Guard Spec.",
-      0x38: "Super Repel",
-      0x39: "Max Repel",
-      0x3a: "Dire Hit",
-      // 0x3b: "Coin", // Unused
-      0x3c: "Fresh Water",
-      0x3d: "Soda Pop",
-      0x3e: "Lemonade",
-      0x3f: "S.S. Ticket",
-      0x40: "Gold Teeth",
-      0x41: "X Attack",
-      0x42: "X Defend",
-      0x43: "X Speed",
-      0x44: "X Special",
-      0x45: "Coin Case",
-      0x46: "Oak's Parcel",
-      0x47: "Item Finder",
-      0x48: "Silph Scope",
-      0x49: "Poké Flute",
-      0x4a: "Lift Key",
-      0x4b: "Exp. All",
-      0x4c: "Old Rod",
-      0x4d: "Good Rod",
-      0x4e: "Super Rod",
-      0x4f: "PP Up",
-      0x50: "Ether",
-      0x51: "Max Ether",
-      0x52: "Elixer",
-      0x53: "Max Elixer",
-      0xc4: "HM01 (Cut)",
-      0xc5: "HM02 (Fly)",
-      0xc6: "HM03 (Surf)",
-      0xc7: "HM04 (Strength)",
-      0xc8: "HM05 (Flash)",
-      0xc9: "TM01 (Mega Punch)",
-      0xca: "TM02 (Razor Wind)",
-      0xcb: "TM03 (Swords Dance)",
-      0xcc: "TM04 (Whirlwind)",
-      0xcd: "TM05 (Mega Kick)",
-      0xce: "TM06 (Toxic)",
-      0xcf: "TM07 (Horn Drill)",
-      0xd0: "TM08 (Body Slam)",
-      0xd1: "TM09 (Take Down)",
-      0xd2: "TM10 (Double-Edge)",
-      0xd3: "TM11 (Bubble Beam)",
-      0xd4: "TM12 (Water Gun)",
-      0xd5: "TM13 (Ice Beam)",
-      0xd6: "TM14 (Blizzard)",
-      0xd7: "TM15 (Hyper Beam)",
-      0xd8: "TM16 (Pay Day)",
-      0xd9: "TM17 (Submission)",
-      0xda: "TM18 (Counter)",
-      0xdb: "TM19 (Seismic Toss)",
-      0xdc: "TM20 (Rage)",
-      0xdd: "TM21 (Mega Drain)",
-      0xde: "TM22 (Solar Beam)",
-      0xdf: "TM23 (Dragon Rage)",
-      0xe0: "TM24 (Thunderbolt)",
-      0xe1: "TM25 (Thunder)",
-      0xe2: "TM26 (Earthquake)",
-      0xe3: "TM27 (Fissure)",
-      0xe4: "TM28 (Dig)",
-      0xe5: "TM29 (Psychic)",
-      0xe6: "TM30 (Teleport)",
-      0xe7: "TM31 (Mimic)",
-      0xe8: "TM32 (Double Team)",
-      0xe9: "TM33 (Reflect)",
-      0xea: "TM34 (Bide)",
-      0xeb: "TM35 (Metronome)",
-      0xec: "TM36 (Self-Destruct)",
-      0xed: "TM37 (Egg Bomb)",
-      0xee: "TM38 (Fire Blast)",
-      0xef: "TM39 (Swift)",
-      0xf0: "TM40 (Skull Bash)",
-      0xf1: "TM41 (Soft-Boiled)",
-      0xf2: "TM42 (Dream Eater)",
-      0xf3: "TM43 (Sky Attack)",
-      0xf4: "TM44 (Rest)",
-      0xf5: "TM45 (Thunder Wave)",
-      0xf6: "TM46 (Psywave)",
-      0xf7: "TM47 (Explosion)",
-      0xf8: "TM48 (Rock Slide)",
-      0xf9: "TM49 (Tri Attack)",
-      0xfa: "TM50 (Substitute)",
-      // 0xfb: "TM51 (Cut)", // Unused
-      // 0xfc: "TM52 (Fly)", // Unused
-      // 0xfd: "TM53 (Surf)", // Unused
-      // 0xfe: "TM54 (Strength)", // Unused
+      ...items,
     },
     letters: [
       // Europe / USA / France / Germany / Italy / Spain
@@ -942,6 +807,7 @@ const template: GameJson = {
         0x46: "ぷ",
         0x47: "ぺ",
         0x48: "ぽ",
+        0x7f: " ",
         0x80: "ア",
         0x81: "イ",
         0x82: "ウ",
@@ -1099,10 +965,14 @@ const template: GameJson = {
       0x0: "-",
       ...moves,
     },
+    optionBooleanReversed: {
+      0x0: "On",
+      0x1: "Off",
+    },
     pokemonNames: "getPokemonNames('party')",
     pokemons: {
-      0xff: "-",
       ...pokemons,
+      0xff: "-",
     },
     prints: {
       0x0: "Lightest",
@@ -1148,71 +1018,10 @@ const template: GameJson = {
     },
   },
   resourcesGroups: {
-    items: [
-      {
-        name: "Poké Balls",
-        options: [0x1, 0x2, 0x3, 0x4, 0x8],
-      },
-      {
-        name: "Medicine",
-        options: [
-          0x10, 0x11, 0x12, 0x13, 0x14, 0xb, 0xc, 0xd, 0xe, 0xf, 0x34, 0x35,
-          0x36, 0x3c, 0x3d, 0x3e, 0x50, 0x51, 0x52, 0x53,
-        ],
-      },
-      {
-        name: "Battle Items",
-        options: [0x2e, 0x37, 0x3a, 0x41, 0x42, 0x43, 0x44],
-      },
-      {
-        name: "Vitamins",
-        options: [0x23, 0x24, 0x25, 0x26, 0x27, 0x28, 0x4f],
-      },
-      {
-        name: "Evolution Stones",
-        options: [0xa, 0x20, 0x21, 0x22, 0x2f],
-      },
-      {
-        name: "Key Items",
-        options: [
-          0x5, 0x6, 0x1f, 0x29, 0x2a, 0x2b, 0x2d, 0x30, 0x3f, 0x40, 0x45, 0x46,
-          0x47, 0x48, 0x49, 0x4a, 0x4c, 0x4d, 0x4e,
-        ],
-      },
-      {
-        name: "Miscellaneous",
-        options: [0x1d, 0x1e, 0x31, 0x33, 0x38, 0x39, 0x4b],
-      },
-      {
-        name: "HMs",
-        options: [0xc4, 0xc5, 0xc6, 0xc7, 0xc8],
-      },
-      {
-        name: "TMs",
-        options: [
-          0xc9, 0xca, 0xcb, 0xcc, 0xcd, 0xce, 0xcf, 0xd0, 0xd1, 0xd2, 0xd3,
-          0xd4, 0xd5, 0xd6, 0xd7, 0xd8, 0xd9, 0xda, 0xdb, 0xdc, 0xdd, 0xde,
-          0xdf, 0xe0, 0xe1, 0xe2, 0xe3, 0xe4, 0xe5, 0xe6, 0xe7, 0xe8, 0xe9,
-          0xea, 0xeb, 0xec, 0xed, 0xee, 0xef, 0xf0, 0xf1, 0xf2, 0xf3, 0xf4,
-          0xf5, 0xf6, 0xf7, 0xf8, 0xf9, 0xfa,
-        ],
-      },
-    ],
+    items: itemsGroups,
   },
   resourcesOrder: {
-    items: [
-      0x4, 0x3, 0x2, 0x1, 0x8, 0x14, 0x13, 0x12, 0x11, 0x10, 0x50, 0x51, 0x52,
-      0x53, 0x35, 0x36, 0xb, 0xc, 0xd, 0xe, 0xf, 0x34, 0x3c, 0x3d, 0x3e, 0x41,
-      0x42, 0x43, 0x44, 0x2e, 0x3a, 0x37, 0x23, 0x4f, 0x24, 0x25, 0x26, 0x27,
-      0x28, 0xa, 0x20, 0x21, 0x22, 0x2f, 0x5, 0x6, 0x1f, 0x29, 0x2a, 0x2b, 0x2d,
-      0x30, 0x3f, 0x40, 0x45, 0x46, 0x47, 0x48, 0x49, 0x4a, 0x4c, 0x4d, 0x4e,
-      0x1d, 0x1e, 0x38, 0x39, 0x31, 0x33, 0x4b, 0xc4, 0xc5, 0xc6, 0xc7, 0xc8,
-      0xc9, 0xca, 0xcb, 0xcc, 0xcd, 0xce, 0xcf, 0xd0, 0xd1, 0xd2, 0xd3, 0xd4,
-      0xd5, 0xd6, 0xd7, 0xd8, 0xd9, 0xda, 0xdb, 0xdc, 0xdd, 0xde, 0xdf, 0xe0,
-      0xe1, 0xe2, 0xe3, 0xe4, 0xe5, 0xe6, 0xe7, 0xe8, 0xe9, 0xea, 0xeb, 0xec,
-      0xed, 0xee, 0xef, 0xf0, 0xf1, 0xf2, 0xf3, 0xf4, 0xf5, 0xf6, 0xf7, 0xf8,
-      0xf9, 0xfa,
-    ],
+    items: itemsOrder,
     pokemons: [0xff, ...pokemonsOrder],
   },
 };

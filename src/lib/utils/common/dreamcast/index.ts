@@ -3,7 +3,7 @@ import { get } from "svelte/store";
 import { dataView } from "$lib/stores";
 import { byteswap, getInt, setInt } from "$lib/utils/bytes";
 
-import { isDciFile } from "./dci";
+import { DCI_HEADER_SIZE, isDciFile } from "./dci";
 
 export enum FileType {
   Data = 0x33,
@@ -12,7 +12,7 @@ export enum FileType {
 
 export function initDataView(dataView: DataView): DataView {
   if (isDciFile(dataView)) {
-    return byteswap(dataView, 0x20);
+    return byteswap(dataView, DCI_HEADER_SIZE);
   }
 
   return dataView;
@@ -22,9 +22,9 @@ export function saveDataView(): ArrayBufferLike {
   const $dataView = get(dataView);
 
   if (isDciFile()) {
-    generateChecksum(0x20);
+    generateChecksum(DCI_HEADER_SIZE);
 
-    return byteswap(undefined, 0x20).buffer;
+    return byteswap(undefined, DCI_HEADER_SIZE).buffer;
   }
 
   return $dataView.buffer;

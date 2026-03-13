@@ -147,7 +147,7 @@ export function japanParseItemAdaptater(item: Item): Item {
     itemString.offset += 0x14a;
 
     return itemString;
-  } else if ("id" in item && item.id === "pokemonDeposited") {
+  } else if ("id" in item && item.id === "isDeposited") {
     const itemInt = item as ItemInt;
 
     itemInt.offset += 0xa;
