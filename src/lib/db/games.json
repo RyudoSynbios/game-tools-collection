@@ -898,6 +898,17 @@
     }
   },
   {
+    "id": "pokemon-gold-silver-and-crystal-gbc",
+    "name": "Pokémon Gold, Silver and Crystal",
+    "consoleId": "game-boy-color",
+    "tools": {
+      "saveEditor": {
+        "createdAt": "2026-03-13",
+        "regions": ["🇪🇺", "🇺🇸", "🇯🇵", "🇫🇷", "🇩🇪", "🇮🇹", "🇪🇸", "🇦🇺"]
+      }
+    }
+  },
+  {
     "id": "pokemon-snap-n64",
     "name": "Pokémon Snap",
     "consoleId": "nintendo-64",
