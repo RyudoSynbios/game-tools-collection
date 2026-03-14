@@ -18,22 +18,22 @@ import {
 export default class Parser {
   private dataView: DataView;
   private offset: number;
-  private json: Json;
-  private types: Types;
+  private _json: Json;
+  private _types: Types;
 
-  constructor(dataView: DataView, offset: number) {
+  constructor(dataView: DataView, offset = 0x0) {
     this.dataView = dataView;
     this.offset = offset;
-    this.json = {};
-    this.types = {};
+    this._json = {};
+    this._types = {};
   }
 
-  public getJson(): Json {
-    return this.json;
+  get json() {
+    return this._json;
   }
 
-  public getTypes(): Types {
-    return this.types;
+  get types() {
+    return this._types;
   }
 
   public parse(): void {
@@ -42,15 +42,19 @@ export default class Parser {
       return;
     }
 
-    this.json = {};
-    this.types = {};
+    this._json = {};
+    this._types = {};
 
     while (this.getString(false) !== "None") {
-      this.parseProperty(this.json, "");
+      this.parseProperty(this._json, "");
     }
   }
 
-  private getInt(
+  public shiftOffset(shift: number): void {
+    this.offset += shift;
+  }
+
+  public getInt(
     dataType: "int8" | "uint8" | "int32" | "uint32" | "float32",
     increment = true,
   ): number {
@@ -63,7 +67,7 @@ export default class Parser {
     return int;
   }
 
-  private getBigInt(dataType: "uint64"): bigint {
+  public getBigInt(dataType: "uint64"): bigint {
     const int = getBigInt(this.offset, dataType, {}, this.dataView);
 
     this.offset += dataTypeToLength(dataType);
@@ -71,7 +75,7 @@ export default class Parser {
     return int;
   }
 
-  private getIdentifier(): string {
+  public getIdentifier(): string {
     let identifier = "";
 
     for (let i = 0x0; i < 0x10; i += 0x1) {
@@ -81,9 +85,17 @@ export default class Parser {
     return identifier;
   }
 
-  private getString(increment = true): string {
-    const length = this.getInt("uint32", increment);
-    const string = getString(this.offset + (!increment ? 0x4 : 0x0), length, "uint8", { endCode: 0x0 }, this.dataView); // prettier-ignore
+  // prettier-ignore
+  public getString(increment = true): string {
+    let length = this.getInt("int32", increment);
+    let dataType: "uint8" | "uint16" = "uint8";
+
+    if (length < 0x0) {
+      dataType = "uint16";
+      length *= -0x2;
+    }
+
+    const string = getString(this.offset + (!increment ? 0x4 : 0x0), length, dataType, { endCode: 0x0 }, this.dataView);
 
     if (increment) {
       this.offset += length;
@@ -104,7 +116,7 @@ export default class Parser {
       propertyType !== PropertyType.Map &&
       propertyType !== PropertyType.Struct
     ) {
-      this.types[path] = propertyType;
+      this._types[path] = propertyType;
     }
 
     switch (propertyType) {
@@ -185,7 +197,7 @@ export default class Parser {
       this.offset += 0x1;
     }
 
-    this.types[path] = `${PropertyType.Array}:${propertyType}`;
+    this._types[path] = `${PropertyType.Array}:${propertyType}`;
 
     for (let i = 0x0; i < count; i += 0x1) {
       switch (propertyType) {
@@ -279,7 +291,7 @@ export default class Parser {
 
     this.offset += 0x1;
 
-    this.types[path] = `${PropertyType.Enum}:${enumName}`;
+    this._types[path] = `${PropertyType.Enum}:${enumName}`;
 
     return this.getString();
   }
@@ -326,7 +338,7 @@ export default class Parser {
 
     const count = this.getInt("uint32");
 
-    this.types[path] = `${PropertyType.Map}:${keyType}-${valueType}`;
+    this._types[path] = `${PropertyType.Map}:${keyType}-${valueType}`;
 
     for (let i = 0x0; i < count; i += 0x1) {
       let key = "";
@@ -348,6 +360,9 @@ export default class Parser {
       }
 
       switch (valueType) {
+        case PropertyType.Bool:
+          map.set(key, this.parseBool(true));
+          break;
         case PropertyType.Int:
           map.set(key, this.parseInt(true));
           break;
@@ -419,9 +434,9 @@ export default class Parser {
 
     if (parentType) {
       const symbol = parentType.match(`^${PropertyType.Array}`) ? ":" : "-";
-      this.types[path] = parentType.replace("($1)", `${symbol}${pathType}`);
+      this._types[path] = parentType.replace("($1)", `${symbol}${pathType}`);
     } else {
-      this.types[path] = pathType;
+      this._types[path] = pathType;
     }
 
     if (type === "Vector") {
@@ -429,7 +444,7 @@ export default class Parser {
       struct.y = this.getInt("float32");
       struct.z = this.getInt("float32");
     } else {
-      this.types[`${path}$ID`] = identifier;
+      this._types[`${path}$ID`] = identifier;
 
       while (this.getString(false) !== "None") {
         this.parseProperty(struct, path);

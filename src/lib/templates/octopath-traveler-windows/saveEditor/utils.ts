@@ -1,45 +1,31 @@
 import { get } from "svelte/store";
 
-import { dataJson, gameTemplate } from "$lib/stores";
-import { getObjKey } from "$lib/utils/format";
+import { dataJson } from "$lib/stores";
 import Gvas from "$lib/utils/gvas";
 import { getJsonInt } from "$lib/utils/json";
-import { checkValidator } from "$lib/utils/validator";
 
-import type { Item, ItemInt, Validator } from "$lib/types";
+import type { Item, ItemInt } from "$lib/types";
 
 import type { BackpackItem } from "./utils/resource";
-
-const PARSER_OFFSET = 0x318;
 
 let gvas: Gvas;
 
 export function beforeInitDataView(dataView: DataView): DataView {
-  const $gameTemplate = get(gameTemplate);
-
-  const regionValidator = $gameTemplate.validator.regions.world as Validator;
-  const key = parseInt(getObjKey(regionValidator, 0));
-  const validator = regionValidator[key];
-
-  if (!checkValidator(validator, key, dataView)) {
-    return dataView;
-  }
-
-  gvas = new Gvas(dataView, PARSER_OFFSET);
-
-  dataJson.set(gvas.parseToJson());
+  gvas = new Gvas(dataView);
 
   return dataView;
 }
 
 export function overrideGetRegions(): string[] {
-  const $dataJson = get(dataJson);
-
-  if ($dataJson?.GamePlaySecond !== undefined) {
+  if (gvas.header.saveType === "KSSaveGameBP_C") {
     return ["world"];
   }
 
   return [];
+}
+
+export function beforeItemsParsing(): void {
+  dataJson.set(gvas.parseToJson());
 }
 
 export function overrideGetInt(item: Item): [boolean, number | undefined] {

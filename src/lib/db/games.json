@@ -77,6 +77,17 @@
     }
   },
   {
+    "id": "bloodstained-ritual-of-the-night-windows",
+    "name": "Bloodstained: Ritual of the Night",
+    "consoleId": "windows",
+    "tools": {
+      "saveEditor": {
+        "createdAt": "2026-04-14",
+        "regions": ["🏳️"]
+      }
+    }
+  },
+  {
     "id": "bomberman-64-n64",
     "name": "Bomberman 64",
     "consoleId": "nintendo-64",

@@ -38,7 +38,7 @@
 
   onMount(() => {
     $onSave = () => {
-      const buffer = iso.getBuffer() as ArrayBuffer;
+      const buffer = iso.buffer as ArrayBuffer;
 
       const blob = new Blob([buffer], {
         type: "application/octet-stream",

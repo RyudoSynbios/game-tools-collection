@@ -462,7 +462,6 @@ export function getInt(
 
   if (offset < 0x0) {
     debug.error("Tried to read a negative offset.");
-
     return 0x0;
   } else if (
     $dataView.byteLength === 0 ||
@@ -471,7 +470,6 @@ export function getInt(
     debug.error(
       `Tried to read bytes past the end of a buffer at offset 0x${offset.toHex()} of 0x${$dataView.byteLength.toHex()}.`,
     );
-
     return 0x0;
   }
 
@@ -551,7 +549,6 @@ export function setInt(
 
   if (offset < 0x0) {
     debug.error("Tried to write to a negative offset.");
-
     return;
   } else if (
     $dataView.byteLength === 0 ||
@@ -560,7 +557,6 @@ export function setInt(
     debug.error(
       `Tried to write bytes past the end of a buffer at offset 0x${offset.toHex()} of 0x${$dataView.byteLength.toHex()}.`,
     );
-
     return;
   }
 
@@ -688,7 +684,6 @@ export function getBigInt(
 
   if (offset < 0x0) {
     debug.error("Tried to read a negative offset.");
-
     return BigInt(0x0);
   } else if (
     $dataView.byteLength === 0 ||
@@ -697,7 +692,6 @@ export function getBigInt(
     debug.error(
       `Tried to read bytes past the end of a buffer at offset 0x${offset.toHex()} of 0x${$dataView.byteLength.toHex()}.`,
     );
-
     return BigInt(0x0);
   }
 
@@ -733,7 +727,6 @@ export function setBigInt(
 
   if (offset < 0x0) {
     debug.error("Tried to write to a negative offset.");
-
     return;
   } else if (
     $dataView.byteLength === 0 ||
@@ -742,7 +735,6 @@ export function setBigInt(
     debug.error(
       `Tried to write bytes past the end of a buffer at offset 0x${offset.toHex()} of 0x${$dataView.byteLength.toHex()}.`,
     );
-
     return;
   }
 
@@ -1073,11 +1065,20 @@ export function float32ToInt(float: number): number {
   return tmp.getUint32(0x0);
 }
 
-export function stringToArray(string: string, endCode?: number): number[] {
+export function stringToArray(
+  string: string,
+  endCode?: number,
+  letterDataType: "uint8" | "uint16" = "uint8",
+): number[] {
   const array = [];
 
   for (let i = 0; i < string.length; i += 1) {
-    array.push(string.charCodeAt(i));
+    if (letterDataType === "uint8") {
+      array.push(string.charCodeAt(i));
+    } else if (letterDataType === "uint16") {
+      array.push(string.charCodeAt(i) & 0xff);
+      array.push(string.charCodeAt(i) >> 0x8);
+    }
   }
 
   if (endCode !== undefined) {

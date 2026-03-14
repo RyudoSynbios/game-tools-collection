@@ -13,12 +13,7 @@ const template: GameJson = {
   validator: {
     fileNames: [/^((?!SYSTEM).)*$/],
     regions: {
-      world: {
-        0x516: [
-          0x46, 0x61, 0x69, 0x72, 0x2e, 0x46, 0x61, 0x69, 0x72, 0x53, 0x61,
-          0x76, 0x65, 0x47, 0x61, 0x6d, 0x65,
-        ], // "Fair.FairSaveGame"
-      },
+      world: {},
     },
     text: "Drag 'n' drop here or click to add a save file.",
     hint: "Designed to work with v1.0.3.\nOther versions may work, but may corrupt the save.\nPlease make a backup before editing.",

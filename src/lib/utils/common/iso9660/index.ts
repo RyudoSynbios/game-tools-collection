@@ -107,11 +107,15 @@ export default class Iso9660 {
     };
 
     if (!isIso9660File(dataView)) {
-      debug.error("Not a ISO9660 valid file.");
+      debug.error("Not a valid ISO9660 file.");
       return;
     }
 
     this.init();
+  }
+
+  get buffer() {
+    return this.dataView.buffer;
   }
 
   get root() {
@@ -171,10 +175,6 @@ export default class Iso9660 {
       "",
       this.volume.root,
     );
-  }
-
-  public getBuffer(): ArrayBufferLike {
-    return this.dataView.buffer;
   }
 
   private getSectorOffset(sector: number, addSectorHeaderSize = true): number {

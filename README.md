@@ -13,6 +13,7 @@ Link to the website: [https://game-tools-collection.com](https://game-tools-coll
 | Akumajou Dracula X: Chi no Rondo             | PCECD    | Save                    | JAP                                           |
 | Banjo-Kazooie                                | N64      | Save                    | EUR / USA / JAP                               |
 | Banjo-Tooie                                  | N64      | Save                    | EUR / USA / JAP                               |
+| Bloodstained: Ritual of the Night            | PC       | Save                    | WORLD                                         |
 | Bomberman 64                                 | N64      | Save / Rom              | EUR / USA / JAP                               |
 | Bouncer, The                                 | PS2      | Save                    | EUR / USA / JAP                               |
 | Castlevania                                  | N64      | Save                    | EUR / USA / JAP                               |
