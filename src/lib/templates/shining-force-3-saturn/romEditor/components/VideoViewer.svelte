@@ -2,7 +2,7 @@
   import { onDestroy, onMount } from "svelte";
 
   import Canvas from "$lib/utils/canvas";
-  import { isCpk, unpackCpk } from "$lib/utils/common/saturn";
+  import { isCpk, unpackCpk } from "$lib/utils/common/saturn/cpk";
 
   import { getFileData } from "../utils";
 
