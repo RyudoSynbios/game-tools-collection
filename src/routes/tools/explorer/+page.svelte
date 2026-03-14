@@ -17,14 +17,16 @@
   import { isGCMFile } from "$lib/utils/common/gamecube/gcm";
   import { isIso9660File } from "$lib/utils/common/iso9660";
   import { isBackupRam } from "$lib/utils/common/saturn/backupRam";
+  import { isGVASFile } from "$lib/utils/gvas";
   import { reset } from "$lib/utils/state";
 
   import BackupRam from "./backupRam/index.svelte";
   import GCM from "./gcm/index.svelte";
+  import GVAS from "./gvas/index.svelte";
   import Iso9660 from "./iso9660/index.svelte";
   import VMU from "./vmu/index.svelte";
 
-  type FileType = "backupRam" | "gcm" | "iso9660" | "vmu";
+  type FileType = "backupRam" | "gcm" | "gvas" | "iso9660" | "vmu";
 
   let typeEl: HTMLSelectElement;
 
@@ -36,6 +38,7 @@
   const types: { [key in FileType]: (dataView: DataView) => boolean } = {
     backupRam: isBackupRam,
     gcm: isGCMFile,
+    gvas: isGVASFile,
     iso9660: isIso9660File,
     vmu: isVmuFile,
   };
@@ -100,6 +103,7 @@
             <option value="iso9660">ISO 9660</option>
             <option value="backupRam">Backup Ram</option>
             <option value="gcm">GCM</option>
+            <option value="gvas">GVAS</option>
             <option value="vmu">VMU</option>
           </select>
         </div>
@@ -137,6 +141,8 @@
           <BackupRam {fileName} {dataView} />
         {:else if fileType === "gcm"}
           <GCM {fileName} {dataView} />
+        {:else if fileType === "gvas"}
+          <GVAS {fileName} {dataView} />
         {:else if fileType === "iso9660"}
           <Iso9660 {fileName} {dataView} />
         {:else if fileType === "vmu"}

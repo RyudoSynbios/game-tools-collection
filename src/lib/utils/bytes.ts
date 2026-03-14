@@ -1073,11 +1073,20 @@ export function float32ToInt(float: number): number {
   return tmp.getUint32(0x0);
 }
 
-export function stringToArray(string: string, endCode?: number): number[] {
+export function stringToArray(
+  string: string,
+  endCode?: number,
+  dataType: "uint8" | "uint16" = "uint8",
+): number[] {
   const array = [];
 
   for (let i = 0; i < string.length; i += 1) {
-    array.push(string.charCodeAt(i));
+    if (dataType === "uint8") {
+      array.push(string.charCodeAt(i));
+    } else if (dataType === "uint16") {
+      array.push(string.charCodeAt(i) & 0xff);
+      array.push(string.charCodeAt(i) >> 0x8);
+    }
   }
 
   if (endCode !== undefined) {

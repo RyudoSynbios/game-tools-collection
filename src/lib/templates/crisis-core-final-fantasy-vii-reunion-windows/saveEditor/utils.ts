@@ -1,9 +1,8 @@
 import { get } from "svelte/store";
 
-import { dataViewAlt, gameTemplate } from "$lib/stores";
+import { dataViewAlt } from "$lib/stores";
 import { getInt, setInt } from "$lib/utils/bytes";
 import { formatChecksum } from "$lib/utils/checksum";
-import { getObjKey } from "$lib/utils/format";
 import Gvas from "$lib/utils/gvas";
 import { getItem, getResource, updateResources } from "$lib/utils/parser";
 import { checkValidator } from "$lib/utils/validator";
@@ -14,29 +13,20 @@ import type {
   ItemContainer,
   ItemInt,
   Resource,
-  Validator,
 } from "$lib/types";
 
 import { decryptData, encryptData } from "./utils/crypto";
 import { c0, c1, c2, c3, c4, c5, c6, c7 } from "./utils/lookupTable";
 import { materiaList } from "./utils/resource";
 
-const PARSER_OFFSET = 0x528;
-
 let gvas: Gvas;
 
 export function beforeInitDataView(dataView: DataView): DataView {
-  const $gameTemplate = get(gameTemplate);
+  gvas = new Gvas(dataView);
 
-  const regionValidator = $gameTemplate.validator.regions.world as Validator;
-  const key = parseInt(getObjKey(regionValidator, 0));
-  const validator = regionValidator[key];
-
-  if (!checkValidator(validator, key, dataView)) {
+  if (!gvas.header.saveType.match(/Fair.FairSaveGame/)) {
     return dataView;
   }
-
-  gvas = new Gvas(dataView, PARSER_OFFSET);
 
   const json = gvas.parseToJson();
 

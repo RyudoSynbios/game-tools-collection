@@ -21,13 +21,7 @@ import {
 const template: GameJson = {
   validator: {
     regions: {
-      world: {
-        0x53e: [
-          0x4b, 0x53, 0x53, 0x61, 0x76, 0x65, 0x47, 0x61, 0x6d, 0x65, 0x42,
-          0x50, 0x2e, 0x4b, 0x53, 0x53, 0x61, 0x76, 0x65, 0x47, 0x61, 0x6d,
-          0x65, 0x42, 0x50, 0x5f, 0x43,
-        ], // "KSSaveGameBP.KSSaveGameBP_C"
-      },
+      world: {},
     },
     text: "Drag 'n' drop here or click to add a save file.",
     hint: "Designed to work with v1.1.0.\nOther versions may work, but may corrupt the save.\nPlease make a backup before editing.",

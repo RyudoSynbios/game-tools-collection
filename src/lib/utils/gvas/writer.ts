@@ -19,54 +19,83 @@ import {
 import { isObjIsEmpty } from "../format";
 
 export default class Writer {
-  private dataView: DataView;
-  private offset: number;
+  private bufferSize: number;
   private json: Json;
   private types: Types;
-  private buffer: Uint8Array;
+  private initData: Uint8Array;
+  private offset: number;
+  private _buffer: Uint8Array;
 
-  constructor(dataView: DataView, offset: number, json: Json, types: Types) {
-    this.dataView = dataView;
-    this.offset = offset;
+  constructor(
+    bufferSize: number,
+    json: Json = {},
+    types: Types = {},
+    initData: Uint8Array = new Uint8Array(),
+    offset = 0x0,
+  ) {
+    this.bufferSize = bufferSize;
     this.json = json;
     this.types = types;
-    this.buffer = new Uint8Array();
+    this.initData = initData;
+    this.offset = offset;
+    this._buffer = new Uint8Array(bufferSize);
   }
 
-  public getBuffer(): ArrayBufferLike {
-    return this.buffer.buffer;
+  get buffer() {
+    return this._buffer.buffer;
   }
 
-  public write(): void {
-    if (isObjIsEmpty(this.json)) {
+  public write(json: Json = {}, end = true, resetBuffer = false): void {
+    if (isObjIsEmpty(json)) {
+      json = this.json;
+    }
+
+    if (isObjIsEmpty(json)) {
       debug.error("JSON is empty.");
       return;
     }
 
-    this.buffer = new Uint8Array(0x1000000);
+    if (resetBuffer) {
+      this._buffer = new Uint8Array(this.bufferSize);
+    }
 
-    const header = new Uint8Array(this.dataView.buffer.slice(0x0, this.offset));
+    if (this.initData.byteLength > 0) {
+      this._buffer.set(this.initData);
+    }
 
-    this.buffer.set(header);
-
-    Object.entries(this.json).forEach(([key, value]) => {
+    Object.entries(json).forEach(([key, value]) => {
       this.writeProperty(key, value);
     });
 
-    this.setString("None");
+    if (end) {
+      this.setString("None");
 
-    this.buffer = this.buffer.slice(0x0, this.offset + 0x4);
+      this.end(0x4);
+    }
   }
 
-  private setInt(
+  public shiftOffset(shift: number): void {
+    this.offset += shift;
+  }
+
+  public end(shift = 0x0): void {
+    this._buffer = this._buffer.slice(0x0, this.offset + shift);
+  }
+
+  public setInt(
     int: number,
-    dataType: "int8" | "uint8" | "int32" | "uint32",
+    dataType: "int8" | "uint8" | "int32" | "uint32" | "float32",
     offset?: number,
   ): void {
+    if (dataType === "float32") {
+      int = float32ToInt(int);
+      dataType = "uint32";
+    }
+
     if (dataType === "int8" || dataType === "uint8") {
-      this.buffer.set([int], this.offset);
+      this._buffer.set([int], this.offset);
     } else {
-      this.buffer.set(intToArray(int, dataType), offset || this.offset);
+      this._buffer.set(intToArray(int, dataType), offset || this.offset);
     }
 
     if (offset === undefined) {
@@ -74,7 +103,7 @@ export default class Writer {
     }
   }
 
-  private setBigInt(int: bigint, dataType: "uint64"): void {
+  public setBigInt(int: bigint, dataType: "uint64"): void {
     const array: number[] = [];
 
     const long = Long.fromBigInt(int);
@@ -88,12 +117,12 @@ export default class Writer {
       );
     }
 
-    this.buffer.set(array, this.offset);
+    this._buffer.set(array, this.offset);
 
     this.offset += dataTypeToLength(dataType);
   }
 
-  private setIdentifier(key: string, type: string): void {
+  public setIdentifier(key: string, type: string): void {
     if (type === "Vector") {
       this.offset += 0x10;
       return;
@@ -110,20 +139,33 @@ export default class Writer {
     }
   }
 
-  private setString(string: string): void {
-    const length = string.length + 0x1;
+  public setString(string: string): void {
+    let length = string.length + 0x1;
+    let dataType: "uint8" | "uint16" = "uint8";
+    let shift = length;
+
+    if (string.match(/è|é|’/)) {
+      length *= -1;
+      dataType = "uint16";
+      shift *= 0x2;
+    }
 
     this.setInt(length, "uint32");
 
-    this.buffer.set(stringToArray(string, 0x0), this.offset);
+    this._buffer.set(stringToArray(string, 0x0, dataType), this.offset);
 
-    this.offset += length;
+    this.offset += shift;
   }
 
   private writeProperty(key: string, value: any, parentKey = ""): void {
-    this.setString(key);
-
     const typeKey = `${parentKey ? `${parentKey}.` : ""}${key}`;
+
+    if (this.types[typeKey] === undefined) {
+      debug.warn(`Unknown "${typeKey}" type.`);
+      return;
+    }
+
+    this.setString(key);
 
     const [mainPropertyType, subPropertyType] =
       this.types[typeKey].split(/:(.*)/);
@@ -143,6 +185,9 @@ export default class Writer {
       case PropertyType.Enum:
         this.writeEnum(subPropertyType, value);
         break;
+      case PropertyType.Float:
+        this.writeFloat(value);
+        break;
       case PropertyType.Int:
         this.writeInt(value);
         break;
@@ -151,6 +196,9 @@ export default class Writer {
         break;
       case PropertyType.Name:
         this.writeName(value);
+        break;
+      case PropertyType.Str:
+        this.writeStr(value);
         break;
       case PropertyType.Struct:
         this.writeStruct(typeKey, subPropertyType, value);
@@ -200,8 +248,14 @@ export default class Writer {
         case PropertyType.Byte:
           this.writeByte(value, true);
           break;
+        case PropertyType.Float:
+          this.writeFloat(value, true);
+          break;
         case PropertyType.Int:
           this.writeInt(value, true);
+          break;
+        case PropertyType.Name:
+          this.setString(value);
           break;
         case PropertyType.Struct:
           this.writeStruct(parentKey, structType, value, true);
@@ -223,10 +277,13 @@ export default class Writer {
     }
   }
 
-  private writeBool(bool: boolean): void {
-    this.offset += 0x8;
+  private writeBool(bool: boolean, isArray = false): void {
+    if (!isArray) {
+      this.offset += 0x8;
+    }
+
     this.setInt(bool ? 0x1 : 0x0, "uint8");
-    this.offset += 0x1;
+    this.offset += !isArray ? 0x1 : 0x0;
   }
 
   private writeByte(byte: number | string, isArray = false): void {
@@ -262,6 +319,15 @@ export default class Writer {
     this.setString(enumType);
     this.offset += 0x1;
     this.setString(enums);
+  }
+
+  private writeFloat(int: number, isArray = false): void {
+    if (!isArray) {
+      this.setInt(0x4, "int32");
+      this.offset += 0x5;
+    }
+
+    this.setInt(int, "float32");
   }
 
   private writeInt(int: number, isArray = false): void {
@@ -301,15 +367,27 @@ export default class Writer {
 
     map.entries().forEach(([key, value]) => {
       switch (keyType) {
+        case PropertyType.Byte:
+          this.writeByte(key, true);
+          break;
         case PropertyType.Enum:
           this.setString(key);
           break;
         case PropertyType.Int:
           this.setInt(parseInt(key), "uint32");
           break;
+        case PropertyType.Name:
+          this.setString(key);
+          break;
       }
 
       switch (valueMainType) {
+        case PropertyType.Bool:
+          this.writeBool(value as boolean, true);
+          break;
+        case PropertyType.Float:
+          this.writeFloat(value as number, true);
+          break;
         case PropertyType.Int:
           this.writeInt(value as number, true);
           break;
@@ -331,6 +409,12 @@ export default class Writer {
   }
 
   private writeName(name: string): void {
+    this.setInt(name.length + 0x5, "uint32");
+    this.offset += 0x5;
+    this.setString(name);
+  }
+
+  private writeStr(name: string): void {
     this.setInt(name.length + 0x5, "uint32");
     this.offset += 0x5;
     this.setString(name);
