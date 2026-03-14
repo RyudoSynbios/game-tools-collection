@@ -60,9 +60,14 @@ export default class Writer {
 
   private setInt(
     int: number,
-    dataType: "int8" | "uint8" | "int32" | "uint32",
+    dataType: "int8" | "uint8" | "int32" | "uint32" | "float32",
     offset?: number,
   ): void {
+    if (dataType === "float32") {
+      int = float32ToInt(int);
+      dataType = "uint32";
+    }
+
     if (dataType === "int8" || dataType === "uint8") {
       this.buffer.set([int], this.offset);
     } else {
@@ -143,6 +148,9 @@ export default class Writer {
       case PropertyType.Enum:
         this.writeEnum(subPropertyType, value);
         break;
+      case PropertyType.Float:
+        this.writeFloat(value);
+        break;
       case PropertyType.Int:
         this.writeInt(value);
         break;
@@ -151,6 +159,9 @@ export default class Writer {
         break;
       case PropertyType.Name:
         this.writeName(value);
+        break;
+      case PropertyType.Str:
+        this.writeStr(value);
         break;
       case PropertyType.Struct:
         this.writeStruct(typeKey, subPropertyType, value);
@@ -200,8 +211,14 @@ export default class Writer {
         case PropertyType.Byte:
           this.writeByte(value, true);
           break;
+        case PropertyType.Float:
+          this.writeFloat(value, true);
+          break;
         case PropertyType.Int:
           this.writeInt(value, true);
+          break;
+        case PropertyType.Name:
+          this.setString(value);
           break;
         case PropertyType.Struct:
           this.writeStruct(parentKey, structType, value, true);
@@ -264,6 +281,15 @@ export default class Writer {
     this.setString(enums);
   }
 
+  private writeFloat(int: number, isArray = false): void {
+    if (!isArray) {
+      this.setInt(0x4, "int32");
+      this.offset += 0x5;
+    }
+
+    this.setInt(int, "float32");
+  }
+
   private writeInt(int: number, isArray = false): void {
     if (!isArray) {
       this.setInt(0x4, "int32");
@@ -307,6 +333,9 @@ export default class Writer {
         case PropertyType.Int:
           this.setInt(parseInt(key), "uint32");
           break;
+        case PropertyType.Name:
+          this.setString(key);
+          break;
       }
 
       switch (valueMainType) {
@@ -331,6 +360,12 @@ export default class Writer {
   }
 
   private writeName(name: string): void {
+    this.setInt(name.length + 0x5, "uint32");
+    this.offset += 0x5;
+    this.setString(name);
+  }
+
+  private writeStr(name: string): void {
     this.setInt(name.length + 0x5, "uint32");
     this.offset += 0x5;
     this.setString(name);

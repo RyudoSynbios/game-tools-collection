@@ -120,6 +120,9 @@ export default class Parser {
       case PropertyType.Enum:
         parent[propertyName] = this.parseEnum(path);
         break;
+      case PropertyType.Float:
+        parent[propertyName] = this.parseFloat();
+        break;
       case PropertyType.Int:
         parent[propertyName] = this.parseInt();
         break;
@@ -128,6 +131,9 @@ export default class Parser {
         break;
       case PropertyType.Name:
         parent[propertyName] = this.parseName();
+        break;
+      case PropertyType.Str:
+        parent[propertyName] = this.parseStr();
         break;
       case PropertyType.Struct:
         parent[propertyName] = this.parseStruct(path);
@@ -189,8 +195,14 @@ export default class Parser {
         case PropertyType.Byte:
           array.push(this.parseByte(isEnum, true));
           break;
+        case PropertyType.Float:
+          array.push(this.parseFloat(true));
+          break;
         case PropertyType.Int:
           array.push(this.parseInt(true));
+          break;
+        case PropertyType.Name:
+          array.push(this.parseName(true));
           break;
         case PropertyType.Struct:
           array.push(
@@ -272,6 +284,16 @@ export default class Parser {
     return this.getString();
   }
 
+  private parseFloat(isArray = false): number {
+    if (!isArray) {
+      // const blockLength = this.getInt("uint32");
+
+      this.offset += 0x9;
+    }
+
+    return this.getInt("float32");
+  }
+
   private parseInt(isArray = false): number {
     if (!isArray) {
       // const blockLength = this.getInt("uint32");
@@ -316,6 +338,9 @@ export default class Parser {
         case PropertyType.Int:
           key = `${this.parseInt(true)}`;
           break;
+        case PropertyType.Name:
+          key = this.parseName(true);
+          break;
         default:
           throw new Error(
             `Key type "${keyType}" on MapProperty "parseMap()" is not handled yet (${this.offset.toHex(0, true)}).`,
@@ -351,6 +376,16 @@ export default class Parser {
   }
 
   private parseName(isArray = false): string {
+    if (!isArray) {
+      // const blockLength = this.getInt("uint32");
+
+      this.offset += 0x9;
+    }
+
+    return this.getString();
+  }
+
+  private parseStr(isArray = false): string {
     if (!isArray) {
       // const blockLength = this.getInt("uint32");
 

@@ -9,10 +9,12 @@ export enum PropertyType {
   Bool = "BoolProperty",
   Byte = "ByteProperty",
   Enum = "EnumProperty",
+  Float = "FloatProperty",
   Int = "IntProperty",
   Int8 = "Int8Property",
   Map = "MapProperty",
   Name = "NameProperty",
+  Str = "StrProperty",
   Struct = "StructProperty",
   UInt64 = "UInt64Property",
 }
@@ -44,7 +46,7 @@ export default class Gvas {
   private json: Json;
   private types: Types;
 
-  constructor(dataView: DataView, offset: number) {
+  constructor(dataView: DataView, offset = 0x0) {
     this.dataView = dataView;
     this.offset = offset;
     this.json = {};
