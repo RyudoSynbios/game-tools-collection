@@ -1,3 +1,4 @@
+import FileSaver from "file-saver";
 import { get } from "svelte/store";
 
 import { debugOptions, isDebug } from "$lib/stores";
@@ -37,6 +38,27 @@ class Debug {
     if (this.canPrint()) {
       console.log(`%c${data}`, `color: ${color};`);
     }
+  }
+
+  public dumpBinary(
+    data: Uint8Array | Uint16Array | Uint32Array,
+    name = "dump",
+  ): void {
+    const buffer = data.buffer as ArrayBuffer;
+
+    const blob = new Blob([buffer], {
+      type: "application/octet-stream",
+    });
+
+    FileSaver.saveAs(blob, name);
+  }
+
+  public dumpJson(data: JSON, name = "dump"): void {
+    const blob = new Blob([JSON.stringify(data)], {
+      type: "octet-stream/json",
+    });
+
+    FileSaver.saveAs(blob, name);
   }
 
   public error(...data: unknown[]): void {
