@@ -134,7 +134,7 @@ export function isInRange(value: number, min: number, max: number) {
   return value >= min && value <= max;
 }
 
-export function isObjIsEmpty(obj: { [key: string]: any }): boolean {
+export function isObjEmpty(obj: { [key: string]: any }): boolean {
   return !obj || Object.keys(obj).length === 0;
 }
 

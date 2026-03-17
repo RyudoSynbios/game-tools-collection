@@ -16,7 +16,7 @@ import {
   type StructProperty,
   type Types,
 } from ".";
-import { isObjIsEmpty } from "../format";
+import { isObjEmpty } from "../format";
 
 export default class Writer {
   private bufferSize: number;
@@ -46,11 +46,11 @@ export default class Writer {
   }
 
   public write(json: Json = {}, end = true, resetBuffer = false): void {
-    if (isObjIsEmpty(json)) {
+    if (isObjEmpty(json)) {
       json = this.json;
     }
 
-    if (isObjIsEmpty(json)) {
+    if (isObjEmpty(json)) {
       debug.error("JSON is empty.");
       return;
     }

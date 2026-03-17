@@ -8,7 +8,7 @@ import { extractBit, injectBit } from "./bytes";
 import debug from "./debug";
 import {
   getPartialValue,
-  isObjIsEmpty,
+  isObjEmpty,
   isPartial,
   makeOperations,
 } from "./format";
@@ -196,7 +196,7 @@ export function getJsonValue<T>(
 ): T {
   const $dataJson = get(dataJson);
 
-  if (isObjIsEmpty(obj) && !isObjIsEmpty($dataJson)) {
+  if (isObjEmpty(obj) && !isObjEmpty($dataJson)) {
     obj = $dataJson;
   } else {
     debug.error("JSON is empty.");
@@ -249,7 +249,7 @@ export function setJsonValue<T>(
 
   let updateDataJson = false;
 
-  if (isObjIsEmpty(obj) && !isObjIsEmpty($dataJson)) {
+  if (isObjEmpty(obj) && !isObjEmpty($dataJson)) {
     obj = $dataJson;
     updateDataJson = true;
   } else {

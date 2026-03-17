@@ -448,6 +448,7 @@ function checkMissingFields(item: Item): void {
       "bitflags",
       "component",
       "container",
+      "message",
       "group",
       "section",
       "tabs",

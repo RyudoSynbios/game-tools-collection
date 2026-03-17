@@ -357,7 +357,7 @@ export function beforeSaving(): ArrayBufferLike {
     }
   });
 
-  return iso.getBuffer();
+  return iso.buffer;
 }
 
 export function onReset(): void {

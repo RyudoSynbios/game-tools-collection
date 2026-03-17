@@ -1,5 +1,5 @@
 import debug from "$lib/utils/debug";
-import { isObjIsEmpty } from "$lib/utils/format";
+import { isObjEmpty } from "$lib/utils/format";
 
 import { getInt, getString } from "../bytes";
 import Parser from "./parser";
@@ -167,7 +167,7 @@ export default class Gvas {
   }
 
   public updateJson(json: Json): void {
-    if (isObjIsEmpty(json)) {
+    if (isObjEmpty(json)) {
       debug.error("JSON is empty.");
       return;
     }
