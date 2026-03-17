@@ -9,11 +9,23 @@ const template: GameJson = {
           0x30,
         ], // "BESLES-00200"
       },
+      directorscut_europe: {
+        0x0: [
+          0x42, 0x45, 0x53, 0x4c, 0x45, 0x53, 0x2d, 0x30, 0x30, 0x39, 0x36,
+          0x39,
+        ], // "BESLES-00969"
+      },
       usa: {
         0x0: [
           0x42, 0x41, 0x53, 0x4c, 0x55, 0x53, 0x2d, 0x30, 0x30, 0x31, 0x37,
           0x30,
         ], // "BASLUS-00170"
+      },
+      directorscut_usa: {
+        0x0: [
+          0x42, 0x41, 0x53, 0x4c, 0x55, 0x53, 0x2d, 0x30, 0x30, 0x35, 0x35,
+          0x31,
+        ], // "BASLUS-00551"
       },
       japan: {
         0x0: [
@@ -21,17 +33,35 @@ const template: GameJson = {
           0x32,
         ], // "BISLPS-00222"
       },
+      directorscut_japan: {
+        0x0: [
+          0x42, 0x49, 0x53, 0x4c, 0x50, 0x53, 0x2d, 0x30, 0x30, 0x39, 0x39,
+          0x38,
+        ], // "BISLPS-00998"
+      },
       france: {
         0x0: [
           0x42, 0x45, 0x53, 0x4c, 0x45, 0x53, 0x2d, 0x30, 0x30, 0x32, 0x32,
           0x37,
         ], // "BESLES-00227"
       },
+      directorscut_france: {
+        0x0: [
+          0x42, 0x45, 0x53, 0x4c, 0x45, 0x53, 0x2d, 0x30, 0x30, 0x39, 0x37,
+          0x30,
+        ], // "BESLES-00970"
+      },
       germany: {
         0x0: [
           0x42, 0x45, 0x53, 0x4c, 0x45, 0x53, 0x2d, 0x30, 0x30, 0x32, 0x32,
           0x38,
         ], // "BESLES-00228"
+      },
+      directorscut_germany: {
+        0x0: [
+          0x42, 0x45, 0x53, 0x4c, 0x45, 0x53, 0x2d, 0x30, 0x30, 0x39, 0x37,
+          0x31,
+        ], // "BESLES-00971"
       },
     },
     text: "Drag 'n' drop here or click to add a save file.",
@@ -411,6 +441,13 @@ const template: GameJson = {
                       name: "General",
                       flex: true,
                       items: [
+                        {
+                          id: "message",
+                          type: "message",
+                          message:
+                            "This section is designed to work with the original game. Some flags may not work with the Director's Cut version.",
+                          hidden: true,
+                        },
                         {
                           name: "Chris Redfield",
                           type: "bitflags",

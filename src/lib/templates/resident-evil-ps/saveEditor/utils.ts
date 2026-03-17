@@ -34,12 +34,22 @@ export function initShifts(shifts: number[]): number[] {
 export function overrideParseItem(item: Item): Item {
   const $gameRegion = get(gameRegion);
 
-  if ("id" in item && item.id === "time" && [1, 2].includes($gameRegion)) {
+  if (
+    "id" in item &&
+    item.id === "time" &&
+    [2, 3, 4, 5].includes($gameRegion)
+  ) {
     const itemInt = item as ItemInt;
 
     itemInt.operations![0] = { "/": 60 };
 
     return itemInt;
+  } else if ("id" in item && item.id === "message") {
+    const itemMessage = item as ItemMessage;
+
+    itemMessage.hidden = [0, 2, 4, 6, 8].includes($gameRegion);
+
+    return itemMessage;
   }
 
   return item;
