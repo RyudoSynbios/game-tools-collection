@@ -215,16 +215,29 @@ export function getJsonValue<T>(
 
     obj = obj[key];
 
-    path[i].matchAll(/\[(\d+)\]/g).forEach((match) => {
-      if (obj[match[1]] === undefined) {
-        debug.error(
-          `Array index "${match[1]}" of key "${key} on path "${pathname}" not found.`,
-        );
-        return defaultValue;
-      }
+    if (obj instanceof Map) {
+      path[i].matchAll(/\[(.*?)\]/gi).forEach((match) => {
+        if (i !== path.length - 1 && obj.get(match[1]) === undefined) {
+          debug.error(
+            `Map index "${match[1]}" of key "${key} on path "${pathname}" not found.`,
+          );
+          return defaultValue;
+        }
 
-      obj = obj[match[1]];
-    });
+        obj = obj.get(match[1]);
+      });
+    } else if (Array.isArray(obj)) {
+      path[i].matchAll(/\[(\d+)\]/g).forEach((match) => {
+        if (i !== path.length - 1 && obj[match[1]] === undefined) {
+          debug.error(
+            `Array index "${match[1]}" of key "${key} on path "${pathname}" not found.`,
+          );
+          return defaultValue;
+        }
+
+        obj = obj[match[1]];
+      });
+    }
   }
 
   if (
@@ -233,6 +246,8 @@ export function getJsonValue<T>(
     typeof obj === "string"
   ) {
     return obj;
+  } else if (obj === undefined) {
+    debug.warn(`Value "${pathname}" is undefined.`);
   } else {
     debug.error(`Value "${pathname}" must be a boolean, a number or a string.`);
   }
@@ -276,32 +291,61 @@ export function setJsonValue<T>(
     pObj = obj;
     obj = obj[key];
 
-    [...path[i].matchAll(/\[(\d+)\]/g)].forEach((match) => {
-      if (obj[match[1]] === undefined) {
-        debug.error(
-          `Array index "${match[1]}" of key "${key} on path "${pathname}" not found.`,
-        );
-        return;
-      }
+    if (obj instanceof Map) {
+      [...path[i].matchAll(/\[(.*?)\]/gi)].forEach((match) => {
+        if (i !== path.length - 1 && obj.get(match[1]) === undefined) {
+          debug.error(
+            `Map index "${match[1]}" of key "${key} on path "${pathname}" not found.`,
+          );
+          return;
+        }
 
-      keys.push(match[1]);
+        keys.push(match[1]);
 
-      pObj = obj;
-      obj = obj[match[1]];
-    });
+        pObj = obj;
+        obj = obj.get(match[1]);
+      });
+    } else if (Array.isArray(obj)) {
+      [...path[i].matchAll(/\[(\d+)\]/g)].forEach((match) => {
+        if (i !== path.length - 1 && obj[match[1]] === undefined) {
+          debug.error(
+            `Array index "${match[1]}" of key "${key} on path "${pathname}" not found.`,
+          );
+          return;
+        }
+
+        keys.push(match[1]);
+
+        pObj = obj;
+        obj = obj[match[1]];
+      });
+    }
   }
 
   const lastKey = keys.at(-1)!;
 
-  if (pObj[lastKey] === undefined) {
-    debug.error(`Key "${lastKey}" on path "${pathname}" not found.`);
-    return;
-  } else if (typeof pObj[lastKey] !== typeof value) {
+  let pValue = undefined;
+
+  if (pObj instanceof Map) {
+    pValue = pObj.get(lastKey);
+  } else {
+    pValue = pObj[lastKey];
+  }
+
+  if (pValue === undefined) {
+    debug.warn(`Key "${lastKey}" on path "${pathname}" not found.`);
+  }
+
+  if (pValue !== undefined && typeof pValue !== typeof value) {
     debug.error(`Type is incorrect on path "${pathname}".`);
     return;
   }
 
-  pObj[lastKey] = value;
+  if (pObj instanceof Map) {
+    pObj.set(lastKey, value);
+  } else {
+    pObj[lastKey] = value;
+  }
 
   if (updateDataJson) {
     dataJson.set($dataJson);
