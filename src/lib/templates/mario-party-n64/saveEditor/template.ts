@@ -69,9 +69,9 @@ const template: GameJson = {
                   hidden: true,
                   type: "bitflags",
                   flags: [
-                    { offset: 0x50, bit: 1, label: "Game Rules Heard" },
+                    { offset: 0x50, bit: 1, label: "Game rules heard" },
                     { offset: 0x50, bit: 2, label: "Toad first talk" },
-                    { offset: 0x50, bit: 3, label: "Bowser Note Read" },
+                    { offset: 0x50, bit: 3, label: "Bowser note read" },
                   ],
                 },
               ],

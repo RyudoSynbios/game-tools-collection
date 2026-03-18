@@ -793,6 +793,17 @@
     }
   },
   {
+    "id": "mario-party-2-n64",
+    "name": "Mario Party 2",
+    "consoleId": "nintendo-64",
+    "tools": {
+      "saveEditor": {
+        "createdAt": "2026-05-18",
+        "regions": ["🇪🇺", "🇺🇸", "🇯🇵"]
+      }
+    }
+  },
+  {
     "id": "marvel-vs-capcom-2-new-age-of-heroes-dc",
     "name": "Marvel vs. Capcom 2: New Age of Heroes",
     "consoleId": "dreamcast",
