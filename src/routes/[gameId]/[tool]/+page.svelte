@@ -166,7 +166,7 @@
       uploadSuccess();
     } else {
       regions = [];
-      uploadFailed("region not found");
+      uploadFailed(7002);
     }
 
     dataViewTmp = undefined;
@@ -174,7 +174,7 @@
   }
 
   function onFileFailed(): void {
-    uploadFailed("file size is 0");
+    uploadFailed(7001);
   }
 
   async function onFileUploaded(file: File, dataView: DataView): Promise<void> {
@@ -219,17 +219,17 @@
         $gameUtils.onInitFailed();
       }
 
-      uploadFailed("invalid file");
+      uploadFailed(7000);
     }
   }
 
-  function uploadFailed(reason: string): void {
+  function uploadFailed(code: number): void {
     error = $gameTemplate.validator.error;
 
     if (!$isDebug) {
       fetch(`${page.url.pathname}/failed`, {
         method: "POST",
-        body: JSON.stringify({ reason }),
+        body: JSON.stringify({ code }),
       });
     }
   }
