@@ -6,45 +6,20 @@
     search,
     searchBigEndian,
     searchType,
-    selectedDataView,
-    selectedOffset,
   } from "$lib/stores/fileVisualizer";
-  import { dataTypeToLength, getInt } from "$lib/utils/bytes";
+  import { searchValue } from "$lib/utils/fileVisualizer";
 
-  import type { DataTypeInt } from "$lib/types";
+  import type { DataTypeUInt } from "$lib/types";
 
   import Toolbar from "./Toolbar.svelte";
 
+  let placeholder = "";
+
   function handleSearch(direction: "previous" | "next"): void {
-    const search = parseInt($search);
-    const type = $searchType as Exclude<DataTypeInt, "int64" | "uint64">;
+    const type = $searchType;
     const bigEndian = $searchBigEndian;
 
-    const dataTypeLength = dataTypeToLength(type);
-
-    if (isNaN(search)) {
-      return;
-    }
-
-    if (direction === "previous") {
-      for (let i = $selectedOffset - 0x1; i >= 0x0; i -= 0x1) {
-        if (getInt(i, type, { bigEndian }, $selectedDataView) === search) {
-          $selectedOffset = i;
-          break;
-        }
-      }
-    } else if (direction === "next") {
-      for (
-        let i = $selectedOffset + 0x1;
-        i <= $selectedDataView.byteLength - dataTypeLength;
-        i += 0x1
-      ) {
-        if (getInt(i, type, { bigEndian }, $selectedDataView) === search) {
-          $selectedOffset = i;
-          break;
-        }
-      }
-    }
+    searchValue(direction, type, bigEndian);
   }
 
   function handleSearchChange(event: Event): void {
@@ -56,8 +31,24 @@
   }
 
   function handleSearchTypeChange(event: Event): void {
-    $searchType = (event.target as HTMLInputElement).value;
+    $searchType = (event.target as HTMLInputElement).value as
+      | DataTypeUInt
+      | "aob"
+      | "float32";
   }
+
+  searchType.subscribe(() => {
+    switch ($searchType) {
+      case "float32":
+        placeholder = "0.0";
+        break;
+      case "aob":
+        placeholder = "00 00 00";
+        break;
+      default:
+        placeholder = "0x0";
+    }
+  });
 </script>
 
 <Toolbar class="gtc-filevisualizer-inspectorsearch" title="Search">
@@ -70,7 +61,7 @@
   </div>
   <Input
     type="text"
-    placeholder="0x0"
+    {placeholder}
     onEnter={() => handleSearch("next")}
     onChange={handleSearchChange}
     bind:value={$search}
@@ -82,6 +73,7 @@
       { key: "uint24", value: "uint24" },
       { key: "uint32", value: "uint32" },
       { key: "float32", value: "float32" },
+      { key: "aob", value: "aob" },
     ]}
     onChange={handleSearchTypeChange}
     value={$searchType}

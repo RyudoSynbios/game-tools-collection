@@ -4,6 +4,7 @@
     dataViewKey,
     editedOffsets,
     highlightsTemplate,
+    options,
     selectedOffset,
     tooltipEl,
   } from "$lib/stores/fileVisualizer";
@@ -11,11 +12,13 @@
 
   export let type: "char" | "hex";
   export let offset: number;
+  export let value: number;
 
   let isEdit = false;
   let isEdited = false;
   let isSelected = false;
   let highlightType = "";
+  let isTransparent = false;
 
   function handleCellClick(): void {
     $selectedOffset = offset;
@@ -45,6 +48,13 @@
     isEdited = $editedOffsets.includes(offset);
     isSelected = offset === $selectedOffset;
     highlightType = highlight?.dataType || highlight?.type || "";
+    isTransparent =
+      !isEdit &&
+      !isEdited &&
+      !isSelected &&
+      !highlightType &&
+      value === 0x0 &&
+      $options.zeroOpacity;
   }
 </script>
 
@@ -56,6 +66,7 @@
   class:gtc-filevisualizer-cell-edited={isEdited}
   class:gtc-filevisualizer-cell-selected={isSelected}
   class:gtc-filevisualizer-cell-highlighted={highlightType}
+  class:gtc-filevisualizer-cell-opacity={isTransparent}
   on:click={handleCellClick}
   on:mousemove={(event) => handleMouseMove(event, offset)}
 >
@@ -129,6 +140,10 @@
 
     &.gtc-filevisualizer-cell-hovered {
       @apply bg-sky-400/80;
+    }
+
+    &.gtc-filevisualizer-cell-opacity:not(:hover) {
+      @apply opacity-10;
     }
 
     &.gtc-filevisualizer-cell-selected {

@@ -6,18 +6,22 @@ import {
   highlightsTemplate,
   rows,
   rowsOffset,
+  search,
   selectedDataView,
+  selectedOffset,
 } from "$lib/stores/fileVisualizer";
 
-import {
+import type {
   ContentType,
   DataType,
+  DataTypeUInt,
   Item,
   ItemInt,
   ItemIntCondition,
 } from "$lib/types";
 
-import { dataTypeToLength } from "./bytes";
+import { dataTypeToLength, getInt } from "./bytes";
+import { checkValidator } from "./validator";
 
 export interface HighlightedOffset {
   offset: number;
@@ -65,6 +69,73 @@ export function scrollDataView(value: number): void {
 
   if ($rowsOffset !== newRowsOffset) {
     rowsOffset.set(newRowsOffset);
+  }
+}
+
+export function searchValue(
+  direction: "next" | "previous",
+  type: DataTypeUInt | "float32" | "aob",
+  bigEndian: boolean,
+): void {
+  const $search = get(search);
+  const $selectedDataView = get(selectedDataView);
+  const $selectedOffset = get(selectedOffset);
+
+  if ($search === "") {
+    return;
+  }
+
+  if (type === "aob") {
+    const array = $search.split(" ").map((int) => parseInt(int, 16) & 0xff);
+
+    if (direction === "previous") {
+      for (let i = $selectedOffset - 0x1; i >= 0x0; i -= 0x1) {
+        if (checkValidator(array, i, $selectedDataView)) {
+          selectedOffset.set(i);
+          break;
+        }
+      }
+    } else if (direction === "next") {
+      for (
+        let i = $selectedOffset + 0x1;
+        i <= $selectedDataView.byteLength - array.length;
+        i += 0x1
+      ) {
+        if (checkValidator(array, i, $selectedDataView)) {
+          selectedOffset.set(i);
+          break;
+        }
+      }
+    }
+
+    return;
+  }
+
+  const value = parseInt($search);
+  const dataTypeLength = dataTypeToLength(type);
+
+  if (isNaN(value)) {
+    return;
+  }
+
+  if (direction === "previous") {
+    for (let i = $selectedOffset - 0x1; i >= 0x0; i -= 0x1) {
+      if (getInt(i, type, { bigEndian }, $selectedDataView) === value) {
+        selectedOffset.set(i);
+        break;
+      }
+    }
+  } else if (direction === "next") {
+    for (
+      let i = $selectedOffset + 0x1;
+      i <= $selectedDataView.byteLength - dataTypeLength;
+      i += 0x1
+    ) {
+      if (getInt(i, type, { bigEndian }, $selectedDataView) === value) {
+        selectedOffset.set(i);
+        break;
+      }
+    }
   }
 }
 

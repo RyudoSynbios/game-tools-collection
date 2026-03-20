@@ -40,7 +40,7 @@
     {@const offset = $rowsOffset * 16 + index}
     {#if offset < $selectedDataView.byteLength}
       {@const int = getInt(offset, "uint8", {}, $selectedDataView)}
-      <Cell type={cellType} {offset}>
+      <Cell type={cellType} {offset} value={int}>
         {view === "hexview"
           ? int.toHex(2).toUpperCase()
           : String.fromCharCode(int)}

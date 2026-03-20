@@ -89,6 +89,14 @@
 
 <style lang="postcss">
   :global(
+    .gtc-filevisualizer-inspectordataview .gtc-filevisualizer-toolbar-title
+  ) {
+    & :global(.gtc-filevisualizer-toolbar-subtitle) {
+      @apply select-text;
+    }
+  }
+
+  :global(
     .gtc-filevisualizer-inspectordataview .gtc-filevisualizer-toolbar-content
   ) {
     & > div {

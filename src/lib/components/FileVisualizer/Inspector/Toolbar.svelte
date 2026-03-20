@@ -13,7 +13,7 @@
         <p>{title}</p>
       {/if}
       {#if subtitle}
-        <p>{subtitle}</p>
+        <p class="gtc-filevisualizer-toolbar-subtitle">{subtitle}</p>
       {/if}
     </div>
   {/if}
@@ -24,7 +24,7 @@
 
 <style lang="postcss">
   .gtc-filevisualizer-toolbar {
-    @apply mb-4 w-full overflow-hidden whitespace-nowrap rounded bg-primary-500 p-2;
+    @apply mb-4 w-full whitespace-nowrap rounded bg-primary-500 p-2;
 
     & .gtc-filevisualizer-toolbar-title {
       @apply mb-2 flex justify-between text-sm font-bold;
