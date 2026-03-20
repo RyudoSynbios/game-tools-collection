@@ -538,7 +538,7 @@
         }
 
         & .gtc-tool-toolbar {
-          @apply absolute left-2 top-10 z-20 w-44 rounded bg-primary-500 py-1 text-xs;
+          @apply absolute left-2 top-10 z-20 w-44 rounded bg-primary-500 py-1 text-xs shadow;
 
           & li {
             @apply flex cursor-pointer px-2 py-1;

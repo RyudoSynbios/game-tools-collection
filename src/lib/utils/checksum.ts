@@ -46,7 +46,7 @@ export function updateChecksums(): void {
         return;
       }
 
-      if (item.dataType !== "int64" && item.dataType !== "uint64") {
+      if (item.dataType !== "uint64") {
         previousChecksum = getInt(item.offset, item.dataType, {
           bigEndian: item.bigEndian,
         }).toHex(dataTypeLength);
@@ -66,7 +66,7 @@ export function updateChecksums(): void {
         checksum = $gameUtils.generateChecksum(item);
       }
 
-      if (item.dataType !== "int64" && item.dataType !== "uint64") {
+      if (item.dataType !== "uint64") {
         setInt(item.offset, item.dataType, checksum, {
           bigEndian: item.bigEndian,
         });

@@ -21,7 +21,7 @@
 
     const dataTypeLength = dataTypeToLength(item.dataType) * 2;
 
-    if (item.dataType !== "int64" && item.dataType !== "uint64") {
+    if (item.dataType !== "uint64") {
       value = getInt(item.offset, item.dataType, {
         bigEndian: item.bigEndian,
       }).toHex(dataTypeLength);

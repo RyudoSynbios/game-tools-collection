@@ -6,6 +6,8 @@ import {
 } from "$lib/utils/bytes";
 import debug from "$lib/utils/debug";
 
+import type { DataTypeInt, DataTypeUInt } from "$lib/types";
+
 import {
   PropertyType,
   type ArrayProperty,
@@ -55,7 +57,7 @@ export default class Parser {
   }
 
   public getInt(
-    dataType: "int8" | "uint8" | "int32" | "uint32" | "float32",
+    dataType: DataTypeInt | DataTypeUInt | "float32",
     increment = true,
   ): number {
     const int = getInt(this.offset, dataType, {}, this.dataView);

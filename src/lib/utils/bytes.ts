@@ -20,6 +20,7 @@ import type {
   Binary,
   DataType,
   DataTypeInt,
+  DataTypeUInt,
   IntOperation,
   StringEncoding,
 } from "$lib/types";
@@ -949,7 +950,7 @@ export function setString(
 export function getIntFromArray(
   array: number[] | Uint8Array,
   offset: number,
-  dataType: Exclude<DataTypeInt, "int64" | "uint64" | "float32">,
+  dataType: DataTypeInt | DataTypeUInt,
   bigEndian = false,
 ): number {
   const littleEndian16 = [0, 1];
@@ -1010,10 +1011,7 @@ export function getIntFromArray(
 
 export function intToArray(
   int: number,
-  dataType: Exclude<
-    DataTypeInt,
-    "int8" | "uint8" | "int64" | "uint64" | "float32"
-  >,
+  dataType: Exclude<DataTypeInt | DataTypeUInt, "int8" | "uint8">,
   bigEndian = false,
 ): number[] {
   const littleEndian16 = [0x0, 0x8];

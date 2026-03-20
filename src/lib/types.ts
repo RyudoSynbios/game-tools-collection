@@ -27,22 +27,20 @@ export type DataType =
   | "lower4"
   | "upper4"
   | "string"
-  | DataTypeInt;
-
-export type DataTypeInt =
-  | "int8"
-  | "int16"
-  | "int24"
-  | "int32"
   | "int64"
-  | "uint8"
-  | "uint16"
-  | "uint24"
-  | "uint32"
   | "uint64"
-  | "float32";
+  | "float32"
+  | DataTypeInt
+  | DataTypeUInt;
+
+export type DataTypeInt = "int8" | "int16" | "int24" | "int32";
+export type DataTypeUInt = "uint8" | "uint16" | "uint24" | "uint32";
 
 export type DebugOptions = {
+  [key: string]: boolean;
+};
+
+export type fileVisualizerOptions = {
   [key: string]: boolean;
 };
 
@@ -225,7 +223,7 @@ export interface ItemChecksum {
   name?: string;
   offset: number;
   type: "checksum";
-  dataType: DataTypeInt;
+  dataType: DataTypeUInt | "uint64";
   bigEndian?: boolean;
   control: {
     offsetStart: number;
@@ -250,7 +248,7 @@ export interface ItemContainer {
   instanceId?: string;
   pointer?: number | number[];
   pointerDataViewAltKey?: string;
-  pointerDataType?: DataTypeInt;
+  pointerDataType?: DataTypeUInt;
   length: number;
   type: "container";
   instanceType: "section" | "tabs";
@@ -368,7 +366,7 @@ export interface ItemString {
   type: "variable";
   dataType: "string";
   bigEndian?: boolean;
-  letterDataType: "uint8" | "uint16" | "uint24" | "uint32";
+  letterDataType: DataTypeUInt;
   letterBigEndian?: boolean;
   letterIsAdaptive?: boolean;
   fallback?: number;
