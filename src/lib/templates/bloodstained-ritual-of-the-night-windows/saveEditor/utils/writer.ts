@@ -109,9 +109,9 @@ export function writeShardPossession(): void {
     const m_UpStatus = shards.m_UpStatus;
 
     if (i < 0x4) {
-      writer.write({ m_Possession });
+      writer.write({ m_Possession }, false);
     } else {
-      writer.write({ m_Skill, m_UpStatus, m_Possession });
+      writer.write({ m_Skill, m_UpStatus, m_Possession }, false);
     }
   }
 
