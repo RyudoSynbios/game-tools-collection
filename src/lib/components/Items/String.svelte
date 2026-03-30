@@ -33,7 +33,7 @@
 
     if (!isOverrided) {
       if (item.jsonPath) {
-        setJsonString(item.jsonPath, item.length, target.value, {
+        setJsonString(item.jsonPath, target.value, item.length, {
           regex: item.regex,
         });
       } else {

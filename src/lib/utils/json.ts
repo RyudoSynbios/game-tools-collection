@@ -180,11 +180,13 @@ export function getJsonString(path: string): string {
 
 export function setJsonString(
   path: string,
-  length: number,
   value: string,
+  length = 0,
   options: JsonStringOptions = {},
 ): void {
-  value = value.slice(0, length);
+  if (length) {
+    value = value.slice(0, length);
+  }
 
   setJsonValue<string>(path, value);
 }

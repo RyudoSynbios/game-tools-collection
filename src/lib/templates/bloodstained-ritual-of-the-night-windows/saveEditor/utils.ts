@@ -271,7 +271,7 @@ export function overrideSetInt(item: Item, value: string): boolean {
     );
 
     if (difficulty) {
-      setJsonString(itemInt.jsonPath!, difficulty.length, difficulty);
+      setJsonString(itemInt.jsonPath!, difficulty);
     }
 
     return true;
@@ -309,7 +309,7 @@ export function overrideSetInt(item: Item, value: string): boolean {
       id = list[index].id;
     }
 
-    setJsonString(itemInt.jsonPath!, id.length, id);
+    setJsonString(itemInt.jsonPath!, id);
 
     const inventory: InventoryItem[][] =
       $dataJson.InventoryDataParsed.Inventory;
