@@ -1,4 +1,4 @@
-import type { StructProperty } from "$lib/utils/gvas";
+import { PropertyType, type StructProperty } from "$lib/utils/gvas";
 import Parser from "$lib/utils/gvas/parser";
 
 import {
@@ -25,13 +25,30 @@ export function parseJson(): StructProperty {
     json[`${field}Types`] = parser.types;
 
     pathsToInit.forEach((path) => {
-      if (path.parent !== `${field}Parsed`) {
+      if (!path.name.match(`${field}Parsed`)) {
         return;
       }
 
-      if (json[`${field}Parsed`][path.name] === undefined) {
-        json[`${field}Parsed`][path.name] = path.value;
-        json[`${field}Types`][path.name] = path.propertyType;
+      const names = path.name.split(".");
+      const key = names.pop() as string;
+      const typeKey = path.name.replace(`${field}Parsed.`, "");
+
+      let obj = json;
+
+      names.forEach((key) => {
+        obj = obj[key];
+      });
+
+      names.shift();
+
+      if (obj[key] === undefined) {
+        obj[key] = path.value;
+        json[`${field}Types`][typeKey] = path.propertyType;
+
+        // prettier-ignore
+        if (path.propertyType.match(PropertyType.Struct)) {
+          json[`${field}Types`][`${typeKey}$ID`] = "00000000000000000000000000000000";
+        }
       }
     });
   });

@@ -24,7 +24,7 @@ import type {
 } from "$lib/types";
 
 import { parseJson } from "./utils/parser";
-import { itemList, shardList } from "./utils/resource";
+import { areas, itemList, locationList, shardList } from "./utils/resource";
 import { updateJson } from "./utils/writer";
 
 enum EPBGameLevel {
@@ -80,15 +80,18 @@ export const fieldsToParse = ["GameRecord", "StatusData"];
 
 // prettier-ignore
 export const pathsToInit = [
-  { parent: "GameRecordParsed", name: "m_TotalKill", propertyType: `${PropertyType.Map}:${PropertyType.Name}-${PropertyType.Int}`, value: new Map() },
-  { parent: "Info", name: "CharacterName", propertyType: PropertyType.Str, value: "Miriam" },
-  { parent: "Info", name: "MapCompleteness", propertyType: PropertyType.Float, value: 0 },
-  { parent: "Info", name: "TotalCoins", propertyType: PropertyType.Int, value: 0 },
-  { parent: "Info", name: "TotalPlaySec", propertyType: PropertyType.Float, value: 0 },
-  { parent: "Info", name: "TrueEndCount", propertyType: PropertyType.Int, value: 0 },
-  { parent: "StatusDataParsed", name: "AdditionalMaxHP", propertyType: PropertyType.Float, value: 0 },
-  { parent: "StatusDataParsed", name: "AdditionalMaxMP", propertyType: PropertyType.Float, value: 0 },
-  { parent: "StatusDataParsed", name: "AdditionalMaxBullet", propertyType: PropertyType.Int, value: 0 },
+  { name: "GameRecordParsed.PCInfo", propertyType: `${PropertyType.Struct}:PBPCRecord`, value: {} },
+  { name: "GameRecordParsed.PCInfo.m_ArtsExperience", propertyType: `${PropertyType.Array}:${PropertyType.Int}`, value: Array(48).fill(0) },
+  { name: "GameRecordParsed.PCInfo.m_ArtsUseNum", propertyType: `${PropertyType.Array}:${PropertyType.Int}`, value: Array(48).fill(0) },
+  { name: "GameRecordParsed.m_TotalKill", propertyType: `${PropertyType.Map}:${PropertyType.Name}-${PropertyType.Int}`, value: new Map() },
+  { name: "Info.CharacterName", propertyType: PropertyType.Str, value: "Miriam" },
+  { name: "Info.MapCompleteness", propertyType: PropertyType.Float, value: 0 },
+  { name: "Info.TotalCoins", propertyType: PropertyType.Int, value: 0 },
+  { name: "Info.TotalPlaySec", propertyType: PropertyType.Float, value: 0 },
+  { name: "Info.TrueEndCount", propertyType: PropertyType.Int, value: 0 },
+  { name: "StatusDataParsed.AdditionalMaxHP", propertyType: PropertyType.Float, value: 0 },
+  { name: "StatusDataParsed.AdditionalMaxMP", propertyType: PropertyType.Float, value: 0 },
+  { name: "StatusDataParsed.AdditionalMaxBullet", propertyType: PropertyType.Int, value: 0 },
 ];
 
 export function beforeInitDataView(dataView: DataView): DataView {
@@ -152,14 +155,23 @@ export function onReady(): void {
   const $dataJson = get(dataJson);
 
   pathsToInit.forEach((path) => {
-    if (path.parent.match(/Parsed/)) {
+    if (path.name.match(/Parsed/)) {
       return;
     }
 
-    if ($dataJson[path.parent][path.name] === undefined) {
-      $dataJson[path.parent][path.name] = path.value;
+    const names = path.name.split(".");
+    const key = names.pop() as string;
 
-      gvas.updateTypes(`${path.parent}.${path.name}`, path.propertyType);
+    let obj = $dataJson;
+
+    names.forEach((key) => {
+      obj = obj[key];
+    });
+
+    if (obj[key] === undefined) {
+      obj[key] = path.value;
+
+      gvas.updateTypes(path.name, path.propertyType);
     }
   });
 }
@@ -189,6 +201,16 @@ export function overrideGetInt(item: Item): [boolean, number | undefined] {
     }
 
     return [true, difficulty];
+  } else if ("id" in item && item.id === "location") {
+    const itemInt = item as ItemInt;
+
+    const roomId = getJsonString(itemInt.jsonPath!);
+
+    const location = locationList.findIndex(
+      (location) => location.roomId === roomId,
+    );
+
+    return [true, location];
   } else if ("id" in item && item.id === "character") {
     const itemInt = item as ItemInt;
 
@@ -273,6 +295,21 @@ export function overrideSetInt(item: Item, value: string): boolean {
     if (difficulty) {
       setJsonString(itemInt.jsonPath!, difficulty);
     }
+
+    return true;
+  } else if ("id" in item && item.id === "location") {
+    const index = parseInt(value);
+
+    const location = locationList[index];
+    const area = areas.find((area) => area.index === location.area);
+
+    setJsonString("RoomID", location.roomId);
+    setJsonString("AreaID", area!.areaId);
+    setJsonString("Info.RoomID", location.roomId);
+    setJsonString("Info.AreaID", area!.areaId.substring(6));
+    setJsonInt("PCInfo.Location.x", "float32", location.coordinates.x);
+    setJsonInt("PCInfo.Location.y", "float32", location.coordinates.y);
+    setJsonInt("PCInfo.Location.z", "float32", location.coordinates.z);
 
     return true;
   } else if ("id" in item && item.id === "level") {

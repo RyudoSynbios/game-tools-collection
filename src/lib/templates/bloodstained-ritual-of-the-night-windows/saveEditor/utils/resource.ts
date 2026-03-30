@@ -1151,3 +1151,95 @@ shardList.forEach((item, index) => {
       break;
   }
 });
+
+export const areas = [
+  { index: 0x0, areaId: "ACT01_SIP", name: "Galleon Minerva" },
+  { index: 0x1, areaId: "ACT02_VIL", name: "Arvantville" },
+  { index: 0x2, areaId: "ACT03_ENT", name: "Entrance" },
+  { index: 0x3, areaId: "ACT04_GDN", name: "Garden of Silence" },
+  { index: 0x4, areaId: "ACT05_SAN", name: "Dian Cécht Cathedral" },
+  { index: 0x5, areaId: "ACT06_KNG", name: "Hall of Termination" },
+  { index: 0x6, areaId: "ACT07_LIB", name: "Livre Ex Machina" },
+  { index: 0x7, areaId: "ACT08_TWR", name: "Towers of Twins Dragons" },
+  { index: 0x8, areaId: "ACT09_TRN", name: "Bridge of Evil" },
+  { index: 0x9, areaId: "ACT10_BIG", name: "Den of Behemoths" },
+  { index: 0xa, areaId: "ACT11_UGD", name: "Forbidden Underground Waterway" },
+  { index: 0xb, areaId: "ACT12_SND", name: "Hidden Desert" },
+  { index: 0xc, areaId: "ACT13_ARC", name: "Underground Sorcery Lab" },
+  { index: 0xd, areaId: "ACT14_TAR", name: "Secret Sorcery Lab" },
+  { index: 0xe, areaId: "ACT15_JPN", name: "Oriental Sorcery Lab" },
+  { index: 0xf, areaId: "ACT17_RVA", name: "Inferno Cave" },
+  { index: 0x10, areaId: "ACT18_ICE", name: "Glacial Tomb" },
+];
+
+// prettier-ignore
+export const locationList = [
+  { roomId: "m01SIP_000", area: 0x0, name: "Galleon Minerva (Introduction)", coordinates: { x: 3337, y: 0, z: 145 } },
+  { roomId: "m01SIP_1000", area: 0x0, name: "Galleon Minerva (Top)", coordinates: { x: 14498, y: 0, z: 175 } },
+  { roomId: "m01SIP_1001", area: 0x0, name: "Galleon Minerva (Bottom)", coordinates: { x: 14498, y: 0, z: -3425 } },
+  { roomId: "m01SIP_1002", area: 0x0, name: "Galleon Minerva (near Vepar)", coordinates: { x: 19538, y: 0, z: 175 } },
+  { roomId: "m02VIL_1000", area: 0x1, name: "Arvantville", coordinates: { x: 30878, y: 0, z: 175 } },
+  { roomId: "m03ENT_1000", area: 0x2, name: "Entrance", coordinates: { x: 63638, y: 0, z: 895 } },
+  { roomId: "m03ENT_1001", area: 0x2, name: "Entrance (near Zangetsu)", coordinates: { x: 64897.99609375, y: 0, z: 4495 } },
+  { roomId: "m05SAN_1000", area: 0x4, name: "Dian Cécht Cathedral", coordinates: { x: 48514, y: 0, z: 4495 } },
+  { roomId: "m05SAN_1001", area: 0x4, name: "Dian Cécht Cathedral (near Craftwork)", coordinates: { x: 67418, y: 0, z: 7375 } },
+  { roomId: "m05SAN_1002", area: 0x4, name: "Dian Cécht Cathedral (near Bloodless)", coordinates: { x: 72458, y: 0, z: 10975 } },
+  { roomId: "m04GDN_1000", area: 0x3, name: "Garden of Silence", coordinates: { x: 95134, y: 0, z: 1615 } },
+  { roomId: "m07LIB_1000", area: 0x6, name: "Livre Ex Machina", coordinates: { x: 87578, y: 0, z: 5215 } },
+  { roomId: "m07LIB_1001", area: 0x6, name: "Livre Ex Machina (near Abyssal Guardian)", coordinates: { x: 90098, y: 0, z: 15295 } },
+  { roomId: "m08TWR_1001", area: 0x7, name: "Towers of Twins Dragons", coordinates: { x: 97658, y: 0, z: 5215 } },
+  { roomId: "m08TWR_1000", area: 0x7, name: "Towers of Twins Dragons (near Valac)", coordinates: { x: 108998, y: 0, z: 9535 } },
+  { roomId: "m09TRN_1000", area: 0x8, name: "Bridge of Evil", coordinates: { x: 139238, y: 0, z: 1615 } },
+  { roomId: "m13ARC_1000", area: 0xc, name: "Underground Sorcery Lab", coordinates: { x: 127894, y: 0, z: -1265 } },
+  { roomId: "m11UGD_1003", area: 0xa, name: "Forbidden Underground Waterway (West)", coordinates: { x: 51034, y: 0, z: -2705 } },
+  { roomId: "m11UGD_1002", area: 0xa, name: "Forbidden Underground Waterway (Middle-West)", coordinates: { x: 72454, y: 0, z: -7744.99951171875 } },
+  { roomId: "m11UGD_1001", area: 0xa, name: "Forbidden Underground Waterway (Middle-East)", coordinates: { x: 83794, y: 0, z: -7025 } },
+  { roomId: "m11UGD_1000", area: 0xa, name: "Forbidden Underground Waterway (East)", coordinates: { x: 97658, y: 0, z: -3425 } },
+  { roomId: "m12SND_1000", area: 0xb, name: "Hidden Desert", coordinates: { x: 96394, y: 0, z: -13505 } },
+  { roomId: "m14TAR_1000", area: 0xd, name: "Secret Sorcery Lab", coordinates: { x: 44738, y: 0, z: -8465 } },
+  { roomId: "m17RVA_1000", area: 0xf, name: "Inferno Cave", coordinates: { x: 61118, y: 0, z: -14225 } },
+  { roomId: "m15JPN_1000", area: 0xe, name: "Oriental Sorcery Lab", coordinates: { x: 47258, y: 0, z: 17455 } },
+  { roomId: "m06KNG_1001", area: 0x5, name: "Hall of Termination", coordinates: { x: 80014, y: 0, z: 13855 } },
+  { roomId: "m06KNG_1000", area: 0x5, name: "Hall of Termination (near Gebel)", coordinates: { x: 73714, y: 0, z: 17455 } },
+  { roomId: "m10BIG_1000", area: 0x9, name: "Den of Behemoths", coordinates: { x: 149318, y: 0, z: 5935 } },
+  { roomId: "m18ICE_1000", area: 0x10, name: "Glacial Tomb", coordinates: { x: 146798, y: 0, z: -5585 } },
+  { roomId: "m18ICE_1001", area: 0x10, name: "Glacial Tomb (near Dominique)", coordinates: { x: 139238, y: 0, z: -7025 } },
+];
+
+export const locations: Resource = {};
+export const locationsGroups: ResourceGroups = [];
+
+areas.forEach((area) => {
+  locationsGroups.push({ name: area.name, options: [] });
+});
+
+locationList.forEach((location, index) => {
+  locations[index] = location.name;
+  locationsGroups[location.area].options.push(index);
+});
+
+export const techniqueList = [
+  { index: 0xe, name: "Assassinate", experience: 5000 },
+  { index: 0xf, name: "Surprise Gift", experience: 8000 },
+  { index: 0x2f, name: "Power Slash", experience: 5000 },
+  { index: 0x1, name: "Force Blast", experience: 12000 },
+  { index: 0x24, name: "Parry", experience: 5000 },
+  { index: 0x10, name: "Back Steal", experience: 0 },
+  { index: 0x26, name: "Sickle Moon", experience: 8000 },
+  { index: 0x1b, name: "Trucidating Gyre", experience: 5000 },
+  { index: 0x13, name: "Thousand Blossoms", experience: 50000 },
+  { index: 0x14, name: "Lasting Wound", experience: 8000 },
+  { index: 0x15, name: "Orbital Wheel", experience: 5000 },
+  { index: 0x16, name: "Penetrate", experience: 8000 },
+  { index: 0x17, name: "Lunging Serpent", experience: 0 },
+  { index: 0x5, name: "Flashing Air Kick", experience: 5000 },
+  { index: 0x18, name: "Hatchet Heel", experience: 8000 },
+  { index: 0x1c, name: "Critical Swing", experience: 5000 },
+  { index: 0x1f, name: "Jinrai", experience: 8000 },
+  { index: 0x1e, name: "Helmsplitter", experience: 5000 },
+  { index: 0x22, name: "Crimson Storm", experience: 8000 },
+  { index: 0x21, name: "Crescent Stroke", experience: 5000 },
+  { index: 0x25, name: "Eleventh Hour", experience: 5000 },
+  { index: 0x20, name: "Sansetsuzan", experience: 5000 },
+  { index: 0x23, name: "Rapid Fire", experience: 8000 },
+];
