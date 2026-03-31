@@ -338,9 +338,9 @@ export const inventory = [
   { index: 0x148, name: "W Emblem", type: 0x3 },
 ];
 
-export const badges: Resource[] = [];
-export const importantThings: Resource[] = [];
-export const items: Resource[] = [];
+export const badges: Resource = {};
+export const importantThings: Resource = {};
+export const items: Resource = {};
 
 export const itemsGroups: ResourceGroups = itemTypes
   .filter((type) => [0x1, 0x2].includes(type.index))

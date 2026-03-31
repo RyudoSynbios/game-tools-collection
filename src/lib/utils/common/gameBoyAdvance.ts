@@ -14,7 +14,7 @@ export function isGameSharkHeader(dataView: DataView): boolean {
 export function getGameSharkHeaderShift(dataView: DataView): number {
   let shift = 0x0;
 
-  for (let i = 0; i < 6; i += 1) {
+  for (let i = 0x0; i < 0x6; i += 0x1) {
     const length = getInt(shift, "uint16", {}, dataView);
 
     shift += 0x4 + length;

@@ -424,7 +424,7 @@ const template: GameJson = {
                   hidden: true,
                   items: [
                     {
-                      name: "Base Max HP",
+                      name: "Base HP",
                       dataViewAltKey: "save",
                       offset: 0x8a19,
                       type: "variable",

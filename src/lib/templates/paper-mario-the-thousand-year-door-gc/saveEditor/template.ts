@@ -278,6 +278,197 @@ const template: GameJson = {
               ],
             },
             {
+              name: "Mario",
+              items: [
+                {
+                  type: "section",
+                  flex: true,
+                  items: [
+                    {
+                      name: "Level",
+                      offset: 0x134aa,
+                      type: "variable",
+                      dataType: "uint16",
+                      bigEndian: true,
+                      min: 1,
+                      max: 99,
+                    },
+                    {
+                      name: "Star Points",
+                      offset: 0x134b6,
+                      type: "variable",
+                      dataType: "uint16",
+                      bigEndian: true,
+                      max: 99,
+                    },
+                    {
+                      id: "crystalStars-units",
+                      name: "Star Power Units",
+                      offset: 0x134ac,
+                      type: "variable",
+                      dataType: "uint16",
+                      bigEndian: true,
+                      max: 8,
+                    },
+                    {
+                      name: "Related to Crystal Stars",
+                      offset: 0x134a4,
+                      type: "variable",
+                      dataType: "uint16",
+                      bigEndian: true,
+                      hidden: true,
+                    },
+                  ],
+                },
+                {
+                  type: "section",
+                  flex: true,
+                  items: [
+                    {
+                      name: "HP",
+                      type: "group",
+                      mode: "fraction",
+                      items: [
+                        {
+                          offset: 0x13490,
+                          type: "variable",
+                          dataType: "uint16",
+                          bigEndian: true,
+                          max: 200,
+                        },
+                        {
+                          id: "baseStats-28",
+                          offset: 0x13492,
+                          type: "variable",
+                          dataType: "uint16",
+                          bigEndian: true,
+                          max: 200,
+                        },
+                      ],
+                    },
+                    {
+                      name: "FP",
+                      type: "group",
+                      mode: "fraction",
+                      items: [
+                        {
+                          offset: 0x13494,
+                          type: "variable",
+                          dataType: "uint16",
+                          bigEndian: true,
+                          max: 200,
+                        },
+                        {
+                          id: "baseStats-26",
+                          offset: 0x13496,
+                          type: "variable",
+                          dataType: "uint16",
+                          bigEndian: true,
+                          max: 200,
+                        },
+                      ],
+                    },
+                    {
+                      name: "BP",
+                      type: "group",
+                      mode: "fraction",
+                      items: [
+                        {
+                          offset: 0x134b2,
+                          type: "variable",
+                          dataType: "uint16",
+                          bigEndian: true,
+                          max: 99,
+                        },
+                        {
+                          offset: 0x134b4,
+                          type: "variable",
+                          dataType: "uint16",
+                          bigEndian: true,
+                          max: 99,
+                        },
+                      ],
+                    },
+                    {
+                      name: "Star Power",
+                      type: "group",
+                      mode: "fraction",
+                      items: [
+                        {
+                          offset: 0x1349a,
+                          type: "variable",
+                          dataType: "uint16",
+                          bigEndian: true,
+                          max: 800,
+                        },
+                        {
+                          offset: 0x1349c,
+                          type: "variable",
+                          dataType: "uint16",
+                          bigEndian: true,
+                          max: 800,
+                          disabled: true,
+                        },
+                      ],
+                    },
+                    {
+                      name: "Base HP",
+                      offset: 0x134ae,
+                      type: "variable",
+                      dataType: "uint16",
+                      bigEndian: true,
+                      hidden: true,
+                    },
+                    {
+                      name: "Base Max FP",
+                      offset: 0x134b0,
+                      type: "variable",
+                      dataType: "uint16",
+                      bigEndian: true,
+                      hidden: true,
+                    },
+                  ],
+                },
+                {
+                  type: "section",
+                  flex: true,
+                  items: [
+                    {
+                      id: "equipment-hammers",
+                      name: "Hammers",
+                      type: "bitflags",
+                      flags: [
+                        { offset: 0x134c0, bit: 0, label: "Mario's Hammer" },
+                        { offset: 0x134c0, bit: 1, label: "Super Hammer" },
+                        { offset: 0x134c0, bit: 2, label: "Ultra Hammer" },
+                      ],
+                    },
+                    {
+                      id: "equipment-boots",
+                      name: "Boots",
+                      type: "bitflags",
+                      flags: [
+                        { offset: 0x134c0, bit: 0, label: "Mario's Boots" },
+                        { offset: 0x134c0, bit: 1, label: "Super Boots" },
+                        { offset: 0x134c0, bit: 2, label: "Ultra Boots" },
+                      ],
+                    },
+                    {
+                      id: "equipment-transformations",
+                      name: "Transformations",
+                      type: "bitflags",
+                      flags: [
+                        { offset: 0x134c0, bit: 2, label: "Plane Mode" },
+                        { offset: 0x134c0, bit: 0, label: "Paper Mode" },
+                        { offset: 0x134c0, bit: 1, label: "Tube Mode" },
+                        { offset: 0x134c0, bit: 3, label: "Boat Mode" },
+                      ],
+                    },
+                  ],
+                },
+              ],
+            },
+            {
               name: "Party",
               items: [
                 {
@@ -287,199 +478,6 @@ const template: GameJson = {
                   instances: 7,
                   resource: "characters",
                   vertical: true,
-                  prependSubinstance: [
-                    {
-                      name: "Mario",
-                      items: [
-                        {
-                          type: "section",
-                          flex: true,
-                          items: [
-                            {
-                              name: "Level",
-                              offset: 0x134aa,
-                              type: "variable",
-                              dataType: "uint16",
-                              bigEndian: true,
-                              min: 1,
-                              max: 99,
-                            },
-                            {
-                              name: "Star Points",
-                              offset: 0x134b6,
-                              type: "variable",
-                              dataType: "uint16",
-                              bigEndian: true,
-                              max: 99,
-                            },
-                            {
-                              id: "crystalStars-units",
-                              name: "Star Power Units",
-                              offset: 0x134ac,
-                              type: "variable",
-                              dataType: "uint16",
-                              bigEndian: true,
-                              max: 8,
-                            },
-                            {
-                              name: "Related to Crystal Stars",
-                              offset: 0x134a4,
-                              type: "variable",
-                              dataType: "uint16",
-                              bigEndian: true,
-                              hidden: true,
-                            },
-                          ],
-                        },
-                        {
-                          type: "section",
-                          flex: true,
-                          items: [
-                            {
-                              name: "HP",
-                              type: "group",
-                              mode: "fraction",
-                              items: [
-                                {
-                                  offset: 0x13490,
-                                  type: "variable",
-                                  dataType: "uint16",
-                                  bigEndian: true,
-                                  max: 200,
-                                },
-                                {
-                                  id: "baseStats-28",
-                                  offset: 0x13492,
-                                  type: "variable",
-                                  dataType: "uint16",
-                                  bigEndian: true,
-                                  max: 200,
-                                },
-                              ],
-                            },
-                            {
-                              name: "FP",
-                              type: "group",
-                              mode: "fraction",
-                              items: [
-                                {
-                                  offset: 0x13494,
-                                  type: "variable",
-                                  dataType: "uint16",
-                                  bigEndian: true,
-                                  max: 200,
-                                },
-                                {
-                                  id: "baseStats-26",
-                                  offset: 0x13496,
-                                  type: "variable",
-                                  dataType: "uint16",
-                                  bigEndian: true,
-                                  max: 200,
-                                },
-                              ],
-                            },
-                            {
-                              name: "BP",
-                              type: "group",
-                              mode: "fraction",
-                              items: [
-                                {
-                                  offset: 0x134b2,
-                                  type: "variable",
-                                  dataType: "uint16",
-                                  bigEndian: true,
-                                  max: 99,
-                                },
-                                {
-                                  offset: 0x134b4,
-                                  type: "variable",
-                                  dataType: "uint16",
-                                  bigEndian: true,
-                                  max: 99,
-                                },
-                              ],
-                            },
-                            {
-                              name: "Star Power",
-                              type: "group",
-                              mode: "fraction",
-                              items: [
-                                {
-                                  offset: 0x1349a,
-                                  type: "variable",
-                                  dataType: "uint16",
-                                  bigEndian: true,
-                                  max: 800,
-                                },
-                                {
-                                  offset: 0x1349c,
-                                  type: "variable",
-                                  dataType: "uint16",
-                                  bigEndian: true,
-                                  max: 800,
-                                  disabled: true,
-                                },
-                              ],
-                            },
-                            {
-                              name: "Base Max HP",
-                              offset: 0x134ae,
-                              type: "variable",
-                              dataType: "uint16",
-                              bigEndian: true,
-                              hidden: true,
-                            },
-                            {
-                              name: "Base Max FP",
-                              offset: 0x134b0,
-                              type: "variable",
-                              dataType: "uint16",
-                              bigEndian: true,
-                              hidden: true,
-                            },
-                          ],
-                        },
-                        {
-                          type: "section",
-                          flex: true,
-                          items: [
-                            {
-                              id: "equipment-hammers",
-                              name: "Hammers",
-                              type: "bitflags",
-                              flags: [
-                                { offset: 0x134c0, bit: 0, label: "Mario's Hammer" },
-                                { offset: 0x134c0, bit: 1, label: "Super Hammer" },
-                                { offset: 0x134c0, bit: 2, label: "Ultra Hammer" },
-                              ],
-                            },
-                            {
-                              id: "equipment-boots",
-                              name: "Boots",
-                              type: "bitflags",
-                              flags: [
-                                { offset: 0x134c0, bit: 0, label: "Mario's Boots" },
-                                { offset: 0x134c0, bit: 1, label: "Super Boots" },
-                                { offset: 0x134c0, bit: 2, label: "Ultra Boots" },
-                              ],
-                            },
-                            {
-                              id: "equipment-transformations",
-                              name: "Transformations",
-                              type: "bitflags",
-                              flags: [
-                                { offset: 0x134c0, bit: 2, label: "Plane Mode" },
-                                { offset: 0x134c0, bit: 0, label: "Paper Mode" },
-                                { offset: 0x134c0, bit: 1, label: "Tube Mode" },
-                                { offset: 0x134c0, bit: 3, label: "Boat Mode" },
-                              ],
-                            },
-                          ],
-                        },
-                      ],
-                    },
-                  ],
                   items: [
                     {
                       type: "section",
@@ -523,7 +521,7 @@ const template: GameJson = {
                           ],
                         },
                         {
-                          name: "Base Max HP",
+                          name: "Base HP",
                           offset: 0x13432,
                           type: "variable",
                           dataType: "uint16",

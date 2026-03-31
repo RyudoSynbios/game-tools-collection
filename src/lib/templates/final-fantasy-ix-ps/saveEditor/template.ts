@@ -746,7 +746,7 @@ const template: GameJson = {
                                   max: 50,
                                 },
                                 {
-                                  name: "Base Max HP",
+                                  name: "Base HP",
                                   offset: 0x9fc,
                                   type: "variable",
                                   dataType: "uint16",
