@@ -264,7 +264,7 @@ export const locationList: {
 
 export const locations: Resource = {};
 
-export const locationsOrder: number[] = [0x0];
+export const locationsOrder: number[] = [];
 
 Object.entries(locationList)
   .sort(([, a], [, b]) => a.order - b.order)

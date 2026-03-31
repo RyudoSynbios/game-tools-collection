@@ -496,7 +496,7 @@ const template: GameJson = {
                           type: "variable",
                           dataType: "uint16",
                           bigEndian: true,
-                          max: 2,
+                          resource: "ranks",
                         },
                         {
                           name: "HP",
@@ -1707,6 +1707,11 @@ const template: GameJson = {
       0x3: "Rank 4",
       0x4: "Rank 5",
       0x5: "Unranked",
+    },
+    ranks: {
+      0x0: "-",
+      0x1: "Super-rank",
+      0x2: "Ultra-rank",
     },
     recipesStatus: {
       0x0: "-",
