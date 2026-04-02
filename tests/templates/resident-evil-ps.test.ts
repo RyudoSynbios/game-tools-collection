@@ -49,6 +49,7 @@ test.describe(game, () => {
     ["should load a DexDrive save (Japan)"                   ,                "japan.gme", [            't|["Slot 4"]'         , "s|4", "i|08$1", "i|29$2"]],
     ["should load a DexDrive save (France)"                  ,               "france.gme", [            't|["Slot 5"]'         , "s|5", "i|10$1", "i|54$2"]],
     ["should load a DexDrive save (Germany)"                 ,              "germany.gme", [            't|["Slot 1"]'         , "s|1", "i|06$1", "i|39$2"]],
+    ["should load a PC save"                                 ,             "savedat1.dat", [            't|["Slot 1"]'         , "s|1", "i|07$1", "i|52$2"]],
   ];
 
   tests.forEach(([title, saveFilePath, args]) => {

@@ -1,7 +1,7 @@
 import { get } from "svelte/store";
 
 import { gameRegion } from "$lib/stores";
-import { getInt, setInt } from "$lib/utils/bytes";
+import { getDataView, getInt, setInt } from "$lib/utils/bytes";
 import {
   customGetRegions,
   getHeaderShift,
@@ -9,6 +9,7 @@ import {
   getSlotShifts,
   isPsvHeader,
 } from "$lib/utils/common/playstation";
+import { checkValidator } from "$lib/utils/validator";
 
 import type { Item, ItemContainer, ItemInt, ItemMessage } from "$lib/types";
 
@@ -20,6 +21,10 @@ export function overrideGetRegions(
   dataView: DataView,
   shift: number,
 ): string[] {
+  if (isPCSave(dataView)) {
+    return ["europe"];
+  }
+
   return customGetRegions(dataView, shift);
 }
 
@@ -61,6 +66,14 @@ export function overrideParseContainerItemsShifts(
   index: number,
 ): [boolean, number[] | undefined] {
   if (item.id === "slots") {
+    if (isPCSave()) {
+      if (index === 0) {
+        return [false, undefined];
+      }
+
+      return [true, [-1]];
+    }
+
     return getSlotShifts("correspondance", shifts, index);
   }
 
@@ -172,4 +185,12 @@ export function afterSetInt(item: Item): void {
     setInt(itemInt.offset + 0x2e, "uint16", coordinates[1]);
     setInt(itemInt.offset + 0x30, "uint16", rotation);
   }
+}
+
+function isPCSave(dataView?: DataView): boolean {
+  const $dataView = getDataView(dataView);
+
+  const validator = [0x73, 0x4e, 0x31, 0x4a];
+
+  return checkValidator(validator, 0x62, $dataView);
 }
