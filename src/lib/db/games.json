@@ -898,6 +898,17 @@
     }
   },
   {
+    "id": "paper-mario-n64",
+    "name": "Paper Mario",
+    "consoleId": "nintendo-64",
+    "tools": {
+      "saveEditor": {
+        "createdAt": "2026-04-04",
+        "regions": ["🇪🇺", "🇺🇸", "🇯🇵"]
+      }
+    }
+  },
+  {
     "id": "paper-mario-the-thousand-year-door-gc",
     "name": "Paper Mario: The Thousand-Year Door",
     "consoleId": "gamecube",

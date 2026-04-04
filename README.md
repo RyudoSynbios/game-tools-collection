@@ -85,6 +85,7 @@ Link to the website: [https://game-tools-collection.com](https://game-tools-coll
 | Mystical Ninja 2 Starring Goemon             | N64      | Save                    | EUR / USA / JAP                               |
 | Octopath Traveler                            | WIN      | Save                    | WORLD                                         |
 | Octopath Traveler II                         | WIN      | Save                    | WORLD                                         |
+| Paper Mario                                  | N64      | Save                    | EUR / USA / JAP                               |
 | Paper Mario: The Thousand-Year Door          | GC       | Save                    | EUR / USA / JAP                               |
 | Pokémon Red, Blue and Yellow                 | GB       | Save                    | EUR / USA / JAP / FRA / GER / ITA / SPA       |
 | Pokémon Gold, Silver and Crystal             | GBC      | Save                    | EUR / USA / JAP / FRA / GER / ITA / SPA / AUS |
