@@ -46,7 +46,7 @@ const template: GameJson = {
       },
       prependSubinstance: [
         {
-          name: "General",
+          name: "System",
           items: [
             {
               id: "language",

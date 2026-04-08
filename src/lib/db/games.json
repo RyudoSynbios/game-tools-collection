@@ -1336,5 +1336,16 @@
         "regions": ["🏳️"]
       }
     }
+  },
+  {
+    "id": "wario-land-4-gba",
+    "name": "Wario Land 4",
+    "consoleId": "game-boy-advance",
+    "tools": {
+      "saveEditor": {
+        "createdAt": "2026-04-08",
+        "regions": ["🇪🇺", "🇺🇸", "🇯🇵"]
+      }
+    }
   }
 ]

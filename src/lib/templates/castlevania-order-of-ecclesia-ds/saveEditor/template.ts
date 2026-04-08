@@ -115,7 +115,7 @@ const template: GameJson = {
       enumeration: "Slot %d",
       prependSubinstance: [
         {
-          name: "General",
+          name: "System",
           items: [
             {
               id: "language",

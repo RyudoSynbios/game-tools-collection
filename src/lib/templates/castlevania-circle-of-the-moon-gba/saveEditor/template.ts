@@ -33,16 +33,16 @@ const template: GameJson = {
       },
       prependSubinstance: [
         {
-          name: "General",
+          name: "System",
           items: [
             {
               name: "Unlocked Modes",
               type: "bitflags",
               flags: [
-                { offset: 0xb, bit: 2, label: "Magician Mode Unlocked" },
-                { offset: 0xb, bit: 3, label: "Fighter Mode Unlocked" },
-                { offset: 0xb, bit: 1, label: "Shooter Mode Unlocked" },
-                { offset: 0xb, bit: 4, label: "Thief Mode Unlocked" },
+                { offset: 0xb, bit: 2, label: "Magician Mode unlocked" },
+                { offset: 0xb, bit: 3, label: "Fighter Mode unlocked" },
+                { offset: 0xb, bit: 1, label: "Shooter Mode unlocked" },
+                { offset: 0xb, bit: 4, label: "Thief Mode unlocked" },
                 { offset: 0xb, bit: 5, label: "All modes completed" },
               ],
             },

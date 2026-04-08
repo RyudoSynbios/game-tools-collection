@@ -448,11 +448,12 @@ const template: GameJson = {
                       flex: true,
                       items: [
                         {
-                          name: "Challenge Machine",
-                          type: "bitflags",
-                          flags: [
-                            { offset: 0x5881, bit: 1, label: "Unlocked" },
-                          ],
+                          name: "Status",
+                          offset: 0x5881,
+                          type: "variable",
+                          dataType: "bit",
+                          bit: 1,
+                          resource: "booleanUnlocked",
                         },
                       ],
                     },
@@ -3006,6 +3007,10 @@ const template: GameJson = {
     },
   ],
   resources: {
+    booleanUnlocked: {
+      0x0: "-",
+      0x1: "Unlocked",
+    },
     cards: {
       0x0: "-",
       0x1: "Grass Energy",

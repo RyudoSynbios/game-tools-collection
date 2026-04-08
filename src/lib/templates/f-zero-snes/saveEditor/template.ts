@@ -19,7 +19,7 @@ const template: GameJson = {
       resource: "leagues",
       prependSubinstance: [
         {
-          name: "General",
+          name: "System",
           flex: true,
           items: [
             {

@@ -1428,10 +1428,12 @@ const template: GameJson = {
                       name: "General",
                       items: [
                         {
-                          type: "bitflags",
-                          flags: [
-                            { offset: 0x19c4, bit: 3, label: "Journal Unlocked" },
-                          ],
+                          name: "Status",
+                          offset: 0x19c4,
+                          type: "variable",
+                          dataType: "bit",
+                          bit: 3,
+                          resource: "booleanUnlocked",
                         },
                       ],
                     },
@@ -2022,18 +2024,27 @@ const template: GameJson = {
                               name: "Trinity Jump",
                               items: [
                                 {
-                                  type: "bitflags",
-                                  flags: [
-                                    { offset: 0x1c1b, bit: 0, label: "Trinity Unlocked" },
+                                  type: "section",
+                                  flex: true,
+                                  noMargin: true,
+                                  items: [
+                                    {
+                                      name: "Status",
+                                      offset: 0x1c1b,
+                                      type: "variable",
+                                      dataType: "bit",
+                                      bit: 0,
+                                      resource: "booleanUnlocked",
+                                    },
+                                    {
+                                      id: "count-trinity-jump-%index%",
+                                      name: "Count",
+                                      offset: 0x1c66,
+                                      type: "variable",
+                                      dataType: "uint16",
+                                      disabled: true,
+                                    },
                                   ],
-                                },
-                                {
-                                  id: "count-trinity-jump-%index%",
-                                  name: "Count",
-                                  offset: 0x1c66,
-                                  type: "variable",
-                                  dataType: "uint16",
-                                  disabled: true,
                                 },
                                 {
                                   id: "trinity-jump-%index%",
@@ -2064,18 +2075,27 @@ const template: GameJson = {
                               name: "Trinity Charge",
                               items: [
                                 {
-                                  type: "bitflags",
-                                  flags: [
-                                    { offset: 0x1c1b, bit: 1, label: "Trinity Unlocked" },
+                                  type: "section",
+                                  flex: true,
+                                  noMargin: true,
+                                  items: [
+                                    {
+                                      name: "Status",
+                                      offset: 0x1c1b,
+                                      type: "variable",
+                                      dataType: "bit",
+                                      bit: 1,
+                                      resource: "booleanUnlocked",
+                                    },
+                                    {
+                                      id: "count-trinity-charge-%index%",
+                                      name: "Count",
+                                      offset: 0x1c68,
+                                      type: "variable",
+                                      dataType: "uint8",
+                                      disabled: true,
+                                    },
                                   ],
-                                },
-                                {
-                                  id: "count-trinity-charge-%index%",
-                                  name: "Count",
-                                  offset: 0x1c68,
-                                  type: "variable",
-                                  dataType: "uint8",
-                                  disabled: true,
                                 },
                                 {
                                   id: "trinity-charge-%index%",
@@ -2095,18 +2115,27 @@ const template: GameJson = {
                               name: "Trinity Ladder",
                               items: [
                                 {
-                                  type: "bitflags",
-                                  flags: [
-                                    { offset: 0x1c1b, bit: 2, label: "Trinity Unlocked" },
+                                  type: "section",
+                                  flex: true,
+                                  noMargin: true,
+                                  items: [
+                                    {
+                                      name: "Status",
+                                      offset: 0x1c1b,
+                                      type: "variable",
+                                      dataType: "bit",
+                                      bit: 2,
+                                      resource: "booleanUnlocked",
+                                    },
+                                    {
+                                      id: "count-trinity-ladder-%index%",
+                                      name: "Count",
+                                      offset: 0x1c69,
+                                      type: "variable",
+                                      dataType: "uint8",
+                                      disabled: true,
+                                    },
                                   ],
-                                },
-                                {
-                                  id: "count-trinity-ladder-%index%",
-                                  name: "Count",
-                                  offset: 0x1c69,
-                                  type: "variable",
-                                  dataType: "uint8",
-                                  disabled: true,
                                 },
                                 {
                                   id: "trinity-ladder-%index%",
@@ -2129,18 +2158,27 @@ const template: GameJson = {
                               name: "Trinity Push",
                               items: [
                                 {
-                                  type: "bitflags",
-                                  flags: [
-                                    { offset: 0x1c1b, bit: 3, label: "Trinity Unlocked" },
+                                  type: "section",
+                                  flex: true,
+                                  noMargin: true,
+                                  items: [
+                                    {
+                                      name: "Status",
+                                      offset: 0x1c1b,
+                                      type: "variable",
+                                      dataType: "bit",
+                                      bit: 3,
+                                      resource: "booleanUnlocked",
+                                    },
+                                    {
+                                      id: "count-trinity-push-%index%",
+                                      name: "Count",
+                                      offset: 0x1c6a,
+                                      type: "variable",
+                                      dataType: "uint8",
+                                      disabled: true,
+                                    },
                                   ],
-                                },
-                                {
-                                  id: "count-trinity-push-%index%",
-                                  name: "Count",
-                                  offset: 0x1c6a,
-                                  type: "variable",
-                                  dataType: "uint8",
-                                  disabled: true,
                                 },
                                 {
                                   id: "trinity-push-%index%",
@@ -2158,18 +2196,27 @@ const template: GameJson = {
                               name: "Trinity Detect",
                               items: [
                                 {
-                                  type: "bitflags",
-                                  flags: [
-                                    { offset: 0x1c1b, bit: 4, label: "Trinity Unlocked" },
+                                  type: "section",
+                                  flex: true,
+                                  noMargin: true,
+                                  items: [
+                                    {
+                                      name: "Status",
+                                      offset: 0x1c1b,
+                                      type: "variable",
+                                      dataType: "bit",
+                                      bit: 4,
+                                      resource: "booleanUnlocked",
+                                    },
+                                    {
+                                      id: "count-trinity-detect-%index%",
+                                      name: "Count",
+                                      offset: 0x1c6b,
+                                      type: "variable",
+                                      dataType: "uint8",
+                                      disabled: true,
+                                    },
                                   ],
-                                },
-                                {
-                                  id: "count-trinity-detect-%index%",
-                                  name: "Count",
-                                  offset: 0x1c6b,
-                                  type: "variable",
-                                  dataType: "uint8",
-                                  disabled: true,
                                 },
                                 {
                                   id: "trinity-detect-%index%",
@@ -3096,6 +3143,10 @@ const template: GameJson = {
   resources: {
     abilities: "getAbilityNames()",
     accessories: "getItemNames('accessories')",
+    booleanUnlocked: {
+      0x0: "-",
+      0x1: "Unlocked",
+    },
     buttons: {
       0x1: "L2",
       0x2: "R2",

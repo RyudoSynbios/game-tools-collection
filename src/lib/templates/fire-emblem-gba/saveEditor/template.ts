@@ -46,7 +46,7 @@ const template: GameJson = {
       onTabChange: "onSlotChange(%d)",
       prependSubinstance: [
         {
-          name: "General",
+          name: "System",
           items: [
             {
               name: "Checksum",
