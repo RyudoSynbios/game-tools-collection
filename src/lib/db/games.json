@@ -55,6 +55,17 @@
     }
   },
   {
+    "id": "azure-dreams-gbc",
+    "name": "Azure Dreams",
+    "consoleId": "game-boy-color",
+    "tools": {
+      "saveEditor": {
+        "createdAt": "2026-04-08",
+        "regions": ["🇪🇺", "🇺🇸", "🇯🇵"]
+      }
+    }
+  },
+  {
     "id": "banjo-kazooie-n64",
     "name": "Banjo-Kazooie",
     "consoleId": "nintendo-64",

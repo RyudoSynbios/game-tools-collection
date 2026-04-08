@@ -11,6 +11,7 @@ Link to the website: [https://game-tools-collection.com](https://game-tools-coll
 | 3D Dot Game Heroes                           | PS3      | Save                    | EUR / USA / JAP                               |
 | ActRaiser                                    | SNES     | Save                    | EUR / USA / JAP / FRA / GER                   |
 | Akumajou Dracula X: Chi no Rondo             | PCECD    | Save                    | JAP                                           |
+| Azure Dreams                                 | GBC      | Save                    | EUR / USA / JAP                               |
 | Banjo-Kazooie                                | N64      | Save                    | EUR / USA / JAP                               |
 | Banjo-Tooie                                  | N64      | Save                    | EUR / USA / JAP                               |
 | Bloodstained: Ritual of the Night            | WIN      | Save                    | WORLD                                         |
@@ -56,7 +57,7 @@ Link to the website: [https://game-tools-collection.com](https://game-tools-coll
 | Golden Sun                                   | GBA      | Save / Rom              | EUR / USA / JAP / FRA / GER / ITA / SPA       |
 | Golden Sun: The Lost Age                     | GBA      | Save                    | EUR / USA / JAP / FRA / GER / ITA / SPA       |
 | GoldenEye 007                                | N64      | Save                    | EUR / USA / JAP                               |
-| Grandia                                      | PS       | Save                    | EUR / USA / JAP / FRA / GER                   |
+| Grandia                                      | PS       | Save / Rom              | EUR / USA / JAP / FRA / GER                   |
 | Grandia II                                   | PS2      | Save                    | EUR / USA / JAP                               |
 | Half-Minute Hero                             | PSP      | Save                    | EUR / USA / JAP                               |
 | Holy Magic Century                           | N64      | Save                    | EUR / USA / JAP / FRA / GER                   |
