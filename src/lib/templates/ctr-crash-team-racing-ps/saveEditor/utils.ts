@@ -1,7 +1,7 @@
 import { get } from "svelte/store";
 
 import { gameRegion } from "$lib/stores";
-import { getInt, setInt } from "$lib/utils/bytes";
+import { byteswap16, getInt, setInt } from "$lib/utils/bytes";
 import { formatChecksum } from "$lib/utils/checksum";
 import {
   customGetRegions,
@@ -182,7 +182,7 @@ export function generateChecksum(item: ItemChecksum): number {
     }
   }
 
-  checksum = ((checksum & 0xff) << 0x8) | (checksum >> 0x8);
+  checksum = byteswap16(checksum);
 
   return formatChecksum(checksum, item.dataType);
 }

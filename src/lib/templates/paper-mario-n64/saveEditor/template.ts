@@ -939,6 +939,7 @@ const template: GameJson = {
                         {
                           type: "section",
                           flex: true,
+                          noMargin: true,
                           items: [
                             {
                               name: "Number of Battles",
@@ -948,6 +949,38 @@ const template: GameJson = {
                               bigEndian: true,
                               max: 9999,
                             },
+                            {
+                              name: "Victories",
+                              offset: 0x2e4,
+                              type: "variable",
+                              dataType: "uint16",
+                              bigEndian: true,
+                            },
+                            {
+                              name: "Times Fled",
+                              type: "group",
+                              mode: "fraction",
+                              items: [
+                                {
+                                  offset: 0x2e8,
+                                  type: "variable",
+                                  dataType: "uint16",
+                                  bigEndian: true,
+                                },
+                                {
+                                  offset: 0x2e6,
+                                  type: "variable",
+                                  dataType: "uint16",
+                                  bigEndian: true,
+                                },
+                              ],
+                            },
+                          ],
+                        },
+                        {
+                          type: "section",
+                          flex: true,
+                          items: [
                             {
                               name: "Your First Strikes",
                               offset: 0x2dc,

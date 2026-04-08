@@ -91,7 +91,7 @@ export function byteswap(
 }
 
 export function byteswap16(number: number): number {
-  return ((number & 0xff) << 0x8) | (number >> 0x8);
+  return ((number & 0xff) << 0x8) | ((number >> 0x8) & 0xff);
 }
 
 export function byteswap32(number: number): number {
@@ -99,7 +99,7 @@ export function byteswap32(number: number): number {
     ((number & 0xff) << 0x18) |
     ((number & 0xff00) << 0x8) |
     ((number >> 0x8) & 0xff00) |
-    (number >> 0x18)
+    ((number >> 0x18) & 0xff)
   );
 }
 

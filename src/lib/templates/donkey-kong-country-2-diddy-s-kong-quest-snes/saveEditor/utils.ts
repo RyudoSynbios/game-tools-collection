@@ -122,12 +122,9 @@ export function overrideParseContainerItemsShifts(
   index: number,
 ): [boolean, number[] | undefined] {
   if (item.id === "slots") {
-    const $gameTemplate = get(gameTemplate);
+    const itemChecksum = clone(item.items[0]) as ItemChecksum;
 
-    const itemContainer = $gameTemplate.items[0] as ItemContainer;
-    const itemChecksum = clone(itemContainer.items[0]) as ItemChecksum;
-
-    const shift = getShift(shifts) + index * itemContainer.length;
+    const shift = getShift(shifts) + index * item.length;
 
     itemChecksum.offset += shift;
     itemChecksum.control.offsetStart += shift;
