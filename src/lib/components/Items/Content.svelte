@@ -8,7 +8,6 @@
   import Section from "$lib/components/Items/Section.svelte";
   import String from "$lib/components/Items/String.svelte";
   import Tabs from "$lib/components/Items/Tabs.svelte";
-  import { debugOptions, isDebug } from "$lib/stores";
 
   import type { Item } from "$lib/types";
 
@@ -22,7 +21,7 @@
   {#each items as item}
     {#if item.type === "bitflags"}
       <Bitflags {item} />
-    {:else if item.type === "checksum" && $isDebug && $debugOptions.showHiddenItems}
+    {:else if item.type === "checksum"}
       <Checksum {item} />
     {:else if item.type === "component"}
       <Component {item} />

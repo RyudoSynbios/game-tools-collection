@@ -35,14 +35,8 @@
   }
 </script>
 
-<div class="gtc-checksum">
-  <Input
-    {label}
-    type="text"
-    {value}
-    debug
-    disabled
-    checksum
-    onChange={() => {}}
-  />
-</div>
+{#if $isDebug && $debugOptions.showChecksums}
+  <div class="gtc-checksum">
+    <Input {label} type="text" {value} debug disabled checksum />
+  </div>
+{/if}

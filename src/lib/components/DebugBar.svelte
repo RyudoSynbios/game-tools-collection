@@ -42,6 +42,13 @@
       </button>
       <button
         type="button"
+        on:click={() => handleOptionToggle("showChecksums")}
+      >
+        Checksums
+        <input type="checkbox" checked={$debugOptions.showChecksums} />
+      </button>
+      <button
+        type="button"
         on:click={() => handleOptionToggle("showInputOffsets")}
       >
         Input Offsets
