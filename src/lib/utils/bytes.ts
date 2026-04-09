@@ -836,7 +836,10 @@ export function getString(
       if (isCharUint16(code16, options.encoding)) {
         string += decodeChar(code16, options.encoding);
         i += 0x1;
-        length += 0x1;
+        
+        if (options.encoding === "shiftJis") {
+          length += 0x1;
+        }
       } else {
         string += decodeChar(code, options.encoding);
       }
