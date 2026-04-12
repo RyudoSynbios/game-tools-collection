@@ -11,6 +11,17 @@
     }
   },
   {
+    "id": "dot-hack-mutation-ps2",
+    "name": ".hack//Mutation",
+    "consoleId": "playstation-2",
+    "tools": {
+      "saveEditor": {
+        "createdAt": "2026-04-12",
+        "regions": ["🇪🇺", "🇺🇸", "🇯🇵"]
+      }
+    }
+  },
+  {
     "id": "007-agent-under-fire-ps2",
     "name": "007: Agent Under Fire",
     "consoleId": "playstation-2",
