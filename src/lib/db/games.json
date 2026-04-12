@@ -1,5 +1,16 @@
 [
   {
+    "id": "dot-hack-infection-ps2",
+    "name": ".hack//Infection",
+    "consoleId": "playstation-2",
+    "tools": {
+      "saveEditor": {
+        "createdAt": "2026-04-12",
+        "regions": ["🇪🇺", "🇺🇸", "🇯🇵"]
+      }
+    }
+  },
+  {
     "id": "007-agent-under-fire-ps2",
     "name": "007: Agent Under Fire",
     "consoleId": "playstation-2",

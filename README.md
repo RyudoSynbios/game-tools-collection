@@ -6,6 +6,7 @@ Link to the website: [https://game-tools-collection.com](https://game-tools-coll
 
 | Games                                        | Consoles | Tools                   | Regions                                       |
 | -------------------------------------------- | -------- | ----------------------- | --------------------------------------------- |
+| .hack//Infection                             | PS2      | Save                    | EUR / USA / JAP                               |
 | 007: Agent Under Fire                        | PS2      | Save                    | EUR / USA / KOR                               |
 | 1080° Snowboarding                           | N64      | Save                    | EUR / USA / JAP                               |
 | 3D Dot Game Heroes                           | PS3      | Save                    | EUR / USA / JAP                               |
