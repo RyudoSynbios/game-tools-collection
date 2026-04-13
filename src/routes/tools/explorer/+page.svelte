@@ -20,50 +20,106 @@
   import { isGVASFile } from "$lib/utils/gvas";
   import { reset } from "$lib/utils/state";
 
-  import BackupRam from "./backupRam/index.svelte";
-  import GCM from "./gcm/index.svelte";
-  import GVAS from "./gvas/index.svelte";
-  import Iso9660 from "./iso9660/index.svelte";
-  import VMU from "./vmu/index.svelte";
+  import VMU from "./dreamcast/VMU.svelte";
+  import GCM from "./gamecube/GCM.svelte";
+  import GVAS from "./miscellaneous/GVAS.svelte";
+  import Iso9660 from "./miscellaneous/Iso9660.svelte";
+  import BackupRam from "./saturn/BackupRam.svelte";
 
-  type FileType = "backupRam" | "gcm" | "gvas" | "iso9660" | "vmu";
+  let fileTypeEl: HTMLSelectElement;
 
-  let typeEl: HTMLSelectElement;
-
+  let console = "";
+  let fileType = "";
   let fileName = "";
-  let fileType: FileType | null = null;
   let dataView: DataView = new DataView(new ArrayBuffer(0));
   let error = "";
 
-  const types: { [key in FileType]: (dataView: DataView) => boolean } = {
-    backupRam: isBackupRam,
-    gcm: isGCMFile,
-    gvas: isGVASFile,
-    iso9660: isIso9660File,
-    vmu: isVmuFile,
+  const consoles: {
+    [key: string]: {
+      name: string;
+      fileTypes: string[];
+    };
+  } = {
+    gamecube: {
+      name: "GameCube",
+      fileTypes: ["gamecube_gcm"],
+    },
+    saturn: {
+      name: "Saturn",
+      fileTypes: ["saturn_backupRam", "miscellaneous_iso9660"],
+    },
+    dreamcast: {
+      name: "Dreamcast",
+      fileTypes: ["dreamcast_vmu"],
+    },
+    playstation: {
+      name: "PlayStation",
+      fileTypes: ["miscellaneous_iso9660"],
+    },
+    miscellaneous: {
+      name: "Miscellaneous",
+      fileTypes: ["miscellaneous_gvas", "miscellaneous_iso9660"],
+    },
+  };
+
+  const tools: {
+    [key: string]: {
+      name: string;
+      fullName: string;
+      validator: (dataView: DataView) => boolean;
+    };
+  } = {
+    gamecube_gcm: {
+      name: "GCM",
+      fullName: "Gamecube - GCM",
+      validator: isGCMFile,
+    },
+    saturn_backupRam: {
+      name: "Backup Ram",
+      fullName: "Saturn - Backup Ram",
+      validator: isBackupRam,
+    },
+    dreamcast_vmu: {
+      name: "VMU",
+      fullName: "Dreamcast - VMU",
+      validator: isVmuFile,
+    },
+    miscellaneous_gvas: {
+      name: "GVAS",
+      fullName: "GVAS",
+      validator: isGVASFile,
+    },
+    miscellaneous_iso9660: {
+      name: "Iso9660",
+      fullName: "Iso9660",
+      validator: isIso9660File,
+    },
   };
 
   function handleFileEject(): void {
+    console = "";
     fileName = "";
-    fileType = null;
+    fileType = "";
     dataView = new DataView(new ArrayBuffer(0));
 
     reset();
   }
 
   function onFileUploaded(fileTmp: File, dataViewTmp: DataView): void {
-    const type = types[typeEl.value as FileType];
-
-    if (typeof type === "function") {
-      if (type(dataViewTmp)) {
-        fileType = typeEl.value as FileType;
-      }
-    } else {
-      Object.entries(types).some(([type, cb]) => {
-        if (cb(dataViewTmp)) {
-          fileType = type as FileType;
+    if (console === "") {
+      Object.entries(tools).some(([subkey, value]) => {
+        if (value.validator(dataViewTmp)) {
+          fileType = subkey;
         }
       });
+    } else {
+      const tool = tools[fileTypeEl.value];
+
+      if (typeof tool.validator === "function") {
+        if (tool.validator(dataViewTmp)) {
+          fileType = fileTypeEl.value;
+        }
+      }
     }
 
     if (fileType) {
@@ -93,19 +149,25 @@
 </svelte:head>
 
 <div class="gtc-explorer">
-  {#if fileType === null}
+  {#if fileName === ""}
     <Dropzone {onFileUploaded}>
       <svelte:fragment slot="dropzone" let:isDragging let:isFileLoading>
         <p class="gtc-explorer-title">Explorer</p>
         <div class="gtc-explorer-form">
-          <select bind:this={typeEl} on:click|stopPropagation>
+          <select bind:value={console} on:click|stopPropagation>
             <option value="">Auto-detect</option>
-            <option value="iso9660">ISO 9660</option>
-            <option value="backupRam">Backup Ram</option>
-            <option value="gcm">GCM</option>
-            <option value="gvas">GVAS</option>
-            <option value="vmu">VMU</option>
+            {#each Object.entries(consoles) as [key, value]}
+              <option value={key}>{value.name}</option>
+            {/each}
           </select>
+          {#if console}
+            <select bind:this={fileTypeEl} on:click|stopPropagation>
+              {#each consoles[console].fileTypes as fileType}
+                {@const tool = tools[fileType]}
+                <option value={fileType}>{tool.name}</option>
+              {/each}
+            </select>
+          {/if}
         </div>
         {#if isDragging}
           <p>Drop the file here.</p>
@@ -122,7 +184,7 @@
   {:else}
     <div class="gtc-explorer-tool">
       <div class="gtc-explorer-banner">
-        <p>{fileType.toUpperCase()}</p>
+        <p>{tools[fileType].fullName}</p>
         <div>
           <button
             type="button"
@@ -137,16 +199,16 @@
         </div>
       </div>
       <div class="gtc-explorer-content">
-        {#if fileType === "backupRam"}
-          <BackupRam {fileName} {dataView} />
-        {:else if fileType === "gcm"}
+        {#if fileType === "gamecube_gcm"}
           <GCM {fileName} {dataView} />
-        {:else if fileType === "gvas"}
-          <GVAS {fileName} {dataView} />
-        {:else if fileType === "iso9660"}
-          <Iso9660 {fileName} {dataView} />
-        {:else if fileType === "vmu"}
+        {:else if fileType === "saturn_backupRam"}
+          <BackupRam {fileName} {dataView} />
+        {:else if fileType === "dreamcast_vmu"}
           <VMU {fileName} {dataView} />
+        {:else if fileType === "miscellaneous_gvas"}
+          <GVAS {fileName} {dataView} />
+        {:else if fileType === "miscellaneous_iso9660"}
+          <Iso9660 {fileName} {dataView} />
         {/if}
       </div>
     </div>
@@ -165,7 +227,11 @@
     }
 
     & .gtc-explorer-form {
-      @apply mb-4 flex;
+      @apply mb-2 flex flex-col;
+
+      & select {
+        @apply mb-2;
+      }
     }
 
     & .gtc-explorer-error {
