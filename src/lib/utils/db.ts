@@ -94,7 +94,7 @@ export function getGames(options: GameOptions = {}): Game[] {
         return moment(b.createdAt).unix() - moment(a.createdAt).unix();
       }
 
-      return a.name.localeCompare(b.name);
+      return a.name.localeCompare(b.name, "en", { numeric: true });
     });
   }
 

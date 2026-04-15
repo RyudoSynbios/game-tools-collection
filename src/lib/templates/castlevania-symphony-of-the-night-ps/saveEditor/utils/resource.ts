@@ -453,7 +453,6 @@ export const handList = [
 ];
 
 export const hands: Resource = {};
-
 export const handsGroups: ResourceGroups = [];
 
 handTypes.forEach((type) => {

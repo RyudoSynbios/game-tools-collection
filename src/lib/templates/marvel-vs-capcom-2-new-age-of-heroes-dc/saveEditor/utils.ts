@@ -5,7 +5,7 @@ import { getInt, setInt } from "$lib/utils/bytes";
 import { formatChecksum } from "$lib/utils/checksum";
 import { initDataView, saveDataView } from "$lib/utils/common/dreamcast";
 import { DCI_HEADER_SIZE, isDciFile } from "$lib/utils/common/dreamcast/dci";
-import VMU, { isVmuFile } from "$lib/utils/common/dreamcast/vmu";
+import VMU, { isVMUFile } from "$lib/utils/common/dreamcast/vmu";
 import { getRegions } from "$lib/utils/validator";
 
 import type { Item, ItemChecksum, ItemContainer, ItemInt } from "$lib/types";
@@ -13,7 +13,7 @@ import type { Item, ItemChecksum, ItemContainer, ItemInt } from "$lib/types";
 let vmu: VMU;
 
 export function beforeInitDataView(dataView: DataView): DataView {
-  if (isVmuFile(dataView)) {
+  if (isVMUFile(dataView)) {
     vmu = new VMU(dataView);
 
     return vmu.unpack();

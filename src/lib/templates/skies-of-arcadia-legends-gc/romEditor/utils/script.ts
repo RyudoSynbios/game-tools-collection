@@ -7,7 +7,7 @@ import { decodeChar, isCharUint16 } from "$lib/utils/encoding";
 import { capitalize } from "$lib/utils/format";
 import { getResource } from "$lib/utils/parser";
 
-import { Resource } from "$lib/types";
+import type { Resource } from "$lib/types";
 
 enum Instruction {
   If = 0x0,

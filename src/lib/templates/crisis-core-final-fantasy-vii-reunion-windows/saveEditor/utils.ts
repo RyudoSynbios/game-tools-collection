@@ -231,7 +231,7 @@ export function afterSetInt(item: Item): void {
     setInt(itemInt.offset + 0x7, "uint8", unknown1, {}, "save");
     setInt(itemInt.offset + 0x8, "uint8", unknown2, {}, "save");
 
-    updateInvetoryMateriaNames(slotIndex);
+    updateInventoryMateriaNames(slotIndex);
   } else if ("id" in item && item.id === "item") {
     const itemInt = item as ItemInt;
 
@@ -398,10 +398,10 @@ export function getSlotNames(): Resource {
 }
 
 export function onSlotChange(slotIndex: number): void {
-  updateInvetoryMateriaNames(slotIndex);
+  updateInventoryMateriaNames(slotIndex);
 }
 
-export function updateInvetoryMateriaNames(slotIndex: number): void {
+export function updateInventoryMateriaNames(slotIndex: number): void {
   const values1 = getInventoryMateriaNames(slotIndex, true);
   const values2 = getInventoryMateriaNames(slotIndex);
 

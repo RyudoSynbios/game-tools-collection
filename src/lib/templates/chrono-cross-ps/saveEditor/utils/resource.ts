@@ -412,7 +412,6 @@ export const elementList = [
 ];
 
 export const elements: Resource = {};
-
 export const elementsGroups: ResourceGroups = elementTypes.map((type) => ({
   name: type.name,
   options: [],

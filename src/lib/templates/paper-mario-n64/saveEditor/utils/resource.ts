@@ -472,8 +472,8 @@ export const locationList: {
 };
 
 export const locations: Resource = {};
-export const locationsGroups: ResourceGroups = [];
 export const locationsOrder: number[] = [];
+export const locationsGroups: ResourceGroups = [];
 
 areas.forEach((area) => {
   locationsGroups.push({ name: area.name, options: [] });

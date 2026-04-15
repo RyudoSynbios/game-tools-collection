@@ -2,6 +2,7 @@ import { get } from "svelte/store";
 
 import { dataView, gameTemplate } from "$lib/stores";
 import { getInt, getString } from "$lib/utils/bytes";
+import debug from "$lib/utils/debug";
 import { mergeUint8Arrays, numberArrayToString } from "$lib/utils/format";
 import { getRegionValidator } from "$lib/utils/validator";
 
@@ -55,19 +56,28 @@ export default class VMU {
   private dataView: DataView;
   private system: System;
   private _root: File[];
-  private saves: Save[];
+  private _saves: Save[];
 
   constructor(dataView: DataView) {
     this.dataView = dataView;
     this.system = this.generateSystem();
     this._root = [];
-    this.saves = [];
+    this._saves = [];
+
+    if (!isVMUFile(dataView)) {
+      debug.error("Not a valid VMU file.");
+      return;
+    }
 
     this.generateRoot();
   }
 
   get root() {
     return this._root;
+  }
+
+  get saves() {
+    return this._saves;
   }
 
   private generateSystem(): System {
@@ -177,6 +187,8 @@ export default class VMU {
   public unpack(): DataView {
     const $gameTemplate = get(gameTemplate);
 
+    this._saves = [];
+
     const uint8Arrays: Uint8Array[] = [];
 
     let offset = 0x0;
@@ -193,7 +205,7 @@ export default class VMU {
 
             uint8Arrays.push(binary);
 
-            this.saves.push({ file, offset });
+            this._saves.push({ file, offset });
 
             offset += binary.length;
           }
@@ -209,7 +221,7 @@ export default class VMU {
   public repack(): ArrayBufferLike {
     const $dataView = get(dataView);
 
-    this.saves.forEach((save) => {
+    this._saves.forEach((save) => {
       generateChecksum(save.offset);
 
       const binary = new Uint8Array(
@@ -237,7 +249,7 @@ export default class VMU {
         const validatorStringified = numberArrayToString(validator);
 
         if (
-          this.saves.some((save) =>
+          this._saves.some((save) =>
             save.file.name.includes(validatorStringified),
           )
         ) {
@@ -253,9 +265,11 @@ export default class VMU {
     const validator = getRegionValidator(0x4);
     const validatorStringified = numberArrayToString(validator);
 
-    return this.saves
+    return this._saves
       .filter((save) => save.file.name.includes(validatorStringified))
-      .sort((a, b) => a.file.name.localeCompare(b.file.name));
+      .sort((a, b) =>
+        a.file.name.localeCompare(b.file.name, "en", { numeric: true }),
+      );
   }
 
   public getSlotShifts(index: number): [boolean, number[] | undefined] {
@@ -272,11 +286,11 @@ export default class VMU {
     this.dataView = new DataView(new ArrayBuffer(0));
     this.system = {} as System;
     this._root = [];
-    this.saves = [];
+    this._saves = [];
   }
 }
 
-export function isVmuFile(dataView: DataView): boolean {
+export function isVMUFile(dataView: DataView): boolean {
   if (dataView.byteLength === VMU_SIZE) {
     const magic = getInt(0x1fe00, "uint8", {}, dataView);
 

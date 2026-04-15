@@ -1,6 +1,7 @@
 import { get } from "svelte/store";
 
 import { dataView, gameTemplate } from "$lib/stores";
+import debug from "$lib/utils/debug";
 
 import { addPadding, getInt, getString, removePadding } from "../../bytes";
 import { mergeUint8Arrays, numberArrayToString } from "../../format";
@@ -36,21 +37,27 @@ export default class BackupRam {
   private dataView: DataView;
   private system: System;
   private _root: File[];
-  private saves: Save[];
+  private _saves: Save[];
 
   constructor(dataView: DataView) {
     this.dataView = dataView;
     this.system = this.generateSystem();
     this._root = [];
-    this.saves = [];
+    this._saves = [];
 
     if (this.system.type) {
       this.generateRoot();
+    } else {
+      debug.error("Not a valid Backup Ram file.");
     }
   }
 
   get root() {
     return this._root;
+  }
+
+  get saves() {
+    return this._saves;
   }
 
   private generateSystem(): System {
@@ -225,6 +232,8 @@ export default class BackupRam {
   public unpack(): DataView {
     const $gameTemplate = get(gameTemplate);
 
+    this._saves = [];
+
     const uint8Arrays: Uint8Array[] = [];
 
     let offset = 0x0;
@@ -241,7 +250,7 @@ export default class BackupRam {
 
             uint8Arrays.push(binary);
 
-            this.saves.push({ file, offset });
+            this._saves.push({ file, offset });
 
             offset += binary.length;
           }
@@ -257,7 +266,7 @@ export default class BackupRam {
   public repack(): ArrayBufferLike {
     const $dataView = get(dataView);
 
-    this.saves.forEach((save) => {
+    this._saves.forEach((save) => {
       const binary = new Uint8Array(
         $dataView.buffer.slice(save.offset, save.offset + save.file.size),
       );
@@ -284,7 +293,7 @@ export default class BackupRam {
         const validatorStringified = numberArrayToString(validator);
 
         if (
-          this.saves.some((save) =>
+          this._saves.some((save) =>
             save.file.name.includes(validatorStringified),
           )
         ) {
@@ -300,9 +309,11 @@ export default class BackupRam {
     const validator = getRegionValidator(0x0);
     const validatorStringified = numberArrayToString(validator);
 
-    return this.saves
+    return this._saves
       .filter((save) => save.file.name.includes(validatorStringified))
-      .sort((a, b) => a.file.name.localeCompare(b.file.name));
+      .sort((a, b) =>
+        a.file.name.localeCompare(b.file.name, "en", { numeric: true }),
+      );
   }
 
   public getSlotShifts(index: number): [boolean, number[] | undefined] {
@@ -319,7 +330,7 @@ export default class BackupRam {
     this.dataView = new DataView(new ArrayBuffer(0));
     this.system = {} as System;
     this._root = [];
-    this.saves = [];
+    this._saves = [];
   }
 }
 

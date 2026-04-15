@@ -1,4 +1,4 @@
-import { Resource, ResourceGroups } from "$lib/types";
+import type { Resource, ResourceGroups } from "$lib/types";
 
 export const characterList = [
   { index: 0x0, name: "Squall", reportBit: 0 },
@@ -375,88 +375,7 @@ export const uniqueCards = [
   { index: 0x20, name: "Squall" },
 ];
 
-// prettier-ignore
-export const locationList: {
-  [key: number]: {
-    preview: number;
-    coordinates: [number, number, number];
-    discs: number[];
-    name: string;
-    group: number;
-    order: (number | undefined)[];
-  };
-} = {
-  0x000: { preview: 0x00, coordinates: [24565, -29180,  -626], discs: [1, 2, 3, 4], group: 0x1 , order: [ 1,  1,  1,  1], name: "World Map" },
-  0x05f: { preview: 0x00, coordinates: [ -570,   -575,     0], discs: [2, 3, 4]   , group: 0x0 , order: [  ,  0,  0,  0], name: "Start Disc" },
-  0x06e: { preview: 0x54, coordinates: [  425,   -315,    44], discs: [1, 2, 3]   , group: 0x2 , order: [ 7, 13,  7,   ], name: "Balamb Hotel" },
-  0x075: { preview: 0x53, coordinates: [  370,    410,    76], discs: [2]         , group: 0x2 , order: [  , 14,   ,   ], name: "Balamb- The Dincht's" },
-  0x0a5: { preview: 0x46, coordinates: [ -690,  -8550,     8], discs: [1, 2, 3]   , group: 0x3 , order: [ 1,  8,  2,   ], name: "B-Garden- Hall" },
-  0x0cd: { preview: 0x44, coordinates: [ -770,  -1690,   204], discs: [2, 3]      , group: 0x3 , order: [  , 12,  6,   ], name: "B-Garden- MD Level" },
-  0x0da: { preview: 0x4e, coordinates: [ -995,   4360,    30], discs: [1, 2, 3]   , group: 0x3 , order: [ 6, 11,  5,   ], name: "B-Garden- Training Center" },
-  0x0ed: { preview: 0x48, coordinates: [ -190,    270,    32], discs: [1]         , group: 0x3 , order: [ 2,   ,   ,   ], name: "B-Garden- Dormitory Double" },
-  0x0f3: { preview: 0x48, coordinates: [ -105,    250,    32], discs: [1]         , group: 0x3 , order: [ 3,   ,   ,   ], name: "B-Garden- Dormitory Double (night)" },
-  0x0f5: { preview: 0x49, coordinates: [  -50,    720,    41], discs: [1, 2, 3]   , group: 0x3 , order: [4 ,  9,  3,   ], name: "B-Garden- Dormitory Single" },
-  0x0f6: { preview: 0x49, coordinates: [   75,    660,    41], discs: [1, 2, 3]   , group: 0x3 , order: [5 , 10,  4,   ], name: "B-Garden- Dormitory Single (night)" },
-  0x109: { preview: 0x59, coordinates: [ -100,   -125,    83], discs: [1]         , group: 0x4 , order: [11,   ,   ,   ], name: "Train" },
-  0x126: { preview: 0xda, coordinates: [-3730,    140,   100], discs: [3]         , group: 0x5 , order: [  ,   , 25,   ], name: "Deep Sea Deposit (top)" },
-  0x12b: { preview: 0xda, coordinates: [-1235,    850,    20], discs: [3]         , group: 0x5 , order: [  ,   , 26,   ], name: "Deep Sea Deposit (bottom)" },
-  0x135: { preview: 0x63, coordinates: [  320,  -1470,    23], discs: [1]         , group: 0x6 , order: [ 9,   ,   ,   ], name: "Dollet- Comm Tower (before Elvoret)" },
-  0x136: { preview: 0x63, coordinates: [  320,  -1470,    23], discs: [1]         , group: 0x6 , order: [10,   ,   ,   ], name: "Dollet- Comm Tower (after Elvoret)" },
-  0x13b: { preview: 0x5d, coordinates: [-1155,   -705,   113], discs: [1]         , group: 0x6 , order: [ 8,   ,   ,   ], name: "Dollet- Town Square (SeeD mission)" },
-  0x13c: { preview: 0x5d, coordinates: [-1155,   -705,   113], discs: [1, 2, 3]   , group: 0x6 , order: [18, 20, 11,   ], name: "Dollet- Town Square" },
-  0x13e: { preview: 0x61, coordinates: [ -535,    470,    86], discs: [1, 2, 3]   , group: 0x6 , order: [16, 18,  9,   ], name: "Dollet Hotel" },
-  0x150: { preview: 0x60, coordinates: [  700,    990,     3], discs: [1, 2, 3]   , group: 0x6 , order: [17, 19, 10,   ], name: "Dollet Pub" },
-  0x15d: { preview: 0xb5, coordinates: [  120,  -1075,    31], discs: [4]         , group: 0x7 , order: [  ,   ,   ,  4], name: "Lunatic Pandora (near Adel)" },
-  0x165: { preview: 0xb6, coordinates: [  150,    335,    51], discs: [1]         , group: 0x8 , order: [19,   ,   ,   ], name: "Centra- Excavation Site (past)" },
-  0x17c: { preview: 0xb5, coordinates: [ -580,  -2370,   272], discs: [3, 4]      , group: 0x7 , order: [  ,   , 40,  2], name: "Lunatic Pandora (near Ragnarok)" },
-  0x191: { preview: 0xb5, coordinates: [  720,  -1740,     8], discs: [3, 4]      , group: 0x7 , order: [  ,   , 41,  3], name: "Lunatic Pandora (near Seifer)" },
-  0x1bc: { preview: 0x9f, coordinates: [  300,  -1600,    48], discs: [3]         , group: 0x9 , order: [  ,   , 32,   ], name: "Esthar- City (near Highway)" },
-  0x1c7: { preview: 0x9f, coordinates: [   60,   4735,    90], discs: [3]         , group: 0x9 , order: [  ,   , 31,   ], name: "Esthar- City" },
-  0x1c8: { preview: 0x9f, coordinates: [   60,   4735,    90], discs: [3]         , group: 0x9 , order: [  ,   , 39,   ], name: "Esthar- City (after Ragnarok)" },
-  0x1da: { preview: 0xb2, coordinates: [ -530,   1975,   195], discs: [3]         , group: 0xa , order: [  ,   , 29,   ], name: "Lunatic Pandora Laboratory (past)" },
-  0x1dc: { preview: 0xb2, coordinates: [ -530,   1975,   195], discs: [3]         , group: 0xa , order: [  ,   , 33,   ], name: "Lunatic Pandora Laboratory" },
-  0x1dd: { preview: 0xb2, coordinates: [ -530,   1975,   195], discs: [3]         , group: 0xa , order: [  ,   , 34,   ], name: "Lunatic Pandora Laboratory (after Ragnarok)" },
-  0x208: { preview: 0x9d, coordinates: [  390,  -1940,    61], discs: [3]         , group: 0xb , order: [  ,   , 28,   ], name: "Great Salt Lake" },
-  0x211: { preview: 0xa7, coordinates: [ -345,    252,    20], discs: [3]         , group: 0xa , order: [  ,   , 30,   ], name: "Dr. Odine's Laboratory- Lobby" },
-  0x232: { preview: 0xf5, coordinates: [  290,   -545,    94], discs: [4]         , group: 0xc , order: [  ,   ,   ,  7], name: "Ultimecia Castle- Clock Tower" },
-  0x247: { preview: 0xf6, coordinates: [  590,   6030,     7], discs: [4]         , group: 0xc , order: [  ,   ,   ,  8], name: "Ultimecia Castle- Master Room" },
-  0x254: { preview: 0xf8, coordinates: [ -440,  -2630,   160], discs: [4]         , group: 0xc , order: [  ,   ,   ,  6], name: "Ultimecia Castle" },
-  0x264: { preview: 0x92, coordinates: [ 1925,   -380,    24], discs: [2, 3]      , group: 0xd , order: [  ,  7, 19,   ], name: "Fishermans Horizon" },
-  0x288: { preview: 0x8c, coordinates: [  315,   -320,    44], discs: [2]         , group: 0xe , order: [  ,  2,   ,   ], name: "Winhill - Vacant House (past)" },
-  0x289: { preview: 0x8c, coordinates: [  315,   -320,    44], discs: [2, 3]      , group: 0xe , order: [  , 32, 23,   ], name: "Winhill - Vacant House" },
-  0x2aa: { preview: 0x72, coordinates: [ -370,   2255,    15], discs: [1, 2]      , group: 0xf , order: [22, 35,   ,   ], name: "G-Garden- Hallway" },
-  0x2ad: { preview: 0x71, coordinates: [  800,  -2135,   136], discs: [1, 2]      , group: 0xf , order: [20, 33,   ,   ], name: "G-Garden- Hall (1F)" },
-  0x2b4: { preview: 0x71, coordinates: [ 1510,   2730,    81], discs: [1, 2]      , group: 0xf , order: [21, 34,   ,   ], name: "G-Garden- Hall (2F)" },
-  0x2ca: { preview: 0x78, coordinates: [ 1185,  -2440,    46], discs: [2]         , group: 0xf , order: [  , 36,   ,   ], name: "G-Garden- Master Room" },
-  0x2d6: { preview: 0x7f, coordinates: [ -500,    450,    97], discs: [1, 2, 3]   , group: 0x10, order: [27, 25, 16,   ], name: "Deling City- Caraway's Mansion" },
-  0x2d7: { preview: 0x86, coordinates: [ -300,     64,    44], discs: [1]         , group: 0x10, order: [29,   ,   ,   ], name: "Deling City- Sewer" },
-  0x2dd: { preview: 0x84, coordinates: [ -535,    680,    46], discs: [1, 2, 3]   , group: 0x10, order: [30, 27, 18,   ], name: "Deling City- Gateway" },
-  0x2e0: { preview: 0x82, coordinates: [ -375,    490,    84], discs: [1, 2, 3]   , group: 0x10, order: [26, 24, 15,   ], name: "Deling City- Hotel" },
-  0x2eb: { preview: 0x7e, coordinates: [-4840, -29720, 15424], discs: [1, 2, 3]   , group: 0x10, order: [28, 26, 17,   ], name: "Deling- Presidential Residence" },
-  0x30a: { preview: 0x89, coordinates: [  391,    555,    31], discs: [2]         , group: 0x11, order: [  ,  5,   ,   ], name: "Galbadia Missile Base (entrance)" },
-  0x30d: { preview: 0x89, coordinates: [ -879,   -140,   157], discs: [2]         , group: 0x11, order: [  ,  6,   ,   ], name: "Galbadia Missile Base (missile launchers room)" },
-  0x314: { preview: 0x91, coordinates: [ -400,    630,    26], discs: [1, 2, 3]   , group: 0x12, order: [24, 22, 13,   ], name: "Tomb of the Unknown King (Sacred room)" },
-  0x316: { preview: 0x91, coordinates: [  280,    570,    29], discs: [1, 2, 3]   , group: 0x12, order: [25, 23, 14,   ], name: "Tomb of the Unknown King (water wheel room)" },
-  0x318: { preview: 0x91, coordinates: [ 1790,  -3735,    53], discs: [1, 2, 3]   , group: 0x12, order: [23, 21, 12,   ], name: "Tomb of the Unknown King (entrance)" },
-  0x31b: { preview: 0x87, coordinates: [-2090,   1070,    39], discs: [2]         , group: 0x13, order: [  ,  3,   ,   ], name: "Galbadia D-District Prison" },
-  0x330: { preview: 0x87, coordinates: [ 1580,    250,    72], discs: [2]         , group: 0x13, order: [  ,  4,   ,   ], name: "Galbadia D-District Prison (top)" },
-  0x339: { preview: 0xd5, coordinates: [  220,   -420,    21], discs: [3]         , group: 0x14, order: [  ,   , 37,   ], name: "Ragnarok- Air Room" },
-  0x346: { preview: 0xd3, coordinates: [ -330,   2160,     3], discs: [3]         , group: 0x14, order: [  ,   , 38,   ], name: "Ragnarok- Hangar" },
-  0x34f: { preview: 0xd8, coordinates: [ -920,   -180,    13], discs: [3]         , group: 0x5 , order: [  ,   , 24,   ], name: "Deep Sea Research Center- Lb" },
-  0x351: { preview: 0xcd, coordinates: [ -775,   1480,    41], discs: [2, 3]      , group: 0x15, order: [  , 28, 27,   ], name: "White SeeD Ship" },
-  0x363: { preview: 0xdc, coordinates: [  525,   -850,    21], discs: [3]         , group: 0x16, order: [  ,   , 35,   ], name: "Lunar Base- Medical Room" },
-  0x366: { preview: 0xdd, coordinates: [  230,  -1140,    21], discs: [3]         , group: 0x16, order: [  ,   , 36,   ], name: "Lunar Base- Pod" },
-  0x378: { preview: 0xc2, coordinates: [ -460,    -20,    69], discs: [2, 3]      , group: 0x17, order: [  , 29, 20,   ], name: "T-Garden- Classroom" },
-  0x37e: { preview: 0x67, coordinates: [  250,   -300,    85], discs: [1]         , group: 0x18, order: [12,   ,   ,   ], name: "Timber- Forest Owls' Base" },
-  0x381: { preview: 0x65, coordinates: [ -190,    -80,    85], discs: [1, 2]      , group: 0x18, order: [15, 17,   ,   ], name: "Timber- City Square" },
-  0x384: { preview: 0x69, coordinates: [ -340,   -485,    41], discs: [1, 2, 3]   , group: 0x18, order: [13, 15,  8,   ], name: "Timber Hotel" },
-  0x39b: { preview: 0x65, coordinates: [  950,   1380,    50], discs: [1, 2]      , group: 0x18, order: [14, 16,   ,   ], name: "Timber- City Square (station)" },
-  0x3ab: { preview: 0xcb, coordinates: [  540,    130,    37], discs: [2, 3]      , group: 0x19, order: [  , 30, 21,   ], name: "Shumi Village- Hotel" },
-  0x3af: { preview: 0xc7, coordinates: [ -725,   -670,    65], discs: [2, 3]      , group: 0x19, order: [  , 31, 22,   ], name: "Shumi Village- Village" },
-  0x3d0: { preview: 0xf9, coordinates: [  -15,    920,     9], discs: [4]         , group: 0x1a, order: [  ,   ,   ,  5], name: "Commencement Room" },
-};
-
-const locationGroupList: Resource = {
+const areas: Resource = {
   0x0: "Disc %d Start",
   0x1: "World Map",
   0x2: "Balamb",
@@ -486,6 +405,87 @@ const locationGroupList: Resource = {
   0x1a: "Time Distorsion",
 };
 
+// prettier-ignore
+export const locationList: {
+  [key: number]: {
+    preview: number;
+    area: number;
+    coordinates: [number, number, number];
+    discs: number[];
+    order: (number | undefined)[];
+    name: string;
+  };
+} = {
+  0x000: { preview: 0x00, area: 0x01, coordinates: [24565, -29180,  -626], discs: [1, 2, 3, 4], order: [ 1,  1,  1,  1], name: "World Map" },
+  0x05f: { preview: 0x00, area: 0x00, coordinates: [ -570,   -575,     0], discs: [2, 3, 4]   , order: [  ,  0,  0,  0], name: "Start Disc" },
+  0x06e: { preview: 0x54, area: 0x02, coordinates: [  425,   -315,    44], discs: [1, 2, 3]   , order: [ 7, 13,  7,   ], name: "Balamb Hotel" },
+  0x075: { preview: 0x53, area: 0x02, coordinates: [  370,    410,    76], discs: [2]         , order: [  , 14,   ,   ], name: "Balamb- The Dincht's" },
+  0x0a5: { preview: 0x46, area: 0x03, coordinates: [ -690,  -8550,     8], discs: [1, 2, 3]   , order: [ 1,  8,  2,   ], name: "B-Garden- Hall" },
+  0x0cd: { preview: 0x44, area: 0x03, coordinates: [ -770,  -1690,   204], discs: [2, 3]      , order: [  , 12,  6,   ], name: "B-Garden- MD Level" },
+  0x0da: { preview: 0x4e, area: 0x03, coordinates: [ -995,   4360,    30], discs: [1, 2, 3]   , order: [ 6, 11,  5,   ], name: "B-Garden- Training Center" },
+  0x0ed: { preview: 0x48, area: 0x03, coordinates: [ -190,    270,    32], discs: [1]         , order: [ 2,   ,   ,   ], name: "B-Garden- Dormitory Double" },
+  0x0f3: { preview: 0x48, area: 0x03, coordinates: [ -105,    250,    32], discs: [1]         , order: [ 3,   ,   ,   ], name: "B-Garden- Dormitory Double (night)" },
+  0x0f5: { preview: 0x49, area: 0x03, coordinates: [  -50,    720,    41], discs: [1, 2, 3]   , order: [4 ,  9,  3,   ], name: "B-Garden- Dormitory Single" },
+  0x0f6: { preview: 0x49, area: 0x03, coordinates: [   75,    660,    41], discs: [1, 2, 3]   , order: [5 , 10,  4,   ], name: "B-Garden- Dormitory Single (night)" },
+  0x109: { preview: 0x59, area: 0x04, coordinates: [ -100,   -125,    83], discs: [1]         , order: [11,   ,   ,   ], name: "Train" },
+  0x126: { preview: 0xda, area: 0x05, coordinates: [-3730,    140,   100], discs: [3]         , order: [  ,   , 25,   ], name: "Deep Sea Deposit (top)" },
+  0x12b: { preview: 0xda, area: 0x05, coordinates: [-1235,    850,    20], discs: [3]         , order: [  ,   , 26,   ], name: "Deep Sea Deposit (bottom)" },
+  0x135: { preview: 0x63, area: 0x06, coordinates: [  320,  -1470,    23], discs: [1]         , order: [ 9,   ,   ,   ], name: "Dollet- Comm Tower (before Elvoret)" },
+  0x136: { preview: 0x63, area: 0x06, coordinates: [  320,  -1470,    23], discs: [1]         , order: [10,   ,   ,   ], name: "Dollet- Comm Tower (after Elvoret)" },
+  0x13b: { preview: 0x5d, area: 0x06, coordinates: [-1155,   -705,   113], discs: [1]         , order: [ 8,   ,   ,   ], name: "Dollet- Town Square (SeeD mission)" },
+  0x13c: { preview: 0x5d, area: 0x06, coordinates: [-1155,   -705,   113], discs: [1, 2, 3]   , order: [18, 20, 11,   ], name: "Dollet- Town Square" },
+  0x13e: { preview: 0x61, area: 0x06, coordinates: [ -535,    470,    86], discs: [1, 2, 3]   , order: [16, 18,  9,   ], name: "Dollet Hotel" },
+  0x150: { preview: 0x60, area: 0x06, coordinates: [  700,    990,     3], discs: [1, 2, 3]   , order: [17, 19, 10,   ], name: "Dollet Pub" },
+  0x15d: { preview: 0xb5, area: 0x07, coordinates: [  120,  -1075,    31], discs: [4]         , order: [  ,   ,   ,  4], name: "Lunatic Pandora (near Adel)" },
+  0x165: { preview: 0xb6, area: 0x08, coordinates: [  150,    335,    51], discs: [1]         , order: [19,   ,   ,   ], name: "Centra- Excavation Site (past)" },
+  0x17c: { preview: 0xb5, area: 0x07, coordinates: [ -580,  -2370,   272], discs: [3, 4]      , order: [  ,   , 40,  2], name: "Lunatic Pandora (near Ragnarok)" },
+  0x191: { preview: 0xb5, area: 0x07, coordinates: [  720,  -1740,     8], discs: [3, 4]      , order: [  ,   , 41,  3], name: "Lunatic Pandora (near Seifer)" },
+  0x1bc: { preview: 0x9f, area: 0x09, coordinates: [  300,  -1600,    48], discs: [3]         , order: [  ,   , 32,   ], name: "Esthar- City (near Highway)" },
+  0x1c7: { preview: 0x9f, area: 0x09, coordinates: [   60,   4735,    90], discs: [3]         , order: [  ,   , 31,   ], name: "Esthar- City" },
+  0x1c8: { preview: 0x9f, area: 0x09, coordinates: [   60,   4735,    90], discs: [3]         , order: [  ,   , 39,   ], name: "Esthar- City (after Ragnarok)" },
+  0x1da: { preview: 0xb2, area: 0x0a, coordinates: [ -530,   1975,   195], discs: [3]         , order: [  ,   , 29,   ], name: "Lunatic Pandora Laboratory (past)" },
+  0x1dc: { preview: 0xb2, area: 0x0a, coordinates: [ -530,   1975,   195], discs: [3]         , order: [  ,   , 33,   ], name: "Lunatic Pandora Laboratory" },
+  0x1dd: { preview: 0xb2, area: 0x0a, coordinates: [ -530,   1975,   195], discs: [3]         , order: [  ,   , 34,   ], name: "Lunatic Pandora Laboratory (after Ragnarok)" },
+  0x208: { preview: 0x9d, area: 0x0b, coordinates: [  390,  -1940,    61], discs: [3]         , order: [  ,   , 28,   ], name: "Great Salt Lake" },
+  0x211: { preview: 0xa7, area: 0x0a, coordinates: [ -345,    252,    20], discs: [3]         , order: [  ,   , 30,   ], name: "Dr. Odine's Laboratory- Lobby" },
+  0x232: { preview: 0xf5, area: 0x0c, coordinates: [  290,   -545,    94], discs: [4]         , order: [  ,   ,   ,  7], name: "Ultimecia Castle- Clock Tower" },
+  0x247: { preview: 0xf6, area: 0x0c, coordinates: [  590,   6030,     7], discs: [4]         , order: [  ,   ,   ,  8], name: "Ultimecia Castle- Master Room" },
+  0x254: { preview: 0xf8, area: 0x0c, coordinates: [ -440,  -2630,   160], discs: [4]         , order: [  ,   ,   ,  6], name: "Ultimecia Castle" },
+  0x264: { preview: 0x92, area: 0x0d, coordinates: [ 1925,   -380,    24], discs: [2, 3]      , order: [  ,  7, 19,   ], name: "Fishermans Horizon" },
+  0x288: { preview: 0x8c, area: 0x0e, coordinates: [  315,   -320,    44], discs: [2]         , order: [  ,  2,   ,   ], name: "Winhill - Vacant House (past)" },
+  0x289: { preview: 0x8c, area: 0x0e, coordinates: [  315,   -320,    44], discs: [2, 3]      , order: [  , 32, 23,   ], name: "Winhill - Vacant House" },
+  0x2aa: { preview: 0x72, area: 0x0f, coordinates: [ -370,   2255,    15], discs: [1, 2]      , order: [22, 35,   ,   ], name: "G-Garden- Hallway" },
+  0x2ad: { preview: 0x71, area: 0x0f, coordinates: [  800,  -2135,   136], discs: [1, 2]      , order: [20, 33,   ,   ], name: "G-Garden- Hall (1F)" },
+  0x2b4: { preview: 0x71, area: 0x0f, coordinates: [ 1510,   2730,    81], discs: [1, 2]      , order: [21, 34,   ,   ], name: "G-Garden- Hall (2F)" },
+  0x2ca: { preview: 0x78, area: 0x0f, coordinates: [ 1185,  -2440,    46], discs: [2]         , order: [  , 36,   ,   ], name: "G-Garden- Master Room" },
+  0x2d6: { preview: 0x7f, area: 0x10, coordinates: [ -500,    450,    97], discs: [1, 2, 3]   , order: [27, 25, 16,   ], name: "Deling City- Caraway's Mansion" },
+  0x2d7: { preview: 0x86, area: 0x10, coordinates: [ -300,     64,    44], discs: [1]         , order: [29,   ,   ,   ], name: "Deling City- Sewer" },
+  0x2dd: { preview: 0x84, area: 0x10, coordinates: [ -535,    680,    46], discs: [1, 2, 3]   , order: [30, 27, 18,   ], name: "Deling City- Gateway" },
+  0x2e0: { preview: 0x82, area: 0x10, coordinates: [ -375,    490,    84], discs: [1, 2, 3]   , order: [26, 24, 15,   ], name: "Deling City- Hotel" },
+  0x2eb: { preview: 0x7e, area: 0x10, coordinates: [-4840, -29720, 15424], discs: [1, 2, 3]   , order: [28, 26, 17,   ], name: "Deling- Presidential Residence" },
+  0x30a: { preview: 0x89, area: 0x11, coordinates: [  391,    555,    31], discs: [2]         , order: [  ,  5,   ,   ], name: "Galbadia Missile Base (entrance)" },
+  0x30d: { preview: 0x89, area: 0x11, coordinates: [ -879,   -140,   157], discs: [2]         , order: [  ,  6,   ,   ], name: "Galbadia Missile Base (missile launchers room)" },
+  0x314: { preview: 0x91, area: 0x12, coordinates: [ -400,    630,    26], discs: [1, 2, 3]   , order: [24, 22, 13,   ], name: "Tomb of the Unknown King (Sacred room)" },
+  0x316: { preview: 0x91, area: 0x12, coordinates: [  280,    570,    29], discs: [1, 2, 3]   , order: [25, 23, 14,   ], name: "Tomb of the Unknown King (water wheel room)" },
+  0x318: { preview: 0x91, area: 0x12, coordinates: [ 1790,  -3735,    53], discs: [1, 2, 3]   , order: [23, 21, 12,   ], name: "Tomb of the Unknown King (entrance)" },
+  0x31b: { preview: 0x87, area: 0x13, coordinates: [-2090,   1070,    39], discs: [2]         , order: [  ,  3,   ,   ], name: "Galbadia D-District Prison" },
+  0x330: { preview: 0x87, area: 0x13, coordinates: [ 1580,    250,    72], discs: [2]         , order: [  ,  4,   ,   ], name: "Galbadia D-District Prison (top)" },
+  0x339: { preview: 0xd5, area: 0x14, coordinates: [  220,   -420,    21], discs: [3]         , order: [  ,   , 37,   ], name: "Ragnarok- Air Room" },
+  0x346: { preview: 0xd3, area: 0x14, coordinates: [ -330,   2160,     3], discs: [3]         , order: [  ,   , 38,   ], name: "Ragnarok- Hangar" },
+  0x34f: { preview: 0xd8, area: 0x05, coordinates: [ -920,   -180,    13], discs: [3]         , order: [  ,   , 24,   ], name: "Deep Sea Research Center- Lb" },
+  0x351: { preview: 0xcd, area: 0x15, coordinates: [ -775,   1480,    41], discs: [2, 3]      , order: [  , 28, 27,   ], name: "White SeeD Ship" },
+  0x363: { preview: 0xdc, area: 0x16, coordinates: [  525,   -850,    21], discs: [3]         , order: [  ,   , 35,   ], name: "Lunar Base- Medical Room" },
+  0x366: { preview: 0xdd, area: 0x16, coordinates: [  230,  -1140,    21], discs: [3]         , order: [  ,   , 36,   ], name: "Lunar Base- Pod" },
+  0x378: { preview: 0xc2, area: 0x17, coordinates: [ -460,    -20,    69], discs: [2, 3]      , order: [  , 29, 20,   ], name: "T-Garden- Classroom" },
+  0x37e: { preview: 0x67, area: 0x18, coordinates: [  250,   -300,    85], discs: [1]         , order: [12,   ,   ,   ], name: "Timber- Forest Owls' Base" },
+  0x381: { preview: 0x65, area: 0x18, coordinates: [ -190,    -80,    85], discs: [1, 2]      , order: [15, 17,   ,   ], name: "Timber- City Square" },
+  0x384: { preview: 0x69, area: 0x18, coordinates: [ -340,   -485,    41], discs: [1, 2, 3]   , order: [13, 15,  8,   ], name: "Timber Hotel" },
+  0x39b: { preview: 0x65, area: 0x18, coordinates: [  950,   1380,    50], discs: [1, 2]      , order: [14, 16,   ,   ], name: "Timber- City Square (station)" },
+  0x3ab: { preview: 0xcb, area: 0x19, coordinates: [  540,    130,    37], discs: [2, 3]      , order: [  , 30, 21,   ], name: "Shumi Village- Hotel" },
+  0x3af: { preview: 0xc7, area: 0x19, coordinates: [ -725,   -670,    65], discs: [2, 3]      , order: [  , 31, 22,   ], name: "Shumi Village- Village" },
+  0x3d0: { preview: 0xf9, area: 0x1a, coordinates: [  -15,    920,     9], discs: [4]         , order: [  ,   ,   ,  5], name: "Commencement Room" },
+};
+
 export const discStartPreviews = [
   { preview: 0x0, name: "" },
   { preview: 0x85, name: "Deling City- Parade" },
@@ -498,15 +498,15 @@ export const disc2Locations: Resource = {};
 export const disc3Locations: Resource = {};
 export const disc4Locations: Resource = {};
 
-export const disc1LocationsGroups: ResourceGroups = [];
-export const disc2LocationsGroups: ResourceGroups = [];
-export const disc3LocationsGroups: ResourceGroups = [];
-export const disc4LocationsGroups: ResourceGroups = [];
-
 export const disc1LocationsOrder: number[] = [0x0];
 export const disc2LocationsOrder: number[] = [0x0];
 export const disc3LocationsOrder: number[] = [0x0];
 export const disc4LocationsOrder: number[] = [0x0];
+
+export const disc1LocationsGroups: ResourceGroups = [];
+export const disc2LocationsGroups: ResourceGroups = [];
+export const disc3LocationsGroups: ResourceGroups = [];
+export const disc4LocationsGroups: ResourceGroups = [];
 
 for (let i = 0; i < 4; i += 1) {
   let discLocations: Resource = {};
@@ -551,7 +551,7 @@ for (let i = 0; i < 4; i += 1) {
         discLocations[index] = discStartPreviews[i].name;
       }
 
-      const groupName = locationGroupList[location.group].replace("%d", `${i + 1}`);
+      const groupName = areas[location.area].replace("%d", `${i + 1}`);
 
       let group = discLocationsGroups.find((group) => group.name === groupName);
 

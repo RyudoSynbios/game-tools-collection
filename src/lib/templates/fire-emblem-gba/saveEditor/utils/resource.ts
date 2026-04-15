@@ -327,7 +327,6 @@ export const inventory = [
 ];
 
 export const items: Resource = {};
-
 export const itemsGroups: ResourceGroups = itemTypes.map((type) => ({
   name: type.name,
   options: [],

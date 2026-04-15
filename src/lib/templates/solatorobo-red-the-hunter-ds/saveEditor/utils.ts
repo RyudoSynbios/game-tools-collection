@@ -11,7 +11,7 @@ import type {
   ItemInt,
 } from "$lib/types";
 
-import { locations } from "./utils/resource";
+import { locationList } from "./utils/resource";
 
 export function initHeaderShift(dataView: DataView): number {
   return getHeaderShift(dataView);
@@ -91,7 +91,7 @@ export function afterSetInt(item: Item, flag: ItemBitflag): void {
 
     const int = getInt(itemInt.offset, "uint8");
 
-    const location = locations[int];
+    const location = locationList[int];
 
     setInt(itemInt.offset - 0x163, "uint8", location.preview);
     setInt(itemInt.offset - 0x133, "uint8", location.preview);

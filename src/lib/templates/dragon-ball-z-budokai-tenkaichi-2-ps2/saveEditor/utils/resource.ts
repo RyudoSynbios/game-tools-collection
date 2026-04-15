@@ -1,4 +1,4 @@
-import { Resource, ResourceGroups } from "$lib/types";
+import type { Resource, ResourceGroups } from "$lib/types";
 
 export const zItemTypes = [
   { index: 0x0, name: "Ability Type" },
@@ -577,8 +577,7 @@ export const zItemList = [
   { index: 0x235, name: "Ruined Earth", type: 0x3, isUnique: true },
 ];
 
-export const zItems: Resource = [];
-
+export const zItems: Resource = {};
 export const zItemsGroups: ResourceGroups = zItemTypes
   .filter((type) => type.index <= 0x1)
   .map((type) => ({

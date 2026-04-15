@@ -1285,7 +1285,6 @@ const wordList = [
 ];
 
 export const keywords: Resource = {};
-
 export const keywordsGroups: ResourceGroups = symbolList.map((symbol) => ({
   name: `Server ${symbol}`,
   options: [],
@@ -2309,7 +2308,7 @@ export const mailList = [
   { index: 0x012, author: "BlackRose", subject: "Did you read?" },
   { index: 0x013, author: "BlackRose", subject: "Found a clue!" },
   { index: 0x014, author: "BlackRose", subject: "Huh" },
-  { index: 0x015, author: "Helba", subject: "Dear #0" },
+  { index: 0x015, author: "Helba", subject: "Dear Kite" },
   { index: 0x016, author: "Au]$", subject: "(*ol$@y" },
   { index: 0x017, author: "ROY@BANDAI", subject: "Cleared Game Data" },
   { index: 0x018, author: "Helba", subject: "Virus Cores 1" },
@@ -2607,7 +2606,7 @@ export const mailList = [
   { index: 0x13c, author: "Terajima Ryoko", subject: "RE: Not bit" },
   { index: 0x13d, author: "Terajima Ryoko", subject: "RE: Is he?" },
   { index: 0x13e, author: "Terajima Ryoko", subject: "RE: Don't worry" },
-  { index: 0x13f, author: "Terajima Ryoko", subject: "#0!" },
+  { index: 0x13f, author: "Terajima Ryoko", subject: "Kite!" },
   { index: 0x140, author: "CC Corporation", subject: "Version Update" },
   { index: 0x141, author: "BlackRose", subject: "Breakwater" },
   { index: 0x142, author: "Terajima Ryoko", subject: "Have a favor" },

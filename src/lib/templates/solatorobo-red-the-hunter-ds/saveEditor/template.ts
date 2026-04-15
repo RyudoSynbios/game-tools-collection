@@ -1,6 +1,7 @@
 import type { GameJson } from "$lib/types";
 
 import { chronoFragment } from "./utils/fragment";
+import { locations } from "./utils/resource";
 
 const template: GameJson = {
   validator: {
@@ -3302,26 +3303,7 @@ const template: GameJson = {
       0x0: "Available",
       0x1: "-",
     },
-    locations: {
-      0x0: "Vizsla",
-      0x1: "Hindenburg",
-      0x2: "Davren Islands",
-      0x3: "Airedale",
-      0x4: "Spinon",
-      0x5: "Shetland",
-      0x6: "Royal Envy",
-      0x7: "Basset",
-      0x8: "Samoyede",
-      0x9: "Golden Roar",
-      0xa: "Lares",
-      0xb: "Pharaoh",
-      0xc: "Mau",
-      0xd: "Sealyham",
-      0xe: "Earth",
-      0xf: "Lemures",
-      0x11: "Duel Ship",
-      0xff: "Asmodeus",
-    },
+    locations,
     questProgressions: {
       0x0: "-",
       0x1: "Available",

@@ -66,6 +66,11 @@ export default class GCM {
       fileOffsets: [],
     };
 
+    if (!isGCMFile(dataView)) {
+      debug.error("Not a valid GCM file.");
+      return;
+    }
+
     this.generateRoot();
   }
 

@@ -1,4 +1,4 @@
-import { Resource, ResourceGroups } from "$lib/types";
+import type { Resource, ResourceGroups } from "$lib/types";
 
 export const abilityTypes = [
   {
@@ -960,10 +960,10 @@ export const inventory = [
   },
 ];
 
-export const arms: Resource = [];
-export const bodies: Resource = [];
-export const hands: Resource = [];
-export const heads: Resource = [];
+export const arms: Resource = {};
+export const bodies: Resource = {};
+export const hands: Resource = {};
+export const heads: Resource = {};
 
 export const bodiesGroups = inventory.reduce(
   (groups: ResourceGroups, type, typeIndex) => {
@@ -977,7 +977,6 @@ export const bodiesGroups = inventory.reduce(
   },
   [],
 );
-
 export const handsGroups = inventory.reduce(
   (groups: ResourceGroups, type, typeIndex) => {
     if (typeIndex === 2) {

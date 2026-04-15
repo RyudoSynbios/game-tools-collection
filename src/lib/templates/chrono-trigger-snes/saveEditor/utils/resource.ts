@@ -1,4 +1,4 @@
-import { Resource, ResourceGroups } from "$lib/types";
+import type { Resource, ResourceGroups } from "$lib/types";
 
 export const characterLevels = [
   20, 60, 130, 240, 400, 620, 920, 1320, 1840, 2490, 3280, 4220, 5320, 6590,
@@ -254,7 +254,6 @@ export const itemsGroups: ResourceGroups = itemTypes.map((type) => ({
   name: type.name,
   options: [],
 }));
-
 export const weaponsGroups: ResourceGroups = itemTypes
   .filter((type) => type.index <= 0x6)
   .map((type) => ({

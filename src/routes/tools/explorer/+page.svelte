@@ -13,7 +13,7 @@
     rowsOffset,
     selectedOffset,
   } from "$lib/stores/fileVisualizer";
-  import { isVmuFile } from "$lib/utils/common/dreamcast/vmu";
+  import { isVMUFile } from "$lib/utils/common/dreamcast/vmu";
   import { isGCMFile } from "$lib/utils/common/gamecube/gcm";
   import { isIso9660File } from "$lib/utils/common/iso9660";
   import { isBackupRam } from "$lib/utils/common/saturn/backupRam";
@@ -82,7 +82,7 @@
     dreamcast_vmu: {
       name: "VMU",
       fullName: "Dreamcast - VMU",
-      validator: isVmuFile,
+      validator: isVMUFile,
     },
     miscellaneous_gvas: {
       name: "GVAS",

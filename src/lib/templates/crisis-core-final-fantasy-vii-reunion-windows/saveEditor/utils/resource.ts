@@ -388,7 +388,6 @@ export const materiaList = [
 ];
 
 export const materias: Resource = {};
-
 export const materiasGroups: ResourceGroups = materiaTypes.map((type) => ({
   name: type.name,
   options: [],

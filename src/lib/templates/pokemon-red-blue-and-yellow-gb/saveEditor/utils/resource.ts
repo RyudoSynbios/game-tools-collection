@@ -161,9 +161,7 @@ const itemList = [
 ];
 
 export const items: Resource = {};
-
 export const itemsOrder: number[] = [0x0];
-
 export const itemsGroups: ResourceGroups = itemTypes.map((type) => ({
   name: type.name,
   options: [],

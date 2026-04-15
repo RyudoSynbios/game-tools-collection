@@ -306,7 +306,7 @@ export default class Iso9660 {
       if (a.type === "directory" && b.type === "file") {
         return -1;
       } else if (a.type === "directory" && b.type === "directory") {
-        return a.path.localeCompare(b.path);
+        return a.path.localeCompare(b.path, "en", { numeric: true });
       } else if (a.type === "file" && b.type === "directory") {
         return 1;
       } else if (a.type === "file" && b.type === "file") {
