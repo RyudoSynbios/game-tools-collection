@@ -4300,6 +4300,54 @@ const template: GameJson = {
               type: "tabs",
               items: [
                 {
+                  name: "General",
+                  flex: true,
+                  items: [
+                    {
+                      id: "damageLimit",
+                      name: "Damage Limit",
+                      dataViewAltKey: "main.dol",
+                      offset: 0x0,
+                      type: "variable",
+                      dataType: "uint32",
+                      bigEndian: true,
+                      resource: "damageLimits",
+                    },
+                    {
+                      id: "damageLimit-instruction",
+                      name: "Compare Instruction",
+                      dataViewAltKey: "main.dol",
+                      offset: 0x0,
+                      type: "variable",
+                      dataType: "uint32",
+                      bigEndian: true,
+                      hex: true,
+                      hidden: true,
+                    },
+                    {
+                      id: "damageLimit-instruction",
+                      name: "Limit Instruction",
+                      dataViewAltKey: "main.dol",
+                      offset: 0x8,
+                      type: "variable",
+                      dataType: "uint32",
+                      bigEndian: true,
+                      hex: true,
+                      hidden: true,
+                    },
+                    {
+                      id: "randomEncounterRate",
+                      name: "Random Encounter Rate Multiplier",
+                      dataViewAltKey: "main.dol",
+                      offset: 0x0,
+                      type: "variable",
+                      dataType: "float32",
+                      bigEndian: true,
+                      hidden: true,
+                    },
+                  ],
+                },
+                {
                   name: "Weapon Conditions",
                   items: [
                     {
@@ -4488,21 +4536,6 @@ const template: GameJson = {
                           step: 0.01,
                         },
                       ],
-                    },
-                  ],
-                },
-                {
-                  name: "Debug",
-                  hidden: true,
-                  items: [
-                    {
-                      id: "randomEncounterRate",
-                      name: "Random Encounter Rate Multiplier",
-                      dataViewAltKey: "main.dol",
-                      offset: 0x0,
-                      type: "variable",
-                      dataType: "float32",
-                      bigEndian: true,
                     },
                   ],
                 },
@@ -4767,6 +4800,10 @@ const template: GameJson = {
       0x8: "Sailor",
       0x9: "Jester",
       0xa: "Delegate",
+    },
+    damageLimits: {
+      0x2c002710: "9999",
+      0x2c007530: "29999",
     },
     enemies: {
       ...enemyStandards,

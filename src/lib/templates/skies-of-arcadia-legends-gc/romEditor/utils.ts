@@ -25,7 +25,10 @@ import ImageViewer from "./components/ImageViewer.svelte";
 import ModelViewer from "./components/ModelViewer.svelte";
 import ScriptViewer from "./components/ScriptViewer.svelte";
 import Texture from "./components/Texture.svelte";
-import { RANDOM_ENCOUNTER_RATE_OFFSET } from "./utils/constants";
+import {
+  MAIN_DOL_DAMAGE_LIMIT,
+  RANDOM_ENCOUNTER_RATE_OFFSET,
+} from "./utils/constants";
 import { exportDataViewAlt, gcm, initDataViewAlt } from "./utils/dataView";
 import {
   DESCRIPTION_LENGTH_OFFSET,
@@ -59,6 +62,12 @@ export function overrideParseItem(item: Item): Item {
     const files = getFilteredFiles(type);
 
     itemContainer.instances = files.length;
+  } else if ("id" in item && item.id?.match(/^damageLimit/)) {
+    const itemInt = item as ItemInt;
+
+    itemInt.offset += getRegionArray(MAIN_DOL_DAMAGE_LIMIT);
+
+    return itemInt;
   } else if ("id" in item && item.id === "randomEncounterRate") {
     const itemInt = item as ItemInt;
 
@@ -355,6 +364,18 @@ export function afterSetInt(item: Item): void {
 
     setInt(itemInt.offset - 0x4, "uint16", value, { bigEndian: true }, "enemies"); // prettier-ignore
     setInt(itemInt.offset - 0x2, "uint16", value, { bigEndian: true }, "enemies"); // prettier-ignore
+  } else if ("id" in item && item.id === "damageLimit") {
+    const itemInt = item as ItemInt;
+
+    const compare = getInt(itemInt.offset, "uint32", { bigEndian: true }, $dataViewAlt["main.dol"]); // prettier-ignore
+
+    let limit = 0x3800270f;
+
+    if (compare === 0x2c007530) {
+      limit = 0x3800752f;
+    }
+
+    setInt(itemInt.offset + 0x8, "uint32", limit, { bigEndian: true }, "main.dol"); // prettier-ignore
   } else if ("id" in item && item.id?.match(/weaponCondition/)) {
     updateResources("weaponConditionNames");
   }
