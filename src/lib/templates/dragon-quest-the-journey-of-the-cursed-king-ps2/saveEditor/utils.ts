@@ -12,7 +12,7 @@ import { formatChecksum } from "$lib/utils/checksum";
 import {
   customGetRegions,
   getFileOffset,
-  getSaves,
+  getRegionSaves,
   repackFile,
   resetState,
   unpackFile,
@@ -55,7 +55,7 @@ export function overrideParseItem(item: Item): Item {
   if ("id" in item && item.id === "slots") {
     const itemContainer = item as ItemContainer;
 
-    const saves = getSaves();
+    const saves = getRegionSaves();
 
     itemContainer.instances = saves.length;
   } else if ("id" in item && item.id?.match(/name/) && $gameRegion === 2) {
@@ -470,10 +470,10 @@ function getMonsterTeam(offset: number): {
 }
 
 export function getSlotNames(): Resource {
-  const saves = getSaves();
+  const saves = getRegionSaves();
 
   const names = saves.reduce((names: Resource, save, index) => {
-    const [, slotIndex] = save.directory.name.split("_");
+    const [, slotIndex] = save.file.name.split("_");
 
     names[index] = `Slot ${parseInt(slotIndex) + 1}`;
 

@@ -5,7 +5,8 @@ import { getInt, setInt } from "$lib/utils/bytes";
 import {
   customGetRegions,
   getFileOffset,
-  getSaves,
+  getRegionSaves,
+  getSlotShifts,
   repackFile,
   resetState,
   unpackFile,
@@ -47,7 +48,7 @@ export function overrideParseItem(item: Item): Item {
   } else if ("id" in item && item.id === "slots") {
     const itemContainer = item as ItemContainer;
 
-    const saves = getSaves();
+    const saves = getRegionSaves();
 
     itemContainer.instances = saves.length;
   } else if ("id" in item && item.id?.match(/time/)) {
@@ -147,7 +148,7 @@ export function overrideParseContainerItemsShifts(
   index: number,
 ): [boolean, number[] | undefined] {
   if (item.id === "slots") {
-    return [true, [getFileOffset(index)]];
+    return getSlotShifts(index);
   }
 
   return [false, undefined];
@@ -251,10 +252,10 @@ export function getItemNames(type: string): Resource {
 }
 
 export function getSlotNames(): Resource {
-  const saves = getSaves();
+  const saves = getRegionSaves();
 
   const names = saves.reduce((names: Resource, save, index) => {
-    const name = save.directory.name.slice(-2);
+    const name = save.file.name.slice(-2);
 
     names[index] = `Slot ${name.replace(/^0/, "")}`;
 

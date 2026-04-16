@@ -5,15 +5,15 @@ import { copyInt, getInt, setInt } from "$lib/utils/bytes";
 import { formatChecksum } from "$lib/utils/checksum";
 import {
   customGetRegions,
-  File,
-  getFileOffset,
-  getSaves,
+  getRegionSaves,
+  getSlotShifts,
   repackFile,
   resetState,
   unpackFile,
+  type Save,
 } from "$lib/utils/common/playstation2";
 import { isInRange } from "$lib/utils/format";
-import { getItem } from "$lib/utils/parser";
+import { getItem, getShift } from "$lib/utils/parser";
 
 import type {
   Item,
@@ -43,22 +43,22 @@ export function onInitFailed(): void {
 export function overrideParseItem(item: Item): Item {
   const $gameRegion = get(gameRegion);
 
-  if (!isExtendedSave()) {
-    if ("id" in item && item.id === "itemCompletionNpc") {
+  if ("id" in item && !isExtendedSave()) {
+    if (item.id === "itemCompletionNpc") {
       const itemInt = item as ItemInt;
 
       itemInt.hidden = true;
-    } else if ("id" in item && item.id === "memberAddresses") {
+    } else if (item.id === "memberAddresses") {
       const itemBitflags = item as ItemBitflags;
 
       itemBitflags.flags[18].hidden = true;
       itemBitflags.flags[19].hidden = true;
       itemBitflags.flags[20].hidden = true;
-    } else if ("id" in item && item.id === "party") {
+    } else if (item.id === "party") {
       const itemContainer = item as ItemContainer;
 
       itemContainer.instances = 18;
-    } else if ("id" in item && item.id === "itemCompletionList") {
+    } else if (item.id === "itemCompletionList") {
       const itemTab = item as ItemTab;
 
       itemTab.hidden = true;
@@ -68,11 +68,7 @@ export function overrideParseItem(item: Item): Item {
   if ("id" in item && item.id?.match(/system-/)) {
     const [slotIndex] = item.id.splitInt();
 
-    const saves = getSaves();
-
-    const save = saves[0].directory.content.find(
-      (file) => file.name === getSlotName(slotIndex),
-    ) as File;
+    const save = getSlotSave(slotIndex);
 
     if (save) {
       if ("offset" in item) {
@@ -82,7 +78,7 @@ export function overrideParseItem(item: Item): Item {
       if (item.type === "checksum") {
         const itemChecksum = item as ItemChecksum;
 
-        itemChecksum.control.offsetEnd = save.size;
+        itemChecksum.control.offsetEnd = save.file.size;
       }
     }
 
@@ -146,13 +142,13 @@ export function overrideParseContainerItemsShifts(
   index: number,
 ): [boolean, number[] | undefined] {
   if (item.id === "slots") {
-    const fileName = `dhdata${`${index + 1}`.padStart(2, "0")}`;
+    const save = getSlotSave(index);
 
     const offset = getSlotSystemOffset(index);
     const isAllocated = getInt(offset, "uint8");
 
-    if (isAllocated) {
-      return [true, [...shifts, getFileOffset(0, fileName)]];
+    if (save && isAllocated) {
+      return [true, [...shifts, save.offset]];
     }
 
     return [true, [-1]];
@@ -270,26 +266,24 @@ export function getMailNames(): Resource {
   return names;
 }
 
-function getSlotName(slotIndex: number): string {
-  return `dhdata${`${slotIndex + 1}`.padStart(2, "0")}`;
+function getSlotSave(slotIndex: number): Save | undefined {
+  const saves = getRegionSaves(true);
+
+  return saves.find(
+    (save) => save.file.name === `dhdata${`${slotIndex + 1}`.padStart(2, "0")}`,
+  );
 }
 
 function getSlotSystemOffset(slotIndex: number): number {
-  const saves = getSaves();
+  const shifts = getSlotShifts(0)[1];
 
-  const fileName = saves[0].directory.name;
-
-  return getFileOffset(0, fileName) + slotIndex * 0x1c;
+  return getShift(shifts) + slotIndex * 0x1c;
 }
 
 function isExtendedSave(): boolean {
-  const saves = getSaves();
+  const save = getSlotSave(0);
 
-  const file = saves[0].directory.content.find(
-    (file) => file.name === "dhdata01",
-  ) as File;
-
-  if (file?.size === 0x8d84) {
+  if (save?.file.size === 0x8d84) {
     return true;
   }
 

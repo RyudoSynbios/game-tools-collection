@@ -1,0 +1,68 @@
+<script lang="ts">
+  import FileSaver from "file-saver";
+  import { onDestroy, onMount } from "svelte";
+
+  import Directory from "$lib/components/Explorer/Directory.svelte";
+  import {
+    dataView as dataViewStore,
+    fileName as fileNameStore,
+    isFileVisualizerOpen,
+  } from "$lib/stores";
+  import { onSave } from "$lib/stores/explorer";
+  import type { File } from "$lib/utils/common/playstation2";
+  import PSU from "$lib/utils/common/playstation2/psu";
+
+  export let fileName = "";
+  export let dataView: DataView;
+
+  const psu = new PSU(dataView, { hideWorkingDirectories: true });
+
+  let currentFile: File;
+
+  function handleFileClick(entry: File): void {
+    const file = psu.getFile(entry.path);
+
+    if (file) {
+      currentFile = file;
+      $dataViewStore = file.dataView;
+      $fileNameStore = file.name;
+      $isFileVisualizerOpen = true;
+    }
+  }
+
+  isFileVisualizerOpen.subscribe((isOpen) => {
+    if (!isOpen && $fileNameStore) {
+      psu.writeFile(currentFile.path, new Uint8Array($dataViewStore.buffer));
+    }
+  });
+
+  onMount(() => {
+    $onSave = () => {
+      const buffer = psu.repack() as ArrayBuffer;
+
+      const blob = new Blob([buffer], {
+        type: "application/octet-stream",
+      });
+
+      FileSaver.saveAs(blob, fileName);
+    };
+  });
+
+  onDestroy(() => {
+    psu.destroy();
+  });
+</script>
+
+{#if psu}
+  <div class="gtc-psu">
+    <Directory content={psu.root} expanded onFileClick={handleFileClick}>
+      {fileName}
+    </Directory>
+  </div>
+{/if}
+
+<style lang="postcss">
+  .gtc-psu {
+    @apply w-1/2 overflow-auto rounded bg-primary-700 p-2;
+  }
+</style>
