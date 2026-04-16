@@ -48,6 +48,7 @@ Link to the website: [https://game-tools-collection.com](https://game-tools-coll
 | F-Zero X                                     | N64      | Save                    | EUR / USA / JAP                               |
 | Final Fantasy                                | NES      | Save                    | USA / JAP                                     |
 | Final Fantasy IV Pixel Remaster              | WIN      | Save                    | WORLD                                         |
+| Final Fantasy VI                             | SNES     | Save                    | USA / JAP                                     |
 | Final Fantasy VII Remake                     | WIN      | Save                    | WORLD                                         |
 | Final Fantasy VII Rebirth                    | WIN      | Save                    | WORLD                                         |
 | Final Fantasy VIII                           | PS       | Save                    | EUR / USA / JAP / FRA / GER / ITA / SPA       |

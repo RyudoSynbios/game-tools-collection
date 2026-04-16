@@ -478,6 +478,17 @@
     }
   },
   {
+    "id": "final-fantasy-vi-snes",
+    "name": "Final Fantasy VI",
+    "consoleId": "super-nintendo",
+    "tools": {
+      "saveEditor": {
+        "createdAt": "2026-04-16",
+        "regions": ["🇺🇸", "🇯🇵"]
+      }
+    }
+  },
+  {
     "id": "final-fantasy-vii-remake-windows",
     "name": "Final Fantasy VII Remake",
     "consoleId": "windows",
