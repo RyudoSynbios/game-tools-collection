@@ -97,7 +97,7 @@ export async function saveShouldBeRejected(
   test.expect(dropzoneErrorEl).toBeTruthy();
 }
 
-export function defaultTests(game: string): void {
+export function defaultTests(game: string, platforms: string[]): void {
   test("should not load an empty file", async () => {
     await saveShouldBeRejected("common/empty");
   });
@@ -106,7 +106,7 @@ export function defaultTests(game: string): void {
     await saveShouldBeRejected(getRandomSave(game));
   });
 
-  if (game.match(/-dc$/)) {
+  if (platforms.includes("dreamcast")) {
     test("should not load an empty standard save", async () => {
       await saveShouldBeRejected("common/dreamcast/empty.bin");
     });
@@ -114,15 +114,15 @@ export function defaultTests(game: string): void {
     test("should not load a deleted standard save", async () => {
       await saveShouldBeRejected(`${game}/deleted.bin`);
     });
-  } else if (game.match(/-gba$/)) {
+  } else if (platforms.includes("game-boy-advance")) {
     test("should not load a wrong GameShark save", async () => {
       await saveShouldBeRejected(`${game}/bad.sps`);
     });
-  } else if (game.match(/-ds$/)) {
+  } else if (platforms.includes("nintendo-ds")) {
     test("should not load a wrong Action Replay Max DS save", async () => {
       await saveShouldBeRejected(`${game}/bad.duc`);
     });
-  } else if (game.match(/-ps$/)) {
+  } else if (platforms.includes("playstation")) {
     test("should not load an empty standard save", async () => {
       await saveShouldBeRejected("common/playstation/empty.mcr");
     });
@@ -130,7 +130,7 @@ export function defaultTests(game: string): void {
     test("should not load a wrong DexDrive save", async () => {
       await saveShouldBeRejected(`${game}/bad.gme`);
     });
-  } else if (game.match(/-ps2$/)) {
+  } else if (platforms.includes("playstation-2")) {
     test("should not load an empty standard save", async () => {
       await saveShouldBeRejected("common/playstation2/empty.ps2");
     });

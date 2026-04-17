@@ -1,31 +1,31 @@
 import moment from "moment";
 
-import consoleManufacturersDb from "$lib/db/consoleManufacturers.json";
-import consolesDb from "$lib/db/consoles.json";
 import gamesDb from "$lib/db/games.json";
+import platformsDb from "$lib/db/platforms.json";
+import platformManufacturersDb from "$lib/db/platformsManufacturers.json";
 
-import type { Console, Game, Manufacturer } from "$lib/types";
+import type { Game, Manufacturer, Platform } from "$lib/types";
 
-export function getConsole(consoleId: string): Console | undefined {
-  const consoles = getConsoles();
+export function getPlatform(platformId: string): Platform | undefined {
+  const platforms = getPlatforms();
 
-  return consoles.find((console) => console.id === consoleId);
+  return platforms.find((platform) => platform.id === platformId);
 }
 
-export function getConsoles(): Console[] {
-  const consoles = consolesDb.reduce((consoles: Console[], console) => {
-    consoles.push({
-      id: console.id,
-      name: console.name,
-      manufacturer: consoleManufacturersDb.find(
-        (manufacturer) => manufacturer.id === console.manufacturerId,
+export function getPlatforms(): Platform[] {
+  const platforms = platformsDb.reduce((platforms: Platform[], platform) => {
+    platforms.push({
+      id: platform.id,
+      name: platform.name,
+      manufacturer: platformManufacturersDb.find(
+        (manufacturer) => manufacturer.id === platform.manufacturerId,
       ) as Manufacturer,
     });
 
-    return consoles;
+    return platforms;
   }, []);
 
-  return consoles;
+  return platforms;
 }
 
 export function getGame(gameId: string): Game | undefined {
@@ -40,7 +40,7 @@ export type Order = "createdAt";
 
 interface GameOptions {
   title?: string;
-  console?: string;
+  platform?: string;
   tool?: Tool;
   order?: Order;
 }
@@ -50,14 +50,22 @@ export function getGames(options: GameOptions = {}): Game[] {
     if (
       (options.title &&
         !game.name.toLowerCase().match(options.title.toLowerCase())) ||
-      (options.console && game.consoleId !== options.console) ||
+      (options.platform && !game.platformIds.includes(options.platform)) ||
       (options.tool && !game.tools[options.tool])
     ) {
       return results;
     }
 
     if (game.tools.saveEditor || game.tools.romEditor) {
-      const console = getConsole(game.consoleId) as Console;
+      const platforms: Platform[] = [];
+
+      game.platformIds.forEach((platformId) => {
+        const platform = getPlatform(platformId);
+
+        if (platform) {
+          platforms.push(platform);
+        }
+      });
 
       let createdAt = "";
 
@@ -75,7 +83,7 @@ export function getGames(options: GameOptions = {}): Game[] {
         id: game.id,
         name: game.name,
         metaName: game.metaName || game.name,
-        console,
+        platforms,
         createdAt,
         tools: {
           saveEditor: game.tools.saveEditor,
@@ -99,4 +107,14 @@ export function getGames(options: GameOptions = {}): Game[] {
   }
 
   return games;
+}
+
+export function formatPlatforms(
+  platforms: { id: string; name: string }[],
+): string {
+  return platforms.reduce(
+    (platforms, platform) =>
+      (platforms += `${platforms ? ", " : ""}${platform.name}`),
+    "",
+  );
 }

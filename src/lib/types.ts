@@ -99,17 +99,6 @@ export interface Binary {
   bitLength: number;
 }
 
-export interface Manufacturer {
-  id: string;
-  name: string;
-}
-
-export interface Console {
-  id: string;
-  name: string;
-  manufacturer: Manufacturer;
-}
-
 export interface DataViewAltMetas {
   isDirty?: boolean;
   patch?: { [offset: number]: bigint | number };
@@ -120,10 +109,10 @@ export interface Game {
   id: string;
   name: string;
   metaName: string;
-  console: {
+  platforms: {
     id: string;
     name: string;
-  };
+  }[];
   createdAt: string;
   tools: {
     saveEditor?: {
@@ -136,6 +125,17 @@ export interface Game {
       regions: string[];
     };
   };
+}
+
+export interface Manufacturer {
+  id: string;
+  name: string;
+}
+
+export interface Platform {
+  id: string;
+  name: string;
+  manufacturer: Manufacturer;
 }
 
 export interface GameJson {

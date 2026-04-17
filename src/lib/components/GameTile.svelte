@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { formatPlatforms } from "$lib/utils/db";
+
   import type { Game } from "$lib/types";
 
   export let game: Game;
@@ -6,19 +8,16 @@
 
 <div class="gtc-tile">
   <div class="gtc-tile-image">
-    <img
-      src="/img/games/{game.id}/background.png"
-      alt="{game.name} ({game.console.name})"
-    />
+    <img src="/img/games/{game.id}/background.png" alt={game.metaName} />
     <img
       class="gtc-tile-logo"
       src="/img/games/{game.id}/logo.png"
-      alt="{game.name} ({game.console.name})"
+      alt={game.metaName}
     />
   </div>
   <div class="gtc-tile-content">
     <p>{game.name}</p>
-    <p>{game.console.name}</p>
+    <p>{formatPlatforms(game.platforms)}</p>
     <div class="gtc-tile-tools">
       {#if game.tools.saveEditor}
         <a href="/{game.id}/save-editor" class="gtc-tile-toollink">
@@ -97,7 +96,7 @@
       }
 
       & p:last-of-type {
-        @apply text-sm;
+        @apply overflow-hidden text-ellipsis whitespace-nowrap text-sm;
       }
 
       & .gtc-tile-tools {

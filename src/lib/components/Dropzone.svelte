@@ -78,14 +78,15 @@
     on:dragover|preventDefault={handleDragOver}
     on:drop|preventDefault={handleDrop}
   >
-    <slot name="dropzone" {isDragging} {isFileLoading} />
+    <slot name="dropzone-inner" {isDragging} {isFileLoading} />
     <input type="file" bind:this={inputEl} on:change={handleInputChange} />
   </div>
+  <slot name="dropzone" />
 </div>
 
 <style lang="postcss">
   .gtc-dropzone {
-    @apply m-auto select-none rounded bg-primary-900 p-2;
+    @apply relative m-auto select-none rounded bg-primary-900 p-2;
 
     width: 600px;
     min-height: 400px;

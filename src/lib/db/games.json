@@ -1,8 +1,8 @@
 [
   {
-    "id": "dot-hack-infection-ps2",
+    "id": "dot-hack-infection",
     "name": ".hack//Infection",
-    "consoleId": "playstation-2",
+    "platformIds": ["playstation-2"],
     "tools": {
       "saveEditor": {
         "createdAt": "2026-04-12",
@@ -11,9 +11,9 @@
     }
   },
   {
-    "id": "dot-hack-mutation-ps2",
+    "id": "dot-hack-mutation",
     "name": ".hack//Mutation",
-    "consoleId": "playstation-2",
+    "platformIds": ["playstation-2"],
     "tools": {
       "saveEditor": {
         "createdAt": "2026-04-12",
@@ -22,9 +22,9 @@
     }
   },
   {
-    "id": "dot-hack-outbreak-ps2",
+    "id": "dot-hack-outbreak",
     "name": ".hack//Outbreak",
-    "consoleId": "playstation-2",
+    "platformIds": ["playstation-2"],
     "tools": {
       "saveEditor": {
         "createdAt": "2026-04-12",
@@ -33,9 +33,9 @@
     }
   },
   {
-    "id": "dot-hack-quarantine-ps2",
+    "id": "dot-hack-quarantine",
     "name": ".hack//Quarantine",
-    "consoleId": "playstation-2",
+    "platformIds": ["playstation-2"],
     "tools": {
       "saveEditor": {
         "createdAt": "2026-04-12",
@@ -44,9 +44,9 @@
     }
   },
   {
-    "id": "007-agent-under-fire-ps2",
+    "id": "007-agent-under-fire",
     "name": "007: Agent Under Fire",
-    "consoleId": "playstation-2",
+    "platformIds": ["playstation-2"],
     "tools": {
       "saveEditor": {
         "createdAt": "2025-06-07",
@@ -55,9 +55,9 @@
     }
   },
   {
-    "id": "1080-snowboarding-n64",
+    "id": "1080-snowboarding",
     "name": "1080° Snowboarding",
-    "consoleId": "nintendo-64",
+    "platformIds": ["nintendo-64"],
     "tools": {
       "saveEditor": {
         "createdAt": "2023-12-16",
@@ -66,9 +66,9 @@
     }
   },
   {
-    "id": "3d-dot-game-heroes-ps3",
+    "id": "3d-dot-game-heroes",
     "name": "3D Dot Game Heroes",
-    "consoleId": "playstation-3",
+    "platformIds": ["playstation-3"],
     "tools": {
       "saveEditor": {
         "createdAt": "2025-07-07",
@@ -77,9 +77,9 @@
     }
   },
   {
-    "id": "actraiser-snes",
+    "id": "actraiser",
     "name": "ActRaiser",
-    "consoleId": "super-nintendo",
+    "platformIds": ["super-nintendo"],
     "tools": {
       "saveEditor": {
         "createdAt": "2025-08-07",
@@ -88,9 +88,9 @@
     }
   },
   {
-    "id": "akumajou-dracula-x-chi-no-rondo-pcecd",
+    "id": "akumajou-dracula-x-chi-no-rondo",
     "name": "Akumajou Dracula X: Chi no Rondo",
-    "consoleId": "pc-engine-cd",
+    "platformIds": ["pc-engine-cd"],
     "tools": {
       "saveEditor": {
         "createdAt": "2023-12-16",
@@ -99,9 +99,9 @@
     }
   },
   {
-    "id": "azure-dreams-gbc",
+    "id": "azure-dreams",
     "name": "Azure Dreams",
-    "consoleId": "game-boy-color",
+    "platformIds": ["game-boy-color"],
     "tools": {
       "saveEditor": {
         "createdAt": "2026-04-08",
@@ -110,9 +110,9 @@
     }
   },
   {
-    "id": "banjo-kazooie-n64",
+    "id": "banjo-kazooie",
     "name": "Banjo-Kazooie",
-    "consoleId": "nintendo-64",
+    "platformIds": ["nintendo-64"],
     "tools": {
       "saveEditor": {
         "createdAt": "2024-04-04",
@@ -121,9 +121,9 @@
     }
   },
   {
-    "id": "banjo-tooie-n64",
+    "id": "banjo-tooie",
     "name": "Banjo-Tooie",
-    "consoleId": "nintendo-64",
+    "platformIds": ["nintendo-64"],
     "tools": {
       "saveEditor": {
         "createdAt": "2025-04-16",
@@ -132,9 +132,9 @@
     }
   },
   {
-    "id": "bloodstained-ritual-of-the-night-windows",
+    "id": "bloodstained-ritual-of-the-night",
     "name": "Bloodstained: Ritual of the Night",
-    "consoleId": "windows",
+    "platformIds": ["steam"],
     "tools": {
       "saveEditor": {
         "createdAt": "2026-03-17",
@@ -143,9 +143,9 @@
     }
   },
   {
-    "id": "bomberman-64-n64",
+    "id": "bomberman-64",
     "name": "Bomberman 64",
-    "consoleId": "nintendo-64",
+    "platformIds": ["nintendo-64"],
     "tools": {
       "saveEditor": {
         "createdAt": "2023-12-20",
@@ -158,9 +158,9 @@
     }
   },
   {
-    "id": "bouncer-the-ps2",
+    "id": "bouncer-the",
     "name": "Bouncer, The",
-    "consoleId": "playstation-2",
+    "platformIds": ["playstation-2"],
     "tools": {
       "saveEditor": {
         "createdAt": "2025-03-31",
@@ -169,9 +169,9 @@
     }
   },
   {
-    "id": "castlevania-n64",
+    "id": "castlevania",
     "name": "Castlevania",
-    "consoleId": "nintendo-64",
+    "platformIds": ["nintendo-64"],
     "tools": {
       "saveEditor": {
         "createdAt": "2025-08-16",
@@ -180,9 +180,9 @@
     }
   },
   {
-    "id": "castlevania-aria-of-sorrow-gba",
+    "id": "castlevania-aria-of-sorrow",
     "name": "Castlevania: Aria of Sorrow",
-    "consoleId": "game-boy-advance",
+    "platformIds": ["game-boy-advance"],
     "tools": {
       "saveEditor": {
         "createdAt": "2023-12-16",
@@ -191,9 +191,9 @@
     }
   },
   {
-    "id": "castlevania-circle-of-the-moon-gba",
+    "id": "castlevania-circle-of-the-moon",
     "name": "Castlevania: Circle of the Moon",
-    "consoleId": "game-boy-advance",
+    "platformIds": ["game-boy-advance"],
     "tools": {
       "saveEditor": {
         "createdAt": "2023-12-16",
@@ -206,9 +206,9 @@
     }
   },
   {
-    "id": "castlevania-dawn-of-sorrow-ds",
+    "id": "castlevania-dawn-of-sorrow",
     "name": "Castlevania: Dawn of Sorrow",
-    "consoleId": "nintendo-ds",
+    "platformIds": ["nintendo-ds"],
     "tools": {
       "saveEditor": {
         "createdAt": "2024-03-24",
@@ -217,9 +217,9 @@
     }
   },
   {
-    "id": "castlevania-harmony-of-dissonance-gba",
+    "id": "castlevania-harmony-of-dissonance",
     "name": "Castlevania: Harmony of Dissonance",
-    "consoleId": "game-boy-advance",
+    "platformIds": ["game-boy-advance"],
     "tools": {
       "saveEditor": {
         "createdAt": "2024-02-19",
@@ -228,9 +228,9 @@
     }
   },
   {
-    "id": "castlevania-order-of-ecclesia-ds",
+    "id": "castlevania-order-of-ecclesia",
     "name": "Castlevania: Order of Ecclesia",
-    "consoleId": "nintendo-ds",
+    "platformIds": ["nintendo-ds"],
     "tools": {
       "saveEditor": {
         "createdAt": "2024-11-21",
@@ -239,9 +239,9 @@
     }
   },
   {
-    "id": "castlevania-portrait-of-ruin-ds",
+    "id": "castlevania-portrait-of-ruin",
     "name": "Castlevania: Portrait of Ruin",
-    "consoleId": "nintendo-ds",
+    "platformIds": ["nintendo-ds"],
     "tools": {
       "saveEditor": {
         "createdAt": "2025-08-02",
@@ -250,9 +250,9 @@
     }
   },
   {
-    "id": "castlevania-symphony-of-the-night-ps",
+    "id": "castlevania-symphony-of-the-night",
     "name": "Castlevania: Symphony of the Night",
-    "consoleId": "playstation",
+    "platformIds": ["playstation"],
     "tools": {
       "saveEditor": {
         "createdAt": "2023-12-16",
@@ -265,9 +265,9 @@
     }
   },
   {
-    "id": "chrono-cross-ps",
+    "id": "chrono-cross",
     "name": "Chrono Cross",
-    "consoleId": "playstation",
+    "platformIds": ["playstation"],
     "tools": {
       "saveEditor": {
         "createdAt": "2025-11-24",
@@ -276,9 +276,9 @@
     }
   },
   {
-    "id": "chrono-trigger-snes",
+    "id": "chrono-trigger",
     "name": "Chrono Trigger",
-    "consoleId": "super-nintendo",
+    "platformIds": ["super-nintendo"],
     "tools": {
       "saveEditor": {
         "createdAt": "2025-09-04",
@@ -291,9 +291,9 @@
     }
   },
   {
-    "id": "crash-bandicoot-ps",
+    "id": "crash-bandicoot",
     "name": "Crash Bandicoot",
-    "consoleId": "playstation",
+    "platformIds": ["playstation"],
     "tools": {
       "saveEditor": {
         "createdAt": "2024-12-01",
@@ -302,9 +302,9 @@
     }
   },
   {
-    "id": "crisis-core-final-fantasy-vii-reunion-windows",
+    "id": "crisis-core-final-fantasy-vii-reunion",
     "name": "Crisis Core -Final Fantasy VII- Reunion",
-    "consoleId": "windows",
+    "platformIds": ["steam"],
     "tools": {
       "saveEditor": {
         "createdAt": "2025-11-29",
@@ -313,9 +313,9 @@
     }
   },
   {
-    "id": "ctr-crash-team-racing-ps",
+    "id": "ctr-crash-team-racing",
     "name": "CTR: Crash Team Racing",
-    "consoleId": "playstation",
+    "platformIds": ["playstation"],
     "tools": {
       "saveEditor": {
         "createdAt": "2025-05-27",
@@ -324,9 +324,9 @@
     }
   },
   {
-    "id": "dead-or-alive-2-ps2",
+    "id": "dead-or-alive-2",
     "name": "Dead or Alive 2",
-    "consoleId": "playstation-2",
+    "platformIds": ["playstation-2"],
     "tools": {
       "saveEditor": {
         "createdAt": "2024-07-12",
@@ -335,9 +335,9 @@
     }
   },
   {
-    "id": "diablo-ii-lord-of-destruction-windows",
+    "id": "diablo-ii-lord-of-destruction",
     "name": "Diablo II: Lord of Destruction",
-    "consoleId": "windows",
+    "platformIds": ["windows"],
     "tools": {
       "saveEditor": {
         "createdAt": "2024-08-16",
@@ -346,9 +346,9 @@
     }
   },
   {
-    "id": "diddy-kong-racing-n64",
+    "id": "diddy-kong-racing",
     "name": "Diddy Kong Racing",
-    "consoleId": "nintendo-64",
+    "platformIds": ["nintendo-64"],
     "tools": {
       "saveEditor": {
         "createdAt": "2025-06-04",
@@ -357,9 +357,9 @@
     }
   },
   {
-    "id": "dissidia-012-duodecim-final-fantasy-psp",
+    "id": "dissidia-012-duodecim-final-fantasy",
     "name": "Dissidia 012: Duodecim Final Fantasy",
-    "consoleId": "playstation-portable",
+    "platformIds": ["playstation-portable"],
     "tools": {
       "saveEditor": {
         "createdAt": "2024-12-12",
@@ -368,9 +368,9 @@
     }
   },
   {
-    "id": "donkey-kong-64-n64",
+    "id": "donkey-kong-64",
     "name": "Donkey Kong 64",
-    "consoleId": "nintendo-64",
+    "platformIds": ["nintendo-64"],
     "tools": {
       "saveEditor": {
         "createdAt": "2025-11-04",
@@ -379,9 +379,9 @@
     }
   },
   {
-    "id": "donkey-kong-country-snes",
+    "id": "donkey-kong-country",
     "name": "Donkey Kong Country",
-    "consoleId": "super-nintendo",
+    "platformIds": ["super-nintendo"],
     "tools": {
       "saveEditor": {
         "createdAt": "2025-08-27",
@@ -390,9 +390,9 @@
     }
   },
   {
-    "id": "donkey-kong-country-2-diddy-s-kong-quest-snes",
+    "id": "donkey-kong-country-2-diddy-s-kong-quest",
     "name": "Donkey Kong Country 2: Diddy's Kong Quest",
-    "consoleId": "super-nintendo",
+    "platformIds": ["super-nintendo"],
     "tools": {
       "saveEditor": {
         "createdAt": "2026-01-03",
@@ -401,9 +401,9 @@
     }
   },
   {
-    "id": "donkey-kong-land-gb",
+    "id": "donkey-kong-land",
     "name": "Donkey Kong Land",
-    "consoleId": "game-boy",
+    "platformIds": ["game-boy"],
     "tools": {
       "saveEditor": {
         "createdAt": "2023-12-16",
@@ -412,9 +412,9 @@
     }
   },
   {
-    "id": "dragon-ball-z-budokai-tenkaichi-2-ps2",
+    "id": "dragon-ball-z-budokai-tenkaichi-2",
     "name": "Dragon Ball Z: Budokai Tenkaichi 2",
-    "consoleId": "playstation-2",
+    "platformIds": ["playstation-2"],
     "tools": {
       "saveEditor": {
         "createdAt": "2025-09-14",
@@ -423,9 +423,9 @@
     }
   },
   {
-    "id": "dragon-quest-the-journey-of-the-cursed-king-ps2",
+    "id": "dragon-quest-the-journey-of-the-cursed-king",
     "name": "Dragon Quest: The Journey of the Cursed King",
-    "consoleId": "playstation-2",
+    "platformIds": ["playstation-2"],
     "tools": {
       "saveEditor": {
         "createdAt": "2025-08-20",
@@ -434,9 +434,9 @@
     }
   },
   {
-    "id": "f-zero-snes",
+    "id": "f-zero",
     "name": "F-Zero",
-    "consoleId": "super-nintendo",
+    "platformIds": ["super-nintendo"],
     "tools": {
       "saveEditor": {
         "createdAt": "2025-12-22",
@@ -445,9 +445,9 @@
     }
   },
   {
-    "id": "f-zero-x-n64",
+    "id": "f-zero-x",
     "name": "F-Zero X",
-    "consoleId": "nintendo-64",
+    "platformIds": ["nintendo-64"],
     "tools": {
       "saveEditor": {
         "createdAt": "2025-07-14",
@@ -456,9 +456,9 @@
     }
   },
   {
-    "id": "final-fantasy-nes",
+    "id": "final-fantasy",
     "name": "Final Fantasy",
-    "consoleId": "nintendo-entertainment-system",
+    "platformIds": ["nintendo-entertainment-system"],
     "tools": {
       "saveEditor": {
         "createdAt": "2025-06-28",
@@ -467,9 +467,9 @@
     }
   },
   {
-    "id": "final-fantasy-iv-pixel-remaster-windows",
+    "id": "final-fantasy-iv-pixel-remaster",
     "name": "Final Fantasy IV Pixel Remaster",
-    "consoleId": "windows",
+    "platformIds": ["steam"],
     "tools": {
       "saveEditor": {
         "createdAt": "2025-08-26",
@@ -478,9 +478,9 @@
     }
   },
   {
-    "id": "final-fantasy-vi-snes",
+    "id": "final-fantasy-vi",
     "name": "Final Fantasy VI",
-    "consoleId": "super-nintendo",
+    "platformIds": ["super-nintendo"],
     "tools": {
       "saveEditor": {
         "createdAt": "2026-04-16",
@@ -489,9 +489,9 @@
     }
   },
   {
-    "id": "final-fantasy-vii-remake-windows",
+    "id": "final-fantasy-vii-remake",
     "name": "Final Fantasy VII Remake",
-    "consoleId": "windows",
+    "platformIds": ["steam"],
     "tools": {
       "saveEditor": {
         "createdAt": "2025-01-05",
@@ -500,9 +500,9 @@
     }
   },
   {
-    "id": "final-fantasy-vii-rebirth-windows",
+    "id": "final-fantasy-vii-rebirth",
     "name": "Final Fantasy VII Rebirth",
-    "consoleId": "windows",
+    "platformIds": ["steam"],
     "tools": {
       "saveEditor": {
         "createdAt": "2025-05-01",
@@ -511,9 +511,9 @@
     }
   },
   {
-    "id": "final-fantasy-viii-ps",
+    "id": "final-fantasy-viii",
     "name": "Final Fantasy VIII",
-    "consoleId": "playstation",
+    "platformIds": ["playstation"],
     "tools": {
       "saveEditor": {
         "createdAt": "2025-12-29",
@@ -522,9 +522,9 @@
     }
   },
   {
-    "id": "final-fantasy-ix-ps",
+    "id": "final-fantasy-ix",
     "name": "Final Fantasy IX",
-    "consoleId": "playstation",
+    "platformIds": ["playstation"],
     "tools": {
       "saveEditor": {
         "createdAt": "2024-11-14",
@@ -533,9 +533,9 @@
     }
   },
   {
-    "id": "final-fantasy-tactics-ps",
+    "id": "final-fantasy-tactics",
     "name": "Final Fantasy Tactics",
-    "consoleId": "playstation",
+    "platformIds": ["playstation"],
     "tools": {
       "saveEditor": {
         "createdAt": "2025-08-12",
@@ -544,9 +544,9 @@
     }
   },
   {
-    "id": "final-fight-one-gba",
+    "id": "final-fight-one",
     "name": "Final Fight One",
-    "consoleId": "game-boy-advance",
+    "platformIds": ["game-boy-advance"],
     "tools": {
       "saveEditor": {
         "createdAt": "2024-04-04",
@@ -555,10 +555,9 @@
     }
   },
   {
-    "id": "fire-emblem-gba",
-    "name": "Fire Emblem",
-    "metaName": "Fire Emblem (The Blazing Blade)",
-    "consoleId": "game-boy-advance",
+    "id": "fire-emblem-the-blazing-blade",
+    "name": "Fire Emblem: The Blazing Blade",
+    "platformIds": ["game-boy-advance"],
     "tools": {
       "saveEditor": {
         "createdAt": "2025-12-08",
@@ -567,9 +566,9 @@
     }
   },
   {
-    "id": "game-and-watch-gallery-3-gbc",
+    "id": "game-and-watch-gallery-3",
     "name": "Game & Watch Gallery 3",
-    "consoleId": "game-boy-color",
+    "platformIds": ["game-boy-color"],
     "tools": {
       "saveEditor": {
         "createdAt": "2023-12-16",
@@ -578,9 +577,9 @@
     }
   },
   {
-    "id": "game-boy-camera-gb",
+    "id": "game-boy-camera",
     "name": "Game Boy Camera",
-    "consoleId": "game-boy",
+    "platformIds": ["game-boy"],
     "tools": {
       "saveEditor": {
         "createdAt": "2024-08-17",
@@ -589,9 +588,9 @@
     }
   },
   {
-    "id": "gex-64-enter-the-gecko-n64",
+    "id": "gex-64-enter-the-gecko",
     "name": "Gex 64: Enter the Gecko",
-    "consoleId": "nintendo-64",
+    "platformIds": ["nintendo-64"],
     "tools": {
       "saveEditor": {
         "createdAt": "2026-02-20",
@@ -600,9 +599,9 @@
     }
   },
   {
-    "id": "golden-sun-gba",
+    "id": "golden-sun",
     "name": "Golden Sun",
-    "consoleId": "game-boy-advance",
+    "platformIds": ["game-boy-advance"],
     "tools": {
       "saveEditor": {
         "createdAt": "2023-12-19",
@@ -615,9 +614,9 @@
     }
   },
   {
-    "id": "golden-sun-the-lost-age-gba",
+    "id": "golden-sun-the-lost-age",
     "name": "Golden Sun: The Lost Age",
-    "consoleId": "game-boy-advance",
+    "platformIds": ["game-boy-advance"],
     "tools": {
       "saveEditor": {
         "createdAt": "2024-11-26",
@@ -626,9 +625,9 @@
     }
   },
   {
-    "id": "goldeneye-007-n64",
+    "id": "goldeneye-007",
     "name": "GoldenEye 007",
-    "consoleId": "nintendo-64",
+    "platformIds": ["nintendo-64"],
     "tools": {
       "saveEditor": {
         "createdAt": "2023-12-16",
@@ -637,9 +636,9 @@
     }
   },
   {
-    "id": "grandia-ps",
+    "id": "grandia",
     "name": "Grandia",
-    "consoleId": "playstation",
+    "platformIds": ["playstation"],
     "tools": {
       "saveEditor": {
         "createdAt": "2023-12-16",
@@ -648,9 +647,9 @@
     }
   },
   {
-    "id": "grandia-ii-ps2",
+    "id": "grandia-ii",
     "name": "Grandia II",
-    "consoleId": "playstation-2",
+    "platformIds": ["playstation-2"],
     "tools": {
       "saveEditor": {
         "createdAt": "2024-08-04",
@@ -659,9 +658,9 @@
     }
   },
   {
-    "id": "half-minute-hero-psp",
+    "id": "half-minute-hero",
     "name": "Half-Minute Hero",
-    "consoleId": "playstation-portable",
+    "platformIds": ["playstation-portable"],
     "tools": {
       "saveEditor": {
         "createdAt": "2024-10-06",
@@ -670,10 +669,10 @@
     }
   },
   {
-    "id": "holy-magic-century-n64",
+    "id": "holy-magic-century",
     "name": "Holy Magic Century",
     "metaName": "Holy Magic Century (Quest 64)",
-    "consoleId": "nintendo-64",
+    "platformIds": ["nintendo-64"],
     "tools": {
       "saveEditor": {
         "createdAt": "2025-12-17",
@@ -682,9 +681,9 @@
     }
   },
   {
-    "id": "kingdom-hearts-ps2",
+    "id": "kingdom-hearts",
     "name": "Kingdom Hearts",
-    "consoleId": "playstation-2",
+    "platformIds": ["playstation-2"],
     "tools": {
       "saveEditor": {
         "createdAt": "2024-03-04",
@@ -693,9 +692,9 @@
     }
   },
   {
-    "id": "kingdom-hearts-chain-of-memories-gba",
+    "id": "kingdom-hearts-chain-of-memories",
     "name": "Kingdom Hearts: Chain of Memories",
-    "consoleId": "game-boy-advance",
+    "platformIds": ["game-boy-advance"],
     "tools": {
       "saveEditor": {
         "createdAt": "2025-07-20",
@@ -704,9 +703,9 @@
     }
   },
   {
-    "id": "kirby-s-adventure-nes",
+    "id": "kirby-s-adventure",
     "name": "Kirby's Adventure",
-    "consoleId": "nintendo-entertainment-system",
+    "platformIds": ["nintendo-entertainment-system"],
     "tools": {
       "saveEditor": {
         "createdAt": "2024-11-22",
@@ -715,9 +714,9 @@
     }
   },
   {
-    "id": "konami-krazy-racers-gba",
+    "id": "konami-krazy-racers",
     "name": "Konami Krazy Racers",
-    "consoleId": "game-boy-advance",
+    "platformIds": ["game-boy-advance"],
     "tools": {
       "saveEditor": {
         "createdAt": "2023-12-16",
@@ -726,9 +725,9 @@
     }
   },
   {
-    "id": "kurukuru-kururin-gba",
+    "id": "kurukuru-kururin",
     "name": "Kurukuru Kururin",
-    "consoleId": "game-boy-advance",
+    "platformIds": ["game-boy-advance"],
     "tools": {
       "saveEditor": {
         "createdAt": "2026-01-05",
@@ -737,9 +736,9 @@
     }
   },
   {
-    "id": "legend-of-zelda-the-a-link-to-the-past-snes",
+    "id": "legend-of-zelda-the-a-link-to-the-past",
     "name": "Legend of Zelda, The: A Link to the Past",
-    "consoleId": "super-nintendo",
+    "platformIds": ["super-nintendo"],
     "tools": {
       "saveEditor": {
         "createdAt": "2024-01-06",
@@ -748,9 +747,9 @@
     }
   },
   {
-    "id": "legend-of-zelda-the-link-s-awakening-dx-gbc",
+    "id": "legend-of-zelda-the-link-s-awakening-dx",
     "name": "Legend of Zelda, The: Link's Awakening DX",
-    "consoleId": "game-boy-color",
+    "platformIds": ["game-boy-color"],
     "tools": {
       "saveEditor": {
         "createdAt": "2023-12-16",
@@ -759,9 +758,9 @@
     }
   },
   {
-    "id": "legend-of-zelda-the-majora-s-mask-n64",
+    "id": "legend-of-zelda-the-majora-s-mask",
     "name": "Legend of Zelda, The: Majora's Mask",
-    "consoleId": "nintendo-64",
+    "platformIds": ["nintendo-64"],
     "tools": {
       "saveEditor": {
         "createdAt": "2023-12-29",
@@ -770,9 +769,9 @@
     }
   },
   {
-    "id": "legend-of-zelda-the-ocarina-of-time-n64",
+    "id": "legend-of-zelda-the-ocarina-of-time",
     "name": "Legend of Zelda, The: Ocarina of Time",
-    "consoleId": "nintendo-64",
+    "platformIds": ["nintendo-64"],
     "tools": {
       "saveEditor": {
         "createdAt": "2025-06-20",
@@ -781,9 +780,9 @@
     }
   },
   {
-    "id": "legend-of-zelda-the-oracle-of-ages-gbc",
+    "id": "legend-of-zelda-the-oracle-of-ages",
     "name": "Legend of Zelda, The: Oracle of Ages",
-    "consoleId": "game-boy-color",
+    "platformIds": ["game-boy-color"],
     "tools": {
       "saveEditor": {
         "createdAt": "2025-05-13",
@@ -792,9 +791,9 @@
     }
   },
   {
-    "id": "legend-of-zelda-the-oracle-of-seasons-gbc",
+    "id": "legend-of-zelda-the-oracle-of-seasons",
     "name": "Legend of Zelda, The: Oracle of Seasons",
-    "consoleId": "game-boy-color",
+    "platformIds": ["game-boy-color"],
     "tools": {
       "saveEditor": {
         "createdAt": "2025-05-13",
@@ -803,9 +802,9 @@
     }
   },
   {
-    "id": "legend-of-zelda-the-the-minish-cap-gba",
+    "id": "legend-of-zelda-the-the-minish-cap",
     "name": "Legend of Zelda, The: The Minish Cap",
-    "consoleId": "game-boy-advance",
+    "platformIds": ["game-boy-advance"],
     "tools": {
       "saveEditor": {
         "createdAt": "2025-09-22",
@@ -814,9 +813,9 @@
     }
   },
   {
-    "id": "luigi-s-mansion-gc",
+    "id": "luigi-s-mansion",
     "name": "Luigi's Mansion",
-    "consoleId": "gamecube",
+    "platformIds": ["gamecube"],
     "tools": {
       "saveEditor": {
         "createdAt": "2025-06-16",
@@ -825,10 +824,10 @@
     }
   },
   {
-    "id": "lylat-wars-n64",
+    "id": "lylat-wars",
     "name": "Lylat Wars",
     "metaName": "Lylat Wars (Star Fox 64)",
-    "consoleId": "nintendo-64",
+    "platformIds": ["nintendo-64"],
     "tools": {
       "saveEditor": {
         "createdAt": "2024-11-24",
@@ -837,9 +836,9 @@
     }
   },
   {
-    "id": "mario-kart-64-n64",
+    "id": "mario-kart-64",
     "name": "Mario Kart 64",
-    "consoleId": "nintendo-64",
+    "platformIds": ["nintendo-64"],
     "tools": {
       "saveEditor": {
         "createdAt": "2025-07-15",
@@ -848,9 +847,9 @@
     }
   },
   {
-    "id": "mario-party-n64",
+    "id": "mario-party",
     "name": "Mario Party",
-    "consoleId": "nintendo-64",
+    "platformIds": ["nintendo-64"],
     "tools": {
       "saveEditor": {
         "createdAt": "2024-10-07",
@@ -859,9 +858,9 @@
     }
   },
   {
-    "id": "mario-party-2-n64",
+    "id": "mario-party-2",
     "name": "Mario Party 2",
-    "consoleId": "nintendo-64",
+    "platformIds": ["nintendo-64"],
     "tools": {
       "saveEditor": {
         "createdAt": "2026-03-18",
@@ -870,9 +869,9 @@
     }
   },
   {
-    "id": "marvel-vs-capcom-2-new-age-of-heroes-dc",
+    "id": "marvel-vs-capcom-2-new-age-of-heroes",
     "name": "Marvel vs. Capcom 2: New Age of Heroes",
-    "consoleId": "dreamcast",
+    "platformIds": ["dreamcast"],
     "tools": {
       "saveEditor": {
         "createdAt": "2024-01-10",
@@ -881,9 +880,9 @@
     }
   },
   {
-    "id": "mission-impossible-n64",
+    "id": "mission-impossible",
     "name": "Mission: Impossible",
-    "consoleId": "nintendo-64",
+    "platformIds": ["nintendo-64"],
     "tools": {
       "saveEditor": {
         "createdAt": "2025-06-27",
@@ -892,9 +891,9 @@
     }
   },
   {
-    "id": "muramasa-the-demon-blade-wii",
+    "id": "muramasa-the-demon-blade",
     "name": "Muramasa: The Demon Blade",
-    "consoleId": "wii",
+    "platformIds": ["wii"],
     "tools": {
       "saveEditor": {
         "createdAt": "2025-06-26",
@@ -903,10 +902,10 @@
     }
   },
   {
-    "id": "mystic-quest-legend-snes",
+    "id": "mystic-quest-legend",
     "name": "Mystic Quest Legend",
     "metaName": "Mystic Quest Legend (Final Fantasy Mystic Quest)",
-    "consoleId": "super-nintendo",
+    "platformIds": ["super-nintendo"],
     "tools": {
       "saveEditor": {
         "createdAt": "2023-12-16",
@@ -919,9 +918,9 @@
     }
   },
   {
-    "id": "mystical-ninja-starring-goemon-n64",
+    "id": "mystical-ninja-starring-goemon",
     "name": "Mystical Ninja Starring Goemon",
-    "consoleId": "nintendo-64",
+    "platformIds": ["nintendo-64"],
     "tools": {
       "saveEditor": {
         "createdAt": "2024-12-19",
@@ -930,10 +929,10 @@
     }
   },
   {
-    "id": "mystical-ninja-2-starring-goemon-n64",
+    "id": "mystical-ninja-2-starring-goemon",
     "name": "Mystical Ninja 2 Starring Goemon",
     "metaName": "Mystical Ninja 2 Starring Goemon (Goemon's Great Adventure)",
-    "consoleId": "nintendo-64",
+    "platformIds": ["nintendo-64"],
     "tools": {
       "saveEditor": {
         "createdAt": "2024-01-28",
@@ -942,9 +941,9 @@
     }
   },
   {
-    "id": "octopath-traveler-windows",
+    "id": "octopath-traveler",
     "name": "Octopath Traveler",
-    "consoleId": "windows",
+    "platformIds": ["switch", "steam"],
     "tools": {
       "saveEditor": {
         "createdAt": "2025-11-15",
@@ -953,9 +952,9 @@
     }
   },
   {
-    "id": "octopath-traveler-ii-windows",
+    "id": "octopath-traveler-ii",
     "name": "Octopath Traveler II",
-    "consoleId": "windows",
+    "platformIds": ["switch", "steam"],
     "tools": {
       "saveEditor": {
         "createdAt": "2025-11-15",
@@ -964,9 +963,9 @@
     }
   },
   {
-    "id": "paper-mario-n64",
+    "id": "paper-mario",
     "name": "Paper Mario",
-    "consoleId": "nintendo-64",
+    "platformIds": ["nintendo-64"],
     "tools": {
       "saveEditor": {
         "createdAt": "2026-04-04",
@@ -975,9 +974,9 @@
     }
   },
   {
-    "id": "paper-mario-the-thousand-year-door-gc",
+    "id": "paper-mario-the-thousand-year-door",
     "name": "Paper Mario: The Thousand-Year Door",
-    "consoleId": "gamecube",
+    "platformIds": ["gamecube"],
     "tools": {
       "saveEditor": {
         "createdAt": "2025-09-10",
@@ -986,9 +985,9 @@
     }
   },
   {
-    "id": "pokemon-red-blue-and-yellow-gb",
+    "id": "pokemon-red-blue-and-yellow",
     "name": "Pokémon Red, Blue and Yellow",
-    "consoleId": "game-boy",
+    "platformIds": ["game-boy"],
     "tools": {
       "saveEditor": {
         "createdAt": "2025-07-27",
@@ -997,9 +996,9 @@
     }
   },
   {
-    "id": "pokemon-gold-silver-and-crystal-gbc",
+    "id": "pokemon-gold-silver-and-crystal",
     "name": "Pokémon Gold, Silver and Crystal",
-    "consoleId": "game-boy-color",
+    "platformIds": ["game-boy-color"],
     "tools": {
       "saveEditor": {
         "createdAt": "2026-03-13",
@@ -1008,9 +1007,9 @@
     }
   },
   {
-    "id": "pokemon-snap-n64",
+    "id": "pokemon-snap",
     "name": "Pokémon Snap",
-    "consoleId": "nintendo-64",
+    "platformIds": ["nintendo-64"],
     "tools": {
       "saveEditor": {
         "createdAt": "2026-03-05",
@@ -1019,9 +1018,9 @@
     }
   },
   {
-    "id": "pokemon-trading-card-game-gbc",
+    "id": "pokemon-trading-card-game",
     "name": "Pokémon Trading Card Game",
-    "consoleId": "game-boy-color",
+    "platformIds": ["game-boy-color"],
     "tools": {
       "saveEditor": {
         "createdAt": "2024-07-25",
@@ -1030,9 +1029,9 @@
     }
   },
   {
-    "id": "rayman-ps",
+    "id": "rayman",
     "name": "Rayman",
-    "consoleId": "playstation",
+    "platformIds": ["playstation"],
     "tools": {
       "saveEditor": {
         "createdAt": "2023-12-23",
@@ -1041,9 +1040,9 @@
     }
   },
   {
-    "id": "rayman-2-the-great-escape-n64",
+    "id": "rayman-2-the-great-escape",
     "name": "Rayman 2: The Great Escape",
-    "consoleId": "nintendo-64",
+    "platformIds": ["nintendo-64"],
     "tools": {
       "saveEditor": {
         "createdAt": "2026-02-10",
@@ -1052,9 +1051,9 @@
     }
   },
   {
-    "id": "resident-evil-ps",
+    "id": "resident-evil",
     "name": "Resident Evil",
-    "consoleId": "playstation",
+    "platformIds": ["playstation"],
     "tools": {
       "saveEditor": {
         "createdAt": "2024-03-17",
@@ -1063,9 +1062,9 @@
     }
   },
   {
-    "id": "rogue-legacy-windows",
+    "id": "rogue-legacy",
     "name": "Rogue Legacy",
-    "consoleId": "windows",
+    "platformIds": ["steam"],
     "tools": {
       "saveEditor": {
         "createdAt": "2024-08-31",
@@ -1074,9 +1073,9 @@
     }
   },
   {
-    "id": "shining-force-3-saturn",
+    "id": "shining-force-3",
     "name": "Shining Force 3",
-    "consoleId": "saturn",
+    "platformIds": ["saturn"],
     "tools": {
       "saveEditor": {
         "createdAt": "2023-12-16",
@@ -1089,9 +1088,9 @@
     }
   },
   {
-    "id": "shining-the-holy-ark-saturn",
+    "id": "shining-the-holy-ark",
     "name": "Shining the Holy Ark",
-    "consoleId": "saturn",
+    "platformIds": ["saturn"],
     "tools": {
       "saveEditor": {
         "createdAt": "2026-02-17",
@@ -1104,9 +1103,9 @@
     }
   },
   {
-    "id": "skies-of-arcadia-legends-gc",
+    "id": "skies-of-arcadia-legends",
     "name": "Skies of Arcadia Legends",
-    "consoleId": "gamecube",
+    "platformIds": ["gamecube"],
     "tools": {
       "saveEditor": {
         "createdAt": "2024-12-25",
@@ -1123,9 +1122,9 @@
     }
   },
   {
-    "id": "solatorobo-red-the-hunter-ds",
+    "id": "solatorobo-red-the-hunter",
     "name": "Solatorobo: Red the Hunter",
-    "consoleId": "nintendo-ds",
+    "platformIds": ["nintendo-ds"],
     "tools": {
       "saveEditor": {
         "createdAt": "2026-01-25",
@@ -1134,10 +1133,10 @@
     }
   },
   {
-    "id": "soleil-md",
+    "id": "soleil",
     "name": "Soleil",
     "metaName": "Soleil (Crusader of Centy)",
-    "consoleId": "mega-drive",
+    "platformIds": ["mega-drive"],
     "tools": {
       "saveEditor": {
         "createdAt": "2024-04-29",
@@ -1150,9 +1149,9 @@
     }
   },
   {
-    "id": "sonic-3-md",
+    "id": "sonic-3",
     "name": "Sonic 3",
-    "consoleId": "mega-drive",
+    "platformIds": ["mega-drive"],
     "tools": {
       "saveEditor": {
         "createdAt": "2023-12-16",
@@ -1161,9 +1160,9 @@
     }
   },
   {
-    "id": "sonic-advance-gba",
+    "id": "sonic-advance",
     "name": "Sonic Advance",
-    "consoleId": "game-boy-advance",
+    "platformIds": ["game-boy-advance"],
     "tools": {
       "saveEditor": {
         "createdAt": "2026-01-31",
@@ -1172,9 +1171,9 @@
     }
   },
   {
-    "id": "sonic-advance-2-gba",
+    "id": "sonic-advance-2",
     "name": "Sonic Advance 2",
-    "consoleId": "game-boy-advance",
+    "platformIds": ["game-boy-advance"],
     "tools": {
       "saveEditor": {
         "createdAt": "2026-01-31",
@@ -1183,9 +1182,9 @@
     }
   },
   {
-    "id": "sonic-advance-3-gba",
+    "id": "sonic-advance-3",
     "name": "Sonic Advance 3",
-    "consoleId": "game-boy-advance",
+    "platformIds": ["game-boy-advance"],
     "tools": {
       "saveEditor": {
         "createdAt": "2026-01-31",
@@ -1194,9 +1193,9 @@
     }
   },
   {
-    "id": "sonic-adventure-2-battle-gc",
+    "id": "sonic-adventure-2-battle",
     "name": "Sonic Adventure 2: Battle",
-    "consoleId": "gamecube",
+    "platformIds": ["gamecube"],
     "tools": {
       "saveEditor": {
         "createdAt": "2024-09-27",
@@ -1205,9 +1204,9 @@
     }
   },
   {
-    "id": "sonic-rush-ds",
+    "id": "sonic-rush",
     "name": "Sonic Rush",
-    "consoleId": "nintendo-ds",
+    "platformIds": ["nintendo-ds"],
     "tools": {
       "saveEditor": {
         "createdAt": "2026-01-31",
@@ -1216,9 +1215,9 @@
     }
   },
   {
-    "id": "super-mario-64-n64",
+    "id": "super-mario-64",
     "name": "Super Mario 64",
-    "consoleId": "nintendo-64",
+    "platformIds": ["nintendo-64"],
     "tools": {
       "saveEditor": {
         "createdAt": "2025-04-03",
@@ -1227,9 +1226,9 @@
     }
   },
   {
-    "id": "super-mario-galaxy-wii",
+    "id": "super-mario-galaxy",
     "name": "Super Mario Galaxy",
-    "consoleId": "wii",
+    "platformIds": ["wii"],
     "tools": {
       "saveEditor": {
         "createdAt": "2025-09-16",
@@ -1238,9 +1237,9 @@
     }
   },
   {
-    "id": "super-mario-galaxy-2-wii",
+    "id": "super-mario-galaxy-2",
     "name": "Super Mario Galaxy 2",
-    "consoleId": "wii",
+    "platformIds": ["wii"],
     "tools": {
       "saveEditor": {
         "createdAt": "2025-12-13",
@@ -1249,9 +1248,9 @@
     }
   },
   {
-    "id": "super-mario-kart-snes",
+    "id": "super-mario-kart",
     "name": "Super Mario Kart",
-    "consoleId": "super-nintendo",
+    "platformIds": ["super-nintendo"],
     "tools": {
       "saveEditor": {
         "createdAt": "2025-07-04",
@@ -1260,9 +1259,9 @@
     }
   },
   {
-    "id": "super-mario-sunshine-gc",
+    "id": "super-mario-sunshine",
     "name": "Super Mario Sunshine",
-    "consoleId": "gamecube",
+    "platformIds": ["gamecube"],
     "tools": {
       "saveEditor": {
         "createdAt": "2025-08-05",
@@ -1271,9 +1270,9 @@
     }
   },
   {
-    "id": "super-metroid-snes",
+    "id": "super-metroid",
     "name": "Super Metroid",
-    "consoleId": "super-nintendo",
+    "platformIds": ["super-nintendo"],
     "tools": {
       "saveEditor": {
         "createdAt": "2025-10-25",
@@ -1282,9 +1281,9 @@
     }
   },
   {
-    "id": "super-punch-out-snes",
+    "id": "super-punch-out",
     "name": "Super Punch Out!!",
-    "consoleId": "super-nintendo",
+    "platformIds": ["super-nintendo"],
     "tools": {
       "saveEditor": {
         "createdAt": "2025-07-03",
@@ -1293,9 +1292,9 @@
     }
   },
   {
-    "id": "super-smash-bros-n64",
+    "id": "super-smash-bros",
     "name": "Super Smash Bros.",
-    "consoleId": "nintendo-64",
+    "platformIds": ["nintendo-64"],
     "tools": {
       "saveEditor": {
         "createdAt": "2023-12-16",
@@ -1304,9 +1303,9 @@
     }
   },
   {
-    "id": "super-smash-bros-melee-gc",
+    "id": "super-smash-bros-melee",
     "name": "Super Smash Bros. Melee",
-    "consoleId": "gamecube",
+    "platformIds": ["gamecube"],
     "tools": {
       "saveEditor": {
         "createdAt": "2024-10-28",
@@ -1315,9 +1314,9 @@
     }
   },
   {
-    "id": "super-street-fighter-ii-turbo-revival-gba",
+    "id": "super-street-fighter-ii-turbo-revival",
     "name": "Super Street Fighter II Turbo Revival",
-    "consoleId": "game-boy-advance",
+    "platformIds": ["game-boy-advance"],
     "tools": {
       "saveEditor": {
         "createdAt": "2023-12-16",
@@ -1326,9 +1325,9 @@
     }
   },
   {
-    "id": "theatrhythm-final-fantasy-curtain-call-3ds",
+    "id": "theatrhythm-final-fantasy-curtain-call",
     "name": "Theatrhythm Final Fantasy: Curtain Call",
-    "consoleId": "nintendo-3ds",
+    "platformIds": ["nintendo-3ds"],
     "tools": {
       "saveEditor": {
         "createdAt": "2025-06-23",
@@ -1337,9 +1336,9 @@
     }
   },
   {
-    "id": "timesplitters-2-ps2",
+    "id": "timesplitters-2",
     "name": "TimeSplitters 2",
-    "consoleId": "playstation-2",
+    "platformIds": ["playstation-2"],
     "tools": {
       "saveEditor": {
         "createdAt": "2024-10-15",
@@ -1348,9 +1347,9 @@
     }
   },
   {
-    "id": "tomb-raider-ii-starring-lara-croft-ps",
+    "id": "tomb-raider-ii-starring-lara-croft",
     "name": "Tomb Raider II: Starring Lara Croft",
-    "consoleId": "playstation",
+    "platformIds": ["playstation"],
     "tools": {
       "saveEditor": {
         "createdAt": "2025-11-08",
@@ -1359,10 +1358,10 @@
     }
   },
   {
-    "id": "tony-hawk-s-skateboarding-ps",
+    "id": "tony-hawk-s-skateboarding",
     "name": "Tony Hawk's Skateboarding",
     "metaName": "Tony Hawk's Skateboarding (Tony Hawk's Pro Skater)",
-    "consoleId": "playstation",
+    "platformIds": ["playstation"],
     "tools": {
       "saveEditor": {
         "createdAt": "2026-02-09",
@@ -1371,9 +1370,9 @@
     }
   },
   {
-    "id": "wario-land-super-mario-land-3-gb",
+    "id": "wario-land-super-mario-land-3",
     "name": "Wario Land: Super Mario Land 3",
-    "consoleId": "game-boy",
+    "platformIds": ["game-boy"],
     "tools": {
       "saveEditor": {
         "createdAt": "2023-12-16",
@@ -1382,9 +1381,9 @@
     }
   },
   {
-    "id": "wario-land-3-gbc",
+    "id": "wario-land-3",
     "name": "Wario Land 3",
-    "consoleId": "game-boy-color",
+    "platformIds": ["game-boy-color"],
     "tools": {
       "saveEditor": {
         "createdAt": "2024-11-01",
@@ -1393,9 +1392,9 @@
     }
   },
   {
-    "id": "wario-land-4-gba",
+    "id": "wario-land-4",
     "name": "Wario Land 4",
-    "consoleId": "game-boy-advance",
+    "platformIds": ["game-boy-advance"],
     "tools": {
       "saveEditor": {
         "createdAt": "2026-04-08",

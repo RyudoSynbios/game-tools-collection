@@ -1,29 +1,29 @@
 <script lang="ts">
   import { page } from "$app/state";
   import GameTile from "$lib/components/GameTile.svelte";
-  import { getConsoles, getGames, type Order, type Tool } from "$lib/utils/db";
+  import { getGames, getPlatforms, type Order, type Tool } from "$lib/utils/db";
 
-  let consoles = getConsoles();
+  let platforms = getPlatforms();
   let games = getGames();
 
   let titleEl: HTMLInputElement;
-  let consoleEl: HTMLSelectElement;
+  let platformEl: HTMLSelectElement;
   let toolEl: HTMLSelectElement;
   let orderEl: HTMLSelectElement;
 
-  let searchConsole = "";
+  let searchPlatform = "";
   let searchTool = "";
   let order = "";
 
   function handleFilter(): void {
     games = getGames({
       title: titleEl.value,
-      console: consoleEl.value,
+      platform: platformEl.value,
       tool: toolEl.value as Tool,
       order: orderEl.value as Order,
     });
 
-    searchConsole = consoleEl.value;
+    searchPlatform = platformEl.value;
     searchTool = toolEl.value;
     order = orderEl.value;
   }
@@ -45,13 +45,13 @@
       on:keyup={handleFilter}
     />
     <select
-      class:gtc-home-select-filled={searchConsole}
-      bind:this={consoleEl}
+      class:gtc-home-select-filled={searchPlatform}
+      bind:this={platformEl}
       on:change={handleFilter}
     >
-      <option value="">Console</option>
-      {#each consoles as console}
-        <option value={console.id}>{console.name}</option>
+      <option value="">Platform</option>
+      {#each platforms as platform}
+        <option value={platform.id}>{platform.name}</option>
       {/each}
     </select>
     <select

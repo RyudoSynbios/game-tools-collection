@@ -25,7 +25,7 @@
     locale,
   } from "$lib/stores";
   import { updateChecksums } from "$lib/utils/checksum";
-  import { getGame } from "$lib/utils/db.js";
+  import { formatPlatforms, getGame } from "$lib/utils/db.js";
   import { capitalize, setLocalStorage, utilsExists } from "$lib/utils/format";
   import { enrichGameJson } from "$lib/utils/parser";
   import { reset } from "$lib/utils/state";
@@ -335,8 +335,8 @@
 
 <!-- prettier-ignore -->
 <svelte:head>
-  <title>{game.metaName} - {game.console.name} - {tool} | Game Tools Collection</title>
-  <meta property="og:title" content="{game.metaName} - {game.console.name} - {tool}" />
+  <title>{game.metaName} - {formatPlatforms(game.platforms)} - {tool} | Game Tools Collection</title>
+  <meta property="og:title" content="{game.metaName} - {formatPlatforms(game.platforms)} - {tool}" />
   <meta property="og:image" content="{page.url.origin}/img/games/{game.id}/logo.png" />
 </svelte:head>
 
@@ -348,11 +348,8 @@
 <div class="gtc-tool">
   {#if $dataView.byteLength === 0}
     <Dropzone {onFileFailed} {onFileUploaded}>
-      <svelte:fragment slot="dropzone" let:isDragging let:isFileLoading>
-        <img
-          src="/img/games/{game.id}/logo.png"
-          alt="{game.metaName} ({game.console.name})"
-        />
+      <svelte:fragment slot="dropzone-inner" let:isDragging let:isFileLoading>
+        <img src="/img/games/{game.id}/logo.png" alt={game.metaName} />
         {#if isDragging}
           <p>Drop the file here.</p>
         {:else if !isFileLoading}
@@ -369,6 +366,11 @@
           </p>
         {/if}
       </svelte:fragment>
+      <svelte:fragment slot="dropzone">
+        <p class="gtc-tool-platform">
+          Supported platforms: <span>{formatPlatforms(game.platforms)}</span>
+        </p>
+      </svelte:fragment>
     </Dropzone>
     {#if regions.length > 1}
       <RegionModal {regions} onSubmit={(region) => initTool(region)} />
@@ -377,7 +379,7 @@
     <div class="gtc-tool-banner">
       <img
         src="/img/games/{game.id}/logo.png"
-        alt="{game.metaName} ({game.console.name})"
+        alt={game.metaName}
         on:click={handleLogoClick}
       />
       <div>
@@ -450,6 +452,14 @@
 <style lang="postcss">
   .gtc-tool {
     @apply flex flex-1 flex-col;
+
+    & .gtc-tool-platform {
+      @apply absolute -bottom-6 right-4 text-center text-xs;
+
+      & span {
+        @apply text-white;
+      }
+    }
 
     & .gtc-tool-hint {
       @apply whitespace-pre-line text-center text-primary-400;

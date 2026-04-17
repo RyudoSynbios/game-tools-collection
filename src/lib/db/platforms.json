@@ -1,0 +1,107 @@
+[
+  {
+    "id": "game-boy",
+    "name": "Game Boy",
+    "manufacturerId": "nintendo"
+  },
+  {
+    "id": "game-boy-color",
+    "name": "Game Boy Color",
+    "manufacturerId": "nintendo"
+  },
+  {
+    "id": "game-boy-advance",
+    "name": "Game Boy Advance",
+    "manufacturerId": "nintendo"
+  },
+  {
+    "id": "nintendo-ds",
+    "name": "Nintendo DS",
+    "manufacturerId": "nintendo"
+  },
+  {
+    "id": "nintendo-3ds",
+    "name": "Nintendo 3DS",
+    "manufacturerId": "nintendo"
+  },
+  {
+    "id": "nintendo-entertainment-system",
+    "name": "Nintendo Entertainment System",
+    "manufacturerId": "nintendo"
+  },
+  {
+    "id": "super-nintendo",
+    "name": "Super Nintendo",
+    "manufacturerId": "nintendo"
+  },
+  {
+    "id": "nintendo-64",
+    "name": "Nintendo 64",
+    "manufacturerId": "nintendo"
+  },
+  {
+    "id": "gamecube",
+    "name": "GameCube",
+    "manufacturerId": "nintendo"
+  },
+  {
+    "id": "wii",
+    "name": "Wii",
+    "manufacturerId": "nintendo"
+  },
+  {
+    "id": "switch",
+    "name": "Switch",
+    "manufacturerId": "nintendo"
+  },
+  {
+    "id": "mega-drive",
+    "name": "Mega Drive",
+    "manufacturerId": "sega"
+  },
+  {
+    "id": "saturn",
+    "name": "Saturn",
+    "manufacturerId": "sega"
+  },
+  {
+    "id": "dreamcast",
+    "name": "Dreamcast",
+    "manufacturerId": "sega"
+  },
+  {
+    "id": "playstation",
+    "name": "PlayStation",
+    "manufacturerId": "sony"
+  },
+  {
+    "id": "playstation-2",
+    "name": "PlayStation 2",
+    "manufacturerId": "sony"
+  },
+  {
+    "id": "playstation-3",
+    "name": "PlayStation 3",
+    "manufacturerId": "sony"
+  },
+  {
+    "id": "playstation-portable",
+    "name": "PlayStation Portable",
+    "manufacturerId": "sony"
+  },
+  {
+    "id": "pc-engine-cd",
+    "name": "PC-Engine CD",
+    "manufacturerId": "nec"
+  },
+  {
+    "id": "steam",
+    "name": "Steam",
+    "manufacturerId": "valve"
+  },
+  {
+    "id": "windows",
+    "name": "Windows",
+    "manufacturerId": "microsoft"
+  }
+]

@@ -23,7 +23,7 @@
 </svelte:head>
 
 <Dropzone {onFileUploaded}>
-  <svelte:fragment slot="dropzone" let:isDragging let:isFileLoading>
+  <svelte:fragment slot="dropzone-inner" let:isDragging let:isFileLoading>
     <p class="gtc-byteswap-title">Byteswap</p>
     {#if isDragging}
       <p>Drop the file here.</p>

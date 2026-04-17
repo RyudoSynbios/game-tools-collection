@@ -34,13 +34,13 @@
 
   let fileTypeEl: HTMLSelectElement;
 
-  let console = "";
+  let platform = "";
   let fileType = "";
   let fileName = "";
   let dataView: DataView = new DataView(new ArrayBuffer(0));
   let error = "";
 
-  const consoles: {
+  const platforms: {
     [key: string]: {
       name: string;
       fileTypes: string[];
@@ -126,7 +126,7 @@
   };
 
   function handleFileEject(): void {
-    console = "";
+    platform = "";
     fileName = "";
     fileType = "";
     dataView = new DataView(new ArrayBuffer(0));
@@ -135,7 +135,7 @@
   }
 
   function onFileUploaded(fileTmp: File, dataViewTmp: DataView): void {
-    if (console === "") {
+    if (platform === "") {
       Object.entries(tools).some(([subkey, value]) => {
         if (value.validator(dataViewTmp)) {
           fileType = subkey;
@@ -180,18 +180,18 @@
 <div class="gtc-explorer">
   {#if fileName === ""}
     <Dropzone {onFileUploaded}>
-      <svelte:fragment slot="dropzone" let:isDragging let:isFileLoading>
+      <svelte:fragment slot="dropzone-inner" let:isDragging let:isFileLoading>
         <p class="gtc-explorer-title">Explorer</p>
         <div class="gtc-explorer-form">
-          <select bind:value={console} on:click|stopPropagation>
+          <select bind:value={platform} on:click|stopPropagation>
             <option value="">Auto-detect</option>
-            {#each Object.entries(consoles) as [key, value]}
+            {#each Object.entries(platforms) as [key, value]}
               <option value={key}>{value.name}</option>
             {/each}
           </select>
-          {#if console}
+          {#if platform}
             <select bind:this={fileTypeEl} on:click|stopPropagation>
-              {#each consoles[console].fileTypes as fileType}
+              {#each platforms[platform].fileTypes as fileType}
                 {@const tool = tools[fileType]}
                 <option value={fileType}>{tool.name}</option>
               {/each}
