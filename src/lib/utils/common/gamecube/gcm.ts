@@ -465,6 +465,8 @@ export default class GCM {
       uint8Array.set(data, this.tmp.fileOffsets[index].new);
     });
 
+    this.dataView = new DataView(uint8Array.buffer);
+
     return uint8Array.buffer;
   }
 
