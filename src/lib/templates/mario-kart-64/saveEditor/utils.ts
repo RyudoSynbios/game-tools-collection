@@ -32,7 +32,7 @@ export function overrideGetRegions(
 
   const itemTabs = $gameTemplate.items[0] as ItemTabs;
   const itemTab = itemTabs.items[0] as ItemTab;
-  const itemChecksum = clone(itemTab.items[0] as ItemChecksum);
+  const itemChecksum = clone(itemTab.items[0]) as ItemChecksum;
 
   itemChecksum.offset += shift;
   itemChecksum.control.offsetStart += shift;

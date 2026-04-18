@@ -28,7 +28,7 @@ export function overrideGetRegions(
   const itemContainer = $gameTemplate.items[0] as ItemContainer;
 
   for (let i = 0x0; i < itemContainer.instances; i += 0x1) {
-    const itemChecksum = clone(itemContainer.items[0] as ItemChecksum);
+    const itemChecksum = clone(itemContainer.items[0]) as ItemChecksum;
 
     const tmpShift = shift + i * itemContainer.length;
 
