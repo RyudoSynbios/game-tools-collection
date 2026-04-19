@@ -28,6 +28,7 @@ import type {
   ItemIntCondition,
   LogicalOperator,
   Resource,
+  ResourceGroups,
 } from "$lib/types";
 
 interface ItemParent {
@@ -636,13 +637,21 @@ export function updateResources(
   gameJson.set({ ...$gameJson, resources });
 }
 
-export function updateResourcesGroups(resource = ""): void {
+export function updateResourcesGroups(
+  resource = "",
+  overrideValues?: ResourceGroups,
+): void {
   const $gameJson = get(gameJson);
   const $gameTemplate = get(gameTemplate);
 
   let resourcesGroups = { ...$gameTemplate.resourcesGroups };
 
-  if (resource && $gameTemplate.resourcesGroups?.[resource]) {
+  if (overrideValues) {
+    resourcesGroups = {
+      ...$gameJson.resourcesGroups,
+      [resource]: overrideValues,
+    };
+  } else if (resource && $gameTemplate.resourcesGroups?.[resource]) {
     if (typeof resourcesGroups[resource] === "string") {
       const values = getUtils(resourcesGroups[resource] as string);
 
