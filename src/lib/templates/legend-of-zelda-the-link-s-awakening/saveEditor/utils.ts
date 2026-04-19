@@ -1,6 +1,44 @@
-import { getInt, setInt } from "$lib/utils/bytes";
+import { get } from "svelte/store";
 
-import type { Item, ItemInt, Resource } from "$lib/types";
+import { fileHeaderShift } from "$lib/stores";
+import { getInt, setInt } from "$lib/utils/bytes";
+import {
+  checkValidator,
+  getRegionName,
+  getRegionValidator,
+} from "$lib/utils/validator";
+
+import type {
+  Item,
+  ItemContainer,
+  ItemInt,
+  ItemTab,
+  Resource,
+} from "$lib/types";
+
+export function overrideParseItem(item: Item): Item {
+  if ("id" in item && item.id === "slots") {
+    const itemContainer = item as ItemContainer;
+
+    if (isGBCSave()) {
+      itemContainer.length = 0x3ad;
+    }
+
+    return itemContainer;
+  } else if ("id" in item && item.id === "gbcOnly") {
+    (item as ItemInt | ItemTab).hidden = !isGBCSave();
+  } else if ("id" in item && item.id === "dungeons") {
+    const itemContainer = item as ItemContainer;
+
+    if (isGBCSave()) {
+      itemContainer.instances = 9;
+    }
+
+    return itemContainer;
+  }
+
+  return item;
+}
 
 export function overrideItem(item: Item): Item {
   if ("id" in item && item.id === "health") {
@@ -61,6 +99,14 @@ export function afterSetInt(item: Item): void {
 
     setInt(itemInt.offset - 0x33, "uint8", arrows);
   }
+}
+
+function isGBCSave(): boolean {
+  const $fileHeaderShift = get(fileHeaderShift);
+
+  const validator = getRegionValidator(0x100, 0);
+
+  return checkValidator(validator, $fileHeaderShift + 0x4ad);
 }
 
 export function getLocationNames(): Resource {

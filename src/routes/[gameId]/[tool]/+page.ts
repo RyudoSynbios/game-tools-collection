@@ -193,8 +193,9 @@ function getRedirectRoute(route: string): string {
       return "kurukuru-kururin";
     case "legend-of-zelda-the-a-link-to-the-past-snes":
       return "legend-of-zelda-the-a-link-to-the-past";
+    case "legend-of-zelda-the-link-s-awakening-dx":
     case "legend-of-zelda-the-link-s-awakening-dx-gbc":
-      return "legend-of-zelda-the-link-s-awakening-dx";
+      return "legend-of-zelda-the-link-s-awakening";
     case "legend-of-zelda-the-majora-s-mask-n64":
       return "legend-of-zelda-the-majora-s-mask";
     case "legend-of-zelda-the-ocarina-of-time-n64":

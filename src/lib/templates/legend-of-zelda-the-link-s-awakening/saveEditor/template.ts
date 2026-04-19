@@ -3,23 +3,17 @@ import type { GameJson } from "$lib/types";
 const template: GameJson = {
   validator: {
     regions: {
-      europe_usa_france: {
-        $and: [
-          { 0x100: [0x1, 0x3, 0x5, 0x7, 0x9] },
-          { 0x4ad: [0x1, 0x3, 0x5, 0x7, 0x9] },
-        ],
+      europe_usa_france_canada: {
+        0x100: [0x1, 0x3, 0x5, 0x7, 0x9],
       },
       japan: {
-        $and: [
+        $or: [
           { 0x100: [0x1, 0x3, 0x5, 0x7, 0x9] },
-          { 0x4ad: [0x1, 0x3, 0x5, 0x7, 0x9] },
+          { 0x100: [0x1, 0x2, 0x3, 0x4, 0x5] },
         ],
       },
       germany: {
-        $and: [
-          { 0x100: [0x1, 0x3, 0x5, 0x7, 0x9] },
-          { 0x4ad: [0x1, 0x3, 0x5, 0x7, 0x9] },
-        ],
+        0x100: [0x1, 0x3, 0x5, 0x7, 0x9],
       },
     },
     text: "Drag 'n' drop here or click to add a save file.",
@@ -27,7 +21,8 @@ const template: GameJson = {
   },
   items: [
     {
-      length: 0x3ad,
+      id: "slots",
+      length: 0x385,
       type: "container",
       instanceType: "tabs",
       instances: 3,
@@ -197,6 +192,7 @@ const template: GameJson = {
                       ],
                     },
                     {
+                      id: "gbcOnly",
                       name: "Photos",
                       items: [
                         {
@@ -254,6 +250,7 @@ const template: GameJson = {
                               autocomplete: true,
                             },
                             {
+                              id: "gbcOnly",
                               name: "Tunic",
                               offset: 0x4aa,
                               type: "variable",
@@ -604,10 +601,11 @@ const template: GameJson = {
               name: "Dungeons",
               items: [
                 {
+                  id: "dungeons",
                   length: 0x5,
                   type: "container",
                   instanceType: "tabs",
-                  instances: 9,
+                  instances: 8,
                   resource: "dungeons",
                   vertical: true,
                   items: [
