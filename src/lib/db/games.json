@@ -480,11 +480,11 @@
   {
     "id": "final-fantasy-vi",
     "name": "Final Fantasy VI",
-    "platformIds": ["super-nintendo"],
+    "platformIds": ["super-nintendo", "game-boy-advance"],
     "tools": {
       "saveEditor": {
         "createdAt": "2026-04-16",
-        "regions": ["🇺🇸", "🇯🇵"]
+        "regions": ["🇪🇺", "🇺🇸", "🇯🇵"]
       }
     }
   },
