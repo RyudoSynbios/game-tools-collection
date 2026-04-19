@@ -637,6 +637,19 @@ export function updateResources(
   gameJson.set({ ...$gameJson, resources });
 }
 
+export function updateResourceOrder(
+  resource = "",
+  overrideValues: number[],
+): void {
+  const $gameJson = get(gameJson);
+
+  if (resource && $gameJson.resourcesOrder?.[resource]) {
+    if (overrideValues) {
+      $gameJson.resourcesOrder[resource] = overrideValues;
+    }
+  }
+}
+
 export function updateResourcesGroups(
   resource = "",
   overrideValues?: ResourceGroups,
