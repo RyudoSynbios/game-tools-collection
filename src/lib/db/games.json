@@ -1381,6 +1381,17 @@
     }
   },
   {
+    "id": "wario-land-ii",
+    "name": "Wario Land II",
+    "platformIds": ["game-boy", "game-boy-color"],
+    "tools": {
+      "saveEditor": {
+        "createdAt": "2026-04-21",
+        "regions": ["🇪🇺", "🇺🇸", "🇯🇵"]
+      }
+    }
+  },
+  {
     "id": "wario-land-3",
     "name": "Wario Land 3",
     "platformIds": ["game-boy-color"],

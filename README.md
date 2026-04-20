@@ -127,6 +127,7 @@ Link to the website: [https://game-tools-collection.com](https://game-tools-coll
 | Tomb Raider II: Starring Lara Croft          | PS         | Save                    | EUR / USA / JAP / FRA / GER / ITA             |
 | Tony Hawk's Skateboarding                    | PS         | Save                    | EUR / USA / JAP                               |
 | Wario Land: Super Mario Land 3               | GB         | Save                    | WORLD                                         |
+| Wario Land II                                | GB / GBC   | Save                    | EUR / USA / JAP                               |
 | Wario Land 3                                 | GBC        | Save                    | WORLD                                         |
 | Wario Land 4                                 | GBA        | Save                    | EUR / USA / JAP                               |
 
