@@ -949,6 +949,18 @@ export function onMainTabChange(tabIndex: number): void {
     return;
   }
 
+  for (let i = 0x0; i < 0x2; i += 0x1) {
+    const pokemonItem = getItem(`pokemonPreview-daycare-${i}`) as ItemInt;
+
+    const offset = pokemonItem.offset - 0x17 - i * 0x2 + japanShift(0xa);
+
+    const hasPokemon = getInt(offset, "bit", { bit: 0 });
+
+    if (!hasPokemon) {
+      setInt(pokemonItem.offset, "uint8", 0xff);
+    }
+  }
+
   updatePokemonNames("daycare");
 }
 
