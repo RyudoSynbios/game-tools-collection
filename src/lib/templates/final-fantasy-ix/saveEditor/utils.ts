@@ -79,7 +79,7 @@ export function overrideParseContainerItemsShifts(
   index: number,
 ): [boolean, number[] | undefined] {
   if (item.id === "slots") {
-    return getSlotShiftsByIdentifier(`00000-${`${index}`.padStart(2, "0")}`);
+    return getSlotShiftsByIdentifier(`00000-${index.leading0()}`);
   }
 
   return [false, undefined];

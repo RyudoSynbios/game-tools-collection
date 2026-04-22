@@ -769,7 +769,7 @@ const template: GameJson = {
                             const end = Math.min(start + 20, monsters.length);
 
                             return {
-                              name: `${`${start + 1}`.padStart(3, "0")}-${`${end}`.padStart(3, "0")}`,
+                              name: `${(start + 1).leading0(2)}-${end.leading0(2)}`,
                               flex: true,
                               items: monsters
                                 .slice(start, end)
@@ -1174,7 +1174,7 @@ const template: GameJson = {
                             const end = Math.min(start + 20, mailList.length);
 
                             return {
-                              name: `${`${start + 1}`.padStart(3, "0")}-${`${end}`.padStart(3, "0")}`,
+                              name: `${(start + 1).leading0(2)}-${end.leading0(2)}`,
                               flex: true,
                               items: mailList
                                 .slice(start, end)

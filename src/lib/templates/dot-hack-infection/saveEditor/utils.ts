@@ -106,7 +106,7 @@ export function overrideParseItem(item: Item): Item {
     itemTab.items.map((subitem, index) => {
       const itemInt = subitem as ItemInt;
 
-      itemInt.name = `${`${index + 1}`.padStart(2, "0")} ${players[index].name}`;
+      itemInt.name = `${(index + 1).leading0()} ${players[index].name}`;
       itemInt.offset += index;
 
       if (isExtendedSave()) {
@@ -270,7 +270,7 @@ function getSlotSave(slotIndex: number): Save | undefined {
   const saves = getRegionSaves(true);
 
   return saves.find(
-    (save) => save.file.name === `dhdata${`${slotIndex + 1}`.padStart(2, "0")}`,
+    (save) => save.file.name === `dhdata${(slotIndex + 1).leading0()}`,
   );
 }
 

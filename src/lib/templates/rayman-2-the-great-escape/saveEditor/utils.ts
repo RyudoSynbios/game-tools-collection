@@ -160,7 +160,7 @@ export function afterSetInt(item: Item, flag: ItemBitflag): void {
 
     const offset = itemBitflags.flags[0].offset - shift;
 
-    const count = `${getYellowLumCount(offset)}`.padStart(4, "0");
+    const count = getYellowLumCount(offset).leading0(3);
 
     setString(offset - 0x1d, 0x4, "uint8", count);
     setString(offset + 0xc3, 0x4, "uint8", count);

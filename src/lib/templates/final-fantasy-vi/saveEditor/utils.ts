@@ -309,11 +309,11 @@ export function overrideParseItem(item: Item): Item | ItemTab {
       const end = Math.min(start + 20, enemies.length);
 
       itemTabs.items.push({
-        name: `${`${start + 1}`.padStart(3, "0")}-${`${end}`.padStart(3, "0")}`,
+        name: `${(start + 1).leading0(2)}-${end.leading0(2)}`,
         flex: true,
         items: enemies.slice(start, end).map((enemy) => ({
           ...itemInt,
-          name: `${`${enemy.bestiaryIndex}`.padStart(3, "0")} ${enemy.name}`,
+          name: `${enemy.bestiaryIndex?.leading0(2)} ${enemy.name}`,
           offset: itemInt.offset + enemy.index * 0x2,
         })),
       });

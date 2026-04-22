@@ -114,6 +114,10 @@ BigInt.prototype.toHex = function (length = 0, prefix = false) {
   return hex;
 };
 
+Number.prototype.leading0 = function (length = 1) {
+  return this.toString().padStart(length + 1, "0");
+};
+
 Number.prototype.toBinary = function (length = 8) {
   return this.toString(2).padStart(length, "0");
 };

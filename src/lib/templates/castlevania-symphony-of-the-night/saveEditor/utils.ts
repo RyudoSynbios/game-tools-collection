@@ -45,7 +45,7 @@ export function overrideParseContainerItemsShifts(
 }
 
 function getTime(offset: number, mode: string): number {
-  const string = getInt(offset, "uint32").toString().padStart(6, "0");
+  const string = getInt(offset, "uint32").leading0(5);
 
   let int = 0;
 
@@ -104,9 +104,9 @@ export function overrideSetInt(item: Item, value: string): boolean {
   } else if ("id" in item && item.id?.match(/ta-/)) {
     const itemInt = item as ItemInt;
 
-    const hours = `${getTime(itemInt.offset, "ta-hours")}`;
-    const minutes = `${getTime(itemInt.offset, "ta-minutes")}`.padStart(2, "0");
-    const seconds = `${getTime(itemInt.offset, "ta-seconds")}`.padStart(2, "0");
+    const hours = getTime(itemInt.offset, "ta-hours");
+    const minutes = getTime(itemInt.offset, "ta-minutes").leading0();
+    const seconds = getTime(itemInt.offset, "ta-seconds").leading0();
 
     let int = 0;
 

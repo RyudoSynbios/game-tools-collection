@@ -776,7 +776,7 @@ const template: GameJson = {
                   const end = Math.min(start + 20, bestiary.length);
 
                   return {
-                    name: `${`${start + 1}`.padStart(3, "0")}-${`${end}`.padStart(3, "0")}`,
+                    name: `${(start + 1).leading0(2)}-${end.leading0(2)}`,
                     flex: true,
                     items: bestiary.slice(start, end).map((enemy) => ({
                       id: `monsterDefeats-${enemy.index}`,

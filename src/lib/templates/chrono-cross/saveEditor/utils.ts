@@ -113,7 +113,7 @@ export function overrideParseContainerItemsShifts(
     const prefix = $gameRegion === 0 ? "USCHRO" : "CHRONO";
 
     const slotShifts = getSlotShiftsByIdentifier(
-      `${prefix}${`${index}`.padStart(2, "0")}`,
+      `${prefix}${index.leading0()}`,
     );
 
     const shift = getShift(slotShifts[1] || []);

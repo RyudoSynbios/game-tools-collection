@@ -107,7 +107,7 @@ export function afterSetInt(item: Item): void {
 
       int = Math.floor((int / 102) * 100);
 
-      setString(progression.offset, 0x3, progression.letterDataType, `${int}`.padStart(3, "0")); // prettier-ignore
+      setString(progression.offset, 0x3, progression.letterDataType, int.leading0(2)); // prettier-ignore
     }
   }
 }

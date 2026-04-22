@@ -166,7 +166,7 @@ export function overrideParseContainerItemsShifts(
     const prefixes = ["0520", "0426", "FF08", "0520", "0520", "0520", "0520"];
 
     return getSlotShiftsByIdentifier(
-      `${getRegionArray(prefixes)}${`${index}`.padStart(2, "0")}`,
+      `${getRegionArray(prefixes)}${index.leading0()}`,
     );
   }
 
