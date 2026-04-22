@@ -1,4 +1,3 @@
-import { getInt, getString } from "$lib/utils/bytes";
 import debug from "$lib/utils/debug";
 import { checkValidator } from "$lib/utils/validator";
 
@@ -8,8 +7,6 @@ import {
   type Directory,
   type Entry,
   type File,
-  type FileOffset,
-  type Page,
   type Save,
 } from ".";
 

@@ -29,11 +29,6 @@ export interface File {
   dataView: DataView;
 }
 
-export interface FileOffset {
-  name: string;
-  offset: number;
-}
-
 export interface Page {
   mode: number;
   length: number;
@@ -154,7 +149,7 @@ export function customGetRegions(): string[] {
 
   Object.entries($gameTemplate.validator.regions).forEach(
     ([region, condition]) => {
-      const validator = Object.values(condition)[0] as number[];
+      const validator: number[] = Object.values(condition)[0];
 
       const validatorStringified = numberArrayToString(validator);
 

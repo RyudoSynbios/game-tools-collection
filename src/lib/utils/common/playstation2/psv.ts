@@ -7,7 +7,6 @@ import {
   type Directory,
   type Entry,
   type File,
-  type FileOffset,
   type Page,
   type Save,
 } from ".";
@@ -44,9 +43,7 @@ export default class PSV {
     offset: number,
     length: number,
     parentDirectory: Entry[],
-  ): FileOffset[] {
-    const fileOffsets: FileOffset[] = [];
-
+  ): void {
     let parentPath = "";
 
     for (let i = 0x0; i <= length; i += 0x1) {
@@ -104,8 +101,6 @@ export default class PSV {
         offset += 0x4;
       }
     }
-
-    return fileOffsets;
   }
 
   // prettier-ignore

@@ -63,8 +63,6 @@ export function generateEcc(sector: Uint8Array): Uint8Array {
 function generateEccPQ(buffer: Uint8Array, zeroAddress = false): Uint8Array {
   const savedAddress = buffer.slice(0xc, 0x10);
 
-  console.log("savedAddress", savedAddress);
-
   if (zeroAddress) {
     buffer.fill(0x0, 0xc, 0x10);
   }

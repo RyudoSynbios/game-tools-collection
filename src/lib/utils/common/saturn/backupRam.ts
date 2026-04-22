@@ -288,7 +288,7 @@ export default class BackupRam {
 
     Object.entries($gameTemplate.validator.regions).forEach(
       ([region, condition]) => {
-        const validator = Object.values(condition)[0] as number[];
+        const validator: number[] = Object.values(condition)[0];
 
         const validatorStringified = numberArrayToString(validator);
 
