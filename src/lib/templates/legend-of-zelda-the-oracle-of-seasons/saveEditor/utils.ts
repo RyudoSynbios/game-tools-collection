@@ -292,7 +292,7 @@ export function getLocationNames(): Resource {
     for (let row = 0; row < 16; row += 1) {
       const index = (column << 0x4) | row;
 
-      names[index] = `${String.fromCharCode(0x41 + column)}${row + 1}`;
+      names[index] = `${column.toLetter()}${row + 1}`;
     }
   }
 

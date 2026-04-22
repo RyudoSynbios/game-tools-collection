@@ -372,7 +372,7 @@ const template: GameJson = {
                           flags: [...Array(26).keys()].map((index) => ({
                             offset: 0x2a8c,
                             bit: 0,
-                            label: String.fromCharCode(0x41 + index),
+                            label: index.toLetter(),
                           })),
                         },
                       ],

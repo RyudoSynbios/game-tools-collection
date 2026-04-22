@@ -31,6 +31,7 @@ declare global {
     toBitCount: () => number;
     toEuler: () => number;
     toHex: (length?: number, prefix?: boolean) => string;
+    toLetter: () => string;
   }
 
   interface String {

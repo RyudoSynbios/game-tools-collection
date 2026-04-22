@@ -148,10 +148,14 @@ Number.prototype.toHex = function (length = 0, prefix = false) {
   return hex;
 };
 
+Number.prototype.toLetter = function () {
+  return String.fromCharCode(0x41 + this.valueOf());
+};
+
 String.prototype.format = function (value: number) {
   return this.replace("%d", `${value}`)
     .replace("%o", getOrdinalSuffix(value))
-    .replace("%s", String.fromCharCode(0x40 + value));
+    .replace("%s", (value - 1).toLetter());
 };
 
 String.prototype.reverse = function () {
