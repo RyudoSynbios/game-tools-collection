@@ -31,6 +31,8 @@
   isFileVisualizerOpen.subscribe((isOpen) => {
     if (!isOpen && $fileNameStore) {
       vmu.writeFile(currentFile, new Uint8Array($dataViewStore.buffer));
+      
+      $dataViewStore = new DataView(new ArrayBuffer(0));
     }
   });
 

@@ -28,6 +28,8 @@
   isFileVisualizerOpen.subscribe((isOpen) => {
     if (!isOpen && $fileNameStore) {
       psv.writeFile(new Uint8Array($dataViewStore.buffer));
+      
+      $dataViewStore = new DataView(new ArrayBuffer(0));
     }
   });
 

@@ -33,6 +33,8 @@
   isFileVisualizerOpen.subscribe((isOpen) => {
     if (!isOpen && $fileNameStore) {
       psu.writeFile(currentFile.path, new Uint8Array($dataViewStore.buffer));
+      
+      $dataViewStore = new DataView(new ArrayBuffer(0));
     }
   });
 

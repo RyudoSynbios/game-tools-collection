@@ -15,20 +15,20 @@ export function initHeaderShift(dataView: DataView): number {
 export function initShifts(shifts: number[]): number[] {
   const shift = getShift(shifts);
 
-  let section = 0;
+  let offset = 0x0;
   let bestSaveCount = 0;
 
-  for (let i = 0x0; i < 0xa; i += 0x1) {
-    const magic = getString(shift + i * 0x1000, 0x4, "uint8");
-    const saveCount = getInt(shift + i * 0x1000 + 0x4, "uint32");
+  for (let i = 0x0; i < 0xa000; i += 0x1000) {
+    const magic = getString(shift + i, 0x4, "uint8");
+    const saveCount = getInt(shift + i + 0x4, "uint32");
 
     if (magic === "MGGE" && saveCount > bestSaveCount) {
-      section = i;
+      offset = i;
       bestSaveCount = saveCount;
     }
   }
 
-  return [...shifts, section * 0x1000];
+  return [...shifts, offset];
 }
 
 export function overrideGetInt(item: Item): [boolean, number | undefined] {

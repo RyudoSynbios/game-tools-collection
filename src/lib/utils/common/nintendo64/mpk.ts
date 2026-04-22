@@ -5,7 +5,7 @@ import { getInt, getString } from "$lib/utils/bytes";
 import { mergeUint8Arrays, numberArrayToString } from "$lib/utils/format";
 import { getRegionValidator } from "$lib/utils/validator";
 
-import { isDexDriveHeader } from "./dexDrive";
+import { isDexDriveFile } from "./dexDrive";
 
 interface Mpk {
   pageLength: number;
@@ -151,7 +151,7 @@ export function isMpk(dataView: DataView, shift = 0x0): boolean {
   checksum = (checksum << 0x10) | (0xfff2 - checksum);
 
   return (
-    isDexDriveHeader(dataView) ||
+    isDexDriveFile(dataView) ||
     checksum === getInt(offset + 0x1c, "uint32", { bigEndian: true }, dataView)
   );
 }

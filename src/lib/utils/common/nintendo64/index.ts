@@ -4,24 +4,22 @@ import { byteswap, getDataView, getInt } from "$lib/utils/bytes";
 
 import type { ItemChecksum } from "$lib/types";
 
-import { getDexDriveHeaderShift, isDexDriveHeader } from "./dexDrive";
+import { DEX_DRIVE_HEADER_SIZE, isDexDriveFile } from "./dexDrive";
 import { isMpk } from "./mpk";
-import { getSrmHeaderEnd, getSrmHeaderShift, isSrm } from "./srm";
+import { Format, getSrmFormatOffset, getSrmFormatSize, isSrm } from "./srm";
 
-export type SaveFormat = "eep" | "fla" | "mpk" | "sra";
-
-export function getHeaderShift(dataView: DataView, format: SaveFormat): number {
+export function getHeaderShift(dataView: DataView, format: Format): number {
   if (isSrm(dataView)) {
-    return getSrmHeaderShift(format);
-  } else if (isDexDriveHeader(dataView)) {
-    return getDexDriveHeaderShift();
+    return getSrmFormatOffset(format);
+  } else if (isDexDriveFile(dataView)) {
+    return DEX_DRIVE_HEADER_SIZE;
   }
 
   return 0x0;
 }
 
 export function byteswapDataView(
-  format: SaveFormat,
+  format: Format,
   dataView?: DataView,
 ): DataView {
   const $dataView = getDataView(dataView);
@@ -31,11 +29,10 @@ export function byteswapDataView(
   }
 
   if (isSrm($dataView)) {
-    return byteswap(
-      $dataView,
-      getSrmHeaderShift(format),
-      getSrmHeaderEnd(format),
-    );
+    const offset = getSrmFormatOffset(format);
+    const size = getSrmFormatSize(format);
+
+    return byteswap($dataView, offset, offset + size);
   } else if (!isMpk($dataView)) {
     return byteswap($dataView);
   }

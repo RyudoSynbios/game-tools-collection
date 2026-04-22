@@ -1,30 +1,35 @@
 import { getInt } from "$lib/utils/bytes";
 
-import type { SaveFormat } from ".";
+const EEP_SIZE = 0x800;
+const MPK_SIZE = 0x20000;
+const SRA_SIZE = 0x8000;
+const FLA_SIZE = 0x20000;
 
-export function getSrmHeaderShift(format: SaveFormat): number {
+export type Format = "eep" | "fla" | "mpk" | "sra";
+
+export function getSrmFormatOffset(format: Format): number {
   switch (format) {
     case "eep":
       return 0x0;
     case "mpk":
-      return 0x800;
+      return EEP_SIZE;
     case "sra":
-      return 0x20800;
+      return EEP_SIZE + MPK_SIZE;
     case "fla":
-      return 0x28800;
+      return EEP_SIZE + MPK_SIZE + SRA_SIZE;
   }
 }
 
-export function getSrmHeaderEnd(format: SaveFormat): number {
+export function getSrmFormatSize(format: Format): number {
   switch (format) {
     case "eep":
-      return 0x800;
+      return EEP_SIZE;
     case "mpk":
-      return 0x20800;
+      return MPK_SIZE;
     case "sra":
-      return 0x28800;
+      return SRA_SIZE;
     case "fla":
-      return 0x48800;
+      return FLA_SIZE;
   }
 }
 

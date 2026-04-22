@@ -32,6 +32,8 @@
   isFileVisualizerOpen.subscribe((isOpen) => {
     if (!isOpen && $fileNameStore) {
       memoryCard.writeFile(currentFile, new Uint8Array($dataViewStore.buffer));
+      
+      $dataViewStore = new DataView(new ArrayBuffer(0));
     }
   });
 

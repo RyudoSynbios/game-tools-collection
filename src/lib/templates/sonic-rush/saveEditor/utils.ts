@@ -12,19 +12,19 @@ export function initHeaderShift(dataView: DataView): number {
 export function initShifts(shifts: number[]): number[] {
   const shift = getShift(shifts);
 
-  let section = 0;
+  let offset = 0x0;
   let bestSaveCount = 0;
 
-  for (let i = 0x0; i < 0xa; i += 0x1) {
-    const saveCount = getInt(shift + i * 0x320 + 0x10, "uint32");
+  for (let i = 0x0; i < 0x1f40; i += 0x320) {
+    const saveCount = getInt(shift + i + 0x10, "uint32");
 
     if (saveCount > bestSaveCount) {
-      section = i;
+      offset = i;
       bestSaveCount = saveCount;
     }
   }
 
-  return [...shifts, section * 0x320];
+  return [...shifts, offset];
 }
 
 export function overrideParseItem(item: Item): Item {

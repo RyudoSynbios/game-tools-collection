@@ -4,6 +4,8 @@ import { getInt } from "../bytes";
 import { formatChecksum } from "../checksum";
 import { checkValidator } from "../validator";
 
+export const ACTION_REPLAY_MAX_DS_HEADER_SIZE = 0x1f4;
+
 export function isActionReplayMaxDsHeader(dataView: DataView): boolean {
   const validator = [
     0x41, 0x52, 0x44, 0x53, 0x30, 0x30, 0x30, 0x30, 0x30, 0x30, 0x30, 0x30,
@@ -13,13 +15,9 @@ export function isActionReplayMaxDsHeader(dataView: DataView): boolean {
   return checkValidator(validator, 0x0, dataView);
 }
 
-export function getActionReplayMaxDsHeaderShift(): number {
-  return 0x1f4;
-}
-
 export function getHeaderShift(dataView: DataView): number {
   if (isActionReplayMaxDsHeader(dataView)) {
-    return getActionReplayMaxDsHeaderShift();
+    return ACTION_REPLAY_MAX_DS_HEADER_SIZE;
   }
 
   return 0x0;

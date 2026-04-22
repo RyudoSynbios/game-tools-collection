@@ -451,7 +451,7 @@ export function pokemonStatsFragment(
             resource: "dayTimes",
           },
           {
-            id: "pokemonUnset-29",
+            id: "pokemonUnset-30",
             name: "Location",
             offset: statsOffset + 0x1e,
             type: "variable",
@@ -491,7 +491,7 @@ export function pokemonStatsFragment(
             bigEndian: true,
           },
           {
-            id: "pokemonUnset-29",
+            id: "pokemonUnset-30",
             name: "Gender",
             offset: statsOffset + 0x1e,
             type: "variable",
