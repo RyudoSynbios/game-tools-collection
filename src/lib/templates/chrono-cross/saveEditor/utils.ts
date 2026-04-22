@@ -10,10 +10,10 @@ import { bitToOffset, getInt, getString, setInt } from "$lib/utils/bytes";
 import { formatChecksum } from "$lib/utils/checksum";
 import {
   customGetRegions,
-  getHeaderShift,
-  getPsvHeaderShift,
-  getSlotShifts,
-  isPsvHeader,
+  getSlotShiftsByIdentifier,
+  repackFile,
+  resetState,
+  unpackFile,
 } from "$lib/utils/common/playstation";
 import { clone } from "$lib/utils/format";
 import { getItem, getShift, updateResources } from "$lib/utils/parser";
@@ -33,23 +33,16 @@ import { getCompressedData } from "./utils/compression/compress";
 import { getDecompressedData } from "./utils/compression/decompress";
 import { characterElements, progressionList } from "./utils/resource";
 
-export function initHeaderShift(dataView: DataView): number {
-  return getHeaderShift(dataView);
+export function beforeInitDataView(dataView: DataView): DataView {
+  return unpackFile(dataView);
 }
 
-export function overrideGetRegions(
-  dataView: DataView,
-  shift: number,
-): string[] {
-  return customGetRegions(dataView, shift);
+export function overrideGetRegions(): string[] {
+  return customGetRegions();
 }
 
-export function initShifts(shifts: number[]): number[] {
-  if (isPsvHeader()) {
-    shifts = [...shifts, getPsvHeaderShift()];
-  }
-
-  return shifts;
+export function onInitFailed(): void {
+  resetState();
 }
 
 export function overrideParseItem(item: Item): Item | ItemTab {
@@ -114,19 +107,16 @@ export function overrideParseContainerItemsShifts(
   const $dataView = get(dataView);
   const $dataViewAlt = get(dataViewAlt);
   const $dataViewAltMetas = get(dataViewAltMetas);
+  const $gameRegion = get(gameRegion);
 
   if (item.id === "slots") {
-    const slotShifts = getSlotShifts("correspondance", shifts, index, {
-      leadingZeros: 1,
-    });
+    const prefix = $gameRegion === 0 ? "USCHRO" : "CHRONO";
 
-    let shift = -1;
+    const slotShifts = getSlotShiftsByIdentifier(
+      `${prefix}${`${index}`.padStart(2, "0")}`,
+    );
 
-    if (isPsvHeader() && index === 0) {
-      shift = getPsvHeaderShift();
-    } else {
-      shift = getShift(slotShifts[1] || []);
-    }
+    const shift = getShift(slotShifts[1] || []);
 
     if (shift !== -1) {
       const compressedData = new DataView(
@@ -348,6 +338,14 @@ export function generateChecksum(item: ItemChecksum): number {
   }
 
   return formatChecksum(checksum, item.dataType);
+}
+
+export function beforeSaving(): ArrayBufferLike {
+  return repackFile();
+}
+
+export function onReset(): void {
+  resetState();
 }
 
 export function getCharacterNames(slotIndex: number): Resource {

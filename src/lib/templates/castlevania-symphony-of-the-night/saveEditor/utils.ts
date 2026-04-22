@@ -4,37 +4,24 @@ import { gameRegion, gameTemplate } from "$lib/stores";
 import { getInt, getString, setInt, setString } from "$lib/utils/bytes";
 import {
   customGetRegions,
-  getHeaderShift,
-  getPsvHeaderShift,
   getSlotShifts,
-  isPsvHeader,
+  repackFile,
+  resetState,
+  unpackFile,
 } from "$lib/utils/common/playstation";
 
 import type { Item, ItemContainer, ItemInt, ItemString } from "$lib/types";
 
-export function initHeaderShift(dataView: DataView): number {
-  return getHeaderShift(dataView);
+export function beforeInitDataView(dataView: DataView): DataView {
+  return unpackFile(dataView);
 }
 
-export function overrideGetRegions(
-  dataView: DataView,
-  shift: number,
-): string[] {
-  return customGetRegions(dataView, shift);
+export function overrideGetRegions(): string[] {
+  return customGetRegions();
 }
 
-export function initShifts(shifts: number[]): number[] {
-  const $gameRegion = get(gameRegion);
-
-  if (isPsvHeader()) {
-    shifts = [...shifts, getPsvHeaderShift()];
-  }
-
-  if ($gameRegion !== 0) {
-    return [...shifts, 0x100];
-  }
-
-  return shifts;
+export function onInitFailed(): void {
+  resetState();
 }
 
 export function overrideParseContainerItemsShifts(
@@ -42,8 +29,16 @@ export function overrideParseContainerItemsShifts(
   shifts: number[],
   index: number,
 ): [boolean, number[] | undefined] {
+  const $gameRegion = get(gameRegion);
+
   if (item.id === "slots") {
-    return getSlotShifts("memory", shifts, index);
+    const shift = getSlotShifts(index);
+
+    if (shift[1][0] !== -1 && $gameRegion !== 0) {
+      shift[1].push(0x100);
+    }
+
+    return shift;
   }
 
   return [false, undefined];
@@ -209,4 +204,12 @@ export function afterSetInt(item: Item): void {
 
     setInt(offset, "uint16", parseInt(buttonMapped!));
   }
+}
+
+export function beforeSaving(): ArrayBufferLike {
+  return repackFile();
+}
+
+export function onReset(): void {
+  resetState();
 }

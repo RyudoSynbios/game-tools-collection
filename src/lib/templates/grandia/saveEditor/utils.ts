@@ -4,10 +4,10 @@ import { gameRegion } from "$lib/stores";
 import { getInt, setInt, setString } from "$lib/utils/bytes";
 import {
   customGetRegions,
-  getHeaderShift,
-  getPsvHeaderShift,
-  getSlotShifts,
-  isPsvHeader,
+  getSlotShiftsByIdentifier,
+  repackFile,
+  resetState,
+  unpackFile,
 } from "$lib/utils/common/playstation";
 import { getObjKey } from "$lib/utils/format";
 import { getResource } from "$lib/utils/parser";
@@ -16,29 +16,16 @@ import type { Item, ItemContainer, ItemInt, Resource } from "$lib/types";
 
 import { locationsCoordinates } from "./utils/resource";
 
-export function initHeaderShift(dataView: DataView): number {
-  return getHeaderShift(dataView);
+export function beforeInitDataView(dataView: DataView): DataView {
+  return unpackFile(dataView);
 }
 
-export function overrideGetRegions(
-  dataView: DataView,
-  shift: number,
-): string[] {
-  return customGetRegions(dataView, shift);
+export function overrideGetRegions(): string[] {
+  return customGetRegions();
 }
 
-export function initShifts(shifts: number[]): number[] {
-  const $gameRegion = get(gameRegion);
-
-  if (isPsvHeader()) {
-    shifts = [...shifts, getPsvHeaderShift()];
-  }
-
-  if ($gameRegion === 1 || $gameRegion === 2) {
-    return [...shifts, 0x180];
-  }
-
-  return shifts;
+export function onInitFailed(): void {
+  resetState();
 }
 
 export function overrideParseItem(item: Item): Item {
@@ -60,8 +47,16 @@ export function overrideParseContainerItemsShifts(
   shifts: number[],
   index: number,
 ): [boolean, number[] | undefined] {
+  const $gameRegion = get(gameRegion);
+
   if (item.id === "slots") {
-    return getSlotShifts("correspondance", shifts, index);
+    const shift = getSlotShiftsByIdentifier(`GRA-S0${index}`);
+
+    if (shift[1][0] !== -1 && [1, 2].includes($gameRegion)) {
+      shift[1].push(0x180);
+    }
+
+    return shift;
   }
 
   return [false, undefined];
@@ -196,6 +191,14 @@ export function afterSetInt(item: Item): void {
     setInt(itemInt.offset + 0x6, "uint8", character3);
     setInt(itemInt.offset + 0x7, "uint8", character4);
   }
+}
+
+export function beforeSaving(): ArrayBufferLike {
+  return repackFile();
+}
+
+export function onReset(): void {
+  resetState();
 }
 
 function updateLocation(offset: number, value = 0x0): void {

@@ -1,10 +1,10 @@
 import { getInt, setInt, setString } from "$lib/utils/bytes";
 import {
   customGetRegions,
-  getHeaderShift,
-  getPsvHeaderShift,
   getSlotShifts,
-  isPsvHeader,
+  repackFile,
+  resetState,
+  unpackFile,
 } from "$lib/utils/common/playstation";
 import { getItem } from "$lib/utils/parser";
 
@@ -17,23 +17,16 @@ import type {
   ItemString,
 } from "$lib/types";
 
-export function initHeaderShift(dataView: DataView): number {
-  return getHeaderShift(dataView);
+export function beforeInitDataView(dataView: DataView): DataView {
+  return unpackFile(dataView);
 }
 
-export function overrideGetRegions(
-  dataView: DataView,
-  shift: number,
-): string[] {
-  return customGetRegions(dataView, shift);
+export function overrideGetRegions(): string[] {
+  return customGetRegions();
 }
 
-export function initShifts(shifts: number[]): number[] {
-  if (isPsvHeader()) {
-    shifts = [...shifts, getPsvHeaderShift()];
-  }
-
-  return shifts;
+export function onInitFailed(): void {
+  resetState();
 }
 
 export function overrideParseContainerItemsShifts(
@@ -42,7 +35,7 @@ export function overrideParseContainerItemsShifts(
   index: number,
 ): [boolean, number[] | undefined] {
   if (item.id === "slots") {
-    return getSlotShifts("memory", shifts, index);
+    return getSlotShifts(index);
   }
 
   return [false, undefined];
@@ -114,12 +107,15 @@ export function afterSetInt(item: Item): void {
 
       int = Math.floor((int / 102) * 100);
 
-      setString(
-        progression.offset,
-        0x3,
-        progression.letterDataType,
-        `${int}`.padStart(3, "0"),
-      );
+      setString(progression.offset, 0x3, progression.letterDataType, `${int}`.padStart(3, "0")); // prettier-ignore
     }
   }
+}
+
+export function beforeSaving(): ArrayBufferLike {
+  return repackFile();
+}
+
+export function onReset(): void {
+  resetState();
 }

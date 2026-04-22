@@ -11,10 +11,10 @@ import {
 } from "$lib/utils/bytes";
 import {
   customGetRegions,
-  getHeaderShift,
-  getPsvHeaderShift,
-  getSlotShifts,
-  isPsvHeader,
+  getSlotShiftsByIdentifier,
+  repackFile,
+  resetState,
+  unpackFile,
 } from "$lib/utils/common/playstation";
 import { getItem, updateResources } from "$lib/utils/parser";
 
@@ -41,23 +41,16 @@ export function getComponent(component: string): typeof Abilities | undefined {
   }
 }
 
-export function initHeaderShift(dataView: DataView): number {
-  return getHeaderShift(dataView);
+export function beforeInitDataView(dataView: DataView): DataView {
+  return unpackFile(dataView);
 }
 
-export function overrideGetRegions(
-  dataView: DataView,
-  shift: number,
-): string[] {
-  return customGetRegions(dataView, shift);
+export function overrideGetRegions(): string[] {
+  return customGetRegions();
 }
 
-export function initShifts(shifts: number[]): number[] {
-  if (isPsvHeader()) {
-    shifts = [...shifts, getPsvHeaderShift()];
-  }
-
-  return shifts;
+export function onInitFailed(): void {
+  resetState();
 }
 
 export function overrideParseItem(item: Item): Item {
@@ -80,9 +73,7 @@ export function overrideParseContainerItemsShifts(
   index: number,
 ): [boolean, number[] | undefined] {
   if (item.id === "slots") {
-    return getSlotShifts("correspondance", shifts, index, {
-      overrideIndex: [0x41 + index],
-    });
+    return getSlotShiftsByIdentifier("FFT%s".format(index + 1));
   }
 
   return [false, undefined];
@@ -376,6 +367,14 @@ export function generateChecksum(item: ItemChecksum): bigint {
   const high = getIntFromArray(buffer, 0x4, "uint32") >>> 0x0;
 
   return BigInt(`0x${high.toHex(8)}${low.toHex(8)}`);
+}
+
+export function beforeSaving(): ArrayBufferLike {
+  return repackFile();
+}
+
+export function onReset(): void {
+  resetState();
 }
 
 function dateToDays(

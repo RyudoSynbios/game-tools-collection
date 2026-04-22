@@ -5,6 +5,7 @@ import {
   ejectFile,
   extractGameName,
   initPage,
+  saveShouldBeRejected,
   snippet,
   type Test,
 } from "../";
@@ -18,11 +19,14 @@ test.beforeEach(async () => ejectFile());
 test.describe(game, () => {
   defaultTests(game, ["playstation"]);
 
+  test("should not load a deleted standard save", async () => {
+    await saveShouldBeRejected(`${game}/deleted.mcr`);
+  });
+
   // prettier-ignore
   const tests: Test[] = [
     ["should load a filled standard save (Europe)" ,        "filled.mcr", ["r|europe", 't|["Slot 1","Slot 2"]'         , "s|2", "i|PASS"]],
     ["should load a filled standard save (Japan)"  ,        "filled.mcr", ["r|japan" , 't|["Slot 1"]'                  , "s|1", "i|PASS"]],
-    ["should load a deleted standard save"         ,       "deleted.mcr", [            't|[]']],
     ["should load a deleted standard save (Slot 1)", "deleted-slot1.mcr", [            't|["Slot 1"]'                  , "s|1", "i|PASS"]],
     ["should load a standard save (Europe)"        ,        "europe.mcr", [            't|["Slot 1","Slot 2","Slot 3"]', "s|2", "i|PASS"]],
     ["should load a standard save (USA)"           ,           "usa.mcr", [            't|["Slot 1","Slot 2","Slot 3"]', "s|3", "i|PASS"]],

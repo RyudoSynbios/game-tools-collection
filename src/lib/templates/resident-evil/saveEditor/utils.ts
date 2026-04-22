@@ -4,36 +4,33 @@ import { gameRegion } from "$lib/stores";
 import { getDataView, getInt, setInt } from "$lib/utils/bytes";
 import {
   customGetRegions,
-  getHeaderShift,
-  getPsvHeaderShift,
-  getSlotShifts,
-  isPsvHeader,
+  getSlotShiftsByIdentifier,
+  repackFile,
+  resetState,
+  unpackFile,
 } from "$lib/utils/common/playstation";
 import { checkValidator } from "$lib/utils/validator";
 
 import type { Item, ItemContainer, ItemInt, ItemMessage } from "$lib/types";
 
-export function initHeaderShift(dataView: DataView): number {
-  return getHeaderShift(dataView);
+let platform = "";
+
+export function beforeInitDataView(dataView: DataView): DataView {
+  platform = isPCSave(dataView) ? "pc" : "ps";
+
+  return unpackFile(dataView);
 }
 
-export function overrideGetRegions(
-  dataView: DataView,
-  shift: number,
-): string[] {
-  if (isPCSave(dataView)) {
+export function overrideGetRegions(): string[] {
+  if (platform === "pc") {
     return ["europe"];
   }
 
-  return customGetRegions(dataView, shift);
+  return customGetRegions();
 }
 
-export function initShifts(shifts: number[]): number[] {
-  if (isPsvHeader()) {
-    shifts = [...shifts, getPsvHeaderShift()];
-  }
-
-  return shifts;
+export function onInitFailed(): void {
+  resetState();
 }
 
 export function overrideParseItem(item: Item): Item {
@@ -66,7 +63,7 @@ export function overrideParseContainerItemsShifts(
   index: number,
 ): [boolean, number[] | undefined] {
   if (item.id === "slots") {
-    if (isPCSave()) {
+    if (platform === "pc") {
       if (index === 0) {
         return [false, undefined];
       }
@@ -74,7 +71,7 @@ export function overrideParseContainerItemsShifts(
       return [true, [-1]];
     }
 
-    return getSlotShifts("correspondance", shifts, index);
+    return getSlotShiftsByIdentifier(`${index}`);
   }
 
   return [false, undefined];
@@ -185,6 +182,14 @@ export function afterSetInt(item: Item): void {
     setInt(itemInt.offset + 0x2e, "uint16", coordinates[1]);
     setInt(itemInt.offset + 0x30, "uint16", rotation);
   }
+}
+
+export function beforeSaving(): ArrayBufferLike {
+  return repackFile();
+}
+
+export function onReset(): void {
+  resetState();
 }
 
 function isPCSave(dataView?: DataView): boolean {

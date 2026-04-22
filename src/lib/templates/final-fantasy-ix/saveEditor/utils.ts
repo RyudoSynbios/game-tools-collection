@@ -5,10 +5,10 @@ import { getInt, getString, setInt, setString } from "$lib/utils/bytes";
 import { formatChecksum, generateCrcCcitt } from "$lib/utils/checksum";
 import {
   customGetRegions,
-  getHeaderShift,
-  getPsvHeaderShift,
-  getSlotShifts,
-  isPsvHeader,
+  getSlotShiftsByIdentifier,
+  repackFile,
+  resetState,
+  unpackFile,
 } from "$lib/utils/common/playstation";
 import { getItem, getResource, updateResources } from "$lib/utils/parser";
 
@@ -33,23 +33,16 @@ export function getComponent(component: string): typeof Abilities | undefined {
   }
 }
 
-export function initHeaderShift(dataView: DataView): number {
-  return getHeaderShift(dataView);
+export function beforeInitDataView(dataView: DataView): DataView {
+  return unpackFile(dataView);
 }
 
-export function overrideGetRegions(
-  dataView: DataView,
-  shift: number,
-): string[] {
-  return customGetRegions(dataView, shift);
+export function overrideGetRegions(): string[] {
+  return customGetRegions();
 }
 
-export function initShifts(shifts: number[]): number[] {
-  if (isPsvHeader()) {
-    shifts = [...shifts, getPsvHeaderShift()];
-  }
-
-  return shifts;
+export function onInitFailed(): void {
+  resetState();
 }
 
 export function overrideParseItem(item: Item): Item {
@@ -86,7 +79,7 @@ export function overrideParseContainerItemsShifts(
   index: number,
 ): [boolean, number[] | undefined] {
   if (item.id === "slots") {
-    return getSlotShifts("correspondance", shifts, index, { leadingZeros: 1 });
+    return getSlotShiftsByIdentifier(`00000-${`${index}`.padStart(2, "0")}`);
   }
 
   return [false, undefined];
@@ -390,6 +383,14 @@ export function generateChecksum(item: ItemChecksum): number {
   const checksum = generateCrcCcitt(item);
 
   return formatChecksum(checksum, item.dataType);
+}
+
+export function beforeSaving(): ArrayBufferLike {
+  return repackFile();
+}
+
+export function onReset(): void {
+  resetState();
 }
 
 export function getCharacterNames(slotIndex: number): Resource {

@@ -16,9 +16,11 @@
   import { isVMUFile } from "$lib/utils/common/dreamcast/vmu";
   import { isGCMFile } from "$lib/utils/common/gamecube/gcm";
   import { isIso9660File } from "$lib/utils/common/iso9660";
-  import { isMemoryCardFile } from "$lib/utils/common/playstation2/memoryCard";
+  import { isMemoryCardFile as isPSMemoryCardFile } from "$lib/utils/common/playstation/memoryCard";
+  import { isPSVFile as isPSPSVFile } from "$lib/utils/common/playstation/psv";
+  import { isMemoryCardFile as isPS2MemoryCardFile } from "$lib/utils/common/playstation2/memoryCard";
   import { isPSUFile } from "$lib/utils/common/playstation2/psu";
-  import { isPSVFile } from "$lib/utils/common/playstation2/psv";
+  import { isPSVFile as isPS2PSVFile } from "$lib/utils/common/playstation2/psv";
   import { isBackupRam } from "$lib/utils/common/saturn/backupRam";
   import { isGVASFile } from "$lib/utils/gvas";
   import { reset } from "$lib/utils/state";
@@ -27,9 +29,11 @@
   import GCM from "./gamecube/GCM.svelte";
   import GVAS from "./miscellaneous/GVAS.svelte";
   import Iso9660 from "./miscellaneous/Iso9660.svelte";
-  import MemoryCard from "./playstation2/MemoryCard.svelte";
+  import PSMemoryCard from "./playstation/MemoryCard.svelte";
+  import PSPSV from "./playstation/PSV.svelte";
+  import PS2MemoryCard from "./playstation2/MemoryCard.svelte";
   import PSU from "./playstation2/PSU.svelte";
-  import PSV from "./playstation2/PSV.svelte";
+  import PS2PSV from "./playstation2/PSV.svelte";
   import BackupRam from "./saturn/BackupRam.svelte";
 
   let fileTypeEl: HTMLSelectElement;
@@ -60,7 +64,11 @@
     },
     playstation: {
       name: "PlayStation",
-      fileTypes: ["miscellaneous_iso9660"],
+      fileTypes: [
+        "playstation_memoryCard",
+        "playstation_psv",
+        "miscellaneous_iso9660",
+      ],
     },
     playstation2: {
       name: "PlayStation 2",
@@ -98,10 +106,20 @@
       fullName: "Dreamcast - VMU",
       validator: isVMUFile,
     },
+    playstation_memoryCard: {
+      name: "Memory Card",
+      fullName: "PlayStation - Memory Card",
+      validator: isPSMemoryCardFile,
+    },
+    playstation_psv: {
+      name: "PSV",
+      fullName: "PlayStation - PSV",
+      validator: isPSPSVFile,
+    },
     playstation2_memoryCard: {
       name: "Memory Card",
       fullName: "PlayStation 2 - Memory Card",
-      validator: isMemoryCardFile,
+      validator: isPS2MemoryCardFile,
     },
     playstation2_psu: {
       name: "PSU",
@@ -111,7 +129,7 @@
     playstation2_psv: {
       name: "PSV",
       fullName: "PlayStation 2 - PSV",
-      validator: isPSVFile,
+      validator: isPS2PSVFile,
     },
     miscellaneous_gvas: {
       name: "GVAS",
@@ -234,12 +252,16 @@
           <BackupRam {fileName} {dataView} />
         {:else if fileType === "dreamcast_vmu"}
           <VMU {fileName} {dataView} />
+        {:else if fileType === "playstation_memoryCard"}
+          <PSMemoryCard {fileName} {dataView} />
+        {:else if fileType === "playstation_psv"}
+          <PSPSV {fileName} {dataView} />
         {:else if fileType === "playstation2_memoryCard"}
-          <MemoryCard {fileName} {dataView} />
+          <PS2MemoryCard {fileName} {dataView} />
         {:else if fileType === "playstation2_psu"}
           <PSU {fileName} {dataView} />
         {:else if fileType === "playstation2_psv"}
-          <PSV {fileName} {dataView} />
+          <PS2PSV {fileName} {dataView} />
         {:else if fileType === "miscellaneous_gvas"}
           <GVAS {fileName} {dataView} />
         {:else if fileType === "miscellaneous_iso9660"}
