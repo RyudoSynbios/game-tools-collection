@@ -88,6 +88,17 @@
     }
   },
   {
+    "id": "advance-wars",
+    "name": "Advance Wars",
+    "platformIds": ["game-boy-advance"],
+    "tools": {
+      "saveEditor": {
+        "createdAt": "2026-04-24",
+        "regions": ["🇪🇺", "🇺🇸", "🇯🇵"]
+      }
+    }
+  },
+  {
     "id": "akumajou-dracula-x-chi-no-rondo",
     "name": "Akumajou Dracula X: Chi no Rondo",
     "platformIds": ["pc-engine-cd"],

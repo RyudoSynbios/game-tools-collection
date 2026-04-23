@@ -14,6 +14,7 @@ Link to the website: [https://game-tools-collection.com](https://game-tools-coll
 | 1080° Snowboarding                           | N64        | Save                    | EUR / USA / JAP                               |
 | 3D Dot Game Heroes                           | PS3        | Save                    | EUR / USA / JAP                               |
 | ActRaiser                                    | SNES       | Save                    | EUR / USA / JAP / FRA / GER                   |
+| Advance Wars                                 | GBA        | Save                    | EUR / USA / JAP                               |
 | Akumajou Dracula X: Chi no Rondo             | PCECD      | Save                    | JAP                                           |
 | Azure Dreams                                 | GBC        | Save                    | EUR / USA / JAP                               |
 | Banjo-Kazooie                                | N64        | Save                    | EUR / USA / JAP                               |
