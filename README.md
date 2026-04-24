@@ -47,6 +47,7 @@ Link to the website: [https://game-tools-collection.com](https://game-tools-coll
 | F-Zero                                       | SNES       | Save                    | EUR / USA / JAP                               |
 | F-Zero X                                     | N64        | Save                    | EUR / USA / JAP                               |
 | Final Fantasy                                | NES        | Save                    | USA / JAP                                     |
+| The Legend of Zelda                          | NES        | Save                    | USA / JAP                                     |
 | Final Fantasy IV Pixel Remaster              | WIN        | Save                    | WORLD                                         |
 | Final Fantasy VI                             | SNES / GBA | Save                    | EUR / USA / JAP                               |
 | Final Fantasy VII Remake                     | WIN        | Save                    | WORLD                                         |

@@ -467,6 +467,17 @@
     }
   },
   {
+    "id": "the-legend-of-zelda",
+    "name": "The Legend of Zelda",
+    "platformIds": ["nintendo-entertainment-system"],
+    "tools": {
+      "saveEditor": {
+        "createdAt": "2025-06-28",
+        "regions": ["🇺🇸", "🇯🇵"]
+      }
+    }
+  },
+  {
     "id": "final-fantasy-iv-pixel-remaster",
     "name": "Final Fantasy IV Pixel Remaster",
     "platformIds": ["steam"],
