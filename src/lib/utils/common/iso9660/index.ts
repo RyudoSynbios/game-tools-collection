@@ -125,40 +125,43 @@ export default class Iso9660 {
   private init(): void {
     let offset = this.getSectorOffset(0x10);
 
-    this.volume.type = getInt(offset, "uint8", {}, this.dataView); // prettier-ignore
-    this.volume.identifier = getString(offset + 0x1, 0x5, "uint8", {}, this.dataView).trim(); // prettier-ignore
-    this.volume.version = getInt(offset + 0x6, "uint8", {}, this.dataView); // prettier-ignore
-    this.volume.systemId = getString(offset + 0x8, 0x20, "uint8", {}, this.dataView).trim(); // prettier-ignore
-    this.volume.volumeId = getString(offset + 0x28, 0x20, "uint8", {}, this.dataView).trim(); // prettier-ignore
-    this.volume.spaceSizeLE = getInt(offset + 0x50, "uint32", {}, this.dataView); // prettier-ignore
-    this.volume.spaceSizeBE = getInt(offset + 0x54, "uint32", { bigEndian: true }, this.dataView); // prettier-ignore
-    this.volume.setSizeLE = getInt(offset + 0x78, "uint16", {}, this.dataView); // prettier-ignore
-    this.volume.setSizeBE = getInt(offset + 0x7a, "uint16", { bigEndian: true }, this.dataView); // prettier-ignore
-    this.volume.sequenceNumberLE = getInt(offset + 0x7c, "uint16", {}, this.dataView); // prettier-ignore
-    this.volume.sequenceNumberBE = getInt(offset + 0x7e, "uint16", { bigEndian: true }, this.dataView); // prettier-ignore
-    this.volume.logicalBlockSizeLE = getInt(offset + 0x80, "uint16", {}, this.dataView); // prettier-ignore
-    this.volume.logicalBlockSizeBE = getInt(offset + 0x82, "uint16", { bigEndian: true }, this.dataView); // prettier-ignore
-    this.volume.pathTableSizeLE = getInt(offset + 0x84, "uint32", {}, this.dataView); // prettier-ignore
-    this.volume.pathTableSizeBE = getInt(offset + 0x88, "uint32", { bigEndian: true }, this.dataView); // prettier-ignore
-    this.volume.pathLBATableLE = getInt(offset + 0x8c, "uint32", {}, this.dataView); // prettier-ignore
-    this.volume.optionalPathLBATableLE = getInt(offset + 0x90, "uint32", {}, this.dataView); // prettier-ignore
-    this.volume.pathLBATableBE = getInt(offset + 0x94, "uint32", { bigEndian: true }, this.dataView); // prettier-ignore
-    this.volume.optionalPathLBATableBE = getInt(offset + 0x98, "uint32", { bigEndian: true }, this.dataView); // prettier-ignore
-    this.volume.sectorLE = getInt(offset + 0x9e, "uint32", {}, this.dataView); // prettier-ignore
-    this.volume.sizeLE = getInt(offset + 0xa6, "uint32", {}, this.dataView); // prettier-ignore
-    this.volume.volumeSetIdentifier = getString(offset + 0xbe, 0x80, "uint8", {}, this.dataView).trim(); // prettier-ignore
-    this.volume.publisherIdentifier = getString(offset + 0x13e, 0x80, "uint8", {}, this.dataView).trim(); // prettier-ignore
-    this.volume.dataPreparerIdentifier = getString(offset + 0x1be, 0x80, "uint8", {}, this.dataView).trim(); // prettier-ignore
-    this.volume.applicationIdentifier = getString(offset + 0x23e, 0x80, "uint8", {}, this.dataView).trim(); // prettier-ignore
-    this.volume.copyrightIdentifier = getString(offset + 0x2be, 0x25, "uint8", {}, this.dataView).trim(); // prettier-ignore
-    this.volume.abstractIdentifier = getString(offset + 0x2e3, 0x25, "uint8", {}, this.dataView).trim(); // prettier-ignore
-    this.volume.bibliographicIdentifier = getString(offset + 0x308, 0x25, "uint8", {}, this.dataView).trim(); // prettier-ignore
-    this.volume.createdAt = getString(offset + 0x32d, 0x11, "uint8", {}, this.dataView); // prettier-ignore
-    this.volume.updatedAt = getString(offset + 0x33e, 0x11, "uint8", {}, this.dataView); // prettier-ignore
-    this.volume.expiredAt = getString(offset + 0x34f, 0x11, "uint8", {}, this.dataView); // prettier-ignore
-    this.volume.effectiveAt = getString(offset + 0x360, 0x11, "uint8", {}, this.dataView); // prettier-ignore
-
-    this.volume.fileStructureVersion = getInt(offset + 0x371, "uint8", {}, this.dataView); // prettier-ignore
+    // prettier-ignore
+    this.volume = {
+      type: getInt(offset, "uint8", {}, this.dataView),
+      identifier: getString(offset + 0x1, 0x5, "uint8", {}, this.dataView).trim(),
+      version: getInt(offset + 0x6, "uint8", {}, this.dataView),
+      systemId: getString(offset + 0x8, 0x20, "uint8", {}, this.dataView).trim(),
+      volumeId: getString(offset + 0x28, 0x20, "uint8", {}, this.dataView).trim(),
+      spaceSizeLE: getInt(offset + 0x50, "uint32", {}, this.dataView),
+      spaceSizeBE: getInt(offset + 0x54, "uint32", { bigEndian: true }, this.dataView),
+      setSizeLE: getInt(offset + 0x78, "uint16", {}, this.dataView),
+      setSizeBE: getInt(offset + 0x7a, "uint16", { bigEndian: true }, this.dataView),
+      sequenceNumberLE: getInt(offset + 0x7c, "uint16", {}, this.dataView),
+      sequenceNumberBE: getInt(offset + 0x7e, "uint16", { bigEndian: true }, this.dataView),
+      logicalBlockSizeLE: getInt(offset + 0x80, "uint16", {}, this.dataView),
+      logicalBlockSizeBE: getInt(offset + 0x82, "uint16", { bigEndian: true }, this.dataView),
+      pathTableSizeLE: getInt(offset + 0x84, "uint32", {}, this.dataView),
+      pathTableSizeBE: getInt(offset + 0x88, "uint32", { bigEndian: true }, this.dataView),
+      pathLBATableLE: getInt(offset + 0x8c, "uint32", {}, this.dataView),
+      optionalPathLBATableLE: getInt(offset + 0x90, "uint32", {}, this.dataView),
+      pathLBATableBE: getInt(offset + 0x94, "uint32", { bigEndian: true }, this.dataView),
+      optionalPathLBATableBE: getInt(offset + 0x98, "uint32", { bigEndian: true }, this.dataView),
+      sectorLE: getInt(offset + 0x9e, "uint32", {}, this.dataView),
+      sizeLE: getInt(offset + 0xa6, "uint32", {}, this.dataView),
+      volumeSetIdentifier: getString(offset + 0xbe, 0x80, "uint8", {}, this.dataView).trim(),
+      publisherIdentifier: getString(offset + 0x13e, 0x80, "uint8", {}, this.dataView).trim(),
+      dataPreparerIdentifier: getString(offset + 0x1be, 0x80, "uint8", {}, this.dataView).trim(),
+      applicationIdentifier: getString(offset + 0x23e, 0x80, "uint8", {}, this.dataView).trim(),
+      copyrightIdentifier: getString(offset + 0x2be, 0x25, "uint8", {}, this.dataView).trim(),
+      abstractIdentifier: getString(offset + 0x2e3, 0x25, "uint8", {}, this.dataView).trim(),
+      bibliographicIdentifier: getString(offset + 0x308, 0x25, "uint8", {}, this.dataView).trim(),
+      createdAt: getString(offset + 0x32d, 0x11, "uint8", {}, this.dataView),
+      updatedAt: getString(offset + 0x33e, 0x11, "uint8", {}, this.dataView),
+      expiredAt: getString(offset + 0x34f, 0x11, "uint8", {}, this.dataView),
+      effectiveAt: getString(offset + 0x360, 0x11, "uint8", {}, this.dataView),
+      fileStructureVersion: getInt(offset + 0x371, "uint8", {}, this.dataView),
+      root: [],
+    };
 
     this.blockSize = this.volume.logicalBlockSizeLE;
 
@@ -166,8 +169,6 @@ export default class Iso9660 {
       this.blockSize =
         this.sectorHeaderSize + this.volume.logicalBlockSizeLE + this.eccSize;
     }
-
-    this.volume.root = [];
 
     this.readDirectory(
       this.volume.sectorLE,
@@ -193,10 +194,9 @@ export default class Iso9660 {
     parentPath: string,
     parentDirectory: Entry[],
   ): void {
-    const sectorEnd =
-      sector + Math.floor(length / this.volume.logicalBlockSizeLE);
+    const sectorEnd = sector + Math.ceil(length / this.volume.logicalBlockSizeLE);
 
-    for (let i = sector; i < sectorEnd; i += 1) {
+    for (let i = sector; i < sectorEnd; i += 0x1) {
       let offset = this.getSectorOffset(i);
 
       const offsetEnd = offset + this.volume.logicalBlockSizeLE;
@@ -227,12 +227,7 @@ export default class Iso9660 {
         let name = "";
 
         for (let i = 0x0; i < nameLength; i += 0x1) {
-          const charCode = getInt(
-            offset + 0x21 + i,
-            "uint8",
-            {},
-            this.dataView,
-          );
+          const charCode = getInt(offset + 0x21 + i, "uint8", {}, this.dataView);
 
           if (charCode === 0x0) {
             name = ".";
