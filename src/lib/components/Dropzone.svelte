@@ -4,6 +4,7 @@
     file: File,
     dataView: DataView,
   ) => void | Promise<void>;
+  export let loadingPercent = 0;
 
   let inputEl: HTMLInputElement;
 
@@ -55,6 +56,10 @@
     isFileLoading = true;
 
     const fileReader = new FileReader();
+
+    fileReader.onprogress = async (event) => {
+      loadingPercent = Math.ceil((event.loaded / event.total) * 100);
+    };
 
     fileReader.onload = async (event: ProgressEvent<FileReader>) => {
       const dataView = new DataView(event.target?.result as ArrayBufferLike);

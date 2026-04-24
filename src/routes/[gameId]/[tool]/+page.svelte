@@ -60,6 +60,7 @@
   let fileHeaderShiftTmp = 0x0;
   let fileNameTmp = "";
   let regions: string[] = [];
+  let loadingPercent = 0;
   let error = "";
 
   let patchInputEl: HTMLInputElement;
@@ -149,8 +150,6 @@
 
     return isLocalized;
   }
-
-  // Tool
 
   function initTool(region: string): void {
     const regionIndex = getRegionIndex(region);
@@ -347,7 +346,7 @@
 <!-- svelte-ignore a11y-no-static-element-interactions -->
 <div class="gtc-tool">
   {#if $dataView.byteLength === 0}
-    <Dropzone {onFileFailed} {onFileUploaded}>
+    <Dropzone {onFileFailed} {onFileUploaded} bind:loadingPercent>
       <svelte:fragment slot="dropzone-inner" let:isDragging let:isFileLoading>
         <img src="/img/games/{game.id}/logo.png" alt={game.metaName} />
         {#if isDragging}
@@ -355,7 +354,7 @@
         {:else if !isFileLoading}
           <p>{$gameTemplate.validator?.text || ""}</p>
         {:else}
-          <p>Loading...</p>
+          <p>Loading {loadingPercent}%</p>
         {/if}
         {#if $gameTemplate?.validator?.hint}
           <p class="gtc-tool-hint">{@html $gameTemplate.validator.hint}</p>
@@ -466,7 +465,7 @@
     }
 
     & .gtc-tool-error {
-      @apply text-center text-primary-300;
+      @apply text-center text-red-700;
     }
 
     & .gtc-tool-banner {

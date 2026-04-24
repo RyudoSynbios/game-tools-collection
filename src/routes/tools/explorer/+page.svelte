@@ -42,6 +42,7 @@
   let fileType = "";
   let fileName = "";
   let dataView: DataView = new DataView(new ArrayBuffer(0));
+  let loadingPercent = 0;
   let error = "";
 
   const platforms: {
@@ -197,7 +198,7 @@
 
 <div class="gtc-explorer">
   {#if fileName === ""}
-    <Dropzone {onFileUploaded}>
+    <Dropzone {onFileUploaded} bind:loadingPercent>
       <svelte:fragment slot="dropzone-inner" let:isDragging let:isFileLoading>
         <p class="gtc-explorer-title">Explorer</p>
         <div class="gtc-explorer-form">
@@ -221,7 +222,7 @@
         {:else if !isFileLoading}
           <p>Drag 'n' drop here or click to add a file.</p>
         {:else}
-          <p>Loading...</p>
+          <p>Loading {loadingPercent}%</p>
         {/if}
         {#if error}
           <p class="gtc-explorer-error">{error}</p>
@@ -292,7 +293,7 @@
     }
 
     & .gtc-explorer-error {
-      @apply text-center text-primary-300;
+      @apply text-center text-red-700;
     }
 
     & .gtc-explorer-tool {
