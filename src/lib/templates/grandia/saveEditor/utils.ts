@@ -11,16 +11,25 @@ import {
 } from "$lib/utils/common/playstation";
 import { getObjKey } from "$lib/utils/format";
 import { getResource } from "$lib/utils/parser";
+import { checkValidator } from "$lib/utils/validator";
 
 import type { Item, ItemContainer, ItemInt, Resource } from "$lib/types";
 
 import { locationsCoordinates } from "./utils/resource";
 
+let platform = "";
+
 export function beforeInitDataView(dataView: DataView): DataView {
+  platform = isPCSave(dataView) ? "pc" : "ps";
+
   return unpackFile(dataView);
 }
 
 export function overrideGetRegions(): string[] {
+  if (platform === "pc") {
+    return ["japan"];
+  }
+
   return customGetRegions();
 }
 
@@ -50,6 +59,14 @@ export function overrideParseContainerItemsShifts(
   const $gameRegion = get(gameRegion);
 
   if (item.id === "slots") {
+    if (platform === "pc") {
+      if (index === 0) {
+        return [true, [0x180]];
+      }
+
+      return [true, [-1]];
+    }
+
     const shift = getSlotShiftsByIdentifier(`GRA-S0${index}`);
 
     if (shift[1][0] !== -1 && [1, 2].includes($gameRegion)) {
@@ -199,6 +216,15 @@ export function beforeSaving(): ArrayBufferLike {
 
 export function onReset(): void {
   resetState();
+}
+
+function isPCSave(dataView: DataView): boolean {
+  const validator = [
+    0x47, 0x72, 0x61, 0x6e, 0x64, 0x69, 0x61, 0x42, 0x75, 0x70, 0x44, 0x61,
+    0x74, 0x61,
+  ]; // "GrandiaBupData"
+
+  return checkValidator(validator, 0x280, dataView);
 }
 
 function updateLocation(offset: number, value = 0x0): void {
