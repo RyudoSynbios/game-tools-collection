@@ -54,6 +54,14 @@ const template: GameJson = {
                   flex: true,
                   items: [
                     {
+                      id: "disc",
+                      name: "Disc",
+                      offset: 0x1a9,
+                      type: "variable",
+                      dataType: "uint8",
+                      resource: "discs",
+                    },
+                    {
                       name: "Playtime",
                       type: "group",
                       mode: "time",
@@ -96,14 +104,6 @@ const template: GameJson = {
                           test: true,
                         },
                       ],
-                    },
-                    {
-                      id: "disc",
-                      name: "Disc",
-                      offset: 0x1a9,
-                      type: "variable",
-                      dataType: "uint8",
-                      resource: "discs",
                     },
                     {
                       id: "location",

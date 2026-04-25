@@ -165,12 +165,10 @@ export function afterSetInt(item: Item): void {
 }
 
 export function generateChecksum(item: ItemChecksum): number {
-  const bitMask = 0x4c11db7;
-
   let checksum = 0xffffffff;
 
   for (let i = item.control.offsetStart; i < item.control.offsetEnd; i += 0x1) {
-    let int = getInt(i, "uint8", {});
+    let int = getInt(i, "uint8");
 
     if (i < item.control.offsetStart + 0x8) {
       int = 0x0;
@@ -179,10 +177,10 @@ export function generateChecksum(item: ItemChecksum): number {
     checksum ^= int << 0x18;
 
     for (let j = 0; j < 8; j += 1) {
-      if ((checksum & 0x80000000) === 0) {
+      if ((checksum & 0x80000000) === 0x0) {
         checksum = checksum << 0x1;
       } else {
-        checksum = (checksum << 0x1) ^ bitMask;
+        checksum = (checksum << 0x1) ^ 0x4c11db7;
       }
     }
   }

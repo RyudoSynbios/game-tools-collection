@@ -449,7 +449,7 @@ const template: GameJson = {
                                 {
                                   type: "bitflags",
                                   flags: [
-                                    { offset: 0x2bc, bit: 3, label: "Map Revealed" },
+                                    { offset: 0x2bc, bit: 3, label: "Map revealed" },
                                   ],
                                 },
                               ],
@@ -965,7 +965,7 @@ const template: GameJson = {
                                 {
                                   type: "bitflags",
                                   flags: [
-                                    { offset: 0x2bc, bit: 2, label: "Map Revealed" },
+                                    { offset: 0x2bc, bit: 2, label: "Map revealed" },
                                   ],
                                 },
                               ],
@@ -1438,7 +1438,7 @@ const template: GameJson = {
                                 {
                                   type: "bitflags",
                                   flags: [
-                                    { offset: 0x2bc, bit: 1, label: "Map Revealed" },
+                                    { offset: 0x2bc, bit: 1, label: "Map revealed" },
                                   ],
                                 },
                               ],
@@ -1564,7 +1564,7 @@ const template: GameJson = {
                                 {
                                   type: "bitflags",
                                   flags: [
-                                    { offset: 0x2bc, bit: 0, label: "Map Revealed" },
+                                    { offset: 0x2bc, bit: 0, label: "Map revealed" },
                                   ],
                                 },
                               ],
@@ -1738,7 +1738,7 @@ const template: GameJson = {
                                 {
                                   type: "bitflags",
                                   flags: [
-                                    { offset: 0x2c3, bit: 7, label: "Map Revealed" },
+                                    { offset: 0x2c3, bit: 7, label: "Map revealed" },
                                   ],
                                 },
                               ],
@@ -1954,7 +1954,7 @@ const template: GameJson = {
                                 {
                                   type: "bitflags",
                                   flags: [
-                                    { offset: 0x2c3, bit: 7, label: "Map Revealed" },
+                                    { offset: 0x2c3, bit: 7, label: "Map revealed" },
                                   ],
                                 },
                               ],
@@ -2086,7 +2086,7 @@ const template: GameJson = {
                                 {
                                   type: "bitflags",
                                   flags: [
-                                    { offset: 0x2c3, bit: 6, label: "Map Revealed" },
+                                    { offset: 0x2c3, bit: 6, label: "Map revealed" },
                                   ],
                                 },
                               ],
@@ -2155,7 +2155,7 @@ const template: GameJson = {
                                 {
                                   type: "bitflags",
                                   flags: [
-                                    { offset: 0x2c3, bit: 6, label: "Map Revealed" },
+                                    { offset: 0x2c3, bit: 6, label: "Map revealed" },
                                   ],
                                 },
                               ],
