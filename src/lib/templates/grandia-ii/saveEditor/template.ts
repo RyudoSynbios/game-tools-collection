@@ -36,6 +36,7 @@ const template: GameJson = {
       },
     },
     text: "Drag 'n' drop here or click to add a save file.",
+    hint: "Compatible with HD Remaster.",
     error: "Not a valid save file.",
   },
   items: [
@@ -44,7 +45,7 @@ const template: GameJson = {
       length: 0x0,
       type: "container",
       instanceType: "tabs",
-      instances: 0,
+      instances: 1,
       resource: "slots",
       items: [
         {

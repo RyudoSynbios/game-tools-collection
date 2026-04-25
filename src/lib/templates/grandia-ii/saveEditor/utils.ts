@@ -7,14 +7,23 @@ import {
   resetState,
   unpackFile,
 } from "$lib/utils/common/playstation2";
+import { checkValidator } from "$lib/utils/validator";
 
 import type { Item, ItemContainer, ItemInt, Resource } from "$lib/types";
 
+let platform = "";
+
 export function beforeInitDataView(dataView: DataView): DataView {
+  platform = isPCSave(dataView) ? "pc" : "ps2";
+
   return unpackFile(dataView);
 }
 
 export function overrideGetRegions(): string[] {
+  if (platform === "pc") {
+    return ["europe"];
+  }
+
   return customGetRegions();
 }
 
@@ -23,7 +32,7 @@ export function onInitFailed(): void {
 }
 
 export function overrideParseItem(item: Item): Item {
-  if ("id" in item && item.id === "slots") {
+  if ("id" in item && item.id === "slots" && platform !== "pc") {
     const itemContainer = item as ItemContainer;
 
     const saves = getRegionSaves();
@@ -40,6 +49,14 @@ export function overrideParseContainerItemsShifts(
   index: number,
 ): [boolean, number[] | undefined] {
   if (item.id === "slots") {
+    if (platform === "pc") {
+      if (index === 0) {
+        return [true, [0x220]];
+      }
+
+      return [true, [-1]];
+    }
+
     return getSlotShifts(index);
   }
 
@@ -137,8 +154,18 @@ export function onReset(): void {
   resetState();
 }
 
+function isPCSave(dataView: DataView): boolean {
+  const validator = [0x47, 0x52, 0x41, 0x4e, 0x44, 0x49, 0x41, 0x32]; // "GRANDIA2"
+
+  return checkValidator(validator, 0x0, dataView);
+}
+
 export function getSlotNames(): Resource {
   const saves = getRegionSaves();
+
+  if (platform === "pc") {
+    return { 0x0: "Slot 1" };
+  }
 
   const names = saves.reduce((names: Resource, save, index) => {
     const name = save.file.name.slice(-2);

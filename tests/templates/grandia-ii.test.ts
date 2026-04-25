@@ -34,6 +34,7 @@ test.describe(game, () => {
     ["should load a PSU save (Europe)"             ,        "europe.psu", [            't|["Slot 3"]'           , "s|1$1", "i|08$1", "i|35$2"]],
     ["should load a PSU save (USA)"                ,           "usa.psu", [            't|["Slot 6"]'           , "s|1$1", "i|09$1", "i|16$2"]],
     ["should load a PSU save (Japan, Asia)"        ,     "japanasia.psu", [            't|["Slot 2"]'           , "s|1$1", "i|11$1", "i|07$2"]],
+    ["should load a PC save"                       ,  "GRANDIA2_002.vms", [            't|["Slot 1"]'           , "s|1$1", "i|06$1", "i|10$2"]],
   ];
 
   tests.forEach(([title, saveFilePath, args]) => {
