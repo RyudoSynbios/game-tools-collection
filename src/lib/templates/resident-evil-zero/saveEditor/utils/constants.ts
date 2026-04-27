@@ -1,0 +1,1 @@
+export const REGION_SHIFTS = [0x0, 0x4, 0x204];

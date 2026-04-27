@@ -1062,6 +1062,17 @@
     }
   },
   {
+    "id": "resident-evil-zero",
+    "name": "Resident Evil Zero",
+    "platformIds": ["gamecube"],
+    "tools": {
+      "saveEditor": {
+        "createdAt": "2026-04-27",
+        "regions": ["🇪🇺", "🇺🇸", "🇯🇵"]
+      }
+    }
+  },
+  {
     "id": "resident-evil",
     "name": "Resident Evil",
     "platformIds": ["playstation"],
