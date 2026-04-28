@@ -177,7 +177,7 @@ const template: GameJson = {
                   vertical: true,
                   prependSubinstance: [
                     {
-                      name: "Current Position",
+                      name: "Pending Game",
                       items: [
                         {
                           type: "tabs",
