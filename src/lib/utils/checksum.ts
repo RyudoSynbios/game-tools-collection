@@ -1,11 +1,12 @@
 import { get } from "svelte/store";
 
-import { gameJson, gameUtils } from "$lib/stores";
+import { dataViewAlt, gameJson, gameUtils } from "$lib/stores";
 import {
   dataTypeToLength,
   dataTypeToValue,
   getBigInt,
   getInt,
+  isDataViewAltExists,
   setBigInt,
   setInt,
 } from "$lib/utils/bytes";
@@ -26,6 +27,7 @@ export function formatChecksum(
 }
 
 export function updateChecksums(): void {
+  const $dataViewAlt = get(dataViewAlt);
   const $gameJson = get(gameJson);
   const $gameUtils = get(gameUtils) as any;
 
@@ -46,18 +48,24 @@ export function updateChecksums(): void {
         return;
       }
 
+      let _dataViewAlt;
+
+      if (isDataViewAltExists(item.dataViewAltKey || "")) {
+        _dataViewAlt = $dataViewAlt[item.dataViewAltKey as string];
+      }
+
       if (item.dataType !== "uint64") {
         previousChecksum = getInt(item.offset, item.dataType, {
           bigEndian: item.bigEndian,
-        }).toHex(dataTypeLength);
+        }, _dataViewAlt).toHex(dataTypeLength);
 
-        setInt(item.offset, item.dataType, 0x0);
+        setInt(item.offset, item.dataType, 0x0, {}, item.dataViewAltKey);
       } else {
         previousChecksum = getBigInt(item.offset, item.dataType, {
           bigEndian: item.bigEndian,
         }).toHex(dataTypeLength);
 
-        setBigInt(item.offset, item.dataType, 0x0n);
+        setBigInt(item.offset, item.dataType, 0x0n, {}, item.dataViewAltKey);
       }
 
       let checksum = 0x0;
@@ -69,11 +77,11 @@ export function updateChecksums(): void {
       if (item.dataType !== "uint64") {
         setInt(item.offset, item.dataType, checksum, {
           bigEndian: item.bigEndian,
-        });
+        }, item.dataViewAltKey);
       } else {
         setBigInt(item.offset, item.dataType, BigInt(checksum), {
           bigEndian: item.bigEndian,
-        });
+        }, item.dataViewAltKey);
       }
 
       const newChecksum = checksum.toHex(dataTypeLength);

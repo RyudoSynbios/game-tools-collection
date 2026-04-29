@@ -221,6 +221,7 @@ export interface ItemBoolean {
 export interface ItemChecksum {
   id?: string;
   name?: string;
+  dataViewAltKey?: string;
   offset: number;
   type: "checksum";
   dataType: DataTypeUInt | "uint64";
