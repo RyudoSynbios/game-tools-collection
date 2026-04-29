@@ -124,6 +124,7 @@ Link to the website: [https://game-tools-collection.com](https://game-tools-coll
 | Super Smash Bros.                            | N64        | Save                    | EUR / USA / JAP / AUS                         |
 | Super Smash Bros. Melee                      | GC         | Save                    | EUR / USA / JAP                               |
 | Super Street Fighter II Turbo Revival        | GBA        | Save                    | EUR / USA / JAP                               |
+| Tekken                                       | PS         | Save                    | EUR / USA / JAP                               |
 | Theatrhythm Final Fantasy: Curtain Call      | 3DS        | Save                    | EUR / USA / JAP                               |
 | TimeSplitters 2                              | PS2        | Save                    | EUR / USA / JAP                               |
 | Tomb Raider II: Starring Lara Croft          | PS         | Save                    | EUR / USA / JAP / FRA / GER / ITA             |

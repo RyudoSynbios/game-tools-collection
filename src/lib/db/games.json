@@ -1347,6 +1347,17 @@
     }
   },
   {
+    "id": "tekken",
+    "name": "Tekken",
+    "platformIds": ["playstation"],
+    "tools": {
+      "saveEditor": {
+        "createdAt": "2026-04-29",
+        "regions": ["🇪🇺", "🇺🇸", "🇯🇵"]
+      }
+    }
+  },
+  {
     "id": "theatrhythm-final-fantasy-curtain-call",
     "name": "Theatrhythm Final Fantasy: Curtain Call",
     "platformIds": ["nintendo-3ds"],
