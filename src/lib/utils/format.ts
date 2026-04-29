@@ -247,6 +247,14 @@ export function setLocalStorage(key: string, value: number | string): void {
   }
 }
 
+export function cloneArrayBuffer(src: ArrayBufferLike): Uint8Array {
+  const dest = new Uint8Array(src.byteLength);
+
+  dest.set(new Uint8Array(src));
+
+  return dest;
+}
+
 export function mergeUint8Arrays(...uint8Arrays: Uint8Array[]): Uint8Array {
   const length = uint8Arrays.reduce(
     (length, uint8Array) => (length += uint8Array.length),
