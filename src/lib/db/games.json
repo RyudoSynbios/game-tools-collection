@@ -1095,6 +1095,17 @@
     }
   },
   {
+    "id": "secret-of-mana",
+    "name": "Secret of Mana",
+    "platformIds": ["super-nintendo"],
+    "tools": {
+      "saveEditor": {
+        "createdAt": "2026-05-05",
+        "regions": ["🇺🇸", "🇯🇵", "🇫🇷", "🇩🇪", "🇬🇧", "🇦🇺"]
+      }
+    }
+  },
+  {
     "id": "shining-force-3",
     "name": "Shining Force 3",
     "platformIds": ["saturn"],
