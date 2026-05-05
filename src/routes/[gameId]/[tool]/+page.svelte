@@ -35,21 +35,25 @@
     getRegions,
   } from "$lib/utils/validator";
 
-  import type { Game, GameJson, Patch } from "$lib/types";
+  import type { Game, GameJson, GameTool, Patch } from "$lib/types";
 
   const game = getGame(page.params["gameId"]!) as Game;
 
   let tool = "";
+  let toolDetails = {} as GameTool;
 
   switch (page.params["tool"]) {
     case "randomizer":
       tool = "Randomizer";
+      toolDetails = game.tools.randomizer!;
       break;
     case "rom-editor":
       tool = "Rom Editor";
+      toolDetails = game.tools.romEditor!;
       break;
     case "save-editor":
       tool = "Save Editor";
+      toolDetails = game.tools.saveEditor!;
       break;
   }
 
@@ -366,9 +370,18 @@
         {/if}
       </svelte:fragment>
       <svelte:fragment slot="dropzone">
-        <p class="gtc-tool-platform">
-          Supported platforms: <span>{formatPlatforms(game.platforms)}</span>
-        </p>
+        <div class="gtc-tool-details">
+          <p>
+            Supported platforms:
+            <span>{formatPlatforms(game.platforms)}</span>
+          </p>
+          {#if toolDetails.compatibilities}
+            <p>
+              Compatible with:
+              <span>{toolDetails.compatibilities.join(",")}</span>
+            </p>
+          {/if}
+        </div>
       </svelte:fragment>
     </Dropzone>
     {#if regions.length > 1}
@@ -452,8 +465,8 @@
   .gtc-tool {
     @apply flex flex-1 flex-col;
 
-    & .gtc-tool-platform {
-      @apply absolute -bottom-6 right-4 text-center text-xs;
+    & .gtc-tool-details {
+      @apply absolute right-4 top-full mt-2 text-right text-xs;
 
       & span {
         @apply text-white;

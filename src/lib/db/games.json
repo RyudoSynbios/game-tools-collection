@@ -197,6 +197,7 @@
     "tools": {
       "saveEditor": {
         "createdAt": "2023-12-16",
+        "compatibilities": ["Castlevania Advance Collection"],
         "regions": ["🇪🇺", "🇺🇸", "🇯🇵"]
       }
     }
@@ -208,6 +209,7 @@
     "tools": {
       "saveEditor": {
         "createdAt": "2023-12-16",
+        "compatibilities": ["Castlevania Advance Collection"],
         "regions": ["🇪🇺", "🇺🇸", "🇯🇵"]
       },
       "romEditor": {
@@ -223,6 +225,7 @@
     "tools": {
       "saveEditor": {
         "createdAt": "2024-03-24",
+        "compatibilities": ["Castlevania Dominus Collection"],
         "regions": ["🇪🇺", "🇺🇸", "🇯🇵"]
       }
     }
@@ -234,6 +237,7 @@
     "tools": {
       "saveEditor": {
         "createdAt": "2024-02-19",
+        "compatibilities": ["Castlevania Advance Collection"],
         "regions": ["🇪🇺", "🇺🇸", "🇯🇵"]
       }
     }
@@ -245,6 +249,7 @@
     "tools": {
       "saveEditor": {
         "createdAt": "2024-11-21",
+        "compatibilities": ["Castlevania Dominus Collection"],
         "regions": ["🇪🇺", "🇺🇸", "🇯🇵", "🇰🇷"]
       }
     }
@@ -256,6 +261,7 @@
     "tools": {
       "saveEditor": {
         "createdAt": "2025-08-02",
+        "compatibilities": ["Castlevania Dominus Collection"],
         "regions": ["🇪🇺", "🇺🇸", "🇯🇵"]
       }
     }
@@ -528,6 +534,7 @@
     "tools": {
       "saveEditor": {
         "createdAt": "2025-12-29",
+        "compatibilities": ["Fantasy VIII Remastered"],
         "regions": ["🇪🇺", "🇺🇸", "🇯🇵", "🇫🇷", "🇩🇪", "🇮🇹", "🇪🇸"]
       }
     }
@@ -653,6 +660,7 @@
     "tools": {
       "saveEditor": {
         "createdAt": "2023-12-16",
+        "compatibilities": ["Grandia HD Remaster"],
         "regions": ["🇪🇺", "🇺🇸", "🇯🇵", "🇫🇷", "🇩🇪"]
       }
     }
@@ -664,6 +672,7 @@
     "tools": {
       "saveEditor": {
         "createdAt": "2024-08-04",
+        "compatibilities": ["Grandia II HD Remaster"],
         "regions": ["🇪🇺", "🇺🇸", "🇯🇵"]
       }
     }

@@ -31,7 +31,6 @@ const template: GameJson = {
       },
     },
     text: "Drag 'n' drop here or click to add a save file.",
-    hint: "Compatible with HD Remaster.",
     error: "Not a valid save file.",
   },
   items: [

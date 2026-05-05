@@ -115,16 +115,15 @@ export interface Game {
   }[];
   createdAt: string;
   tools: {
-    saveEditor?: {
-      regions: string[];
-    };
-    romEditor?: {
-      regions: string[];
-    };
-    randomizer?: {
-      regions: string[];
-    };
+    saveEditor?: GameTool;
+    romEditor?: GameTool;
+    randomizer?: GameTool;
   };
+}
+
+export interface GameTool {
+  compatibilities?: string[];
+  regions: string[];
 }
 
 export interface Manufacturer {
