@@ -5,6 +5,10 @@
   import Dropzone from "$lib/components/Dropzone.svelte";
   import { byteswap } from "$lib/utils/bytes";
 
+  const metaTitle = "Byteswap";
+  const metaDescription = "Byteswap your binary files.";
+  const metaImage = `${page.url.origin}/img/icon.png`;
+
   function onFileUploaded(file: File, dataView: DataView): void {
     const buffer = byteswap(dataView).buffer as ArrayBuffer;
 
@@ -17,9 +21,11 @@
 </script>
 
 <svelte:head>
-  <title>Byteswap | Game Tools Collection</title>
-  <meta property="og:title" content="Byteswap" />
-  <meta property="og:image" content="{page.url.origin}/img/icon.png" />
+  <title>{metaTitle} | Game Tools Collection</title>
+  <meta property="og:title" content={metaTitle} />
+  <meta property="description" content={metaDescription} />
+  <meta property="og:description" content={metaDescription} />
+  <meta property="og:image" content={metaImage} />
 </svelte:head>
 
 <Dropzone {onFileUploaded}>

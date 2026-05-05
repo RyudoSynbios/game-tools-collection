@@ -36,6 +36,10 @@
   import PS2PSV from "./playstation2/PSV.svelte";
   import BackupRam from "./saturn/BackupRam.svelte";
 
+  const metaTitle = "Explorer";
+  const metaDescription = "Explore the contents of your game memory cards, ISO files and more.";
+  const metaImage = `${page.url.origin}/img/icon.png`;
+
   let fileTypeEl: HTMLSelectElement;
 
   let platform = "";
@@ -191,9 +195,11 @@
 </script>
 
 <svelte:head>
-  <title>Explorer | Game Tools Collection</title>
-  <meta property="og:title" content="Explorer" />
-  <meta property="og:image" content="{page.url.origin}/img/icon.png" />
+  <title>{metaTitle} | Game Tools Collection</title>
+  <meta property="og:title" content={metaTitle} />
+  <meta property="description" content={metaDescription} />
+  <meta property="og:description" content={metaDescription} />
+  <meta property="og:image" content={metaImage} />
 </svelte:head>
 
 <div class="gtc-explorer">

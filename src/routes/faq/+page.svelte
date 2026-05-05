@@ -1,12 +1,15 @@
 <script lang="ts">
   import { page } from "$app/state";
   import Spoiler from "$lib/components/Spoiler.svelte";
+
+  const metaTitle = "FAQ";
+  const metaImage = `${page.url.origin}/img/icon.png`;
 </script>
 
 <svelte:head>
-  <title>FAQ | Game Tools Collection</title>
-  <meta property="og:title" content="FAQ" />
-  <meta property="og:image" content="{page.url.origin}/img/icon.png" />
+  <title>{metaTitle} | Game Tools Collection</title>
+  <meta property="og:title" content={metaTitle} />
+  <meta property="og:image" content={metaImage} />
 </svelte:head>
 
 <div class="gtc-faq">

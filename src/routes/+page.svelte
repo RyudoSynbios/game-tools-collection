@@ -3,6 +3,10 @@
   import GameTile from "$lib/components/GameTile.svelte";
   import { getGames, getPlatforms, type Order, type Tool } from "$lib/utils/db";
 
+  const metaTitle = "Game Tools Collection: Customize your games!";
+  const metaDescription = "Use a collection of tools to rediscover your favorite games by editing your saves or randomizing gameplay elements.";
+  const metaImage = `${page.url.origin}/img/icon.png`;
+
   let platforms = getPlatforms();
   let games = getGames();
 
@@ -30,9 +34,11 @@
 </script>
 
 <svelte:head>
-  <title>Game Tools Collection: Customize your games!</title>
-  <meta property="og:title" content="Game Tools Collection: Customize your games!" />
-  <meta property="og:image" content="{page.url.origin}/img/icon.png" />
+  <title>{metaTitle}</title>
+  <meta property="og:title" content={metaTitle} />
+  <meta property="description" content={metaDescription} />
+  <meta property="og:description" content={metaDescription} />
+  <meta property="og:image" content={metaImage} />
 </svelte:head>
 
 <div class="gtc-home">

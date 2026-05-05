@@ -1,11 +1,14 @@
 <script lang="ts">
   import { page } from "$app/state";
+
+  const metaTitle = "About";
+  const metaImage = `${page.url.origin}/img/icon.png`;
 </script>
 
 <svelte:head>
-  <title>About | Game Tools Collection</title>
-  <meta property="og:title" content="About" />
-  <meta property="og:image" content="{page.url.origin}/img/icon.png" />
+  <title>{metaTitle} | Game Tools Collection</title>
+  <meta property="og:title" content={metaTitle} />
+  <meta property="og:image" content={metaImage} />
 </svelte:head>
 
 <div class="gtc-about">

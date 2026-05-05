@@ -57,6 +57,10 @@
       break;
   }
 
+  const metaTitle = `${game.metaName} - ${formatPlatforms(game.platforms)} - ${tool}`;
+  const metaDescription = `A ${tool} for ${game.metaName} on ${formatPlatforms(game.platforms)}.${toolDetails.compatibilities ? ` Compatible with ${toolDetails.compatibilities.join(",")}.` : ""}`;
+  const metaImage = `${page.url.origin}/img/games/${game.id}/logo.png`;
+
   let logoClickCount = 0;
   let logoClickTimer: NodeJS.Timeout;
 
@@ -338,9 +342,11 @@
 
 <!-- prettier-ignore -->
 <svelte:head>
-  <title>{game.metaName} - {formatPlatforms(game.platforms)} - {tool} | Game Tools Collection</title>
-  <meta property="og:title" content="{game.metaName} - {formatPlatforms(game.platforms)} - {tool}" />
-  <meta property="og:image" content="{page.url.origin}/img/games/{game.id}/logo.png" />
+  <title>{metaTitle} | Game Tools Collection</title>
+  <meta property="og:title" content={metaTitle} />
+  <meta property="description" content={metaDescription} />
+  <meta property="og:description" content={metaDescription} />
+  <meta property="og:image" content={metaImage} />
 </svelte:head>
 
 <svelte:window on:click={handleClick} />
