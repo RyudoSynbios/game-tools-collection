@@ -2,15 +2,17 @@ import type { GameJson } from "$lib/types";
 
 const template: GameJson = {
   validator: {
-    regions: {
-      europe: {
-        $and: [{ 0x0: [0x4, 0x21, 0x5] }, { 0x5800: [0x8] }],
-      },
-      usa_australia: {
-        $and: [{ 0x0: [0x4, 0x21, 0x5] }, { 0x5800: [0x8] }],
-      },
-      japan: {
-        $and: [{ 0x0: [0x4, 0x21, 0x5] }, { 0x5800: [0x8] }],
+    platforms: {
+      gameboycolor: {
+        europe: {
+          $and: [{ 0x0: [0x4, 0x21, 0x5] }, { 0x5800: [0x8] }],
+        },
+        usa_australia: {
+          $and: [{ 0x0: [0x4, 0x21, 0x5] }, { 0x5800: [0x8] }],
+        },
+        japan: {
+          $and: [{ 0x0: [0x4, 0x21, 0x5] }, { 0x5800: [0x8] }],
+        },
       },
     },
     text: "Drag 'n' drop here or click to add a save file.",

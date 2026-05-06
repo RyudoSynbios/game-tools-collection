@@ -2,14 +2,16 @@ import type { GameJson } from "$lib/types";
 
 const template: GameJson = {
   validator: {
-    regions: {
-      europe: {
-        0x0: [0x4e, 0x47, 0x4d, 0x50], // "NGMP"
+    platforms: {
+      nintendo64: {
+        europe: {
+          0x0: [0x4e, 0x47, 0x4d, 0x50], // "NGMP"
+        },
+        usa: {
+          0x0: [0x4e, 0x47, 0x4d, 0x45], // "NGME"
+        },
+        japan: {},
       },
-      usa: {
-        0x0: [0x4e, 0x47, 0x4d, 0x45], // "NGME"
-      },
-      japan: {},
     },
     text: "Drag 'n' drop here or click to add a save file.",
     hint: "If you're having trouble loading a save file from an <b>Everdrive</b> cartridge, please see the FAQ.",

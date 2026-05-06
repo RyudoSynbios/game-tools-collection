@@ -9,9 +9,11 @@ import {
 
 const template: GameJson = {
   validator: {
-    regions: {
-      europe_usa_japan: {
-        0x0: [0x48, 0x4f, 0x4c, 0x59, 0x5f, 0x41, 0x52, 0x4b, 0x5f], // "HOLY_ARK_"
+    platforms: {
+      saturn: {
+        europe_usa_japan: {
+          0x0: [0x48, 0x4f, 0x4c, 0x59, 0x5f, 0x41, 0x52, 0x4b, 0x5f], // "HOLY_ARK_"
+        },
       },
     },
     text: "Drag 'n' drop here or click to add a save file.",

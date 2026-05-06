@@ -4,9 +4,11 @@ import { levels, worlds } from "./utils/resource";
 
 const template: GameJson = {
   validator: {
-    regions: {
-      europe_germany: {},
-      usa_japan: {},
+    platforms: {
+      supernintendo: {
+        europe_germany: {},
+        usa_japan: {},
+      },
     },
     text: "Drag 'n' drop here or click to add a save file.",
     error: "Not a valid save file.",

@@ -5,10 +5,12 @@ import { portals } from "./utils/resource";
 const template: GameJson = {
   validator: {
     fileNames: ["GameData.bin"],
-    regions: {
-      europe_usa_japan_australia_korea: {
-        0x10: [0x6d, 0x61, 0x72, 0x69, 0x6f, 0x31],
-      }, // "mario1"
+    platforms: {
+      wii: {
+        europe_usa_japan_australia_korea: {
+          0x10: [0x6d, 0x61, 0x72, 0x69, 0x6f, 0x31],
+        }, // "mario1"
+      },
     },
     text: "Drag 'n' drop here or click to add a save file.",
     hint: "Only works with decrypted saves (see FAQ).",

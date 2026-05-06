@@ -17,8 +17,10 @@ import {
 const template: GameJson = {
   validator: {
     fileNames: ["savedata.bk"],
-    regions: {
-      europe_usa_japan: true,
+    platforms: {
+      nintendo3ds: {
+        europe_usa_japan: true,
+      },
     },
     text: "Drag 'n' drop here or click to add a save file.",
     hint: 'Works with "savedata.bk" files.',

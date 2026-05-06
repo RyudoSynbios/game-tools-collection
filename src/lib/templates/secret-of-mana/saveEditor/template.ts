@@ -7,10 +7,12 @@ const statsHint =
 
 const template: GameJson = {
   validator: {
-    regions: {
-      usa_france_uk_australia: {},
-      japan: {},
-      germany: {},
+    platforms: {
+      supernintendo: {
+        usa_france_uk_australia: {},
+        japan: {},
+        germany: {},
+      },
     },
     text: "Drag 'n' drop here or click to add a save file.",
     error: "Not a valid save file.",

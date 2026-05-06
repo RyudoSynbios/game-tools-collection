@@ -20,9 +20,10 @@ test.describe(game, () => {
 
   // prettier-ignore
   const tests: Test[] = [
-    ["should load an empty standard save"          ,         "empty.sav", ['t|[]']],
-    ["should load a deleted standard save (Slot 3)", "deleted-slot3.sav", ['t|["Slot 3"]', "c|0xfbbb", "i|PASS", "w|QASS", "c|0xfbba"]],
-    ["should load a standard save (Japan)"         ,         "japan.sav", ['t|["Slot 2"]', "c|0xfbbb", "i|PASS", "w|QASS", "c|0xfbba"]],
+    // PC-Engine CD
+    ["should load an empty standard save"          , "pc-engine-cd/empty.sav"        , ['t|[]']],
+    ["should load a deleted standard save (Slot 3)", "pc-engine-cd/deleted-slot3.sav", ['t|["Slot 3"]', "c|0xfbbb", "i|PASS", "w|QASS", "c|0xfbba"]],
+    ["should load a standard save (Japan)"         , "pc-engine-cd/japan.sav"        , ['t|["Slot 2"]', "c|0xfbbb", "i|PASS", "w|QASS", "c|0xfbba"]],
   ];
 
   tests.forEach(([title, saveFilePath, args]) => {

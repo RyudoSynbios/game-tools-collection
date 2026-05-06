@@ -1,9 +1,9 @@
 import { get } from "svelte/store";
 
-import { dataView, gameTemplate } from "$lib/stores";
+import { dataView } from "$lib/stores";
 import { getInt, getString } from "$lib/utils/bytes";
 import { numberArrayToString } from "$lib/utils/format";
-import { getRegionValidator } from "$lib/utils/validator";
+import { getPlatformRegions, getRegionValidator } from "$lib/utils/validator";
 
 import MemoryCard, { isMemoryCardFile } from "./memoryCard";
 import PSU, { isPSUFile } from "./psu";
@@ -100,6 +100,12 @@ export function getEntry(offset: number, dataView: DataView): Page {
   };
 }
 
+export function isPlaystation2SaveFile(dataView: DataView): boolean {
+  return (
+    isMemoryCardFile(dataView) || isPSUFile(dataView) || isPSVFile(dataView)
+  );
+}
+
 export function unpackFile(dataView: DataView): DataView {
   if (isMemoryCardFile(dataView)) {
     memoryCard = new MemoryCard(dataView);
@@ -133,8 +139,6 @@ export function repackFile(): ArrayBufferLike {
 }
 
 export function customGetRegions(): string[] {
-  const $gameTemplate = get(gameTemplate);
-
   const regions: string[] = [];
 
   let saves: Save[] = [];
@@ -147,17 +151,17 @@ export function customGetRegions(): string[] {
     saves = psv.saves;
   }
 
-  Object.entries($gameTemplate.validator.regions).forEach(
-    ([region, condition]) => {
-      const validator: number[] = Object.values(condition)[0];
+  const platformRegions = getPlatformRegions();
 
-      const validatorStringified = numberArrayToString(validator);
+  Object.entries(platformRegions).forEach(([region, condition]) => {
+    const validator: number[] = Object.values(condition)[0];
 
-      if (saves.some((save) => save.file.name.includes(validatorStringified))) {
-        regions.push(region);
-      }
-    },
-  );
+    const validatorStringified = numberArrayToString(validator);
+
+    if (saves.some((save) => save.file.name.includes(validatorStringified))) {
+      regions.push(region);
+    }
+  });
 
   return regions;
 }

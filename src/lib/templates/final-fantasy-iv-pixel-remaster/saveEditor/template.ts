@@ -15,8 +15,10 @@ import {
 
 const template: GameJson = {
   validator: {
-    regions: {
-      world: { 0x0: [0xef, 0xbb, 0xbf] },
+    platforms: {
+      steam: {
+        world: { 0x0: [0xef, 0xbb, 0xbf] },
+      },
     },
     text: "Drag 'n' drop here or click to add a save file.",
     hint: 'Designed to work with v1.2.0.\nOther versions may work, but may corrupt the save.\nPlease make a backup before editing.\n\nQuick Save: "nRl18osV3e9kPX9SMW"...\nSlot 1: "ookrbATYovG3tEOXIH..."\nSlot 2: "7nCxyzTwG31W3Zlg70..."\nBestiary: "dp3fS2vqP7GDj8eF72..."',

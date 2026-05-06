@@ -2,9 +2,13 @@ import type { GameJson } from "$lib/types";
 
 const template: GameJson = {
   validator: {
-    regions: {
-      europe_usa_japan: {
-        0x0: [0x73, 0x6f, 0x6e, 0x69, 0x63, 0x5f, 0x72, 0x75, 0x73, 0x68, 0x5f], // "sonic_rush_"
+    platforms: {
+      nintendods: {
+        europe_usa_japan: {
+          0x0: [
+            0x73, 0x6f, 0x6e, 0x69, 0x63, 0x5f, 0x72, 0x75, 0x73, 0x68, 0x5f,
+          ], // "sonic_rush_"
+        },
       },
     },
     text: "Drag 'n' drop here or click to add a save file.",

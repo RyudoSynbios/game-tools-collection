@@ -1,11 +1,15 @@
 import { get } from "svelte/store";
 
-import { dataView, gameTemplate } from "$lib/stores";
+import { dataView } from "$lib/stores";
 import debug from "$lib/utils/debug";
 
 import { addPadding, getInt, getString, removePadding } from "../../bytes";
 import { mergeUint8Arrays, numberArrayToString } from "../../format";
-import { checkValidator, getRegionValidator } from "../../validator";
+import {
+  checkValidator,
+  getPlatformRegions,
+  getRegionValidator,
+} from "../../validator";
 
 const HEADER_SIZE = 0x20;
 
@@ -230,15 +234,15 @@ export default class BackupRam {
   }
 
   public unpack(): DataView {
-    const $gameTemplate = get(gameTemplate);
-
     this._saves = [];
 
     const uint8Arrays: Uint8Array[] = [];
 
     let offset = 0x0;
 
-    Object.values($gameTemplate.validator.regions).forEach((condition) => {
+    const platformRegions = getPlatformRegions();
+
+    Object.values(platformRegions).forEach((condition) => {
       const validator: number[] = Object.values(condition)[0];
 
       if (validator) {
@@ -282,25 +286,23 @@ export default class BackupRam {
   }
 
   public getRegions(): string[] {
-    const $gameTemplate = get(gameTemplate);
-
     const regions: string[] = [];
 
-    Object.entries($gameTemplate.validator.regions).forEach(
-      ([region, condition]) => {
-        const validator: number[] = Object.values(condition)[0];
+    const platformRegions = getPlatformRegions();
 
-        const validatorStringified = numberArrayToString(validator);
+    Object.entries(platformRegions).forEach(([region, condition]) => {
+      const validator: number[] = Object.values(condition)[0];
 
-        if (
-          this._saves.some((save) =>
-            save.file.name.includes(validatorStringified),
-          )
-        ) {
-          regions.push(region);
-        }
-      },
-    );
+      const validatorStringified = numberArrayToString(validator);
+
+      if (
+        this._saves.some((save) =>
+          save.file.name.includes(validatorStringified),
+        )
+      ) {
+        regions.push(region);
+      }
+    });
 
     return regions;
   }

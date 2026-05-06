@@ -20,24 +20,25 @@ test.describe(game, () => {
 
   // prettier-ignore
   const tests: Test[] = [
-    ["should load a filled standard save (Europe)",     "filled.mcr", ["r|europe", "s|3", "i|PAS"]],
-    ["should load a filled standard save (Japan)" ,     "filled.mcr", ["r|japan" , "s|3", "i|PAS"]],
-    ["should load a standard save (Europe)"       ,     "europe.mcr", [            "s|3", "i|PAS"]],
-    ["should load a standard save (USA)"          ,        "usa.mcr", [            "s|3", "i|PAS"]],
-    ["should load a standard save (Japan)"        ,      "japan.mcr", [            "s|3", "i|PAS"]],
-    ["should load a standard save (Japan) (Rev 1)", "japan-rev1.mcr", [            "s|3", "i|PAS"]],
-    ["should load a PSV save (Europe)"            ,     "europe.psv", [            "s|3", "i|PAS"]],
-    ["should load a PSV save (USA)"               ,        "usa.psv", [            "s|3", "i|PAS"]],
-    ["should load a PSV save (Japan)"             ,      "japan.psv", [            "s|3", "i|PAS"]],
-    ["should load a PSV save (Japan) (Rev 1)"     , "japan-rev1.psv", [            "s|3", "i|PAS"]],
-    ["should load a VMP save (Europe)"            ,     "europe.vmp", [            "s|3", "i|PAS"]],
-    ["should load a VMP save (USA)"               ,        "usa.vmp", [            "s|3", "i|PAS"]],
-    ["should load a VMP save (Japan)"             ,      "japan.vmp", [            "s|3", "i|PAS"]],
-    ["should load a VMP save (Japan) (Rev 1)"     , "japan-rev1.vmp", [            "s|3", "i|PAS"]],
-    ["should load a DexDrive save (Europe)"       ,     "europe.gme", [            "s|3", "i|PAS"]],
-    ["should load a DexDrive save (USA)"          ,        "usa.gme", [            "s|3", "i|PAS"]],
-    ["should load a DexDrive save (Japan)"        ,      "japan.gme", [            "s|3", "i|PAS"]],
-    ["should load a DexDrive save (Japan) (Rev 1)", "japan-rev1.gme", [            "s|3", "i|PAS"]],
+    // PlayStation
+    ["should load a filled standard save (Europe)", "playstation/filled.mcr"    , ["r|europe", "s|3", "i|PAS"]],
+    ["should load a filled standard save (Japan)" , "playstation/filled.mcr"    , ["r|japan" , "s|3", "i|PAS"]],
+    ["should load a standard save (Europe)"       , "playstation/europe.mcr"    , [            "s|3", "i|PAS"]],
+    ["should load a standard save (USA)"          , "playstation/usa.mcr"       , [            "s|3", "i|PAS"]],
+    ["should load a standard save (Japan)"        , "playstation/japan.mcr"     , [            "s|3", "i|PAS"]],
+    ["should load a standard save (Japan) (Rev 1)", "playstation/japan-rev1.mcr", [            "s|3", "i|PAS"]],
+    ["should load a PSV save (Europe)"            , "playstation/europe.psv"    , [            "s|3", "i|PAS"]],
+    ["should load a PSV save (USA)"               , "playstation/usa.psv"       , [            "s|3", "i|PAS"]],
+    ["should load a PSV save (Japan)"             , "playstation/japan.psv"     , [            "s|3", "i|PAS"]],
+    ["should load a PSV save (Japan) (Rev 1)"     , "playstation/japan-rev1.psv", [            "s|3", "i|PAS"]],
+    ["should load a VMP save (Europe)"            , "playstation/europe.vmp"    , [            "s|3", "i|PAS"]],
+    ["should load a VMP save (USA)"               , "playstation/usa.vmp"       , [            "s|3", "i|PAS"]],
+    ["should load a VMP save (Japan)"             , "playstation/japan.vmp"     , [            "s|3", "i|PAS"]],
+    ["should load a VMP save (Japan) (Rev 1)"     , "playstation/japan-rev1.vmp", [            "s|3", "i|PAS"]],
+    ["should load a DexDrive save (Europe)"       , "playstation/europe.gme"    , [            "s|3", "i|PAS"]],
+    ["should load a DexDrive save (USA)"          , "playstation/usa.gme"       , [            "s|3", "i|PAS"]],
+    ["should load a DexDrive save (Japan)"        , "playstation/japan.gme"     , [            "s|3", "i|PAS"]],
+    ["should load a DexDrive save (Japan) (Rev 1)", "playstation/japan-rev1.gme", [            "s|3", "i|PAS"]],
   ];
 
   tests.forEach(([title, saveFilePath, args]) => {

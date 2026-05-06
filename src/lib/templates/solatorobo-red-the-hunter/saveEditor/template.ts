@@ -5,12 +5,14 @@ import { locations } from "./utils/resource";
 
 const template: GameJson = {
   validator: {
-    regions: {
-      europe_usa_japan: {
-        0x0: [
-          0x43, 0x4f, 0x44, 0x41, 0x53, 0x41, 0x56, 0x45, 0x5f, 0x30, 0x30,
-          0x30, 0x30, 0x30, 0x62,
-        ], // "CODASAVE_00000b"
+    platforms: {
+      nintendods: {
+        europe_usa_japan: {
+          0x0: [
+            0x43, 0x4f, 0x44, 0x41, 0x53, 0x41, 0x56, 0x45, 0x5f, 0x30, 0x30,
+            0x30, 0x30, 0x30, 0x62,
+          ], // "CODASAVE_00000b"
+        },
       },
     },
     text: "Drag 'n' drop here or click to add a save file.",

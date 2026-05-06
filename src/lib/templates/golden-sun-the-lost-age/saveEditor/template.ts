@@ -2,16 +2,18 @@ import type { GameJson } from "$lib/types";
 
 const template: GameJson = {
   validator: {
-    regions: {
-      europe_usa_france_germany_italy_spain: {
-        $or: [...Array(0x5).keys()].map((index) => ({
-          [index * 0x3000]: [0x43, 0x41, 0x4d, 0x45, 0x4c, 0x4f, 0x54], // "CAMELOT"
-        })),
-      },
-      japan: {
-        $or: [...Array(0x5).keys()].map((index) => ({
-          [index * 0x3000]: [0x43, 0x41, 0x4d, 0x45, 0x4c, 0x4f, 0x54], // "CAMELOT"
-        })),
+    platforms: {
+      gameboyadvance: {
+        europe_usa_france_germany_italy_spain: {
+          $or: [...Array(0x5).keys()].map((index) => ({
+            [index * 0x3000]: [0x43, 0x41, 0x4d, 0x45, 0x4c, 0x4f, 0x54], // "CAMELOT"
+          })),
+        },
+        japan: {
+          $or: [...Array(0x5).keys()].map((index) => ({
+            [index * 0x3000]: [0x43, 0x41, 0x4d, 0x45, 0x4c, 0x4f, 0x54], // "CAMELOT"
+          })),
+        },
       },
     },
     text: "Drag 'n' drop here or click to add a save file.",

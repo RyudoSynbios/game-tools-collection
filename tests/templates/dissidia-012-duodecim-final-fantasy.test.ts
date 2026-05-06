@@ -20,10 +20,11 @@ test.describe(game, () => {
 
   // prettier-ignore
   const tests: Test[] = [
-    ["should load a standard save (Europe)", "europe.bin", ["r|europe", "i|PASS"]],
-    ["should load a standard save (USA)"   ,    "usa.bin", ["r|usa"   , "i|PASS"]],
-    ["should load a standard save (Japan)" ,  "japan.bin", [            "i|PASS"]],
-    ["should load a standard save (Asia)"  ,   "asia.bin", ["r|asia"  , "i|PASS"]],
+    // PlayStation Portable
+    ["should load a standard save (Europe)", "playstation-portable/europe.bin", ["r|europe", "i|PASS"]],
+    ["should load a standard save (USA)"   , "playstation-portable/usa.bin"   , ["r|usa"   , "i|PASS"]],
+    ["should load a standard save (Japan)" , "playstation-portable/japan.bin" , [            "i|PASS"]],
+    ["should load a standard save (Asia)"  , "playstation-portable/asia.bin"  , ["r|asia"  , "i|PASS"]],
   ];
 
   tests.forEach(([title, saveFilePath, args]) => {

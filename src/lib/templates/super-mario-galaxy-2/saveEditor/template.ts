@@ -5,10 +5,12 @@ import { worlds } from "./utils/resource";
 const template: GameJson = {
   validator: {
     fileNames: ["GameData.bin"],
-    regions: {
-      europe_usa_japan_korea: {
-        0x10: [0x75, 0x73, 0x65, 0x72, 0x31],
-      }, // "user1"
+    platforms: {
+      wii: {
+        europe_usa_japan_korea: {
+          0x10: [0x75, 0x73, 0x65, 0x72, 0x31],
+        }, // "user1"
+      },
     },
     text: "Drag 'n' drop here or click to add a save file.",
     hint: "Only works with decrypted saves (see FAQ).",

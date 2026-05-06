@@ -20,7 +20,8 @@ test.describe(game, () => {
 
   // prettier-ignore
   const tests: Test[] = [
-    ["should load a standard save (World)", "ff7rebirth001.sav", ["i|2000"]],
+    // Steam
+    ["should load a standard save (World)", "steam/ff7rebirth001.sav", ["i|2000"]],
   ];
 
   tests.forEach(([title, saveFilePath, args]) => {

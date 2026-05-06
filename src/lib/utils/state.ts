@@ -8,6 +8,7 @@ import {
   fileHeaderShift,
   fileName,
   gameJson,
+  gamePlatform,
   gameRegion,
   gameUtils,
   isDirty,
@@ -44,6 +45,7 @@ export function reset(): void {
   fileHeaderShift.set(0x0);
   fileName.set("");
   gameJson.set({} as GameJson);
+  gamePlatform.set(-1);
   gameRegion.set(-1);
   isDirty.set(false);
   locale.set("");

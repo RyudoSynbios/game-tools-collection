@@ -1,7 +1,7 @@
 import { md5 } from "js-md5";
 import { get } from "svelte/store";
 
-import { dataJson, gameTemplate } from "$lib/stores";
+import { dataJson } from "$lib/stores";
 
 import "$lib/utils/bytes";
 
@@ -13,7 +13,7 @@ import {
   setJsonInt,
   setJsonString,
 } from "$lib/utils/json";
-import { checkValidator } from "$lib/utils/validator";
+import { checkValidator, getPlatformRegions } from "$lib/utils/validator";
 
 import type {
   Item,
@@ -95,11 +95,9 @@ export const pathsToInit = [
 ];
 
 export function beforeInitDataView(dataView: DataView): DataView {
-  const $gameTemplate = get(gameTemplate);
-
-  const regionValidator = $gameTemplate.validator.regions.world as Validator;
-  const key = parseInt(getObjKey(regionValidator, 0));
-  const validator = regionValidator[key];
+  const platformRegions = getPlatformRegions().world as Validator;
+  const key = parseInt(getObjKey(platformRegions, 0));
+  const validator = platformRegions[key];
 
   if (!checkValidator(validator, key, dataView)) {
     return dataView;

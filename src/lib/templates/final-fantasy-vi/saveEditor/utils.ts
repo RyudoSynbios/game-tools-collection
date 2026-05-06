@@ -1,10 +1,10 @@
 import { get } from "svelte/store";
 
-import { gameRegion, gameTemplate } from "$lib/stores";
+import { gamePlatform, gameRegion, gameTemplate } from "$lib/stores";
 import { bitToOffset, getInt, getString, setInt } from "$lib/utils/bytes";
 import { formatChecksum } from "$lib/utils/checksum";
 import { getHeaderShift } from "$lib/utils/common/gameBoyAdvance";
-import { clone, getRegionArray, isInRange } from "$lib/utils/format";
+import { clone, getObjKey, getRegionArray, isInRange } from "$lib/utils/format";
 import {
   getItem,
   getShift,
@@ -12,7 +12,7 @@ import {
   updateResources,
   updateResourcesGroups,
 } from "$lib/utils/parser";
-import { checkValidator } from "$lib/utils/validator";
+import { checkValidator, getPlatformRegions } from "$lib/utils/validator";
 
 import type {
   Binary,
@@ -27,6 +27,7 @@ import type {
   ItemTabs,
   Resource,
   ResourceGroups,
+  Validator,
 } from "$lib/types";
 
 import { gbaResources } from "./utils/gba/resource";
@@ -36,7 +37,19 @@ import {
   snesResources,
 } from "./utils/snes/resource";
 
-let platform = "";
+// prettier-ignore
+export function setGamePlatform(dataView: DataView): void {
+  const platformRegions = getPlatformRegions("gameboyadvance").europe as Validator;
+  const key = parseInt(getObjKey(platformRegions, 0));
+  const validator = platformRegions[key];
+  const offset = getHeaderShift(dataView) + key;
+
+  if (checkValidator(validator, offset, dataView)) {
+    gamePlatform.set(0);
+  } else {
+    gamePlatform.set(1);
+  }
+}
 
 export function initHeaderShift(dataView: DataView): number {
   return getHeaderShift(dataView);
@@ -46,6 +59,7 @@ export function overrideGetRegions(
   dataView: DataView,
   shift: number,
 ): string[] {
+  const $gamePlatform = get(gamePlatform);
   const $gameTemplate = get(gameTemplate);
 
   const itemContainer = $gameTemplate.items[0] as ItemContainer;
@@ -70,11 +84,9 @@ export function overrideGetRegions(
       checksum !== 0x0 &&
       checksum === getInt(itemChecksum.offset, "uint16", {}, dataView)
     ) {
-      if (isGBASave(dataView, shift)) {
-        platform = "gba";
+      if ($gamePlatform === 0) {
         return ["europe", "usa", "japan"];
-      } else {
-        platform = "snes";
+      } else if ($gamePlatform === 1) {
         return ["usa", "japan"];
       }
     }
@@ -84,6 +96,7 @@ export function overrideGetRegions(
 }
 
 export function overrideParseItem(item: Item): Item | ItemTab {
+  const $gamePlatform = get(gamePlatform);
   const $gameRegion = get(gameRegion);
 
   if ("id" in item && item.id?.match(/checksumGba-/)) {
@@ -91,7 +104,7 @@ export function overrideParseItem(item: Item): Item | ItemTab {
 
     const [slotIndex] = item.id.splitInt();
 
-    if (platform !== "gba") {
+    if ($gamePlatform !== 0) {
       itemChecksum.offset = 0x0;
       itemChecksum.disabled = true;
     }
@@ -103,7 +116,7 @@ export function overrideParseItem(item: Item): Item | ItemTab {
   } else if ("id" in item && item.id === "gbaOnly") {
     const itemInt = item as ItemInt;
 
-    if (platform !== "gba") {
+    if ($gamePlatform !== 0) {
       itemInt.offset = 0x0;
       itemInt.hidden = true;
     }
@@ -112,7 +125,7 @@ export function overrideParseItem(item: Item): Item | ItemTab {
   } else if ("id" in item && item.id === "snesOnly") {
     const itemInt = item as ItemInt;
 
-    itemInt.hidden = platform !== "snes";
+    itemInt.hidden = $gamePlatform !== 1;
 
     return itemInt;
   } else if ("id" in item && item.id === "europeOnly") {
@@ -127,7 +140,7 @@ export function overrideParseItem(item: Item): Item | ItemTab {
   } else if ("id" in item && item.id?.match(/cross-/)) {
     const itemInt = item as ItemInt;
 
-    if (platform !== "gba") {
+    if ($gamePlatform !== 0) {
       return itemInt;
     }
 
@@ -161,7 +174,7 @@ export function overrideParseItem(item: Item): Item | ItemTab {
 
     const itemInt = itemTab.items[0] as ItemInt;
 
-    if (platform === "gba") {
+    if ($gamePlatform === 0) {
       itemInt.offset -= 0x205;
     }
 
@@ -173,7 +186,7 @@ export function overrideParseItem(item: Item): Item | ItemTab {
           flex: true,
           items: magic.spells.map((spell) => ({
             ...itemInt,
-            id: `spell-${platform}-%index%-${spell.index}`,
+            id: `spell-%index%-${spell.index}`,
             name: spell.name,
             offset: itemInt.offset + spell.index,
           })),
@@ -196,13 +209,15 @@ export function overrideParseItem(item: Item): Item | ItemTab {
 
     if (type === "rareItems") {
       flagPerItem = 22;
-    } else if (type === "espers" && platform === "gba") {
-      offset += 0x1b97;
-      overrideShift = { parent: -1, shift: 0x400 };
-    } else if (type === "swordTechs" && platform === "gba") {
-      itemTab.name = "Bushido";
-    } else if (type === "enemies" && platform === "gba") {
-      resource = resource.slice(0x0, 0x100);
+    } else if ($gamePlatform === 0) {
+      if (type === "espers") {
+        offset += 0x1b97;
+        overrideShift = { parent: -1, shift: 0x400 };
+      } else if (type === "swordTechs") {
+        itemTab.name = "Bushido";
+      } else if (type === "enemies") {
+        resource = resource.slice(0x0, 0x100);
+      }
     }
 
     itemTab.items = [];
@@ -236,7 +251,7 @@ export function overrideParseItem(item: Item): Item | ItemTab {
     let overrideShift: { parent: number; shift: number } | undefined;
     let binary: Binary | undefined;
 
-    if (platform === "gba") {
+    if ($gamePlatform === 0) {
       itemInt.offset += 0x1dc7;
       binary = { bitStart: 0, bitLength: 7 };
       overrideShift = { parent: -1, shift: 0x400 };
@@ -288,7 +303,7 @@ export function overrideParseItem(item: Item): Item | ItemTab {
   } else if ("id" in item && item.id === "bestiary") {
     const itemTab = item as ItemTab;
 
-    if (platform !== "gba") {
+    if ($gamePlatform !== 0) {
       return itemTab;
     }
 
@@ -540,18 +555,10 @@ export function generateChecksum(
   return formatChecksum(checksum, item.dataType);
 }
 
-export function isGBASave(dataView: DataView, shift: number): boolean {
-  const validator = [
-    0x46, 0x49, 0x4e, 0x41, 0x4c, 0x20, 0x46, 0x41, 0x4e, 0x54, 0x41, 0x53,
-    0x59, 0x20, 0x56, 0x49, 0x20, 0x20, 0x20, 0x20, 0x20, 0x41, 0x44, 0x56,
-    0x41, 0x4e, 0x43, 0x45, 0x20, 0x20, 0x20, 0x20,
-  ]; // "FINAL FANTASY VI     ADVANCE    "
-
-  return checkValidator(validator, shift + 0x1f00, dataView);
-}
-
 function getResources(): Resources {
-  return platform === "gba" ? gbaResources : snesResources;
+  const $gamePlatform = get(gamePlatform);
+
+  return $gamePlatform === 0 ? gbaResources : snesResources;
 }
 
 function generateResources(): void {
@@ -692,10 +699,14 @@ export function updateCharacterNames(slotIndex: number): void {
 }
 
 function getInventoryLength(): number {
-  return platform === "gba" ? 0x120 : 0x100;
+  const $gamePlatform = get(gamePlatform);
+
+  return $gamePlatform === 0 ? 0x120 : 0x100;
 }
 
 function getInventory(offset: number): number[] {
+  const $gamePlatform = get(gamePlatform);
+
   const inventory: number[] = [];
 
   const length = getInventoryLength();
@@ -705,7 +716,7 @@ function getInventory(offset: number): number[] {
   for (let i = 0x0; i < length; i += 0x1) {
     let itemIndex = getInt(itemsOffset + i, "uint8");
 
-    if (platform === "gba") {
+    if ($gamePlatform === 0) {
       itemIndex |= getInt(offset + i, "bit", { bit: 7 }) << 0x8;
     }
 
@@ -720,12 +731,14 @@ function updateInventory(
   itemIndex: number,
   value: number,
 ): void {
+  const $gamePlatform = get(gamePlatform);
+
   const inventory = getInventory(offset);
   const length = getInventoryLength();
 
   const index = inventory.findIndex((index) => index === itemIndex);
 
-  if (platform === "gba") {
+  if ($gamePlatform === 0) {
     value |= (itemIndex & 0x100) >> 0x1;
     itemIndex &= 0xff;
   }
@@ -750,7 +763,9 @@ function getSpellShift(
   partyIndex: number,
   spellIndex: number,
 ): number {
-  if (platform === "gba") {
+  const $gamePlatform = get(gamePlatform);
+
+  if ($gamePlatform === 0) {
     if (partyIndex < 0xc) {
       return partyIndex * 0x40;
     }

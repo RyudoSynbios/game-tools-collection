@@ -1,7 +1,7 @@
 import { get } from "svelte/store";
 
-import { gameRegion } from "$lib/stores";
-import { getDataView, getInt, setInt } from "$lib/utils/bytes";
+import { dataView, gamePlatform, gameRegion } from "$lib/stores";
+import { getInt, setInt } from "$lib/utils/bytes";
 import {
   customGetRegions,
   getSlotShiftsByIdentifier,
@@ -9,21 +9,44 @@ import {
   resetState,
   unpackFile,
 } from "$lib/utils/common/playstation";
-import { checkValidator } from "$lib/utils/validator";
+import { getObjKey } from "$lib/utils/format";
+import { checkValidator, getPlatformRegions } from "$lib/utils/validator";
 
-import type { Item, ItemContainer, ItemInt, ItemMessage } from "$lib/types";
+import type {
+  Item,
+  ItemContainer,
+  ItemInt,
+  ItemMessage,
+  Validator,
+} from "$lib/types";
 
-let platform = "";
+export function setGamePlatform(dataView: DataView): void {
+  const platformRegions = getPlatformRegions("windows").usa as Validator;
+  const key = parseInt(getObjKey(platformRegions, 0));
+  const validator = platformRegions[key];
+
+  if (checkValidator(validator, key, dataView)) {
+    gamePlatform.set(1);
+  } else {
+    gamePlatform.set(0);
+  }
+}
 
 export function beforeInitDataView(dataView: DataView): DataView {
-  platform = isPCSave(dataView) ? "pc" : "ps";
+  const $gamePlatform = get(gamePlatform);
 
-  return unpackFile(dataView);
+  if ($gamePlatform === 0) {
+    return unpackFile(dataView);
+  }
+
+  return dataView;
 }
 
 export function overrideGetRegions(): string[] {
-  if (platform === "pc") {
-    return ["europe"];
+  const $gamePlatform = get(gamePlatform);
+
+  if ($gamePlatform === 1) {
+    return ["usa"];
   }
 
   return customGetRegions();
@@ -34,12 +57,13 @@ export function onInitFailed(): void {
 }
 
 export function overrideParseItem(item: Item): Item {
+  const $gamePlatform = get(gamePlatform);
   const $gameRegion = get(gameRegion);
 
   if (
     "id" in item &&
     item.id === "time" &&
-    [2, 3, 4, 5].includes($gameRegion)
+    ($gamePlatform === 1 || [2, 3, 4, 5].includes($gameRegion))
   ) {
     const itemInt = item as ItemInt;
 
@@ -62,8 +86,10 @@ export function overrideParseContainerItemsShifts(
   shifts: number[],
   index: number,
 ): [boolean, number[] | undefined] {
+  const $gamePlatform = get(gamePlatform);
+
   if (item.id === "slots") {
-    if (platform === "pc") {
+    if ($gamePlatform === 1) {
       if (index === 0) {
         return [false, undefined];
       }
@@ -185,17 +211,16 @@ export function afterSetInt(item: Item): void {
 }
 
 export function beforeSaving(): ArrayBufferLike {
-  return repackFile();
+  const $dataView = get(dataView);
+  const $gamePlatform = get(gamePlatform);
+
+  if ($gamePlatform === 0) {
+    return repackFile();
+  }
+
+  return $dataView.buffer;
 }
 
 export function onReset(): void {
   resetState();
-}
-
-function isPCSave(dataView?: DataView): boolean {
-  const $dataView = getDataView(dataView);
-
-  const validator = [0x73, 0x4e, 0x31, 0x4a];
-
-  return checkValidator(validator, 0x62, $dataView);
 }

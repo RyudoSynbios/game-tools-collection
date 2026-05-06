@@ -29,15 +29,17 @@ import {
 
 const template: GameJson = {
   validator: {
-    regions: {
-      europe: {
-        0x0: [0x64, 0x75, 0xa3, 0x08],
-      },
-      usa: {
-        0x0: [0x64, 0x75, 0xa3, 0x08],
-      },
-      japan: {
-        0x0: [0x64, 0x75, 0xa3, 0x08],
+    platforms: {
+      nintendods: {
+        europe: {
+          0x0: [0x64, 0x75, 0xa3, 0x08],
+        },
+        usa: {
+          0x0: [0x64, 0x75, 0xa3, 0x08],
+        },
+        japan: {
+          0x0: [0x64, 0x75, 0xa3, 0x08],
+        },
       },
     },
     text: "Drag 'n' drop here or click to add a save file.",

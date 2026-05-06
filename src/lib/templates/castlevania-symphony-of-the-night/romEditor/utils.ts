@@ -5,7 +5,6 @@ import {
   dataViewAlt,
   dataViewAltMetas,
   gameRegion,
-  gameTemplate,
 } from "$lib/stores";
 import { getInt, getString, setInt } from "$lib/utils/bytes";
 import Iso9660, { customGetRegions } from "$lib/utils/common/iso9660";
@@ -16,6 +15,7 @@ import {
   importDataViewAltPatch,
   type PatchData,
 } from "$lib/utils/patch";
+import { getPlatformName, getPlatformRegions } from "$lib/utils/validator";
 
 import type {
   Item,
@@ -151,11 +151,13 @@ export function importPatch(patch: Patch<PatchData>): void {
 
 export function generatePatch(): Patch<PatchData> {
   const $gameRegion = get(gameRegion);
-  const $gameTemplate = get(gameTemplate);
 
+  const platform = getPlatformName();
   const regions: string[] = [];
 
-  Object.keys($gameTemplate.validator.regions).forEach((region, index) => {
+  const platformRegions = getPlatformRegions();
+
+  Object.keys(platformRegions).forEach((region, index) => {
     if (
       ($gameRegion === 2 && index === 2) || // japan_japanrev1
       ($gameRegion === 3 && index === 3) || // japanrev2
@@ -166,7 +168,8 @@ export function generatePatch(): Patch<PatchData> {
   });
 
   return generateDataViewAltPatch(
-    "castlevania-symphony-of-the-night-ps",
+    "castlevania-symphony-of-the-night",
+    platform,
     "1.0",
     regions,
   );

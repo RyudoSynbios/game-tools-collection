@@ -13,6 +13,7 @@ export interface PatchData {
 
 export function generateDataViewAltPatch(
   identifier: string,
+  platform: string,
   version: string,
   regions?: string[],
 ): Patch<PatchData> {
@@ -31,6 +32,7 @@ export function generateDataViewAltPatch(
 
   const patch: Patch<PatchData> = {
     identifier,
+    platform,
     version,
     regions,
     data: {

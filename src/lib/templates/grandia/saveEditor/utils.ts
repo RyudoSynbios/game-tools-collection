@@ -1,6 +1,6 @@
 import { get } from "svelte/store";
 
-import { gameRegion } from "$lib/stores";
+import { dataView, gamePlatform, gameRegion } from "$lib/stores";
 import { getInt, setInt, setString } from "$lib/utils/bytes";
 import {
   customGetRegions,
@@ -11,22 +11,44 @@ import {
 } from "$lib/utils/common/playstation";
 import { getObjKey } from "$lib/utils/format";
 import { getResource } from "$lib/utils/parser";
-import { checkValidator } from "$lib/utils/validator";
+import { checkValidator, getPlatformRegions } from "$lib/utils/validator";
 
-import type { Item, ItemContainer, ItemInt, Resource } from "$lib/types";
+import type {
+  Item,
+  ItemContainer,
+  ItemInt,
+  Resource,
+  Validator,
+} from "$lib/types";
 
 import { locationsCoordinates } from "./utils/resource";
 
-let platform = "";
+export function setGamePlatform(dataView: DataView): void {
+  const platformRegions = getPlatformRegions("hdremaster").japan as Validator;
+  const key = parseInt(getObjKey(platformRegions, 0));
+  const validator = platformRegions[key];
+
+  if (checkValidator(validator, key, dataView)) {
+    gamePlatform.set(1);
+  } else {
+    gamePlatform.set(0);
+  }
+}
 
 export function beforeInitDataView(dataView: DataView): DataView {
-  platform = isPCSave(dataView) ? "pc" : "ps";
+  const $gamePlatform = get(gamePlatform);
 
-  return unpackFile(dataView);
+  if ($gamePlatform === 0) {
+    return unpackFile(dataView);
+  }
+
+  return dataView;
 }
 
 export function overrideGetRegions(): string[] {
-  if (platform === "pc") {
+  const $gamePlatform = get(gamePlatform);
+
+  if ($gamePlatform === 1) {
     return ["japan"];
   }
 
@@ -38,9 +60,14 @@ export function onInitFailed(): void {
 }
 
 export function overrideParseItem(item: Item): Item {
+  const $gamePlatform = get(gamePlatform);
   const $gameRegion = get(gameRegion);
 
-  if ("id" in item && item.id === "time" && [1, 2].includes($gameRegion)) {
+  if (
+    "id" in item &&
+    item.id === "time" &&
+    ($gamePlatform === 1 || [1, 2].includes($gameRegion))
+  ) {
     const itemInt = item as ItemInt;
 
     itemInt.operations![0] = { "/": 60 };
@@ -56,10 +83,11 @@ export function overrideParseContainerItemsShifts(
   shifts: number[],
   index: number,
 ): [boolean, number[] | undefined] {
+  const $gamePlatform = get(gamePlatform);
   const $gameRegion = get(gameRegion);
 
   if (item.id === "slots") {
-    if (platform === "pc") {
+    if ($gamePlatform === 1) {
       if (index === 0) {
         return [true, [0x180]];
       }
@@ -211,20 +239,18 @@ export function afterSetInt(item: Item): void {
 }
 
 export function beforeSaving(): ArrayBufferLike {
-  return repackFile();
+  const $dataView = get(dataView);
+  const $gamePlatform = get(gamePlatform);
+
+  if ($gamePlatform === 0) {
+    return repackFile();
+  }
+
+  return $dataView.buffer;
 }
 
 export function onReset(): void {
   resetState();
-}
-
-function isPCSave(dataView: DataView): boolean {
-  const validator = [
-    0x47, 0x72, 0x61, 0x6e, 0x64, 0x69, 0x61, 0x42, 0x75, 0x70, 0x44, 0x61,
-    0x74, 0x61,
-  ]; // "GrandiaBupData"
-
-  return checkValidator(validator, 0x280, dataView);
 }
 
 function updateLocation(offset: number, value = 0x0): void {

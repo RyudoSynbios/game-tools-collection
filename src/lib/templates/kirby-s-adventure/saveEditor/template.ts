@@ -2,10 +2,12 @@ import type { GameJson } from "$lib/types";
 
 const template: GameJson = {
   validator: {
-    regions: {
-      europe_usarev1_france_germany: {},
-      usa_japan: {},
-      canada: {},
+    platforms: {
+      nintendoentertainmentsystem: {
+        europe_usarev1_france_germany: {},
+        usa_japan: {},
+        canada: {},
+      },
     },
     text: "Drag 'n' drop here or click to add a save file.",
     error: "Not a valid save file.",

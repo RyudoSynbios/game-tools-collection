@@ -1,13 +1,14 @@
-import { get } from "svelte/store";
-
-import { gameTemplate } from "$lib/stores";
-
 import { RegionValidator } from "$lib/types";
 
 import { extractBit, getInt, getString } from "../../bytes";
 import debug from "../../debug";
 import { getObjKey, mergeUint8Arrays } from "../../format";
-import { checkValidator, getRegions, reduceConditions } from "../../validator";
+import {
+  checkValidator,
+  getPlatformRegions,
+  getRegions,
+  reduceConditions,
+} from "../../validator";
 import { generateEcc } from "./ecc";
 
 export type Entry = Directory | File;
@@ -408,11 +409,9 @@ export default class Iso9660 {
 }
 
 export function customGetRegions(dataView: DataView, shift: number): string[] {
-  const $gameTemplate = get(gameTemplate);
+  const platformRegions = getPlatformRegions();
 
-  const overridedRegions = Object.entries(
-    $gameTemplate.validator.regions,
-  ).reduce(
+  const overridedRegions = Object.entries(platformRegions).reduce(
     (regions: { [key: string]: RegionValidator }, [region, conditions]) => {
       const shiftedConditions = reduceConditions(
         conditions,

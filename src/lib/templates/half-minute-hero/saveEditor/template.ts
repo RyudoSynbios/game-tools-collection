@@ -6,12 +6,14 @@ import { princess30Levels } from "./utils/resource";
 
 const template: GameJson = {
   validator: {
-    regions: {
-      europe_usa: {
-        0x0: [0x68, 0x73, 0x70, 0x6b], // "hspk"
-      },
-      japan: {
-        0x0: [0x68, 0x73, 0x70, 0x6b], // "hspk"
+    platforms: {
+      playstationportable: {
+        europe_usa: {
+          0x0: [0x68, 0x73, 0x70, 0x6b], // "hspk"
+        },
+        japan: {
+          0x0: [0x68, 0x73, 0x70, 0x6b], // "hspk"
+        },
       },
     },
     text: "Drag 'n' drop here or click to add a save file.",

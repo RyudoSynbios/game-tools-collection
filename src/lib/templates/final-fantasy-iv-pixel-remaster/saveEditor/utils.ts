@@ -1,6 +1,6 @@
 import { get } from "svelte/store";
 
-import { dataJson, gameTemplate } from "$lib/stores";
+import { dataJson } from "$lib/stores";
 import { extractBit, getString } from "$lib/utils/bytes";
 import { getObjKey, lowerize } from "$lib/utils/format";
 import {
@@ -11,7 +11,7 @@ import {
   setJsonValue,
 } from "$lib/utils/json";
 import { updateResources } from "$lib/utils/parser";
-import { checkValidator } from "$lib/utils/validator";
+import { checkValidator, getPlatformRegions } from "$lib/utils/validator";
 
 import type {
   Item,
@@ -61,9 +61,8 @@ interface UserItem {
 export async function beforeInitDataView(
   dataView: DataView,
 ): Promise<DataView> {
-  const $gameTemplate = get(gameTemplate);
-
-  const regionValidator = $gameTemplate.validator.regions.world as Validator;
+  const platformRegions = getPlatformRegions();
+  const regionValidator = platformRegions.world as Validator;
   const key = parseInt(getObjKey(regionValidator, 0));
   const validator = regionValidator[key];
 

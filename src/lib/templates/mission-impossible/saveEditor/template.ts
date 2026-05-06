@@ -2,9 +2,11 @@ import type { GameJson } from "$lib/types";
 
 const template: GameJson = {
   validator: {
-    regions: {
-      europe_usa_japan: {
-        0x12: [0x49, 0x4d, 0x46], // "IMF"
+    platforms: {
+      nintendo64: {
+        europe_usa_japan: {
+          0x12: [0x49, 0x4d, 0x46], // "IMF"
+        },
       },
     },
     text: "Drag 'n' drop here or click to add a save file.",

@@ -98,7 +98,7 @@
   } = {
     gamecube_gcm: {
       name: "GCM",
-      fullName: "Gamecube - GCM",
+      fullName: "GameCube - GCM",
       validator: isGCMFile,
     },
     saturn_backupRam: {

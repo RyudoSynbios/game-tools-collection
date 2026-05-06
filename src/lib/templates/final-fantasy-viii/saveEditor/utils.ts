@@ -1,6 +1,6 @@
 import { get } from "svelte/store";
 
-import { gameRegion } from "$lib/stores";
+import { gamePlatform, gameRegion } from "$lib/stores";
 import {
   bitToOffset,
   copyInt,
@@ -44,22 +44,28 @@ import {
   locationList,
 } from "./utils/resource";
 
-let platform = "";
+export function setGamePlatform(dataView: DataView): void {
+  if (isRemasteredSave(dataView, true)) {
+    gamePlatform.set(1);
+  } else {
+    gamePlatform.set(0);
+  }
+}
 
 export function beforeInitDataView(dataView: DataView): DataView {
-  if (isRemasteredSave(dataView, true)) {
-    platform = "remastered";
+  const $gamePlatform = get(gamePlatform);
 
+  if ($gamePlatform === 1) {
     return decompressRemasteredSave(dataView);
   }
-
-  platform = "ps";
 
   return unpackFile(dataView);
 }
 
 export function overrideGetRegions(): string[] {
-  if (platform === "remastered") {
+  const $gamePlatform = get(gamePlatform);
+
+  if ($gamePlatform === 1) {
     return ["usa", "japan"];
   }
 
@@ -71,6 +77,7 @@ export function onInitFailed(): void {
 }
 
 export function overrideParseItem(item: Item): Item {
+  const $gamePlatform = get(gamePlatform);
   const $gameRegion = get(gameRegion);
 
   if (
@@ -141,7 +148,7 @@ export function overrideParseItem(item: Item): Item {
   } else if ("id" in item && item.id === "remasterExcluded") {
     const itemInt = item as ItemInt;
 
-    itemInt.hidden = platform === "remastered";
+    itemInt.hidden = $gamePlatform === 1;
 
     return itemInt;
   }
@@ -154,8 +161,10 @@ export function overrideParseContainerItemsShifts(
   shifts: number[],
   index: number,
 ): [boolean, number[] | undefined] {
+  const $gamePlatform = get(gamePlatform);
+
   if (item.id === "slots") {
-    if (platform === "remastered") {
+    if ($gamePlatform === 1) {
       if (index === 0) {
         return [false, undefined];
       }
@@ -810,7 +819,9 @@ export function generateChecksum(item: ItemChecksum): number {
 }
 
 export function beforeSaving(): ArrayBufferLike {
-  if (platform === "remastered") {
+  const $gamePlatform = get(gamePlatform);
+
+  if ($gamePlatform === 1) {
     return compressRemasteredSave();
   }
 

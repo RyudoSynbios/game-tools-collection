@@ -4,18 +4,20 @@ import { courses } from "./utils/resource";
 
 const template: GameJson = {
   validator: {
-    regions: {
-      europe: {
-        $and: [
-          { 0x34: [0x44, 0x41] }, // "DA"
-          { 0x1dc: [0x48, 0x49] }, // "HI"
-        ],
-      },
-      usa_japan: {
-        $and: [
-          { 0x34: [0x44, 0x41] }, // "DA"
-          { 0x1dc: [0x48, 0x49] }, // "HI"
-        ],
+    platforms: {
+      nintendo64: {
+        europe: {
+          $and: [
+            { 0x34: [0x44, 0x41] }, // "DA"
+            { 0x1dc: [0x48, 0x49] }, // "HI"
+          ],
+        },
+        usa_japan: {
+          $and: [
+            { 0x34: [0x44, 0x41] }, // "DA"
+            { 0x1dc: [0x48, 0x49] }, // "HI"
+          ],
+        },
       },
     },
     text: "Drag 'n' drop here or click to add a save file.",

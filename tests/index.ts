@@ -34,20 +34,14 @@ export function getRandomSave(exclude: string): string {
       recursive: true,
       withFileTypes: true,
     })
-    .filter((dirent) => dirent.isFile())
+    .filter((dirent) => dirent.isFile() && !dirent.name.match(/^\./))
     .map((file) => {
-      const split = file.parentPath.split("/");
+      const index = file.parentPath.indexOf(`${game.name}/`);
 
-      if (split.at(-2) === game.name) {
-        return `${split.at(-1)}/${file.name}`;
-      }
-
-      return file.name;
+      return `${file.parentPath.substring(index)}/${file.name}`;
     });
 
-  const save = saves[getRandomNumber(0, saves.length - 1)];
-
-  return `${game.name}/${save}`;
+  return saves[getRandomNumber(0, saves.length - 1)];
 }
 
 let page: Page;
@@ -112,15 +106,15 @@ export function defaultTests(game: string, platforms: string[]): void {
     });
 
     test("should not load a deleted standard save", async () => {
-      await saveShouldBeRejected(`${game}/deleted.bin`);
+      await saveShouldBeRejected(`${game}/dreamcast/deleted.bin`);
     });
   } else if (platforms.includes("game-boy-advance")) {
     test("should not load a wrong GameShark save", async () => {
-      await saveShouldBeRejected(`${game}/bad.sps`);
+      await saveShouldBeRejected(`${game}/game-boy-advance/bad.sps`);
     });
   } else if (platforms.includes("nintendo-ds")) {
     test("should not load a wrong Action Replay Max DS save", async () => {
-      await saveShouldBeRejected(`${game}/bad.duc`);
+      await saveShouldBeRejected(`${game}/nintendo-ds/bad.duc`);
     });
   } else if (platforms.includes("playstation")) {
     test("should not load an empty standard save", async () => {
@@ -128,15 +122,15 @@ export function defaultTests(game: string, platforms: string[]): void {
     });
 
     test("should not load a wrong DexDrive save", async () => {
-      await saveShouldBeRejected(`${game}/bad.gme`);
+      await saveShouldBeRejected(`${game}/playstation/bad.gme`);
     });
   } else if (platforms.includes("playstation-2")) {
     test("should not load an empty standard save", async () => {
-      await saveShouldBeRejected("common/playstation2/empty.ps2");
+      await saveShouldBeRejected("common/playstation-2/empty.ps2");
     });
 
     test("should not load an unformatted standard save", async () => {
-      await saveShouldBeRejected("common/playstation2/unformated.ps2");
+      await saveShouldBeRejected("common/playstation-2/unformated.ps2");
     });
   }
 }

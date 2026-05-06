@@ -13,9 +13,11 @@ import {
 
 const template: GameJson = {
   validator: {
-    regions: {
-      europe_usa_france_germany_italy_spain: {},
-      japan: {},
+    platforms: {
+      gameboy: {
+        europe_usa_france_germany_italy_spain: {},
+        japan: {},
+      },
     },
     text: "Drag 'n' drop here or click to add a save file.",
     error: "Not a valid save file.",

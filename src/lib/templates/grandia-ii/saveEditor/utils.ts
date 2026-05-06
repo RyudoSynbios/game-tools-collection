@@ -1,3 +1,6 @@
+import { get } from "svelte/store";
+
+import { dataView, gamePlatform } from "$lib/stores";
 import { getInt, setInt } from "$lib/utils/bytes";
 import {
   customGetRegions,
@@ -7,20 +10,43 @@ import {
   resetState,
   unpackFile,
 } from "$lib/utils/common/playstation2";
-import { checkValidator } from "$lib/utils/validator";
+import { getObjKey } from "$lib/utils/format";
+import { checkValidator, getPlatformRegions } from "$lib/utils/validator";
 
-import type { Item, ItemContainer, ItemInt, Resource } from "$lib/types";
+import type {
+  Item,
+  ItemContainer,
+  ItemInt,
+  Resource,
+  Validator,
+} from "$lib/types";
 
-let platform = "";
+export function setGamePlatform(dataView: DataView): void {
+  const platformRegions = getPlatformRegions("hdremaster").europe as Validator;
+  const key = parseInt(getObjKey(platformRegions, 0));
+  const validator = platformRegions[key];
+
+  if (checkValidator(validator, key, dataView)) {
+    gamePlatform.set(1);
+  } else {
+    gamePlatform.set(0);
+  }
+}
 
 export function beforeInitDataView(dataView: DataView): DataView {
-  platform = isPCSave(dataView) ? "pc" : "ps2";
+  const $gamePlatform = get(gamePlatform);
 
-  return unpackFile(dataView);
+  if ($gamePlatform === 0) {
+    return unpackFile(dataView);
+  }
+
+  return dataView;
 }
 
 export function overrideGetRegions(): string[] {
-  if (platform === "pc") {
+  const $gamePlatform = get(gamePlatform);
+
+  if ($gamePlatform === 1) {
     return ["europe"];
   }
 
@@ -32,7 +58,9 @@ export function onInitFailed(): void {
 }
 
 export function overrideParseItem(item: Item): Item {
-  if ("id" in item && item.id === "slots" && platform !== "pc") {
+  const $gamePlatform = get(gamePlatform);
+
+  if ("id" in item && item.id === "slots" && $gamePlatform === 0) {
     const itemContainer = item as ItemContainer;
 
     const saves = getRegionSaves();
@@ -48,8 +76,10 @@ export function overrideParseContainerItemsShifts(
   shifts: number[],
   index: number,
 ): [boolean, number[] | undefined] {
+  const $gamePlatform = get(gamePlatform);
+
   if (item.id === "slots") {
-    if (platform === "pc") {
+    if ($gamePlatform === 1) {
       if (index === 0) {
         return [true, [0x220]];
       }
@@ -147,23 +177,26 @@ export function overrideSetInt(item: Item, value: string): boolean {
 }
 
 export function beforeSaving(): ArrayBufferLike {
-  return repackFile();
+  const $dataView = get(dataView);
+  const $gamePlatform = get(gamePlatform);
+
+  if ($gamePlatform === 0) {
+    return repackFile();
+  }
+
+  return $dataView.buffer;
 }
 
 export function onReset(): void {
   resetState();
 }
 
-function isPCSave(dataView: DataView): boolean {
-  const validator = [0x47, 0x52, 0x41, 0x4e, 0x44, 0x49, 0x41, 0x32]; // "GRANDIA2"
-
-  return checkValidator(validator, 0x0, dataView);
-}
-
 export function getSlotNames(): Resource {
+  const $gamePlatform = get(gamePlatform);
+
   const saves = getRegionSaves();
 
-  if (platform === "pc") {
+  if ($gamePlatform === 1) {
     return { 0x0: "Slot 1" };
   }
 

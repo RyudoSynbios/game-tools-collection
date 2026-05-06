@@ -18,8 +18,10 @@ const statsHint =
 const template: GameJson = {
   validator: {
     fileNames: [/ff7rebirth([0-9]+).sav/],
-    regions: {
-      world: true,
+    platforms: {
+      steam: {
+        world: true,
+      },
     },
     text: "Drag 'n' drop here or click to add a save file.",
     hint: 'Works with "ff7rebirth{xxx}.sav" files.',

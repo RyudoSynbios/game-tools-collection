@@ -20,8 +20,9 @@ test.describe(game, () => {
 
   // prettier-ignore
   const tests: Test[] = [
-    ["should load a standard Main Story save (World)"  ,     "ff7remake001.sav", ["i|50016"]],
-    ["should load a standard INTERmission save (World)", "ff7remakeplus001.sav", ["i|50000"]],
+    // Steam
+    ["should load a standard Main Story save (World)"  , "steam/ff7remake001.sav"    , ["i|50016"]],
+    ["should load a standard INTERmission save (World)", "steam/ff7remakeplus001.sav", ["i|50000"]],
   ];
 
   tests.forEach(([title, saveFilePath, args]) => {

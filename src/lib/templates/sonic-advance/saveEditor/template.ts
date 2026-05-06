@@ -2,16 +2,18 @@ import type { GameJson } from "$lib/types";
 
 const template: GameJson = {
   validator: {
-    regions: {
-      europe: {
-        $or: [...Array(0xa).keys()].map((index) => ({
-          [index * 0x1000]: [0x50, 0x49, 0x52, 0x4f], // "PIRO"
-        })),
-      },
-      usa_japan: {
-        $or: [...Array(0xa).keys()].map((index) => ({
-          [index * 0x1000]: [0x50, 0x49, 0x52, 0x4f], // "PIRO"
-        })),
+    platforms: {
+      gameboyadvance: {
+        europe: {
+          $or: [...Array(0xa).keys()].map((index) => ({
+            [index * 0x1000]: [0x50, 0x49, 0x52, 0x4f], // "PIRO"
+          })),
+        },
+        usa_japan: {
+          $or: [...Array(0xa).keys()].map((index) => ({
+            [index * 0x1000]: [0x50, 0x49, 0x52, 0x4f], // "PIRO"
+          })),
+        },
       },
     },
     text: "Drag 'n' drop here or click to add a save file.",
