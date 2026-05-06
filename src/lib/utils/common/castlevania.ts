@@ -1,13 +1,13 @@
 import pako from "pako";
 import { get } from "svelte/store";
 
-import { dataView, dataViewAlt, gameRegion, gameTemplate } from "$lib/stores";
+import { dataView, dataViewAlt, gameRegion } from "$lib/stores";
 
 import { Validator } from "$lib/types";
 
 import { getInt, setInt } from "../bytes";
 import { getObjKey, mergeUint8Arrays } from "../format";
-import { checkValidator, getRegions } from "../validator";
+import { checkValidator, getPlatformRegions, getRegions } from "../validator";
 
 const magic = [0x53, 0x54, 0x41, 0x54, 0x52, 0x41, 0x4d, 0x30]; // "STATRAM0"
 
@@ -44,7 +44,6 @@ export function extractCastlevaniaCollectionSaves(
   dataView: DataView,
 ): DataView {
   const $dataViewAlt = get(dataViewAlt);
-  const $gameTemplate = get(gameTemplate);
 
   const offsets = gameOffsets[game];
 
@@ -53,8 +52,9 @@ export function extractCastlevaniaCollectionSaves(
   let saveOffset = 0x0;
 
   offsets.forEach((offset, index) => {
-    const region = Object.keys($gameTemplate.validator.regions)[index];
-    const regionValidator = $gameTemplate.validator.regions[region] as Validator; // prettier-ignore
+    const platformRegions = getPlatformRegions();
+    const region = Object.keys(platformRegions)[index];
+    const regionValidator = platformRegions[region] as Validator;
     const key = parseInt(getObjKey(regionValidator, 0));
     const validator = regionValidator[key];
 
@@ -135,11 +135,10 @@ export function customGetRegions(dataView: DataView, shift: number): string[] {
 
 export function getSaveIndex(): number {
   const $gameRegion = get(gameRegion);
-  const $gameTemplate = get(gameTemplate);
 
-  const currentRegion = Object.keys($gameTemplate.validator.regions)[
-    $gameRegion
-  ];
+  const platformRegions = getPlatformRegions();
+
+  const currentRegion = Object.keys(platformRegions)[$gameRegion];
 
   return regions.findIndex((region) => region === currentRegion);
 }

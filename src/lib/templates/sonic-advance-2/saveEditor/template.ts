@@ -4,9 +4,11 @@ import { progressions } from "./utils/resource";
 
 const template: GameJson = {
   validator: {
-    regions: {
-      europe_usa_japan: {
-        0x0: [0x4d, 0x47, 0x47, 0x45], // "MGGE"
+    platforms: {
+      gameboyadvance: {
+        europe_usa_japan: {
+          0x0: [0x4d, 0x47, 0x47, 0x45], // "MGGE"
+        },
       },
     },
     text: "Drag 'n' drop here or click to add a save file.",

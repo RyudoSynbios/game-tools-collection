@@ -27,9 +27,11 @@ import {
 const template: GameJson = {
   validator: {
     fileNames: [/^Story_Slot([0-9]+)/],
-    regions: {
-      world: {
-        0x0: [0x7d, 0x6d, 0x7d, 0x6e],
+    platforms: {
+      steam: {
+        world: {
+          0x0: [0x7d, 0x6d, 0x7d, 0x6e],
+        },
       },
     },
     text: "Drag 'n' drop here or click to add a save file.",

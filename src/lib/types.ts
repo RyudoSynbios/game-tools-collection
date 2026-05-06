@@ -140,7 +140,7 @@ export interface Platform {
 export interface GameJson {
   validator: {
     fileNames?: (RegExp | string)[];
-    regions: { [key: string]: RegionValidator | boolean };
+    platforms: { [platform: string]: GameRegion };
     text: string;
     hint?: string;
     error: string;
@@ -161,6 +161,10 @@ export interface GameJson {
   resourcesOrder?: {
     [key: string]: number[];
   };
+}
+
+export interface GameRegion {
+  [region: string]: RegionValidator | boolean;
 }
 
 export interface ItemBitflag {
@@ -417,6 +421,7 @@ export interface LogicalOperator<T> {
 
 export interface Patch<T> {
   identifier: string;
+  platform: string;
   version: string;
   regions?: string[];
   data: T;

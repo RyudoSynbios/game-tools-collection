@@ -16,12 +16,14 @@ import {
 
 const template: GameJson = {
   validator: {
-    regions: {
-      europe_usa: {
-        0xf000: [0x77, 0x61, 0x72, 0x73], // "wars"
-      },
-      japan: {
-        0xf000: [0x77, 0x61, 0x72, 0x73], // "wars"
+    platforms: {
+      gameboyadvance: {
+        europe_usa: {
+          0xf000: [0x77, 0x61, 0x72, 0x73], // "wars"
+        },
+        japan: {
+          0xf000: [0x77, 0x61, 0x72, 0x73], // "wars"
+        },
       },
     },
     text: "Drag 'n' drop here or click to add a save file.",

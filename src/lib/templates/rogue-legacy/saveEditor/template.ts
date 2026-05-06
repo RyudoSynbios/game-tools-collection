@@ -5,8 +5,10 @@ import { gears, runes } from "./utils/resource";
 const template: GameJson = {
   validator: {
     fileNames: ["RogueLegacyBP.rcdat", "RogueLegacyPlayer.rcdat"],
-    regions: {
-      world: true,
+    platforms: {
+      steam: {
+        world: true,
+      },
     },
     text: "Drag 'n' drop here or click to add a save file.",
     hint: 'Only works with v1.4.0 or above.\nMain: "RogueLegacyPlayer.rcdat"\nManor: "RogueLegacyBP.rcdat"',

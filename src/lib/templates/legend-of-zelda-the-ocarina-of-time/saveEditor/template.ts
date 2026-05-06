@@ -2,15 +2,17 @@ import type { GameJson } from "$lib/types";
 
 const template: GameJson = {
   validator: {
-    regions: {
-      europe: {
-        0x7: [0x5a, 0x45, 0x4c, 0x44, 0x41], // "ZELDA"
-      },
-      usa: {
-        0x7: [0x5a, 0x45, 0x4c, 0x44, 0x41], // "ZELDA"
-      },
-      japan: {
-        0x7: [0x5a, 0x45, 0x4c, 0x44, 0x41], // "ZELDA"
+    platforms: {
+      nintendo64: {
+        europe: {
+          0x7: [0x5a, 0x45, 0x4c, 0x44, 0x41], // "ZELDA"
+        },
+        usa: {
+          0x7: [0x5a, 0x45, 0x4c, 0x44, 0x41], // "ZELDA"
+        },
+        japan: {
+          0x7: [0x5a, 0x45, 0x4c, 0x44, 0x41], // "ZELDA"
+        },
       },
     },
     text: "Drag 'n' drop here or click to add a save file.",

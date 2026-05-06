@@ -12,7 +12,7 @@ import {
   importDataViewAltPatch,
   type PatchData,
 } from "$lib/utils/patch";
-import { getRegionName } from "$lib/utils/validator";
+import { getPlatformName, getRegionName } from "$lib/utils/validator";
 
 import type {
   Item,
@@ -316,10 +316,12 @@ export function importPatch(patch: Patch<PatchData>): void {
 }
 
 export function generatePatch(): Patch<PatchData> {
+  const platform = getPlatformName();
   const regions = [getRegionName()];
 
   return generateDataViewAltPatch(
-    "shining-the-holy-ark-saturn",
+    "shining-the-holy-ark",
+    platform,
     "1.0",
     regions,
   );

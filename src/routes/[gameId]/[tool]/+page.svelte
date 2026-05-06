@@ -16,6 +16,7 @@
     fileHeaderShift,
     fileName,
     gameJson,
+    gamePlatform,
     gameRegion,
     gameTemplate,
     gameUtils,
@@ -26,10 +27,13 @@
   } from "$lib/stores";
   import { updateChecksums } from "$lib/utils/checksum";
   import { formatPlatforms, getGame } from "$lib/utils/db.js";
+  import debug from "$lib/utils/debug";
   import { capitalize, setLocalStorage, utilsExists } from "$lib/utils/format";
   import { enrichGameJson } from "$lib/utils/parser";
   import { reset } from "$lib/utils/state";
   import {
+    getPlatformName,
+    getPlatformRegions,
     getRegionIndex,
     getRegionName,
     getRegions,
@@ -146,7 +150,7 @@
       return false;
     }
 
-    const regions = Object.keys($gameTemplate.validator.regions);
+    const regions = Object.keys(getPlatformRegions());
 
     const isLocalized = $gameTemplate.localization.regions.includes(
       regions[$gameRegion],
@@ -189,6 +193,12 @@
     fileNameTmp = file.name;
     fileHeaderShiftTmp = 0x0;
 
+    $gamePlatform = -1;
+
+    if (Object.keys($gameTemplate.validator.platforms).length === 1) {
+      $gamePlatform = 0;
+    }
+
     if (utilsExists("initHeaderShift")) {
       fileHeaderShiftTmp = $gameUtils.initHeaderShift(dataViewTmp);
     }
@@ -198,6 +208,11 @@
         dataViewTmp,
         fileHeaderShiftTmp,
       );
+    }
+
+    if ($gamePlatform === -1) {
+      debug.error("Platform not defined on a multi-platform tool.");
+      return;
     }
 
     if (utilsExists("overrideGetRegions")) {
@@ -286,6 +301,12 @@
         if (patch.identifier !== page.params["gameId"]) {
           patchIsLoading = false;
           patchError = "bad identifier";
+          return;
+        }
+
+        if (patch.platform !== getPlatformName()) {
+          patchIsLoading = false;
+          patchError = "bad platform";
           return;
         }
 

@@ -20,13 +20,14 @@ test.describe(game, () => {
 
   // prettier-ignore
   const tests: Test[] = [
-    ["should not load a standard save with bad region", "europe.srm", ["r|japan" , "s|6", "n|English"]],
-    ["should load a standard save (Europe)"           , "europe.eep", ["r|europe", "c|0x09f4", "i|300", "w|301", "c|0x09f5"]],
-    ["should load a standard save (USA)"              ,    "usa.eep", ["r|usa"   , "c|0x0641", "i|300", "w|301", "c|0x0642"]],
-    ["should load a standard save (Japan)"            ,  "japan.eep", ["r|japan" , "c|0x0641", "i|300", "w|301", "c|0x0642"]],
-    ["should load a SRM save (Europe)"                , "europe.srm", ["r|europe", "c|0x09f4", "i|300", "w|301", "c|0x09f5"]],
-    ["should load a SRM save (USA)"                   ,    "usa.srm", ["r|usa"   , "c|0x0641", "i|300", "w|301", "c|0x0642"]],
-    ["should load a SRM save (Japan)"                 ,  "japan.srm", ["r|japan" , "c|0x0641", "i|300", "w|301", "c|0x0642"]],
+    // Nintendo 64
+    ["should not load a standard save with bad region", "nintendo-64/europe.srm", ["r|japan" , "s|6", "n|English"]],
+    ["should load a standard save (Europe)"           , "nintendo-64/europe.eep", ["r|europe", "c|0x09f4", "i|300", "w|301", "c|0x09f5"]],
+    ["should load a standard save (USA)"              , "nintendo-64/usa.eep"   , ["r|usa"   , "c|0x0641", "i|300", "w|301", "c|0x0642"]],
+    ["should load a standard save (Japan)"            , "nintendo-64/japan.eep" , ["r|japan" , "c|0x0641", "i|300", "w|301", "c|0x0642"]],
+    ["should load a SRM save (Europe)"                , "nintendo-64/europe.srm", ["r|europe", "c|0x09f4", "i|300", "w|301", "c|0x09f5"]],
+    ["should load a SRM save (USA)"                   , "nintendo-64/usa.srm"   , ["r|usa"   , "c|0x0641", "i|300", "w|301", "c|0x0642"]],
+    ["should load a SRM save (Japan)"                 , "nintendo-64/japan.srm" , ["r|japan" , "c|0x0641", "i|300", "w|301", "c|0x0642"]],
   ];
 
   tests.forEach(([title, saveFilePath, args]) => {

@@ -1,10 +1,16 @@
 import { get } from "svelte/store";
 
-import { dataViewAlt, gameRegion, gameTemplate } from "$lib/stores";
+import {
+  dataViewAlt,
+  gamePlatform,
+  gameRegion,
+  gameTemplate,
+} from "$lib/stores";
 import { getBigInt, getInt, isDataViewAltExists } from "$lib/utils/bytes";
 import { getObjKey } from "$lib/utils/format";
 
 import type {
+  GameRegion,
   ItemIntCondition,
   LogicalOperator,
   RegionValidator,
@@ -99,10 +105,32 @@ export function checkValidator(
   });
 }
 
-export function getRegionIndex(region: string): number {
+export function getPlatformName(): string {
+  const $gamePlatform = get(gamePlatform);
   const $gameTemplate = get(gameTemplate);
 
-  const regionIndex = Object.keys($gameTemplate.validator.regions).findIndex(
+  return getObjKey($gameTemplate.validator.platforms, $gamePlatform);
+}
+
+export function getPlatformRegions(): GameRegion {
+  const $gamePlatform = get(gamePlatform);
+  const $gameTemplate = get(gameTemplate);
+
+  const platforms = $gameTemplate.validator.platforms;
+
+  const platform = getObjKey(platforms, $gamePlatform);
+
+  if (!platform || !platforms[platform]) {
+    return {};
+  }
+
+  return platforms[platform];
+}
+
+export function getRegionIndex(region: string): number {
+  const platformRegions = getPlatformRegions();
+
+  const regionIndex = Object.keys(platformRegions).findIndex(
     (item) => item === region,
   );
 
@@ -111,24 +139,24 @@ export function getRegionIndex(region: string): number {
 
 export function getRegionName(regionIndex?: number): string {
   const $gameRegion = get(gameRegion);
-  const $gameTemplate = get(gameTemplate);
+
+  const platformRegions = getPlatformRegions();
 
   if (regionIndex === undefined) {
     regionIndex = $gameRegion;
   }
 
-  return getObjKey($gameTemplate.validator.regions, regionIndex);
+  return getObjKey(platformRegions, regionIndex);
 }
 
 export function getRegionValidator(
   offset: number,
   regionIndex?: number,
 ): number[] {
-  const $gameTemplate = get(gameTemplate);
-
+  const platformRegions = getPlatformRegions();
   const region = getRegionName(regionIndex);
 
-  const validator = $gameTemplate.validator.regions[region] as Validator;
+  const validator = platformRegions[region] as Validator;
 
   return validator[offset];
 }
@@ -138,44 +166,45 @@ export function getRegions(
   shift = 0x0,
   overridedRegions?: { [key: string]: RegionValidator },
 ): string[] {
-  const $gameTemplate = get(gameTemplate);
+  const platformRegions = getPlatformRegions();
 
-  const regions = Object.entries(
-    overridedRegions || $gameTemplate.validator.regions,
-  ).reduce((regions: string[], [region, conditions]) => {
-    if (
-      checkConditions(conditions, (condition: any) => {
-        if (condition === true) {
+  return Object.entries(overridedRegions || platformRegions).reduce(
+    (regions: string[], [region, conditions]) => {
+      if (
+        checkConditions(conditions, (condition: any) => {
+          if (condition === true) {
+            return true;
+          }
+
+          const offset = parseInt(getObjKey(condition, 0));
+          const array = condition[offset];
+
+          if (isNaN(offset) || !array) {
+            return false;
+          }
+
+          const length = array.length;
+
+          for (let i = offset; i < offset + length; i += 0x1) {
+            if (i >= dataView.byteLength) {
+              return false;
+            }
+
+            if (
+              getInt(i + shift, "uint8", {}, dataView) !== array[i - offset]
+            ) {
+              return false;
+            }
+          }
+
           return true;
-        }
+        })
+      ) {
+        regions.push(region);
+      }
 
-        const offset = parseInt(getObjKey(condition, 0));
-        const array = condition[offset];
-
-        if (isNaN(offset) || !array) {
-          return false;
-        }
-
-        const length = array.length;
-
-        for (let i = offset; i < offset + length; i += 0x1) {
-          if (i >= dataView.byteLength) {
-            return false;
-          }
-
-          if (getInt(i + shift, "uint8", {}, dataView) !== array[i - offset]) {
-            return false;
-          }
-        }
-
-        return true;
-      })
-    ) {
-      regions.push(region);
-    }
-
-    return regions;
-  }, []);
-
-  return regions;
+      return regions;
+    },
+    [],
+  );
 }

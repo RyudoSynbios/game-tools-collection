@@ -6,12 +6,14 @@ import { techTypes } from "../saveEditor/utils/resource";
 
 const template: GameJson = {
   validator: {
-    regions: {
-      usa: {
-        0xffb0: [0x43, 0x33, 0x41, 0x43, 0x54, 0x45], // "C3ACTE"
-      },
-      japan: {
-        0xffb0: [0x43, 0x33, 0x41, 0x43, 0x54, 0x4a], // "C3ACTJ"
+    platforms: {
+      supernintendo: {
+        usa: {
+          0xffb0: [0x43, 0x33, 0x41, 0x43, 0x54, 0x45], // "C3ACTE"
+        },
+        japan: {
+          0xffb0: [0x43, 0x33, 0x41, 0x43, 0x54, 0x4a], // "C3ACTJ"
+        },
       },
     },
     text: "Drag 'n' drop here or click to add a rom file.",

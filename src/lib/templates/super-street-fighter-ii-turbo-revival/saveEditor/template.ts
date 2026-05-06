@@ -2,12 +2,14 @@ import type { GameJson } from "$lib/types";
 
 const template: GameJson = {
   validator: {
-    regions: {
-      europe_usa_japan: {
-        $or: [
-          { 0x0: [0x53, 0x50, 0x32, 0x58, 0x20, 0x56, 0x30, 0x35] }, // "SP2X V05"
-          { 0x100: [0x53, 0x50, 0x32, 0x58, 0x20, 0x56, 0x30, 0x35] }, // "SP2X V05"
-        ],
+    platforms: {
+      gameboyadvance: {
+        europe_usa_japan: {
+          $or: [
+            { 0x0: [0x53, 0x50, 0x32, 0x58, 0x20, 0x56, 0x30, 0x35] }, // "SP2X V05"
+            { 0x100: [0x53, 0x50, 0x32, 0x58, 0x20, 0x56, 0x30, 0x35] }, // "SP2X V05"
+          ],
+        },
       },
     },
     text: "Drag 'n' drop here or click to add a save file.",

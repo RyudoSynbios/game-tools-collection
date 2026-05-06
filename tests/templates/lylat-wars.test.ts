@@ -20,18 +20,19 @@ test.describe(game, () => {
 
   // prettier-ignore
   const tests: Test[] = [
-    ["should load a standard save (Europe)"       ,      "europe.eep", ["r|europe"   , "s|2", "c|0x950a", "i|PAS", "w|QAS", "c|0x954a"]],
-    ["should load a standard save (USA)"          ,         "usa.eep", ["r|usa"      , "s|2", "c|0x95c2", "i|PAS", "w|QAS", "c|0x9582"]],
-    ["should load a standard save (USA) (Rev 1)"  ,    "usa-rev1.eep", ["r|usa"      , "s|2", "c|0x95c2", "i|PAS", "w|QAS", "c|0x9582"]],
-    ["should load a standard save (Japan)"        ,       "japan.eep", ["r|japan"    , "s|2", "c|0x958d", "i|PAS", "w|QAS", "c|0x95cd"]],
-    ["should load a standard save (Japan) (Rev 1)",  "japan-rev1.eep", ["r|japan"    , "s|2", "c|0x958d", "i|PAS", "w|QAS", "c|0x95cd"]],
-    ["should load a standard save (Australia)"    ,   "australia.eep", ["r|australia", "s|2", "c|0x950a", "i|PAS", "w|QAS", "c|0x954a"]],
-    ["should load a SRM save (Europe)"            ,      "europe.srm", ["r|europe"   , "s|2", "c|0x950a", "i|PAS", "w|QAS", "c|0x954a"]],
-    ["should load a SRM save (USA)"               ,         "usa.srm", ["r|usa"      , "s|2", "c|0x95c2", "i|PAS", "w|QAS", "c|0x9582"]],
-    ["should load a SRM save (USA) (Rev 1)"       ,    "usa-rev1.srm", ["r|usa"      , "s|2", "c|0x95c2", "i|PAS", "w|QAS", "c|0x9582"]],
-    ["should load a SRM save (Japan)"             ,       "japan.srm", ["r|japan"    , "s|2", "c|0x958d", "i|PAS", "w|QAS", "c|0x95cd"]],
-    ["should load a SRM save (Japan) (Rev 1)"     ,  "japan-rev1.srm", ["r|japan"    , "s|2", "c|0x958d", "i|PAS", "w|QAS", "c|0x95cd"]],
-    ["should load a SRM save (Australia)"         ,   "australia.srm", ["r|australia", "s|2", "c|0x950a", "i|PAS", "w|QAS", "c|0x954a"]],
+    // Nintendo 64
+    ["should load a standard save (Europe)"       , "nintendo-64/europe.eep"    , ["r|europe"   , "s|2", "c|0x950a", "i|PAS", "w|QAS", "c|0x954a"]],
+    ["should load a standard save (USA)"          , "nintendo-64/usa.eep"       , ["r|usa"      , "s|2", "c|0x95c2", "i|PAS", "w|QAS", "c|0x9582"]],
+    ["should load a standard save (USA) (Rev 1)"  , "nintendo-64/usa-rev1.eep"  , ["r|usa"      , "s|2", "c|0x95c2", "i|PAS", "w|QAS", "c|0x9582"]],
+    ["should load a standard save (Japan)"        , "nintendo-64/japan.eep"     , ["r|japan"    , "s|2", "c|0x958d", "i|PAS", "w|QAS", "c|0x95cd"]],
+    ["should load a standard save (Japan) (Rev 1)", "nintendo-64/japan-rev1.eep", ["r|japan"    , "s|2", "c|0x958d", "i|PAS", "w|QAS", "c|0x95cd"]],
+    ["should load a standard save (Australia)"    , "nintendo-64/australia.eep" , ["r|australia", "s|2", "c|0x950a", "i|PAS", "w|QAS", "c|0x954a"]],
+    ["should load a SRM save (Europe)"            , "nintendo-64/europe.srm"    , ["r|europe"   , "s|2", "c|0x950a", "i|PAS", "w|QAS", "c|0x954a"]],
+    ["should load a SRM save (USA)"               , "nintendo-64/usa.srm"       , ["r|usa"      , "s|2", "c|0x95c2", "i|PAS", "w|QAS", "c|0x9582"]],
+    ["should load a SRM save (USA) (Rev 1)"       , "nintendo-64/usa-rev1.srm"  , ["r|usa"      , "s|2", "c|0x95c2", "i|PAS", "w|QAS", "c|0x9582"]],
+    ["should load a SRM save (Japan)"             , "nintendo-64/japan.srm"     , ["r|japan"    , "s|2", "c|0x958d", "i|PAS", "w|QAS", "c|0x95cd"]],
+    ["should load a SRM save (Japan) (Rev 1)"     , "nintendo-64/japan-rev1.srm", ["r|japan"    , "s|2", "c|0x958d", "i|PAS", "w|QAS", "c|0x95cd"]],
+    ["should load a SRM save (Australia)"         , "nintendo-64/australia.srm" , ["r|australia", "s|2", "c|0x950a", "i|PAS", "w|QAS", "c|0x954a"]],
   ];
 
   tests.forEach(([title, saveFilePath, args]) => {

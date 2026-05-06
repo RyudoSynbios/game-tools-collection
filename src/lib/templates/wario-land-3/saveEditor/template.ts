@@ -2,12 +2,14 @@ import type { GameJson } from "$lib/types";
 
 const template: GameJson = {
   validator: {
-    regions: {
-      world: {
-        $and: [
-          { 0x0: [0x0, 0x0, 0x0, 0x0] },
-          { 0x380: [0x77, 0x61, 0x72, 0x33] }, // "war3"
-        ],
+    platforms: {
+      gameboycolor: {
+        world: {
+          $and: [
+            { 0x0: [0x0, 0x0, 0x0, 0x0] },
+            { 0x380: [0x77, 0x61, 0x72, 0x33] }, // "war3"
+          ],
+        },
       },
     },
     text: "Drag 'n' drop here or click to add a save file.",

@@ -20,19 +20,20 @@ test.describe(game, () => {
   defaultTests(game, ["game-boy-color"]);
 
   test("should not load an empty standard save", async () => {
-    await saveShouldBeRejected(`${game}/empty.sav`);
+    await saveShouldBeRejected(`${game}/game-boy-color/empty.sav`);
   });
 
   test("should not load a deleted standard save", async () => {
-    await saveShouldBeRejected(`${game}/deleted.sav`);
+    await saveShouldBeRejected(`${game}/game-boy-color/deleted.sav`);
   });
 
   // prettier-ignore
   const tests: Test[] = [
-    ["should not load a standard save with bad region",        "japan.sav", ["r|europe"   , 't|["Slot 1"]', "n|ごうかく"]],
-    ["should load a standard save (Europe)"           ,       "europe.sav", ["r|europe"   , 't|["Slot 2"]', "c|0xcfb8", "i|PASS"   , "w|QASS"  , "c|0xcfb9"]],
-    ["should load a standard save (USA, Australia)"   , "usaaustralia.sav", ["r|australia", 't|["Slot 3"]', "c|0xcfb8", "i|PASS"   , "w|QASS"  , "c|0xcfb9"]],
-    ["should load a standard save (Japan)"            ,        "japan.sav", ["r|japan"    , 't|["Slot 1"]', "c|0x0515", "i|ごうかく", "w|ざうかく", "c|0x0516"]],
+    // Game Boy Color
+    ["should not load a standard save with bad region", "game-boy-color/japan.sav"       , ["r|europe"   , 't|["Slot 1"]', "n|ごうかく"]],
+    ["should load a standard save (Europe)"           , "game-boy-color/europe.sav"      , ["r|europe"   , 't|["Slot 2"]', "c|0xcfb8", "i|PASS"   , "w|QASS"  , "c|0xcfb9"]],
+    ["should load a standard save (USA, Australia)"   , "game-boy-color/usaaustralia.sav", ["r|australia", 't|["Slot 3"]', "c|0xcfb8", "i|PASS"   , "w|QASS"  , "c|0xcfb9"]],
+    ["should load a standard save (Japan)"            , "game-boy-color/japan.sav"       , ["r|japan"    , 't|["Slot 1"]', "c|0x0515", "i|ごうかく", "w|ざうかく", "c|0x0516"]],
   ];
 
   tests.forEach(([title, saveFilePath, args]) => {

@@ -2,12 +2,14 @@ import type { GameJson } from "$lib/types";
 
 const template: GameJson = {
   validator: {
-    regions: {
-      europe: {
-        0x0: [
-          0x42, 0x45, 0x53, 0x43, 0x45, 0x53, 0x2d, 0x35, 0x30, 0x30, 0x30,
-          0x33,
-        ], // "BESCES-50003"
+    platforms: {
+      playstation2: {
+        europe: {
+          0x0: [
+            0x42, 0x45, 0x53, 0x43, 0x45, 0x53, 0x2d, 0x35, 0x30, 0x30, 0x30,
+            0x33,
+          ], // "BESCES-50003"
+        },
       },
     },
     text: "Drag 'n' drop here or click to add a save file.",

@@ -5,9 +5,11 @@ import { equipSwords, swordNames } from "./utils/resource";
 const template: GameJson = {
   validator: {
     fileNames: ["DATA.SAV", "SYS.DAT"],
-    regions: {
-      europe_usa: true,
-      japan: true,
+    platforms: {
+      playstation3: {
+        europe_usa: true,
+        japan: true,
+      },
     },
     text: "Drag 'n' drop here or click to add a save file.",
     hint: 'Only works with decrypted saves (see FAQ).\nMain: "DATA.SAV"\nSystem: "SYS.DAT"',

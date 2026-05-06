@@ -5,13 +5,15 @@ import { skillTrees } from "./utils/resource";
 
 const template: GameJson = {
   validator: {
-    regions: {
-      world: {
-        $and: [
-          { 0x0: [0x55, 0xaa, 0x55, 0xaa] },
-          { 0x4: [0x60] },
-          { 0x14f: [0x57] },
-        ],
+    platforms: {
+      windows: {
+        world: {
+          $and: [
+            { 0x0: [0x55, 0xaa, 0x55, 0xaa] },
+            { 0x4: [0x60] },
+            { 0x14f: [0x57] },
+          ],
+        },
       },
     },
     text: "Drag 'n' drop here or click to add a save file.",

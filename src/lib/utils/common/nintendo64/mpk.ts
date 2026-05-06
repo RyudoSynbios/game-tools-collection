@@ -1,9 +1,9 @@
 import { get } from "svelte/store";
 
-import { dataView, gameTemplate } from "$lib/stores";
+import { dataView } from "$lib/stores";
 import { getInt, getString } from "$lib/utils/bytes";
 import { mergeUint8Arrays, numberArrayToString } from "$lib/utils/format";
-import { getRegionValidator } from "$lib/utils/validator";
+import { getPlatformRegions, getRegionValidator } from "$lib/utils/validator";
 
 import { isDexDriveFile } from "./dexDrive";
 
@@ -161,8 +161,6 @@ export function isUnpackedMpk(): boolean {
 }
 
 export function unpackMpk(dataView: DataView, shift: number): DataView {
-  const $gameTemplate = get(gameTemplate);
-
   if (isMpk(dataView, shift)) {
     generateMpk(dataView, shift);
 
@@ -170,7 +168,9 @@ export function unpackMpk(dataView: DataView, shift: number): DataView {
 
     let offset = 0x0;
 
-    Object.values($gameTemplate.validator.regions).forEach((condition) => {
+    const platformRegions = getPlatformRegions();
+
+    Object.values(platformRegions).forEach((condition) => {
       const validator: number[] = Object.values(condition)[0];
 
       if (validator) {
@@ -233,12 +233,10 @@ export function getSaves(): Save[] {
 }
 
 export function getRegionsFromMpk(): string[] {
-  const $gameTemplate = get(gameTemplate);
+  const platformRegions = getPlatformRegions();
 
-  const regions: string[] = [];
-
-  Object.entries($gameTemplate.validator.regions).forEach(
-    ([region, condition]) => {
+  return Object.entries(platformRegions).reduce(
+    (regions: string[], [region, condition]) => {
       const validator: number[] = Object.values(condition)[0];
 
       const validatorStringified = numberArrayToString(validator);
@@ -246,10 +244,11 @@ export function getRegionsFromMpk(): string[] {
       if (saves.some((save) => save.note.serial === validatorStringified)) {
         regions.push(region);
       }
-    },
-  );
 
-  return regions;
+      return regions;
+    },
+    [],
+  );
 }
 
 export function getMpkNoteShift(): number[] {

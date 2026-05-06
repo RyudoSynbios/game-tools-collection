@@ -20,9 +20,10 @@ test.describe(game, () => {
 
   // prettier-ignore
   const tests: Test[] = [
-    ["should load a standard save (Europe)", "europe/savedata.bk", ['t|["Slot 2"]'         , "s|2", "i|PASS"]],
-    ["should load a standard save (USA)"   ,    "usa/savedata.bk", ['t|["Slot 1","Slot 2"]', "s|2", "i|PASS"]],
-    ["should load a standard save (Japan)" ,  "japan/savedata.bk", ['t|["Slot 1"]'         , "s|1", "i|PASS"]],
+    // Nintendo 3DS
+    ["should load a standard save (Europe)", "nintendo-3ds/europe/savedata.bk", ['t|["Slot 2"]'         , "s|2", "i|PASS"]],
+    ["should load a standard save (USA)"   , "nintendo-3ds/usa/savedata.bk"   , ['t|["Slot 1","Slot 2"]', "s|2", "i|PASS"]],
+    ["should load a standard save (Japan)" , "nintendo-3ds/japan/savedata.bk" , ['t|["Slot 1"]'         , "s|1", "i|PASS"]],
   ];
 
   tests.forEach(([title, saveFilePath, args]) => {

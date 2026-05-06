@@ -2,9 +2,11 @@ import type { GameJson } from "$lib/types";
 
 const template: GameJson = {
   validator: {
-    regions: {
-      europe_usa: { 0x10d2: [0x4d, 0x61, 0x67, 0x69, 0x63] }, // "Magic"
-      japan: { 0x10d2: [0x4d, 0x61, 0x67, 0x69, 0x63] }, // "Magic"
+    platforms: {
+      gameboy: {
+        europe_usa: { 0x10d2: [0x4d, 0x61, 0x67, 0x69, 0x63] }, // "Magic"
+        japan: { 0x10d2: [0x4d, 0x61, 0x67, 0x69, 0x63] }, // "Magic"
+      },
     },
     text: "Drag 'n' drop here or click to add a save file.",
     error: "Not a valid save file.",

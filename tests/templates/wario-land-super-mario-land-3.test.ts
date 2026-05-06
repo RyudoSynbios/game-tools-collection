@@ -20,9 +20,10 @@ test.describe(game, () => {
 
   // prettier-ignore
   const tests: Test[] = [
-    ["should load an empty standard save" ,   "empty.sav", ['t|[]']],
-    ["should load a deleted standard save", "deleted.sav", ['t|[]']],
-    ["should load a standard save (World)",   "world.sav", ['t|["Slot 3"]', "c|0x75", "i|20$1", "i|38$2", "w|21$1", "c|0x76"]],
+    // Game Boy
+    ["should load an empty standard save" , "game-boy/empty.sav"  , ['t|[]']],
+    ["should load a deleted standard save", "game-boy/deleted.sav", ['t|[]']],
+    ["should load a standard save (World)", "game-boy/world.sav"  , ['t|["Slot 3"]', "c|0x75", "i|20$1", "i|38$2", "w|21$1", "c|0x76"]],
   ];
 
   tests.forEach(([title, saveFilePath, args]) => {

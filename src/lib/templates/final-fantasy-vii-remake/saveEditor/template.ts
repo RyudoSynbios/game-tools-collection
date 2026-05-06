@@ -11,8 +11,10 @@ import {
 const template: GameJson = {
   validator: {
     fileNames: [/ff7remake([0-9]+).sav/, /ff7remakeplus([0-9]+).sav/],
-    regions: {
-      world: true,
+    platforms: {
+      steam: {
+        world: true,
+      },
     },
     text: "Drag 'n' drop here or click to add a save file.",
     hint: 'Works with "ff7remake{xxx}.sav" and "ff7remakeplus{xxx}.sav" files.',

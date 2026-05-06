@@ -2,8 +2,10 @@ import type { GameJson } from "$lib/types";
 
 const template: GameJson = {
   validator: {
-    regions: {
-      world: { 0x0: [0x19, 0x64, 0x39, 0x57] },
+    platforms: {
+      gameboy: {
+        world: { 0x0: [0x19, 0x64, 0x39, 0x57] },
+      },
     },
     text: "Drag 'n' drop here or click to add a save file.",
     error: "Not a valid save file.",

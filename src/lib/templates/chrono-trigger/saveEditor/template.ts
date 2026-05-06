@@ -16,20 +16,22 @@ import {
 
 const template: GameJson = {
   validator: {
-    regions: {
-      usa: {
-        $or: [
-          { 0x1ff8: [0x1b, 0xe4] },
-          { 0x1ffa: [0x1b, 0xe4] },
-          { 0x1ffc: [0x1b, 0xe4] },
-        ],
-      },
-      japan: {
-        $or: [
-          { 0x1ff8: [0x1b, 0xe4] },
-          { 0x1ffa: [0x1b, 0xe4] },
-          { 0x1ffc: [0x1b, 0xe4] },
-        ],
+    platforms: {
+      supernintendo: {
+        usa: {
+          $or: [
+            { 0x1ff8: [0x1b, 0xe4] },
+            { 0x1ffa: [0x1b, 0xe4] },
+            { 0x1ffc: [0x1b, 0xe4] },
+          ],
+        },
+        japan: {
+          $or: [
+            { 0x1ff8: [0x1b, 0xe4] },
+            { 0x1ffa: [0x1b, 0xe4] },
+            { 0x1ffc: [0x1b, 0xe4] },
+          ],
+        },
       },
     },
     text: "Drag 'n' drop here or click to add a save file.",

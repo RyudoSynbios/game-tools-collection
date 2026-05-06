@@ -19,8 +19,10 @@ import {
 
 const template: GameJson = {
   validator: {
-    regions: {
-      world: {},
+    platforms: {
+      switch_steam: {
+        world: {},
+      },
     },
     text: "Drag 'n' drop here or click to add a save file.",
     hint: "Designed to work with v1.0.5.\nOther versions may work, but may corrupt the save.\nPlease make a backup before editing.",

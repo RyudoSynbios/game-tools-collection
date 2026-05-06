@@ -16,6 +16,7 @@ export const debugOptions = writable<DebugOptions>(lsDebugOptions);
 export const fileHeaderShift = writable(0x0);
 export const fileName = writable("");
 export const gameJson = writable({} as GameJson);
+export const gamePlatform = writable(-1);
 export const gameRegion = writable(-1);
 export const gameTemplate = writable({} as GameJson);
 export const gameUtils = writable({}) as any;

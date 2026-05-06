@@ -4,12 +4,14 @@ import { timeFragment } from "./resource/fragment";
 
 const template: GameJson = {
   validator: {
-    regions: {
-      europe_japan: {
-        0x0: [
-          0x4b, 0x55, 0x52, 0x55, 0x52, 0x49, 0x4e, 0x20, 0x31, 0x2e, 0x30,
-          0x31,
-        ], // "KURURIN 1.01"
+    platforms: {
+      gameboyadvance: {
+        europe_japan: {
+          0x0: [
+            0x4b, 0x55, 0x52, 0x55, 0x52, 0x49, 0x4e, 0x20, 0x31, 0x2e, 0x30,
+            0x31,
+          ], // "KURURIN 1.01"
+        },
       },
     },
     text: "Drag 'n' drop here or click to add a save file.",

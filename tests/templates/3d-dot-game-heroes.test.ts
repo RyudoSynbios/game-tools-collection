@@ -20,12 +20,13 @@ test.describe(game, () => {
 
   // prettier-ignore
   const tests: Test[] = [
-    ["should load a Main save (Europe)"  , "europe/DATA.SAV", ["r|europe", 't|["General","Inventory","Bestiary","Loading Art","Options"]', "i|PASS$1", "i|57$2"]],
-    ["should load a Main save (USA)"     ,    "usa/DATA.SAV", ["r|usa"   , 't|["General","Inventory","Bestiary","Loading Art","Options"]', "i|PASS$1", "i|58$2"]],
-    ["should load a Main save (Japan)"   ,  "japan/DATA.SAV", ["r|japan" , 't|["General","Inventory","Bestiary","Options"]'              , "i|PASS$1", "i|57$2"]],
-    ["should load a System save (Europe)",  "europe/SYS.DAT", ["r|europe", 't|["System"]']],
-    ["should load a System save (USA)"   ,     "usa/SYS.DAT", ["r|usa"   , 't|["System"]']],
-    ["should load a System save (Japan)" ,   "japan/SYS.DAT", ["r|japan" , 't|["System"]']],
+    // PlayStation 3
+    ["should load a Main save (Europe)"  , "playstation-3/europe/DATA.SAV", ["r|europe", 't|["General","Inventory","Bestiary","Loading Art","Options"]', "i|PASS$1", "i|57$2"]],
+    ["should load a Main save (USA)"     , "playstation-3/usa/DATA.SAV"   , ["r|usa"   , 't|["General","Inventory","Bestiary","Loading Art","Options"]', "i|PASS$1", "i|58$2"]],
+    ["should load a Main save (Japan)"   , "playstation-3/japan/DATA.SAV" , ["r|japan" , 't|["General","Inventory","Bestiary","Options"]'              , "i|PASS$1", "i|57$2"]],
+    ["should load a System save (Europe)", "playstation-3/europe/SYS.DAT" , ["r|europe", 't|["System"]']],
+    ["should load a System save (USA)"   , "playstation-3/usa/SYS.DAT"    , ["r|usa"   , 't|["System"]']],
+    ["should load a System save (Japan)" , "playstation-3/japan/SYS.DAT"  , ["r|japan" , 't|["System"]']],
   ];
 
   tests.forEach(([title, saveFilePath, args]) => {

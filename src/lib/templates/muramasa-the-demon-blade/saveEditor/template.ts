@@ -3,8 +3,10 @@ import type { GameJson } from "$lib/types";
 const template: GameJson = {
   validator: {
     fileNames: ["save.dat"],
-    regions: {
-      europe_usa_japan: { 0x0: [0x4e, 0x50, 0x53, 0x44] }, // "NPSD"
+    platforms: {
+      wii: {
+        europe_usa_japan: { 0x0: [0x4e, 0x50, 0x53, 0x44] }, // "NPSD"
+      },
     },
     text: "Drag 'n' drop here or click to add a save file.",
     hint: "Only works with decrypted saves (see FAQ).",

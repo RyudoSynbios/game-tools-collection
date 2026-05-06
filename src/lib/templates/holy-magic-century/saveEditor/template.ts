@@ -2,21 +2,23 @@ import type { GameJson } from "$lib/types";
 
 const template: GameJson = {
   validator: {
-    regions: {
-      europe: {
-        0x0: [0x4e, 0x45, 0x54, 0x50], // "NETP"
-      },
-      usa: {
-        0x0: [0x4e, 0x45, 0x54, 0x45], // "NETE"
-      },
-      japan: {
-        0x0: [0x4e, 0x45, 0x54, 0x4a], // "NETJ"
-      },
-      france: {
-        0x0: [0x4e, 0x45, 0x54, 0x46], // "NETF"
-      },
-      germany: {
-        0x0: [0x4e, 0x45, 0x54, 0x44], // "NETD"
+    platforms: {
+      nintendo64: {
+        europe: {
+          0x0: [0x4e, 0x45, 0x54, 0x50], // "NETP"
+        },
+        usa: {
+          0x0: [0x4e, 0x45, 0x54, 0x45], // "NETE"
+        },
+        japan: {
+          0x0: [0x4e, 0x45, 0x54, 0x4a], // "NETJ"
+        },
+        france: {
+          0x0: [0x4e, 0x45, 0x54, 0x46], // "NETF"
+        },
+        germany: {
+          0x0: [0x4e, 0x45, 0x54, 0x44], // "NETD"
+        },
       },
     },
     text: "Drag 'n' drop here or click to add a save file.",

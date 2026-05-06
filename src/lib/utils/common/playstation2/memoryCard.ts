@@ -1,10 +1,10 @@
 import { get } from "svelte/store";
 
-import { dataView, gameTemplate } from "$lib/stores";
+import { dataView } from "$lib/stores";
 import { getInt, getString } from "$lib/utils/bytes";
 import debug from "$lib/utils/debug";
 import { mergeUint8Arrays, numberArrayToString } from "$lib/utils/format";
-import { checkValidator } from "$lib/utils/validator";
+import { checkValidator, getPlatformRegions } from "$lib/utils/validator";
 
 import {
   getEntry,
@@ -431,15 +431,15 @@ export default class MemoryCard {
   }
 
   public unpack(): DataView {
-    const $gameTemplate = get(gameTemplate);
-
     this._saves = [];
 
     const uint8Arrays: Uint8Array[] = [];
 
     let offset = 0x0;
 
-    Object.values($gameTemplate.validator.regions).forEach((condition) => {
+    const platformRegions = getPlatformRegions();
+
+    Object.values(platformRegions).forEach((condition) => {
       const validator: number[] = Object.values(condition)[0];
 
       if (validator) {

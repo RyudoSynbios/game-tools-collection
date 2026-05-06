@@ -20,7 +20,8 @@ test.describe(game, () => {
 
   // prettier-ignore
   const tests: Test[] = [
-    ["should load a standard save (World)", "SaveData0.sav", ["i|2520"]],
+    // Steam
+    ["should load a standard save (World)", "steam/SaveData0.sav", ["i|2520"]],
   ];
 
   tests.forEach(([title, saveFilePath, args]) => {

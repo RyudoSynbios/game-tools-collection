@@ -46,7 +46,7 @@
   {
     "id": "007-agent-under-fire",
     "name": "007: Agent Under Fire",
-    "platformIds": ["playstation-2"],
+    "platformIds": ["gamecube", "playstation-2"],
     "tools": {
       "saveEditor": {
         "createdAt": "2025-06-07",
@@ -1084,7 +1084,7 @@
   {
     "id": "resident-evil",
     "name": "Resident Evil",
-    "platformIds": ["playstation"],
+    "platformIds": ["playstation", "windows"],
     "tools": {
       "saveEditor": {
         "createdAt": "2024-03-17",

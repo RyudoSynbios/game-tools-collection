@@ -11,6 +11,7 @@ import {
   importDataViewAltPatch,
   type PatchData,
 } from "$lib/utils/patch";
+import { getPlatformName } from "$lib/utils/validator";
 
 import type {
   Item,
@@ -396,7 +397,9 @@ export function importPatch(patch: Patch<PatchData>): void {
 }
 
 export function generatePatch(): Patch<PatchData> {
-  return generateDataViewAltPatch("skies-of-arcadia-legends-gc", "1.0");
+  const platform = getPlatformName();
+
+  return generateDataViewAltPatch("skies-of-arcadia-legends", platform, "1.0");
 }
 
 export function getAssetNames(type: string): Resource {
