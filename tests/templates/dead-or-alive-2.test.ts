@@ -26,10 +26,16 @@ test.describe(game, () => {
   // prettier-ignore
   const tests: Test[] = [
     // PlayStation 2
-    ["should load a filled standard save (Europe)", "playstation-2/filled.ps2", ["c|0x16", "i|54$1", "i|10$2" , "w|55$1", "c|0x17"]],
-    ["should load a standard save (Europe)"       , "playstation-2/europe.ps2", ["c|0xc9", "i|21$1", "i|30$2" , "w|22$1", "c|0xca"]],
-    ["should load a PSV save (Europe)"            , "playstation-2/europe.psv", ["c|0xc9", "i|21$1", "i|30$2" , "w|22$1", "c|0xca"]],
-    ["should load a PSU save (Europe)"            , "playstation-2/europe.psu", ["c|0xc9", "i|21$1", "i|30$2" , "w|22$1", "c|0xca"]],
+    ["should load a filled standard save (Europe)", "playstation-2/filled.ps2", ["r|europe", "c|0x16", "i|54$1", "i|10$2" , "w|55$1", "c|0x17"]],
+    ["should load a standard save (Europe)"       , "playstation-2/europe.ps2", [            "c|0xc9", "i|21$1", "i|30$2" , "w|22$1", "c|0xca"]],
+    ["should load a standard save (USA)"          , "playstation-2/usa.ps2"   , [            "c|0x20", "i|57$1", "i|30$2" , "w|58$1", "c|0x23"]],
+    ["should load a standard save (Japan)"        , "playstation-2/japan.ps2" , [            "c|0xac", "i|05$1", "i|30$2" , "w|06$1", "c|0xaf"]],
+    ["should load a PSV save (Europe)"            , "playstation-2/europe.psv", [            "c|0xc9", "i|21$1", "i|30$2" , "w|22$1", "c|0xca"]],
+    ["should load a PSV save (USA)"               , "playstation-2/usa.psv"   , [            "c|0x20", "i|57$1", "i|30$2" , "w|58$1", "c|0x23"]],
+    ["should load a PSV save (Japan)"             , "playstation-2/japan.psv" , [            "c|0xac", "i|05$1", "i|30$2" , "w|06$1", "c|0xaf"]],
+    ["should load a PSU save (Europe)"            , "playstation-2/europe.psu", [            "c|0xc9", "i|21$1", "i|30$2" , "w|22$1", "c|0xca"]],
+    ["should load a PSU save (USA)"               , "playstation-2/usa.psu"   , [            "c|0x20", "i|57$1", "i|30$2" , "w|58$1", "c|0x23"]],
+    ["should load a PSU save (Japan)"             , "playstation-2/japan.psu" , [            "c|0xac", "i|05$1", "i|30$2" , "w|06$1", "c|0xaf"]],
   ];
 
   tests.forEach(([title, saveFilePath, args]) => {

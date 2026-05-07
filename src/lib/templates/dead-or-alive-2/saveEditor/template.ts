@@ -10,6 +10,18 @@ const template: GameJson = {
             0x33,
           ], // "BESCES-50003"
         },
+        usa: {
+          0x0: [
+            0x42, 0x41, 0x53, 0x4c, 0x55, 0x53, 0x2d, 0x32, 0x30, 0x30, 0x37,
+            0x31,
+          ], // "BASLUS-20071"
+        },
+        japan: {
+          0x0: [
+            0x42, 0x49, 0x53, 0x4c, 0x50, 0x53, 0x2d, 0x32, 0x35, 0x30, 0x32,
+            0x36,
+          ], // "BISLPS-25026"
+        },
       },
     },
     text: "Drag 'n' drop here or click to add a save file.",

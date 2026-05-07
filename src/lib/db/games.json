@@ -343,11 +343,12 @@
   {
     "id": "dead-or-alive-2",
     "name": "Dead or Alive 2",
+    "metaName": "Dead or Alive 2 (DOA2 Hardcore)",
     "platformIds": ["playstation-2"],
     "tools": {
       "saveEditor": {
         "createdAt": "2024-07-12",
-        "regions": ["🇪🇺"]
+        "regions": ["🇪🇺", "🇺🇸", "🇯🇵"]
       }
     }
   },

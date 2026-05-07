@@ -35,7 +35,7 @@ Link to the website: [https://game-tools-collection.com](https://game-tools-coll
 | Crash Bandicoot                              | PS         | Save                    | EUR / USA / JAP / AUS                         |
 | Crisis Core -Final Fantasy VII- Reunion      | WIN        | Save                    | WORLD                                         |
 | CTR: Crash Team Racing                       | PS         | Save                    | EUR / USA / JAP                               |
-| Dead or Alive 2                              | PS2        | Save                    | EUR                                           |
+| Dead or Alive 2                              | PS2        | Save                    | EUR / USA / JAP                               |
 | Diablo II: Lord of Destruction               | WIN        | Save                    | WORLD                                         |
 | Diddy Kong Racing                            | N64        | Save                    | EUR / USA / JAP                               |
 | Dissidia 012: Duodecim Final Fantasy         | PSP        | Save                    | EUR / USA / JAP                               |
