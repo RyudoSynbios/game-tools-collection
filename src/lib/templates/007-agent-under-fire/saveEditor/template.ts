@@ -2,30 +2,67 @@ import type { GameJson } from "$lib/types";
 
 const template: GameJson = {
   validator: {
-    regions: {
-      europe: {
-        0x0: [
-          0x42, 0x45, 0x53, 0x4c, 0x45, 0x53, 0x2d, 0x35, 0x30, 0x35, 0x33,
-          0x39,
-        ], // "BESLES-50539"
+    platforms: {
+      gamecube: {
+        europe: {
+          0x0: [0x47, 0x57, 0x37, 0x50, 0x36, 0x39], // "GW7P69"
+        },
+        usa: {
+          0x0: [0x47, 0x57, 0x37, 0x45, 0x36, 0x39], // "GW7E69"
+        },
+        france: {
+          0x0: [0x47, 0x57, 0x37, 0x46, 0x36, 0x39], // "GW7F69"
+        },
+        germany: {
+          0x0: [0x47, 0x57, 0x37, 0x44, 0x36, 0x39], // "GW7D69"
+        },
       },
-      usa: {
-        0x0: [
-          0x42, 0x41, 0x53, 0x4c, 0x55, 0x53, 0x2d, 0x32, 0x30, 0x32, 0x36,
-          0x35,
-        ], // "BASLUS-20265"
-      },
-      korea: {
-        0x0: [
-          0x42, 0x49, 0x53, 0x4c, 0x50, 0x4d, 0x2d, 0x36, 0x37, 0x35, 0x30,
-          0x35,
-        ], // "BISLPM-67505"
+      playstation2: {
+        europe: {
+          0x0: [
+            0x42, 0x45, 0x53, 0x4c, 0x45, 0x53, 0x2d, 0x35, 0x30, 0x35, 0x33,
+            0x39,
+          ], // "BESLES-50539"
+        },
+        usa: {
+          0x0: [
+            0x42, 0x41, 0x53, 0x4c, 0x55, 0x53, 0x2d, 0x32, 0x30, 0x32, 0x36,
+            0x35,
+          ], // "BASLUS-20265"
+        },
+        korea: {
+          0x0: [
+            0x42, 0x49, 0x53, 0x4c, 0x50, 0x4d, 0x2d, 0x36, 0x37, 0x35, 0x30,
+            0x35,
+          ], // "BISLPM-67505"
+        },
       },
     },
     text: "Drag 'n' drop here or click to add a save file.",
     error: "Not a valid save file.",
   },
   items: [
+    {
+      id: "checksum",
+      type: "section",
+      items: [
+        {
+          name: "Checksum",
+          offset: 0x46,
+          type: "checksum",
+          dataType: "uint16",
+          bigEndian: true,
+          control: {
+            offsetStart: 0x0,
+            offsetEnd: 0x1690,
+          },
+          overrideShift: {
+            parent: 1,
+            shift: 0x0,
+          },
+        },
+      ],
+    },
     {
       length: 0xf8,
       type: "container",
@@ -76,7 +113,7 @@ const template: GameJson = {
                       name: "Current Mission",
                       offset: 0x24,
                       type: "variable",
-                      dataType: "uint8",
+                      dataType: "uint32",
                       resource: "missions",
                       autocomplete: true,
                     },
@@ -87,6 +124,7 @@ const template: GameJson = {
                   flex: true,
                   items: [
                     {
+                      id: "rewards",
                       name: "Gold Rewards",
                       type: "bitflags",
                       flags: [
@@ -105,6 +143,7 @@ const template: GameJson = {
                       ],
                     },
                     {
+                      id: "rewards",
                       name: "Platinum Rewards",
                       type: "bitflags",
                       flags: [
@@ -174,7 +213,7 @@ const template: GameJson = {
                   name: "Difficulty",
                   offset: 0x15f4,
                   type: "variable",
-                  dataType: "uint8",
+                  dataType: "uint32",
                   resource: "difficulties",
                 },
               ],
@@ -187,7 +226,7 @@ const template: GameJson = {
                   name: "Controller Setup",
                   offset: 0x15e4,
                   type: "variable",
-                  dataType: "uint8",
+                  dataType: "uint32",
                   resource: "controllerSetups",
                 },
                 {
@@ -203,7 +242,7 @@ const template: GameJson = {
                   offset: 0x15ec,
                   type: "variable",
                   dataType: "bit",
-                  bit: 1,
+                  bit: 3,
                   resource: "optionBoolean",
                 },
               ],
