@@ -1,7 +1,7 @@
 import { get } from "svelte/store";
 
-import { gameRegion } from "$lib/stores";
-import { getInt, setInt } from "$lib/utils/bytes";
+import { dataView, gamePlatform, gameRegion } from "$lib/stores";
+import { getInt, getString, setInt } from "$lib/utils/bytes";
 import {
   customGetRegions,
   getFileOffset,
@@ -24,11 +24,31 @@ import type {
 
 import { abilityList, inventory } from "./utils/resource";
 
+export function setGamePlatform(dataView: DataView, fileName: string): void {
+  if (fileName.match(/KHFM/)) {
+    gamePlatform.set(1);
+  } else {
+    gamePlatform.set(0);
+  }
+}
+
 export function beforeInitDataView(dataView: DataView): DataView {
-  return unpackFile(dataView);
+  const $gamePlatform = get(gamePlatform);
+
+  if ($gamePlatform === 0) {
+    return unpackFile(dataView);
+  }
+
+  return dataView;
 }
 
 export function overrideGetRegions(): string[] {
+  const $gamePlatform = get(gamePlatform);
+
+  if ($gamePlatform === 1) {
+    return ["finalMix"];
+  }
+
   return customGetRegions();
 }
 
@@ -36,7 +56,16 @@ export function onInitFailed(): void {
   resetState();
 }
 
+export function beforeItemsParsing(): void {
+  const $gamePlatform = get(gamePlatform);
+
+  if ($gamePlatform === 1) {
+    gameRegion.set(7);
+  }
+}
+
 export function overrideParseItem(item: Item): Item {
+  const $gamePlatform = get(gamePlatform);
   const $gameRegion = get(gameRegion);
 
   if ("id" in item && item.id === "difficuty") {
@@ -48,9 +77,21 @@ export function overrideParseItem(item: Item): Item {
   } else if ("id" in item && item.id === "slots") {
     const itemContainer = item as ItemContainer;
 
+    if ($gamePlatform === 1) {
+      const saves = getHD15RemixSaves();
+
+      itemContainer.instances = saves.length;
+
+      return itemContainer;
+    }
+
     const saves = getRegionSaves();
 
+    console.log(saves);
+
     itemContainer.instances = saves.length;
+
+    return itemContainer;
   } else if ("id" in item && item.id?.match(/time/)) {
     const itemInt = item as ItemInt;
 
@@ -62,6 +103,7 @@ export function overrideParseItem(item: Item): Item {
   } else if (
     "id" in item &&
     item.id === "name" &&
+    $gamePlatform === 0 &&
     [2, 7].includes($gameRegion)
   ) {
     const itemString = item as ItemString;
@@ -135,7 +177,13 @@ export function overrideShift(
   shifts: number[],
   instanceIndex: number,
 ): number[] {
+  const $gamePlatform = get(gamePlatform);
+
   if ("id" in item && item.id === "time-playtime") {
+    if ($gamePlatform === 1) {
+      return [...shifts, 0x16c40];
+    }
+
     return [...shifts.slice(0, -1), getFileOffset(instanceIndex, "system.bin")];
   }
 
@@ -147,7 +195,15 @@ export function overrideParseContainerItemsShifts(
   shifts: number[],
   index: number,
 ): [boolean, number[] | undefined] {
+  const $gamePlatform = get(gamePlatform);
+
   if (item.id === "slots") {
+    if ($gamePlatform === 1) {
+      const saves = getHD15RemixSaves();
+
+      return [true, [saves[index].offset]];
+    }
+
     return getSlotShifts(index);
   }
 
@@ -194,7 +250,14 @@ export function afterSetInt(item: Item): void {
 }
 
 export function beforeSaving(): ArrayBufferLike {
-  return repackFile();
+  const $dataView = get(dataView);
+  const $gamePlatform = get(gamePlatform);
+
+  if ($gamePlatform === 0) {
+    return repackFile();
+  }
+
+  return $dataView.buffer;
 }
 
 export function onReset(): void {
@@ -202,12 +265,17 @@ export function onReset(): void {
 }
 
 export function getAbilityNames(): Resource {
+  const $gamePlatform = get(gamePlatform);
   const $gameRegion = get(gameRegion);
 
   const names: Resource = {};
 
   abilityList.forEach((ability) => {
-    if (!ability.finalMix || $gameRegion === 7) {
+    if (
+      (!ability.finalMix && !ability.hd15Remix) ||
+      (ability.finalMix && $gameRegion === 7) ||
+      (ability.hd15Remix && $gamePlatform === 1)
+    ) {
       names[ability.index] = ability.name;
     }
   });
@@ -252,15 +320,44 @@ export function getItemNames(type: string): Resource {
 }
 
 export function getSlotNames(): Resource {
+  const $gamePlatform = get(gamePlatform);
+
+  if ($gamePlatform === 1) {
+    const saves = getHD15RemixSaves();
+
+    return saves.reduce((names: Resource, save, index) => {
+      names[index] = `Slot ${save.name.replace(/^0/, "")}`;
+
+      return names;
+    }, {});
+  }
+
   const saves = getRegionSaves();
 
-  const names = saves.reduce((names: Resource, save, index) => {
+  return saves.reduce((names: Resource, save, index) => {
     const name = save.file.name.slice(-2);
 
     names[index] = `Slot ${name.replace(/^0/, "")}`;
 
     return names;
   }, {});
+}
 
-  return names;
+function getHD15RemixSaves(): { name: string; offset: number }[] {
+  const saves = [];
+
+  for (let i = 0x0; i < 0x63; i += 0x1) {
+    const offset = 0x1c8 + i * 0x2b0;
+
+    if (getInt(offset, "uint8") === 0x2d) {
+      saves.push({
+        name: getString(offset + 0x1, 0x2, "uint8"),
+        offset: 0x10d30 + i * 0x2d880,
+      });
+    }
+  }
+
+  return saves.sort((a, b) =>
+    a.name.localeCompare(b.name, "en", { numeric: true }),
+  );
 }

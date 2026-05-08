@@ -708,6 +708,7 @@
     "tools": {
       "saveEditor": {
         "createdAt": "2024-03-04",
+        "compatibilities": ["Kingdom Hearts HD 1.5 ReMIX"],
         "regions": ["🇪🇺", "🇺🇸", "🇯🇵", "🇫🇷", "🇩🇪", "🇮🇹", "🇪🇸", "🇦🇺"]
       }
     }

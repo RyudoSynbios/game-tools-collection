@@ -64,6 +64,9 @@ const template: GameJson = {
           ], // "BISLPS-25198-"
         },
       },
+      hd15Remix: {
+        finalMix: {},
+      },
     },
     text: "Drag 'n' drop here or click to add a save file.",
     error: "Not a valid save file.",

@@ -555,6 +555,8 @@ export const abilityList = [
   { index: 0x3d, name: "Encounter Plus", finalMix: true },
   { index: 0x3e, name: "Leaf Bracer", finalMix: true },
   { index: 0x3f, name: "Evolution", finalMix: true },
+  { index: 0x40, name: "EXP Zero", hd15Remix: true },
+  { index: 0x41, name: "Combo Master", hd15Remix: true },
 ];
 
 export const itemTypes = [
