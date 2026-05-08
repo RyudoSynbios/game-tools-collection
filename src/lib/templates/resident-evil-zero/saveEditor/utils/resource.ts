@@ -124,14 +124,14 @@ const itemList = [
 ];
 
 export const items: Resource = {};
-export const itemsOrder: number[] = [0xff];
 export const itemsGroups: ResourceGroups = itemTypes.map((type) => ({
   name: type.name,
   options: [],
 }));
+export const itemsOrder: number[] = [0xff];
 
 itemList.forEach((item) => {
   items[item.index] = item.name;
-  itemsOrder.push(item.index);
   itemsGroups[item.type].options.push(item.index);
+  itemsOrder.push(item.index);
 });

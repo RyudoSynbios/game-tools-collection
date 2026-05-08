@@ -152,12 +152,12 @@ export function overrideParseContainerItemsShifts(
 }
 
 export function overrideGetInt(item: Item): [boolean, number | undefined] {
-  if ("id" in item && item.id === "currentLevel") {
+  if ("id" in item && item.id === "location") {
     const itemInt = item as ItemInt;
 
-    const level = getInt(itemInt.offset, "uint8");
+    const world = getInt(itemInt.offset, "uint8");
 
-    if (level === 0x6) {
+    if (world === 0x6) {
       return [true, 0x5c];
     }
   } else if ("id" in item && item.id?.match(/progression-cleared/)) {
@@ -205,7 +205,7 @@ export function overrideSetInt(item: Item, value: string): boolean {
 }
 
 export function afterSetInt(item: Item, flag: ItemBitflag): void {
-  if ("id" in item && item.id === "currentLevel") {
+  if ("id" in item && item.id === "location") {
     const itemInt = item as ItemInt;
 
     const int = getInt(itemInt.offset, "uint8");

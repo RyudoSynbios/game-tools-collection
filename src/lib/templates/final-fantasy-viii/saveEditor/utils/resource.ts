@@ -498,15 +498,15 @@ export const disc2Locations: Resource = {};
 export const disc3Locations: Resource = {};
 export const disc4Locations: Resource = {};
 
-export const disc1LocationsOrder: number[] = [0x0];
-export const disc2LocationsOrder: number[] = [0x0];
-export const disc3LocationsOrder: number[] = [0x0];
-export const disc4LocationsOrder: number[] = [0x0];
-
 export const disc1LocationsGroups: ResourceGroups = [];
 export const disc2LocationsGroups: ResourceGroups = [];
 export const disc3LocationsGroups: ResourceGroups = [];
 export const disc4LocationsGroups: ResourceGroups = [];
+
+export const disc1LocationsOrder: number[] = [0x0];
+export const disc2LocationsOrder: number[] = [0x0];
+export const disc3LocationsOrder: number[] = [0x0];
+export const disc4LocationsOrder: number[] = [0x0];
 
 for (let i = 0; i < 4; i += 1) {
   let discLocations: Resource = {};

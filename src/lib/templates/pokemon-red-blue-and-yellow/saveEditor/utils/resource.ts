@@ -161,18 +161,18 @@ const itemList = [
 ];
 
 export const items: Resource = {};
-export const itemsOrder: number[] = [0x0];
 export const itemsGroups: ResourceGroups = itemTypes.map((type) => ({
   name: type.name,
   options: [],
 }));
+export const itemsOrder: number[] = [0x0];
 
 itemList
   .sort((a, b) => a.order - b.order)
   .forEach((item) => {
     items[item.index] = item.name;
-    itemsOrder.push(item.index);
     itemsGroups[item.type].options.push(item.index);
+    itemsOrder.push(item.index);
   });
 
 export const moveList = getMoveList(1);

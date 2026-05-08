@@ -650,11 +650,12 @@ export const magics: Resource = {};
 export const subweapons: Resource = {};
 export const weapons: Resource = {};
 
+export const itemsGroups: ResourceGroups = [];
+
 export const itemsOrder: number[] = [0x0];
 export const subweaponsOrder: number[] = [0x0];
 export const weaponsOrder: number[] = [0x0];
 
-export const itemsGroups: ResourceGroups = [];
 
 inventory.forEach((type, index) => {
   const group: ResourceGroups[number] = { name: type.name, options: [] };
@@ -663,8 +664,8 @@ inventory.forEach((type, index) => {
     switch (index) {
       case 0: // Items
         items[item.index - 0x317] = item.name;
-        itemsOrder.push(item.index - 0x317);
         group.options.push(item.index - 0x317);
+        itemsOrder.push(item.index - 0x317);
         break;
 
       case 1: // Weapons
@@ -675,23 +676,23 @@ inventory.forEach((type, index) => {
           books[item.index - 0x380] = item.name;
         }
         items[item.index - 0x31f] = item.name;
-        itemsOrder.push(item.index - 0x31f);
         group.options.push(item.index - 0x31f);
+        itemsOrder.push(item.index - 0x31f);
         break;
 
       case 2: // Subweapons
         subweapons[item.index] = item.name;
         subweaponsOrder.push(item.index);
         items[item.index + 0x150] = item.name;
-        itemsOrder.push(item.index + 0x150);
         group.options.push(item.index + 0x150);
+        itemsOrder.push(item.index + 0x150);
         break;
 
       case 3: // Magic
         magics[item.index] = item.name;
         items[item.index + 0x150] = item.name;
-        itemsOrder.push(item.index + 0x150);
         group.options.push(item.index + 0x150);
+        itemsOrder.push(item.index + 0x150);
         break;
 
       case 4: // Body
@@ -702,8 +703,8 @@ inventory.forEach((type, index) => {
           charlotteBodies[item.index - 0x3d0] = item.name;
         }
         items[item.index - 0x326] = item.name;
-        itemsOrder.push(item.index - 0x326);
         group.options.push(item.index - 0x326);
+        itemsOrder.push(item.index - 0x326);
         break;
 
       case 5: // Head
@@ -714,8 +715,8 @@ inventory.forEach((type, index) => {
           charlotteHeads[item.index - 0x410] = item.name;
         }
         items[item.index - 0x32c] = item.name;
-        itemsOrder.push(item.index - 0x32c);
         group.options.push(item.index - 0x32c);
+        itemsOrder.push(item.index - 0x32c);
         break;
 
       case 6: // Legs
@@ -726,8 +727,8 @@ inventory.forEach((type, index) => {
           charlotteLegs[item.index - 0x438] = item.name;
         }
         items[item.index - 0x32e] = item.name;
-        itemsOrder.push(item.index - 0x32e);
         group.options.push(item.index - 0x32e);
+        itemsOrder.push(item.index - 0x32e);
         break;
 
       case 7: // Accessories
@@ -738,8 +739,8 @@ inventory.forEach((type, index) => {
           charlotteAccessories[item.index - 0x458] = item.name;
         }
         items[item.index - 0x331] = item.name;
-        itemsOrder.push(item.index - 0x331);
         group.options.push(item.index - 0x331);
+        itemsOrder.push(item.index - 0x331);
         break;
 
       case 8: // Dual Crushes

@@ -71,17 +71,17 @@ const template: GameJson = {
                   name: "General",
                   items: [
                     {
-                      name: "Mode",
-                      offset: 0x10,
-                      type: "variable",
-                      dataType: "uint8",
-                      resource: "modes",
-                      disabled: true,
-                    },
-                    {
                       type: "section",
                       flex: true,
                       items: [
+                        {
+                          name: "Mode",
+                          offset: 0x10,
+                          type: "variable",
+                          dataType: "uint8",
+                          resource: "modes",
+                          disabled: true,
+                        },
                         {
                           name: "Completion Rate",
                           offset: 0x16,
@@ -91,11 +91,11 @@ const template: GameJson = {
                           disabled: true,
                         },
                         {
-                          name: "Current Level",
+                          name: "Location",
                           offset: 0x15,
                           type: "variable",
                           dataType: "uint8",
-                          resource: "levels",
+                          resource: "locations",
                         },
                         {
                           name: "Playtime",
@@ -1150,7 +1150,7 @@ const template: GameJson = {
       0x1: "French",
       0x2: "German",
     },
-    levels: {
+    locations: {
       0x16: "Jungle Hijinxs",
       0xfa: "Kongo Jungle",
       0xfb: "Monkey Mines",
@@ -1171,7 +1171,7 @@ const template: GameJson = {
     },
   },
   resourcesOrder: {
-    levels: [0x16, 0xfa, 0xfb, 0xff, 0xfc, 0xfd, 0xfe],
+    locations: [0x16, 0xfa, 0xfb, 0xff, 0xfc, 0xfd, 0xfe],
   },
 };
 

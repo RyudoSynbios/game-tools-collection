@@ -48,21 +48,21 @@ const template: GameJson = {
                   name: "General",
                   items: [
                     {
-                      name: "Mode",
-                      offset: 0xd,
-                      type: "variable",
-                      dataType: "uint8",
-                      resource: "modes",
-                      disabled: true,
-                      overrideShift: {
-                        parent: 1,
-                        shift: 0x0,
-                      },
-                    },
-                    {
                       type: "section",
                       flex: true,
                       items: [
+                        {
+                          name: "Mode",
+                          offset: 0xd,
+                          type: "variable",
+                          dataType: "uint8",
+                          resource: "modes",
+                          disabled: true,
+                          overrideShift: {
+                            parent: 1,
+                            shift: 0x0,
+                          },
+                        },
                         {
                           name: "Progression",
                           offset: 0xeb,
@@ -175,12 +175,12 @@ const template: GameJson = {
                           max: 75,
                         },
                         {
-                          id: "currentLevel",
-                          name: "Current Level",
+                          id: "location",
+                          name: "Location",
                           offset: 0xbd,
                           type: "variable",
                           dataType: "uint8",
-                          resource: "levels",
+                          resource: "locations",
                         },
                       ],
                     },
@@ -691,7 +691,7 @@ const template: GameJson = {
       0x1: "Diddy Kong",
       0x2: "Dixie Kong",
     },
-    levels: {
+    locations: {
       0xa: "Gangplank Galleon",
       0x16: "Crocodile Cauldron",
       0x23: "Krem Quay",

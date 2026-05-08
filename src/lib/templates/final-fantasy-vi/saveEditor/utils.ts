@@ -387,11 +387,11 @@ export function overrideItem(item: Item): Item {
     }
 
     const location = getInt(itemInt.offset + shift, "uint16") & 0x1ff;
-    const isWorldmap = [0, 1].includes(location);
+    const isWorldMap = [0, 1].includes(location);
 
     itemInt.hidden =
-      (type === "general" && isWorldmap) ||
-      (type === "worldMap" && !isWorldmap);
+      (type === "general" && isWorldMap) ||
+      (type === "worldMap" && !isWorldMap);
 
     return itemInt;
   } else if ("id" in item && item.id?.match(/airshipCharacters-/)) {
@@ -651,8 +651,8 @@ function generateResources(): void {
   // Locations
 
   const locations: Resource = {};
-  const locationsOrder: number[] = [];
   const locationsGroups: ResourceGroups = [];
+  const locationsOrder: number[] = [];
 
   resources.areas.forEach((area) => {
     locationsGroups.push({ name: area.name, options: [] });

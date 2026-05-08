@@ -262,7 +262,6 @@ export const locationList: {
 };
 
 export const locations: Resource = {};
-
 export const locationsOrder: number[] = [];
 
 Object.entries(locationList)
