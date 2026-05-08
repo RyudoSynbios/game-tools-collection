@@ -142,6 +142,8 @@ function getRedirectRoute(route: string): string {
       return "f-zero-x";
     case "final-fantasy-nes":
       return "final-fantasy";
+    case "the-legend-of-zelda-nes":
+      return "the-legend-of-zelda";
     case "final-fantasy-iv-pixel-remaster-windows":
       return "final-fantasy-iv-pixel-remaster";
     case "final-fantasy-vi-snes":
