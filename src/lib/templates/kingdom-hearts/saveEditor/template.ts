@@ -1,4 +1,4 @@
-import type { GameJson, ItemSection, ItemTab, Resource } from "$lib/types";
+import type { GameJson, ItemTab, Resource } from "$lib/types";
 
 import {
   accessoriesOrder,

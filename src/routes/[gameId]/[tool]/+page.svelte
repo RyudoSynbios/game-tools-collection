@@ -196,7 +196,7 @@
     $gamePlatform = -1;
 
     if (utilsExists("setGamePlatform")) {
-      fileHeaderShiftTmp = $gameUtils.setGamePlatform(dataViewTmp);
+      fileHeaderShiftTmp = $gameUtils.setGamePlatform(dataViewTmp, fileNameTmp);
     }
 
     if (Object.keys($gameTemplate.validator.platforms).length === 1) {

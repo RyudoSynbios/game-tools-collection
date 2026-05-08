@@ -3,6 +3,10 @@ import type { GameJson } from "$lib/types";
 const template: GameJson = {
   validator: {
     platforms: {
+      supernintendo: {
+        usa: {},
+        japan: {},
+      },
       gameboyadvance: {
         europe: {
           0x1f00: [
@@ -25,11 +29,6 @@ const template: GameJson = {
             0x44, 0x56, 0x41, 0x4e, 0x43, 0x45, 0x20, 0x20, 0x20, 0x20,
           ], // "FINAL FANTASY VI     ADVANCE    "
         },
-      },
-      supernintendo: {
-        europe: {},
-        usa: {},
-        japan: {},
       },
     },
     text: "Drag 'n' drop here or click to add a save file.",

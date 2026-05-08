@@ -39,15 +39,15 @@ import {
 
 // prettier-ignore
 export function setGamePlatform(dataView: DataView): void {
-  const platformRegions = getPlatformRegions("gameboyadvance").europe as Validator;
-  const key = parseInt(getObjKey(platformRegions, 0));
-  const validator = platformRegions[key];
+  const regionValidator = getPlatformRegions("gameboyadvance").europe as Validator;
+  const key = parseInt(getObjKey(regionValidator, 0));
+  const validator = regionValidator[key];
   const offset = getHeaderShift(dataView) + key;
 
   if (checkValidator(validator, offset, dataView)) {
-    gamePlatform.set(0);
-  } else {
     gamePlatform.set(1);
+  } else {
+    gamePlatform.set(0);
   }
 }
 
@@ -85,14 +85,24 @@ export function overrideGetRegions(
       checksum === getInt(itemChecksum.offset, "uint16", {}, dataView)
     ) {
       if ($gamePlatform === 0) {
-        return ["europe", "usa", "japan"];
-      } else if ($gamePlatform === 1) {
         return ["usa", "japan"];
+      } else if ($gamePlatform === 1) {
+        return ["europe", "usa", "japan"];
       }
     }
   }
 
   return [];
+}
+
+export function beforeItemsParsing(): void {
+  const $gamePlatform = get(gamePlatform);
+  const $gameRegion = get(gameRegion);
+
+  if ($gamePlatform === 0) {
+    console.log($gameRegion)
+    gameRegion.set($gameRegion + 1);
+  }
 }
 
 export function overrideParseItem(item: Item): Item | ItemTab {
@@ -104,7 +114,7 @@ export function overrideParseItem(item: Item): Item | ItemTab {
 
     const [slotIndex] = item.id.splitInt();
 
-    if ($gamePlatform !== 0) {
+    if ($gamePlatform !== 1) {
       itemChecksum.offset = 0x0;
       itemChecksum.disabled = true;
     }
@@ -116,7 +126,7 @@ export function overrideParseItem(item: Item): Item | ItemTab {
   } else if ("id" in item && item.id === "gbaOnly") {
     const itemInt = item as ItemInt;
 
-    if ($gamePlatform !== 0) {
+    if ($gamePlatform !== 1) {
       itemInt.offset = 0x0;
       itemInt.hidden = true;
     }
@@ -125,7 +135,7 @@ export function overrideParseItem(item: Item): Item | ItemTab {
   } else if ("id" in item && item.id === "snesOnly") {
     const itemInt = item as ItemInt;
 
-    itemInt.hidden = $gamePlatform !== 1;
+    itemInt.hidden = $gamePlatform !== 0;
 
     return itemInt;
   } else if ("id" in item && item.id === "europeOnly") {
@@ -140,7 +150,7 @@ export function overrideParseItem(item: Item): Item | ItemTab {
   } else if ("id" in item && item.id?.match(/cross-/)) {
     const itemInt = item as ItemInt;
 
-    if ($gamePlatform !== 0) {
+    if ($gamePlatform !== 1) {
       return itemInt;
     }
 
@@ -174,7 +184,7 @@ export function overrideParseItem(item: Item): Item | ItemTab {
 
     const itemInt = itemTab.items[0] as ItemInt;
 
-    if ($gamePlatform === 0) {
+    if ($gamePlatform === 1) {
       itemInt.offset -= 0x205;
     }
 
@@ -209,7 +219,7 @@ export function overrideParseItem(item: Item): Item | ItemTab {
 
     if (type === "rareItems") {
       flagPerItem = 22;
-    } else if ($gamePlatform === 0) {
+    } else if ($gamePlatform === 1) {
       if (type === "espers") {
         offset += 0x1b97;
         overrideShift = { parent: -1, shift: 0x400 };
@@ -251,7 +261,7 @@ export function overrideParseItem(item: Item): Item | ItemTab {
     let overrideShift: { parent: number; shift: number } | undefined;
     let binary: Binary | undefined;
 
-    if ($gamePlatform === 0) {
+    if ($gamePlatform === 1) {
       itemInt.offset += 0x1dc7;
       binary = { bitStart: 0, bitLength: 7 };
       overrideShift = { parent: -1, shift: 0x400 };
@@ -303,7 +313,7 @@ export function overrideParseItem(item: Item): Item | ItemTab {
   } else if ("id" in item && item.id === "bestiary") {
     const itemTab = item as ItemTab;
 
-    if ($gamePlatform !== 0) {
+    if ($gamePlatform !== 1) {
       return itemTab;
     }
 
@@ -558,7 +568,7 @@ export function generateChecksum(
 function getResources(): Resources {
   const $gamePlatform = get(gamePlatform);
 
-  return $gamePlatform === 0 ? gbaResources : snesResources;
+  return $gamePlatform === 1 ? gbaResources : snesResources;
 }
 
 function generateResources(): void {
@@ -701,7 +711,7 @@ export function updateCharacterNames(slotIndex: number): void {
 function getInventoryLength(): number {
   const $gamePlatform = get(gamePlatform);
 
-  return $gamePlatform === 0 ? 0x120 : 0x100;
+  return $gamePlatform === 1 ? 0x120 : 0x100;
 }
 
 function getInventory(offset: number): number[] {
@@ -716,7 +726,7 @@ function getInventory(offset: number): number[] {
   for (let i = 0x0; i < length; i += 0x1) {
     let itemIndex = getInt(itemsOffset + i, "uint8");
 
-    if ($gamePlatform === 0) {
+    if ($gamePlatform === 1) {
       itemIndex |= getInt(offset + i, "bit", { bit: 7 }) << 0x8;
     }
 
@@ -738,7 +748,7 @@ function updateInventory(
 
   const index = inventory.findIndex((index) => index === itemIndex);
 
-  if ($gamePlatform === 0) {
+  if ($gamePlatform === 1) {
     value |= (itemIndex & 0x100) >> 0x1;
     itemIndex &= 0xff;
   }
@@ -765,7 +775,7 @@ function getSpellShift(
 ): number {
   const $gamePlatform = get(gamePlatform);
 
-  if ($gamePlatform === 0) {
+  if ($gamePlatform === 1) {
     if (partyIndex < 0xc) {
       return partyIndex * 0x40;
     }

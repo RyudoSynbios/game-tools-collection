@@ -61,8 +61,7 @@ interface UserItem {
 export async function beforeInitDataView(
   dataView: DataView,
 ): Promise<DataView> {
-  const platformRegions = getPlatformRegions();
-  const regionValidator = platformRegions.world as Validator;
+  const regionValidator = getPlatformRegions().world as Validator;
   const key = parseInt(getObjKey(regionValidator, 0));
   const validator = regionValidator[key];
 

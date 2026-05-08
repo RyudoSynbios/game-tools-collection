@@ -53,7 +53,6 @@ const template: GameJson = {
         },
       },
       remastered: {
-        europe_australia: {},
         usa: {},
         japan: {},
       },

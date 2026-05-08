@@ -95,9 +95,9 @@ export const pathsToInit = [
 ];
 
 export function beforeInitDataView(dataView: DataView): DataView {
-  const platformRegions = getPlatformRegions().world as Validator;
-  const key = parseInt(getObjKey(platformRegions, 0));
-  const validator = platformRegions[key];
+  const regionValidator = getPlatformRegions().world as Validator;
+  const key = parseInt(getObjKey(regionValidator, 0));
+  const validator = regionValidator[key];
 
   if (!checkValidator(validator, key, dataView)) {
     return dataView;

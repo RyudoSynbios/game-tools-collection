@@ -21,9 +21,9 @@ import type {
 } from "$lib/types";
 
 export function setGamePlatform(dataView: DataView): void {
-  const platformRegions = getPlatformRegions("windows").usa as Validator;
-  const key = parseInt(getObjKey(platformRegions, 0));
-  const validator = platformRegions[key];
+  const regionValidator = getPlatformRegions("windows").usa as Validator;
+  const key = parseInt(getObjKey(regionValidator, 0));
+  const validator = regionValidator[key];
 
   if (checkValidator(validator, key, dataView)) {
     gamePlatform.set(1);
@@ -56,6 +56,14 @@ export function onInitFailed(): void {
   resetState();
 }
 
+export function beforeItemsParsing(): void {
+  const $gamePlatform = get(gamePlatform);
+
+  if ($gamePlatform === 1) {
+    gameRegion.set(2);
+  }
+}
+
 export function overrideParseItem(item: Item): Item {
   const $gamePlatform = get(gamePlatform);
   const $gameRegion = get(gameRegion);
@@ -63,7 +71,7 @@ export function overrideParseItem(item: Item): Item {
   if (
     "id" in item &&
     item.id === "time" &&
-    ($gamePlatform === 1 || [2, 3, 4, 5].includes($gameRegion))
+    [2, 3, 4, 5].includes($gameRegion)
   ) {
     const itemInt = item as ItemInt;
 

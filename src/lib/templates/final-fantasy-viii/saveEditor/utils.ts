@@ -76,6 +76,15 @@ export function onInitFailed(): void {
   resetState();
 }
 
+export function beforeItemsParsing(): void {
+  const $gamePlatform = get(gamePlatform);
+  const $gameRegion = get(gameRegion);
+
+  if ($gamePlatform === 1) {
+    gameRegion.set($gameRegion + 1);
+  }
+}
+
 export function overrideParseItem(item: Item): Item {
   const $gamePlatform = get(gamePlatform);
   const $gameRegion = get(gameRegion);
