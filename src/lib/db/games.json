@@ -419,6 +419,17 @@
     }
   },
   {
+    "id": "donkey-kong-country-3-dixie-kong-s-double-trouble",
+    "name": "Donkey Kong Country 3: Dixie Kong's Double Trouble!",
+    "platformIds": ["super-nintendo"],
+    "tools": {
+      "saveEditor": {
+        "createdAt": "2026-05-11",
+        "regions": ["🇪🇺", "🇺🇸", "🇯🇵"]
+      }
+    }
+  },
+  {
     "id": "donkey-kong-land",
     "name": "Donkey Kong Land",
     "platformIds": ["game-boy"],
