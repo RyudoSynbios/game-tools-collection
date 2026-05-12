@@ -24,7 +24,6 @@ const template: GameJson = {
       },
     },
     text: "Drag 'n' drop here or click to add a save file.",
-    hint: "If you're having trouble loading a save file from an <b>Everdrive</b> cartridge, please see the FAQ.",
     error: "Not a valid save file.",
   },
   items: [

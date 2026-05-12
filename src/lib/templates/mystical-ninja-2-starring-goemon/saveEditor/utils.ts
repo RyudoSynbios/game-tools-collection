@@ -27,8 +27,10 @@ import type {
   ItemTab,
 } from "$lib/types";
 
+const SAVE_FORMAT = "sra";
+
 export function initHeaderShift(dataView: DataView): number {
-  const format = isSrmMpk(dataView) ? "mpk" : "sra";
+  const format = isSrmMpk(dataView) ? "mpk" : SAVE_FORMAT;
 
   return getHeaderShift(dataView, format);
 }
@@ -41,7 +43,7 @@ export function beforeInitDataView(
     return unpackMpk(dataView, shift);
   }
 
-  return byteswapDataView("sra", dataView);
+  return byteswapDataView(SAVE_FORMAT, dataView, shift, overrideGetRegions);
 }
 
 export function overrideGetRegions(
@@ -275,7 +277,7 @@ export function beforeSaving(): ArrayBufferLike {
     return repackMpk();
   }
 
-  return byteswapDataView("sra").buffer;
+  return byteswapDataView(SAVE_FORMAT).buffer;
 }
 
 export function onReset(): void {

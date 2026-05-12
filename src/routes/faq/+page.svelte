@@ -105,17 +105,6 @@
       </li>
     </ul>
   </Spoiler>
-  <Spoiler title="My save file from an Everdrive won't load (Nintendo 64)">
-    <p>Everdrive save files can be byteswapped. You can follow those steps:</p>
-    <p>
-      Open this <a href="/tools/byteswap" target="_blank">page</a> and upload your
-      save file. Your file will be converted and downloaded automatically.
-    </p>
-    <p>
-      Your save file should now work with the save editor. Once you're done
-      editing, use the same tool to convert your file back.
-    </p>
-  </Spoiler>
   <Spoiler title="My data.bin save file won't load (Wii)">
     <p>It looks like you're trying to edit an encrypted save file.</p>
     <p>

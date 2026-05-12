@@ -7,12 +7,17 @@ import { clone } from "$lib/utils/format";
 
 import type { Item, ItemChecksum, ItemInt, ItemSection } from "$lib/types";
 
+const SAVE_FORMAT = "sra";
+
 export function initHeaderShift(dataView: DataView): number {
-  return getHeaderShift(dataView, "sra");
+  return getHeaderShift(dataView, SAVE_FORMAT);
 }
 
-export function beforeInitDataView(dataView: DataView): DataView {
-  return byteswapDataView("sra", dataView);
+export function beforeInitDataView(
+  dataView: DataView,
+  shift: number,
+): DataView {
+  return byteswapDataView(SAVE_FORMAT, dataView, shift, overrideGetRegions);
 }
 
 export function overrideGetRegions(
@@ -101,5 +106,5 @@ export function generateChecksum(
 }
 
 export function beforeSaving(): ArrayBufferLike {
-  return byteswapDataView("sra").buffer;
+  return byteswapDataView(SAVE_FORMAT).buffer;
 }

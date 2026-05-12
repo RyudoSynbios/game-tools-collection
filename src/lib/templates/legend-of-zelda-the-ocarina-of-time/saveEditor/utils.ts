@@ -19,14 +19,19 @@ import {
 
 import { itemQuantites } from "./utils/resource";
 
+const SAVE_FORMAT = "sra";
+
 const poePointsSave = [0, 0, 0];
 
 export function initHeaderShift(dataView: DataView): number {
-  return getHeaderShift(dataView, "sra");
+  return getHeaderShift(dataView, SAVE_FORMAT);
 }
 
-export function beforeInitDataView(dataView: DataView): DataView {
-  return byteswapDataView("sra", dataView);
+export function beforeInitDataView(
+  dataView: DataView,
+  shift: number,
+): DataView {
+  return byteswapDataView(SAVE_FORMAT, dataView, shift);
 }
 
 export function overrideParseItem(item: Item): Item {
@@ -449,7 +454,7 @@ export function generateChecksum(item: ItemChecksum): number {
 }
 
 export function beforeSaving(): ArrayBufferLike {
-  return byteswapDataView("sra").buffer;
+  return byteswapDataView(SAVE_FORMAT).buffer;
 }
 
 function isBiggoronsSword(offset: number): boolean {

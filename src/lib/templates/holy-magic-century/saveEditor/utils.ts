@@ -11,8 +11,10 @@ import {
 
 import type { Item, ItemContainer, ItemInt } from "$lib/types";
 
+const SAVE_FORMAT = "mpk";
+
 export function initHeaderShift(dataView: DataView): number {
-  return getHeaderShift(dataView, "mpk");
+  return getHeaderShift(dataView, SAVE_FORMAT);
 }
 
 export function beforeInitDataView(

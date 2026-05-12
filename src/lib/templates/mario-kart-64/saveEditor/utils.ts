@@ -16,12 +16,14 @@ import type {
 
 const TIME_UNCLEARED = 0x0927c0;
 
+const SAVE_FORMAT = "eep";
+
 export function initHeaderShift(dataView: DataView): number {
-  return getHeaderShift(dataView, "eep");
+  return getHeaderShift(dataView, SAVE_FORMAT);
 }
 
 export function beforeInitDataView(dataView: DataView): DataView {
-  return byteswapDataView("eep", dataView);
+  return byteswapDataView(SAVE_FORMAT, dataView);
 }
 
 export function overrideGetRegions(
@@ -188,7 +190,7 @@ export function generateChecksum(
 }
 
 export function beforeSaving(): ArrayBufferLike {
-  return byteswapDataView("eep").buffer;
+  return byteswapDataView(SAVE_FORMAT).buffer;
 }
 
 function generateBestRecordsChecksum(item: ItemChecksum): number {

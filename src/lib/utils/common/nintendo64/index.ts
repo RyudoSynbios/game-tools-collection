@@ -1,11 +1,13 @@
 import Long from "long";
+import { get } from "svelte/store";
 
+import { gameMetas } from "$lib/stores";
 import { byteswap, getDataView, getInt } from "$lib/utils/bytes";
+import { getRegions } from "$lib/utils/validator";
 
 import type { ItemChecksum } from "$lib/types";
 
 import { DEX_DRIVE_HEADER_SIZE, isDexDriveFile } from "./dexDrive";
-import { isMpk } from "./mpk";
 import { Format, getSrmFormatOffset, getSrmFormatSize, isSrm } from "./srm";
 
 export function getHeaderShift(dataView: DataView, format: Format): number {
@@ -21,23 +23,43 @@ export function getHeaderShift(dataView: DataView, format: Format): number {
 export function byteswapDataView(
   format: Format,
   dataView?: DataView,
+  shift = 0x0,
+  customGetRegions?: (dataView: DataView, shift: number) => string[],
 ): DataView {
+  const $gameMetas = get(gameMetas);
   const $dataView = getDataView(dataView);
 
-  if (format === "eep") {
+  if (["eep", "mpk"].includes(format)) {
     return $dataView;
   }
+
+  // Check the endianess before byteswapping
+  if (dataView) {
+    let regions = [];
+
+    if (typeof customGetRegions === "function") {
+      regions = customGetRegions(dataView, shift);
+    } else {
+      regions = getRegions(dataView, shift);
+    }
+
+    if (regions.length > 0) {
+      return $dataView;
+    }
+  } else if (!$gameMetas.isByteswapped) {
+    return $dataView;
+  }
+
+  gameMetas.set({ isByteswapped: true });
 
   if (isSrm($dataView)) {
     const offset = getSrmFormatOffset(format);
     const size = getSrmFormatSize(format);
 
     return byteswap($dataView, offset, offset + size);
-  } else if (!isMpk($dataView)) {
-    return byteswap($dataView);
   }
 
-  return $dataView;
+  return byteswap($dataView);
 }
 
 function getHash(int: number, polynormal: Long, shift: number): Long {

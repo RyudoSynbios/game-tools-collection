@@ -27,8 +27,10 @@ import type {
 
 import { items } from "./utils/resource";
 
+const SAVE_FORMAT = "eep";
+
 export function initHeaderShift(dataView: DataView): number {
-  const format = isSrmMpk(dataView) ? "mpk" : "eep";
+  const format = isSrmMpk(dataView) ? "mpk" : SAVE_FORMAT;
 
   return getHeaderShift(dataView, format);
 }
@@ -41,7 +43,7 @@ export function beforeInitDataView(
     return unpackMpk(dataView, shift);
   }
 
-  return byteswapDataView("eep", dataView);
+  return byteswapDataView(SAVE_FORMAT, dataView);
 }
 
 export function overrideGetRegions(
@@ -258,7 +260,7 @@ export function beforeSaving(): ArrayBufferLike {
     return repackMpk();
   }
 
-  return byteswapDataView("eep").buffer;
+  return byteswapDataView(SAVE_FORMAT).buffer;
 }
 
 export function onReset(): void {

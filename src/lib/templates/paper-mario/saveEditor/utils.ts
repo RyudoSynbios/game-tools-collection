@@ -16,12 +16,17 @@ import type {
 
 import { badges, locationList } from "./utils/resource";
 
+const SAVE_FORMAT = "fla";
+
 export function initHeaderShift(dataView: DataView): number {
-  return getHeaderShift(dataView, "fla");
+  return getHeaderShift(dataView, SAVE_FORMAT);
 }
 
-export function beforeInitDataView(dataView: DataView): DataView {
-  return byteswapDataView("fla", dataView);
+export function beforeInitDataView(
+  dataView: DataView,
+  shift: number,
+): DataView {
+  return byteswapDataView(SAVE_FORMAT, dataView, shift);
 }
 
 export function overrideParseItem(item: Item): Item {
@@ -327,7 +332,7 @@ export function generateChecksum(item: ItemChecksum): number {
 }
 
 export function beforeSaving(): ArrayBufferLike {
-  return byteswapDataView("fla").buffer;
+  return byteswapDataView(SAVE_FORMAT).buffer;
 }
 
 function getBadges(offset: number, type: string): number[] {
