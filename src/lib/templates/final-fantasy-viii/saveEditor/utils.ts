@@ -66,7 +66,7 @@ export function overrideGetRegions(): string[] {
   const $gamePlatform = get(gamePlatform);
 
   if ($gamePlatform === 1) {
-    return ["usa", "japan"];
+    return ["europe_usa", "japan"];
   }
 
   return customGetRegions();
@@ -299,7 +299,7 @@ export function overrideGetInt(item: Item): [boolean, number | undefined] {
     const locationType = getInt(itemInt.offset - 0x2, "uint16");
 
     if (locationType === 0x2) {
-      return [true, 0x0];
+      return [true, 0x0]; // World Map
     }
   } else if ("id" in item && item.id?.match(/level-/)) {
     const itemInt = item as ItemInt;
@@ -412,14 +412,7 @@ export function overrideSetInt(item: Item, value: string): boolean {
 
     const int = parseInt(value);
 
-    let locationType = 0x1;
-
-    if (int === 0x0) {
-      locationType = 0x2;
-    }
-
-    setInt(itemInt.offset - 0x2, "uint8", locationType);
-    setInt(itemInt.offset, "uint16", value);
+    setInt(itemInt.offset, "uint16", int);
 
     updateLocation(itemInt.offset, int);
   } else if ("id" in item && item.id?.match(/level-/)) {

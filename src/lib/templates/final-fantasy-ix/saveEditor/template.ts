@@ -42,7 +42,6 @@ const template: GameJson = {
   items: [
     {
       id: "slots",
-      instanceId: "slots",
       length: 0x2000,
       type: "container",
       instanceType: "tabs",
@@ -340,7 +339,7 @@ const template: GameJson = {
                               name: "Position",
                               items: [
                                 {
-                                  name: "Zidane",
+                                  name: "Party",
                                   type: "section",
                                   flex: true,
                                   items: [

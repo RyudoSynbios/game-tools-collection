@@ -220,8 +220,8 @@ export function afterSetInt(item: Item): void {
 
     if (materia) {
       subtype = materia.subtype;
-      unknown1 = materia.unknown1;
-      unknown2 = materia.unknown2;
+      unknown1 = materia.unknowns[0];
+      unknown2 = materia.unknowns[1];
     } else {
       quantity = 0;
     }

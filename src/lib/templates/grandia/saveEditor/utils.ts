@@ -68,7 +68,6 @@ export function beforeItemsParsing(): void {
 }
 
 export function overrideParseItem(item: Item): Item {
-  const $gamePlatform = get(gamePlatform);
   const $gameRegion = get(gameRegion);
 
   if ("id" in item && item.id === "time" && [1, 2].includes($gameRegion)) {

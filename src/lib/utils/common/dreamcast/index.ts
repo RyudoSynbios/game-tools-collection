@@ -56,9 +56,7 @@ export function generateChecksum(offset: number): void {
   const size = getFileSize(offset);
 
   for (let i = offset; i < offset + size; i += 0x1) {
-    const int = getInt(i, "uint8");
-
-    checksum ^= int << 0x8;
+    checksum ^= getInt(i, "uint8") << 0x8;
 
     for (let j = 0; j < 8; j += 1) {
       if (checksum & 0x8000) {

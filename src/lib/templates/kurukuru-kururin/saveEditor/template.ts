@@ -1,6 +1,6 @@
 import type { GameJson } from "$lib/types";
 
-import { timeFragment } from "./resource/fragment";
+import { timeFragment } from "./utils/fragment";
 
 const template: GameJson = {
   validator: {

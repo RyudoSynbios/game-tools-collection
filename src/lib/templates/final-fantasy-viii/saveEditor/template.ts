@@ -53,7 +53,7 @@ const template: GameJson = {
         },
       },
       remastered: {
-        usa: {},
+        europe_usa: {},
         japan: {},
       },
     },
@@ -63,7 +63,6 @@ const template: GameJson = {
   items: [
     {
       id: "slots",
-      instanceId: "slots",
       length: 0x2000,
       type: "container",
       instanceType: "tabs",
@@ -429,6 +428,7 @@ const template: GameJson = {
                               type: "variable",
                               dataType: "uint8",
                               resource: "fieldCharacters",
+                              hidden: true,
                             },
                             {
                               name: "Character 2 (Save Preview)",
@@ -436,6 +436,7 @@ const template: GameJson = {
                               type: "variable",
                               dataType: "uint8",
                               resource: "fieldCharacters",
+                              hidden: true,
                             },
                             {
                               name: "Character 3 (Save Preview)",
@@ -443,6 +444,7 @@ const template: GameJson = {
                               type: "variable",
                               dataType: "uint8",
                               resource: "fieldCharacters",
+                              hidden: true,
                             },
                           ],
                         },

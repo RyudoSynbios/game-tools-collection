@@ -65,7 +65,6 @@ export function beforeItemsParsing(): void {
 }
 
 export function overrideParseItem(item: Item): Item {
-  const $gamePlatform = get(gamePlatform);
   const $gameRegion = get(gameRegion);
 
   if (

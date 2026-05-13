@@ -309,7 +309,7 @@ const template: GameJson = {
                       ],
                     },
                     {
-                      name: "Sprits",
+                      name: "Spirits",
                       items: [
                         {
                           type: "bitflags",
