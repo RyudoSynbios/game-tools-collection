@@ -2044,7 +2044,6 @@ const template: GameJson = {
                                 { offset: 0x38f3, bit: 2, label: "Magic Droplet x2" },
                                 { offset: 0x38f3, bit: 3, label: "150 gold" },
                                 { offset: 0x38f3, bit: 4, label: "Moonberry x1" },
-                                { offset: 0x38f3, bit: 5, label: "200 gold" },
                               ],
                             },
                           ],
@@ -2069,6 +2068,7 @@ const template: GameJson = {
                               type: "bitflags",
                               flags: [
                                 { offset: 0x38f3, bit: 6, label: "Repair Kit x3" },
+                                { offset: 0x38f3, bit: 5, label: "200 gold" },
                               ],
                             },
                           ],
