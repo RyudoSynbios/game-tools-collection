@@ -249,6 +249,11 @@ export function parseComponent(
 
   props = Object.entries(props).reduce(
     (results: { [key: string]: any }, [key, value]) => {
+      if (key === "offset") {
+        results[key] = value + getShift(shifts);
+        return results;
+      }
+
       const instance = parents.find((parent) => parent.id === value);
 
       results[key] = instance !== undefined ? instance.index : value;
