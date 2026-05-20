@@ -518,6 +518,17 @@
     }
   },
   {
+    "id": "final-fantasy-vii",
+    "name": "Final Fantasy VII",
+    "platformIds": ["playstation", "steam"],
+    "tools": {
+      "saveEditor": {
+        "createdAt": "2026-05-20",
+        "regions": ["🇪🇺", "🇺🇸", "🇯🇵", "🇫🇷", "🇩🇪", "🇪🇸"]
+      }
+    }
+  },
+  {
     "id": "final-fantasy-vii-remake",
     "name": "Final Fantasy VII Remake",
     "platformIds": ["steam"],

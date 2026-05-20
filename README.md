@@ -51,6 +51,7 @@ Link to the website: [https://game-tools-collection.com](https://game-tools-coll
 | Final Fantasy                                       | NES            | Save                    | USA / JAP                                     |
 | Final Fantasy IV Pixel Remaster                     | STEAM          | Save                    | WORLD                                         |
 | Final Fantasy VI                                    | SNES / GBA     | Save                    | EUR / USA / JAP                               |
+| Final Fantasy VII                                   | PS / STEAM     | Save                    | EUR / USA / JAP / FRA / GER / SPA             |
 | Final Fantasy VII Remake                            | STEAM          | Save                    | WORLD                                         |
 | Final Fantasy VII Rebirth                           | STEAM          | Save                    | WORLD                                         |
 | Final Fantasy VIII                                  | PS             | Save                    | EUR / USA / JAP / FRA / GER / ITA / SPA       |
