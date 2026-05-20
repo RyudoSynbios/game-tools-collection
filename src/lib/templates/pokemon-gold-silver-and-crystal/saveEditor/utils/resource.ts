@@ -335,6 +335,7 @@ export const moves = moveList.reduce((moves: Resource, move) => {
 
 const pokemonNames = getPokemonList(2);
 
+// prettier-ignore
 export const pokemonList = [
   { index: 0x01, name: pokemonNames[0]  , genderThreshold: 2 },
   { index: 0x02, name: pokemonNames[1]  , genderThreshold: 2 },

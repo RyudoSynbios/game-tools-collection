@@ -91,7 +91,7 @@
 
 <style lang="postcss">
   .gtc-dropzone {
-    @apply relative m-auto sm:w-[600px] w-full select-none rounded bg-primary-900 p-2;
+    @apply relative m-auto w-full select-none rounded bg-primary-900 p-2 sm:w-[600px];
 
     min-height: 400px;
 

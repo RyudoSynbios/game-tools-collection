@@ -22,6 +22,7 @@ export const itemTypes = [
   { index: 0xd, name: "Knowledge" },
 ];
 
+// prettier-ignore
 export const inventory = [
   { index: 0x012e, type: 0xc, name: "Book of Scripture" },
   { index: 0x0770, type: 0x0, name: "Healing Grape" },

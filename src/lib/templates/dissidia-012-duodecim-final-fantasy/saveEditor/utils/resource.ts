@@ -1401,6 +1401,7 @@ export const accessories = [
   { index: 0x24d, name: "Damage time ≧ 5 sec", type: 0x1 },
 ];
 
+// prettier-ignore
 export const artifactBonuses = [
   { index: 0x2, name: "Cannot be equipped", action: 0xffff },
   { index: 0x3, name: "-", action: 0xffff },

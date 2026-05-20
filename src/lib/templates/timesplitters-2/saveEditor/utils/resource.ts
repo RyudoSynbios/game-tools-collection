@@ -1,3 +1,4 @@
+// prettier-ignore
 export const arcadeLeagues = [
   {
     name: "Amateur League",

@@ -33,7 +33,7 @@
   isFileVisualizerOpen.subscribe((isOpen) => {
     if (!isOpen && $fileNameStore) {
       gcm.writeFile(currentFile.path, $dataViewStore);
-      
+
       $dataViewStore = new DataView(new ArrayBuffer(0));
     }
   });

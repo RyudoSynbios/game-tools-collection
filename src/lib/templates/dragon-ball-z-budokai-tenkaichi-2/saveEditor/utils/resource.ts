@@ -8,6 +8,7 @@ export const zItemTypes = [
   { index: 0x4, name: "Dragon Ball" },
 ];
 
+// prettier-ignore
 export const zItemList = [
   { index: 0x000, type: 0x0, name: "Health +1" },
   { index: 0x001, type: 0x0, name: "Health +2" },

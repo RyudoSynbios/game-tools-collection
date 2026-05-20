@@ -195,7 +195,8 @@ export default class Iso9660 {
     parentPath: string,
     parentDirectory: Entry[],
   ): void {
-    const sectorEnd = sector + Math.ceil(length / this.volume.logicalBlockSizeLE);
+    const sectorEnd =
+      sector + Math.ceil(length / this.volume.logicalBlockSizeLE);
 
     for (let i = sector; i < sectorEnd; i += 0x1) {
       let offset = this.getSectorOffset(i);
@@ -227,6 +228,7 @@ export default class Iso9660 {
 
         let name = "";
 
+        // prettier-ignore
         for (let i = 0x0; i < nameLength; i += 0x1) {
           const charCode = getInt(offset + 0x21 + i, "uint8", {}, this.dataView);
 

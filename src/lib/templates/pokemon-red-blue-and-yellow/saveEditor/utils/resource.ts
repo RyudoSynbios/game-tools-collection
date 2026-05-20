@@ -15,6 +15,7 @@ const itemTypes = [
   { index: 0x08, name: "TMs" },
 ];
 
+// prettier-ignore
 const itemList = [
   { index: 0x01, type: 0x0, order:   3, name: "Master Ball" },
   { index: 0x02, type: 0x0, order:   2, name: "Ultra Ball" },
@@ -185,6 +186,7 @@ export const moves = moveList.reduce((moves: Resource, move) => {
 
 const pokemonNames = getPokemonList(1);
 
+// prettier-ignore
 export const pokemonList = [
   { index: 0x99, name: pokemonNames[0]  , types: [0x16, 0x03] },
   { index: 0x09, name: pokemonNames[1]  , types: [0x16, 0x03] },

@@ -1,7 +1,18 @@
 <script lang="ts">
   import Input from "$lib/components/Input.svelte";
-  import { dataJson, dataView, dataViewAlt, debugOptions, isDebug } from "$lib/stores";
-  import { dataTypeToLength, getBigInt, getInt, isDataViewAltExists } from "$lib/utils/bytes";
+  import {
+    dataJson,
+    dataView,
+    dataViewAlt,
+    debugOptions,
+    isDebug,
+  } from "$lib/stores";
+  import {
+    dataTypeToLength,
+    getBigInt,
+    getInt,
+    isDataViewAltExists,
+  } from "$lib/utils/bytes";
 
   import type { ItemChecksum } from "$lib/types";
 

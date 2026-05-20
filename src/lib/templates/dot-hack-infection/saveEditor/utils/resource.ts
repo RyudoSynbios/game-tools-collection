@@ -2970,6 +2970,7 @@ export const monsters = [
   { index: 0x12e, name: "303 De{th I$p^a&t" },
 ];
 
+// prettier-ignore
 export const players = [
   { order:  0, name: "Mia" },
   { order:  1, name: "Orca" },

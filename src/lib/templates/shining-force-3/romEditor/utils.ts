@@ -379,12 +379,7 @@ export function importPatch(patch: Patch<PatchData>): void {
 export function generatePatch(): Patch<PatchData> {
   const regions = [getRegionName()];
 
-  return generateDataViewAltPatch(
-    "shining-force-3",
-    "saturn",
-    "1.0",
-    regions,
-  );
+  return generateDataViewAltPatch("shining-force-3", "saturn", "1.0", regions);
 }
 
 export function getAssetNames(type: string): Resource {

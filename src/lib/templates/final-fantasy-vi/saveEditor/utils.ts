@@ -100,7 +100,6 @@ export function beforeItemsParsing(): void {
   const $gameRegion = get(gameRegion);
 
   if ($gamePlatform === 0) {
-    console.log($gameRegion)
     gameRegion.set($gameRegion + 1);
   }
 }
