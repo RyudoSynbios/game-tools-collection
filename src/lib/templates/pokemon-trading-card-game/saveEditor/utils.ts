@@ -117,6 +117,10 @@ export function afterSetInt(item: Item, flag: ItemBitflag): void {
     const int = getInt(album.offset, "uint8") + (isChecked ? 1 : -1);
 
     setInt(album.offset, "uint8", int);
+  } else if ("id" in item && item.id === "card") {
+    const itemInt = item as ItemInt;
+
+    setInt(itemInt.offset, "bit", 0, { bit: 7 });
   }
 }
 

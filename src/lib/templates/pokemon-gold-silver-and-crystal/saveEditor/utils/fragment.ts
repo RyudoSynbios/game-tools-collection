@@ -97,7 +97,6 @@ export function pokemonStatsFragment(
           {
             type: "section",
             flex: true,
-            noMargin: true,
             items: [
               ...(type !== "daycare"
                 ? [

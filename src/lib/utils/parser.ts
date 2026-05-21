@@ -26,6 +26,7 @@ import type {
   ItemComponent,
   ItemContainer,
   ItemIntCondition,
+  ItemTab,
   LogicalOperator,
   Resource,
   ResourceGroups,
@@ -573,17 +574,28 @@ function regexReplace(item: any, key: string, parents: ItemParent[]): void {
   }
 }
 
-export function getItem(id: string, items?: Item[]): Item | undefined {
+export function getItem(
+  id: RegExp | string,
+  items?: (Item | ItemTab)[],
+): Item | ItemTab | undefined {
   const $gameJson = get(gameJson);
   const $gameTemplate = get(gameTemplate);
 
-  if (items) {
-    return items.reduce((result: Item | undefined, item: Item) => {
+  if (!items) {
+    return getItem(id, $gameJson.items || $gameTemplate.items);
+  }
+
+  return items.reduce(
+    (result: Item | ItemTab | undefined, item: Item | ItemTab) => {
       if (result) {
         return result;
       }
 
-      if ("id" in item && item.id === id) {
+      if (
+        "id" in item &&
+        ((typeof id === "string" && item.id === id) ||
+          (typeof id === "object" && item.id?.match(id)))
+      ) {
         return item;
       } else if ("items" in item) {
         const found = getItem(id, item.items as Item[]);
@@ -594,10 +606,9 @@ export function getItem(id: string, items?: Item[]): Item | undefined {
       }
 
       return result;
-    }, undefined);
-  } else {
-    return getItem(id, $gameJson.items || $gameTemplate.items);
-  }
+    },
+    undefined,
+  );
 }
 
 export function getResource(key = ""): Resource | undefined {
