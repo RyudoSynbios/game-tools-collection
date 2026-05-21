@@ -3,6 +3,7 @@
   import {
     dataJson,
     dataView,
+    dataViewAlt,
     debugOptions,
     gameUtils,
     isDebug,
@@ -14,7 +15,7 @@
   export let item: ItemGroup;
 
   $: {
-    ($dataJson, $dataView);
+    ($dataJson, $dataView, $dataViewAlt);
 
     if (utilsExists("overrideItem")) {
       item = $gameUtils.overrideItem(item);

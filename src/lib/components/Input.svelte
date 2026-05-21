@@ -1,7 +1,7 @@
 <script lang="ts">
   import type { HTMLInputTypeAttribute } from "svelte/elements";
 
-  import { dataJson, dataView, isDebug } from "$lib/stores";
+  import { dataJson, dataView, dataViewAlt, isDebug } from "$lib/stores";
 
   export let label = "";
   export let type: HTMLInputTypeAttribute;
@@ -79,7 +79,7 @@
   }
 
   $: {
-    ($dataJson, $dataView);
+    ($dataJson, $dataView, $dataViewAlt);
 
     if (inputEl) {
       inputEl.value = value.toString();

@@ -1,5 +1,11 @@
 <script lang="ts">
-  import { dataJson, dataView, debugOptions, isDebug } from "$lib/stores";
+  import {
+    dataJson,
+    dataView,
+    dataViewAlt,
+    debugOptions,
+    isDebug,
+  } from "$lib/stores";
 
   export let label = "";
   export let type: "number" | "string" = "string";
@@ -13,7 +19,7 @@
   export let onChange: (event: Event) => void;
 
   $: {
-    ($dataJson, $dataView);
+    ($dataJson, $dataView, $dataViewAlt);
 
     if (
       $isDebug &&

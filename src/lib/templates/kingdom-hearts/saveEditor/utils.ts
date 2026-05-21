@@ -221,9 +221,29 @@ export function overrideItem(item: Item): Item {
     itemInt.disabled = index >= int;
 
     return itemInt;
+  } else if ("id" in item && item.id?.match(/^(score|time)$/)) {
+    const itemInt = item as ItemInt;
+
+    const int = getInt(itemInt.offset, "int32");
+
+    itemInt.disabled = int === -1;
+
+    return itemInt;
   }
 
   return item;
+}
+
+export function overrideGetInt(item: Item): [boolean, number | undefined] {
+  if ("id" in item && item.id?.match(/^(score|time)$/)) {
+    const itemInt = item as ItemInt;
+
+    if (itemInt.disabled) {
+      return [true, 0x0];
+    }
+  }
+
+  return [false, undefined];
 }
 
 export function afterSetInt(item: Item): void {

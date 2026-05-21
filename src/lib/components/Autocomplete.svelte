@@ -1,6 +1,12 @@
 <script lang="ts">
   import ExpandMoreIcon from "$lib/assets/ExpandMore.svelte";
-  import { dataJson, dataView, debugOptions, isDebug } from "$lib/stores";
+  import {
+    dataJson,
+    dataView,
+    dataViewAlt,
+    debugOptions,
+    isDebug,
+  } from "$lib/stores";
   import { scrollIntoViewIfNecessary } from "$lib/utils/ui";
 
   import type { ResourceGroups, ResourceLabels } from "$lib/types";
@@ -262,7 +268,7 @@
   }
 
   $: {
-    ($dataJson, $dataView);
+    ($dataJson, $dataView, $dataViewAlt);
 
     const index = options.findIndex((option) => option.key === `${value}`);
 

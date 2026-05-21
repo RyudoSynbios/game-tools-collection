@@ -22,7 +22,7 @@
   let value: string;
 
   $: {
-    ($dataJson, $dataView);
+    ($dataJson, $dataView, $dataViewAlt);
 
     label = item.name || "";
 
@@ -38,6 +38,7 @@
 
     const dataTypeLength = dataTypeToLength(item.dataType) * 2;
 
+    // prettier-ignore
     if (item.dataType !== "uint64") {
       value = getInt(item.offset, item.dataType, {
         bigEndian: item.bigEndian,

@@ -100,7 +100,7 @@
   let labels: ResourceLabels;
 
   $: {
-    ($dataJson, $dataView);
+    ($dataJson, $dataView, $dataViewAlt);
 
     let isOverrided = false;
 

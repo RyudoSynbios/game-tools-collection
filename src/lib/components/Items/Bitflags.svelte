@@ -64,7 +64,7 @@
   let flags: ItemBitflagChecked[];
 
   $: {
-    ($dataJson, $dataView);
+    ($dataJson, $dataView, $dataViewAlt);
 
     let isOverrided = false;
 

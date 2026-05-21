@@ -182,6 +182,14 @@ export function overrideItem(item: Item): Item {
     itemInt.disabled = !bonus?.name.match(/\+|-/);
 
     return itemInt;
+  } else if ("id" in item && item.id === "time") {
+    const itemInt = item as ItemInt;
+
+    const int = getInt(itemInt.offset, "int32");
+
+    itemInt.disabled = int === -1;
+
+    return itemInt;
   }
 
   return item;
@@ -227,6 +235,12 @@ export function overrideGetInt(
       return [true, 0x0];
     } else if (int < 0) {
       return [true, -int];
+    }
+  } else if ("id" in item && item.id === "time") {
+    const itemInt = item as ItemInt;
+
+    if (itemInt.disabled) {
+      return [true, 0x0];
     }
   }
 

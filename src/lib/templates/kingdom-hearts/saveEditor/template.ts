@@ -2262,11 +2262,11 @@ const template: GameJson = {
                                   items: category.ranks.map((rank) =>
                                     game.type === "score"
                                       ? {
+                                          id: "score",
                                           name: rank.name,
                                           offset: 0xf4c + rank.index,
                                           type: "variable",
                                           dataType: "int32",
-                                          disableIfNegative: true,
                                           min: 0,
                                           max: 999,
                                         }
@@ -2289,7 +2289,6 @@ const template: GameJson = {
                                                   },
                                                 },
                                               ],
-                                              disableIfNegative: true,
                                               min: 0,
                                               max: 59,
                                             },
@@ -2307,7 +2306,6 @@ const template: GameJson = {
                                                   },
                                                 },
                                               ],
-                                              disableIfNegative: true,
                                               leadingZeros: 1,
                                               min: 0,
                                               max: 59,
@@ -2326,7 +2324,6 @@ const template: GameJson = {
                                                   },
                                                 },
                                               ],
-                                              disableIfNegative: true,
                                               leadingZeros: 1,
                                               min: 0,
                                               max: 59,

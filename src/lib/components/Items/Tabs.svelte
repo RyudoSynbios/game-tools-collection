@@ -6,6 +6,7 @@
   import {
     dataJson,
     dataView,
+    dataViewAlt,
     debugOptions,
     gameJson,
     gameUtils,
@@ -113,7 +114,7 @@
   }
 
   $: {
-    ($dataJson, $dataView);
+    ($dataJson, $dataView, $dataViewAlt);
 
     if (utilsExists("overrideItem")) {
       item = $gameUtils.overrideItem(item);

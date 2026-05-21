@@ -51,7 +51,7 @@
   let checked: boolean;
 
   $: {
-    ($dataJson, $dataView);
+    ($dataJson, $dataView, $dataViewAlt);
 
     let isOverrided = false;
 
