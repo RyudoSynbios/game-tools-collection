@@ -28,6 +28,7 @@ import type {
   ItemIntCondition,
   ItemTab,
   LogicalOperator,
+  ParentItem,
   Resource,
   ResourceGroups,
 } from "$lib/types";
@@ -609,6 +610,36 @@ export function getItem(
     },
     undefined,
   );
+}
+
+export function getClosestItem(
+  id: RegExp | string,
+  item: Item | ParentItem,
+): Item | ParentItem | undefined {
+  if (!item.parent) {
+    return undefined;
+  }
+
+  let find = undefined;
+
+  if (
+    (typeof id === "string" && id === item.parent.id) ||
+    (typeof id === "object" && item.parent.id?.match(id))
+  ) {
+    return item.parent;
+  }
+
+  if (typeof id === "string") {
+    find = item.parent.items.find((item) => "id" in item && item.id === id);
+  } else {
+    find = item.parent.items.find((item) => "id" in item && item.id?.match(id));
+  }
+
+  if (find) {
+    return find;
+  }
+
+  return getClosestItem(id, item.parent);
 }
 
 export function getResource(key = ""): Resource | undefined {
