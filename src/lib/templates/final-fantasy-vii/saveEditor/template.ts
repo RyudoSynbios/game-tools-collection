@@ -904,6 +904,7 @@ const template: GameJson = {
                                   offset: 0x282,
                                   type: "variable",
                                   dataType: "uint16",
+                                  min: 1,
                                   max: 9999,
                                 },
                                 {
@@ -1811,7 +1812,7 @@ const template: GameJson = {
                                           dataType: "uint16",
                                           binaryCodedDecimal: true,
                                           operations: [{ "/": 10 }],
-                                          leadingZeros: 1,
+                                          leadingZeros: 2,
                                           max: 999,
                                         },
                                       ],

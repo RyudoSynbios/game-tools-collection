@@ -330,13 +330,15 @@ const template: GameJson = {
                       name: "HP",
                       type: "group",
                       mode: "fraction",
+                      linked: true,
                       items: [
                         {
+                          id: "current",
                           offset: 0x13490,
                           type: "variable",
                           dataType: "uint16",
                           bigEndian: true,
-                          max: 200,
+                          min: 1,
                         },
                         {
                           id: "baseStats-28",
@@ -344,6 +346,7 @@ const template: GameJson = {
                           type: "variable",
                           dataType: "uint16",
                           bigEndian: true,
+                          min: 1,
                           max: 200,
                         },
                       ],
@@ -352,13 +355,14 @@ const template: GameJson = {
                       name: "FP",
                       type: "group",
                       mode: "fraction",
+                      linked: true,
                       items: [
                         {
+                          id: "current",
                           offset: 0x13494,
                           type: "variable",
                           dataType: "uint16",
                           bigEndian: true,
-                          max: 200,
                         },
                         {
                           id: "baseStats-26",
@@ -374,13 +378,14 @@ const template: GameJson = {
                       name: "BP",
                       type: "group",
                       mode: "fraction",
+                      linked: true,
                       items: [
                         {
+                          id: "current",
                           offset: 0x134b2,
                           type: "variable",
                           dataType: "uint16",
                           bigEndian: true,
-                          max: 99,
                         },
                         {
                           offset: 0x134b4,
@@ -395,13 +400,14 @@ const template: GameJson = {
                       name: "Star Power",
                       type: "group",
                       mode: "fraction",
+                      linked: true,
                       items: [
                         {
+                          id: "current",
                           offset: 0x1349a,
                           type: "variable",
                           dataType: "uint16",
                           bigEndian: true,
-                          max: 800,
                         },
                         {
                           offset: 0x1349c,
@@ -504,13 +510,14 @@ const template: GameJson = {
                           name: "HP",
                           type: "group",
                           mode: "fraction",
+                          linked: true,
                           items: [
                             {
+                              id: "current",
                               offset: 0x13434,
                               type: "variable",
                               dataType: "uint16",
                               bigEndian: true,
-                              max: 99,
                             },
                             {
                               id: "baseStats-2",
@@ -518,6 +525,7 @@ const template: GameJson = {
                               type: "variable",
                               dataType: "uint16",
                               bigEndian: true,
+                              min: 1,
                               max: 99,
                             },
                           ],

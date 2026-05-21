@@ -108,14 +108,14 @@ const template: GameJson = {
                       name: "Health",
                       type: "group",
                       mode: "fraction",
+                      linked: true,
                       items: [
                         {
-                          id: "health",
+                          id: "current",
                           offset: 0x22,
                           type: "variable",
                           dataType: "uint8",
                           min: 1,
-                          max: 110,
                           test: true,
                         },
                         {

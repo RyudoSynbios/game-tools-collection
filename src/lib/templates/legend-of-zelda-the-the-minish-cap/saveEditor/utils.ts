@@ -114,14 +114,6 @@ export function overrideItem(item: Item): Item {
     const upgrade = getInt(itemInt.offset + shift, "uint8");
 
     itemInt.max = valuesMax[upgrade];
-  } else if ("id" in item && item.id === "health") {
-    const itemInt = item as ItemInt;
-
-    const maxHealth = getInt(itemInt.offset + 0x1, "uint8", {
-      operations: itemInt.operations,
-    });
-
-    itemInt.max = maxHealth;
   } else if ("id" in item && item.id?.match(/charmDuration-/)) {
     const itemInt = item as ItemInt;
 
@@ -180,15 +172,6 @@ export function afterSetInt(item: Item, flag: ItemBitflag): void {
     value = Math.min(value, valuesMax[upgrade]);
 
     setInt(itemInt.offset - shift, dataType, value);
-  } else if ("id" in item && item.id === "maxHealth") {
-    const itemInt = item as ItemInt;
-
-    let health = getInt(itemInt.offset - 0x1, "uint8");
-    const maxHealth = getInt(itemInt.offset, "uint8");
-
-    health = Math.min(health, maxHealth);
-
-    setInt(itemInt.offset - 0x1, "uint8", health);
   } else if ("id" in item && item.id?.match(/bottle-/)) {
     const itemInt = item as ItemInt;
 

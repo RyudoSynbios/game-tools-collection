@@ -203,17 +203,16 @@ const template: GameJson = {
                       name: "Energy",
                       type: "group",
                       mode: "fraction",
+                      linked: true,
                       items: [
                         {
-                          id: "value-energy",
+                          id: "current",
                           offset: 0x30,
                           type: "variable",
                           dataType: "uint16",
                           min: 1,
-                          max: 1499,
                         },
                         {
-                          id: "max-energy",
                           offset: 0x32,
                           type: "variable",
                           dataType: "uint16",
@@ -226,16 +225,16 @@ const template: GameJson = {
                       name: "Reserve Tank",
                       type: "group",
                       mode: "fraction",
+                      linked: true,
                       items: [
                         {
-                          id: "value-reserveTank",
+                          id: "current",
                           offset: 0x44,
                           type: "variable",
                           dataType: "uint16",
-                          max: 400,
                         },
                         {
-                          id: "max-reserveTank",
+                          id: "maxReserveTank",
                           offset: 0x42,
                           type: "variable",
                           dataType: "uint16",
@@ -261,16 +260,15 @@ const template: GameJson = {
                       name: "Missiles",
                       type: "group",
                       mode: "fraction",
+                      linked: true,
                       items: [
                         {
-                          id: "value-missiles",
+                          id: "current",
                           offset: 0x34,
                           type: "variable",
                           dataType: "uint16",
-                          max: 230,
                         },
                         {
-                          id: "max-missiles",
                           offset: 0x36,
                           type: "variable",
                           dataType: "uint16",
@@ -282,16 +280,15 @@ const template: GameJson = {
                       name: "Super Missiles",
                       type: "group",
                       mode: "fraction",
+                      linked: true,
                       items: [
                         {
-                          id: "value-superMissiles",
+                          id: "current",
                           offset: 0x38,
                           type: "variable",
                           dataType: "uint16",
-                          max: 50,
                         },
                         {
-                          id: "max-superMissiles",
                           offset: 0x3a,
                           type: "variable",
                           dataType: "uint16",
@@ -303,16 +300,15 @@ const template: GameJson = {
                       name: "Power Bombs",
                       type: "group",
                       mode: "fraction",
+                      linked: true,
                       items: [
                         {
-                          id: "value-powerBombs",
+                          id: "current",
                           offset: 0x3c,
                           type: "variable",
                           dataType: "uint16",
-                          max: 50,
                         },
                         {
-                          id: "max-powerBombs",
                           offset: 0x3e,
                           type: "variable",
                           dataType: "uint16",

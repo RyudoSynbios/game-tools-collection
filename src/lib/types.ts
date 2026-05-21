@@ -292,6 +292,7 @@ export interface ItemGroup {
   name?: string;
   type: "group";
   mode?: "chrono" | "date" | "fraction" | "time";
+  linked?: boolean;
   hint?: string;
   hidden?: boolean;
   items: ItemInt[];

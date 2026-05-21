@@ -22,6 +22,7 @@ import type {
   DataTypeInt,
   DataTypeUInt,
   IntOperation,
+  ItemInt,
   StringEncoding,
 } from "$lib/types";
 
@@ -31,6 +32,7 @@ import {
   isCharBigEndian,
   isCharUint16,
 } from "./encoding";
+import { getJsonInt, setJsonInt } from "./json";
 import { getResource } from "./parser";
 
 export function getDataView(dataViewTmp?: DataView): DataView {
@@ -1010,6 +1012,68 @@ export function getIntFromArray(
   }
 
   return int;
+}
+
+export function getIntFromItem(item: ItemInt): number | bigint {
+  const $dataViewAlt = get(dataViewAlt);
+
+  let _dataViewAlt;
+
+  if (isDataViewAltExists(item.dataViewAltKey || "")) {
+    _dataViewAlt = $dataViewAlt[item.dataViewAltKey as string];
+  }
+
+  let value: bigint | number | string = 0;
+
+  // prettier-ignore
+  if (item.jsonPath) {
+    value = getJsonInt(item.jsonPath, { operations: item.operations });
+  } else if (item.dataType !== "int64" && item.dataType !== "uint64") {
+    value = getInt(item.offset, item.dataType, {
+      bigEndian: item.bigEndian,
+      binaryCodedDecimal: item.binaryCodedDecimal,
+      binary: item.binary,
+      bit: item.bit,
+      operations: item.operations,
+    }, _dataViewAlt);
+  } else {
+    value = getBigInt(item.offset, item.dataType, {
+      bigEndian: item.bigEndian,
+    }, _dataViewAlt);
+  }
+
+  return value;
+}
+
+// prettier-ignore
+export function setIntFromItem(
+  item: ItemInt,
+  value: bigint | number | string,
+): void {
+  if (item.jsonPath && typeof value !== "bigint") {
+    setJsonInt(item.jsonPath, item.dataType, value, {
+      operations: item.operations,
+    });
+  } else if (
+    item.dataType !== "int64" &&
+    item.dataType !== "uint64" &&
+    typeof value !== "bigint"
+  ) {
+    setInt(item.offset, item.dataType, value, {
+      bigEndian: item.bigEndian,
+      binaryCodedDecimal: item.binaryCodedDecimal,
+      binary: item.binary,
+      bit: item.bit,
+      operations: item.operations,
+    }, item.dataViewAltKey);
+  } else if (
+    (item.dataType === "int64" || item.dataType === "uint64") &&
+    typeof value === "bigint"
+  ) {
+    setBigInt(item.offset, item.dataType, value, {
+      bigEndian: item.bigEndian,
+    }, item.dataViewAltKey);
+  }
 }
 
 export function intToArray(

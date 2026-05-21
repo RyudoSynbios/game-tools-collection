@@ -127,12 +127,13 @@ export function familiarFragment(type: string, offset: number): ItemSection {
           name: "HP",
           type: "group",
           mode: "fraction",
+          linked: true,
           items: [
             {
+              id: "current",
               offset: offset + 0x35,
               type: "variable",
               dataType: "uint16",
-              max: 999,
             },
             {
               offset: offset + 0xd,
@@ -146,8 +147,10 @@ export function familiarFragment(type: string, offset: number): ItemSection {
           name: "MP",
           type: "group",
           mode: "fraction",
+          linked: true,
           items: [
             {
+              id: "current",
               offset: offset + 0x37,
               type: "variable",
               dataType: "uint8",

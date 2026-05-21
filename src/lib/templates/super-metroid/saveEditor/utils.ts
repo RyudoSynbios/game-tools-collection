@@ -21,21 +21,7 @@ export function overrideParseItem(item: Item, instanceIndex: number): Item {
 }
 
 export function overrideItem(item: Item): Item {
-  if ("id" in item && item.id?.match(/value-/)) {
-    const itemInt = item as ItemInt;
-
-    const [, type] = item.id.split("-");
-
-    let shift = 0x2;
-
-    if (type === "reserveTank") {
-      shift = -0x2;
-    }
-
-    const max = getInt(itemInt.offset + shift, "uint16");
-
-    itemInt.max = max;
-  } else if ("id" in item && item.id === "supplyMode") {
+  if ("id" in item && item.id === "supplyMode") {
     const itemInt = item as ItemInt;
 
     const maxReserveTank = getInt(itemInt.offset + 0x14, "uint16");
@@ -88,26 +74,7 @@ export function overrideSetInt(item: Item, value: string): boolean {
 }
 
 export function afterSetInt(item: Item, flag: ItemBitflag): void {
-  if ("id" in item && item.id?.match(/max-/)) {
-    const itemInt = item as ItemInt;
-
-    const [, type] = item.id.split("-");
-
-    let shift = 0x2;
-
-    if (type === "reserveTank") {
-      shift = -0x2;
-    }
-
-    let value = getInt(itemInt.offset - shift, "uint16");
-    const max = getInt(itemInt.offset, "uint16");
-
-    value = Math.min(value, max);
-
-    setInt(itemInt.offset - shift, "uint16", value);
-  }
-
-  if ("id" in item && item.id === "max-reserveTank") {
+  if ("id" in item && item.id === "maxReserveTank") {
     const itemInt = item as ItemInt;
 
     const maxReserveTank = getInt(itemInt.offset, "uint16");

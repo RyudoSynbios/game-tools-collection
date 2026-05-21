@@ -80,14 +80,6 @@ export function overrideItem(item: Item): Item {
     });
 
     itemInt.max = valuesMax[upgrade];
-  } else if ("id" in item && item.id === "health") {
-    const itemInt = item as ItemInt;
-
-    const maxHealth = getInt(itemInt.offset - 0x2, "uint16", {
-      bigEndian: true,
-    });
-
-    itemInt.max = maxHealth / 16;
   } else if ("id" in item && item.id === "magic") {
     const itemInt = item as ItemInt;
 
@@ -316,16 +308,10 @@ export function afterSetInt(item: Item, flag: ItemBitflag): void {
   } else if ("id" in item && item.id === "maxHealth") {
     const itemInt = item as ItemInt;
 
-    let health = getInt(itemInt.offset + 0x2, "uint16", { bigEndian: true });
     const maxHealth = getInt(itemInt.offset, "uint16", { bigEndian: true });
-
-    health = Math.min(health, maxHealth);
-
-    setInt(itemInt.offset + 0x2, "uint16", health, { bigEndian: true });
+    const hasDoubleDefense = getBoolean(itemInt.offset + 0xf);
 
     let int = 0;
-
-    const hasDoubleDefense = getBoolean(itemInt.offset + 0xe);
 
     if (hasDoubleDefense) {
       int = maxHealth / 16;

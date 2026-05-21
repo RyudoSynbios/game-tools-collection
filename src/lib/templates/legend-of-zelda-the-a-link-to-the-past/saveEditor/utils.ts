@@ -60,15 +60,7 @@ export function overrideParseItem(item: Item): Item {
 export function overrideItem(item: Item): Item {
   const $gameTemplate = get(gameTemplate);
 
-  if ("id" in item && item.id === "health") {
-    const itemInt = item as ItemInt;
-
-    const maxHealth = getInt(itemInt.offset - 0x1, "uint8", {
-      operations: itemInt.operations,
-    });
-
-    itemInt.max = maxHealth;
-  } else if ("id" in item && item.id === "bombs") {
+  if ("id" in item && item.id === "bombs") {
     const itemInt = item as ItemInt;
 
     const bombBag = getInt(itemInt.offset + 0x2d, "uint8");
@@ -121,16 +113,7 @@ export function overrideSetInt(item: Item, value: string): boolean {
 export function afterSetInt(item: Item, flag: ItemBitflag): void {
   const $gameTemplate = get(gameTemplate);
 
-  if ("id" in item && item.id === "maxHealth") {
-    const itemInt = item as ItemInt;
-
-    let health = getInt(itemInt.offset + 0x1, "uint8");
-    const maxHealth = getInt(itemInt.offset, "uint8");
-
-    health = Math.min(health, maxHealth);
-
-    setInt(itemInt.offset + 0x1, "uint8", health);
-  } else if ("id" in item && item.id === "items") {
+  if ("id" in item && item.id === "items") {
     const itemBitflags = item as ItemBitflags;
 
     const checked = getInt(flag.offset, "bit", { bit: flag.bit });

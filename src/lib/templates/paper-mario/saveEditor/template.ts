@@ -323,18 +323,21 @@ const template: GameJson = {
                       name: "HP",
                       type: "group",
                       mode: "fraction",
+                      linked: true,
                       items: [
                         {
+                          id: "current",
                           offset: 0x42,
                           type: "variable",
                           dataType: "uint8",
-                          max: 75,
+                          min: 1,
                         },
                         {
                           id: "baseStats",
                           offset: 0x43,
                           type: "variable",
                           dataType: "uint8",
+                          min: 1,
                           max: 75,
                         },
                       ],
@@ -343,12 +346,13 @@ const template: GameJson = {
                       name: "FP",
                       type: "group",
                       mode: "fraction",
+                      linked: true,
                       items: [
                         {
+                          id: "current",
                           offset: 0x45,
                           type: "variable",
                           dataType: "uint8",
-                          max: 75,
                         },
                         {
                           id: "baseStats",
@@ -370,12 +374,13 @@ const template: GameJson = {
                       name: "Star Energy",
                       type: "group",
                       mode: "fraction",
+                      linked: true,
                       items: [
                         {
+                          id: "current",
                           offset: 0x2d0,
                           type: "variable",
                           dataType: "uint8",
-                          max: 7,
                         },
                         {
                           id: "savePreview-4130",
@@ -961,8 +966,10 @@ const template: GameJson = {
                               name: "Times Fled",
                               type: "group",
                               mode: "fraction",
+                              linked: true,
                               items: [
                                 {
+                                  id: "current",
                                   offset: 0x2e8,
                                   type: "variable",
                                   dataType: "uint16",

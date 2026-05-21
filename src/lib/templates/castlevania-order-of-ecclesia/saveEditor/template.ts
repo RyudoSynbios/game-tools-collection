@@ -573,13 +573,14 @@ const template: GameJson = {
                               name: "HP",
                               type: "group",
                               mode: "fraction",
+                              linked: true,
                               items: [
                                 {
+                                  id: "current",
                                   offset: 0x358,
                                   type: "variable",
                                   dataType: "uint16",
                                   min: 1,
-                                  max: 9999,
                                 },
                                 {
                                   id: "bonusStats-0",
@@ -595,12 +596,13 @@ const template: GameJson = {
                               name: "MP",
                               type: "group",
                               mode: "fraction",
+                              linked: true,
                               items: [
                                 {
+                                  id: "current",
                                   offset: 0x35c,
                                   type: "variable",
                                   dataType: "uint16",
-                                  max: 9999,
                                 },
                                 {
                                   id: "bonusStats-1",
@@ -615,12 +617,13 @@ const template: GameJson = {
                               name: "Hearts",
                               type: "group",
                               mode: "fraction",
+                              linked: true,
                               items: [
                                 {
+                                  id: "current",
                                   offset: 0x360,
                                   type: "variable",
                                   dataType: "uint16",
-                                  max: 999,
                                 },
                                 {
                                   id: "bonusStats-2",

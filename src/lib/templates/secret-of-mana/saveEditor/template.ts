@@ -889,14 +889,15 @@ const template: GameJson = {
                               name: "Energy Orbs",
                               type: "group",
                               mode: "fraction",
+                              linked: true,
                               items: [
                                 {
+                                  id: "current",
                                   offset: 0xdb,
                                   type: "variable",
                                   dataType: "upper4",
                                   operations: [{ "+": 1 }],
                                   min: 1,
-                                  max: 9,
                                 },
                                 {
                                   offset: 0xdf,
@@ -929,14 +930,15 @@ const template: GameJson = {
                               name: "Energy Orbs",
                               type: "group",
                               mode: "fraction",
+                              linked: true,
                               items: [
                                 {
+                                  id: "current",
                                   offset: 0xdb,
                                   type: "variable",
                                   dataType: "lower4",
                                   operations: [{ "+": 1 }],
                                   min: 1,
-                                  max: 9,
                                 },
                                 {
                                   offset: 0xdf,
@@ -969,14 +971,15 @@ const template: GameJson = {
                               name: "Energy Orbs",
                               type: "group",
                               mode: "fraction",
+                              linked: true,
                               items: [
                                 {
+                                  id: "current",
                                   offset: 0xdc,
                                   type: "variable",
                                   dataType: "upper4",
                                   operations: [{ "+": 1 }],
                                   min: 1,
-                                  max: 9,
                                 },
                                 {
                                   offset: 0xe0,
@@ -1009,14 +1012,15 @@ const template: GameJson = {
                               name: "Energy Orbs",
                               type: "group",
                               mode: "fraction",
+                              linked: true,
                               items: [
                                 {
+                                  id: "current",
                                   offset: 0xdc,
                                   type: "variable",
                                   dataType: "lower4",
                                   operations: [{ "+": 1 }],
                                   min: 1,
-                                  max: 9,
                                 },
                                 {
                                   offset: 0xe0,
@@ -1049,14 +1053,15 @@ const template: GameJson = {
                               name: "Energy Orbs",
                               type: "group",
                               mode: "fraction",
+                              linked: true,
                               items: [
                                 {
+                                  id: "current",
                                   offset: 0xdd,
                                   type: "variable",
                                   dataType: "upper4",
                                   operations: [{ "+": 1 }],
                                   min: 1,
-                                  max: 9,
                                 },
                                 {
                                   offset: 0xe1,
@@ -1089,14 +1094,15 @@ const template: GameJson = {
                               name: "Energy Orbs",
                               type: "group",
                               mode: "fraction",
+                              linked: true,
                               items: [
                                 {
+                                  id: "current",
                                   offset: 0xdd,
                                   type: "variable",
                                   dataType: "lower4",
                                   operations: [{ "+": 1 }],
                                   min: 1,
-                                  max: 9,
                                 },
                                 {
                                   offset: 0xe1,
@@ -1129,14 +1135,15 @@ const template: GameJson = {
                               name: "Energy Orbs",
                               type: "group",
                               mode: "fraction",
+                              linked: true,
                               items: [
                                 {
+                                  id: "current",
                                   offset: 0xde,
                                   type: "variable",
                                   dataType: "upper4",
                                   operations: [{ "+": 1 }],
                                   min: 1,
-                                  max: 9,
                                 },
                                 {
                                   offset: 0xe2,
@@ -1169,14 +1176,15 @@ const template: GameJson = {
                               name: "Energy Orbs",
                               type: "group",
                               mode: "fraction",
+                              linked: true,
                               items: [
                                 {
+                                  id: "current",
                                   offset: 0xde,
                                   type: "variable",
                                   dataType: "lower4",
                                   operations: [{ "+": 1 }],
                                   min: 1,
-                                  max: 9,
                                 },
                                 {
                                   offset: 0xe2,

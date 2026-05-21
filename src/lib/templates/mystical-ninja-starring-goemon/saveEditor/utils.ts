@@ -46,21 +46,6 @@ export function initShifts(): number[] {
   return getMpkNoteShift();
 }
 
-export function overrideItem(item: Item): Item {
-  if ("id" in item && item.id === "health") {
-    const itemInt = item as ItemInt;
-
-    const maxHealth = getInt(itemInt.offset - 0x4, "uint16", {
-      bigEndian: true,
-      operations: itemInt.operations,
-    });
-
-    itemInt.max = maxHealth;
-  }
-
-  return item;
-}
-
 export function overrideGetInt(
   item: Item,
 ): [boolean, ItemBitflagChecked[] | undefined] {
@@ -110,16 +95,7 @@ export function overrideSetInt(
 }
 
 export function afterSetInt(item: Item): void {
-  if ("id" in item && item.id === "maxHealth") {
-    const itemInt = item as ItemInt;
-
-    let health = getInt(itemInt.offset + 0x4, "uint16", { bigEndian: true });
-    const maxHealth = getInt(itemInt.offset, "uint16", { bigEndian: true });
-
-    health = Math.min(health, maxHealth);
-
-    setInt(itemInt.offset + 0x4, "uint16", health, { bigEndian: true });
-  } else if ("id" in item && item.id === "location") {
+  if ("id" in item && item.id === "location") {
     const itemInt = item as ItemInt;
 
     const int = getInt(itemInt.offset, "uint16", { bigEndian: true });

@@ -105,9 +105,10 @@ const template: GameJson = {
                               name: "Health",
                               type: "group",
                               mode: "fraction",
+                              linked: true,
                               items: [
                                 {
-                                  id: "health",
+                                  id: "current",
                                   offset: 0x12a,
                                   type: "variable",
                                   dataType: "uint8",
@@ -116,7 +117,6 @@ const template: GameJson = {
                                   step: 0.25,
                                 },
                                 {
-                                  id: "maxHealth",
                                   offset: 0x12b,
                                   type: "variable",
                                   dataType: "uint8",

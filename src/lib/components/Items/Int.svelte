@@ -11,13 +11,7 @@
     gameUtils,
     isDebug,
   } from "$lib/stores";
-  import {
-    getBigInt,
-    getInt,
-    isDataViewAltExists,
-    setBigInt,
-    setInt,
-  } from "$lib/utils/bytes";
+  import { getIntFromItem, setIntFromItem } from "$lib/utils/bytes";
   import {
     getIntMax,
     getIntMin,
@@ -26,7 +20,6 @@
     round,
     utilsExists,
   } from "$lib/utils/format";
-  import { getJsonInt, setJsonInt } from "$lib/utils/json";
   import { getResource } from "$lib/utils/parser";
 
   import type {
@@ -64,30 +57,40 @@
       isOverrided = $gameUtils.overrideSetInt(item, newValue);
     }
 
-    // prettier-ignore
     if (!isOverrided) {
-      if (item.jsonPath) {
-        setJsonInt(item.jsonPath, item.dataType, newValue, {
-          operations: item.operations,
-        });
-      } else if (item.dataType !== "int64" && item.dataType !== "uint64") {
-        setInt(item.offset, item.dataType, newValue, {
-          bigEndian: item.bigEndian,
-          binaryCodedDecimal: item.binaryCodedDecimal,
-          binary: item.binary,
-          bit: item.bit,
-          operations: item.operations,
-        }, item.dataViewAltKey);
-      } else {
-        setBigInt(item.offset, item.dataType, newValue, {
-          bigEndian: item.bigEndian
-        }, item.dataViewAltKey);
+      setIntFromItem(item, newValue);
+    }
+
+    if (isLinked(item) && item.id !== "current") {
+      const currentItem = item.parent!.items[0] as ItemInt;
+      const maxItem = item.parent!.items[1] as ItemInt;
+
+      let current = getIntFromItem(currentItem);
+      const max = getIntFromItem(maxItem);
+
+      if (typeof current !== "bigint" && typeof max !== "bigint") {
+        current = Math.min(current, max);
+
+        setIntFromItem(currentItem, current);
       }
     }
 
     if (utilsExists("afterSetInt")) {
       $gameUtils.afterSetInt(item);
     }
+  }
+
+  function isLinked(item: ItemInt): boolean {
+    if (
+      item.parent &&
+      "type" in item.parent &&
+      item.parent.type === "group" &&
+      item.parent.linked
+    ) {
+      return true;
+    }
+
+    return false;
   }
 
   let label: string;
@@ -104,14 +107,22 @@
 
     let isOverrided = false;
 
-    let int = 0;
-
     if (item.uncontrolled && item.id !== previousId) {
       value = 0;
     }
 
     if (utilsExists("overrideItem")) {
       item = $gameUtils.overrideItem(item);
+    }
+
+    if (isLinked(item) && item.id === "current") {
+      const maxItem = item.parent!.items[1] as ItemInt;
+
+      const max = getIntFromItem(maxItem);
+
+      if (typeof max !== "bigint") {
+        item.max = max;
+      }
     }
 
     label = item.name || "";
@@ -128,40 +139,8 @@
     }
 
     if (!item.uncontrolled) {
-      let _dataViewAlt;
-
-      if (isDataViewAltExists(item.dataViewAltKey || "")) {
-        _dataViewAlt = $dataViewAlt[item.dataViewAltKey as string];
-      }
-
-      // prettier-ignore
       if (!isOverrided) {
-        if (item.jsonPath) {
-          value = getJsonInt(item.jsonPath, { operations: item.operations });
-        } else if (item.dataType !== "int64" && item.dataType !== "uint64") {
-          int = getInt(item.offset, item.dataType, {
-            bigEndian: item.bigEndian,
-          }, _dataViewAlt);
-
-          value = getInt(item.offset, item.dataType, {
-            bigEndian: item.bigEndian,
-            binaryCodedDecimal: item.binaryCodedDecimal,
-            binary: item.binary,
-            bit: item.bit,
-            operations: item.operations,
-          }, _dataViewAlt);
-        } else {
-          value = getBigInt(item.offset, item.dataType, {
-            bigEndian: item.bigEndian,
-          }, _dataViewAlt);
-        }
-      }
-
-      const isNegative = (int || value) === -1;
-
-      if (item.disableIfNegative && isNegative) {
-        item.disabled = true;
-        value = 0;
+        value = getIntFromItem(item);
       }
 
       if (item.dataType === "float32") {

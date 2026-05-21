@@ -209,19 +209,22 @@ const template: GameJson = {
                           name: "Life",
                           type: "group",
                           mode: "fraction",
+                          linked: true,
                           items: [
                             {
+                              id: "current",
                               dataViewAltKey: "heroStatus",
                               offset: 0x18,
                               type: "variable",
                               dataType: "uint16",
-                              max: 8191,
+                              min: 1,
                             },
                             {
                               dataViewAltKey: "heroStatus",
                               offset: 0x1c,
                               type: "variable",
                               dataType: "uint16",
+                              min: 1,
                               max: 8191,
                             },
                           ],
@@ -230,13 +233,14 @@ const template: GameJson = {
                           name: "Mana",
                           type: "group",
                           mode: "fraction",
+                          linked: true,
                           items: [
                             {
+                              id: "current",
                               dataViewAltKey: "heroStatus",
                               offset: 0x20,
                               type: "variable",
                               dataType: "uint16",
-                              max: 8191,
                             },
                             {
                               dataViewAltKey: "heroStatus",
@@ -251,13 +255,14 @@ const template: GameJson = {
                           name: "Stamina",
                           type: "group",
                           mode: "fraction",
+                          linked: true,
                           items: [
                             {
+                              id: "current",
                               dataViewAltKey: "heroStatus",
                               offset: 0x28,
                               type: "variable",
                               dataType: "uint16",
-                              max: 8191,
                             },
                             {
                               dataViewAltKey: "heroStatus",

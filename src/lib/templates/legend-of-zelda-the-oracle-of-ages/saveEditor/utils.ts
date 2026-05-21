@@ -28,23 +28,7 @@ export function overrideParseItem(item: Item): Item {
 }
 
 export function overrideItem(item: Item): Item {
-  if ("id" in item && item.id === "health") {
-    const itemInt = item as ItemInt;
-
-    const maxHealth = getInt(itemInt.offset + 0x1, "uint8", {
-      operations: itemInt.operations,
-    });
-
-    itemInt.max = maxHealth;
-  } else if ("id" in item && item.id === "bombs") {
-    const itemInt = item as ItemInt;
-
-    const maxBombs = getInt(itemInt.offset + 0x1, "uint8", {
-      binaryCodedDecimal: true,
-    });
-
-    itemInt.max = maxBombs;
-  } else if ("id" in item && item.id?.match(/seeds-/)) {
+  if ("id" in item && item.id?.match(/seeds-/)) {
     const itemInt = item as ItemInt;
 
     const [shift] = item.id.splitInt();
@@ -175,15 +159,6 @@ export function afterSetInt(item: Item, flag: ItemBitflag): void {
     const checked = getInt(itemInt.offset, "bit", { bit: itemInt.bit });
 
     setInt(itemInt.offset + 0xbe, "bit", checked, { bit: 4 });
-  } else if ("id" in item && item.id === "maxHealth") {
-    const itemInt = item as ItemInt;
-
-    let health = getInt(itemInt.offset - 0x1, "uint8");
-    const maxHealth = getInt(itemInt.offset, "uint8");
-
-    health = Math.min(health, maxHealth);
-
-    setInt(itemInt.offset - 0x1, "uint8", health);
   } else if ("id" in item && item.id === "galeSeedsWarps") {
     if (flag.label === "Crescent Island") {
       const checked = getInt(flag.offset, "bit", { bit: flag.bit });
@@ -218,15 +193,6 @@ export function afterSetInt(item: Item, flag: ItemBitflag): void {
 
       setInt(flag.offset + 0x2, "bit", checked, { bit: 0 });
     }
-  } else if ("id" in item && item.id === "maxBombs") {
-    const itemInt = item as ItemInt;
-
-    let bombs = getInt(itemInt.offset - 0x1, "uint8");
-    const maxBombs = getInt(itemInt.offset, "uint8");
-
-    bombs = Math.min(bombs, maxBombs);
-
-    setInt(itemInt.offset - 0x1, "uint8", bombs);
   } else if ("id" in item && item.id === "maxSeeds") {
     const itemInt = item as ItemInt;
 

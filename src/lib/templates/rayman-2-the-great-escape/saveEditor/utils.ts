@@ -61,18 +61,6 @@ export function overrideParseContainerItemsShifts(
   return [false, undefined];
 }
 
-export function overrideItem(item: Item): Item {
-  if ("id" in item && item.id === "health") {
-    const itemInt = item as ItemInt;
-
-    const maxHealth = getInt(itemInt.offset - 0x1, "uint8");
-
-    itemInt.max = maxHealth;
-  }
-
-  return item;
-}
-
 export function overrideGetInt(item: Item): [boolean, number | undefined] {
   if ("id" in item && item.id === "completionRate") {
     const itemInt = item as ItemInt;

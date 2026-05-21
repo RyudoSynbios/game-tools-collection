@@ -120,14 +120,15 @@ const template: GameJson = {
                       name: "HP",
                       type: "group",
                       mode: "fraction",
+                      linked: true,
                       items: [
                         {
+                          id: "current",
                           offset: 0x4,
                           type: "variable",
                           dataType: "uint16",
                           bigEndian: true,
                           min: 1,
-                          max: 500,
                         },
                         {
                           offset: 0x6,
@@ -143,13 +144,14 @@ const template: GameJson = {
                       name: "MP",
                       type: "group",
                       mode: "fraction",
+                      linked: true,
                       items: [
                         {
+                          id: "current",
                           offset: 0x8,
                           type: "variable",
                           dataType: "uint16",
                           bigEndian: true,
-                          max: 500,
                         },
                         {
                           offset: 0xa,

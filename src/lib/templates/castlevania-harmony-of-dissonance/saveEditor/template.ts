@@ -273,12 +273,13 @@ const template: GameJson = {
                               name: "Hearts",
                               type: "group",
                               mode: "fraction",
+                              linked: true,
                               items: [
                                 {
+                                  id: "current",
                                   offset: 0x34,
                                   type: "variable",
                                   dataType: "uint16",
-                                  max: 999,
                                 },
                                 {
                                   offset: 0x2a,

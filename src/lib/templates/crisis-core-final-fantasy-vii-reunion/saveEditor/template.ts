@@ -300,14 +300,15 @@ const template: GameJson = {
                       name: "HP",
                       type: "group",
                       mode: "fraction",
+                      linked: true,
                       items: [
                         {
+                          id: "current",
                           dataViewAltKey: "save",
                           offset: 0x8a11,
                           type: "variable",
                           dataType: "uint32",
                           min: 1,
-                          max: 99999,
                         },
                         {
                           id: "baseStats-4",
@@ -324,13 +325,14 @@ const template: GameJson = {
                       name: "MP",
                       type: "group",
                       mode: "fraction",
+                      linked: true,
                       items: [
                         {
+                          id: "current",
                           dataViewAltKey: "save",
                           offset: 0x8a1d,
                           type: "variable",
                           dataType: "uint32",
-                          max: 9999,
                         },
                         {
                           id: "baseStats-4",
@@ -346,13 +348,14 @@ const template: GameJson = {
                       name: "AP",
                       type: "group",
                       mode: "fraction",
+                      linked: true,
                       items: [
                         {
+                          id: "current",
                           dataViewAltKey: "save",
                           offset: 0x8a29,
                           type: "variable",
                           dataType: "uint32",
-                          max: 9999,
                         },
                         {
                           id: "baseStats-4",

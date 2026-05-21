@@ -97,15 +97,15 @@ const template: GameJson = {
                               name: "HP",
                               type: "group",
                               mode: "fraction",
+                              linked: true,
                               items: [
                                 {
+                                  id: "current",
                                   dataViewAltKey: "party",
                                   offset: 0x1a,
                                   type: "variable",
                                   dataType: "uint16",
                                   bigEndian: true,
-                                  min: 1,
-                                  max: 9999,
                                 },
                                 {
                                   dataViewAltKey: "party",
@@ -130,14 +130,15 @@ const template: GameJson = {
                               name: "Spirit",
                               type: "group",
                               mode: "fraction",
+                              linked: true,
                               items: [
                                 {
+                                  id: "current",
                                   dataViewAltKey: "party",
                                   offset: 0x20,
                                   type: "variable",
                                   dataType: "uint16",
                                   bigEndian: true,
-                                  max: 99,
                                 },
                                 {
                                   dataViewAltKey: "party",
@@ -2659,14 +2660,15 @@ const template: GameJson = {
                               name: "Spirit",
                               type: "group",
                               mode: "fraction",
+                              linked: true,
                               items: [
                                 {
+                                  id: "current",
                                   dataViewAltKey: "ships",
                                   offset: 0x1a,
                                   type: "variable",
                                   dataType: "uint16",
                                   bigEndian: true,
-                                  max: 99,
                                 },
                                 {
                                   dataViewAltKey: "ships",

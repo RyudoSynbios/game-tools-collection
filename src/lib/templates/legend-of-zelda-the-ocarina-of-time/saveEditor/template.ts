@@ -136,16 +136,16 @@ const template: GameJson = {
                       name: "Health",
                       type: "group",
                       mode: "fraction",
+                      linked: true,
                       items: [
                         {
-                          id: "health",
+                          id: "current",
                           offset: 0x50,
                           type: "variable",
                           dataType: "uint16",
                           bigEndian: true,
                           operations: [{ "/": 16 }],
                           min: 0.25,
-                          max: 20,
                           step: 0.25,
                         },
                         {

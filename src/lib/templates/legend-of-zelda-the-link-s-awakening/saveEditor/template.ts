@@ -88,9 +88,10 @@ const template: GameJson = {
                               name: "Health",
                               type: "group",
                               mode: "fraction",
+                              linked: true,
                               items: [
                                 {
-                                  id: "health",
+                                  id: "current",
                                   offset: 0x45f,
                                   type: "variable",
                                   dataType: "uint8",
@@ -99,7 +100,6 @@ const template: GameJson = {
                                   step: 0.25,
                                 },
                                 {
-                                  id: "maxHealth",
                                   offset: 0x460,
                                   type: "variable",
                                   dataType: "uint8",
@@ -398,16 +398,16 @@ const template: GameJson = {
                           name: "Magic Powder",
                           type: "group",
                           mode: "fraction",
+                          linked: true,
                           items: [
                             {
-                              id: "magicPowder",
+                              id: "current",
                               offset: 0x451,
                               type: "variable",
                               dataType: "uint8",
                               binaryCodedDecimal: true,
                             },
                             {
-                              id: "maxMagicPowder",
                               offset: 0x47b,
                               type: "variable",
                               dataType: "uint8",
@@ -419,16 +419,16 @@ const template: GameJson = {
                           name: "Bombs",
                           type: "group",
                           mode: "fraction",
+                          linked: true,
                           items: [
                             {
-                              id: "bombs",
+                              id: "current",
                               offset: 0x452,
                               type: "variable",
                               dataType: "uint8",
                               binaryCodedDecimal: true,
                             },
                             {
-                              id: "maxBombs",
                               offset: 0x47c,
                               type: "variable",
                               dataType: "uint8",
@@ -440,16 +440,16 @@ const template: GameJson = {
                           name: "Arrows",
                           type: "group",
                           mode: "fraction",
+                          linked: true,
                           items: [
                             {
-                              id: "arrows",
+                              id: "current",
                               offset: 0x44a,
                               type: "variable",
                               dataType: "uint8",
                               binaryCodedDecimal: true,
                             },
                             {
-                              id: "maxArrows",
                               offset: 0x47d,
                               type: "variable",
                               dataType: "uint8",

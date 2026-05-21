@@ -149,12 +149,14 @@ const template: GameJson = {
                             {
                               name: "Stars",
                               type: "group",
+                              mode: "fraction",
+                              linked: true,
                               items: [
                                 {
+                                  id: "current",
                                   offset: 0x5a5,
                                   type: "variable",
                                   dataType: "uint8",
-                                  max: 99,
                                 },
                                 {
                                   id: "savePreview-1381",
@@ -517,13 +519,14 @@ const template: GameJson = {
                                   name: "HP",
                                   type: "group",
                                   mode: "fraction",
+                                  linked: true,
                                   items: [
                                     {
+                                      id: "current",
                                       dataViewAltKey: "slot%parent%",
                                       offset: 0xaadc,
                                       type: "variable",
                                       dataType: "uint16",
-                                      max: 999,
                                       overrideShift: {
                                         parent: -1,
                                         shift: 0xcc,

@@ -318,13 +318,14 @@ const template: GameJson = {
                               name: "HP",
                               type: "group",
                               mode: "fraction",
+                              linked: true,
                               items: [
                                 {
+                                  id: "current",
                                   offset: 0x374,
                                   type: "variable",
                                   dataType: "uint32",
                                   min: 1,
-                                  max: 9999,
                                 },
                                 {
                                   offset: 0x378,
@@ -339,12 +340,13 @@ const template: GameJson = {
                               name: "MP",
                               type: "group",
                               mode: "fraction",
+                              linked: true,
                               items: [
                                 {
+                                  id: "current",
                                   offset: 0x384,
                                   type: "variable",
                                   dataType: "uint32",
-                                  max: 9999,
                                 },
                                 {
                                   offset: 0x388,
@@ -358,12 +360,13 @@ const template: GameJson = {
                               name: "Hearts",
                               type: "group",
                               mode: "fraction",
+                              linked: true,
                               items: [
                                 {
+                                  id: "current",
                                   offset: 0x37c,
                                   type: "variable",
                                   dataType: "uint32",
-                                  max: 9999,
                                 },
                                 {
                                   offset: 0x380,

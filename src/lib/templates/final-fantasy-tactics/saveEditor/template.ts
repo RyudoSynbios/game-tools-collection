@@ -1050,8 +1050,10 @@ const template: GameJson = {
                           name: "Days",
                           type: "group",
                           mode: "fraction",
+                          linked: true,
                           items: [
                             {
+                              id: "current",
                               offset: 0x43b,
                               type: "variable",
                               dataType: "uint8",

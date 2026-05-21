@@ -328,12 +328,13 @@ const template: GameJson = {
                                   name: "HP",
                                   type: "group",
                                   mode: "fraction",
+                                  linked: true,
                                   items: [
                                     {
+                                      id: "current",
                                       offset: 0x106,
                                       type: "variable",
                                       dataType: "uint16",
-                                      max: 9999,
                                     },
                                     {
                                       offset: 0x104,
@@ -348,12 +349,13 @@ const template: GameJson = {
                                   name: "MP",
                                   type: "group",
                                   mode: "fraction",
+                                  linked: true,
                                   items: [
                                     {
+                                      id: "current",
                                       offset: 0x10a,
                                       type: "variable",
                                       dataType: "uint16",
-                                      max: 999,
                                     },
                                     {
                                       offset: 0x108,
@@ -367,12 +369,13 @@ const template: GameJson = {
                                   name: "SP",
                                   type: "group",
                                   mode: "fraction",
+                                  linked: true,
                                   items: [
                                     {
+                                      id: "current",
                                       offset: 0x10e,
                                       type: "variable",
                                       dataType: "uint16",
-                                      max: 999,
                                     },
                                     {
                                       offset: 0x10c,

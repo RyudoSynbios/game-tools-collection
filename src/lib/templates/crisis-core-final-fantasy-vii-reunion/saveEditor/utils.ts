@@ -109,7 +109,7 @@ export function overrideItem(item: Item): Item {
     const calculate = getInt(itemInt.offset, dataType, {}, $dataViewAlt.save);
     const base = getInt(itemInt.offset + shift, dataType, {}, $dataViewAlt.save); // prettier-ignore
 
-    itemInt.min = Math.max(0, calculate - base);
+    itemInt.min = Math.max(itemInt.min || 0, calculate - base);
 
     return itemInt;
   } else if ("id" in item && item.id === "materiaBonusValue") {

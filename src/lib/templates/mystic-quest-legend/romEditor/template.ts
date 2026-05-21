@@ -156,12 +156,13 @@ const template: GameJson = {
                       name: "HP",
                       type: "group",
                       mode: "fraction",
+                      linked: true,
                       items: [
                         {
+                          id: "current",
                           offset: 0x14,
                           type: "variable",
                           dataType: "uint16",
-                          max: 1640,
                         },
                         {
                           offset: 0x16,
@@ -176,12 +177,13 @@ const template: GameJson = {
                       name: "White Magic",
                       type: "group",
                       mode: "fraction",
+                      linked: true,
                       items: [
                         {
+                          id: "current",
                           offset: 0x18,
                           type: "variable",
                           dataType: "uint8",
-                          max: 99,
                         },
                         {
                           offset: 0x1b,
@@ -195,12 +197,13 @@ const template: GameJson = {
                       name: "Black Magic",
                       type: "group",
                       mode: "fraction",
+                      linked: true,
                       items: [
                         {
+                          id: "current",
                           offset: 0x19,
                           type: "variable",
                           dataType: "uint8",
-                          max: 99,
                         },
                         {
                           offset: 0x1c,
@@ -214,12 +217,13 @@ const template: GameJson = {
                       name: "Sorcery",
                       type: "group",
                       mode: "fraction",
+                      linked: true,
                       items: [
                         {
+                          id: "current",
                           offset: 0x1a,
                           type: "variable",
                           dataType: "uint8",
-                          max: 99,
                         },
                         {
                           offset: 0x1d,

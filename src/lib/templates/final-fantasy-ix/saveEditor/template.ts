@@ -630,13 +630,13 @@ const template: GameJson = {
                                   name: "HP",
                                   type: "group",
                                   mode: "fraction",
+                                  linked: true,
                                   items: [
                                     {
+                                      id: "current",
                                       offset: 0x9e0,
                                       type: "variable",
                                       dataType: "uint16",
-                                      min: 1,
-                                      max: 9999,
                                     },
                                     {
                                       offset: 0x9e8,
@@ -651,12 +651,13 @@ const template: GameJson = {
                                   name: "MP",
                                   type: "group",
                                   mode: "fraction",
+                                  linked: true,
                                   items: [
                                     {
+                                      id: "current",
                                       offset: 0x9e2,
                                       type: "variable",
                                       dataType: "uint16",
-                                      max: 999,
                                     },
                                     {
                                       offset: 0x9ea,
@@ -670,12 +671,13 @@ const template: GameJson = {
                                   name: "AP",
                                   type: "group",
                                   mode: "fraction",
+                                  linked: true,
                                   items: [
                                     {
+                                      id: "current",
                                       offset: 0x9e7,
                                       type: "variable",
                                       dataType: "uint8",
-                                      max: 99,
                                     },
                                     {
                                       offset: 0x9ef,
