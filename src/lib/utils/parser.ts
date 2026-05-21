@@ -200,6 +200,8 @@ export function parseItem(
     newItem.items = newItem.items.reduce((results: Item[], subitem: Item) => {
       const parsedItem = parseItem(subitem, shifts, parents, options);
 
+      parsedItem.parent = newItem;
+
       results.push(parsedItem);
 
       return results;
@@ -305,7 +307,7 @@ export function parseContainer(
   const $gameTemplate = get(gameTemplate);
   const $gameUtils = get(gameUtils) as any;
 
-  const parsedItem: any = {
+  const parsedContainer: any = {
     id: item.id,
     type: item.instanceType,
     enumeration: item.enumeration,
@@ -343,11 +345,15 @@ export function parseContainer(
 
   if (item.instanceType === "tabs" && item.prependSubinstance) {
     item.prependSubinstance.forEach((subitem: any) => {
-      parsedItem.items.push({
+      subitem.parent = parsedContainer;
+
+      parsedContainer.items.push({
         ...subitem,
         items: subitem.items
-          ? subitem.items.reduce((results: any, subitem: any) => {
-              const parsedItem = parseItem(subitem, shifts, parents, options);
+          ? subitem.items.reduce((results: any, item: any) => {
+              const parsedItem = parseItem(item, shifts, parents, options);
+
+              parsedItem.parent = subitem;
 
               results.push(parsedItem);
 
@@ -374,7 +380,7 @@ export function parseContainer(
 
     const disabled = getShift(instanceShifts) === -1;
 
-    const parsedSubitem: any = {
+    const parsedItem: any = {
       flex: item.flex,
       noMargin: item.noMargin,
       disabled,
@@ -385,11 +391,14 @@ export function parseContainer(
               { id: item.instanceId || "", index: i },
             ];
 
-            const parsedItem = parseItem(subitem, instanceShifts, itemParents, {
+            // prettier-ignore
+            const parsedSubitem = parseItem(subitem, instanceShifts, itemParents, {
               checksumsDisabled: disabled,
             });
 
-            results.push(parsedItem);
+            parsedSubitem.parent = parsedContainer;
+
+            results.push(parsedSubitem);
 
             return results;
           }, [])
@@ -398,21 +407,21 @@ export function parseContainer(
 
     if (item.instanceType === "section") {
       if (item.enumeration) {
-        parsedSubitem.name = item.enumeration.format(i + 1);
+        parsedItem.name = item.enumeration.format(i + 1);
       } else if (
         item.resource &&
         $gameTemplate.resources &&
         $gameTemplate.resources[item.resource]
       ) {
-        parsedSubitem.name = $gameTemplate.resources[item.resource][i];
+        parsedItem.name = $gameTemplate.resources[item.resource][i];
       }
 
-      parsedSubitem.type = "section";
+      parsedItem.type = "section";
     }
 
     if (item.instanceType === "tabs") {
       if (item.disableSubinstanceIf) {
-        parsedSubitem.disableTabIf = parseConditions(
+        parsedItem.disableTabIf = parseConditions(
           item.disableSubinstanceIf,
           instanceShifts,
           parents,
@@ -420,16 +429,20 @@ export function parseContainer(
       }
     }
 
-    parsedItem.items.push(parsedSubitem);
+    parsedContainer.items.push(parsedItem);
   }
 
   if (item.instanceType === "tabs" && item.appendSubinstance) {
     item.appendSubinstance.forEach((subitem: any) => {
-      parsedItem.items.push({
+      subitem.parent = parsedContainer;
+
+      parsedContainer.items.push({
         ...subitem,
         items: subitem.items
-          ? subitem.items.reduce((results: any, subitem: any) => {
-              const parsedItem = parseItem(subitem, shifts, parents, options);
+          ? subitem.items.reduce((results: any, item: any) => {
+              const parsedItem = parseItem(item, shifts, parents, options);
+
+              parsedItem.parent = subitem;
 
               results.push(parsedItem);
 
@@ -440,7 +453,7 @@ export function parseContainer(
     });
   }
 
-  return parsedItem;
+  return parsedContainer;
 }
 
 function checkMissingFields(item: Item): void {

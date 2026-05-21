@@ -65,6 +65,8 @@ export type ObjectKeyValue<T> = { key: string; value: T };
 
 export type Palette = Color[];
 
+export type ParentItem = ItemGroup | ItemSection | ItemTab | ItemTabs;
+
 export type RegionValidator = Validator | LogicalOperator<Validator>;
 
 export type Resource = { [key: number]: string };
@@ -199,6 +201,7 @@ export interface ItemBitflags {
   reversed?: boolean;
   disabled?: boolean;
   hidden?: boolean;
+  parent?: ParentItem;
 }
 
 export interface ItemBoolean {
@@ -219,6 +222,7 @@ export interface ItemBoolean {
   separator?: boolean;
   disabled?: boolean;
   hidden?: boolean;
+  parent?: ParentItem;
 }
 
 export interface ItemChecksum {
@@ -239,12 +243,14 @@ export interface ItemChecksum {
     shift: number;
   };
   disabled?: boolean;
+  parent?: ParentItem;
 }
 
 export interface ItemComponent {
   type: "component";
   component: string;
   props?: { [key: string]: any };
+  parent?: ParentItem;
 }
 
 export interface ItemContainer {
@@ -273,6 +279,7 @@ export interface ItemContainer {
   prependSubinstance?: ItemTab[];
   items: Item[];
   appendSubinstance?: ItemTab[];
+  parent?: ParentItem;
 }
 
 export interface ItemContent {
@@ -288,6 +295,7 @@ export interface ItemGroup {
   hint?: string;
   hidden?: boolean;
   items: ItemInt[];
+  parent?: ParentItem;
 }
 
 export interface ItemInt {
@@ -327,6 +335,7 @@ export interface ItemInt {
   disabled?: boolean;
   hidden?: boolean;
   test?: boolean;
+  parent?: ParentItem;
 }
 
 export interface ItemIntCondition {
@@ -346,6 +355,7 @@ export interface ItemMessage {
   type: "message";
   message: string;
   hidden?: boolean;
+  parent?: ParentItem;
 }
 
 export interface ItemSection {
@@ -358,6 +368,7 @@ export interface ItemSection {
   noMargin?: boolean;
   hidden?: boolean;
   items: Item[];
+  parent?: ParentItem;
 }
 
 export interface ItemString {
@@ -387,6 +398,7 @@ export interface ItemString {
   disabled?: boolean;
   hidden?: boolean;
   test?: boolean;
+  parent?: ParentItem;
 }
 
 export interface ItemTab {
@@ -398,6 +410,7 @@ export interface ItemTab {
   hidden?: boolean;
   planned?: boolean;
   items: Item[];
+  parent?: ParentItem;
 }
 
 export interface ItemTabs {
@@ -412,6 +425,7 @@ export interface ItemTabs {
   onTabChange?: string;
   hidden?: boolean;
   items: ItemTab[];
+  parent?: ParentItem;
 }
 
 export interface LogicalOperator<T> {
