@@ -343,6 +343,18 @@ const template: GameJson = {
                           flex: true,
                           items: [
                             {
+                              id: "max-rupees",
+                              name: "Wallet",
+                              offset: 0xc2,
+                              type: "variable",
+                              dataType: "uint8",
+                              binary: {
+                                bitStart: 4,
+                                bitLength: 2,
+                              },
+                              resource: "wallets",
+                            },
+                            {
                               id: "max-dekuSeeds",
                               name: "Deku Seeds Bullet Bag",
                               offset: 0xc2,
@@ -399,18 +411,6 @@ const template: GameJson = {
                                 bitLength: 2,
                               },
                               resource: "scales",
-                            },
-                            {
-                              id: "max-rupees",
-                              name: "Wallet",
-                              offset: 0xc2,
-                              type: "variable",
-                              dataType: "uint8",
-                              binary: {
-                                bitStart: 4,
-                                bitLength: 2,
-                              },
-                              resource: "wallets",
                             },
                           ],
                         },

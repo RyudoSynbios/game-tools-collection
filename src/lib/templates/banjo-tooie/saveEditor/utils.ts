@@ -1,3 +1,4 @@
+import Long from "long";
 import { get } from "svelte/store";
 
 import { fileHeaderShift, gameRegion } from "$lib/stores";
@@ -228,10 +229,10 @@ export function overrideSetInt(item: Item, value: string): boolean {
 export function generateChecksum(item: ItemChecksum): bigint {
   const [checksum1, checksum2] = generateRareChecksum(item);
 
-  const high = checksum1.toString(16).padStart(8, "0").slice(-8);
-  const low = checksum1.xor(checksum2).toString(16).padStart(8, "0").slice(-8);
+  const high = checksum1.toInt();
+  const low = checksum1.xor(checksum2).toInt();
 
-  return BigInt(`0x${high}${low}`);
+  return new Long(low, high).toUnsigned().toBigInt();
 }
 
 export function beforeSaving(): ArrayBufferLike {

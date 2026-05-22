@@ -72,7 +72,7 @@ const template: GameJson = {
                     {
                       name: "Unlocked Menus",
                       type: "bitflags",
-                      flags: [{ offset: 0x24c, bit: 4, label: "Scarpbook" }],
+                      flags: [{ offset: 0x24c, bit: 4, label: "Scrapbook" }],
                     },
                   ],
                 },

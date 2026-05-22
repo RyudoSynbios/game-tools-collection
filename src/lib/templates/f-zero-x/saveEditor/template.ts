@@ -787,7 +787,6 @@ const template: GameJson = {
                   instanceType: "section",
                   instances: 30,
                   resource: "machines",
-                  resourceOrder: true,
                   items: [
                     {
                       name: "Speed Ratio",

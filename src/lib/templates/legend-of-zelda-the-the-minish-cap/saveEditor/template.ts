@@ -127,6 +127,13 @@ const template: GameJson = {
                               ],
                             },
                             {
+                              name: "Heart Pieces",
+                              offset: 0x129,
+                              type: "variable",
+                              dataType: "uint8",
+                              max: 3,
+                            },
+                            {
                               name: "Rupees",
                               type: "group",
                               mode: "fraction",
@@ -145,13 +152,6 @@ const template: GameJson = {
                                   resource: "maxRupees",
                                 },
                               ],
-                            },
-                            {
-                              name: "Heart Pieces",
-                              offset: 0x129,
-                              type: "variable",
-                              dataType: "uint8",
-                              max: 3,
                             },
                             {
                               name: "Mysterious Shells",

@@ -403,6 +403,18 @@ const template: GameJson = {
                           flex: true,
                           items: [
                             {
+                              id: "max-rupees",
+                              name: "Wallet",
+                              offset: 0xba,
+                              type: "variable",
+                              dataType: "uint8",
+                              binary: {
+                                bitStart: 4,
+                                bitLength: 2,
+                              },
+                              resource: "wallets",
+                            },
+                            {
                               id: "max-arrows",
                               name: "Quiver",
                               offset: 0xbb,
@@ -425,18 +437,6 @@ const template: GameJson = {
                                 bitLength: 2,
                               },
                               resource: "bombBags",
-                            },
-                            {
-                              id: "max-rupees",
-                              name: "Wallet",
-                              offset: 0xba,
-                              type: "variable",
-                              dataType: "uint8",
-                              binary: {
-                                bitStart: 4,
-                                bitLength: 2,
-                              },
-                              resource: "wallets",
                             },
                           ],
                         },
