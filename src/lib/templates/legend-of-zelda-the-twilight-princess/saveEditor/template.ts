@@ -1,0 +1,1560 @@
+import { bitToOffset } from "$lib/utils/bytes";
+
+import type { GameJson } from "$lib/types";
+
+import { letterList, letters } from "./utils/resource";
+
+const template: GameJson = {
+  validator: {
+    platforms: {
+      gamecube: {
+        europe: { 0x0: [0x47, 0x5a, 0x32, 0x50, 0x30, 0x31] }, // "GZ2P01"
+        usa: { 0x0: [0x47, 0x5a, 0x32, 0x45, 0x30, 0x31] }, // "GZ2E01"
+        japan: { 0x0: [0x47, 0x5a, 0x32, 0x4a, 0x30, 0x31] }, // "GZ2J01"
+      },
+      wii: {
+        europe_australia: true,
+        usa: true,
+        japan: true,
+      },
+    },
+    text: "Drag 'n' drop here or click to add a save file.",
+    error: "Not a valid save file.",
+  },
+  items: [
+    {
+      length: 0xa94,
+      type: "container",
+      instanceType: "tabs",
+      instances: 3,
+      enumeration: "Slot %d",
+      disableSubinstanceIf: {
+        offset: 0x41fc,
+        type: "variable",
+        dataType: "uint8",
+        operator: "=",
+        value: 0x0,
+      },
+      items: [
+        {
+          name: "Checksum",
+          offset: 0x4ad4,
+          type: "checksum",
+          dataType: "uint64",
+          bigEndian: true,
+          control: {
+            offsetStart: 0x4048,
+            offsetEnd: 0x4ad4,
+          },
+        },
+        {
+          type: "tabs",
+          items: [
+            {
+              name: "General",
+              items: [
+                {
+                  type: "tabs",
+                  vertical: true,
+                  items: [
+                    {
+                      name: "General",
+                      items: [
+                        {
+                          type: "message",
+                          message:
+                            "This save editor is still under development. It will be updated regularly.",
+                        },
+                        {
+                          type: "section",
+                          flex: true,
+                          items: [
+                            {
+                              id: "name",
+                              name: "Name",
+                              offset: 0x41fc,
+                              length: 0x8,
+                              type: "variable",
+                              dataType: "string",
+                              letterDataType: "uint8",
+                              endCode: 0x0,
+                              test: true,
+                            },
+                            {
+                              id: "name",
+                              name: "Horne Name",
+                              offset: 0x420d,
+                              length: 0x8,
+                              type: "variable",
+                              dataType: "string",
+                              letterDataType: "uint8",
+                              endCode: 0x0,
+                            },
+                            {
+                              name: "Playtime",
+                              type: "group",
+                              mode: "time",
+                              items: [
+                                {
+                                  id: "playtime",
+                                  offset: 0x41f0,
+                                  type: "variable",
+                                  dataType: "uint64",
+                                  bigEndian: true,
+                                  operations: [
+                                    {
+                                      convert: {
+                                        from: "seconds",
+                                        to: "hours",
+                                      },
+                                    },
+                                  ],
+                                  max: 999,
+                                },
+                                {
+                                  id: "playtime",
+                                  offset: 0x41f0,
+                                  type: "variable",
+                                  dataType: "uint64",
+                                  bigEndian: true,
+                                  operations: [
+                                    {
+                                      convert: {
+                                        from: "seconds",
+                                        to: "minutes",
+                                      },
+                                    },
+                                  ],
+                                  leadingZeros: 1,
+                                  max: 59,
+                                },
+                                {
+                                  id: "playtime",
+                                  offset: 0x41f0,
+                                  type: "variable",
+                                  dataType: "uint64",
+                                  bigEndian: true,
+                                  operations: [
+                                    {
+                                      convert: {
+                                        from: "seconds",
+                                        to: "seconds",
+                                      },
+                                    },
+                                  ],
+                                  leadingZeros: 1,
+                                  max: 59,
+                                },
+                              ],
+                            },
+                            {
+                              name: "Death Count",
+                              offset: 0x41fa,
+                              type: "variable",
+                              dataType: "uint16",
+                              bigEndian: true,
+                            },
+                            {
+                              name: "Save Time",
+                              offset: 0x4070,
+                              type: "variable",
+                              dataType: "uint64",
+                              bigEndian: true,
+                              hidden: true,
+                            },
+                            {
+                              name: "Day Time",
+                              offset: 0x407c,
+                              type: "variable",
+                              dataType: "float32",
+                              operations: [{ "/": 15 }],
+                              bigEndian: true,
+                              hidden: true,
+                            },
+                          ],
+                        },
+                        {
+                          type: "section",
+                          flex: true,
+                          items: [
+                            {
+                              name: "Health",
+                              type: "group",
+                              mode: "fraction",
+                              linked: true,
+                              items: [
+                                {
+                                  id: "current",
+                                  offset: 0x404a,
+                                  type: "variable",
+                                  dataType: "uint16",
+                                  bigEndian: true,
+                                  operations: [{ "/": 4 }],
+                                  min: 0.25,
+                                  step: 0.25,
+                                },
+                                {
+                                  offset: 0x4048,
+                                  type: "variable",
+                                  dataType: "uint16",
+                                  bigEndian: true,
+                                  operations: [{ "/": 5 }, { roundFloor: 0 }],
+                                  min: 1,
+                                  max: 20,
+                                },
+                              ],
+                            },
+                            {
+                              id: "heartPieces",
+                              name: "Heart Pieces",
+                              offset: 0x4048,
+                              type: "variable",
+                              dataType: "uint16",
+                              bigEndian: true,
+                              max: 4,
+                            },
+                            {
+                              name: "Rupees",
+                              type: "group",
+                              mode: "fraction",
+                              items: [
+                                {
+                                  id: "valueRupees",
+                                  offset: 0x404c,
+                                  type: "variable",
+                                  dataType: "uint16",
+                                  bigEndian: true,
+                                },
+                                {
+                                  id: "maxRupees",
+                                  offset: 0x4061,
+                                  type: "variable",
+                                  dataType: "uint8",
+                                  resource: "maxRupees",
+                                },
+                              ],
+                            },
+                          ],
+                        },
+                      ],
+                    },
+                    {
+                      name: "Hidden Skills",
+                      flex: true,
+                      items: [
+                        {
+                          name: "Howling Stones",
+                          type: "bitflags",
+                          flags: [
+                            { offset: 0x4861, bit: 2, label: "-", disabled: true },
+                            { offset: 0x4872, bit: 7, label: "Death Mountain" },
+                            { offset: 0x4872, bit: 6, label: "Upper Zora's River" },
+                            { offset: 0x4872, bit: 5, label: "North Faron Woods" },
+                            { offset: 0x4872, bit: 4, label: "Lake Hylia" },
+                            { offset: 0x4872, bit: 3, label: "Snowpeak" },
+                            { offset: 0x4872, bit: 2, label: "Hidden Village" },
+                          ],
+                        },
+                        {
+                          id: "goldenWolf",
+                          name: "Golden Wolf",
+                          type: "bitflags",
+                          flags: [
+                            { offset: 0x4861, bit: 2, label: "North Faron Woods" },
+                            { offset: 0x4874, bit: 3, label: "Ordon Spring" },
+                            { offset: 0x4874, bit: 2, label: "West Hyrule Field" },
+                            { offset: 0x4874, bit: 1, label: "South Hyrule Field" },
+                            { offset: 0x4874, bit: 0, label: "Gerudo Desert" },
+                            { offset: 0x4875, bit: 7, label: "Kakariko Graveyard" },
+                            { offset: 0x4875, bit: 6, label: "North Castle Town" },
+                          ],
+                        },
+                        {
+                          id: "hiddenSkills",
+                          name: "Learned Skills",
+                          type: "bitflags",
+                          flags: [
+                            { offset: 0x4861, bit: 2, label: "Ending Blow", disabled: true },
+                            { offset: 0x4861, bit: 3, label: "Shield Attack", disabled: true },
+                            { offset: 0x4861, bit: 1, label: "Back Slice", disabled: true },
+                            { offset: 0x4861, bit: 0, label: "Helm Splitter", disabled: true },
+                            { offset: 0x4862, bit: 7, label: "Mortal Draw", disabled: true },
+                            { offset: 0x4862, bit: 6, label: "Jump Strike", disabled: true },
+                            { offset: 0x4862, bit: 5, label: "Great Spin", disabled: true },
+                          ],
+                        },
+                      ],
+                    },
+                    {
+                      name: "Hyrule Map",
+                      flex: true,
+                      items: [
+                        {
+                          name: "Provinces",
+                          type: "bitflags",
+                          flags: [
+                            { offset: 0x40c5, bit: 1, label: "Ordona Province" },
+                            { offset: 0x40c5, bit: 2, label: "Faron Province" },
+                            { offset: 0x40c5, bit: 3, label: "Eldin Province" },
+                            { offset: 0x40c5, bit: 4, label: "Lanaryu Province" },
+                            { offset: 0x40c5, bit: 5, label: "Desert Province" },
+                            { offset: 0x40c5, bit: 6, label: "Peak Province" },
+                          ],
+                        },
+                        {
+                          name: "Portals",
+                          type: "bitflags",
+                          flags: [
+                            { offset: 0x4245, bit: 4, label: "<b>Ordona Province:</b> Ordon Spring", separator: true },
+                            { offset: 0x4283, bit: 2, label: "<b>Faron Province:</b> N. Faron Woods" },
+                            { offset: 0x428b, bit: 7, label: "<b>Faron Province:</b> S. Faron Woods" },
+                            { offset: 0x432f, bit: 4, label: "<b>Faron Province:</b> Sacred Grove", separator: true },
+                            { offset: 0x4301, bit: 5, label: "<b>Eldin Province:</b> Kakariko Gorge" },
+                            { offset: 0x42a0, bit: 7, label: "<b>Eldin Province:</b> Kakariko Village" },
+                            { offset: 0x42a1, bit: 5, label: "<b>Eldin Province:</b> Death Mountain" },
+                            { offset: 0x430f, bit: 3, label: "<b>Eldin Province:</b> Bridge of Eldin", separator: true },
+                            { offset: 0x42c3, bit: 2, label: "<b>Lanaryu Province:</b> Zora's Domain" },
+                            { offset: 0x42c2, bit: 2, label: "<b>Lanaryu Province:</b> Lake Hylia" },
+                            { offset: 0x4303, bit: 3, label: "<b>Lanaryu Province:</b> Castle Town" },
+                            { offset: 0x42c1, bit: 5, label: "<b>Lanaryu Province:</b> Upper Zora's River", separator: true },
+                            { offset: 0x4381, bit: 5, label: "<b>Desert Province:</b> Gerudo Mesa" },
+                            { offset: 0x4386, bit: 0, label: "<b>Desert Province:</b> Mirror Chamber", separator: true },
+                            { offset: 0x4341, bit: 5, label: "<b>Peak Province:</b> Snowpeak Top" },
+                          ],
+                        },
+                      ],
+                    },
+                  ],
+                },
+              ],
+            },
+            {
+              name: "Inventory",
+              items: [
+                {
+                  type: "tabs",
+                  vertical: true,
+                  items: [
+                    {
+                      name: "Equipment",
+                      items: [
+                        {
+                          type: "section",
+                          flex: true,
+                          noMargin: true,
+                          items: [
+                            {
+                              name: "Sword",
+                              offset: 0x405c,
+                              type: "variable",
+                              dataType: "uint8",
+                              resource: "swords",
+                            },
+                            {
+                              name: "Shield",
+                              offset: 0x405d,
+                              type: "variable",
+                              dataType: "uint8",
+                              resource: "shields",
+                            },
+                            {
+                              name: "Tunic",
+                              offset: 0x405b,
+                              type: "variable",
+                              dataType: "uint8",
+                              resource: "tunics",
+                            },
+                          ],
+                        },
+                        {
+                          type: "section",
+                          flex: true,
+                          items: [
+                            {
+                              type: "bitflags",
+                              flags: [
+                                { offset: 0x4118, bit: 7, label: "Wooden Sword" },
+                                { offset: 0x411a, bit: 0, label: "Ordon Sword" },
+                                { offset: 0x411a, bit: 1, label: "Master Sword" },
+                              ],
+                            },
+                            {
+                              type: "bitflags",
+                              flags: [
+                                { offset: 0x411a, bit: 3, label: "Wooden Shield" },
+                                { offset: 0x411a, bit: 2, label: "Ordon Shield" },
+                                { offset: 0x411a, bit: 4, label: "Hylian Shield" },
+                              ],
+                            },
+                            {
+                              type: "bitflags",
+                              flags: [
+                                { offset: 0x411a, bit: 7, label: "Hero's Clothes" },
+                                { offset: 0x4119, bit: 1, label: "Zora Armor" },
+                                { offset: 0x4119, bit: 0, label: "Magic Armor" },
+                              ],
+                            },
+                          ],
+                        },
+                        {
+                          type: "section",
+                          flex: true,
+                          items: [
+                            {
+                              id: "maxRupees",
+                              name: "Wallet",
+                              offset: 0x4061,
+                              type: "variable",
+                              dataType: "uint8",
+                              resource: "wallets",
+                            },
+                            {
+                              id: "maxArrows",
+                              name: "Quiver",
+                              offset: 0x4140,
+                              type: "variable",
+                              dataType: "uint8",
+                              resource: "quivers",
+                            },
+                            {
+                              id: "maxBombs",
+                              name: "Bomb Bags",
+                              offset: 0x411e,
+                              type: "variable",
+                              dataType: "bit",
+                              bit: 7,
+                              resource: "bombBags",
+                            },
+                          ],
+                        },
+                        {
+                          type: "section",
+                          flex: true,
+                          items: [
+                            {
+                              name: "Scent",
+                              offset: 0x405e,
+                              type: "variable",
+                              dataType: "uint8",
+                              resource: "scents",
+                            },
+                            {
+                              name: "Scent Related",
+                              offset: 0x4055,
+                              type: "variable",
+                              dataType: "uint8",
+                              resource: "scents",
+                              hidden: true,
+                            },
+                          ],
+                        },
+                        {
+                          type: "section",
+                          flex: true,
+                          hidden: true,
+                          items: [
+                            {
+                              name: "X",
+                              offset: 0x4053,
+                              type: "variable",
+                              dataType: "uint8",
+                              hidden: true,
+                            },
+                            {
+                              name: "X Combo",
+                              offset: 0x4057,
+                              type: "variable",
+                              dataType: "uint8",
+                              hidden: true,
+                            },
+                            {
+                              name: "Y",
+                              offset: 0x4054,
+                              type: "variable",
+                              dataType: "uint8",
+                              hidden: true,
+                            },
+                            {
+                              name: "Y Combo",
+                              offset: 0x4058,
+                              type: "variable",
+                              dataType: "uint8",
+                              hidden: true,
+                            },
+                          ],
+                        },
+                      ],
+                    },
+                    {
+                      name: "Items",
+                      flex: true,
+                      items: [
+                        {
+                          type: "section",
+                          flex: true,
+                          items: [
+                            {
+                              type: "section",
+                              background: true,
+                              flexStart: true,
+                              items: [
+                                {
+                                  name: "Dominion Rod",
+                                  offset: 0x40ec,
+                                  type: "variable",
+                                  dataType: "boolean",
+                                  on: 0x46,
+                                  off: 0xff,
+                                },
+                                {
+                                  name: "Ball and Chain",
+                                  offset: 0x40ea,
+                                  type: "variable",
+                                  dataType: "boolean",
+                                  on: 0x42,
+                                  off: 0xff,
+                                },
+                                {
+                                  name: "Spinner",
+                                  offset: 0x40e6,
+                                  type: "variable",
+                                  dataType: "boolean",
+                                  on: 0x41,
+                                  off: 0xff,
+                                },
+                                {
+                                  name: "Hero's Bow",
+                                  offset: 0x40e8,
+                                  type: "variable",
+                                  dataType: "boolean",
+                                  on: 0x43,
+                                  off: 0xff,
+                                },
+                                {
+                                  name: "Iron Boots",
+                                  offset: 0x40e7,
+                                  type: "variable",
+                                  dataType: "boolean",
+                                  on: 0x45,
+                                  off: 0xff,
+                                },
+                                {
+                                  name: "Gale Boomerang",
+                                  offset: 0x40e4,
+                                  type: "variable",
+                                  dataType: "boolean",
+                                  on: 0x40,
+                                  off: 0xff,
+                                },
+                                {
+                                  name: "Lantern",
+                                  offset: 0x40e5,
+                                  type: "variable",
+                                  dataType: "boolean",
+                                  on: 0x48,
+                                  off: 0xff,
+                                },
+                                {
+                                  name: "Slingshot",
+                                  offset: 0x40fb,
+                                  type: "variable",
+                                  dataType: "boolean",
+                                  on: 0x4b,
+                                  off: 0xff,
+                                },
+                                {
+                                  name: "Hawkeye",
+                                  offset: 0x40e9,
+                                  type: "variable",
+                                  dataType: "boolean",
+                                  on: 0x3e,
+                                  off: 0xff,
+                                },
+                              ],
+                            },
+                            {
+                              type: "section",
+                              flex1: true,
+                              items: [
+                                {
+                                  type: "section",
+                                  flex: true,
+                                  items: [
+                                    {
+                                      name: "Clawshot",
+                                      offset: 0x40ed,
+                                      type: "variable",
+                                      dataType: "uint16",
+                                      bigEndian: true,
+                                      resource: "clawshots",
+                                    },
+                                    {
+                                      name: "Fishing Rod",
+                                      offset: 0x40f8,
+                                      type: "variable",
+                                      dataType: "uint8",
+                                      resource: "fishingRods",
+                                    },
+                                    {
+                                      name: "Coral Earring",
+                                      offset: 0x4118,
+                                      type: "variable",
+                                      dataType: "bit",
+                                      bit: 5,
+                                      hidden: true,
+                                    },
+                                    {
+                                      name: "???",
+                                      offset: 0x40eb,
+                                      type: "variable",
+                                      dataType: "uint8",
+                                      resource: "items",
+                                      hidden: true,
+                                    },
+                                    {
+                                      name: "???",
+                                      offset: 0x40ee,
+                                      type: "variable",
+                                      dataType: "uint8",
+                                      resource: "items",
+                                      hidden: true,
+                                    },
+                                    {
+                                      name: "Ooccoo?",
+                                      offset: 0x40f6,
+                                      type: "variable",
+                                      dataType: "uint8",
+                                      resource: "items",
+                                      hidden: true,
+                                    },
+                                    {
+                                      name: "Ashei's Sketch",
+                                      offset: 0x40f7,
+                                      type: "variable",
+                                      dataType: "uint8",
+                                      resource: "items",
+                                      hidden: true,
+                                    },
+                                    {
+                                      name: "Ila's Charm",
+                                      offset: 0x40f9,
+                                      type: "variable",
+                                      dataType: "uint8",
+                                      resource: "iliasMemoryItems",
+                                    },
+                                    {
+                                      name: "Ancient Sky Book?",
+                                      offset: 0x40fa,
+                                      type: "variable",
+                                      dataType: "uint8",
+                                      resource: "items",
+                                      hidden: true,
+                                    },
+                                  ],
+                                },
+                                {
+                                  type: "section",
+                                  flex: true,
+                                  items: [
+                                    {
+                                      name: "Bombs 1",
+                                      offset: 0x40f3,
+                                      type: "variable",
+                                      dataType: "uint8",
+                                      resource: "bombs",
+                                    },
+                                    {
+                                      name: "Bombs 2",
+                                      offset: 0x40f4,
+                                      type: "variable",
+                                      dataType: "uint8",
+                                      resource: "bombs",
+                                    },
+                                    {
+                                      name: "Bombs 3",
+                                      offset: 0x40f5,
+                                      type: "variable",
+                                      dataType: "uint8",
+                                      resource: "bombs",
+                                    },
+                                  ],
+                                },
+                                {
+                                  type: "section",
+                                  flex: true,
+                                  items: [
+                                    {
+                                      name: "Bottle 1",
+                                      offset: 0x40ef,
+                                      type: "variable",
+                                      dataType: "uint8",
+                                      resource: "bottles",
+                                      autocomplete: true,
+                                    },
+                                    {
+                                      name: "Bottle 2",
+                                      offset: 0x40f0,
+                                      type: "variable",
+                                      dataType: "uint8",
+                                      resource: "bottles",
+                                      autocomplete: true,
+                                    },
+                                    {
+                                      name: "Bottle 3",
+                                      offset: 0x40f1,
+                                      type: "variable",
+                                      dataType: "uint8",
+                                      resource: "bottles",
+                                      autocomplete: true,
+                                    },
+                                    {
+                                      name: "Bottle 4",
+                                      offset: 0x40f2,
+                                      type: "variable",
+                                      dataType: "uint8",
+                                      resource: "bottles",
+                                      autocomplete: true,
+                                    },
+                                  ],
+                                },
+                              ],
+                            },
+                          ],
+                        },
+                      ],
+                    },
+                    {
+                      name: "Quantities",
+                      items: [
+                        {
+                          type: "section",
+                          flex: true,
+                          items: [
+                            {
+                              name: "Seeds",
+                              offset: 0x413c,
+                              type: "variable",
+                              dataType: "uint8",
+                              max: 50,
+                            },
+                            {
+                              name: "Arrows",
+                              type: "group",
+                              mode: "fraction",
+                              linked: true,
+                              items: [
+                                {
+                                  id: "current",
+                                  offset: 0x4134,
+                                  type: "variable",
+                                  dataType: "uint8",
+                                },
+                                {
+                                  offset: 0x4140,
+                                  type: "variable",
+                                  dataType: "uint8",
+                                  resource: "maxArrows",
+                                },
+                              ],
+                            },
+                            {
+                              name: "Oil",
+                              type: "group",
+                              mode: "fraction",
+                              linked: true,
+                              items: [
+                                {
+                                  id: "current",
+                                  offset: 0x4050,
+                                  type: "variable",
+                                  dataType: "uint16",
+                                  bigEndian: true,
+                                },
+                                {
+                                  offset: 0x404e,
+                                  type: "variable",
+                                  dataType: "uint16",
+                                  bigEndian: true,
+                                  max: 65000,
+                                },
+                              ],
+                            },
+                          ],
+                        },
+                        {
+                          type: "section",
+                          flex: true,
+                          items: [
+                            {
+                              name: "Bombs",
+                              type: "group",
+                              mode: "fraction",
+                              items: [
+                                {
+                                  id: "valueBombs-bombs",
+                                  offset: 0x4135,
+                                  type: "variable",
+                                  dataType: "uint8",
+                                },
+                                {
+                                  id: "maxBombs-bombs",
+                                  offset: 0x411e,
+                                  type: "variable",
+                                  dataType: "bit",
+                                  bit: 7,
+                                  resource: "maxBombs",
+                                },
+                              ],
+                            },
+                            {
+                              name: "Water Bombs",
+                              type: "group",
+                              mode: "fraction",
+                              items: [
+                                {
+                                  id: "valueBombs-waterBombs",
+                                  offset: 0x4136,
+                                  type: "variable",
+                                  dataType: "uint8",
+                                },
+                                {
+                                  id: "maxBombs-waterBombs",
+                                  offset: 0x411e,
+                                  type: "variable",
+                                  dataType: "bit",
+                                  bit: 7,
+                                  resource: "maxWaterBombs",
+                                },
+                              ],
+                            },
+                            {
+                              name: "Bomblings",
+                              type: "group",
+                              mode: "fraction",
+                              items: [
+                                {
+                                  id: "valueBombs-bomblings",
+                                  offset: 0x4146,
+                                  type: "variable",
+                                  dataType: "uint8",
+                                },
+                                {
+                                  id: "maxBombs-bomblings",
+                                  offset: 0x411e,
+                                  type: "variable",
+                                  dataType: "bit",
+                                  bit: 7,
+                                  resource: "maxBomblings",
+                                },
+                              ],
+                            },
+                          ],
+                        },
+                        {
+                          type: "section",
+                          flex: true,
+                          items: [
+                            {
+                              name: "Bee Larvas",
+                              offset: 0x4138,
+                              type: "variable",
+                              dataType: "uint8",
+                              max: 10,
+                            },
+                          ],
+                        },
+                      ],
+                    },
+                    {
+                      name: "Quest Items",
+                      items: [
+                        {
+                          type: "section",
+                          flex: true,
+                          items: [
+                            {
+                              name: "Miscellaneous",
+                              type: "bitflags",
+                              flags: [
+                                { offset: 0x4845, bit: 2, label: "Shadow Crystal" },
+                              ],
+                            },
+                          ],
+                        },
+                        {
+                          name: "Twilight Areas",
+                          type: "section",
+                          flex: true,
+                          items: [
+                            {
+                              type: "section",
+                              noMargin: true,
+                              items: [
+                                {
+                                  name: "Faron Province",
+                                  type: "bitflags",
+                                  flags: [
+                                    { offset: 0x4160, bit: 0, label: "Vessel of Light obtained" },
+                                    { offset: 0x4079, bit: 0, label: "Twilight cleared" },
+                                  ],
+                                },
+                                {
+                                  name: "Tears of Light",
+                                  offset: 0x415c,
+                                  type: "variable",
+                                  dataType: "uint8",
+                                  max: 16,
+                                },
+                              ],
+                            },
+                            {
+                              type: "section",
+                              noMargin: true,
+                              items: [
+                                {
+                                  name: "Eldin Province",
+                                  type: "bitflags",
+                                  flags: [
+                                    { offset: 0x4160, bit: 1, label: "Vessel of Light obtained" },
+                                    { offset: 0x4079, bit: 1, label: "Twilight cleared" },
+                                  ],
+                                },
+                                {
+                                  name: "Tears of Light",
+                                  offset: 0x415d,
+                                  type: "variable",
+                                  dataType: "uint8",
+                                  max: 16,
+                                },
+                              ],
+                            },
+                            {
+                              type: "section",
+                              noMargin: true,
+                              items: [
+                                {
+                                  name: "Lanaryu Province",
+                                  type: "bitflags",
+                                  flags: [
+                                    { offset: 0x4160, bit: 2, label: "Vessel of Light obtained" },
+                                    { offset: 0x4079, bit: 2, label: "Twilight cleared" },
+                                  ],
+                                },
+                                {
+                                  name: "Tears of Light",
+                                  offset: 0x415e,
+                                  type: "variable",
+                                  dataType: "uint8",
+                                  max: 16,
+                                },
+                              ],
+                            },
+                          ],
+                        },
+                      ],
+                    },
+                  ],
+                },
+              ],
+            },
+            {
+              name: "Dungeons",
+              items: [
+                {
+                  length: 0x20,
+                  type: "container",
+                  instanceType: "tabs",
+                  instances: 9,
+                  resource: "dungeons",
+                  vertical: true,
+                  items: [
+                    {
+                      type: "section",
+                      flex: true,
+                      items: [
+                        {
+                          id: "dungeon-events-%index%",
+                          name: "Events",
+                          type: "bitflags",
+                          flags: [
+                            { offset: 0x4455, bit: 3, label: "Boss defeated" },
+                          ],
+                        },
+                        {
+                          id: "dungeon-items-%index%",
+                          name: "Items",
+                          type: "bitflags",
+                          flags: [
+                            { offset: 0x4455, bit: 0, label: "Dungeon Map" },
+                            { offset: 0x4455, bit: 1, label: "Compass" },
+                            { offset: 0x4455, bit: 2, label: "Big Key" },
+                            { offset: 0x4455, bit: 4, label: "Heart Container" },
+                          ],
+                        },
+                        {
+                          type: "section",
+                          items: [
+                            {
+                              name: "Keys",
+                              offset: 0x4454,
+                              type: "variable",
+                              dataType: "uint8",
+                              max: 5,
+                            },
+                          ],
+                        },
+                      ],
+                    },
+                  ],
+                },
+              ],
+            },
+            {
+              name: "Events",
+              items: [
+                {
+                  type: "tabs",
+                  vertical: true,
+                  items: [
+                    {
+                      name: "Fish Journal",
+                      items: [
+                        {
+                          name: "Ordon Catfish",
+                          type: "section",
+                          flex: true,
+                          items: [
+                            {
+                              id: "fishSize",
+                              name: "Largest Size",
+                              offset: 0x41d7,
+                              type: "variable",
+                              dataType: "uint8",
+                              operations: [{ "/": 2.54 }, { roundFloor: 0 }],
+                              max: 100,
+                            },
+                            {
+                              name: "Caugth",
+                              offset: 0x41ba,
+                              type: "variable",
+                              dataType: "uint16",
+                              bigEndian: true,
+                            },
+                          ],
+                        },
+                        {
+                          name: "Greengill",
+                          type: "section",
+                          flex: true,
+                          items: [
+                            {
+                              id: "fishSize",
+                              name: "Largest Size",
+                              offset: 0x41d9,
+                              type: "variable",
+                              dataType: "uint8",
+                              operations: [{ "/": 2.54 }, { roundFloor: 0 }],
+                              max: 100,
+                            },
+                            {
+                              name: "Caugth",
+                              offset: 0x41be,
+                              type: "variable",
+                              dataType: "uint16",
+                              bigEndian: true,
+                            },
+                          ],
+                        },
+                        {
+                          name: "Reekfish",
+                          type: "section",
+                          flex: true,
+                          items: [
+                            {
+                              id: "fishSize",
+                              name: "Largest Size",
+                              offset: 0x41d8,
+                              type: "variable",
+                              dataType: "uint8",
+                              operations: [{ "/": 2.54 }, { roundFloor: 0 }],
+                              max: 100,
+                            },
+                            {
+                              name: "Caugth",
+                              offset: 0x41bc,
+                              type: "variable",
+                              dataType: "uint16",
+                              bigEndian: true,
+                            },
+                          ],
+                        },
+                        {
+                          name: "Hyrule Bass",
+                          type: "section",
+                          flex: true,
+                          items: [
+                            {
+                              id: "fishSize",
+                              name: "Largest Size",
+                              offset: 0x41d4,
+                              type: "variable",
+                              dataType: "uint8",
+                              operations: [{ "/": 2.54 }, { roundFloor: 0 }],
+                              max: 100,
+                            },
+                            {
+                              name: "Caugth",
+                              offset: 0x41b4,
+                              type: "variable",
+                              dataType: "uint16",
+                              bigEndian: true,
+                            },
+                          ],
+                        },
+                        {
+                          name: "Hylian Pike",
+                          type: "section",
+                          flex: true,
+                          items: [
+                            {
+                              id: "fishSize",
+                              name: "Largest Size",
+                              offset: 0x41d6,
+                              type: "variable",
+                              dataType: "uint8",
+                              operations: [{ "/": 2.54 }, { roundFloor: 0 }],
+                              max: 100,
+                            },
+                            {
+                              name: "Caugth",
+                              offset: 0x41b8,
+                              type: "variable",
+                              dataType: "uint16",
+                              bigEndian: true,
+                            },
+                          ],
+                        },
+                        {
+                          name: "Hylian Loach",
+                          type: "section",
+                          flex: true,
+                          items: [
+                            {
+                              id: "fishSize",
+                              name: "Largest Size",
+                              offset: 0x41d5,
+                              type: "variable",
+                              dataType: "uint8",
+                              operations: [{ "/": 2.54 }, { roundFloor: 0 }],
+                              max: 100,
+                            },
+                            {
+                              name: "Caugth",
+                              offset: 0x41b6,
+                              type: "variable",
+                              dataType: "uint16",
+                              bigEndian: true,
+                            },
+                          ],
+                        },
+                      ],
+                    },
+                    {
+                      name: "Golden Bugs",
+                      flex: true,
+                      items: [
+                        {
+                          name: "Found",
+                          type: "bitflags",
+                          flags: [
+                            { offset: 0x412d, bit: 4, label: "♂ Ant" },
+                            { offset: 0x412d, bit: 5, label: "♀ Ant", separator: true },
+                            { offset: 0x412d, bit: 6, label: "♂ Dayfly" },
+                            { offset: 0x412d, bit: 7, label: "♀ Dayfly", separator: true },
+                            { offset: 0x412f, bit: 0, label: "♂ Bettle" },
+                            { offset: 0x412f, bit: 1, label: "♀ Bettle", separator: true },
+                            { offset: 0x412e, bit: 4, label: "♂ Mantis" },
+                            { offset: 0x412e, bit: 5, label: "♀ Mantis", separator: true },
+                            { offset: 0x412f, bit: 4, label: "♂ Stag Beetle" },
+                            { offset: 0x412f, bit: 5, label: "♀ Stag Beetle", separator: true },
+                            { offset: 0x412e, bit: 2, label: "♂ Pill Bug" },
+                            { offset: 0x412e, bit: 3, label: "♀ Pill Bug", separator: true },
+                            { offset: 0x412f, bit: 2, label: "♂ Butterfly" },
+                            { offset: 0x412f, bit: 3, label: "♀ Butterfly", separator: true },
+                            { offset: 0x412e, bit: 6, label: "♂ Ladybug" },
+                            { offset: 0x412e, bit: 7, label: "♀ Ladybug", separator: true },
+                            { offset: 0x412d, bit: 0, label: "♂ Snail" },
+                            { offset: 0x412d, bit: 1, label: "♀ Snail", separator: true },
+                            { offset: 0x412e, bit: 0, label: "♂ Phasmid" },
+                            { offset: 0x412e, bit: 1, label: "♀ Phasmid", separator: true },
+                            { offset: 0x412f, bit: 6, label: "♂ Grasshopper" },
+                            { offset: 0x412f, bit: 7, label: "♀ Grasshopper", separator: true },
+                            { offset: 0x412d, bit: 2, label: "♂ Dragonfly" },
+                            { offset: 0x412d, bit: 3, label: "♀ Dragonfly", separator: true },
+                          ],
+                        },
+                        {
+                          name: "Given",
+                          type: "bitflags",
+                          flags: [
+                            { offset: 0x486b, bit: 0, label: "♂ Ant" },
+                            { offset: 0x486c, bit: 7, label: "♀ Ant", separator: true },
+                            { offset: 0x486c, bit: 6, label: "♂ Dayfly" },
+                            { offset: 0x486c, bit: 5, label: "♀ Dayfly", separator: true },
+                            { offset: 0x4869, bit: 4, label: "♂ Bettle" },
+                            { offset: 0x4869, bit: 3, label: "♀ Bettle", separator: true },
+                            { offset: 0x486a, bit: 0, label: "♂ Mantis" },
+                            { offset: 0x486b, bit: 7, label: "♀ Mantis", separator: true },
+                            { offset: 0x4869, bit: 0, label: "♂ Stag Bettle" },
+                            { offset: 0x486a, bit: 7, label: "♀ Stag Beetle", separator: true },
+                            { offset: 0x486a, bit: 2, label: "♂ Pill Bug" },
+                            { offset: 0x486a, bit: 1, label: "♀ Pill Bug", separator: true },
+                            { offset: 0x4869, bit: 2, label: "♂ Butterfly" },
+                            { offset: 0x4869, bit: 1, label: "♀ Butterfly", separator: true },
+                            { offset: 0x486b, bit: 6, label: "♂ Ladybug" },
+                            { offset: 0x486b, bit: 5, label: "♀ Ladybug", separator: true },
+                            { offset: 0x486b, bit: 4, label: "♂ Snail" },
+                            { offset: 0x486b, bit: 3, label: "♀ Snail", separator: true },
+                            { offset: 0x486a, bit: 4, label: "♂ Phasmid" },
+                            { offset: 0x486a, bit: 3, label: "♀ Phasmid", separator: true },
+                            { offset: 0x486a, bit: 6, label: "♂ Grasshopper" },
+                            { offset: 0x486a, bit: 5, label: "♀ Grasshopper", separator: true },
+                            { offset: 0x486b, bit: 2, label: "♂ Dragonfly" },
+                            { offset: 0x486b, bit: 1, label: "♀ Dragonfly", separator: true },
+                          ],
+                        },
+                      ],
+                    },
+                    {
+                      name: "Heart Pieces",
+                      planned: true,
+                      items: [],
+                    },
+                    {
+                      name: "Letters",
+                      items: [
+                        {
+                          type: "section",
+                          flex: true,
+                          items: [
+                            {
+                              id: "receivedLetters",
+                              name: "Received",
+                              type: "bitflags",
+                              flags: letterList
+                                .sort((a, b) => a.order - b.order)
+                                .map((letter) => ({
+                                  offset:
+                                    0x4166 + bitToOffset(letter.flagIndex),
+                                  bit: letter.flagIndex % 8,
+                                  label: letter.name,
+                                })),
+                            },
+                            {
+                              name: "Read",
+                              type: "bitflags",
+                              flags: letterList
+                                .sort((a, b) => a.order - b.order)
+                                .map((letter) => ({
+                                  offset:
+                                    0x416e + bitToOffset(letter.flagIndex),
+                                  bit: letter.flagIndex % 8,
+                                  label: letter.name,
+                                })),
+                            },
+                          ],
+                        },
+                        {
+                          name: "Letters",
+                          type: "section",
+                          flex: true,
+                          hidden: true,
+                          items: [
+                            {
+                              name: "Letter 01",
+                              offset: 0x4174,
+                              type: "variable",
+                              dataType: "uint8",
+                              resource: "letters",
+                            },
+                            {
+                              name: "Letter 02",
+                              offset: 0x4175,
+                              type: "variable",
+                              dataType: "uint8",
+                              resource: "letters",
+                            },
+                            {
+                              name: "Letter 03",
+                              offset: 0x4176,
+                              type: "variable",
+                              dataType: "uint8",
+                              resource: "letters",
+                            },
+                            {
+                              name: "Letter 04",
+                              offset: 0x4177,
+                              type: "variable",
+                              dataType: "uint8",
+                              resource: "letters",
+                            },
+                            {
+                              name: "Letter 05",
+                              offset: 0x4178,
+                              type: "variable",
+                              dataType: "uint8",
+                              resource: "letters",
+                            },
+                            {
+                              name: "Letter 06",
+                              offset: 0x4179,
+                              type: "variable",
+                              dataType: "uint8",
+                              resource: "letters",
+                            },
+                            {
+                              name: "Letter 07",
+                              offset: 0x417a,
+                              type: "variable",
+                              dataType: "uint8",
+                              resource: "letters",
+                            },
+                            {
+                              name: "Letter 08",
+                              offset: 0x417b,
+                              type: "variable",
+                              dataType: "uint8",
+                              resource: "letters",
+                            },
+                            {
+                              name: "Letter 09",
+                              offset: 0x417c,
+                              type: "variable",
+                              dataType: "uint8",
+                              resource: "letters",
+                            },
+                            {
+                              name: "Letter 10",
+                              offset: 0x417d,
+                              type: "variable",
+                              dataType: "uint8",
+                              resource: "letters",
+                            },
+                            {
+                              name: "Letter 11",
+                              offset: 0x417e,
+                              type: "variable",
+                              dataType: "uint8",
+                              resource: "letters",
+                            },
+                            {
+                              name: "Letter 12",
+                              offset: 0x417f,
+                              type: "variable",
+                              dataType: "uint8",
+                              resource: "letters",
+                            },
+                            {
+                              name: "Letter 13",
+                              offset: 0x4180,
+                              type: "variable",
+                              dataType: "uint8",
+                              resource: "letters",
+                            },
+                            {
+                              name: "Letter 14",
+                              offset: 0x4181,
+                              type: "variable",
+                              dataType: "uint8",
+                              resource: "letters",
+                            },
+                            {
+                              name: "Letter 15",
+                              offset: 0x4182,
+                              type: "variable",
+                              dataType: "uint8",
+                              resource: "letters",
+                            },
+                            {
+                              name: "Letter 16",
+                              offset: 0x4183,
+                              type: "variable",
+                              dataType: "uint8",
+                              resource: "letters",
+                            },
+                          ],
+                        },
+                      ],
+                    },
+                    {
+                      name: "Poe Souls",
+                      planned: true,
+                      items: [
+                        {
+                          name: "Total",
+                          offset: 0x4154,
+                          type: "variable",
+                          dataType: "uint8",
+                          disabled: true,
+                        },
+                      ],
+                    },
+                  ],
+                },
+              ],
+            },
+          ],
+        },
+      ],
+    },
+  ],
+  resources: {
+    bombBags: {
+      0x0: "Regular Bomb Bags",
+      0x1: "Giant Bomb Bags",
+    },
+    bombs: {
+      0x50: "Bomb Bag",
+      0x70: "Bombs",
+      0x71: "Water Bombs",
+      0x72: "Bomblings",
+      0xff: "-",
+    },
+    bottles: {
+      0x60: "Empty Bottle",
+      0x61: "Red Potion",
+      0x62: "Magic Potion (Unused)",
+      0x63: "Blue Potion",
+      0x64: "Milk",
+      0x65: "Milk (1/2)",
+      0x66: "Lantern Oil",
+      0x67: "Water",
+      0x6a: "Nasty Soup",
+      0x6b: "Hot Springwater",
+      0x6c: "Fairy",
+      0x73: "Fairy's Tears",
+      0x74: "Worm",
+      0x76: "Bee Larva",
+      0x77: "Rare Chu Jelly",
+      0x78: "Red Chu Jelly",
+      0x79: "Blue Chu Jelly",
+      0x7a: "Green Chu Jelly (Unused)",
+      0x7b: "Yellow Chu Jelly",
+      0x7c: "Purple Chu Jelly",
+      0x7d: "Simple Soup",
+      0x7e: "Good Soup",
+      0x7f: "Superb Soup",
+      0x9f: "Black Chu Jelly (Unused)",
+      0xff: "-",
+    },
+    clawshots: {
+      0x44ff: "Clawshot",
+      0xff47: "Double Clawshots",
+      0xffff: "-",
+    },
+    dungeons: {
+      0x0: "Forest Temple",
+      0x1: "Goron Mines",
+      0x2: "Lakebed Temple",
+      0x3: "Arbiter's Grounds",
+      0x4: "Snowpeak Ruins",
+      0x5: "Temple of Time",
+      0x6: "City in the Sky",
+      0x7: "Palace of Twilight",
+      0x8: "Hyrule Castle",
+    },
+    fishingRods: {
+      0x4a: "Fishing Rod",
+      0x5b: "Fishing Rod + Larva",
+      0x5c: "Fishing Rod + Coral Earring",
+      0x5d: "Fishing Rod + Worm",
+      0x5e: "Fishing Rod + Bee Earring",
+      0x5f: "Fishing Rod + Worm Earring",
+      0xff: "-",
+    },
+    iliasMemoryItems: {
+      0x80: "Renado's Letter",
+      0x81: "Invoice",
+      0x82: "Wooden Statue",
+      0x83: "Ilia's Charm",
+      0x84: "Horse Call",
+      0xff: "-",
+    },
+    letters: {
+      0x0: "-",
+      ...letters,
+    },
+    maxArrows: {
+      0x1e: "30",
+      0x3c: "60",
+      0x64: "100",
+    },
+    maxBomblings: {
+      0x0: "10",
+      0x1: "20",
+    },
+    maxBombs: {
+      0x0: "30",
+      0x1: "60",
+    },
+    maxRupees: {
+      0x0: "300",
+      0x1: "600",
+      0x2: "1000",
+    },
+    maxWaterBombs: {
+      0x0: "15",
+      0x1: "30",
+    },
+    quivers: {
+      0x1e: "Quiver",
+      0x3c: "Big Quiver",
+      0x64: "Giant Quiver",
+    },
+    scents: {
+      0xb0: "Scent of Ilia",
+      0xb2: "Poe Scent",
+      0xb3: "Reekfish Scent",
+      0xb4: "Youths' Scent",
+      0xb5: "Medicine Scent",
+      0xff: "-",
+    },
+    shields: {
+      0x2a: "Ordon Shield",
+      0x2b: "Wooden Shield",
+      0x2c: "Hylian Shield",
+      0xff: "-",
+    },
+    swords: {
+      0x28: "Ordon Sword",
+      0x29: "Master Sword L1",
+      0x3f: "Wooden Sword",
+      0x49: "Master Sword L2",
+      0xff: "-",
+    },
+    tunics: {
+      0x2e: "Ranch Clothes",
+      0x2f: "Hero's Clothes",
+      0x30: "Magic Armor",
+      0x31: "Zora Armor",
+    },
+    wallets: {
+      0x0: "Wallet",
+      0x1: "Big Wallet",
+      0x2: "Giant Wallet",
+    },
+  },
+  resourcesOrder: {
+    bombs: [0xff],
+    bottles: [0xff],
+    clawshots: [0xffff],
+    fishingRods: [0xff, 0x4a, 0x5b, 0x5d, 0x5c, 0x5e, 0x5f],
+    iliasMemoryItems: [0xff],
+    shields: [0xff, 0x2b, 0x2a, 0x2c],
+    scents: [0xff, 0xb4, 0xb0, 0xb2, 0xb3, 0xb5],
+    swords: [0xff, 0x3f, 0x28, 0x29, 0x49],
+    tunics: [0x2e, 0x2f, 0x31, 0x30],
+  },
+};
+
+export default template;

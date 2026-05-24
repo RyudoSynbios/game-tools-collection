@@ -857,6 +857,17 @@
     }
   },
   {
+    "id": "legend-of-zelda-the-twilight-princess",
+    "name": "Legend of Zelda, The: Twilight Princess",
+    "platformIds": ["gamecube", "wii"],
+    "tools": {
+      "saveEditor": {
+        "createdAt": "2026-05-24",
+        "regions": ["🇪🇺", "🇺🇸", "🇯🇵", "🇦🇺"]
+      }
+    }
+  },
+  {
     "id": "luigi-s-mansion",
     "name": "Luigi's Mansion",
     "platformIds": ["gamecube"],
