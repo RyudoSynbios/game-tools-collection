@@ -1,4 +1,3 @@
-import Long from "long";
 import { get } from "svelte/store";
 
 import { gameRegion } from "$lib/stores";
@@ -10,6 +9,7 @@ import {
   setString,
 } from "$lib/utils/bytes";
 import { formatChecksum } from "$lib/utils/checksum";
+import { getTime, setTime } from "$lib/utils/common/gamecube";
 import { getPartialValue, makeOperations } from "$lib/utils/format";
 
 import {
@@ -98,7 +98,7 @@ export function overrideGetInt(
   if ("id" in item && item.id === "playtime") {
     const itemInt = item as ItemInt;
 
-    const playtime = getPlaytime(itemInt.offset);
+    const playtime = getTime(itemInt.offset);
 
     const int = makeOperations(playtime, itemInt.operations);
 
@@ -189,15 +189,12 @@ export function overrideSetInt(
   if ("id" in item && item.id === "playtime") {
     const itemInt = item as ItemInt;
 
-    const oldInt = getPlaytime(itemInt.offset);
+    const oldInt = getTime(itemInt.offset);
 
     let int = makeOperations(parseInt(value), itemInt.operations, true);
     int = getPartialValue(oldInt, int, itemInt.operations!);
 
-    const long = Long.fromNumber(int).multiply(40500000);
-
-    setInt(itemInt.offset, "uint32", long.high, { bigEndian: true });
-    setInt(itemInt.offset + 0x4, "uint32", long.low, { bigEndian: true });
+    setTime(itemInt.offset, int);
 
     return true;
   } else if ("id" in item && item.id === "location") {
@@ -355,15 +352,6 @@ export function generateChecksum(item: ItemChecksum): number {
   }
 
   return formatChecksum(checksum, item.dataType);
-}
-
-function getPlaytime(offset: number): number {
-  const int1 = getInt(offset, "uint32", { bigEndian: true });
-  const int2 = getInt(offset + 0x4, "uint32", { bigEndian: true });
-
-  const long = new Long(int2, int1);
-
-  return long.divide(40500000).toNumber();
 }
 
 function hasImportantThing(offset: number, value: number): boolean {
