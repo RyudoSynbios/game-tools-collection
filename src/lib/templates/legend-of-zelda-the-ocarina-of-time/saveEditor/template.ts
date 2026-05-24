@@ -463,6 +463,7 @@ const template: GameJson = {
                             {
                               type: "section",
                               background: true,
+                              flexStart: true,
                               items: [
                                 {
                                   name: "Deku Stick",

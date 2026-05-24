@@ -365,6 +365,7 @@ export interface ItemSection {
   background?: boolean;
   flex?: boolean;
   flex1?: boolean;
+  flexStart?: boolean;
   noMargin?: boolean;
   hidden?: boolean;
   items: Item[];

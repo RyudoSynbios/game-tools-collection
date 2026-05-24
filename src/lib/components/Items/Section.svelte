@@ -29,6 +29,7 @@
     class:gtc-section-background={item.background}
     class:gtc-section-debug={item.hidden}
     class:gtc-section-flex1={item.flex1}
+    class:gtc-section-flexStart={item.flexStart}
     class:gtc-section-nomargin={item.noMargin}
   >
     {#if item.name}
@@ -58,6 +59,10 @@
 
     &.gtc-section-flex1 {
       @apply flex-1;
+    }
+
+    &.gtc-section-flexStart {
+      @apply self-start;
     }
 
     &.gtc-section-nomargin {
