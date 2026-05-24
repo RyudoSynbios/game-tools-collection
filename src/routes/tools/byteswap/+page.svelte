@@ -6,7 +6,7 @@
   import { byteswap } from "$lib/utils/bytes";
 
   const metaTitle = "Byteswap";
-  const metaDescription = "Byteswap your binary files.";
+  const metaDescription = "Byteswap your binary files. Use a collection of tools to rediscover your favorite games by editing your saves or randomizing gameplay elements.";
   const metaImage = `${page.url.origin}/img/icon.png`;
 
   function onFileUploaded(file: File, dataView: DataView): void {
