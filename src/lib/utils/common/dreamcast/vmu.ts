@@ -104,6 +104,8 @@ export default class VMU {
   }
 
   private generateRoot(): void {
+    this._root = [];
+
     const { block, size } = this.system.fileInformation;
 
     // prettier-ignore

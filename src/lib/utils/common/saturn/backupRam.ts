@@ -119,7 +119,7 @@ export default class BackupRam {
   }
 
   private generateRoot(): void {
-    const root: File[] = [];
+    this._root = [];
 
     const usedBlocks: number[] = [];
 

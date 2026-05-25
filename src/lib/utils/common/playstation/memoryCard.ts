@@ -47,6 +47,8 @@ export default class MemoryCard {
   }
 
   private generateRoot(): void {
+    this._root = [];
+
     for (let i = 0x0; i < 0xf; i += 0x1) {
       const offset = this.headerSize + (i + 0x1) * FRAME_SIZE;
 

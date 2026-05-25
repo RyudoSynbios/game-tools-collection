@@ -1,6 +1,3 @@
-import { get } from "svelte/store";
-
-import { gameRegion } from "$lib/stores";
 import { byteswap16, getInt, setInt } from "$lib/utils/bytes";
 import { formatChecksum } from "$lib/utils/checksum";
 import {
@@ -48,8 +45,6 @@ export function overrideParseContainerItemsShifts(
 export function overrideGetInt(
   item: Item,
 ): [boolean, number | string | undefined] {
-  const $gameRegion = get(gameRegion);
-
   if ("id" in item && item.id?.match(/stats-/)) {
     const type = item.id.split("-")[1];
 

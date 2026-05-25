@@ -1,6 +1,3 @@
-import { get } from "svelte/store";
-
-import { gameRegion } from "$lib/stores";
 import { getInt, setInt } from "$lib/utils/bytes";
 import { formatChecksum } from "$lib/utils/checksum";
 import { getRegionArray } from "$lib/utils/format";

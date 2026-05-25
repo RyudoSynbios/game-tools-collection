@@ -1,4 +1,4 @@
-import type { GameJson, ItemSection } from "$lib/types";
+import type { GameJson } from "$lib/types";
 
 import { levelFragment } from "./utils/fragment";
 import {

@@ -243,74 +243,88 @@ const template: GameJson = {
                           noMargin: true,
                           items: [
                             {
-                              id: "sword",
-                              name: "Sword",
-                              offset: 0x91,
-                              type: "variable",
-                              dataType: "lower4",
-                              resource: "swordsGK",
-                            },
-                            {
-                              name: "Shield",
-                              offset: 0x91,
-                              type: "variable",
-                              dataType: "upper4",
-                              resource: "shields",
-                            },
-                            {
-                              name: "Tunic",
-                              offset: 0x90,
-                              type: "variable",
-                              dataType: "lower4",
-                              resource: "tunics",
-                            },
-                            {
-                              name: "Boots",
-                              offset: 0x90,
-                              type: "variable",
-                              dataType: "upper4",
-                              resource: "boots",
-                            },
-                          ],
-                        },
-                        {
-                          type: "section",
-                          flex: true,
-                          items: [
-                            {
-                              id: "obtainedSwords",
-                              type: "bitflags",
-                              flags: [
-                                { offset: 0xbd, bit: 0, label: "Kokiri Sword" },
-                                { offset: 0xbd, bit: 1, label: "Master Sword" },
-                                { offset: 0xbd, bit: 2, label: "Giant's Knife", hidden: true },
-                                { offset: 0xbd, bit: 3, label: "Giant's Knife (Broken)", hidden: true },
-                                { offset: 0xbd, bit: 2, label: "Biggoron's Sword", hidden: true },
-                                { offset: 0x5e, bit: 0, label: "Biggoron's Sword obtained", hidden: true },
+                              type: "section",
+                              items: [
+                                {
+                                  id: "sword",
+                                  name: "Sword",
+                                  offset: 0x91,
+                                  type: "variable",
+                                  dataType: "lower4",
+                                  resource: "swordsGK",
+                                },
+                                {
+                                  id: "obtainedSwords",
+                                  type: "bitflags",
+                                  flags: [
+                                    { offset: 0xbd, bit: 0, label: "Kokiri Sword" },
+                                    { offset: 0xbd, bit: 1, label: "Master Sword" },
+                                    { offset: 0xbd, bit: 2, label: "Giant's Knife", hidden: true },
+                                    { offset: 0xbd, bit: 3, label: "Giant's Knife (Broken)", hidden: true },
+                                    { offset: 0xbd, bit: 2, label: "Biggoron's Sword", hidden: true },
+                                    { offset: 0x5e, bit: 0, label: "Biggoron's Sword obtained", hidden: true },
+                                  ],
+                                },
                               ],
                             },
                             {
-                              type: "bitflags",
-                              flags: [
-                                { offset: 0xbd, bit: 4, label: "Deku Shield" },
-                                { offset: 0xbd, bit: 5, label: "Hylian Shield" },
-                                { offset: 0xbd, bit: 6, label: "Mirror Shield" },
+                              type: "section",
+                              items: [
+                                {
+                                  name: "Shield",
+                                  offset: 0x91,
+                                  type: "variable",
+                                  dataType: "upper4",
+                                  resource: "shields",
+                                },
+                                {
+                                  type: "bitflags",
+                                  flags: [
+                                    { offset: 0xbd, bit: 4, label: "Deku Shield" },
+                                    { offset: 0xbd, bit: 5, label: "Hylian Shield" },
+                                    { offset: 0xbd, bit: 6, label: "Mirror Shield" },
+                                  ],
+                                },
                               ],
                             },
                             {
-                              type: "bitflags",
-                              flags: [
-                                { offset: 0xbc, bit: 0, label: "Kokiri Tunic" },
-                                { offset: 0xbc, bit: 1, label: "Goron Tunic" },
-                                { offset: 0xbc, bit: 2, label: "Zora Tunic" },
+                              type: "section",
+                              items: [
+                                {
+                                  name: "Tunic",
+                                  offset: 0x90,
+                                  type: "variable",
+                                  dataType: "lower4",
+                                  resource: "tunics",
+                                },
+                                {
+                                  type: "bitflags",
+                                  flags: [
+                                    { offset: 0xbc, bit: 0, label: "Kokiri Tunic" },
+                                    { offset: 0xbc, bit: 1, label: "Goron Tunic" },
+                                    { offset: 0xbc, bit: 2, label: "Zora Tunic" },
+                                  ],
+                                },
                               ],
                             },
                             {
-                              type: "bitflags",
-                              flags: [
-                                { offset: 0xbc, bit: 4, label: "Kokiri Boots" },
-                                { offset: 0xbc, bit: 5, label: "Iron Boots" },
-                                { offset: 0xbc, bit: 6, label: "Hover Boots" },
+                              type: "section",
+                              items: [
+                                {
+                                  name: "Boots",
+                                  offset: 0x90,
+                                  type: "variable",
+                                  dataType: "upper4",
+                                  resource: "boots",
+                                },
+                                {
+                                  type: "bitflags",
+                                  flags: [
+                                    { offset: 0xbc, bit: 4, label: "Kokiri Boots" },
+                                    { offset: 0xbc, bit: 5, label: "Iron Boots" },
+                                    { offset: 0xbc, bit: 6, label: "Hover Boots" },
+                                  ],
+                                },
                               ],
                             },
                           ],

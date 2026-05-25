@@ -95,7 +95,8 @@ export default class GCM {
 
   // prettier-ignore
   private generateRoot(): void {
-    
+    this._root = [];
+
     this._root.push({
       index: 0,
       type: "directory",

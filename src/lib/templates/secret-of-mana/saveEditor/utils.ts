@@ -189,8 +189,6 @@ export function overrideSetInt(item: Item, value: string): boolean {
   } else if ("id" in item && item.id?.match(/equipment-/)) {
     const itemInt = item as ItemInt;
 
-    const [slotIndex] = item.id.splitInt();
-
     const itemIndex = parseInt(value);
 
     const previous = getInt(itemInt.offset, "uint8", {

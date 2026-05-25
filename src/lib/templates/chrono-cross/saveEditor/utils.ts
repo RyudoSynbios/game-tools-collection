@@ -186,8 +186,6 @@ export function overrideItem(item: Item): Item {
 export function overrideGetInt(
   item: Item,
 ): [boolean, number | string | undefined] {
-  const $gameRegion = get(gameRegion);
-
   if ("id" in item && item.id === "progression") {
     const itemInt = item as ItemInt;
 

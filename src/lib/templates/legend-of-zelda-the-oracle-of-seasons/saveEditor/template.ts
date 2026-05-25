@@ -1168,52 +1168,6 @@ const template: GameJson = {
                   vertical: true,
                   items: [
                     {
-                      name: "Heart Pieces",
-                      items: [
-                        {
-                          type: "bitflags",
-                          flags: [
-                            { offset: 0x238, bit: 5, label: "<b>Horon Village:</b> Behind a bush" },
-                            { offset: 0x512, bit: 5, label: "<b>Eastern Suburbs:</b> In a cave" },
-                            { offset: 0x20f, bit: 5, label: "<b>Woods of Winter:</b> Behind a rock" },
-                            { offset: 0xa2, bit: 1, label: "<b>Subrosia:</b> Bought from the Subrosia Market" },
-                            { offset: 0x1bb, bit: 5, label: "<b>Ruined Keep:</b> In a chest" },
-                            { offset: 0x18d, bit: 5, label: "<b>Mt. Cucco:</b> On a ledge" },
-                            { offset: 0x211, bit: 5, label: "<b>Spool Swamp:</b> In the middle of the current" },
-                            { offset: 0x520, bit: 5, label: "<b>Eyeglass Lake:</b> In a cave" },
-                            { offset: 0x231, bit: 5, label: "<b>Graveyard:</b> Behind tomb stones" },
-                            { offset: 0x527, bit: 5, label: "<b>Temple Remains:</b> In a cave" },
-                            { offset: 0xa1, bit: 7, label: "Obtained from Maple" },
-                            { offset: 0xa9, bit: 1, label: "Inside a Gasha Nut" },
-                          ],
-                        },
-                      ],
-                    },
-                    {
-                      name: "Gasha Trees",
-                      items: gashasLocations.map((location) => ({
-                        type: "section",
-                        flex: true,
-                        items: [
-                          {
-                            name: location.name,
-                            offset: 0xaa + bitToOffset(location.index),
-                            type: "variable",
-                            dataType: "bit",
-                            bit: location.index % 8,
-                            resource: "softSoilStatus",
-                          },
-                          {
-                            name: "Time",
-                            offset: 0xac + location.index,
-                            type: "variable",
-                            dataType: "uint8",
-                            hint: "Gasha Nut can be obtained when time reaches at least 40.",
-                          },
-                        ],
-                      })),
-                    },
-                    {
                       name: "Bipin & Blossom's Child",
                       flex: true,
                       planned: true,
@@ -1262,6 +1216,52 @@ const template: GameJson = {
                           type: "variable",
                           dataType: "uint8",
                           resource: "childPersonalities",
+                        },
+                      ],
+                    },
+                    {
+                      name: "Gasha Trees",
+                      items: gashasLocations.map((location) => ({
+                        type: "section",
+                        flex: true,
+                        items: [
+                          {
+                            name: location.name,
+                            offset: 0xaa + bitToOffset(location.index),
+                            type: "variable",
+                            dataType: "bit",
+                            bit: location.index % 8,
+                            resource: "softSoilStatus",
+                          },
+                          {
+                            name: "Time",
+                            offset: 0xac + location.index,
+                            type: "variable",
+                            dataType: "uint8",
+                            hint: "Gasha Nut can be obtained when time reaches at least 40.",
+                          },
+                        ],
+                      })),
+                    },
+                    {
+                      name: "Heart Pieces",
+                      items: [
+                        {
+                          type: "bitflags",
+                          flags: [
+                            { offset: 0x238, bit: 5, label: "<b>Horon Village:</b> Behind a bush" },
+                            { offset: 0x512, bit: 5, label: "<b>Eastern Suburbs:</b> In a cave" },
+                            { offset: 0x20f, bit: 5, label: "<b>Woods of Winter:</b> Behind a rock" },
+                            { offset: 0xa2, bit: 1, label: "<b>Subrosia:</b> Bought from the Subrosia Market" },
+                            { offset: 0x1bb, bit: 5, label: "<b>Ruined Keep:</b> In a chest" },
+                            { offset: 0x18d, bit: 5, label: "<b>Mt. Cucco:</b> On a ledge" },
+                            { offset: 0x211, bit: 5, label: "<b>Spool Swamp:</b> In the middle of the current" },
+                            { offset: 0x520, bit: 5, label: "<b>Eyeglass Lake:</b> In a cave" },
+                            { offset: 0x231, bit: 5, label: "<b>Graveyard:</b> Behind tomb stones" },
+                            { offset: 0x527, bit: 5, label: "<b>Temple Remains:</b> In a cave" },
+                            { offset: 0xa1, bit: 7, label: "Obtained from Maple" },
+                            { offset: 0xa9, bit: 1, label: "Inside a Gasha Nut" },
+                          ],
                         },
                       ],
                     },

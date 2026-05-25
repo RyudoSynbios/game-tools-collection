@@ -7,7 +7,6 @@ import type {
   ItemBitflag,
   ItemBitflags,
   ItemChecksum,
-  ItemContainer,
   ItemInt,
 } from "$lib/types";
 

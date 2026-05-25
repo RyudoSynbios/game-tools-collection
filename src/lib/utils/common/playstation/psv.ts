@@ -38,6 +38,8 @@ export default class PSV {
 
   // prettier-ignore
   private generateRoot(): void {
+    this._root = [];
+
     const file: File = {
       size: getInt(0x40, "uint32", {}, this.dataView),
       countryCode: getString(HEADER_OFFSET, 0x2, "uint8", {}, this.dataView),

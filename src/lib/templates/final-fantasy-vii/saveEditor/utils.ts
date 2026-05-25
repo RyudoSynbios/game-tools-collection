@@ -3,7 +3,6 @@ import { get } from "svelte/store";
 import { dataView, gamePlatform, gameRegion } from "$lib/stores";
 import {
   copyInt,
-  extractBinary,
   extractBit,
   getInt,
   getString,

@@ -13,7 +13,6 @@ import type {
   ItemContainer,
   ItemInt,
   ItemString,
-  ItemTabs,
   Resource,
 } from "$lib/types";
 
@@ -50,8 +49,6 @@ export function overrideParseContainerItemsShifts(
       return [true, [-1]];
     }
   } else if (item.id?.match(/monstersTabs-/)) {
-    const [slotIndex] = item.id.splitInt();
-
     const offset = getShift(shifts) + 0xb1;
 
     let count = 0;

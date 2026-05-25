@@ -1212,71 +1212,6 @@ const template: GameJson = {
                   vertical: true,
                   items: [
                     {
-                      name: "Heart Pieces",
-                      flex: true,
-                      items: [
-                        {
-                          name: "Present",
-                          type: "bitflags",
-                          flags: [
-                            { offset: 0x1eb, bit: 5, label: "<b>Yoll Graveyard:</b> On a small island" },
-                            { offset: 0x171, bit: 5, label: "<b>Talus Peaks:</b> Near a bridge" },
-                            { offset: 0xa3, bit: 6, label: "<b>Lynna City:</b> Bought from the hidden Shop" },
-                            { offset: 0x521, bit: 5, label: "<b>Rolling Ridge:</b> In a cave" },
-                            { offset: 0x16d, bit: 5, label: "<b>Rolling Ridge:</b> Outside a cave" },
-                          ],
-                        },
-                        {
-                          name: "Past",
-                          type: "bitflags",
-                          flags: [
-                            { offset: 0x2e6, bit: 5, label: "<b>The Black Tower:</b> At the entrance" },
-                            { offset: 0x366, bit: 5, label: "<b>Maku Path:</b> In the dungeon" },
-                            { offset: 0x511, bit: 5, label: "<b>Deku Forest:</b> In a cave" },
-                            { offset: 0x30f, bit: 5, label: "<b>Restoration Wall:</b> In a cave" },
-                            { offset: 0x35d, bit: 5, label: "<b>Cresent Island:</b> Underwater" },
-                          ],
-                        },
-                        {
-                          name: "Both",
-                          type: "bitflags",
-                          flags: [
-                            { offset: 0xa4, bit: 7, label: "Obtained from Maple" },
-                            { offset: 0xac, bit: 1, label: "Inside a Gasha Nut" },
-                          ],
-                        },
-                      ],
-                    },
-                    {
-                      name: "Gasha Trees",
-                      flex: true,
-                      items: gashasLocations.map((age) => ({
-                        name: age.name,
-                        type: "section",
-                        items: age.locations.map((location) => ({
-                          type: "section",
-                          flex: true,
-                          items: [
-                            {
-                              name: location.name,
-                              offset: 0xad + bitToOffset(location.index),
-                              type: "variable",
-                              dataType: "bit",
-                              bit: location.index % 8,
-                              resource: "softSoilStatus",
-                            },
-                            {
-                              name: "Time",
-                              offset: 0xaf + location.index,
-                              type: "variable",
-                              dataType: "uint8",
-                              hint: "Gasha Nut can be obtained when time reaches at least 40.",
-                            },
-                          ],
-                        })),
-                      })),
-                    },
-                    {
                       name: "Bipin & Blossom's Child",
                       flex: true,
                       planned: true,
@@ -1325,6 +1260,71 @@ const template: GameJson = {
                           type: "variable",
                           dataType: "uint8",
                           resource: "childPersonalities",
+                        },
+                      ],
+                    },
+                    {
+                      name: "Gasha Trees",
+                      flex: true,
+                      items: gashasLocations.map((age) => ({
+                        name: age.name,
+                        type: "section",
+                        items: age.locations.map((location) => ({
+                          type: "section",
+                          flex: true,
+                          items: [
+                            {
+                              name: location.name,
+                              offset: 0xad + bitToOffset(location.index),
+                              type: "variable",
+                              dataType: "bit",
+                              bit: location.index % 8,
+                              resource: "softSoilStatus",
+                            },
+                            {
+                              name: "Time",
+                              offset: 0xaf + location.index,
+                              type: "variable",
+                              dataType: "uint8",
+                              hint: "Gasha Nut can be obtained when time reaches at least 40.",
+                            },
+                          ],
+                        })),
+                      })),
+                    },
+                    {
+                      name: "Heart Pieces",
+                      flex: true,
+                      items: [
+                        {
+                          name: "Present",
+                          type: "bitflags",
+                          flags: [
+                            { offset: 0x1eb, bit: 5, label: "<b>Yoll Graveyard:</b> On a small island" },
+                            { offset: 0x171, bit: 5, label: "<b>Talus Peaks:</b> Near a bridge" },
+                            { offset: 0xa3, bit: 6, label: "<b>Lynna City:</b> Bought from the hidden Shop" },
+                            { offset: 0x521, bit: 5, label: "<b>Rolling Ridge:</b> In a cave" },
+                            { offset: 0x16d, bit: 5, label: "<b>Rolling Ridge:</b> Outside a cave" },
+                          ],
+                        },
+                        {
+                          name: "Past",
+                          type: "bitflags",
+                          flags: [
+                            { offset: 0x2e6, bit: 5, label: "<b>The Black Tower:</b> At the entrance" },
+                            { offset: 0x366, bit: 5, label: "<b>Maku Path:</b> In the dungeon" },
+                            { offset: 0x511, bit: 5, label: "<b>Deku Forest:</b> In a cave" },
+                            { offset: 0x30f, bit: 5, label: "<b>Restoration Wall:</b> In a cave" },
+                            { offset: 0x35d, bit: 5, label: "<b>Cresent Island:</b> Underwater" },
+                          ],
+                        },
+                        {
+                          name: "Both",
+                          type: "bitflags",
+                          flags: [
+                            { offset: 0xa4, bit: 7, label: "Obtained from Maple" },
+                            { offset: 0xac, bit: 1, label: "Inside a Gasha Nut" },
+                          ],
                         },
                       ],
                     },
