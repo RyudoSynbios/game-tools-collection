@@ -2,7 +2,7 @@ import type { Resource } from "$lib/types";
 
 export const itemQuantites: {
   [key: string]: {
-    shift: number;
+    shift?: number;
     valuesMax: number[];
   };
 } = {
@@ -11,15 +11,12 @@ export const itemQuantites: {
     valuesMax: [300, 600, 1000],
   },
   bombs: {
-    shift: -0x17,
     valuesMax: [30, 60],
   },
   waterBombs: {
-    shift: -0x18,
     valuesMax: [15, 30],
   },
   bomblings: {
-    shift: -0x28,
     valuesMax: [10, 20],
   },
 };

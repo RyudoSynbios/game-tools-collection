@@ -4,6 +4,8 @@ import type { GameJson } from "$lib/types";
 
 import { letterList, letters } from "./utils/resource";
 
+export const regex = "[ ,-.0-9A-Za-zÀ-ÂÄÆ-ÏÑ-ÔÖÙ-Üà-âäæ-ïñ-ôöù-üĐđŒœβ]";
+
 const template: GameJson = {
   validator: {
     platforms: {
@@ -61,11 +63,6 @@ const template: GameJson = {
                       name: "General",
                       items: [
                         {
-                          type: "message",
-                          message:
-                            "This save editor is still under development. It will be updated regularly.",
-                        },
-                        {
                           type: "section",
                           flex: true,
                           items: [
@@ -77,18 +74,22 @@ const template: GameJson = {
                               type: "variable",
                               dataType: "string",
                               letterDataType: "uint8",
+                              fallback: 0x20,
                               endCode: 0x0,
+                              regex,
                               test: true,
                             },
                             {
                               id: "name",
-                              name: "Horne Name",
+                              name: "Horse Name",
                               offset: 0x420d,
                               length: 0x8,
                               type: "variable",
                               dataType: "string",
                               letterDataType: "uint8",
+                              fallback: 0x20,
                               endCode: 0x0,
+                              regex,
                             },
                             {
                               name: "Playtime",
@@ -162,15 +163,6 @@ const template: GameJson = {
                               bigEndian: true,
                               hidden: true,
                             },
-                            {
-                              name: "Day Time",
-                              offset: 0x407c,
-                              type: "variable",
-                              dataType: "float32",
-                              operations: [{ "/": 15 }],
-                              bigEndian: true,
-                              hidden: true,
-                            },
                           ],
                         },
                         {
@@ -194,6 +186,7 @@ const template: GameJson = {
                                   step: 0.25,
                                 },
                                 {
+                                  id: "maxHealth",
                                   offset: 0x4048,
                                   type: "variable",
                                   dataType: "uint16",
@@ -233,6 +226,317 @@ const template: GameJson = {
                                   resource: "maxRupees",
                                 },
                               ],
+                            },
+                            {
+                              name: "Transformation",
+                              offset: 0x4066,
+                              type: "variable",
+                              dataType: "uint8",
+                              resource: "transformations",
+                            },
+                          ],
+                        },
+                        {
+                          type: "section",
+                          flex: true,
+                          items: [
+                            {
+                              name: "Day Time",
+                              type: "group",
+                              mode: "time",
+                              items: [
+                                {
+                                  id: "daytime-hours",
+                                  offset: 0x407c,
+                                  type: "variable",
+                                  dataType: "uint32",
+                                  bigEndian: true,
+                                  leadingZeros: 1,
+                                  max: 23,
+                                },
+                                {
+                                  id: "daytime-minutes",
+                                  offset: 0x407c,
+                                  type: "variable",
+                                  dataType: "uint32",
+                                  bigEndian: true,
+                                  leadingZeros: 1,
+                                  max: 59,
+                                },
+                              ],
+                            },
+                            {
+                              name: "Day Time",
+                              offset: 0x407c,
+                              type: "variable",
+                              dataType: "float32",
+                              bigEndian: true,
+                              hidden: true,
+                            },
+                            {
+                              name: "Wolf Link",
+                              type: "bitflags",
+                              flags: [
+                                { offset: 0x4844, bit: 4, label: "Midna joined" },
+                                { offset: 0x487b, bit: 3, label: "Sense unlocked" },
+                                { offset: 0x483d, bit: 0, label: "Dark Energy unlocked" },
+                                { offset: 0x4845, bit: 2, label: "Shadow Crystal obtained" },
+                              ],
+                            },
+                          ],
+                        },
+                        {
+                          name: "Location",
+                          type: "section",
+                          flex: true,
+                          hidden: true,
+                          items: [
+                            {
+                              name: "Location",
+                              offset: 0x40a0,
+                              length: 0x8,
+                              type: "variable",
+                              dataType: "string",
+                              letterDataType: "uint8",
+                              endCode: 0x0,
+                              hidden: true,
+                            },
+                            {
+                              name: "Room",
+                              offset: 0x40a9,
+                              type: "variable",
+                              dataType: "uint8",
+                              hidden: true,
+                            },
+                            {
+                              name: "Spawn",
+                              offset: 0x40a8,
+                              type: "variable",
+                              dataType: "uint8",
+                              hidden: true,
+                            },
+                          ],
+                        },
+                        {
+                          name: "Previous Location",
+                          type: "section",
+                          flex: true,
+                          noMargin: true,
+                          hidden: true,
+                          items: [
+                            {
+                              name: "Location",
+                              offset: 0x40ba,
+                              length: 0x8,
+                              type: "variable",
+                              dataType: "string",
+                              letterDataType: "uint8",
+                              endCode: 0x0,
+                              hidden: true,
+                            },
+                            {
+                              name: "Room",
+                              offset: 0x40c2,
+                              type: "variable",
+                              dataType: "uint8",
+                              hidden: true,
+                            },
+                            {
+                              name: "Spawn",
+                              offset: 0x40c3,
+                              type: "variable",
+                              dataType: "uint8",
+                              hidden: true,
+                            },
+                          ],
+                        },
+                        {
+                          type: "section",
+                          flex: true,
+                          hidden: true,
+                          items: [
+                            {
+                              name: "Position X",
+                              offset: 0x40ac,
+                              type: "variable",
+                              dataType: "float32",
+                              bigEndian: true,
+                              hidden: true,
+                            },
+                            {
+                              name: "Position Y",
+                              offset: 0x40b0,
+                              type: "variable",
+                              dataType: "float32",
+                              bigEndian: true,
+                              hidden: true,
+                            },
+                            {
+                              name: "Position Z",
+                              offset: 0x40b4,
+                              type: "variable",
+                              dataType: "float32",
+                              bigEndian: true,
+                              hidden: true,
+                            },
+                            {
+                              name: "Orientation",
+                              offset: 0x40b8,
+                              type: "variable",
+                              dataType: "uint16",
+                              bigEndian: true,
+                              hidden: true,
+                            },
+                          ],
+                        },
+                        {
+                          name: "Epona",
+                          type: "section",
+                          flex: true,
+                          noMargin: true,
+                          hidden: true,
+                          items: [
+                            {
+                              name: "Location",
+                              offset: 0x4096,
+                              length: 0x8,
+                              type: "variable",
+                              dataType: "string",
+                              letterDataType: "uint8",
+                              endCode: 0x0,
+                              hidden: true,
+                            },
+                            {
+                              name: "Room",
+                              offset: 0x409f,
+                              type: "variable",
+                              dataType: "uint8",
+                              hidden: true,
+                            },
+                            {
+                              name: "Spawn",
+                              offset: 0x409e,
+                              type: "variable",
+                              dataType: "uint8",
+                              hidden: true,
+                            },
+                          ],
+                        },
+                        {
+                          type: "section",
+                          flex: true,
+                          hidden: true,
+                          items: [
+                            {
+                              name: "Position X",
+                              offset: 0x4088,
+                              type: "variable",
+                              dataType: "float32",
+                              bigEndian: true,
+                              hidden: true,
+                            },
+                            {
+                              name: "Position Y",
+                              offset: 0x408c,
+                              type: "variable",
+                              dataType: "float32",
+                              bigEndian: true,
+                              hidden: true,
+                            },
+                            {
+                              name: "Position Z",
+                              offset: 0x4090,
+                              type: "variable",
+                              dataType: "float32",
+                              bigEndian: true,
+                              hidden: true,
+                            },
+                            {
+                              name: "Orientation",
+                              offset: 0x4094,
+                              type: "variable",
+                              dataType: "uint16",
+                              bigEndian: true,
+                              hidden: true,
+                            },
+                          ],
+                        },
+                        {
+                          name: "Ooccoo",
+                          type: "section",
+                          flex: true,
+                          noMargin: true,
+                          hidden: true,
+                          items: [
+                            {
+                              name: "Location",
+                              offset: 0x40d6,
+                              length: 0x8,
+                              type: "variable",
+                              dataType: "string",
+                              letterDataType: "uint8",
+                              endCode: 0x0,
+                              hidden: true,
+                            },
+                            {
+                              name: "Room",
+                              offset: 0x40df,
+                              type: "variable",
+                              dataType: "uint8",
+                              hidden: true,
+                            },
+                            {
+                              name: "Spawn",
+                              offset: 0x40de,
+                              type: "variable",
+                              dataType: "uint8",
+                              hidden: true,
+                            },
+                            {
+                              name: "Pending",
+                              offset: 0x40e0,
+                              type: "variable",
+                              dataType: "uint8",
+                              hidden: true,
+                            },
+                          ],
+                        },
+                        {
+                          type: "section",
+                          flex: true,
+                          hidden: true,
+                          items: [
+                            {
+                              name: "Position X",
+                              offset: 0x40c8,
+                              type: "variable",
+                              dataType: "float32",
+                              bigEndian: true,
+                              hidden: true,
+                            },
+                            {
+                              name: "Position Y",
+                              offset: 0x40cc,
+                              type: "variable",
+                              dataType: "float32",
+                              bigEndian: true,
+                              hidden: true,
+                            },
+                            {
+                              name: "Position Z",
+                              offset: 0x40d0,
+                              type: "variable",
+                              dataType: "float32",
+                              bigEndian: true,
+                              hidden: true,
+                            },
+                            {
+                              name: "Orientation",
+                              offset: 0x40d4,
+                              type: "variable",
+                              dataType: "uint16",
+                              bigEndian: true,
+                              hidden: true,
                             },
                           ],
                         },
@@ -286,7 +590,7 @@ const template: GameJson = {
                       ],
                     },
                     {
-                      name: "Hyrule Map",
+                      name: "Hyrule Kingdom Map",
                       flex: true,
                       items: [
                         {
@@ -296,12 +600,13 @@ const template: GameJson = {
                             { offset: 0x40c5, bit: 1, label: "Ordona Province" },
                             { offset: 0x40c5, bit: 2, label: "Faron Province" },
                             { offset: 0x40c5, bit: 3, label: "Eldin Province" },
-                            { offset: 0x40c5, bit: 4, label: "Lanaryu Province" },
+                            { offset: 0x40c5, bit: 4, label: "Lanayru Province" },
                             { offset: 0x40c5, bit: 5, label: "Desert Province" },
                             { offset: 0x40c5, bit: 6, label: "Peak Province" },
                           ],
                         },
                         {
+                          id: "hiddenFlags",
                           name: "Portals",
                           type: "bitflags",
                           flags: [
@@ -313,11 +618,12 @@ const template: GameJson = {
                             { offset: 0x42a0, bit: 7, label: "<b>Eldin Province:</b> Kakariko Village" },
                             { offset: 0x42a1, bit: 5, label: "<b>Eldin Province:</b> Death Mountain" },
                             { offset: 0x430f, bit: 3, label: "<b>Eldin Province:</b> Bridge of Eldin", separator: true },
-                            { offset: 0x42c3, bit: 2, label: "<b>Lanaryu Province:</b> Zora's Domain" },
-                            { offset: 0x42c2, bit: 2, label: "<b>Lanaryu Province:</b> Lake Hylia" },
-                            { offset: 0x4303, bit: 3, label: "<b>Lanaryu Province:</b> Castle Town" },
-                            { offset: 0x42c1, bit: 5, label: "<b>Lanaryu Province:</b> Upper Zora's River", separator: true },
+                            { offset: 0x42c3, bit: 2, label: "<b>Lanayru Province:</b> Zora's Domain" },
+                            { offset: 0x42c2, bit: 2, label: "<b>Lanayru Province:</b> Lake Hylia" },
+                            { offset: 0x4303, bit: 3, label: "<b>Lanayru Province:</b> Castle Town" },
+                            { offset: 0x42c1, bit: 5, label: "<b>Lanayru Province:</b> Upper Zora's River", separator: true },
                             { offset: 0x4381, bit: 5, label: "<b>Desert Province:</b> Gerudo Mesa" },
+                            { offset: 0x4878, bit: 3, label: "Canonned to Gerudo Desert (avoid black screen)", hidden: true },
                             { offset: 0x4386, bit: 0, label: "<b>Desert Province:</b> Mirror Chamber", separator: true },
                             { offset: 0x4341, bit: 5, label: "<b>Peak Province:</b> Snowpeak Top" },
                           ],
@@ -344,54 +650,66 @@ const template: GameJson = {
                           noMargin: true,
                           items: [
                             {
-                              name: "Sword",
-                              offset: 0x405c,
-                              type: "variable",
-                              dataType: "uint8",
-                              resource: "swords",
-                            },
-                            {
-                              name: "Shield",
-                              offset: 0x405d,
-                              type: "variable",
-                              dataType: "uint8",
-                              resource: "shields",
-                            },
-                            {
-                              name: "Tunic",
-                              offset: 0x405b,
-                              type: "variable",
-                              dataType: "uint8",
-                              resource: "tunics",
-                            },
-                          ],
-                        },
-                        {
-                          type: "section",
-                          flex: true,
-                          items: [
-                            {
-                              type: "bitflags",
-                              flags: [
-                                { offset: 0x4118, bit: 7, label: "Wooden Sword" },
-                                { offset: 0x411a, bit: 0, label: "Ordon Sword" },
-                                { offset: 0x411a, bit: 1, label: "Master Sword" },
+                              type: "section",
+                              items: [
+                                {
+                                  name: "Sword",
+                                  offset: 0x405c,
+                                  type: "variable",
+                                  dataType: "uint8",
+                                  resource: "swords",
+                                },
+                                {
+                                  type: "bitflags",
+                                  flags: [
+                                    { offset: 0x4118, bit: 7, label: "Wooden Sword" },
+                                    { offset: 0x411a, bit: 0, label: "Ordon Sword" },
+                                    { offset: 0x411a, bit: 1, label: "Master Sword" },
+                                    { offset: 0x411e, bit: 1, label: "Master Sword (Light)" },
+                                  ],
+                                },
                               ],
                             },
                             {
-                              type: "bitflags",
-                              flags: [
-                                { offset: 0x411a, bit: 3, label: "Wooden Shield" },
-                                { offset: 0x411a, bit: 2, label: "Ordon Shield" },
-                                { offset: 0x411a, bit: 4, label: "Hylian Shield" },
+                              type: "section",
+                              items: [
+                                {
+                                  name: "Shield",
+                                  offset: 0x405d,
+                                  type: "variable",
+                                  dataType: "uint8",
+                                  resource: "shields",
+                                },
+                                {
+                                  type: "bitflags",
+                                  flags: [
+                                    { offset: 0x411a, bit: 3, label: "Wooden Shield" },
+                                    { offset: 0x411a, bit: 2, label: "Ordon Shield" },
+                                    { offset: 0x411a, bit: 4, label: "Hylian Shield" },
+                                  ],
+                                },
                               ],
                             },
                             {
-                              type: "bitflags",
-                              flags: [
-                                { offset: 0x411a, bit: 7, label: "Hero's Clothes" },
-                                { offset: 0x4119, bit: 1, label: "Zora Armor" },
-                                { offset: 0x4119, bit: 0, label: "Magic Armor" },
+                              type: "section",
+                              items: [
+                                {
+                                  name: "Tunic",
+                                  offset: 0x405b,
+                                  type: "variable",
+                                  dataType: "uint8",
+                                  resource: "tunics",
+                                  hint: 'The tunics obtained will not appear if "Ranch Clothes" is equipped.',
+                                },
+                                {
+                                  id: "tunics",
+                                  type: "bitflags",
+                                  flags: [
+                                    { offset: 0x411a, bit: 7, label: "Hero's Clothes" },
+                                    { offset: 0x4119, bit: 1, label: "Zora Armor" },
+                                    { offset: 0x4119, bit: 0, label: "Magic Armor" },
+                                  ],
+                                },
                               ],
                             },
                           ],
@@ -499,14 +817,6 @@ const template: GameJson = {
                               flexStart: true,
                               items: [
                                 {
-                                  name: "Dominion Rod",
-                                  offset: 0x40ec,
-                                  type: "variable",
-                                  dataType: "boolean",
-                                  on: 0x46,
-                                  off: 0xff,
-                                },
-                                {
                                   name: "Ball and Chain",
                                   offset: 0x40ea,
                                   type: "variable",
@@ -581,6 +891,22 @@ const template: GameJson = {
                                   flex: true,
                                   items: [
                                     {
+                                      id: "dominionRod",
+                                      name: "Dominion Rod",
+                                      offset: 0x40ec,
+                                      type: "variable",
+                                      dataType: "uint8",
+                                      resource: "dominionRods",
+                                    },
+                                    {
+                                      name: "Dominion Rod Restored",
+                                      offset: 0x485d,
+                                      type: "variable",
+                                      dataType: "bit",
+                                      bit: 7,
+                                      hidden: true,
+                                    },
+                                    {
                                       name: "Clawshot",
                                       offset: 0x40ed,
                                       type: "variable",
@@ -589,6 +915,15 @@ const template: GameJson = {
                                       resource: "clawshots",
                                     },
                                     {
+                                      name: "Double Clawshots",
+                                      offset: 0x40ee,
+                                      type: "variable",
+                                      dataType: "uint8",
+                                      resource: "items",
+                                      hidden: true,
+                                    },
+                                    {
+                                      id: "fishingRod",
                                       name: "Fishing Rod",
                                       offset: 0x40f8,
                                       type: "variable",
@@ -612,30 +947,6 @@ const template: GameJson = {
                                       hidden: true,
                                     },
                                     {
-                                      name: "???",
-                                      offset: 0x40ee,
-                                      type: "variable",
-                                      dataType: "uint8",
-                                      resource: "items",
-                                      hidden: true,
-                                    },
-                                    {
-                                      name: "Ooccoo?",
-                                      offset: 0x40f6,
-                                      type: "variable",
-                                      dataType: "uint8",
-                                      resource: "items",
-                                      hidden: true,
-                                    },
-                                    {
-                                      name: "Ashei's Sketch",
-                                      offset: 0x40f7,
-                                      type: "variable",
-                                      dataType: "uint8",
-                                      resource: "items",
-                                      hidden: true,
-                                    },
-                                    {
                                       name: "Ila's Charm",
                                       offset: 0x40f9,
                                       type: "variable",
@@ -643,12 +954,19 @@ const template: GameJson = {
                                       resource: "iliasMemoryItems",
                                     },
                                     {
-                                      name: "Ancient Sky Book?",
+                                      name: "Ancient Sky Book",
                                       offset: 0x40fa,
                                       type: "variable",
                                       dataType: "uint8",
-                                      resource: "items",
-                                      hidden: true,
+                                      resource: "ancientSkyBooks",
+                                      hint: 'Please check the corresponding section on the "Events" tab.',
+                                    },
+                                    {
+                                      name: "Ooccoo",
+                                      offset: 0x40f6,
+                                      type: "variable",
+                                      dataType: "uint8",
+                                      resource: "ooccoos",
                                     },
                                   ],
                                 },
@@ -657,6 +975,7 @@ const template: GameJson = {
                                   flex: true,
                                   items: [
                                     {
+                                      id: "bombs-0",
                                       name: "Bombs 1",
                                       offset: 0x40f3,
                                       type: "variable",
@@ -664,6 +983,7 @@ const template: GameJson = {
                                       resource: "bombs",
                                     },
                                     {
+                                      id: "bombs-1",
                                       name: "Bombs 2",
                                       offset: 0x40f4,
                                       type: "variable",
@@ -671,6 +991,7 @@ const template: GameJson = {
                                       resource: "bombs",
                                     },
                                     {
+                                      id: "bombs-2",
                                       name: "Bombs 3",
                                       offset: 0x40f5,
                                       type: "variable",
@@ -714,6 +1035,19 @@ const template: GameJson = {
                                       dataType: "uint8",
                                       resource: "bottles",
                                       autocomplete: true,
+                                    },
+                                  ],
+                                },
+                                {
+                                  type: "section",
+                                  flex: true,
+                                  items: [
+                                    {
+                                      name: "Miscellaneous",
+                                      offset: 0x40f7,
+                                      type: "variable",
+                                      dataType: "uint8",
+                                      resource: "miscellaneousItems",
                                     },
                                   ],
                                 },
@@ -782,69 +1116,67 @@ const template: GameJson = {
                           ],
                         },
                         {
+                          name: "Bombs",
                           type: "section",
                           flex: true,
                           items: [
                             {
-                              name: "Bombs",
+                              name: "Slot 1",
                               type: "group",
                               mode: "fraction",
                               items: [
                                 {
-                                  id: "valueBombs-bombs",
+                                  id: "valueBombs-0",
                                   offset: 0x4135,
                                   type: "variable",
                                   dataType: "uint8",
                                 },
                                 {
-                                  id: "maxBombs-bombs",
+                                  id: "maxBombs-0",
                                   offset: 0x411e,
                                   type: "variable",
                                   dataType: "bit",
                                   bit: 7,
-                                  resource: "maxBombs",
                                 },
                               ],
                             },
                             {
-                              name: "Water Bombs",
+                              name: "Slot 2",
                               type: "group",
                               mode: "fraction",
                               items: [
                                 {
-                                  id: "valueBombs-waterBombs",
+                                  id: "valueBombs-1",
                                   offset: 0x4136,
                                   type: "variable",
                                   dataType: "uint8",
                                 },
                                 {
-                                  id: "maxBombs-waterBombs",
+                                  id: "maxBombs-1",
                                   offset: 0x411e,
                                   type: "variable",
                                   dataType: "bit",
                                   bit: 7,
-                                  resource: "maxWaterBombs",
                                 },
                               ],
                             },
                             {
-                              name: "Bomblings",
+                              name: "Slot 3",
                               type: "group",
                               mode: "fraction",
                               items: [
                                 {
-                                  id: "valueBombs-bomblings",
-                                  offset: 0x4146,
+                                  id: "valueBombs-2",
+                                  offset: 0x4137,
                                   type: "variable",
                                   dataType: "uint8",
                                 },
                                 {
-                                  id: "maxBombs-bomblings",
+                                  id: "maxBombs-2",
                                   offset: 0x411e,
                                   type: "variable",
                                   dataType: "bit",
                                   bit: 7,
-                                  resource: "maxBomblings",
                                 },
                               ],
                             },
@@ -853,10 +1185,60 @@ const template: GameJson = {
                         {
                           type: "section",
                           flex: true,
+                          hidden: true,
                           items: [
                             {
-                              name: "Bee Larvas",
+                              name: "Base Max Bombs",
+                              offset: 0x4141,
+                              type: "variable",
+                              dataType: "uint8",
+                              hidden: true,
+                            },
+                            {
+                              name: "Base Max Water Bombs",
+                              offset: 0x4142,
+                              type: "variable",
+                              dataType: "uint8",
+                              hidden: true,
+                            },
+                            {
+                              name: "Base Max Bomblings",
+                              offset: 0x4146,
+                              type: "variable",
+                              dataType: "uint8",
+                              hidden: true,
+                            },
+                          ],
+                        },
+                        {
+                          name: "Bottles",
+                          type: "section",
+                          flex: true,
+                          items: [
+                            {
+                              name: "Slot 1",
                               offset: 0x4138,
+                              type: "variable",
+                              dataType: "uint8",
+                              max: 10,
+                            },
+                            {
+                              name: "Slot 2",
+                              offset: 0x4139,
+                              type: "variable",
+                              dataType: "uint8",
+                              max: 10,
+                            },
+                            {
+                              name: "Slot 3",
+                              offset: 0x413a,
+                              type: "variable",
+                              dataType: "uint8",
+                              max: 10,
+                            },
+                            {
+                              name: "Slot 4",
+                              offset: 0x413b,
                               type: "variable",
                               dataType: "uint8",
                               max: 10,
@@ -873,16 +1255,31 @@ const template: GameJson = {
                           flex: true,
                           items: [
                             {
-                              name: "Miscellaneous",
+                              name: "Fused Shadows",
                               type: "bitflags",
                               flags: [
-                                { offset: 0x4845, bit: 2, label: "Shadow Crystal" },
+                                { offset: 0x4151, bit: 0, label: "Forest Temple" },
+                                { offset: 0x4151, bit: 1, label: "Goron Mines" },
+                                { offset: 0x4151, bit: 2, label: "Lakebed Temple", separator: true },
+                                { offset: 0x4844, bit: 0, label: "Fused Shadows stolen" },
+                                { offset: 0x4151, bit: 3, label: "Fused Shadows reunite" },
+                              ],
+                            },
+                            {
+                              name: "Mirror Shards",
+                              type: "bitflags",
+                              flags: [
+                                { offset: 0x4152, bit: 0, label: "Mirror Chamber" },
+                                { offset: 0x4152, bit: 1, label: "Snowpeak Ruins" },
+                                { offset: 0x4152, bit: 2, label: "Temple of Time" },
+                                { offset: 0x4152, bit: 3, label: "City in the Sky", separator: true },
+                                { offset: 0x4863, bit: 3, label: "Mirror of Twilight restored" },
                               ],
                             },
                           ],
                         },
                         {
-                          name: "Twilight Areas",
+                          name: "Light Springs",
                           type: "section",
                           flex: true,
                           items: [
@@ -891,7 +1288,7 @@ const template: GameJson = {
                               noMargin: true,
                               items: [
                                 {
-                                  name: "Faron Province",
+                                  name: "Faron Spring",
                                   type: "bitflags",
                                   flags: [
                                     { offset: 0x4160, bit: 0, label: "Vessel of Light obtained" },
@@ -912,7 +1309,7 @@ const template: GameJson = {
                               noMargin: true,
                               items: [
                                 {
-                                  name: "Eldin Province",
+                                  name: "Eldin Spring",
                                   type: "bitflags",
                                   flags: [
                                     { offset: 0x4160, bit: 1, label: "Vessel of Light obtained" },
@@ -933,7 +1330,7 @@ const template: GameJson = {
                               noMargin: true,
                               items: [
                                 {
-                                  name: "Lanaryu Province",
+                                  name: "Lanayru Spring",
                                   type: "bitflags",
                                   flags: [
                                     { offset: 0x4160, bit: 2, label: "Vessel of Light obtained" },
@@ -973,11 +1370,50 @@ const template: GameJson = {
                       flex: true,
                       items: [
                         {
-                          id: "dungeon-events-%index%",
-                          name: "Events",
-                          type: "bitflags",
-                          flags: [
-                            { offset: 0x4455, bit: 3, label: "Boss defeated" },
+                          type: "section",
+                          items: [
+                            {
+                              id: "dungeon-events-%index%",
+                              name: "Events",
+                              type: "bitflags",
+                              overrideShift: { parent: 1, shift: 0x0 },
+                              flags: [
+                                // Forest Temple
+                                { offset: 0x4282, bit: 2, label: "Dungeon accessible", hidden: true },
+                                { offset: 0x483e, bit: 1, label: "Dungeon cleared", hidden: true },
+                                { offset: 0x4455, bit: 3, label: "Boss defeated", hidden: true },
+                                // Goron Mines
+                                { offset: 0x483f, bit: 2, label: "Dungeon accessible", hidden: true },
+                                { offset: 0x483f, bit: 0, label: "Dungeon cleared", hidden: true },
+                                { offset: 0x4475, bit: 3, label: "Boss defeated", hidden: true },
+                                // Lakebed Temple
+                                { offset: 0x42c7, bit: 7, label: "Dungeon accessible", hidden: true },
+                                { offset: 0x4841, bit: 2, label: "Dungeon cleared", hidden: true },
+                                { offset: 0x4495, bit: 3, label: "Boss defeated", hidden: true },
+                                // Arbiter's Grounds
+                                { offset: 0x4843, bit: 6, label: "Dungeon accessible", hidden: true },
+                                { offset: 0x4858, bit: 4, label: "Dungeon cleared", hidden: true },
+                                { offset: 0x44b5, bit: 3, label: "Boss defeated", hidden: true },
+                                // Snowpeak Ruins
+                                { offset: 0x4858, bit: 3, label: "Dungeon cleared", hidden: true },
+                                { offset: 0x44d5, bit: 3, label: "Boss defeated", hidden: true },
+                                // Temple of Time
+                                { offset: 0x4323, bit: 4, label: "Dungeon accessible", hidden: true },
+                                { offset: 0x4858, bit: 2, label: "Dungeon cleared", hidden: true },
+                                { offset: 0x44f5, bit: 3, label: "Boss defeated", hidden: true },
+                                // City in the Sky
+                                { offset: 0x4869, bit: 5, label: "Dungeon accessible", hidden: true },
+                                { offset: 0x4873, bit: 3, label: "Cannon repaired", hidden: true },
+                                { offset: 0x4858, bit: 1, label: "Dungeon cleared", hidden: true },
+                                { offset: 0x4515, bit: 3, label: "Boss defeated", hidden: true },
+                                // Place of Twilight
+                                { offset: 0x4863, bit: 3, label: "Dungeon accessible", hidden: true },
+                                { offset: 0x488c, bit: 4, label: "Dungeon cleared", hidden: true },
+                                { offset: 0x4535, bit: 3, label: "Boss defeated", hidden: true },
+                                // Hyrule Castle
+                                { offset: 0x487a, bit: 3, label: "Dungeon accessible", hidden: true },
+                              ],
+                            },
                           ],
                         },
                         {
@@ -1017,6 +1453,112 @@ const template: GameJson = {
                   vertical: true,
                   items: [
                     {
+                      name: "Ancient Sky Book",
+                      items: [
+                        {
+                          id: "skyCharacters",
+                          name: "Sky Characters",
+                          type: "bitflags",
+                          flags: [
+                            { offset: 0x4898, bit: 7, label: "Faron Woods" },
+                            { offset: 0x4280, bit: 2, label: "Faron Woods", hidden: true },
+                            { offset: 0x4898, bit: 5, label: "Kakariko Gorge" },
+                            { offset: 0x4309, bit: 1, label: "Kakariko Gorge", hidden: true },
+                            { offset: 0x4898, bit: 4, label: "Bridge of Eldin" },
+                            { offset: 0x4309, bit: 3, label: "Bridge of Eldin", hidden: true },
+                            { offset: 0x4898, bit: 3, label: "Lake Hylia" },
+                            { offset: 0x4309, bit: 5, label: "Lake Hylia", hidden: true },
+                            { offset: 0x489a, bit: 2, label: "Hyrule Field" },
+                            { offset: 0x4309, bit: 7, label: "Hyrule Field", hidden: true },
+                            { offset: 0x4898, bit: 6, label: "Gerudo Desert" },
+                            { offset: 0x4387, bit: 2, label: "Gerudo Desert", hidden: true },
+                            { offset: 0x4898, bit: 2, label: "Ancient Skybook filled", hidden: true },
+                          ],
+                        },
+                      ],
+                    },
+                    {
+                      name: "Cave of Ordeals",
+                      flex: true,
+                      items: [
+                        {
+                          id: "caveOfOrdeals",
+                          name: "Reached Floor",
+                          offset: 0x4780,
+                          type: "variable",
+                          dataType: "uint32",
+                          max: 50,
+                        },
+                        {
+                          name: "Rewards",
+                          type: "bitflags",
+                          flags: [
+                            { offset: 0x4875, bit: 2, label: "Fairies in Ordon Spring" },
+                            { offset: 0x4875, bit: 1, label: "Fairies in Faron Spring" },
+                            { offset: 0x4875, bit: 0, label: "Fairies in Eldin Spring" },
+                            { offset: 0x4876, bit: 7, label: "Fairies in Lanayru Spring", separator: true },
+                            { offset: 0x4876, bit: 6, label: "Great Fairy in Light Springs" },
+                          ],
+                        },
+                        {
+                          type: "bitflags",
+                          hidden: true,
+                          flags: [
+                            { offset: 0x4783, bit: 0, label: "B1 reached" },
+                            { offset: 0x4783, bit: 1, label: "B2 reached" },
+                            { offset: 0x4783, bit: 2, label: "B3 reached" },
+                            { offset: 0x4783, bit: 3, label: "B4 reached" },
+                            { offset: 0x4783, bit: 4, label: "B5 reached" },
+                            { offset: 0x4783, bit: 5, label: "B6 reached" },
+                            { offset: 0x4783, bit: 6, label: "B7 reached" },
+                            { offset: 0x4783, bit: 7, label: "B8 reached" },
+                            { offset: 0x4782, bit: 0, label: "B9 reached" },
+                            { offset: 0x4782, bit: 1, label: "B10 reached" },
+                            { offset: 0x4782, bit: 2, label: "B11 reached" },
+                            { offset: 0x4782, bit: 3, label: "B12 reached" },
+                            { offset: 0x4782, bit: 4, label: "B13 reached" },
+                            { offset: 0x4782, bit: 5, label: "B14 reached" },
+                            { offset: 0x4782, bit: 6, label: "B15 reached" },
+                            { offset: 0x4782, bit: 7, label: "B16 reached" },
+                            { offset: 0x4781, bit: 0, label: "B17 reached" },
+                            { offset: 0x4781, bit: 1, label: "B18 reached" },
+                            { offset: 0x4781, bit: 2, label: "B19 reached" },
+                            { offset: 0x4781, bit: 3, label: "B20 reached" },
+                            { offset: 0x4781, bit: 4, label: "B21 reached" },
+                            { offset: 0x4781, bit: 5, label: "B22 reached" },
+                            { offset: 0x4781, bit: 6, label: "B23 reached" },
+                            { offset: 0x4781, bit: 7, label: "B24 reached" },
+                            { offset: 0x4780, bit: 0, label: "B25 reached" },
+                            { offset: 0x4780, bit: 1, label: "B26 reached" },
+                            { offset: 0x4780, bit: 2, label: "B27 reached" },
+                            { offset: 0x4780, bit: 3, label: "B28 reached" },
+                            { offset: 0x4780, bit: 4, label: "B29 reached" },
+                            { offset: 0x4780, bit: 5, label: "B30 reached" },
+                            { offset: 0x4780, bit: 6, label: "B31 reached" },
+                            { offset: 0x4780, bit: 7, label: "B32 reached" },
+                            { offset: 0x4787, bit: 0, label: "B33 reached" },
+                            { offset: 0x4787, bit: 1, label: "B34 reached" },
+                            { offset: 0x4787, bit: 2, label: "B35 reached" },
+                            { offset: 0x4787, bit: 3, label: "B36 reached" },
+                            { offset: 0x4787, bit: 4, label: "B37 reached" },
+                            { offset: 0x4787, bit: 5, label: "B38 reached" },
+                            { offset: 0x4787, bit: 6, label: "B39 reached" },
+                            { offset: 0x4787, bit: 7, label: "B40 reached" },
+                            { offset: 0x4786, bit: 0, label: "B41 reached" },
+                            { offset: 0x4786, bit: 1, label: "B42 reached" },
+                            { offset: 0x4786, bit: 2, label: "B43 reached" },
+                            { offset: 0x4786, bit: 3, label: "B44 reached" },
+                            { offset: 0x4786, bit: 4, label: "B45 reached" },
+                            { offset: 0x4786, bit: 5, label: "B46 reached" },
+                            { offset: 0x4786, bit: 6, label: "B47 reached" },
+                            { offset: 0x4786, bit: 7, label: "B48 reached" },
+                            { offset: 0x4785, bit: 0, label: "B49 reached" },
+                            { offset: 0x4785, bit: 1, label: "B50 reached" },
+                          ],
+                        },
+                      ],
+                    },
+                    {
                       name: "Fish Journal",
                       items: [
                         {
@@ -1039,6 +1581,7 @@ const template: GameJson = {
                               type: "variable",
                               dataType: "uint16",
                               bigEndian: true,
+                              max: 999,
                             },
                           ],
                         },
@@ -1227,8 +1770,102 @@ const template: GameJson = {
                     },
                     {
                       name: "Heart Pieces",
-                      planned: true,
-                      items: [],
+                      flex: true,
+                      items: [
+                        {
+                          type: "section",
+                          items: [
+                            {
+                              name: "Ordona Province",
+                              type: "bitflags",
+                              maxWidth: true,
+                              flags: [
+                                { offset: 0x487a, bit: 6, label: "<b>Ordon Ranch:</b> Herding mini-game won" },
+                              ],
+                            },
+                            {
+                              name: "Faron Province",
+                              type: "bitflags",
+                              maxWidth: true,
+                              flags: [
+                                { offset: 0x4278, bit: 2, label: "<b>Faron Woods:</b> Inside a chest in a cave on the fog area" },
+                                { offset: 0x4278, bit: 6, label: "<b>Faron Woods:</b> Inside a chest on the fog area using a Owl Statue", separator: true },
+                                { offset: 0x4313, bit: 1, label: "<b>Hyrule Field:</b> On a tree", separator: true },
+                                { offset: 0x459b, bit: 3, label: "<b>Sacred Grove:</b> Inside a chest in a secret grotto" },
+                                { offset: 0x431b, bit: 1, label: "<b>Sacred Grove:</b> Inside a chest behind a Owl Statue", separator: true },
+                                { offset: 0x4438, bit: 7, label: "<b>Forest Temple 1F:</b> Inside a chest behind a Deku Like" },
+                                { offset: 0x4439, bit: 3, label: "<b>Forest Temple 1F:</b> Inside a chest in the Tile Worms room", separator: true },
+                                { offset: 0x44da, bit: 4, label: "<b>Temple of Time 5F:</b> Inside a chest behind an electric barrier" },
+                                { offset: 0x44db, bit: 5, label: "<b>Temple of Time 5F:</b> Inside a chest in the 2 metal plate room" },
+                              ],
+                            },
+                            {
+                              name: "Eldin Province",
+                              type: "bitflags",
+                              maxWidth: true,
+                              flags: [
+                                { offset: 0x42fb, bit: 2, label: "<b>Hyrule Field:</b> Inside a chest in the rocky area" },
+                                { offset: 0x4313, bit: 0, label: "<b>Hyrule Field:</b> Reward from the Goron at the east bridge" },
+                                { offset: 0x457c, bit: 6, label: "<b>Hyrule Field:</b> Inside a chest at the bottom of the Bridge of Eldin cave" },
+                                { offset: 0x459b, bit: 2, label: "<b>Hyrule Field:</b> Inside a chest in a secret grotto" },
+                                { offset: 0x42fb, bit: 3, label: "<b>Hyrule Field:</b> Inside a chest next using the Owl Statue on the Bridge of Eldin", separator: true },
+                                { offset: 0x4313, bit: 2, label: "<b>Kakariko Gorge:</b> At the top of a spire" },
+                                { offset: 0x42fa, bit: 5, label: "<b>Kakariko Gorge:</b> Inside a chest on a spire using the Double Clawshots" },
+                                { offset: 0x455c, bit: 6, label: "<b>Kakariko Gorge:</b> Inside a chest in a cave", separator: true },
+                                { offset: 0x4841, bit: 5, label: "<b>Kakariko Village:</b> Reward from Talo" },
+                                { offset: 0x42b2, bit: 4, label: "<b>Kakariko Village:</b> Inside a bouder near the Eldin Spring" },
+                                { offset: 0x4299, bit: 5, label: "<b>Kakariko Village:</b> Inside a chest underwater", separator: true },
+                                { offset: 0x4299, bit: 6, label: "<b>Death Mountain:</b> Inside a chest on a ledge", separator: true },
+                                { offset: 0x42b2, bit: 3, label: "<b>Hidden Village:</b> Reward from the Cucco leader", separator: true },
+                                { offset: 0x4459, bit: 4, label: "<b>Goron Mines 1F:</b> Inside a chest using a magnetic path" },
+                                { offset: 0x445a, bit: 1, label: "<b>Goron Mines 2F:</b> Inside a chest using a magnetic path" },
+                              ],
+                            },
+                            {
+                              name: "Lanayru Province",
+                              type: "bitflags",
+                              maxWidth: true,
+                              flags: [
+                                { offset: 0x485c, bit: 7, label: "<b>Castle Town:</b> Reward from Charlo", separator: true },
+                                { offset: 0x42fa, bit: 0, label: "<b>Hyrule Field:</b> Inside a chest using the Spinner", separator: true },
+                                { offset: 0x42bb, bit: 0, label: "<b>Lake Hylia:</b> Inside a chest during the Flight-by-Fowl mini-game" },
+                                { offset: 0x457b, bit: 3, label: "<b>Lake Hylia:</b> Inside a chest in the labyrinth cave" },
+                                { offset: 0x42b8, bit: 5, label: "<b>Lake Hylia:</b> Inside a chest in the Spring of the Spirit Lanayru" },
+                                { offset: 0x485b, bit: 7, label: "<b>Lake Hylia:</b> Fruit-Pop-Flight won" },
+                                { offset: 0x455b, bit: 0, label: "<b>Lake Hylia:</b> Inside a chest in the ice cave", separator: true },
+                                { offset: 0x43b3, bit: 0, label: "<b>Fishing Hole:</b> On a rock formation", separator: true },
+                                { offset: 0x447b, bit: 5, label: "<b>Lakebed Temple 2F:</b> Inside a chest on a chandelier" },
+                                { offset: 0x447a, bit: 0, label: "<b>Lakebed Temple 1F:</b> Inside a chest behind a gate", separator: true },
+                                { offset: 0x44fb, bit: 6, label: "<b>City in the Sky 2F:</b> Inside a chest after a narrow path" },
+                                { offset: 0x44fa, bit: 1, label: "<b>City in the Sky 3F:</b> Inside a chest using Peahats" },
+                              ],
+                            },
+                            {
+                              name: "Peak Province",
+                              type: "bitflags",
+                              maxWidth: true,
+                              flags: [
+                                { offset: 0x4873, bit: 4, label: "<b>Snowpeak:</b> Sled Race against Yeta won", separator: true },
+                                { offset: 0x44b9, bit: 5, label: "<b>Snowpeak Ruins 2F:</b> Inside a chest above the entrance" },
+                                { offset: 0x44b8, bit: 1, label: "<b>Snowpeak Ruins 1F:</b> Inside a chest below a damaged floor" },
+                              ],
+                            },
+                            {
+                              name: "Desert Province",
+                              type: "bitflags",
+                              maxWidth: true,
+                              flags: [
+                                { offset: 0x4390, bit: 7, label: "<b>Bulblin Fortress:</b> Inside a roasting boar", separator: true },
+                                { offset: 0x4499, bit: 3, label: "<b>Arbiter's Grounds 1F:</b> Inside a chest in the 4 torches room" },
+                                { offset: 0x4498, bit: 2, label: "<b>Arbiter's Grounds B2:</b> Inside a chest in the spinner tracks area", separator: true },
+                                { offset: 0x4518, bit: 6, label: "<b>Palace of Twilight 1F:</b> Inside a chest in the west wing" },
+                                { offset: 0x451b, bit: 0, label: "<b>Palace of Twilight 1F:</b> Inside a chest in the east wing" },
+                              ],
+                            },
+                          ],
+                        },
+                        { type: "section", items: [] },
+                      ],
                     },
                     {
                       name: "Letters",
@@ -1387,15 +2024,255 @@ const template: GameJson = {
                       ],
                     },
                     {
-                      name: "Poe Souls",
-                      planned: true,
+                      name: "Mini-Games",
+                      flex: true,
                       items: [
                         {
+                          name: "STAR Game",
+                          type: "group",
+                          mode: "chrono",
+                          items: [
+                            {
+                              offset: 0x498c,
+                              type: "variable",
+                              dataType: "uint32",
+                              bigEndian: true,
+                              operations: [
+                                { "*": 60 },
+                                {
+                                  convert: {
+                                    from: "milliseconds",
+                                    to: "hours",
+                                  },
+                                },
+                              ],
+                              max: 99,
+                            },
+                            {
+                              offset: 0x498c,
+                              type: "variable",
+                              dataType: "uint32",
+                              bigEndian: true,
+                              operations: [
+                                {
+                                  convert: {
+                                    from: "milliseconds",
+                                    to: "seconds",
+                                  },
+                                },
+                              ],
+                              leadingZeros: 1,
+                              max: 59,
+                            },
+                            {
+                              offset: 0x498c,
+                              type: "variable",
+                              dataType: "uint32",
+                              bigEndian: true,
+                              operations: [
+                                {
+                                  convert: {
+                                    from: "milliseconds",
+                                    to: "milliseconds",
+                                  },
+                                },
+                              ],
+                              leadingZeros: 2,
+                              max: 999,
+                            },
+                          ],
+                        },
+                        {
+                          name: "Fruit-Pop-Flight",
+                          offset: 0x4990,
+                          type: "variable",
+                          dataType: "uint32",
+                          bigEndian: true,
+                          max: 99999,
+                        },
+                        {
+                          name: "Sled Race",
+                          type: "group",
+                          mode: "chrono",
+                          items: [
+                            {
+                              offset: 0x4994,
+                              type: "variable",
+                              dataType: "uint32",
+                              bigEndian: true,
+                              operations: [
+                                { "*": 60 },
+                                {
+                                  convert: {
+                                    from: "milliseconds",
+                                    to: "hours",
+                                  },
+                                },
+                              ],
+                              max: 99,
+                            },
+                            {
+                              offset: 0x4994,
+                              type: "variable",
+                              dataType: "uint32",
+                              bigEndian: true,
+                              operations: [
+                                {
+                                  convert: {
+                                    from: "milliseconds",
+                                    to: "seconds",
+                                  },
+                                },
+                              ],
+                              leadingZeros: 1,
+                              max: 59,
+                            },
+                            {
+                              offset: 0x4994,
+                              type: "variable",
+                              dataType: "uint32",
+                              bigEndian: true,
+                              operations: [
+                                {
+                                  convert: {
+                                    from: "milliseconds",
+                                    to: "milliseconds",
+                                  },
+                                },
+                              ],
+                              leadingZeros: 2,
+                              max: 999,
+                            },
+                          ],
+                        },
+                      ],
+                    },
+                    {
+                      name: "Poe Souls",
+                      items: [
+                        {
+                          id: "poeSoulsTotal",
                           name: "Total",
                           offset: 0x4154,
                           type: "variable",
                           dataType: "uint8",
                           disabled: true,
+                        },
+                        {
+                          type: "section",
+                          flex: true,
+                          items: [
+                            {
+                              id: "poeSoulsSection",
+                              type: "section",
+                              items: [
+                                {
+                                  id: "poeSouls",
+                                  name: "Faron Province",
+                                  type: "bitflags",
+                                  maxWidth: true,
+                                  flags: [
+                                    { offset: 0x4288, bit: 5, label: "<b>Faron Woods:</b> In the fog area", separator: true },
+                                    { offset: 0x4304, bit: 1, label: "<b>Hyrule Field:</b> Near the Heart Piece tree", separator: true },
+                                    { offset: 0x4321, bit: 1, label: "<b>Sacred Grove:</b> On a ledge near a waterfall" },
+                                    { offset: 0x4321, bit: 0, label: "<b>Sacred Grove:</b> Below a boulder in the Skull Kid area" },
+                                    { offset: 0x4322, bit: 7, label: "<b>Sacred Grove:</b> Near the Master Sword pedestal" },
+                                    { offset: 0x4320, bit: 6, label: "<b>Sacred Grove:</b> Behind a Owl Statue", separator: true },
+                                    { offset: 0x44e0, bit: 1, label: "<b>Temple of Time 3F:</b> Behind a gate" },
+                                    { offset: 0x44e0, bit: 0, label: "<b>Temple of Time 7F:</b> In the scale room" },
+                                  ],
+                                },
+                                {
+                                  id: "poeSouls",
+                                  name: "Eldin Province",
+                                  type: "bitflags",
+                                  maxWidth: true,
+                                  flags: [
+                                    { offset: 0x4304, bit: 2, label: "<b>Kakariko Gorge:</b> Near a spire" },
+                                    { offset: 0x456f, bit: 0, label: "<b>Kakariko Gorge:</b> Inside a cave", separator: true },
+                                    { offset: 0x42a8, bit: 6, label: "<b>Kakariko Village:</b> Near the ruins of the storehouse" },
+                                    { offset: 0x42a8, bit: 7, label: "<b>Kakariko Village:</b> At the base of the watchtower", separator: true },
+                                    { offset: 0x42a8, bit: 0, label: "<b>Kakariko Graveyard:</b> In the graveyard" },
+                                    { offset: 0x42a9, bit: 7, label: "<b>Kakariko Graveyard:</b> By pushing a tombstone", separator: true },
+                                    { offset: 0x42a8, bit: 1, label: "<b>Death Mountain:</b> On a ledge", separator: true },
+                                    { offset: 0x42ab, bit: 0, label: "<b>Hidden Village:</b> On a balcony" },
+                                  ],
+                                },
+                                {
+                                  id: "poeSouls",
+                                  name: "Lanayru Province",
+                                  type: "bitflags",
+                                  maxWidth: true,
+                                  flags: [
+                                    { offset: 0x4360, bit: 7, label: "<b>Castle Town:</b> Inside Jovani's house", separator: true },
+                                    { offset: 0x4304, bit: 3, label: "<b>Hyrule Field</b> On a ledge near the Lake Hylia bridge" },
+                                    { offset: 0x430a, bit: 1, label: "<b>Hyrule Field</b> In the amphitheatre near the Owl Statue" },
+                                    { offset: 0x4305, bit: 0, label: "<b>Hyrule Field</b> On the stairs at the south of Castle Town" },
+                                    { offset: 0x430b, bit: 7, label: "<b>Hyrule Field</b> On the bridge at the east of Castle Town" },
+                                    { offset: 0x4305, bit: 3, label: "<b>Hyrule Field</b> On the bridge at the north of Castle Town" },
+                                    { offset: 0x45a2, bit: 2, label: "<b>Hyrule Field:</b> In a secret grotto near the bridge at the north of Castle Town" },
+                                    { offset: 0x45a2, bit: 3, label: "<b>Hyrule Field:</b> In a secret grotto near the bridge at the north of Castle Town", separator: true },
+                                    { offset: 0x42ca, bit: 4, label: "<b>Lake Hylia:</b> At the base of the watchtower" },
+                                    { offset: 0x42cb, bit: 6, label: "<b>Lake Hylia:</b> Near a cave on the south of Lake Hylia" },
+                                    { offset: 0x42ca, bit: 3, label: "<b>Lake Hylia:</b> At the east of the lake" },
+                                    { offset: 0x42ca, bit: 5, label: "<b>Lake Hylia:</b> On a ledge below the Flight-by-Fowl mini-game" },
+                                    { offset: 0x42cb, bit: 7, label: "<b>Lake Hylia:</b> On the floating platforms of the Flight-by-Fowl" },
+                                    { offset: 0x4588, bit: 5, label: "<b>Lake Hylia:</b> Inside the labyrinth cave" },
+                                    { offset: 0x4588, bit: 6, label: "<b>Lake Hylia:</b> Inside the labyrinth cave" },
+                                    { offset: 0x4588, bit: 7, label: "<b>Lake Hylia:</b> Inside the labyrinth cave", separator: true },
+                                    { offset: 0x42ca, bit: 0, label: "<b>Upper Zora's River:</b> Near the boat rental cabin", separator: true },
+                                    { offset: 0x42ca, bit: 2, label: "<b>Zora's Domain:</b> On a ledge" },
+                                    { offset: 0x42ca, bit: 1, label: "<b>Zora's Domain:</b> Behind the waterfall", separator: true },
+                                    { offset: 0x4509, bit: 4, label: "<b>City in the Sky 2F:</b> On a island using Peahats" },
+                                    { offset: 0x4509, bit: 5, label: "<b>City in the Sky 4F:</b> On a platform" },
+                                  ],
+                                },
+                                {
+                                  id: "poeSouls",
+                                  name: "Peak Province",
+                                  type: "bitflags",
+                                  maxWidth: true,
+                                  flags: [
+                                    { offset: 0x434c, bit: 3, label: "<b>Snowpeak:</b> In the White Wolfos area" },
+                                    { offset: 0x434c, bit: 4, label: "<b>Snowpeak:</b> In the White Wolfos area" },
+                                    { offset: 0x434c, bit: 5, label: "<b>Snowpeak:</b> In the White Wolfos area" },
+                                    { offset: 0x434c, bit: 7, label: "<b>Snowpeak:</b> Inside an ice block in the cave" },
+                                    { offset: 0x434c, bit: 6, label: "<b>Snowpeak:</b> At the top of the hill near Snowpeak Ruins", separator: true },
+                                    { offset: 0x44cd, bit: 2, label: "<b>Snowpeak Ruins 1F:</b> At the entrance" },
+                                    { offset: 0x44c1, bit: 5, label: "<b>Snowpeak Ruins 1F:</b> Inside an armor at the entrance" },
+                                    { offset: 0x44cc, bit: 7, label: "<b>Snowpeak Ruins 2F:</b> Behind an ice block" },
+                                  ],
+                                },
+                                {
+                                  id: "poeSouls",
+                                  name: "Desert Province",
+                                  type: "bitflags",
+                                  maxWidth: true,
+                                  flags: [
+                                    { offset: 0x4388, bit: 3, label: "<b>Gerudo Desert:</b> On a platform using a Peahats" },
+                                    { offset: 0x4388, bit: 4, label: "<b>Gerudo Desert:</b> At the east of the desert" },
+                                    { offset: 0x45a1, bit: 0, label: "<b>Gerudo Desert:</b> In a secret grotto" },
+                                    { offset: 0x45a2, bit: 7, label: "<b>Gerudo Desert:</b> In a secret grotto" },
+                                    { offset: 0x4388, bit: 5, label: "<b>Gerudo Desert:</b> Above the Cave of the Ordeals" },
+                                    { offset: 0x4385, bit: 3, label: "<b>Gerudo Desert:</b> Before entering the Bulblin Fortress" },
+                                    { offset: 0x4388, bit: 2, label: "<b>Gerudo Desert:</b> Before entering Arbiter's Grounds", separator: true },
+                                    { offset: 0x438c, bit: 0, label: "<b>Bulblin Fortress:</b> In the ruins of the stable", separator: true },
+                                    { offset: 0x44a0, bit: 6, label: "<b>Arbiter's Grounds 1F:</b> In the 4 blue torches room" },
+                                    { offset: 0x44a0, bit: 7, label: "<b>Arbiter's Grounds 1F:</b> In a round room" },
+                                    { offset: 0x44a7, bit: 0, label: "<b>Arbiter's Grounds 2F:</b> In a room hidden behind a wall" },
+                                    { offset: 0x44a7, bit: 1, label: "<b>Arbiter's Grounds 2F:</b> In the west wing", separator: true },
+                                    { offset: 0x456b, bit: 5, label: "<b>Cave of Ordeals B17:</b> In the center of the room" },
+                                    { offset: 0x456b, bit: 6, label: "<b>Cave of Ordeals B33:</b> In the center of the room" },
+                                    { offset: 0x456b, bit: 7, label: "<b>Cave of Ordeals B44:</b> In the center of the room" },
+                                  ],
+                                },
+                              ],
+                            },
+                            {
+                              type: "section",
+                              items: [],
+                            },
+                          ],
                         },
                       ],
                     },
@@ -1409,6 +2286,12 @@ const template: GameJson = {
     },
   ],
   resources: {
+    ancientSkyBooks: {
+      0xe9: "Ancient Sky Book",
+      0xea: "Ancient Sky Book (Partial)",
+      0xeb: "Filled Sky Book",
+      0xff: "-",
+    },
     bombBags: {
       0x0: "Regular Bomb Bags",
       0x1: "Giant Bomb Bags",
@@ -1451,6 +2334,11 @@ const template: GameJson = {
       0x44ff: "Clawshot",
       0xff47: "Double Clawshots",
       0xffff: "-",
+    },
+    dominionRods: {
+      0x46: "Dominion Rod (Powerless)",
+      0xff: "-",
+      0x146: "Dominion Rod",
     },
     dungeons: {
       0x0: "Forest Temple",
@@ -1506,6 +2394,17 @@ const template: GameJson = {
       0x0: "15",
       0x1: "30",
     },
+    miscellaneousItems: {
+      0x90: "Auru's Memo",
+      0x91: "Ashei's Sketch",
+      0xff: "-",
+    },
+    ooccoos: {
+      0x25: "Ooccoo",
+      0x27: "Ooccoo Jr.",
+      0x2d: "Ooccoo's Note",
+      0xff: "-",
+    },
     quivers: {
       0x1e: "Quiver",
       0x3c: "Big Quiver",
@@ -1527,10 +2426,14 @@ const template: GameJson = {
     },
     swords: {
       0x28: "Ordon Sword",
-      0x29: "Master Sword L1",
+      0x29: "Master Sword",
       0x3f: "Wooden Sword",
-      0x49: "Master Sword L2",
+      0x49: "Master Sword (Light)",
       0xff: "-",
+    },
+    transformations: {
+      0x0: "Human",
+      0x1: "Wolf",
     },
     tunics: {
       0x2e: "Ranch Clothes",
@@ -1544,12 +2447,37 @@ const template: GameJson = {
       0x2: "Giant Wallet",
     },
   },
+  resourcesGroups: {
+    bottles: [
+      {
+        name: "Medicines",
+        options: [
+          0x61, 0x63, 0x64, 0x65, 0x67, 0x6b, 0x6a, 0x6c, 0x73, 0x7d, 0x7e,
+          0x7f,
+        ],
+      },
+
+      { name: "Chu Jellies", options: [0x77, 0x78, 0x79, 0x7b, 0x7c] },
+      { name: "Baits", options: [0x74, 0x76] },
+      { name: "Miscellaneous", options: [0x66] },
+      { name: "Unused", options: [0x62, 0x7a, 0x9f] },
+    ],
+  },
   resourcesOrder: {
+    ancientSkyBooks: [0xff],
     bombs: [0xff],
-    bottles: [0xff],
+    bottles: [
+      0xff, 0x60, 0x61, 0x63, 0x64, 0x65, 0x67, 0x6b, 0x6a, 0x6c, 0x73, 0x7d,
+      0x7e, 0x7f, 0x77, 0x78, 0x79, 0x7b, 0x7c, 0x66, 0x74, 0x76, 0x62, 0x7a,
+      0x9f,
+    ],
+
     clawshots: [0xffff],
+    dominionRods: [0xff],
     fishingRods: [0xff, 0x4a, 0x5b, 0x5d, 0x5c, 0x5e, 0x5f],
     iliasMemoryItems: [0xff],
+    miscellaneousItems: [0xff],
+    ooccoos: [0xff],
     shields: [0xff, 0x2b, 0x2a, 0x2c],
     scents: [0xff, 0xb4, 0xb0, 0xb2, 0xb3, 0xb5],
     swords: [0xff, 0x3f, 0x28, 0x29, 0x49],
