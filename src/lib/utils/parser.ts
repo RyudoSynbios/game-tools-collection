@@ -380,32 +380,33 @@ export function parseContainer(
       instanceShifts = [...shifts, i * item.length];
     }
 
-    const disabled = getShift(instanceShifts) === -1;
+    const disabled = instanceShifts.at(-1) === -1;
 
     const parsedItem: any = {
       flex: item.flex,
       noMargin: item.noMargin,
       disabled,
-      items: item.items
-        ? item.items.reduce((results: any, subitem: any) => {
-            const itemParents = [
-              ...parents,
-              { id: item.instanceId || "", index: i },
-            ];
-
-            // prettier-ignore
-            const parsedSubitem = parseItem(subitem, instanceShifts, itemParents, {
-              checksumsDisabled: disabled,
-            });
-
-            parsedSubitem.parent = parsedContainer;
-
-            results.push(parsedSubitem);
-
-            return results;
-          }, [])
-        : [],
+      items: [],
     };
+
+    if (item.items) {
+      parsedItem.items = item.items.reduce((results: any, subitem: any) => {
+        const itemParents = [
+          ...parents,
+          { id: item.instanceId || "", index: i },
+        ];
+
+        const parsedSubitem = parseItem(subitem, instanceShifts, itemParents, {
+          checksumsDisabled: disabled,
+        });
+
+        parsedSubitem.parent = parsedItem;
+
+        results.push(parsedSubitem);
+
+        return results;
+      }, []);
+    }
 
     if (item.instanceType === "section") {
       if (item.enumeration) {

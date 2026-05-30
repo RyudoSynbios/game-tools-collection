@@ -63,7 +63,7 @@ export function updateChecksums(): void {
       } else {
         previousChecksum = getBigInt(item.offset, item.dataType, {
           bigEndian: item.bigEndian,
-        }).toHex(dataTypeLength);
+        }, _dataViewAlt).toHex(dataTypeLength);
 
         setBigInt(item.offset, item.dataType, 0x0n, {}, item.dataViewAltKey);
       }

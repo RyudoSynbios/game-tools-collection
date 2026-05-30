@@ -103,9 +103,9 @@ export function beforeInitDataView(dataView: DataView): DataView {
     return dataView;
   }
 
-  const obfuscatedData = obfuscateData(new Uint8Array(dataView.buffer));
+  const deobfuscatedData = obfuscateData(new Uint8Array(dataView.buffer));
 
-  dataView = new DataView(obfuscatedData.buffer);
+  dataView = new DataView(deobfuscatedData.buffer);
 
   gvas = new Gvas(dataView);
 
@@ -429,7 +429,7 @@ export function beforeSaving(): ArrayBufferLike {
   return mergeUint8Arrays(obfuscatedData, checksum).buffer;
 }
 
-export function obfuscateData(data: Uint8Array): Uint8Array {
+function obfuscateData(data: Uint8Array): Uint8Array {
   const obfuscatedData = new Uint8Array(data.length);
 
   for (let i = 0x0; i < data.length; i += 0x1) {

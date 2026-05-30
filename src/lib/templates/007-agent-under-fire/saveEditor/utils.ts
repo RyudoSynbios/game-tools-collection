@@ -23,16 +23,16 @@ import type {
 
 export function setGamePlatform(dataView: DataView): void {
   if (isPlaystation2SaveFile(dataView)) {
-    gamePlatform.set(0);
-  } else {
     gamePlatform.set(1);
+  } else {
+    gamePlatform.set(0);
   }
 }
 
 export function beforeInitDataView(dataView: DataView): DataView {
   const $gamePlatform = get(gamePlatform);
 
-  if ($gamePlatform === 0) {
+  if ($gamePlatform === 1) {
     return unpackFile(dataView);
   }
 
@@ -42,7 +42,7 @@ export function beforeInitDataView(dataView: DataView): DataView {
 export function overrideGetRegions(dataView: DataView): string[] {
   const $gamePlatform = get(gamePlatform);
 
-  if ($gamePlatform === 0) {
+  if ($gamePlatform === 1) {
     return customGetRegions();
   }
 
@@ -56,7 +56,7 @@ export function onInitFailed(): void {
 export function initShifts(shifts: number[]): number[] {
   const $gamePlatform = get(gamePlatform);
 
-  if ($gamePlatform === 0) {
+  if ($gamePlatform === 1) {
     return [...shifts, getFileOffset(0, "Savegame")];
   }
 
@@ -66,7 +66,7 @@ export function initShifts(shifts: number[]): number[] {
 export function overrideParseItem(item: Item): Item {
   const $gamePlatform = get(gamePlatform);
 
-  if ($gamePlatform === 1) {
+  if ($gamePlatform === 0) {
     if ("dataType" in item && item.dataType === "bit") {
       const itemInt = item as ItemInt;
 
@@ -165,7 +165,7 @@ export function beforeSaving(): ArrayBufferLike {
   const $dataView = get(dataView);
   const $gamePlatform = get(gamePlatform);
 
-  if ($gamePlatform === 0) {
+  if ($gamePlatform === 1) {
     return repackFile();
   }
 

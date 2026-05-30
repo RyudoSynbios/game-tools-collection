@@ -23,16 +23,6 @@ export function initShifts(shifts: number[]): number[] {
   return shifts;
 }
 
-export function overrideShift(item: Item, shifts: number[]): number[] {
-  if ("id" in item && item.id === "name") {
-    return shifts.slice(0, -2);
-  } else if ("id" in item && item.id?.match(/beforeModelName/)) {
-    return shifts.slice(0, -1);
-  }
-
-  return shifts;
-}
-
 export function overrideParseItem(item: Item): Item | ItemTab {
   const $fileName = get(fileName);
   const $gameRegion = get(gameRegion);
@@ -63,6 +53,16 @@ export function overrideParseItem(item: Item): Item | ItemTab {
   }
 
   return item;
+}
+
+export function overrideShift(item: Item, shifts: number[]): number[] {
+  if ("id" in item && item.id === "name") {
+    return shifts.slice(0, -2);
+  } else if ("id" in item && item.id?.match(/beforeModelName/)) {
+    return shifts.slice(0, -1);
+  }
+
+  return shifts;
 }
 
 export function overrideItem(item: Item): Item {
