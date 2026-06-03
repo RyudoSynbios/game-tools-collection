@@ -1292,6 +1292,17 @@
     }
   },
   {
+    "id": "soulcalibur-ii",
+    "name": "SoulCalibur II",
+    "platformIds": ["gamecube", "playstation-2"],
+    "tools": {
+      "saveEditor": {
+        "createdAt": "2026-06-03",
+        "regions": ["🇪🇺", "🇺🇸", "🇯🇵", "🇰🇷"]
+      }
+    }
+  },
+  {
     "id": "super-mario-64",
     "name": "Super Mario 64",
     "platformIds": ["nintendo-64"],
