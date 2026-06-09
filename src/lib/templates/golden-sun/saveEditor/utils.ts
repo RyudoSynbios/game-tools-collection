@@ -9,6 +9,7 @@ import { getItem, getShift, updateResources } from "$lib/utils/parser";
 import type {
   Item,
   ItemBitflag,
+  ItemBitflags,
   ItemChecksum,
   ItemContainer,
   ItemInt,
@@ -262,7 +263,15 @@ export function afterSetInt(item: Item, flag: ItemBitflag): void {
       setInt(itemInt.offset - 0x61c, "uint8", int);
     }
   } else if ("id" in item && item.id?.match(/djinn-/)) {
+    const itemBitflags = item as ItemBitflags;
+
     const [characterIndex, elementIndex] = item.id.splitInt();
+
+    const totalItem = item.parent!.items[1] as ItemInt;
+
+    const count = getInt(itemBitflags.flags[0].offset, "uint8").toBitCount();
+
+    setInt(totalItem.offset, "uint8", count);
 
     const offset =
       flag.offset -

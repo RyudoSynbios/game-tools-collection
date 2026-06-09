@@ -111,6 +111,7 @@ const template: GameJson = {
                         {
                           name: "Unlocked Menus",
                           type: "bitflags",
+                          hint: "It's recommended to complete at least Chapter 2 before using Chapter Selection in order to initialize some mandatory story flags.",
                           flags: [
                             { offset: 0x44ab1, bit: 0, label: "Main Menu", hidden: true },
                             { offset: 0x4493a, bit: 2, label: "Extra Settings" },

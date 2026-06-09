@@ -1858,37 +1858,54 @@ const template: GameJson = {
         {
           name: "Events",
           flex: true,
-          hidden: true,
           items: [
             {
-              name: "Gift Box New Flags",
-              offset: 0x428ac,
-              type: "variable",
-              dataType: "uint32",
-            },
-            {
-              name: "Gift Box Cactuar Related",
-              offset: 0x45694,
-              type: "variable",
-              dataType: "uint32",
-            },
-            {
-              name: "Gift Box Cactuar Acquired",
-              offset: 0x46dcc,
+              name: "Chapter 14 Resolution",
+              offset: 0x42a8c,
               type: "variable",
               dataType: "uint8",
+              binary: {
+                bitStart: 1,
+                bitLength: 2,
+              },
+              resource: "chapter14Characters",
             },
             {
-              name: "Chest: Tuft of Phoenix Down",
-              offset: 0x50100,
-              type: "variable",
-              dataType: "uint32",
-            },
-            {
-              name: "Chest: Tuft of Phoenix Down",
-              offset: 0x50120,
-              type: "variable",
-              dataType: "uint32",
+              type: "section",
+              flex: true,
+              hidden: true,
+              items: [
+                {
+                  name: "Gift Box New Flags",
+                  offset: 0x428ac,
+                  type: "variable",
+                  dataType: "uint32",
+                },
+                {
+                  name: "Gift Box Cactuar Related",
+                  offset: 0x45694,
+                  type: "variable",
+                  dataType: "uint32",
+                },
+                {
+                  name: "Gift Box Cactuar Acquired",
+                  offset: 0x46dcc,
+                  type: "variable",
+                  dataType: "uint8",
+                },
+                {
+                  name: "Chest: Tuft of Phoenix Down",
+                  offset: 0x50100,
+                  type: "variable",
+                  dataType: "uint32",
+                },
+                {
+                  name: "Chest: Tuft of Phoenix Down",
+                  offset: 0x50120,
+                  type: "variable",
+                  dataType: "uint32",
+                },
+              ],
             },
           ],
         },
@@ -1901,6 +1918,11 @@ const template: GameJson = {
     challengeProgressions: {
       0x0: "-",
       0x1: "Completed",
+    },
+    chapter14Characters: {
+      0x0: "Tifa",
+      0x1: "Aerith",
+      0x2: "Barret",
     },
     characters: {
       ...characters,
