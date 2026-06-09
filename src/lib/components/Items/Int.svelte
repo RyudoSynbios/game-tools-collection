@@ -189,6 +189,7 @@
         hex={item.hex}
         {value}
         size={item.size}
+        fixedWidth={item.fixedWidth}
         hint={item.hint}
         prefix={item.prefix}
         suffix={item.suffix}
@@ -205,6 +206,7 @@
         {groups}
         {labels}
         size={item.size}
+        fixedWidth={item.fixedWidth}
         hint={item.hint}
         debug={item.hidden}
         disabled={item.disabled}
@@ -218,6 +220,7 @@
         {value}
         {options}
         size={item.size}
+        fixedWidth={item.fixedWidth}
         hint={item.hint}
         debug={item.hidden}
         disabled={item.disabled}

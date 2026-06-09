@@ -195,6 +195,7 @@ export interface ItemBitflags {
     shift: number;
   };
   hint?: string;
+  fixedWidth?: boolean;
   maxWidth?: boolean;
   noMargin?: boolean;
   reversed?: boolean;
@@ -323,6 +324,7 @@ export interface ItemInt {
     shift: number;
   };
   size?: "md" | "lg" | "xl";
+  fixedWidth?: boolean;
   autocomplete?: boolean;
   button?: {
     label: string;

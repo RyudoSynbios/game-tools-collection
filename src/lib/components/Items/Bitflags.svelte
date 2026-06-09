@@ -115,6 +115,7 @@
   <div
     class="gtc-bitflags"
     class:gtc-bitflags-debug={item.hidden}
+    class:gtc-bitflags-fixedWidth={item.fixedWidth}
     class:gtc-bitflags-maxWidth={item.maxWidth}
     class:gtc-bitflags-nomargin={item.noMargin}
   >
@@ -153,6 +154,12 @@
 
     &.gtc-bitflags-debug {
       @apply bg-orange-950 text-orange-800;
+    }
+
+    &.gtc-bitflags-fixedWidth :global(label span) {
+      @apply overflow-hidden text-ellipsis whitespace-nowrap;
+
+      width: 260px;
     }
 
     &.gtc-bitflags-maxWidth {

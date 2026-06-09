@@ -14,6 +14,7 @@
   export let hex = false;
   export let value: bigint | number | string;
   export let size: "md" | "lg" | "xl" = "md";
+  export let fixedWidth = false;
   export let hint = "";
   export let prefix = "";
   export let suffix = "";
@@ -97,7 +98,7 @@
   class:gtc-input-suffix={suffix}
 >
   {#if label}
-    <div class="gtc-input-label">
+    <div class="gtc-input-label" class:gtc-input-label-fixedwidth={fixedWidth}>
       <p>{label}</p>
       {#if hint}
         <span data-title={hint}>?</span>
@@ -150,19 +151,6 @@
       }
     }
 
-    &.gtc-input-lg input {
-      width: 260px;
-    }
-
-    &.gtc-input-xl input {
-      width: 392px;
-    }
-
-    &.gtc-input-prefix input,
-    &.gtc-input-suffix input {
-      width: 160px;
-    }
-
     &.gtc-input-prefix span {
       @apply pl-1.5;
     }
@@ -173,6 +161,10 @@
 
     & .gtc-input-label {
       @apply mb-2 flex items-center justify-between;
+
+      &.gtc-input-label-fixedwidth p {
+        @apply overflow-hidden text-ellipsis whitespace-nowrap;
+      }
 
       & p {
         @apply text-sm font-bold;
@@ -189,6 +181,25 @@
       & span {
         @apply w-5 bg-white py-1.5 text-sm;
       }
+    }
+
+    .gtc-input-label-fixedwidth p {
+      width: 180px;
+    }
+
+    &.gtc-input-lg .gtc-input-label-fixedwidth p,
+    &.gtc-input-lg input {
+      width: 260px;
+    }
+
+    &.gtc-input-xl .gtc-input-label-fixedwidth p,
+    &.gtc-input-xl input {
+      width: 392px;
+    }
+
+    &.gtc-input-prefix input,
+    &.gtc-input-suffix input {
+      width: 160px;
     }
   }
 </style>

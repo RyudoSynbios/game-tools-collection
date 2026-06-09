@@ -17,6 +17,7 @@
   export let groups: ResourceGroups = [];
   export let labels: ResourceLabels = {};
   export let size: "md" | "lg" | "xl" = "md";
+  export let fixedWidth = false;
   export let hint = "";
   export let debug = false;
   export let disabled = false;
@@ -305,22 +306,22 @@
   class="gtc-autocomplete"
   class:gtc-autocomplete-debug={debug}
   class:gtc-autocomplete-disabled={disabled}
+  class:gtc-autocomplete-lg={size === "lg"}
+  class:gtc-autocomplete-xl={size === "xl"}
   bind:this={rootEl}
 >
   {#if label}
-    <div class="gtc-autocomplete-label">
+    <div
+      class="gtc-autocomplete-label"
+      class:gtc-autocomplete-label-fixedwidth={fixedWidth}
+    >
       <p>{label}</p>
       {#if hint}
         <span data-title={hint}>?</span>
       {/if}
     </div>
   {/if}
-  <div
-    class="gtc-autocomplete-input"
-    class:gtc-autocomplete-input-lg={size === "lg"}
-    class:gtc-autocomplete-input-xl={size === "xl"}
-    on:click={handleDropdownOpen}
-  >
+  <div class="gtc-autocomplete-input" on:click={handleDropdownOpen}>
     <input
       value={valueDisplayed}
       disabled={disabled && !$isDebug}
@@ -386,6 +387,10 @@
     & .gtc-autocomplete-label {
       @apply mb-2 flex items-center justify-between;
 
+      &.gtc-autocomplete-label-fixedwidth p {
+        @apply overflow-hidden text-ellipsis whitespace-nowrap;
+      }
+
       & p {
         @apply text-sm font-bold;
       }
@@ -393,6 +398,18 @@
       & span {
         @apply w-5 cursor-pointer rounded bg-primary-400 text-center text-sm font-bold;
       }
+    }
+
+    .gtc-autocomplete-label-fixedwidth p {
+      width: 180px;
+    }
+
+    &.gtc-autocomplete-lg .gtc-autocomplete-label-fixedwidth p {
+      width: 260px;
+    }
+
+    &.gtc-autocomplete-xl .gtc-autocomplete-label-fixedwidth p {
+      width: 392px;
     }
 
     &.gtc-autocomplete-disabled .gtc-autocomplete-input {
@@ -414,14 +431,14 @@
       & :global(svg) {
         @apply h-8 w-4 bg-white;
       }
+    }
 
-      &.gtc-autocomplete-input-lg input {
-        width: 244px;
-      }
+    &.gtc-autocomplete-lg .gtc-autocomplete-input input {
+      width: 244px;
+    }
 
-      &.gtc-autocomplete-input-xl input {
-        width: 376px;
-      }
+    &.gtc-autocomplete-xl .gtc-autocomplete-input input {
+      width: 376px;
     }
 
     & .gtc-autocomplete-inputhidden {
