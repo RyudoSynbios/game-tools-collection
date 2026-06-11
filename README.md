@@ -128,6 +128,7 @@ Link to the website: [https://game-tools-collection.com](https://game-tools-coll
 | Super Punch Out!!                                   | SNES           | Save                    | EUR / USA / JAP                               |
 | Super Smash Bros.                                   | N64            | Save                    | EUR / USA / JAP / AUS                         |
 | Super Smash Bros. Melee                             | GC             | Save                    | EUR / USA / JAP                               |
+| Super Smash Bros. Brawl                             | WII            | Save                    | EUR / USA / JAP / AUS / CAN / KOR             |
 | Super Street Fighter II Turbo Revival               | GBA            | Save                    | EUR / USA / JAP                               |
 | Tekken                                              | PS             | Save                    | EUR / USA / JAP                               |
 | Tekken 2                                            | PS             | Save                    | EUR / USA / JAP                               |

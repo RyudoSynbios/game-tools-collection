@@ -1402,6 +1402,17 @@
     }
   },
   {
+    "id": "super-smash-bros-brawl",
+    "name": "Super Smash Bros. Brawl",
+    "platformIds": ["wii"],
+    "tools": {
+      "saveEditor": {
+        "createdAt": "2026-06-11",
+        "regions": ["🇪🇺", "🇺🇸", "🇯🇵", "🇦🇺", "🇨🇦", "🇰🇷"]
+      }
+    }
+  },
+  {
     "id": "super-street-fighter-ii-turbo-revival",
     "name": "Super Street Fighter II Turbo Revival",
     "platformIds": ["game-boy-advance"],
