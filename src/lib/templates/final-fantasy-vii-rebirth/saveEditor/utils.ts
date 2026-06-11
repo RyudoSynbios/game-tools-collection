@@ -1,4 +1,9 @@
-import { bitToOffset, getInt, setInt } from "$lib/utils/bytes";
+import {
+  bitToOffset,
+  checkNextHiddenFlags,
+  getInt,
+  setInt,
+} from "$lib/utils/bytes";
 import { getItem, getResource, updateResources } from "$lib/utils/parser";
 
 import {
@@ -576,20 +581,10 @@ export function afterSetInt(item: Item, flag: ItemBitflag): void {
     const count = (getInt(offset, "uint32") & 0x7ffffffe).toBitCount();
 
     setInt(offset - 0x124ac, "uint32", count);
-  } else if ("id" in item && item.id === "hiddenEvents") {
+  } else if ("id" in item && item.id === "hiddenFlags") {
     const itemBitflags = item as ItemBitflags;
 
-    const checked = getInt(flag.offset, "bit", { bit: flag.bit });
-
-    const index = itemBitflags.flags.findIndex(
-      (item) => item.offset === flag.offset && item.bit === flag.bit,
-    );
-
-    const hiddenFlag = itemBitflags.flags[index + 1];
-
-    if (hiddenFlag.hidden) {
-      setInt(hiddenFlag.offset, "bit", checked, { bit: hiddenFlag.bit });
-    }
+    checkNextHiddenFlags(flag, itemBitflags);
   }
 }
 

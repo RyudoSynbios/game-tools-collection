@@ -2,6 +2,7 @@ import { get } from "svelte/store";
 
 import { dataView, gamePlatform, gameRegion } from "$lib/stores";
 import {
+  checkNextHiddenFlags,
   copyInt,
   extractBit,
   getInt,
@@ -619,20 +620,10 @@ export function afterSetInt(item: Item, flag: ItemBitflag): void {
     const [slotIndex] = item.id.splitInt();
 
     updateChocoboNames(slotIndex);
-  } else if ("id" in item && item.id === "hiddenEvents") {
+  } else if ("id" in item && item.id === "hiddenFlags") {
     const itemBitflags = item as ItemBitflags;
 
-    const checked = getInt(flag.offset, "bit", { bit: flag.bit });
-
-    const index = itemBitflags.flags.findIndex(
-      (item) => item.offset === flag.offset && item.bit === flag.bit,
-    );
-
-    const hiddenFlag = itemBitflags.flags[index + 1];
-
-    if (hiddenFlag.hidden) {
-      setInt(hiddenFlag.offset, "bit", checked, { bit: hiddenFlag.bit });
-    }
+    checkNextHiddenFlags(flag, itemBitflags);
   }
 }
 

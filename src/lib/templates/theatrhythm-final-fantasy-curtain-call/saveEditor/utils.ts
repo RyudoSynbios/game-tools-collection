@@ -1,4 +1,4 @@
-import { getInt, setInt } from "$lib/utils/bytes";
+import { checkNextHiddenFlags, getInt, setInt } from "$lib/utils/bytes";
 
 import { Item, ItemBitflag, ItemBitflags, ItemInt } from "$lib/types";
 
@@ -7,11 +7,10 @@ export function afterSetInt(item: Item, flag: ItemBitflag): void {
     const itemInt = item as ItemInt;
 
     setInt(itemInt.offset, "bit", 1, { bit: 7 });
-  } else if ("id" in item && item.id === "hiddenEvents") {
-    const checked = getInt(flag.offset, "bit", { bit: flag.bit });
+  } else if ("id" in item && item.id === "hiddenFlags") {
+    const itemBitflags = item as ItemBitflags;
 
-    setInt(flag.offset + 0x1, "bit", checked, { bit: flag.bit });
-    setInt(flag.offset + 0x2, "bit", checked, { bit: flag.bit });
+    checkNextHiddenFlags(flag, itemBitflags, 2);
   } else if ("id" in item && item.id?.match(/trophies-/)) {
     const itemBitflags = item as ItemBitflags;
 

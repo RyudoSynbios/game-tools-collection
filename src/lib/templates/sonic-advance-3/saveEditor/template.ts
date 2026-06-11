@@ -208,7 +208,7 @@ const template: GameJson = {
                   name: "Final Zone",
                   items: [
                     {
-                      id: "hiddenEvents",
+                      id: "hiddenFlags",
                       name: "Boss",
                       type: "bitflags",
                       flags: [
@@ -225,7 +225,7 @@ const template: GameJson = {
                   name: "Extra Zone",
                   items: [
                     {
-                      id: "hiddenEvents",
+                      id: "hiddenFlags",
                       name: "Boss",
                       type: "bitflags",
                       flags: [

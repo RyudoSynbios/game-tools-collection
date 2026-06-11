@@ -846,7 +846,7 @@ const template: GameJson = {
                       flex: true,
                       items: [
                         {
-                          id: "hiddenEvents",
+                          id: "hiddenFlags",
                           name: "Miscellaneous",
                           type: "bitflags",
                           flags: [

@@ -347,7 +347,7 @@ const template: GameJson = {
                       ],
                     },
                     {
-                      id: "hiddenEvents",
+                      id: "hiddenFlags",
                       name: "Cleared",
                       type: "bitflags",
                       flags: [
@@ -404,7 +404,7 @@ const template: GameJson = {
                       ],
                     },
                     {
-                      id: "hiddenEvents",
+                      id: "hiddenFlags",
                       name: "Cleared",
                       type: "bitflags",
                       flags: [
@@ -511,7 +511,7 @@ const template: GameJson = {
                       ],
                     },
                     {
-                      id: "hiddenEvents",
+                      id: "hiddenFlags",
                       name: "Cleared",
                       type: "bitflags",
                       flags: [
@@ -568,7 +568,7 @@ const template: GameJson = {
                       ],
                     },
                     {
-                      id: "hiddenEvents",
+                      id: "hiddenFlags",
                       name: "Cleared",
                       type: "bitflags",
                       flags: [
@@ -625,7 +625,7 @@ const template: GameJson = {
                       ],
                     },
                     {
-                      id: "hiddenEvents",
+                      id: "hiddenFlags",
                       name: "Cleared",
                       type: "bitflags",
                       flags: [

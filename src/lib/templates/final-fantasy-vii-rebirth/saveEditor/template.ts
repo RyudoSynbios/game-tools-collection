@@ -4942,7 +4942,7 @@ const template: GameJson = {
                               ],
                             },
                             {
-                              id: "hiddenEvents",
+                              id: "hiddenFlags",
                               name: "Places of Interest",
                               type: "bitflags",
                               flags: [
@@ -5158,7 +5158,7 @@ const template: GameJson = {
                           flex: true,
                           items: [
                             {
-                              id: "hiddenEvents",
+                              id: "hiddenFlags",
                               name: "Intel Entries",
                               type: "bitflags",
                               flags: [
@@ -5361,7 +5361,7 @@ const template: GameJson = {
                           flex: true,
                           items: [
                             {
-                              id: "hiddenEvents",
+                              id: "hiddenFlags",
                               name: "Intel Entries",
                               type: "bitflags",
                               flags: [
@@ -5528,7 +5528,7 @@ const template: GameJson = {
                               ],
                             },
                             {
-                              id: "hiddenEvents",
+                              id: "hiddenFlags",
                               name: "Places of Interest",
                               type: "bitflags",
                               flags: [
@@ -5555,7 +5555,7 @@ const template: GameJson = {
                           flex: true,
                           items: [
                             {
-                              id: "hiddenEvents",
+                              id: "hiddenFlags",
                               name: "Intel Entries",
                               type: "bitflags",
                               flags: [
@@ -5949,7 +5949,7 @@ const template: GameJson = {
                               ],
                             },
                             {
-                              id: "hiddenEvents",
+                              id: "hiddenFlags",
                               name: "Places of Interest",
                               type: "bitflags",
                               flags: [
@@ -6110,7 +6110,7 @@ const template: GameJson = {
                           flex: true,
                           items: [
                             {
-                              id: "hiddenEvents",
+                              id: "hiddenFlags",
                               name: "Places of Interest",
                               type: "bitflags",
                               flags: [

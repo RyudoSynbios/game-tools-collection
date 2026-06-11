@@ -1,4 +1,4 @@
-import { getInt, setInt } from "$lib/utils/bytes";
+import { checkNextHiddenFlags, getInt } from "$lib/utils/bytes";
 import { formatChecksum } from "$lib/utils/checksum";
 import { getShift } from "$lib/utils/parser";
 
@@ -72,20 +72,10 @@ export function overrideGetInt(item: Item): [boolean, number | undefined] {
 }
 
 export function afterSetInt(item: Item, flag: ItemBitflag): void {
-  if ("id" in item && item.id === "hiddenEvents") {
+  if ("id" in item && item.id === "hiddenFlags") {
     const itemBitflags = item as ItemBitflags;
 
-    const checked = getInt(flag.offset, "bit", { bit: flag.bit });
-
-    const index = itemBitflags.flags.findIndex(
-      (item) => item.offset === flag.offset && item.bit === flag.bit,
-    );
-
-    const hiddenFlag = itemBitflags.flags[index + 1];
-
-    if (hiddenFlag.hidden) {
-      setInt(hiddenFlag.offset, "bit", checked, { bit: hiddenFlag.bit });
-    }
+    checkNextHiddenFlags(flag, itemBitflags);
   }
 }
 

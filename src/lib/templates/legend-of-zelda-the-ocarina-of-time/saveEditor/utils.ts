@@ -1,7 +1,13 @@
 import { get } from "svelte/store";
 
 import { gameRegion } from "$lib/stores";
-import { getBoolean, getInt, setBoolean, setInt } from "$lib/utils/bytes";
+import {
+  checkNextHiddenFlags,
+  getBoolean,
+  getInt,
+  setBoolean,
+  setInt,
+} from "$lib/utils/bytes";
 import { formatChecksum } from "$lib/utils/checksum";
 import { byteswapDataView, getHeaderShift } from "$lib/utils/common/nintendo64";
 import { round } from "$lib/utils/format";
@@ -389,20 +395,10 @@ export function afterSetInt(item: Item, flag: ItemBitflag): void {
     const itemInt = item as ItemInt;
 
     updateObtainedSwords(itemInt.offset + 0x67);
-  } else if ("id" in item && item.id === "hiddenEvents") {
+  } else if ("id" in item && item.id === "hiddenFlags") {
     const itemBitflags = item as ItemBitflags;
 
-    const checked = getInt(flag.offset, "bit", { bit: flag.bit });
-
-    const index = itemBitflags.flags.findIndex(
-      (item) => item.offset === flag.offset && item.bit === flag.bit,
-    );
-
-    const hiddenFlag = itemBitflags.flags[index + 1];
-
-    if (hiddenFlag.hidden) {
-      setInt(hiddenFlag.offset, "bit", checked, { bit: hiddenFlag.bit });
-    }
+    checkNextHiddenFlags(flag, itemBitflags);
   } else if ("id" in item && item.id?.match(/poeCollectorPoints-/)) {
     const itemInt = item as ItemInt;
 

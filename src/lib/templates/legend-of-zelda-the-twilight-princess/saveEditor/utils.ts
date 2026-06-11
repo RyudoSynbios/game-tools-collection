@@ -2,7 +2,12 @@ import Long from "long";
 import { get } from "svelte/store";
 
 import { gamePlatform, gameRegion } from "$lib/stores";
-import { bitToOffset, getInt, setInt } from "$lib/utils/bytes";
+import {
+  bitToOffset,
+  checkNextHiddenFlags,
+  getInt,
+  setInt,
+} from "$lib/utils/bytes";
 import { getTime, setTime } from "$lib/utils/common/gamecube";
 import { capitalize, getPartialValue, makeOperations } from "$lib/utils/format";
 import { getClosestItem } from "$lib/utils/parser";
@@ -428,17 +433,7 @@ export function afterSetInt(item: Item, flag: ItemBitflag): void {
   } else if ("id" in item && item.id?.match(/dungeon-events|hiddenFlags/)) {
     const itemBitflags = item as ItemBitflags;
 
-    const checked = getInt(flag.offset, "bit", { bit: flag.bit });
-
-    const index = itemBitflags.flags.findIndex(
-      (item) => item.offset === flag.offset && item.bit === flag.bit,
-    );
-
-    const hiddenFlag = itemBitflags.flags[index + 1];
-
-    if (hiddenFlag.hidden) {
-      setInt(hiddenFlag.offset, "bit", checked, { bit: hiddenFlag.bit });
-    }
+    checkNextHiddenFlags(flag, itemBitflags);
   } else if ("id" in item && item.id === "skyCharacters") {
     const itemBitflags = item as ItemBitflags;
 
@@ -452,18 +447,7 @@ export function afterSetInt(item: Item, flag: ItemBitflag): void {
     setInt(offset, "bit", count === 6 ? 1 : 0, { bit: 2 });
 
     // We update the corresponding Map flag
-
-    const checked = getInt(flag.offset, "bit", { bit: flag.bit });
-
-    const index = itemBitflags.flags.findIndex(
-      (item) => item.offset === flag.offset && item.bit === flag.bit,
-    );
-
-    const hiddenFlag = itemBitflags.flags[index + 1];
-
-    if (hiddenFlag.hidden) {
-      setInt(hiddenFlag.offset, "bit", checked, { bit: hiddenFlag.bit });
-    }
+    checkNextHiddenFlags(flag, itemBitflags);
   } else if ("id" in item && item.id === "receivedLetters") {
     const itemBitflags = item as ItemBitflags;
 

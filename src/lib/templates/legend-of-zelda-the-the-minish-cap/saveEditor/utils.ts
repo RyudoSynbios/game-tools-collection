@@ -4,6 +4,7 @@ import { fileHeaderShift, gameRegion } from "$lib/stores";
 import {
   bitToOffset,
   byteswap,
+  checkNextHiddenFlags,
   getInt,
   getString,
   setInt,
@@ -220,20 +221,10 @@ export function afterSetInt(item: Item, flag: ItemBitflag): void {
     }
 
     setInt(offset - 0x12a, "uint8", count);
-  } else if ("id" in item && item.id === "hiddenEvents") {
+  } else if ("id" in item && item.id === "hiddenFlags") {
     const itemBitflags = item as ItemBitflags;
 
-    const checked = getInt(flag.offset, "bit", { bit: flag.bit });
-
-    const index = itemBitflags.flags.findIndex(
-      (item) => item.offset === flag.offset && item.bit === flag.bit,
-    );
-
-    const hiddenFlag = itemBitflags.flags[index + 1];
-
-    if (hiddenFlag.hidden) {
-      setInt(hiddenFlag.offset, "bit", checked, { bit: hiddenFlag.bit });
-    }
+    checkNextHiddenFlags(flag, itemBitflags);
   }
 }
 

@@ -1,4 +1,9 @@
-import { getInt, getString, setInt } from "$lib/utils/bytes";
+import {
+  checkNextHiddenFlags,
+  getInt,
+  getString,
+  setInt,
+} from "$lib/utils/bytes";
 import { formatChecksum } from "$lib/utils/checksum";
 import { getHeaderShift } from "$lib/utils/common/gameBoyAdvance";
 import { getPartialValue, makeOperations } from "$lib/utils/format";
@@ -116,20 +121,10 @@ export function overrideSetInt(item: Item, value: string): boolean {
 }
 
 export function afterSetInt(item: Item, flag: ItemBitflag): void {
-  if ("id" in item && item.id === "hiddenEvents") {
+  if ("id" in item && item.id === "hiddenFlags") {
     const itemBitflags = item as ItemBitflags;
 
-    const checked = getInt(flag.offset, "bit", { bit: flag.bit });
-
-    const index = itemBitflags.flags.findIndex(
-      (item) => item.offset === flag.offset && item.bit === flag.bit,
-    );
-
-    const hiddenFlag = itemBitflags.flags[index + 1];
-
-    if (hiddenFlag.hidden) {
-      setInt(hiddenFlag.offset, "bit", checked, { bit: hiddenFlag.bit });
-    }
+    checkNextHiddenFlags(flag, itemBitflags);
   } else if ("id" in item && item.id?.match(/vsResult-/)) {
     const itemInt = item as ItemInt;
 

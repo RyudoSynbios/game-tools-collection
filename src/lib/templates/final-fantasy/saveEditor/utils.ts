@@ -1,7 +1,7 @@
 import { get } from "svelte/store";
 
 import { gameTemplate } from "$lib/stores";
-import { getInt, getString, setInt } from "$lib/utils/bytes";
+import { checkNextHiddenFlags, getInt, getString } from "$lib/utils/bytes";
 import { formatChecksum } from "$lib/utils/checksum";
 import { getItem, updateResources } from "$lib/utils/parser";
 
@@ -35,20 +35,10 @@ export function overrideGetRegions(dataView: DataView): string[] {
 export function afterSetInt(item: Item, flag: ItemBitflag): void {
   if ("id" in item && item.id?.match(/name-/)) {
     updateResources("characterNames");
-  } else if ("id" in item && item.id === "hiddenEvents") {
+  } else if ("id" in item && item.id === "hiddenFlags") {
     const itemBitflags = item as ItemBitflags;
 
-    const checked = getInt(flag.offset, "bit", { bit: flag.bit });
-
-    const index = itemBitflags.flags.findIndex(
-      (item) => item.offset === flag.offset && item.bit === flag.bit,
-    );
-
-    const hiddenFlag = itemBitflags.flags[index + 1];
-
-    if (hiddenFlag.hidden) {
-      setInt(hiddenFlag.offset, "bit", checked, { bit: hiddenFlag.bit });
-    }
+    checkNextHiddenFlags(flag, itemBitflags);
   }
 }
 

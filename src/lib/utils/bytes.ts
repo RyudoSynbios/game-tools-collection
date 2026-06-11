@@ -22,6 +22,8 @@ import type {
   DataTypeInt,
   DataTypeUInt,
   IntOperation,
+  ItemBitflag,
+  ItemBitflags,
   ItemInt,
   StringEncoding,
 } from "$lib/types";
@@ -449,6 +451,32 @@ export function setBitflag(
   );
 
   setInt(offset, "uint8", binary, {}, dataViewAltKey);
+}
+
+export function checkNextHiddenFlags(
+  flag: ItemBitflag,
+  bitflags: ItemBitflags,
+  count = 1,
+): void {
+  if (flag.hidden) {
+    return;
+  }
+
+  const checked = getInt(flag.offset, "bit", { bit: flag.bit });
+
+  const index = bitflags.flags.findIndex(
+    (item) => item.offset === flag.offset && item.bit === flag.bit,
+  );
+
+  for (let i = 1; i < count + 1; i += 1) {
+    const flag = bitflags.flags[index + i];
+
+    if (!flag || !flag.hidden) {
+      break;
+    }
+
+    setInt(flag.offset, "bit", checked, { bit: flag.bit });
+  }
 }
 
 interface IntOptions {

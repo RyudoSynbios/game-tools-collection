@@ -1679,7 +1679,7 @@ const template: GameJson = {
                               ],
                             },
                             {
-                              id: "hiddenEvents",
+                              id: "hiddenFlags",
                               name: "Weapons",
                               type: "bitflags",
                               flags: [

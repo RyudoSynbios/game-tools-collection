@@ -673,7 +673,7 @@ const template: GameJson = {
                       flex: true,
                       items: [
                         {
-                          id: "hiddenEvents",
+                          id: "hiddenFlags",
                           name: "Events",
                           type: "bitflags",
                           flags: [
@@ -749,7 +749,7 @@ const template: GameJson = {
                       flex: true,
                       items: [
                         {
-                          id: "hiddenEvents",
+                          id: "hiddenFlags",
                           name: "Events",
                           type: "bitflags",
                           flags: [

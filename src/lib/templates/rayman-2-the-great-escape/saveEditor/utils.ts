@@ -1,4 +1,10 @@
-import { copyInt, getInt, setInt, setString } from "$lib/utils/bytes";
+import {
+  checkNextHiddenFlags,
+  copyInt,
+  getInt,
+  setInt,
+  setString,
+} from "$lib/utils/bytes";
 import { formatChecksum } from "$lib/utils/checksum";
 import { getHeaderShift } from "$lib/utils/common/nintendo64";
 import {
@@ -128,23 +134,8 @@ export function afterSetInt(item: Item, flag: ItemBitflag): void {
 
     const [shift] = item.id.splitInt();
 
-    // Super Yellow Lum check
-
-    const checked = getInt(flag.offset, "bit", { bit: flag.bit });
-
-    const index = itemBitflags.flags.findIndex(
-      (item) => item.offset === flag.offset && item.bit === flag.bit,
-    );
-
-    const hiddenFlag = itemBitflags.flags[index + 1];
-
-    if (hiddenFlag.hidden) {
-      for (let i = 1; i < 5; i += 1) {
-        const flag = itemBitflags.flags[index + i];
-
-        setInt(flag.offset, "bit", checked, { bit: flag.bit });
-      }
-    }
+    // Super Yellow Lum
+    checkNextHiddenFlags(flag, itemBitflags, 4);
 
     // Count obtained Yellow Lums
 

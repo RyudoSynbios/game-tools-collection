@@ -471,7 +471,7 @@ const template: GameJson = {
                     name: game.name,
                     items: [
                       {
-                        id: "hiddenEvents",
+                        id: "hiddenFlags",
                         type: "bitflags",
                         flags: game.songs.reduce(
                           (songs: ItemBitflag[], song) => {
