@@ -269,6 +269,10 @@ export function bitToOffset(bit: number): number {
   return bit >> 0x3;
 }
 
+export function byteswapOffset(offset: number): number {
+  return (((offset >> 0x2) + 0x1) << 0x2) - 0x1 - (offset % 4);
+}
+
 export function extractBit(number: number, bit: number): boolean {
   return (number & (0x1 << bit)) !== 0x0;
 }

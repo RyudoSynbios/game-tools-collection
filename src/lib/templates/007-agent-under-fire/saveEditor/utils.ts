@@ -1,7 +1,7 @@
 import { get } from "svelte/store";
 
 import { dataView, gamePlatform } from "$lib/stores";
-import { getInt } from "$lib/utils/bytes";
+import { byteswapOffset, getInt } from "$lib/utils/bytes";
 import { formatChecksum } from "$lib/utils/checksum";
 import {
   customGetRegions,
@@ -70,7 +70,7 @@ export function overrideParseItem(item: Item): Item {
     if ("dataType" in item && item.dataType === "bit") {
       const itemInt = item as ItemInt;
 
-      itemInt.offset += 0x3;
+      itemInt.offset = byteswapOffset(itemInt.offset);
 
       return itemInt;
     } else if ("dataType" in item && item.dataType === "uint32") {
@@ -84,7 +84,7 @@ export function overrideParseItem(item: Item): Item {
 
       itemBitflags.flags = itemBitflags.flags.map((flag) => ({
         ...flag,
-        offset: flag.offset + 0x3,
+        offset: byteswapOffset(flag.offset),
       }));
 
       return itemBitflags;
