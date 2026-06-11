@@ -386,6 +386,7 @@ export function parseContainer(
       flex: item.flex,
       noMargin: item.noMargin,
       disabled,
+      parent: parsedContainer,
       items: [],
     };
 

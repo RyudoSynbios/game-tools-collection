@@ -194,11 +194,11 @@ export interface ItemBitflags {
     parent: number;
     shift: number;
   };
-  hint?: string;
   fixedWidth?: boolean;
   maxWidth?: boolean;
   noMargin?: boolean;
   reversed?: boolean;
+  hint?: string;
   disabled?: boolean;
   hidden?: boolean;
   flags: ItemBitflag[];
@@ -331,9 +331,9 @@ export interface ItemInt {
     action: string;
   };
   uncontrolled?: boolean;
-  hint?: string;
   prefix?: string;
   suffix?: string;
+  hint?: string;
   disabled?: boolean;
   hidden?: boolean;
   test?: boolean;

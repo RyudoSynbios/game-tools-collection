@@ -106,18 +106,18 @@ export function overrideGetInt(item: Item): [boolean, number | undefined] {
   } else if ("id" in item && item.id === "hitPercentage") {
     const itemInt = item as ItemInt;
 
-    let int = 0;
+    let percent = 0;
 
-    const successfulHits = getInt(itemInt.offset, "uint32", {
+    const hitsLanded = getInt(itemInt.offset, "uint32", {
       bigEndian: true,
     });
-    const hits = getInt(itemInt.offset + 0x4, "uint32", { bigEndian: true });
+    const total = getInt(itemInt.offset + 0x4, "uint32", { bigEndian: true });
 
-    if (hits > 0x0 && successfulHits <= hits) {
-      int = round((successfulHits / hits) * 100, 2);
+    if (total > 0x0 && hitsLanded <= total) {
+      percent = round((hitsLanded / total) * 100, 2);
     }
 
-    return [true, int];
+    return [true, percent];
   } else if ("id" in item && item.id === "vsPlayMatchTotal") {
     const itemInt = item as ItemInt;
 
@@ -266,7 +266,7 @@ export function afterSetInt(item: Item): void {
     const itemInt = item as ItemInt;
 
     const int =
-      getInt(itemInt.offset, "uint16", { bigEndian: true }) > 0 ? 0x1 : 0x0;
+      getInt(itemInt.offset, "uint16", { bigEndian: true }) > 0 ? 1 : 0;
 
     setInt(itemInt.offset - 0x26, "bit", int, { bit: 4 });
   } else if ("id" in item && item.id?.match(/training-/)) {

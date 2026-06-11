@@ -151,11 +151,11 @@
       }
     }
 
-    &.gtc-input-prefix span {
+    &.gtc-input-prefix .gtc-input-content span {
       @apply pl-1.5;
     }
 
-    &.gtc-input-suffix span {
+    &.gtc-input-suffix .gtc-input-content span {
       @apply pr-1.5;
     }
 

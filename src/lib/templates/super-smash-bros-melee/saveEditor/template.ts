@@ -2,6 +2,7 @@ import { bitToOffset } from "$lib/utils/bytes";
 
 import type { GameJson, ItemInt, ItemTab } from "$lib/types";
 
+import { chronoFragment } from "./utils/fragment";
 import {
   characters,
   charactersSorted,
@@ -132,7 +133,7 @@ const template: GameJson = {
                   ],
                 },
                 {
-                  name: "Unlocked Options",
+                  name: "Unlocked Modes",
                   type: "bitflags",
                   flags: [
                     { offset: 0x25, bit: 0, label: "???", hidden: true },
@@ -143,9 +144,9 @@ const template: GameJson = {
                     { offset: 0x25, bit: 5, label: "???", hidden: true },
                     { offset: 0x25, bit: 6, label: "???", hidden: true },
                     { offset: 0x25, bit: 7, label: "???", hidden: true },
+                    { offset: 0x24, bit: 2, label: "All-Star", separator: true },
                     { offset: 0x24, bit: 0, label: "Score Display" },
                     { offset: 0x24, bit: 1, label: "Random Stage" },
-                    { offset: 0x24, bit: 2, label: "All-Star" },
                     { offset: 0x24, bit: 3, label: "Sound Test" },
                     { offset: 0x24, bit: 4, label: "???", hidden: true },
                     { offset: 0x24, bit: 5, label: "???", hidden: true },
@@ -224,7 +225,7 @@ const template: GameJson = {
                                   resource: "difficulties",
                                 },
                                 {
-                                  name: "Highscore",
+                                  name: "High Score",
                                   offset: 0x76c,
                                   type: "variable",
                                   dataType: "uint32",
@@ -304,7 +305,7 @@ const template: GameJson = {
                                   resource: "difficulties",
                                 },
                                 {
-                                  name: "Highscore",
+                                  name: "High Score",
                                   offset: 0x770,
                                   type: "variable",
                                   dataType: "uint32",
@@ -384,7 +385,7 @@ const template: GameJson = {
                                   resource: "difficulties",
                                 },
                                 {
-                                  name: "Highscore",
+                                  name: "High Score",
                                   offset: 0x774,
                                   type: "variable",
                                   dataType: "uint32",
@@ -461,65 +462,11 @@ const template: GameJson = {
                                   bit: match.index % 8,
                                   resource: "progressions",
                                 },
-                                (match.type === "Time" && {
-                                  name: "Time",
-                                  type: "group",
-                                  mode: "chrono",
-                                  items: [
-                                    {
-                                      offset: 0x228 + match.index * 0x4,
-                                      type: "variable",
-                                      dataType: "uint32",
-                                      bigEndian: true,
-                                      operations: [
-                                        { "/": 60 },
-                                        {
-                                          convert: {
-                                            from: "seconds",
-                                            to: "minutes",
-                                          },
-                                        },
-                                      ],
-                                      max: 59,
-                                    },
-                                    {
-                                      offset: 0x228 + match.index * 0x4,
-                                      type: "variable",
-                                      dataType: "uint32",
-                                      bigEndian: true,
-                                      operations: [
-                                        { "/": 60 },
-                                        {
-                                          convert: {
-                                            from: "seconds",
-                                            to: "seconds",
-                                          },
-                                        },
-                                      ],
-                                      leadingZeros: 1,
-                                      max: 59,
-                                    },
-                                    {
-                                      offset: 0x228 + match.index * 0x4,
-                                      type: "variable",
-                                      dataType: "uint32",
-                                      bigEndian: true,
-                                      operations: [
-                                        { "/": 60 },
-                                        {
-                                          convert: {
-                                            from: "seconds",
-                                            to: "milliseconds",
-                                          },
-                                        },
-                                        { round: 0 },
-                                      ],
-                                      leadingZeros: 2,
-                                      max: 999,
-                                      step: 100,
-                                    },
-                                  ],
-                                }) || {
+                                (match.type === "Time" &&
+                                  chronoFragment(
+                                    "Time",
+                                    0x228 + match.index * 0x4,
+                                  )) || {
                                   name: match.type,
                                   offset: 0x228 + match.index * 0x4,
                                   type: "variable",
@@ -564,76 +511,14 @@ const template: GameJson = {
                                 },
                                 {
                                   id: "targetTest-count-%index%",
-                                  name: "Highscore",
+                                  name: "High Score",
                                   offset: 0x778,
                                   type: "variable",
                                   dataType: "uint32",
                                   bigEndian: true,
                                   max: 9,
                                 },
-                                {
-                                  id: "targetTest-group-%index%",
-                                  name: "Highscore",
-                                  type: "group",
-                                  mode: "chrono",
-                                  items: [
-                                    {
-                                      id: "targetTest-time-%index%",
-                                      offset: 0x778,
-                                      type: "variable",
-                                      dataType: "uint32",
-                                      bigEndian: true,
-                                      operations: [
-                                        { "/": 60 },
-                                        {
-                                          convert: {
-                                            from: "seconds",
-                                            to: "minutes",
-                                          },
-                                        },
-                                      ],
-                                      max: 59,
-                                    },
-                                    {
-                                      id: "targetTest-time-%index%",
-                                      offset: 0x778,
-                                      type: "variable",
-                                      dataType: "uint32",
-                                      bigEndian: true,
-                                      operations: [
-                                        { "/": 60 },
-                                        {
-                                          convert: {
-                                            from: "seconds",
-                                            to: "seconds",
-                                          },
-                                        },
-                                      ],
-                                      leadingZeros: 1,
-                                      max: 59,
-                                    },
-                                    {
-                                      id: "targetTest-time-%index%",
-                                      offset: 0x778,
-                                      type: "variable",
-                                      dataType: "uint32",
-                                      bigEndian: true,
-                                      operations: [
-                                        { "/": 60 },
-                                        {
-                                          convert: {
-                                            from: "seconds",
-                                            to: "milliseconds",
-                                          },
-                                        },
-                                        { round: 0 },
-                                      ],
-                                      leadingZeros: 2,
-                                      max: 999,
-                                      step: 100,
-                                    },
-                                  ],
-                                },
+                                chronoFragment("High Score", 0x778, "targetTest-group-%index%", "targetTest-time-%index%"),
                                 {
                                   name: "Unlockables Trophies Related",
                                   offset: 0x9c,
@@ -797,6 +682,8 @@ const template: GameJson = {
                                 dataType: "uint32",
                                 bigEndian: true,
                                 operations: [{ "/": 100 }],
+                                max: 9999.9,
+                                step: 0.1,
                               };
 
                               return characters;
@@ -832,73 +719,14 @@ const template: GameJson = {
                                     },
                                     {
                                       id: "10ManMelee-count-%index%",
-                                      name: "Highscore",
+                                      name: "High Score",
                                       offset: 0x77c,
                                       type: "variable",
                                       dataType: "uint32",
                                       bigEndian: true,
                                       max: 9,
                                     },
-                                    {
-                                      id: "10ManMelee-group-%index%",
-                                      name: "Highscore",
-                                      type: "group",
-                                      mode: "chrono",
-                                      items: [
-                                        {
-                                          offset: 0x77c,
-                                          type: "variable",
-                                          dataType: "uint32",
-                                          bigEndian: true,
-                                          operations: [
-                                            { "/": 60 },
-                                            {
-                                              convert: {
-                                                from: "seconds",
-                                                to: "minutes",
-                                              },
-                                            },
-                                          ],
-                                          max: 59,
-                                        },
-                                        {
-                                          offset: 0x77c,
-                                          type: "variable",
-                                          dataType: "uint32",
-                                          bigEndian: true,
-                                          operations: [
-                                            { "/": 60 },
-                                            {
-                                              convert: {
-                                                from: "seconds",
-                                                to: "seconds",
-                                              },
-                                            },
-                                          ],
-                                          leadingZeros: 1,
-                                          max: 59,
-                                        },
-                                        {
-                                          offset: 0x77c,
-                                          type: "variable",
-                                          dataType: "uint32",
-                                          bigEndian: true,
-                                          operations: [
-                                            { "/": 60 },
-                                            {
-                                              convert: {
-                                                from: "seconds",
-                                                to: "milliseconds",
-                                              },
-                                            },
-                                            { round: 0 },
-                                          ],
-                                          leadingZeros: 2,
-                                          max: 999,
-                                          step: 100,
-                                        },
-                                      ],
-                                    },
+                                    chronoFragment("High Score", 0x77c, "10ManMelee-group-%index%"),
                                   ],
                                 },
                                 {
@@ -917,73 +745,14 @@ const template: GameJson = {
                                     },
                                     {
                                       id: "100ManMelee-count-%index%",
-                                      name: "Highscore",
+                                      name: "High Score",
                                       offset: 0x780,
                                       type: "variable",
                                       dataType: "uint32",
                                       bigEndian: true,
                                       max: 99,
                                     },
-                                    {
-                                      id: "100ManMelee-group-%index%",
-                                      name: "Highscore",
-                                      type: "group",
-                                      mode: "chrono",
-                                      items: [
-                                        {
-                                          offset: 0x780,
-                                          type: "variable",
-                                          dataType: "uint32",
-                                          bigEndian: true,
-                                          operations: [
-                                            { "/": 60 },
-                                            {
-                                              convert: {
-                                                from: "seconds",
-                                                to: "minutes",
-                                              },
-                                            },
-                                          ],
-                                          max: 59,
-                                        },
-                                        {
-                                          offset: 0x780,
-                                          type: "variable",
-                                          dataType: "uint32",
-                                          bigEndian: true,
-                                          operations: [
-                                            { "/": 60 },
-                                            {
-                                              convert: {
-                                                from: "seconds",
-                                                to: "seconds",
-                                              },
-                                            },
-                                          ],
-                                          leadingZeros: 1,
-                                          max: 59,
-                                        },
-                                        {
-                                          offset: 0x780,
-                                          type: "variable",
-                                          dataType: "uint32",
-                                          bigEndian: true,
-                                          operations: [
-                                            { "/": 60 },
-                                            {
-                                              convert: {
-                                                from: "seconds",
-                                                to: "milliseconds",
-                                              },
-                                            },
-                                            { round: 0 },
-                                          ],
-                                          leadingZeros: 2,
-                                          max: 999,
-                                          step: 100,
-                                        },
-                                      ],
-                                    },
+                                    chronoFragment("High Score", 0x780, "100ManMelee-group-%index%"),
                                   ],
                                 },
                                 {
@@ -1080,16 +849,11 @@ const template: GameJson = {
                   name: "Item Switch",
                   items: [
                     {
-                      type: "section",
-                      items: [
-                        {
-                          name: "Frequency",
-                          offset: 0x468,
-                          type: "variable",
-                          dataType: "uint8",
-                          resource: "frequencies",
-                        },
-                      ],
+                      name: "Frequency",
+                      offset: 0x468,
+                      type: "variable",
+                      dataType: "uint8",
+                      resource: "frequencies",
                     },
                     {
                       type: "section",
@@ -1257,100 +1021,6 @@ const template: GameJson = {
           ],
         },
         {
-          name: "Options",
-          items: [
-            {
-              type: "section",
-              flex: true,
-              items: [
-                {
-                  name: "P1 Rumble",
-                  offset: 0x478,
-                  type: "variable",
-                  dataType: "uint8",
-                  resource: "optionBoolean",
-                },
-                {
-                  name: "P2 Rumble",
-                  offset: 0x479,
-                  type: "variable",
-                  dataType: "uint8",
-                  resource: "optionBoolean",
-                },
-                {
-                  name: "P3 Rumble",
-                  offset: 0x47a,
-                  type: "variable",
-                  dataType: "uint8",
-                  resource: "optionBoolean",
-                },
-                {
-                  name: "P4 Rumble",
-                  offset: 0x47b,
-                  type: "variable",
-                  dataType: "uint8",
-                  resource: "optionBoolean",
-                },
-              ],
-            },
-            {
-              type: "section",
-              flex: true,
-              items: [
-                {
-                  name: "Sounds <> Music",
-                  offset: 0x47c,
-                  type: "variable",
-                  dataType: "int8",
-                  hidden: true,
-                },
-                {
-                  id: "sounds",
-                  name: "Sounds",
-                  offset: 0x47c,
-                  type: "variable",
-                  dataType: "uint8",
-                  max: 200,
-                },
-                {
-                  id: "music",
-                  name: "Music",
-                  offset: 0x47c,
-                  type: "variable",
-                  dataType: "uint8",
-                  max: 200,
-                },
-              ],
-            },
-            {
-              type: "section",
-              flex: true,
-              items: [
-                {
-                  name: "Screen Deflicker",
-                  offset: 0x47d,
-                  type: "variable",
-                  dataType: "uint8",
-                  resource: "optionBoolean",
-                },
-              ],
-            },
-            {
-              type: "section",
-              flex: true,
-              items: [
-                {
-                  name: "Language",
-                  offset: 0x47e,
-                  type: "variable",
-                  dataType: "uint8",
-                  resource: "languages",
-                },
-              ],
-            },
-          ],
-        },
-        {
           name: "Data",
           items: [
             {
@@ -1402,14 +1072,14 @@ const template: GameJson = {
                                   flex: true,
                                   items: [
                                     {
-                                      name: "Successful Hits",
+                                      name: "Hits Landed",
                                       offset: 0x71c,
                                       type: "variable",
                                       dataType: "uint32",
                                       bigEndian: true,
                                     },
                                     {
-                                      name: "Hits",
+                                      name: "Attacks Attempted",
                                       offset: 0x720,
                                       type: "variable",
                                       dataType: "uint32",
@@ -1569,70 +1239,70 @@ const template: GameJson = {
                                       bigEndian: true,
                                       hidden: true,
                                     },
+                                  ],
+                                },
+                                {
+                                  type: "section",
+                                  flex: true,
+                                  items: [
                                     {
-                                      type: "section",
-                                      flex: true,
-                                      items: [
-                                        {
-                                          name: "Ground Distance",
-                                          offset: 0x740,
-                                          type: "variable",
-                                          dataType: "uint32",
-                                          bigEndian: true,
-                                          operations: [{ "/": 100000 }],
-                                        },
-                                        {
-                                          name: "Jump Distance",
-                                          offset: 0x744,
-                                          type: "variable",
-                                          dataType: "uint32",
-                                          bigEndian: true,
-                                          operations: [{ "/": 100000 }],
-                                        },
-                                        {
-                                          name: "Drop Distance",
-                                          offset: 0x748,
-                                          type: "variable",
-                                          dataType: "uint32",
-                                          bigEndian: true,
-                                          operations: [{ "/": 100000 }],
-                                        },
-                                        {
-                                          name: "Flight Distance",
-                                          offset: 0x74c,
-                                          type: "variable",
-                                          dataType: "uint32",
-                                          bigEndian: true,
-                                          operations: [{ "/": 100000 }],
-                                        },
-                                      ],
+                                      name: "Ground Distance",
+                                      offset: 0x740,
+                                      type: "variable",
+                                      dataType: "uint32",
+                                      bigEndian: true,
+                                      operations: [{ "/": 100000 }],
                                     },
                                     {
-                                      type: "section",
-                                      flex: true,
-                                      items: [
-                                        {
-                                          name: "Coin Points",
-                                          offset: 0x750,
-                                          type: "variable",
-                                          dataType: "uint32",
-                                          bigEndian: true,
-                                        },
-                                        {
-                                          name: "Swiped Coins",
-                                          offset: 0x754,
-                                          type: "variable",
-                                          dataType: "uint32",
-                                          bigEndian: true,
-                                        },
-                                        {
-                                          name: "Lost Coin",
-                                          offset: 0x758,
-                                          type: "variable",
-                                          dataType: "uint32",
-                                          bigEndian: true,
-                                        },
-                                      ],
+                                      name: "Jump Distance",
+                                      offset: 0x744,
+                                      type: "variable",
+                                      dataType: "uint32",
+                                      bigEndian: true,
+                                      operations: [{ "/": 100000 }],
+                                    },
+                                    {
+                                      name: "Drop Distance",
+                                      offset: 0x748,
+                                      type: "variable",
+                                      dataType: "uint32",
+                                      bigEndian: true,
+                                      operations: [{ "/": 100000 }],
+                                    },
+                                    {
+                                      name: "Flight Distance",
+                                      offset: 0x74c,
+                                      type: "variable",
+                                      dataType: "uint32",
+                                      bigEndian: true,
+                                      operations: [{ "/": 100000 }],
+                                    },
+                                  ],
+                                },
+                                {
+                                  type: "section",
+                                  flex: true,
+                                  items: [
+                                    {
+                                      name: "Coin Points",
+                                      offset: 0x750,
+                                      type: "variable",
+                                      dataType: "uint32",
+                                      bigEndian: true,
+                                    },
+                                    {
+                                      name: "Swiped Coins",
+                                      offset: 0x754,
+                                      type: "variable",
+                                      dataType: "uint32",
+                                      bigEndian: true,
+                                    },
+                                    {
+                                      name: "Lost Coin",
+                                      offset: 0x758,
+                                      type: "variable",
+                                      dataType: "uint32",
+                                      bigEndian: true,
                                     },
                                   ],
                                 },
@@ -2552,6 +2222,100 @@ const template: GameJson = {
                       ),
                     },
                   ],
+                },
+              ],
+            },
+          ],
+        },
+        {
+          name: "Options",
+          items: [
+            {
+              type: "section",
+              flex: true,
+              items: [
+                {
+                  name: "P1 Rumble",
+                  offset: 0x478,
+                  type: "variable",
+                  dataType: "uint8",
+                  resource: "optionBoolean",
+                },
+                {
+                  name: "P2 Rumble",
+                  offset: 0x479,
+                  type: "variable",
+                  dataType: "uint8",
+                  resource: "optionBoolean",
+                },
+                {
+                  name: "P3 Rumble",
+                  offset: 0x47a,
+                  type: "variable",
+                  dataType: "uint8",
+                  resource: "optionBoolean",
+                },
+                {
+                  name: "P4 Rumble",
+                  offset: 0x47b,
+                  type: "variable",
+                  dataType: "uint8",
+                  resource: "optionBoolean",
+                },
+              ],
+            },
+            {
+              type: "section",
+              flex: true,
+              items: [
+                {
+                  name: "Sounds <> Music",
+                  offset: 0x47c,
+                  type: "variable",
+                  dataType: "int8",
+                  hidden: true,
+                },
+                {
+                  id: "sounds",
+                  name: "Sounds",
+                  offset: 0x47c,
+                  type: "variable",
+                  dataType: "uint8",
+                  max: 200,
+                },
+                {
+                  id: "music",
+                  name: "Music",
+                  offset: 0x47c,
+                  type: "variable",
+                  dataType: "uint8",
+                  max: 200,
+                },
+              ],
+            },
+            {
+              type: "section",
+              flex: true,
+              items: [
+                {
+                  name: "Screen Deflicker",
+                  offset: 0x47d,
+                  type: "variable",
+                  dataType: "uint8",
+                  resource: "optionBoolean",
+                },
+              ],
+            },
+            {
+              type: "section",
+              flex: true,
+              items: [
+                {
+                  name: "Language",
+                  offset: 0x47e,
+                  type: "variable",
+                  dataType: "uint8",
+                  resource: "languages",
                 },
               ],
             },

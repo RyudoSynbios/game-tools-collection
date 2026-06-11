@@ -1397,7 +1397,7 @@ const template: GameJson = {
     },
     laWeapons,
     legs,
-    mails: 'getMailNames()',
+    mails: "getMailNames()",
     modes: {
       0x0: "-",
       0x1: "Parody Mode",

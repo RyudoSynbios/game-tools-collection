@@ -110,7 +110,9 @@ export const eventMatches = [
   },
   {
     name: "Lv. 51",
-    matches: [{ index: 0x32, type: "Time", name: "Lv. 51: The Showdown" }],
+    matches: [
+      { index: 0x32, type: "Time", name: "Lv. 51: The Showdown" },
+    ],
   },
 ];
 

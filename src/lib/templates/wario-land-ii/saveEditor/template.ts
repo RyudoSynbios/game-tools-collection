@@ -356,12 +356,7 @@ const template: GameJson = {
                         { offset: 0x428, bit: 6, label: "Story 3" },
                         { offset: 0x428, bit: 7, label: "Story 4" },
                         { offset: 0x429, bit: 0, label: "Final Story" },
-                        {
-                          offset: 0x425,
-                          bit: 0,
-                          label: "Ending",
-                          hidden: true,
-                        },
+                        { offset: 0x425, bit: 0, label: "Ending", hidden: true },
                       ],
                     },
                     {
@@ -413,12 +408,7 @@ const template: GameJson = {
                         { offset: 0x429, bit: 3, label: "Story 3" },
                         { offset: 0x429, bit: 4, label: "Story 4" },
                         { offset: 0x429, bit: 5, label: "Final Story" },
-                        {
-                          offset: 0x425,
-                          bit: 1,
-                          label: "Ending",
-                          hidden: true,
-                        },
+                        { offset: 0x425, bit: 1, label: "Ending", hidden: true },
                       ],
                     },
                     {
@@ -520,12 +510,7 @@ const template: GameJson = {
                         { offset: 0x42a, bit: 5, label: "Story 3" },
                         { offset: 0x42a, bit: 6, label: "Story 4" },
                         { offset: 0x42a, bit: 7, label: "Final Story" },
-                        {
-                          offset: 0x425,
-                          bit: 2,
-                          label: "Ending",
-                          hidden: true,
-                        },
+                        { offset: 0x425, bit: 2, label: "Ending", hidden: true },
                       ],
                     },
                     {
@@ -577,12 +562,7 @@ const template: GameJson = {
                         { offset: 0x42b, bit: 2, label: "Story 3" },
                         { offset: 0x42b, bit: 3, label: "Story 4" },
                         { offset: 0x42b, bit: 4, label: "Final Story" },
-                        {
-                          offset: 0x425,
-                          bit: 3,
-                          label: "Ending",
-                          hidden: true,
-                        },
+                        { offset: 0x425, bit: 3, label: "Ending", hidden: true },
                       ],
                     },
                     {
@@ -634,12 +614,7 @@ const template: GameJson = {
                         { offset: 0x42b, bit: 7, label: "Story 3" },
                         { offset: 0x42c, bit: 0, label: "Story 4" },
                         { offset: 0x42c, bit: 1, label: "Final Story" },
-                        {
-                          offset: 0x425,
-                          bit: 4,
-                          label: "Ending",
-                          hidden: true,
-                        },
+                        { offset: 0x425, bit: 4, label: "Ending", hidden: true },
                       ],
                     },
                     {
