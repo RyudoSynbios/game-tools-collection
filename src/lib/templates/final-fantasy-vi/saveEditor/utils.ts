@@ -4,7 +4,14 @@ import { gamePlatform, gameRegion, gameTemplate } from "$lib/stores";
 import { bitToOffset, getInt, getString, setInt } from "$lib/utils/bytes";
 import { formatChecksum } from "$lib/utils/checksum";
 import { getHeaderShift } from "$lib/utils/common/gameBoyAdvance";
-import { clone, getObjKey, getRegionArray, isInRange } from "$lib/utils/format";
+import {
+  clone,
+  getObjKey,
+  getPageRange,
+  getRegionArray,
+  isInRange,
+  paginate,
+} from "$lib/utils/format";
 import {
   getItem,
   getShift,
@@ -326,22 +333,17 @@ export function overrideParseItem(item: Item): Item | ItemTab {
 
     const itemTabs = { type: "tabs", vertical: true, items: [] } as ItemTabs;
 
-    const count = Math.floor((enemies.length - 1) / 20);
-
-    for (let i = 0; i <= count; i += 1) {
-      const start = i * 20;
-      const end = Math.min(start + 20, enemies.length);
-
+    paginate(enemies, 20, true).forEach((page, index) => {
       itemTabs.items.push({
-        name: `${(start + 1).leading0(2)}-${end.leading0(2)}`,
+        name: getPageRange(page, index),
         flex: true,
-        items: enemies.slice(start, end).map((enemy) => ({
+        items: page.map((enemy) => ({
           ...itemInt,
           name: `${enemy.bestiaryIndex?.leading0(2)} ${enemy.name}`,
           offset: itemInt.offset + enemy.index * 0x2,
         })),
       });
-    }
+    });
 
     itemTab.items = [itemTabs];
     itemTab.hidden = false;

@@ -1,3 +1,5 @@
+import { getPageRange, paginate } from "$lib/utils/format";
+
 import type { GameJson, ItemTab } from "$lib/types";
 
 import {
@@ -772,26 +774,19 @@ const template: GameJson = {
             {
               type: "tabs",
               vertical: true,
-              items: [...Array(Math.ceil(bestiary.length / 20)).keys()].map(
-                (page) => {
-                  const start = page * 20;
-                  const end = Math.min(start + 20, bestiary.length);
-
-                  return {
-                    name: `${(start + 1).leading0(2)}-${end.leading0(2)}`,
-                    flex: true,
-                    items: bestiary.slice(start, end).map((enemy) => ({
-                      id: `monsterDefeats-${enemy.index}`,
-                      name: enemy.name,
-                      offset: 0x0,
-                      type: "variable",
-                      dataType: "uint32",
-                      max: 9999,
-                      test: true,
-                    })),
-                  };
-                },
-              ),
+              items: paginate(bestiary, 20, true).map((page, index) => ({
+                name: getPageRange(page, index),
+                flex: true,
+                items: page.map((enemy) => ({
+                  id: `monsterDefeats-${enemy.index}`,
+                  name: enemy.name,
+                  offset: 0x0,
+                  type: "variable",
+                  dataType: "uint32",
+                  max: 9999,
+                  test: true,
+                })),
+              })),
             },
           ],
         },

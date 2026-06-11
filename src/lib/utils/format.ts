@@ -344,6 +344,30 @@ export function objToArrayKeyValue<T>(
   return array;
 }
 
+export function paginate<T>(array: T[], value: number, isCount = false): T[][] {
+  let pages = value;
+  let count = Math.ceil(array.length / pages);
+
+  if (isCount) {
+    pages = Math.ceil(array.length / value);
+    count = value;
+  }
+
+  return [...Array(pages).keys()].map((page) => {
+    const start = page * count;
+    const end = Math.min(start + count, array.length);
+
+    return array.slice(start, end);
+  });
+}
+
+export function getPageRange<T>(page: T[], index: number): string {
+  const start = index * 20 + 1;
+  const end = index * 20 + page.length;
+
+  return `${start.leading0(2)}-${end.leading0(2)}`;
+}
+
 export function round(value: number, decimals = 2): number {
   return (
     Math.round((value + Number.EPSILON) * Math.pow(10, decimals)) /

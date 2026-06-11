@@ -1,5 +1,5 @@
 import { bitToOffset } from "$lib/utils/bytes";
-import { isInRange } from "$lib/utils/format";
+import { getPageRange, isInRange, paginate } from "$lib/utils/format";
 
 import type { GameJson } from "$lib/types";
 
@@ -764,26 +764,19 @@ const template: GameJson = {
                         {
                           type: "tabs",
                           vertical: true,
-                          items: [
-                            ...Array(Math.ceil(monsters.length / 20)).keys(),
-                          ].map((page) => {
-                            const start = page * 20;
-                            const end = Math.min(start + 20, monsters.length);
-
-                            return {
-                              name: `${(start + 1).leading0(2)}-${end.leading0(2)}`,
+                          items: paginate(monsters, 20, true).map(
+                            (page, index) => ({
+                              name: getPageRange(page, index),
                               flex: true,
-                              items: monsters
-                                .slice(start, end)
-                                .map((monster) => ({
-                                  name: monster.name,
-                                  offset: 0x68b7 + monster.index,
-                                  type: "variable",
-                                  dataType: "uint8",
-                                  max: 99,
-                                })),
-                            };
-                          }),
+                              items: page.map((monster) => ({
+                                name: monster.name,
+                                offset: 0x68b7 + monster.index,
+                                type: "variable",
+                                dataType: "uint8",
+                                max: 99,
+                              })),
+                            }),
+                          ),
                         },
                       ],
                     },
@@ -1169,28 +1162,21 @@ const template: GameJson = {
                         {
                           type: "tabs",
                           vertical: true,
-                          items: [
-                            ...Array(Math.ceil(mailList.length / 20)).keys(),
-                          ].map((page) => {
-                            const start = page * 20;
-                            const end = Math.min(start + 20, mailList.length);
-
-                            return {
-                              name: `${(start + 1).leading0(2)}-${end.leading0(2)}`,
+                          items: paginate(mailList, 20, true).map(
+                            (page, pageIndex) => ({
+                              name: getPageRange(page, pageIndex),
                               flex: true,
-                              items: mailList
-                                .slice(start, end)
-                                .map((_, index) => ({
-                                  name: `Mail ${start + index + 0x1}`,
-                                  offset: 0x2464 + start + index * 0x2,
-                                  type: "variable",
-                                  dataType: "uint16",
-                                  resource: "mails",
-                                  size: "lg",
-                                  autocomplete: true,
-                                })),
-                            };
-                          }),
+                              items: page.map((_, index) => ({
+                                name: `Mail ${pageIndex * 20 + index + 0x1}`,
+                                offset: 0x2464 + pageIndex * 20 + index * 0x2,
+                                type: "variable",
+                                dataType: "uint16",
+                                resource: "mails",
+                                size: "lg",
+                                autocomplete: true,
+                              })),
+                            }),
+                          ),
                         },
                       ],
                     },

@@ -1,3 +1,5 @@
+import { paginate } from "$lib/utils/format";
+
 import type { GameJson } from "$lib/types";
 
 import { cardCollections, cardList, cards, cardTypes } from "./utils/resource";
@@ -536,25 +538,16 @@ const template: GameJson = {
                         return {
                           name: collection.name,
                           flex: true,
-                          items: [
-                            ...Array(Math.ceil(cards.length / 10)).keys(),
-                          ].map((page) => {
-                            const start = page * 10;
-                            const end = Math.min(start + 10, cards.length);
-
-                            return {
-                              id: "collection",
-                              type: "bitflags",
-                              reversed: true,
-                              flags: cards
-                                .slice(start, end)
-                                .map((card) => ({
-                                  offset: 0x4100 + card.index,
-                                  bit: 7,
-                                  label: `${card.prefix} ${card.name}`,
-                                })),
-                            };
-                          }),
+                          items: paginate(cards, 10, true).map((page) => ({
+                            id: "collection",
+                            type: "bitflags",
+                            reversed: true,
+                            flags: page.map((card) => ({
+                              offset: 0x4100 + card.index,
+                              bit: 7,
+                              label: `${card.prefix} ${card.name}`,
+                            })),
+                          })),
                         };
                       }),
                     },
