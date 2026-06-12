@@ -1,9 +1,9 @@
 import { getInt } from "$lib/utils/bytes";
 
-const EEP_SIZE = 0x800;
-const MPK_SIZE = 0x20000;
-const SRA_SIZE = 0x8000;
-const FLA_SIZE = 0x20000;
+export const EEP_SIZE = 0x800;
+export const MPK_SIZE = 0x20000;
+export const SRA_SIZE = 0x8000;
+export const FLA_SIZE = 0x20000;
 
 export type Format = "eep" | "fla" | "mpk" | "sra";
 

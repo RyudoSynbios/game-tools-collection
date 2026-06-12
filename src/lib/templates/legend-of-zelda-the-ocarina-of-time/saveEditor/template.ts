@@ -56,8 +56,8 @@ const template: GameJson = {
                   flex: true,
                   items: [
                     {
-                      id: "filename",
-                      name: "Filename",
+                      id: "name",
+                      name: "Name",
                       offset: 0x44,
                       length: 0x8,
                       type: "variable",
