@@ -804,7 +804,7 @@
   {
     "id": "legend-of-zelda-the-majora-s-mask",
     "name": "Legend of Zelda, The: Majora's Mask",
-    "platformIds": ["nintendo-64"],
+    "platformIds": ["nintendo-64", "gamecube"],
     "tools": {
       "saveEditor": {
         "createdAt": "2023-12-29",

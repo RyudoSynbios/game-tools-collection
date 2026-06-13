@@ -24,6 +24,26 @@ const template: GameJson = {
           ],
         },
       },
+      gamecube: {
+        europe: {
+          $and: [
+            { 0x0: [0x50, 0x5a, 0x4c, 0x50, 0x30, 0x31] }, // "PZLP01"
+            { 0x8: [0x5a, 0x45, 0x4c, 0x44, 0x41, 0x32] }, // "ZELDA2"
+          ],
+        },
+        usa: {
+          $and: [
+            { 0x0: [0x50, 0x5a, 0x4c, 0x45, 0x30, 0x31] }, // "PZLE01"
+            { 0x8: [0x5a, 0x45, 0x4c, 0x44, 0x41, 0x32] }, // "ZELDA2"
+          ],
+        },
+        japan: {
+          $and: [
+            { 0x0: [0x50, 0x5a, 0x4c, 0x4a, 0x30, 0x31] }, // "PZLJ01"
+            { 0x8: [0x5a, 0x45, 0x4c, 0x44, 0x41, 0x32] }, // "ZELDA2"
+          ],
+        },
+      },
     },
     text: "Drag 'n' drop here or click to add a save file.",
     error: "Not a valid save file.",
@@ -34,25 +54,14 @@ const template: GameJson = {
       length: 0x4000,
       type: "container",
       instanceType: "tabs",
-      instances: 3,
+      instances: 2,
       enumeration: "Slot %d",
       disableSubinstanceIf: {
-        $or: [
-          {
-            offset: 0x24,
-            type: "variable",
-            dataType: "uint8",
-            operator: "=",
-            value: 0x0,
-          },
-          {
-            offset: 0x24,
-            type: "variable",
-            dataType: "uint8",
-            operator: "=",
-            value: 0xff,
-          },
-        ],
+        offset: 0x24,
+        type: "variable",
+        dataType: "uint8",
+        operator: "!=",
+        value: 0x5a,
       },
       items: [
         {

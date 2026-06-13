@@ -1,10 +1,16 @@
 import { get } from "svelte/store";
 
-import { gameRegion } from "$lib/stores";
+import { dataViewAlt, gamePlatform, gameRegion } from "$lib/stores";
 import { getBoolean, getInt, setBoolean, setInt } from "$lib/utils/bytes";
 import { formatChecksum } from "$lib/utils/checksum";
+import {
+  extractN64SaveFromGCI,
+  injectN64SaveToGCI,
+} from "$lib/utils/common/gamecube/zelda";
 import { byteswapDataView, getHeaderShift } from "$lib/utils/common/nintendo64";
+import { FLA_SIZE } from "$lib/utils/common/nintendo64/srm";
 import { getShift } from "$lib/utils/parser";
+import { getPlatformRegions, getRegions } from "$lib/utils/validator";
 
 import type {
   Item,
@@ -14,11 +20,26 @@ import type {
   ItemInt,
   ItemString,
   ItemTab,
+  RegionValidator,
 } from "$lib/types";
 
 import { itemQuantites } from "./utils/resource";
 
 const SAVE_FORMAT = "fla";
+
+export function setGamePlatform(dataView: DataView): void {
+  const gamecubeRegions = getPlatformRegions("gamecube") as {
+    [key: string]: RegionValidator;
+  };
+
+  const isGamecube = getRegions(dataView, 0x0, gamecubeRegions).length > 0;
+
+  if (isGamecube) {
+    gamePlatform.set(1);
+  } else {
+    gamePlatform.set(0);
+  }
+}
 
 export function initHeaderShift(dataView: DataView): number {
   return getHeaderShift(dataView, SAVE_FORMAT);
@@ -28,48 +49,74 @@ export function beforeInitDataView(
   dataView: DataView,
   shift: number,
 ): DataView {
+  const $gamePlatform = get(gamePlatform);
+
+  if ($gamePlatform === 1) {
+    return extractN64SaveFromGCI(dataView, FLA_SIZE);
+  }
+
   return byteswapDataView(SAVE_FORMAT, dataView, shift);
+}
+
+export function overrideGetRegions(
+  dataView: DataView,
+  shift: number,
+): string[] {
+  const $dataViewAlt = get(dataViewAlt);
+  const $gamePlatform = get(gamePlatform);
+
+  if ($gamePlatform === 1) {
+    return getRegions($dataViewAlt.gci);
+  }
+
+  return getRegions(dataView, shift);
 }
 
 export function overrideParseItem(item: Item): Item | ItemTab {
   const $gameRegion = get(gameRegion);
 
-  if ("id" in item && item.id === "checksum" && $gameRegion === 2) {
-    const itemChecksum = item as ItemChecksum;
+  if (!hasOwlFile()) {
+    if ("id" in item && item.id === "slots") {
+      const itemContainer = item as ItemContainer;
 
-    itemChecksum.offset += 0x384;
+      itemContainer.instances = 3;
 
-    return itemChecksum;
-  } else if ("id" in item && item.id === "filename" && $gameRegion === 2) {
+      return itemContainer;
+    } else if ("id" in item && item.id === "checksum") {
+      const itemChecksum = item as ItemChecksum;
+
+      itemChecksum.offset += 0x384;
+
+      return itemChecksum;
+    } else if ("id" in item && item.id === "owlFile") {
+      const itemTab = item as ItemTab;
+
+      itemTab.hidden = true;
+
+      return itemTab;
+    } else if ("id" in item && item.id === "mask") {
+      const itemBoolean = item as ItemBoolean;
+
+      if (itemBoolean.on) {
+        itemBoolean.on += 0x1c;
+      }
+
+      return itemBoolean;
+    } else if ("id" in item && item.id?.match(/hideoutCode|coloredMasks/)) {
+      const itemString = item as ItemString;
+
+      itemString.offset += 0x384;
+
+      return itemString;
+    }
+  }
+
+  if ("id" in item && item.id === "name" && $gameRegion === 2) {
     const itemString = item as ItemString;
 
     if (itemString.fallback) {
       itemString.fallback = 0xdf;
     }
-
-    return itemString;
-  } else if ("id" in item && item.id === "owlFile" && $gameRegion === 2) {
-    const itemTab = item as ItemTab;
-
-    itemTab.disabled = true;
-
-    return itemTab;
-  } else if ("id" in item && item.id === "mask" && $gameRegion === 2) {
-    const itemBoolean = item as ItemBoolean;
-
-    if (itemBoolean.on) {
-      itemBoolean.on += 0x1c;
-    }
-
-    return itemBoolean;
-  } else if (
-    "id" in item &&
-    item.id?.match(/hideoutCode|coloredMasks/) &&
-    $gameRegion === 2
-  ) {
-    const itemString = item as ItemString;
-
-    itemString.offset += 0x384;
 
     return itemString;
   }
@@ -82,9 +129,7 @@ export function overrideParseContainerItemsShifts(
   shifts: number[],
   index: number,
 ): [boolean, number[] | undefined] {
-  const $gameRegion = get(gameRegion);
-
-  if (item.id === "slots" && $gameRegion !== 2 && index !== 2) {
+  if (item.id === "slots" && hasOwlFile()) {
     const shift = getShift(shifts);
 
     let offset = 0x0;
@@ -100,12 +145,6 @@ export function overrideParseContainerItemsShifts(
     if (isValid) {
       return [true, [...shifts, offset]];
     }
-  } else if (item.id === "slots" && $gameRegion !== 2 && index === 2) {
-    const shift = getShift(shifts);
-
-    const offset = shift + 0x18000;
-
-    return [true, [...shifts, offset]];
   }
 
   return [false, undefined];
@@ -336,13 +375,11 @@ export function afterSetInt(item: Item): void {
 }
 
 export function generateChecksum(item: ItemChecksum): number {
-  const $gameRegion = get(gameRegion);
-
   let checksum = 0x0;
 
   let isOwlFile = false;
 
-  if ($gameRegion !== 2) {
+  if (hasOwlFile()) {
     isOwlFile = getBoolean(item.offset - 0xfe7);
   }
 
@@ -358,5 +395,18 @@ export function generateChecksum(item: ItemChecksum): number {
 }
 
 export function beforeSaving(): ArrayBufferLike {
+  const $gamePlatform = get(gamePlatform);
+
+  if ($gamePlatform === 1) {
+    return injectN64SaveToGCI(FLA_SIZE);
+  }
+
   return byteswapDataView(SAVE_FORMAT).buffer;
+}
+
+function hasOwlFile(): boolean {
+  const $gamePlatform = get(gamePlatform);
+  const $gameRegion = get(gameRegion);
+
+  return $gamePlatform === 1 || $gameRegion !== 2;
 }
