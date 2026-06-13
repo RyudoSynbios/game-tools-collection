@@ -141,6 +141,7 @@ Link to the website: [https://game-tools-collection.com](https://game-tools-coll
 | Wario Land II                                       | GB / GBC       | Save                    | EUR / USA / JAP                               |
 | Wario Land 3                                        | GBC            | Save                    | WORLD                                         |
 | Wario Land 4                                        | GBA            | Save                    | EUR / USA / JAP                               |
+| WarioWare, Inc.: Minigame Mania                     | GBA            | Save                    | EUR / USA / JAP                               |
 
 ---
 

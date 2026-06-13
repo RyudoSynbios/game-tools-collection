@@ -1544,5 +1544,17 @@
         "regions": ["🇪🇺", "🇺🇸", "🇯🇵"]
       }
     }
+  },
+  {
+    "id": "warioware-inc-minigame-mania",
+    "name": "WarioWare, Inc.: Minigame Mania",
+    "metaName": "WarioWare, Inc.: Minigame Mania (Mega Microgame$!)",
+    "platformIds": ["game-boy-advance"],
+    "tools": {
+      "saveEditor": {
+        "createdAt": "2026-06-14",
+        "regions": ["🇪🇺", "🇺🇸", "🇯🇵"]
+      }
+    }
   }
 ]
