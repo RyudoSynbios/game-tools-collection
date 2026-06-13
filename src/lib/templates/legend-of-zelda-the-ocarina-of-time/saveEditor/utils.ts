@@ -1,6 +1,6 @@
 import { get } from "svelte/store";
 
-import { gameRegion } from "$lib/stores";
+import { dataViewAlt, gamePlatform, gameRegion } from "$lib/stores";
 import {
   checkNextHiddenFlags,
   getBoolean,
@@ -9,9 +9,15 @@ import {
   setInt,
 } from "$lib/utils/bytes";
 import { formatChecksum } from "$lib/utils/checksum";
+import {
+  extractN64SaveFromGCI,
+  injectN64SaveToGCI,
+} from "$lib/utils/common/gamecube/zelda";
 import { byteswapDataView, getHeaderShift } from "$lib/utils/common/nintendo64";
+import { SRA_SIZE } from "$lib/utils/common/nintendo64/srm";
 import { round } from "$lib/utils/format";
 import { getItem } from "$lib/utils/parser";
+import { getPlatformRegions, getRegions } from "$lib/utils/validator";
 
 import {
   Item,
@@ -21,6 +27,7 @@ import {
   ItemChecksum,
   ItemInt,
   ItemString,
+  RegionValidator,
 } from "$lib/types";
 
 import { itemQuantites } from "./utils/resource";
@@ -28,6 +35,20 @@ import { itemQuantites } from "./utils/resource";
 const SAVE_FORMAT = "sra";
 
 const poePointsSave = [0, 0, 0];
+
+export function setGamePlatform(dataView: DataView): void {
+  const gamecubeRegions = getPlatformRegions("gamecube") as {
+    [key: string]: RegionValidator;
+  };
+
+  const isGamecube = getRegions(dataView, 0x0, gamecubeRegions).length > 0;
+
+  if (isGamecube) {
+    gamePlatform.set(1);
+  } else {
+    gamePlatform.set(0);
+  }
+}
 
 export function initHeaderShift(dataView: DataView): number {
   return getHeaderShift(dataView, SAVE_FORMAT);
@@ -37,13 +58,44 @@ export function beforeInitDataView(
   dataView: DataView,
   shift: number,
 ): DataView {
+  const $gamePlatform = get(gamePlatform);
+
+  if ($gamePlatform === 1) {
+    return extractN64SaveFromGCI(dataView, SRA_SIZE);
+  }
+
   return byteswapDataView(SAVE_FORMAT, dataView, shift);
+}
+
+export function overrideGetRegions(
+  dataView: DataView,
+  shift: number,
+): string[] {
+  const $dataViewAlt = get(dataViewAlt);
+  const $gamePlatform = get(gamePlatform);
+
+  if ($gamePlatform === 1) {
+    return getRegions($dataViewAlt.gci);
+  }
+
+  return getRegions(dataView, shift);
+}
+
+export function beforeItemsParsing(): void {
+  const $gameRegion = get(gameRegion);
+  const $gamePlatform = get(gamePlatform);
+
+  if ($gamePlatform === 1 && $gameRegion === 3) {
+    gameRegion.set(0);
+  } else if ($gamePlatform === 1 && $gameRegion === 4) {
+    gameRegion.set(1);
+  }
 }
 
 export function overrideParseItem(item: Item): Item {
   const $gameRegion = get(gameRegion);
 
-  if ("id" in item && item.id === "filename" && $gameRegion !== 0) {
+  if ("id" in item && item.id === "name" && $gameRegion !== 0) {
     const itemString = item as ItemString;
 
     if (itemString.fallback) {
@@ -436,6 +488,12 @@ export function generateChecksum(item: ItemChecksum): number {
 }
 
 export function beforeSaving(): ArrayBufferLike {
+  const $gamePlatform = get(gamePlatform);
+
+  if ($gamePlatform === 1) {
+    return injectN64SaveToGCI(SRA_SIZE);
+  }
+
   return byteswapDataView(SAVE_FORMAT).buffer;
 }
 

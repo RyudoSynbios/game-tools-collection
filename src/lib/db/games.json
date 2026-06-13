@@ -815,7 +815,7 @@
   {
     "id": "legend-of-zelda-the-ocarina-of-time",
     "name": "Legend of Zelda, The: Ocarina of Time",
-    "platformIds": ["nintendo-64"],
+    "platformIds": ["nintendo-64", "gamecube"],
     "tools": {
       "saveEditor": {
         "createdAt": "2025-06-20",

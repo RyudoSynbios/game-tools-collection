@@ -77,7 +77,7 @@ Link to the website: [https://game-tools-collection.com](https://game-tools-coll
 | Legend of Zelda, The: A Link to the Past            | SNES           | Save                    | EUR / USA / JAP / FRA / GER / CAN             |
 | Legend of Zelda, The: Link's Awakening              | GB / GBC       | Save                    | EUR / USA / JAP / FRA / GER / CAN             |
 | Legend of Zelda, The: Majora's Mask                 | N64            | Save                    | EUR / USA / JAP                               |
-| Legend of Zelda, The: Ocarina of Time               | N64            | Save                    | EUR / USA / JAP                               |
+| Legend of Zelda, The: Ocarina of Time               | N64 / GC       | Save                    | EUR / USA / JAP                               |
 | Legend of Zelda, The: Oracle of Ages                | GBC            | Save                    | EUR / USA / JAP / AUS                         |
 | Legend of Zelda, The: Oracle of Seasons             | GBC            | Save                    | EUR / USA / JAP / AUS                         |
 | Legend of Zelda, The: The Minish Cap                | GBA            | Save                    | EUR / USA / JAP                               |
