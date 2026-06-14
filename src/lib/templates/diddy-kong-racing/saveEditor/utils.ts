@@ -101,6 +101,12 @@ export function overrideParseItem(
     itemTab.disabled = checksum1Item.disabled && checksum2Item.disabled;
 
     return itemTab;
+  } else if ("id" in item && item.id === "time" && $gameRegion !== 0) {
+    const itemInt = item as ItemInt;
+
+    itemInt.operations![0] = { "/": 60 };
+
+    return itemInt;
   } else if ("id" in item && item.id === "language") {
     const itemInt = item as ItemInt;
 
