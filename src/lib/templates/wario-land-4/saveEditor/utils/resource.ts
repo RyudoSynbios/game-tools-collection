@@ -1,4 +1,3 @@
-// prettier-ignore
 export const worlds = [
   {
     name: "Entry Passage",
