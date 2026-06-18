@@ -1347,6 +1347,17 @@
     }
   },
   {
+    "id": "super-mario-rpg-legend-of-the-seven-stars",
+    "name": "Super Mario RPG: Legend of the Seven Stars",
+    "platformIds": ["super-nintendo"],
+    "tools": {
+      "saveEditor": {
+        "createdAt": "2026-06-18",
+        "regions": ["🇺🇸", "🇯🇵"]
+      }
+    }
+  },
+  {
     "id": "super-mario-sunshine",
     "name": "Super Mario Sunshine",
     "platformIds": ["gamecube"],
