@@ -43,7 +43,7 @@ const template: GameJson = {
           name: "System",
           items: [
             {
-              name: "Unlocked Modes",
+              name: "Modes",
               type: "bitflags",
               flags: [
                 { offset: 0xb, bit: 2, label: "Magician Mode unlocked" },

@@ -2772,14 +2772,14 @@ export const summonstones = [
   { index: 0x3c, name: "Land Worm", type: 0x1 },
 ];
 
-export const summons = summonstones.reduce((items: Resource, item) => {
-  let index = item.index;
+export const summons = summonstones.reduce((summons: Resource, summon) => {
+  let index = summon.index;
 
   if (index >= 0x34) {
     index += 0x1;
   }
 
-  items[index] = item.name;
+  summons[index] = summon.name;
 
-  return items;
+  return summons;
 }, {});

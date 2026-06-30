@@ -90,9 +90,9 @@ export function overrideItem(item: Item): Item {
         offset += getShift(getShifts());
       }
 
-      const int = getInt(offset, "bit", { bit: index - 1 });
+      const isActive = getInt(offset, "bit", { bit: index - 1 });
 
-      item.disabled = !Boolean(int);
+      item.disabled = !isActive;
     });
 
     return itemTabs;

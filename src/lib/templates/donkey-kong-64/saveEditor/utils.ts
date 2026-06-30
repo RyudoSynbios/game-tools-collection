@@ -412,7 +412,7 @@ export function overrideSetInt(
         (letter) => letter === value[i],
       );
 
-      let letter = itemString.fallback as number;
+      let letter = itemString.fallback || 0x0;
 
       if (index !== -1) {
         letter = parseInt(getObjKey(letters, index));
