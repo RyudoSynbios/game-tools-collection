@@ -47,6 +47,7 @@ Link to the website: [https://game-tools-collection.com](https://game-tools-coll
 | Dragon Ball Z: Budokai Tenkaichi 2                  | PS2            | Save                    | EUR / USA / JAP / KOR                         |
 | Dragon Quest: The Journey of the Cursed King        | PS2            | Save                    | EUR / USA / JAP                               |
 | F-Zero                                              | SNES           | Save                    | EUR / USA / JAP                               |
+| F-Zero: Maximum Velocity                            | GBA            | Save                    | EUR / USA / JAP                               |
 | F-Zero X                                            | N64            | Save                    | EUR / USA / JAP                               |
 | Final Fantasy                                       | NES            | Save                    | USA / JAP                                     |
 | Final Fantasy IV Pixel Remaster                     | STEAM          | Save                    | WORLD                                         |

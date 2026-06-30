@@ -81,8 +81,8 @@ const template: GameJson = {
                   hidden: true,
                 },
                 {
-                  type: "group",
                   name: "Best Lap",
+                  type: "group",
                   mode: "time",
                   items: [
                     {
