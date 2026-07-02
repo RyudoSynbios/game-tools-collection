@@ -474,6 +474,17 @@
     }
   },
   {
+    "id": "f-zero-maximum-velocity",
+    "name": "F-Zero: Maximum Velocity",
+    "platformIds": ["game-boy-advance"],
+    "tools": {
+      "saveEditor": {
+        "createdAt": "2026-07-02",
+        "regions": ["🇪🇺", "🇺🇸", "🇯🇵"]
+      }
+    }
+  },
+  {
     "id": "f-zero-x",
     "name": "F-Zero X",
     "platformIds": ["nintendo-64"],
