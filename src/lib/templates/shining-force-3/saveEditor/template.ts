@@ -323,7 +323,7 @@ const template: GameJson = {
                               name: "Condition",
                               type: "bitflags",
                               flags: [
-                                { offset: 0x24b6, bit: 0, label: "Sleep" },
+                                { offset: 0x24b6, bit: 0, label: "Asleep" },
                                 { offset: 0x24b7, bit: 0, label: "Confused" },
                                 { offset: 0x24b8, bit: 0, label: "Illusion" },
                                 { offset: 0x24b9, bit: 0, label: "Silenced" },
