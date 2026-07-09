@@ -108,6 +108,7 @@ Link to the website: [https://game-tools-collection.com](https://game-tools-coll
 | Resident Evil                                       | PS / WIN       | Save                    | EUR / USA / JAP / FRA / GER                   |
 | Rogue Legacy                                        | STEAM          | Save                    | WORLD                                         |
 | Secret of Mana                                      | SNES           | Save                    | USA / JAP / FRA / GER / UK / AUS              |
+| Shining Force                                       | MD             | Save                    | EUR / USA / JAP                               |
 | Shining Force 3                                     | SATURN         | Save / Rom              | EUR / USA / JAP                               |
 | Shining the Holy Ark                                | SATURN         | Save / Rom              | EUR / USA / JAP                               |
 | Skies of Arcadia Legends                            | GC             | Save / Rom / Randomizer | EUR / USA / JAP                               |

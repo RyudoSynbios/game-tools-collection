@@ -1161,6 +1161,17 @@
     }
   },
   {
+    "id": "shining-force",
+    "name": "Shining Force",
+    "platformIds": ["mega-drive"],
+    "tools": {
+      "saveEditor": {
+        "createdAt": "2026-07-09",
+        "regions": ["🇪🇺", "🇺🇸", "🇯🇵"]
+      }
+    }
+  },
+  {
     "id": "shining-force-3",
     "name": "Shining Force 3",
     "platformIds": ["saturn"],
