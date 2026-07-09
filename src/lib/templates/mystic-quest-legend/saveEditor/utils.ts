@@ -108,8 +108,8 @@ export function generateChecksum(item: ItemChecksum): number {
   let checksum = 0x0;
 
   for (let i = item.control.offsetStart; i < item.control.offsetEnd; i += 0x2) {
-    checksum %= 0xffff;
     checksum += getInt(i, "uint16");
+    checksum %= 0xffff;
   }
 
   return formatChecksum(checksum, item.dataType);

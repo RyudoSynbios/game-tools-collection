@@ -50,8 +50,8 @@ export function generateChecksum(
 
   for (let i = item.control.offsetStart; i < item.control.offsetEnd; i += 0x1) {
     if (i !== item.offset) {
-      checksum %= 0xff;
       checksum += getInt(i, "uint8", {}, dataView);
+      checksum %= 0xff;
     }
   }
 
