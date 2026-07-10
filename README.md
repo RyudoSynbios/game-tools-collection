@@ -145,6 +145,7 @@ Link to the website: [https://game-tools-collection.com](https://game-tools-coll
 | Wario Land 3                                        | GBC            | Save                    | WORLD                                         |
 | Wario Land 4                                        | GBA            | Save                    | EUR / USA / JAP                               |
 | WarioWare, Inc.: Minigame Mania                     | GBA            | Save                    | EUR / USA / JAP                               |
+| Yoshi's Story                                       | N64            | Save                    | EUR / USA / JAP                               |
 
 ---
 

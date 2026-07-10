@@ -1589,5 +1589,16 @@
         "regions": ["🇪🇺", "🇺🇸", "🇯🇵"]
       }
     }
+  },
+  {
+    "id": "yoshi-s-story",
+    "name": "Yoshi's Story",
+    "platformIds": ["nintendo-64"],
+    "tools": {
+      "saveEditor": {
+        "createdAt": "2026-07-10",
+        "regions": ["🇪🇺", "🇺🇸", "🇯🇵"]
+      }
+    }
   }
 ]
