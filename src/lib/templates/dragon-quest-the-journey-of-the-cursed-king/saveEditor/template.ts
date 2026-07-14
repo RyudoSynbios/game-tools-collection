@@ -46,7 +46,7 @@ const template: GameJson = {
       type: "container",
       instanceType: "tabs",
       instances: 0,
-      resource: "slots",
+      resource: "slotNames",
       onTabChange: "onSlotChange(%d)",
       items: [
         {
@@ -1560,11 +1560,11 @@ const template: GameJson = {
       0x0: "-",
       0x1: "Game Completed",
     },
-    slots: "getSlotNames()",
     screenModes: {
       0x0: "Normal 4:3",
       0x1: "Wide 16:9",
     },
+    slotNames: "getSlotNames()",
     soundModes: {
       0x0: "Stereo",
       0x1: "Monaural",

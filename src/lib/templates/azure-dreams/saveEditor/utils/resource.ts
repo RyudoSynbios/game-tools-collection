@@ -167,12 +167,10 @@ export const itemList = [
 ];
 
 export const items: Resource = {};
-
 export const itemsGroups: ResourceGroups = itemTypes.map((type) => ({
   name: type.name,
   options: [],
 }));
-
 export const itemsOrder: number[] = [0];
 
 itemList.forEach((item) => {

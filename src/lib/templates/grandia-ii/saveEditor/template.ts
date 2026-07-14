@@ -52,7 +52,7 @@ const template: GameJson = {
       type: "container",
       instanceType: "tabs",
       instances: 1,
-      resource: "slots",
+      resource: "slotNames",
       items: [
         {
           type: "tabs",
@@ -1131,11 +1131,11 @@ const template: GameJson = {
       0x1f: "Full-Body Blow",
       0x20: "Magica Esoterica",
     },
+    slotNames: "getSlotNames()",
     sounds: {
       0x0: "Stereo",
       0x1: "Monaural",
     },
-    slots: "getSlotNames()",
     weapons: {
       0x0: "-",
       ...weapons,

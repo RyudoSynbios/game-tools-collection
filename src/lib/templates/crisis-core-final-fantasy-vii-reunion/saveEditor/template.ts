@@ -38,7 +38,7 @@ const template: GameJson = {
       type: "container",
       instanceType: "tabs",
       instances: 0,
-      resource: "slots",
+      resource: "slotNames",
       onTabChange: "onSlotChange(%d)",
       items: [
         {
@@ -991,7 +991,7 @@ const template: GameJson = {
       0x0: "-",
       0x1: "Cleared",
     },
-    slots: "getSlotNames()",
+    slotNames: "getSlotNames()",
   },
   resourcesGroups: {
     items: itemsGroups,
