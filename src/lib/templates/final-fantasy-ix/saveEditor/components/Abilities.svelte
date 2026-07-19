@@ -49,7 +49,7 @@
           flex: true,
           items: characterAbilities.support.map((ability, index) => ({
             name: names[ability.index] as string,
-            offset: offset + characterAbilities.support.length + index,
+            offset: offset + characterAbilities.command.length + index,
             type: "variable",
             dataType: "uint8",
             max: ability.max,
