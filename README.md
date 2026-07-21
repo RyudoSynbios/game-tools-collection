@@ -111,6 +111,7 @@ Link to the website: [https://game-tools-collection.com](https://game-tools-coll
 | Shining Force                                       | MD             | Save                    | EUR / USA / JAP                               |
 | Shining Force 3                                     | SATURN         | Save / Rom              | EUR / USA / JAP                               |
 | Shining the Holy Ark                                | SATURN         | Save / Rom              | EUR / USA / JAP                               |
+| Silent Hill                                         | PS             | Save                    | EUR / USA / JAP                               |
 | Skies of Arcadia Legends                            | GC             | Save / Rom / Randomizer | EUR / USA / JAP                               |
 | Solatorobo: Red the Hunter                          | DS             | Save                    | EUR / USA / JAP                               |
 | Soleil                                              | MD             | Save / Rom              | EUR / USA / JAP / FRA / GER / SPA / KOR       |

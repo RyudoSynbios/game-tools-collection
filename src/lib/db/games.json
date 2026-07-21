@@ -1202,6 +1202,17 @@
     }
   },
   {
+    "id": "silent-hill",
+    "name": "Silent Hill",
+    "platformIds": ["playstation"],
+    "tools": {
+      "saveEditor": {
+        "createdAt": "2026-07-21",
+        "regions": ["🇪🇺", "🇺🇸", "🇯🇵"]
+      }
+    }
+  },
+  {
     "id": "skies-of-arcadia-legends",
     "name": "Skies of Arcadia Legends",
     "platformIds": ["gamecube"],
