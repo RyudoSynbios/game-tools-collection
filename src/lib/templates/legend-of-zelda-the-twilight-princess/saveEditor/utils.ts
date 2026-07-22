@@ -186,9 +186,9 @@ export function overrideGetInt(item: Item): [boolean, number | undefined] {
   } else if ("id" in item && item.id === "heartPieces") {
     const itemInt = item as ItemInt;
 
-    const health = getInt(itemInt.offset, "uint16", { bigEndian: true });
+    const health = getInt(itemInt.offset, "uint16", { bigEndian: true }) % 5;
 
-    return [true, health % 5];
+    return [true, health];
   } else if ("id" in item && item.id === "dominionRod") {
     const itemInt = item as ItemInt;
 

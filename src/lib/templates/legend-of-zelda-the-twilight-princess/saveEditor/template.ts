@@ -1370,50 +1370,45 @@ const template: GameJson = {
                       flex: true,
                       items: [
                         {
-                          type: "section",
-                          items: [
-                            {
-                              id: "dungeon-events-%index%",
-                              name: "Events",
-                              type: "bitflags",
-                              overrideShift: { parent: 1, shift: 0x0 },
-                              flags: [
-                                // Forest Temple
-                                { offset: 0x4282, bit: 2, label: "Dungeon accessible", hidden: true },
-                                { offset: 0x483e, bit: 1, label: "Dungeon cleared", hidden: true },
-                                { offset: 0x4455, bit: 3, label: "Boss defeated", hidden: true },
-                                // Goron Mines
-                                { offset: 0x483f, bit: 2, label: "Dungeon accessible", hidden: true },
-                                { offset: 0x483f, bit: 0, label: "Dungeon cleared", hidden: true },
-                                { offset: 0x4475, bit: 3, label: "Boss defeated", hidden: true },
-                                // Lakebed Temple
-                                { offset: 0x42c7, bit: 7, label: "Dungeon accessible", hidden: true },
-                                { offset: 0x4841, bit: 2, label: "Dungeon cleared", hidden: true },
-                                { offset: 0x4495, bit: 3, label: "Boss defeated", hidden: true },
-                                // Arbiter's Grounds
-                                { offset: 0x4843, bit: 6, label: "Dungeon accessible", hidden: true },
-                                { offset: 0x4858, bit: 4, label: "Dungeon cleared", hidden: true },
-                                { offset: 0x44b5, bit: 3, label: "Boss defeated", hidden: true },
-                                // Snowpeak Ruins
-                                { offset: 0x4858, bit: 3, label: "Dungeon cleared", hidden: true },
-                                { offset: 0x44d5, bit: 3, label: "Boss defeated", hidden: true },
-                                // Temple of Time
-                                { offset: 0x4323, bit: 4, label: "Dungeon accessible", hidden: true },
-                                { offset: 0x4858, bit: 2, label: "Dungeon cleared", hidden: true },
-                                { offset: 0x44f5, bit: 3, label: "Boss defeated", hidden: true },
-                                // City in the Sky
-                                { offset: 0x4869, bit: 5, label: "Dungeon accessible", hidden: true },
-                                { offset: 0x4873, bit: 3, label: "Cannon repaired", hidden: true },
-                                { offset: 0x4858, bit: 1, label: "Dungeon cleared", hidden: true },
-                                { offset: 0x4515, bit: 3, label: "Boss defeated", hidden: true },
-                                // Place of Twilight
-                                { offset: 0x4863, bit: 3, label: "Dungeon accessible", hidden: true },
-                                { offset: 0x488c, bit: 4, label: "Dungeon cleared", hidden: true },
-                                { offset: 0x4535, bit: 3, label: "Boss defeated", hidden: true },
-                                // Hyrule Castle
-                                { offset: 0x487a, bit: 3, label: "Dungeon accessible", hidden: true },
-                              ],
-                            },
+                          id: "dungeon-events-%index%",
+                          name: "Events",
+                          type: "bitflags",
+                          overrideShift: { parent: 1, shift: 0x0 },
+                          flags: [
+                            // Forest Temple
+                            { offset: 0x4282, bit: 2, label: "Dungeon accessible", hidden: true },
+                            { offset: 0x483e, bit: 1, label: "Dungeon cleared", hidden: true },
+                            { offset: 0x4455, bit: 3, label: "Boss defeated", hidden: true },
+                            // Goron Mines
+                            { offset: 0x483f, bit: 2, label: "Dungeon accessible", hidden: true },
+                            { offset: 0x483f, bit: 0, label: "Dungeon cleared", hidden: true },
+                            { offset: 0x4475, bit: 3, label: "Boss defeated", hidden: true },
+                            // Lakebed Temple
+                            { offset: 0x42c7, bit: 7, label: "Dungeon accessible", hidden: true },
+                            { offset: 0x4841, bit: 2, label: "Dungeon cleared", hidden: true },
+                            { offset: 0x4495, bit: 3, label: "Boss defeated", hidden: true },
+                            // Arbiter's Grounds
+                            { offset: 0x4843, bit: 6, label: "Dungeon accessible", hidden: true },
+                            { offset: 0x4858, bit: 4, label: "Dungeon cleared", hidden: true },
+                            { offset: 0x44b5, bit: 3, label: "Boss defeated", hidden: true },
+                            // Snowpeak Ruins
+                            { offset: 0x4858, bit: 3, label: "Dungeon cleared", hidden: true },
+                            { offset: 0x44d5, bit: 3, label: "Boss defeated", hidden: true },
+                            // Temple of Time
+                            { offset: 0x4323, bit: 4, label: "Dungeon accessible", hidden: true },
+                            { offset: 0x4858, bit: 2, label: "Dungeon cleared", hidden: true },
+                            { offset: 0x44f5, bit: 3, label: "Boss defeated", hidden: true },
+                            // City in the Sky
+                            { offset: 0x4869, bit: 5, label: "Dungeon accessible", hidden: true },
+                            { offset: 0x4873, bit: 3, label: "Cannon repaired", hidden: true },
+                            { offset: 0x4858, bit: 1, label: "Dungeon cleared", hidden: true },
+                            { offset: 0x4515, bit: 3, label: "Boss defeated", hidden: true },
+                            // Place of Twilight
+                            { offset: 0x4863, bit: 3, label: "Dungeon accessible", hidden: true },
+                            { offset: 0x488c, bit: 4, label: "Dungeon cleared", hidden: true },
+                            { offset: 0x4535, bit: 3, label: "Boss defeated", hidden: true },
+                            // Hyrule Castle
+                            { offset: 0x487a, bit: 3, label: "Dungeon accessible", hidden: true },
                           ],
                         },
                         {
@@ -1428,16 +1423,11 @@ const template: GameJson = {
                           ],
                         },
                         {
-                          type: "section",
-                          items: [
-                            {
-                              name: "Keys",
-                              offset: 0x4454,
-                              type: "variable",
-                              dataType: "uint8",
-                              max: 5,
-                            },
-                          ],
+                          name: "Keys",
+                          offset: 0x4454,
+                          type: "variable",
+                          dataType: "uint8",
+                          max: 5,
                         },
                       ],
                     },

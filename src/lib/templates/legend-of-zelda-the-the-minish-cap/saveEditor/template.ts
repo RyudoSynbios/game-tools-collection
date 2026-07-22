@@ -467,7 +467,7 @@ const template: GameJson = {
                           flex: true,
                           items: [
                             {
-                              name: "Sidequest Items",
+                              name: "Side Quest Items",
                               type: "bitflags",
                               flags: [
                                 { offset: 0x18b, bit: 6, label: "Kinstone Bag" },
@@ -602,8 +602,8 @@ const template: GameJson = {
                           name: "Events",
                           type: "bitflags",
                           flags: [
-                            { offset: 0x4fd, bit: 0, label: "Blue Teleporter" },
-                            { offset: 0x4fd, bit: 1, label: "Red Teleporter", separator: true },
+                            { offset: 0x4fd, bit: 0, label: "Blue Warp Portal" },
+                            { offset: 0x4fd, bit: 1, label: "Red Warp Portal", separator: true },
                             { offset: 0x2dc, bit: 2, label: "Dungeon cleared" },
                           ],
                         },
@@ -639,8 +639,8 @@ const template: GameJson = {
                           name: "Events",
                           type: "bitflags",
                           flags: [
-                            { offset: 0x4fe, bit: 0, label: "Blue Teleporter" },
-                            { offset: 0x4fe, bit: 1, label: "Red Teleporter", separator: true },
+                            { offset: 0x4fe, bit: 0, label: "Blue Warp Portal" },
+                            { offset: 0x4fe, bit: 1, label: "Red Warp Portal", separator: true },
                             { offset: 0x2dc, bit: 3, label: "Dungeon cleared" },
                           ],
                         },
@@ -677,8 +677,8 @@ const template: GameJson = {
                           name: "Events",
                           type: "bitflags",
                           flags: [
-                            { offset: 0x4ff, bit: 0, label: "Blue Teleporter" },
-                            { offset: 0x4ff, bit: 1, label: "Red Teleporter", separator: true },
+                            { offset: 0x4ff, bit: 0, label: "Blue Warp Portal" },
+                            { offset: 0x4ff, bit: 1, label: "Red Warp Portal", separator: true },
                             { offset: 0x2dc, bit: 4, label: "Dungeon cleared" },
                             { offset: 0x3b2, bit: 1, label: "Boss defeated", hidden: true },
                           ],
@@ -715,8 +715,8 @@ const template: GameJson = {
                           name: "Events",
                           type: "bitflags",
                           flags: [
-                            { offset: 0x500, bit: 0, label: "Blue Teleporter" },
-                            { offset: 0x500, bit: 1, label: "Red Teleporter", separator: true },
+                            { offset: 0x500, bit: 0, label: "Blue Warp Portal" },
+                            { offset: 0x500, bit: 1, label: "Red Warp Portal", separator: true },
                             { offset: 0x2dc, bit: 5, label: "Dungeon cleared" },
                           ],
                         },
@@ -753,8 +753,8 @@ const template: GameJson = {
                           name: "Events",
                           type: "bitflags",
                           flags: [
-                            { offset: 0x501, bit: 0, label: "Blue Teleporter" },
-                            { offset: 0x501, bit: 1, label: "Red Teleporter", separator: true },
+                            { offset: 0x501, bit: 0, label: "Blue Warp Portal" },
+                            { offset: 0x501, bit: 1, label: "Red Warp Portal", separator: true },
                             { offset: 0x2dc, bit: 6, label: "Dungeon cleared" },
                             { offset: 0x3eb, bit: 3, label: "Boss defeated", hidden: true },
                           ],
@@ -791,8 +791,8 @@ const template: GameJson = {
                           name: "Events",
                           type: "bitflags",
                           flags: [
-                            { offset: 0x502, bit: 0, label: "Blue Teleporter" },
-                            { offset: 0x502, bit: 1, label: "Red Teleporter" },
+                            { offset: 0x502, bit: 0, label: "Blue Warp Portal" },
+                            { offset: 0x502, bit: 1, label: "Red Warp Portal" },
                           ],
                         },
                         {
@@ -851,7 +851,7 @@ const template: GameJson = {
                             { offset: 0x2e7, bit: 2, label: "<b>Trilby Highlands:</b> Purchased from a Business Scrub" },
                             { offset: 0x312, bit: 2, label: "<b>Eastern Hills:</b> Inside a chest from a Kinstone fusion" },
                             { offset: 0x17f, bit: 5, label: "<b>Lake Hylia:</b> Reward for feeding Stockwell's dog" },
-                            { offset: 0x36a, bit: 6, label: "<b>Lon Lon Ranch:</b> Reward from the Goron sidequest" },
+                            { offset: 0x36a, bit: 6, label: "<b>Lon Lon Ranch:</b> Reward from the Goron side quest" },
                           ],
                         },
                       ],
@@ -1083,7 +1083,7 @@ const template: GameJson = {
                             { offset: 0x303, bit: 4, label: "<b>Minish Woods:</b> Near Deepwood Shrine" },
                             { offset: 0x36b, bit: 2, label: "<b>Minish Woods:</b> At the end of a tunnel as a Minish", separator: true },
                             { offset: 0x334, bit: 2, label: "<b>Minish Village:</b> At the end of a boarded path", separator: true },
-                            { offset: 0x385, bit: 7, label: "<b>Deepwood Shrine:</b> Near the blue teleporter" },
+                            { offset: 0x385, bit: 7, label: "<b>Deepwood Shrine:</b> Near the blue warp portal" },
                             { offset: 0x386, bit: 2, label: "<b>Deepwood Shrine:</b> Near the Dungeon Map chest" },
                           ],
                         },

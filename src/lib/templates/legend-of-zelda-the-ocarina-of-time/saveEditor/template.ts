@@ -142,31 +142,6 @@ const template: GameJson = {
                       bigEndian: true,
                       hidden: true,
                     },
-                    {
-                      name: "Rupees",
-                      type: "group",
-                      mode: "fraction",
-                      items: [
-                        {
-                          id: "value-rupees",
-                          offset: 0x54,
-                          type: "variable",
-                          dataType: "uint16",
-                          bigEndian: true,
-                        },
-                        {
-                          id: "max-rupees",
-                          offset: 0xc2,
-                          type: "variable",
-                          dataType: "uint8",
-                          binary: {
-                            bitStart: 4,
-                            bitLength: 2,
-                          },
-                          resource: "maxRupees",
-                        },
-                      ],
-                    },
                   ],
                 },
                 {
@@ -202,14 +177,6 @@ const template: GameJson = {
                       ],
                     },
                     {
-                      id: "magic",
-                      name: "Magic",
-                      offset: 0x53,
-                      type: "variable",
-                      dataType: "uint8",
-                      max: 96,
-                    },
-                    {
                       name: "Heart Pieces",
                       offset: 0xc4,
                       type: "variable",
@@ -219,6 +186,39 @@ const template: GameJson = {
                         bitLength: 2,
                       },
                       max: 3,
+                    },
+                    {
+                      id: "magic",
+                      name: "Magic",
+                      offset: 0x53,
+                      type: "variable",
+                      dataType: "uint8",
+                      max: 96,
+                    },
+                    {
+                      name: "Rupees",
+                      type: "group",
+                      mode: "fraction",
+                      items: [
+                        {
+                          id: "value-rupees",
+                          offset: 0x54,
+                          type: "variable",
+                          dataType: "uint16",
+                          bigEndian: true,
+                        },
+                        {
+                          id: "max-rupees",
+                          offset: 0xc2,
+                          type: "variable",
+                          dataType: "uint8",
+                          binary: {
+                            bitStart: 4,
+                            bitLength: 2,
+                          },
+                          resource: "maxRupees",
+                        },
+                      ],
                     },
                   ],
                 },

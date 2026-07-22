@@ -114,6 +114,13 @@ const template: GameJson = {
                       ],
                     },
                     {
+                      name: "Heart Pieces",
+                      offset: 0x36b,
+                      type: "variable",
+                      dataType: "uint8",
+                      max: 3,
+                    },
+                    {
                       name: "Magic",
                       offset: 0x36e,
                       type: "variable",
@@ -126,13 +133,6 @@ const template: GameJson = {
                       type: "variable",
                       dataType: "uint16",
                       max: 999,
-                    },
-                    {
-                      name: "Heart Pieces",
-                      offset: 0x36b,
-                      type: "variable",
-                      dataType: "uint8",
-                      max: 3,
                     },
                   ],
                 },
