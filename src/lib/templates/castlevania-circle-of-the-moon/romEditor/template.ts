@@ -32,6 +32,172 @@ const template: GameJson = {
       type: "tabs",
       items: [
         {
+          name: "Nathan",
+          items: [
+            {
+              pointer: [0x6da2c, 0x6da2c, 0x6d6ec],
+              pointerDataType: "uint24",
+              length: 0x24,
+              type: "container",
+              instanceType: "tabs",
+              instances: 5,
+              resource: "modes",
+              vertical: true,
+              items: [
+                {
+                  type: "section",
+                  flex: true,
+                  noMargin: true,
+                  items: [
+                    {
+                      name: "Base HP",
+                      offset: 0x2,
+                      type: "variable",
+                      dataType: "uint16",
+                      min: 1,
+                      max: 9999,
+                    },
+                    {
+                      name: "HP Increment",
+                      offset: 0x6,
+                      type: "variable",
+                      dataType: "uint16",
+                      min: 1,
+                      max: 9999,
+                    },
+                  ],
+                },
+                {
+                  type: "section",
+                  flex: true,
+                  noMargin: true,
+                  items: [
+                    {
+                      name: "Base MP",
+                      offset: 0xa,
+                      type: "variable",
+                      dataType: "uint16",
+                      max: 9999,
+                    },
+                    {
+                      name: "MP Increment",
+                      offset: 0xe,
+                      type: "variable",
+                      dataType: "uint16",
+                      max: 9999,
+                    },
+                  ],
+                },
+                {
+                  type: "section",
+                  flex: true,
+                  noMargin: true,
+                  items: [
+                    {
+                      name: "Base Hearts",
+                      offset: 0x10,
+                      type: "variable",
+                      dataType: "uint16",
+                      max: 999,
+                    },
+                    {
+                      name: "Hearts Increment",
+                      offset: 0x12,
+                      type: "variable",
+                      dataType: "uint16",
+                      max: 999,
+                    },
+                  ],
+                },
+                {
+                  type: "section",
+                  flex: true,
+                  noMargin: true,
+                  items: [
+                    {
+                      name: "Base Strength",
+                      offset: 0x14,
+                      type: "variable",
+                      dataType: "uint16",
+                      max: 9999,
+                    },
+                    {
+                      name: "Strength Increment",
+                      offset: 0x16,
+                      type: "variable",
+                      dataType: "uint16",
+                      max: 9999,
+                    },
+                  ],
+                },
+                {
+                  type: "section",
+                  flex: true,
+                  noMargin: true,
+                  items: [
+                    {
+                      name: "Base Defense",
+                      offset: 0x18,
+                      type: "variable",
+                      dataType: "uint16",
+                      max: 9999,
+                    },
+                    {
+                      name: "Defense Increment",
+                      offset: 0x1a,
+                      type: "variable",
+                      dataType: "uint16",
+                      max: 9999,
+                    },
+                  ],
+                },
+                {
+                  type: "section",
+                  flex: true,
+                  noMargin: true,
+                  items: [
+                    {
+                      name: "Base Intelligence",
+                      offset: 0x1c,
+                      type: "variable",
+                      dataType: "uint16",
+                      max: 9999,
+                    },
+                    {
+                      name: "Intelligence Increment",
+                      offset: 0x1e,
+                      type: "variable",
+                      dataType: "uint16",
+                      max: 9999,
+                    },
+                  ],
+                },
+                {
+                  type: "section",
+                  flex: true,
+                  noMargin: true,
+                  items: [
+                    {
+                      name: "Base Luck",
+                      offset: 0x20,
+                      type: "variable",
+                      dataType: "uint16",
+                      max: 9999,
+                    },
+                    {
+                      name: "Luck Increment",
+                      offset: 0x22,
+                      type: "variable",
+                      dataType: "uint16",
+                      max: 9999,
+                    },
+                  ],
+                },
+              ],
+            },
+          ],
+        },
+        {
           name: "Enemies",
           items: [
             {
@@ -525,6 +691,13 @@ const template: GameJson = {
       },
     ],
     mapNames: "getMapNames()",
+    modes: {
+      0x0: "Vampire Killer",
+      0x1: "Shooter",
+      0x2: "Magician",
+      0x3: "Fighter",
+      0x4: "Thief",
+    },
   },
 };
 
