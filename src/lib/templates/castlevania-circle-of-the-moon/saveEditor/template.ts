@@ -1722,11 +1722,11 @@ const template: GameJson = {
       0xf01: "Debug Room",
     },
     modes: {
-      0x0: "Vampire Killer Mode",
-      0x1: "Shooter Mode",
-      0x2: "Magician Mode",
-      0x3: "Fighter Mode",
-      0x4: "Thief Mode",
+      0x0: "Vampire Killer",
+      0x1: "Shooter",
+      0x2: "Magician",
+      0x3: "Fighter",
+      0x4: "Thief",
     },
     subweapons: {
       0x0: "-",
