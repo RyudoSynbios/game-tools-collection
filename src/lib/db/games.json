@@ -868,6 +868,17 @@
     }
   },
   {
+    "id": "legend-of-zelda-the-the-wind-waker",
+    "name": "Legend of Zelda, The: The Wind Waker",
+    "platformIds": ["gamecube"],
+    "tools": {
+      "saveEditor": {
+        "createdAt": "2026-07-31",
+        "regions": ["🇪🇺", "🇺🇸", "🇯🇵", "🇨🇦", "🇰🇷"]
+      }
+    }
+  },
+  {
     "id": "legend-of-zelda-the-twilight-princess",
     "name": "Legend of Zelda, The: Twilight Princess",
     "platformIds": ["gamecube", "wii"],
