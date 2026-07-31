@@ -350,7 +350,7 @@ export function getBoolean(
 
   if (options.on !== undefined && options.on === int) {
     return true;
-  } else if (options.off !== undefined && options.off === int) {
+  } else if (options.off !== undefined) {
     return false;
   }
 
