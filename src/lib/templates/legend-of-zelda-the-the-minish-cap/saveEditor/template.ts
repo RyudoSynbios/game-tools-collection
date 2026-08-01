@@ -90,7 +90,7 @@ const template: GameJson = {
                               resource: "progressions",
                             },
                             {
-                              name: "Slayed Monsters",
+                              name: "Slain Monsters",
                               offset: 0xd0,
                               type: "variable",
                               dataType: "uint32",
@@ -1626,7 +1626,7 @@ const template: GameJson = {
     },
     progressions: {
       0x0: "-",
-      0x1: "Game Complete",
+      0x1: "Game Cleared",
     },
   },
   resourcesLabels: {

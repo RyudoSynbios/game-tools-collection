@@ -2041,7 +2041,7 @@ const template: GameJson = {
     // status: {
     //   0x0: "-",
     //   0x2: "New Game +",
-    //   0x3: "Game Complete",
+    //   0x3: "Game Cleared",
     // },
     types: {
       0x0: "-",

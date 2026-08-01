@@ -259,7 +259,7 @@ const template: GameJson = {
                           max: 999999999,
                         },
                         {
-                          name: "Slayed Monster Count",
+                          name: "Slain Monster Count",
                           offset: 0x0,
                           jsonPath: "userData.monstersKilledCount",
                           type: "variable",

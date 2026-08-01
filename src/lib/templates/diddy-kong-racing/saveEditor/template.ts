@@ -687,7 +687,7 @@ const template: GameJson = {
                               flags: [
                                 { offset: 0x22, bit: 2, label: "Related to Spacedust Alley completed" },
                                 { offset: 0x24, bit: 7, label: "Wizpig Level door open animation" },
-                                { offset: 0xd, bit: 5, label: "Game Completed" },
+                                { offset: 0xd, bit: 5, label: "Game Cleared" },
                               ],
                             },
                           ],

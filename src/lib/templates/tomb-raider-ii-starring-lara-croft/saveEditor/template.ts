@@ -866,7 +866,7 @@ const template: GameJson = {
     },
     progressions: {
       0x0: "-",
-      0x1: "Game Complete",
+      0x1: "Game Cleared",
     },
   },
 };

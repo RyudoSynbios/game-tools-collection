@@ -1031,7 +1031,7 @@ const template: GameJson = {
                                   dataType: "uint8",
                                 },
                                 {
-                                  name: "Slayed Enemies",
+                                  name: "Slain Enemies",
                                   offset: 0x278,
                                   type: "variable",
                                   dataType: "uint16",

@@ -158,7 +158,7 @@ const template: GameJson = {
                               resource: "progressions",
                             },
                             {
-                              name: "Game Completed",
+                              name: "Game Cleared",
                               offset: 0x12f,
                               type: "variable",
                               dataType: "bit",

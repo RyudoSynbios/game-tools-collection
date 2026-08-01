@@ -559,7 +559,7 @@ const template: GameJson = {
                           max: 9999,
                         },
                         {
-                          name: "Slayed Dragons",
+                          name: "Slain Dragons",
                           offset: 0xef0,
                           type: "variable",
                           dataType: "uint16",

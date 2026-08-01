@@ -4,7 +4,7 @@ import {
   accessoriesOrder,
   gummiBlocks,
   heartlessList,
-  inventory,
+  itemList,
   itemsOrder,
   itemTypes,
   miniGames,
@@ -92,116 +92,126 @@ const template: GameJson = {
                   items: [
                     {
                       name: "General",
-                      flex: true,
                       items: [
                         {
-                          id: "difficuty",
-                          name: "Difficulty",
-                          offset: 0x16418,
-                          type: "variable",
-                          dataType: "uint32",
-                          resource: "difficulties",
-                        },
-                        {
-                          id: "finalMixOnly",
-                          name: "Difficulty",
-                          offset: 0x1642c,
-                          type: "variable",
-                          dataType: "uint32",
-                          resource: "finalMixDifficulties",
-                        },
-                        {
-                          name: "Playtime",
-                          type: "group",
-                          mode: "time",
+                          type: "section",
+                          flex: true,
                           items: [
                             {
-                              id: "time-playtime",
-                              offset: 0x10,
+                              id: "difficuty",
+                              name: "Difficulty",
+                              offset: 0x16418,
                               type: "variable",
                               dataType: "uint32",
-                              operations: [
-                                { "/": 50 },
-                                {
-                                  convert: { from: "seconds", to: "hours" },
-                                },
-                              ],
-                              max: 99,
+                              resource: "difficulties",
                             },
                             {
-                              id: "time-playtime",
-                              offset: 0x10,
+                              id: "finalMixOnly",
+                              name: "Difficulty",
+                              offset: 0x1642c,
                               type: "variable",
                               dataType: "uint32",
-                              operations: [
-                                { "/": 50 },
-                                {
-                                  convert: {
-                                    from: "seconds",
-                                    to: "minutes",
-                                  },
-                                },
-                              ],
-                              leadingZeros: 1,
-                              max: 59,
-                              test: true,
+                              resource: "finalMixDifficulties",
                             },
                             {
-                              id: "time-playtime",
-                              offset: 0x10,
-                              type: "variable",
-                              dataType: "uint32",
-                              operations: [
-                                { "/": 50 },
+                              name: "Playtime",
+                              type: "group",
+                              mode: "time",
+                              items: [
                                 {
-                                  convert: {
-                                    from: "seconds",
-                                    to: "seconds",
-                                  },
+                                  id: "time-playtime",
+                                  offset: 0x10,
+                                  type: "variable",
+                                  dataType: "uint32",
+                                  operations: [
+                                    { "/": 50 },
+                                    {
+                                      convert: { from: "seconds", to: "hours" },
+                                    },
+                                  ],
+                                  max: 99,
+                                },
+                                {
+                                  id: "time-playtime",
+                                  offset: 0x10,
+                                  type: "variable",
+                                  dataType: "uint32",
+                                  operations: [
+                                    { "/": 50 },
+                                    {
+                                      convert: {
+                                        from: "seconds",
+                                        to: "minutes",
+                                      },
+                                    },
+                                  ],
+                                  leadingZeros: 1,
+                                  max: 59,
+                                  test: true,
+                                },
+                                {
+                                  id: "time-playtime",
+                                  offset: 0x10,
+                                  type: "variable",
+                                  dataType: "uint32",
+                                  operations: [
+                                    { "/": 50 },
+                                    {
+                                      convert: {
+                                        from: "seconds",
+                                        to: "seconds",
+                                      },
+                                    },
+                                  ],
+                                  leadingZeros: 1,
+                                  max: 59,
+                                  test: true,
                                 },
                               ],
-                              leadingZeros: 1,
-                              max: 59,
-                              test: true,
+                            },
+                            {
+                              name: "Leveling Curve",
+                              offset: 0x48d,
+                              type: "variable",
+                              dataType: "uint8",
+                              resource: "levelingCurves",
                             },
                           ],
                         },
                         {
-                          name: "Leveling Curve",
-                          offset: 0x48d,
-                          type: "variable",
-                          dataType: "uint8",
-                          resource: "levelingCurves",
-                        },
-                        {
-                          name: "Munny",
-                          offset: 0x1641c,
-                          type: "variable",
-                          dataType: "uint32",
-                          max: 99999,
-                        },
-                        {
-                          id: "world",
-                          name: "World",
-                          offset: 0x2040,
-                          type: "variable",
-                          dataType: "uint32",
-                          resource: "worlds",
-                          disabled: true,
-                        },
-                        {
-                          name: "Room",
-                          offset: 0x2044,
-                          type: "variable",
-                          dataType: "uint32",
-                          hidden: true,
-                        },
-                        {
-                          name: "???",
-                          offset: 0x2048,
-                          type: "variable",
-                          dataType: "uint32",
-                          hidden: true,
+                          type: "section",
+                          flex: true,
+                          items: [
+                            {
+                              name: "World",
+                              offset: 0x2040,
+                              type: "variable",
+                              dataType: "uint32",
+                              resource: "worlds",
+                              disabled: true,
+                            },
+                            {
+                              name: "Room",
+                              offset: 0x2044,
+                              type: "variable",
+                              dataType: "uint32",
+                              hidden: true,
+                            },
+                            {
+                              name: "???",
+                              offset: 0x2048,
+                              type: "variable",
+                              dataType: "uint32",
+                              hidden: true,
+                            },
+                            {
+                              name: "Munny",
+                              offset: 0x1641c,
+                              type: "variable",
+                              dataType: "uint32",
+                              max: 99999,
+                            },
+                          ],
                         },
                       ],
                     },
@@ -1041,7 +1051,7 @@ const template: GameJson = {
                       type: "tabs",
                       items: [
                         {
-                          name: "General",
+                          name: "Status",
                           items: [
                             {
                               type: "section",
@@ -1144,12 +1154,8 @@ const template: GameJson = {
                                 },
                               ],
                             },
-                          ],
-                        },
-                        {
-                          name: "Magic",
-                          items: [
                             {
+                              name: "Magic",
                               type: "bitflags",
                               flags: [
                                 { offset: 0x74, bit: 0, label: "Fire" },
@@ -1160,27 +1166,6 @@ const template: GameJson = {
                                 { offset: 0x74, bit: 5, label: "Stop" },
                                 { offset: 0x74, bit: 6, label: "Aero" },
                               ],
-                            },
-                          ],
-                        },
-                        {
-                          name: "Abilities",
-                          items: [
-                            {
-                              type: "section",
-                              flex: true,
-                              items: [...Array(48).keys()].map((index) => ({
-                                name: `Ability ${index + 1}`,
-                                offset: 0x44 + index,
-                                type: "variable",
-                                dataType: "uint8",
-                                binary: {
-                                  bitStart: 0,
-                                  bitLength: 7,
-                                },
-                                resource: "abilities",
-                                autocomplete: true,
-                              })),
                             },
                           ],
                         },
@@ -1388,6 +1373,27 @@ const template: GameJson = {
                             },
                           ],
                         },
+                        {
+                          name: "Abilities",
+                          items: [
+                            {
+                              type: "section",
+                              flex: true,
+                              items: [...Array(48).keys()].map((index) => ({
+                                name: `Ability ${index + 1}`,
+                                offset: 0x44 + index,
+                                type: "variable",
+                                dataType: "uint8",
+                                binary: {
+                                  bitStart: 0,
+                                  bitLength: 7,
+                                },
+                                resource: "abilities",
+                                autocomplete: true,
+                              })),
+                            },
+                          ],
+                        },
                       ],
                     },
                   ],
@@ -1406,7 +1412,7 @@ const template: GameJson = {
                       name: subtype,
                       type: "section",
                       flex: true,
-                      items: inventory
+                      items: itemList
                         .filter(
                           (item) => item.type === (type.index | subTypeIndex),
                         )
@@ -1890,6 +1896,7 @@ const template: GameJson = {
                                 type: "variable",
                                 dataType: heartless.bit !== undefined ? "bit" : "uint16",
                                 bit: heartless.bit,
+                                max: 9999,
                               })),
                             },
                           ],
@@ -2755,6 +2762,7 @@ const template: GameJson = {
                     {
                       name: "General",
                       flex: true,
+                      hidden: true,
                       items: [
                         {
                           type: "bitflags",
@@ -3017,6 +3025,20 @@ const template: GameJson = {
                   type: "section",
                   flex: true,
                   items: [
+                    {
+                      name: "Power Chosen",
+                      offset: 0xd00,
+                      type: "variable",
+                      dataType: "uint8",
+                      hidden: true,
+                    },
+                    {
+                      name: "Power Given Up",
+                      offset: 0xd01,
+                      type: "variable",
+                      dataType: "uint8",
+                      hidden: true,
+                    },
                     {
                       name: "Destiny Islands - Sora Wins",
                       offset: 0x1036,
@@ -3550,25 +3572,25 @@ const template: GameJson = {
       0x1: "Fast then Slow",
       0x2: "Slow then Fast",
     },
-    magicLevelsFire: {
-      0x1: "Fire",
-      0x2: "Fira",
-      0x3: "Firaga",
+    magicLevelsAero: {
+      0x1: "Aero",
+      0x2: "Aeora",
+      0x3: "Aeroga",
     },
     magicLevelsBlizzard: {
       0x1: "Blizzard",
       0x2: "Blizzara",
       0x3: "Blizzaga",
     },
-    magicLevelsThunder: {
-      0x1: "Thunder",
-      0x2: "Thundara",
-      0x3: "Thundaga",
-    },
     magicLevelsCure: {
       0x1: "Cure",
       0x2: "Cura",
       0x3: "Curaga",
+    },
+    magicLevelsFire: {
+      0x1: "Fire",
+      0x2: "Fira",
+      0x3: "Firaga",
     },
     magicLevelsGravity: {
       0x1: "Gravity",
@@ -3580,10 +3602,10 @@ const template: GameJson = {
       0x2: "Stopra",
       0x3: "Stopga",
     },
-    magicLevelsAero: {
-      0x1: "Aero",
-      0x2: "Aeora",
-      0x3: "Aeroga",
+    magicLevelsThunder: {
+      0x1: "Thunder",
+      0x2: "Thundara",
+      0x3: "Thundaga",
     },
     magics: {
       0x0: "Fire",
@@ -3624,7 +3646,7 @@ const template: GameJson = {
       0x1: "Hidden",
       0x2: "???",
       0x3: "Discovered",
-      0x4: "Completed",
+      0x4: "Cleared",
     },
     worlds: {
       0x0: "Dive into the Heart",

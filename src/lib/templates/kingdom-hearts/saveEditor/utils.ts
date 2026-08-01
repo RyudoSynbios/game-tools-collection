@@ -22,7 +22,7 @@ import type {
   Resource,
 } from "$lib/types";
 
-import { abilityList, inventory } from "./utils/resource";
+import { abilityList, itemList } from "./utils/resource";
 
 export function setGamePlatform(dataView: DataView, fileName: string): void {
   if (fileName.match(/KHFM/)) {
@@ -42,11 +42,17 @@ export function beforeInitDataView(dataView: DataView): DataView {
   return dataView;
 }
 
-export function overrideGetRegions(): string[] {
+export function overrideGetRegions(dataView: DataView): string[] {
   const $gamePlatform = get(gamePlatform);
 
   if ($gamePlatform === 1) {
-    return ["finalMix"];
+    const saves = getHD15RemixSaves(dataView);
+
+    if (saves.length > 0) {
+      return ["finalMix"];
+    }
+
+    return [];
   }
 
   return customGetRegions();
@@ -68,13 +74,7 @@ export function overrideParseItem(item: Item): Item {
   const $gamePlatform = get(gamePlatform);
   const $gameRegion = get(gameRegion);
 
-  if ("id" in item && item.id === "difficuty") {
-    const itemInt = item as ItemInt;
-
-    itemInt.hidden = [2, 7].includes($gameRegion);
-
-    return itemInt;
-  } else if ("id" in item && item.id === "slots") {
+  if ("id" in item && item.id === "slots") {
     const itemContainer = item as ItemContainer;
 
     if ($gamePlatform === 1) {
@@ -87,11 +87,15 @@ export function overrideParseItem(item: Item): Item {
 
     const saves = getRegionSaves();
 
-    console.log(saves);
-
     itemContainer.instances = saves.length;
 
     return itemContainer;
+  } else if ("id" in item && item.id === "difficuty") {
+    const itemInt = item as ItemInt;
+
+    itemInt.hidden = [2, 7].includes($gameRegion);
+
+    return itemInt;
   } else if ("id" in item && item.id?.match(/time/)) {
     const itemInt = item as ItemInt;
 
@@ -235,7 +239,7 @@ export function overrideItem(item: Item): Item {
 }
 
 export function overrideGetInt(item: Item): [boolean, number | undefined] {
-  if ("id" in item && item.id?.match(/^(score|time)$/)) {
+  if ("id" in item && item.id?.match(/item-|(^(score|time)$)/)) {
     const itemInt = item as ItemInt;
 
     if (itemInt.disabled) {
@@ -324,7 +328,7 @@ export function getItemNames(type: string): Resource {
       break;
   }
 
-  inventory.forEach((item) => {
+  itemList.forEach((item) => {
     if (
       (!item.finalMix || $gameRegion === 7) &&
       item.type !== 0x1 &&
@@ -346,7 +350,7 @@ export function getSlotNames(): Resource {
     const saves = getHD15RemixSaves();
 
     return saves.reduce((names: Resource, save, index) => {
-      names[index] = `Slot ${save.name.replace(/^0/, "")}`;
+      names[index] = `Slot ${parseInt(save.name)}`;
 
       return names;
     }, {});
@@ -357,21 +361,23 @@ export function getSlotNames(): Resource {
   return saves.reduce((names: Resource, save, index) => {
     const name = save.file.name.slice(-2);
 
-    names[index] = `Slot ${name.replace(/^0/, "")}`;
+    names[index] = `Slot ${parseInt(name)}`;
 
     return names;
   }, {});
 }
 
-function getHD15RemixSaves(): { name: string; offset: number }[] {
+function getHD15RemixSaves(
+  dataView?: DataView,
+): { name: string; offset: number }[] {
   const saves = [];
 
   for (let i = 0x0; i < 0x63; i += 0x1) {
     const offset = 0x1c8 + i * 0x2b0;
 
-    if (getInt(offset, "uint8") === 0x2d) {
+    if (getInt(offset, "uint8", {}, dataView) === 0x2d) {
       saves.push({
-        name: getString(offset + 0x1, 0x2, "uint8"),
+        name: getString(offset + 0x1, 0x2, "uint8", {}, dataView),
         offset: 0x10d30 + i * 0x2d880,
       });
     }

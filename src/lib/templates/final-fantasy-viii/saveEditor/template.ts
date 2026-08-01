@@ -2121,7 +2121,7 @@ const template: GameJson = {
                           flex: true,
                           items: [
                             {
-                              name: "Slayed Tonberries",
+                              name: "Slain Tonberries",
                               offset: 0xe68,
                               type: "variable",
                               dataType: "uint32",

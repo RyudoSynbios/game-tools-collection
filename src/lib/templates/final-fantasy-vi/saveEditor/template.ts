@@ -305,7 +305,7 @@ const template: GameJson = {
                       type: "tabs",
                       items: [
                         {
-                          name: "General",
+                          name: "Status",
                           items: [
                             {
                               type: "section",
@@ -1110,7 +1110,7 @@ const template: GameJson = {
     },
     progressions: {
       0x0: "-",
-      0x1: "Game Complete",
+      0x1: "Game Cleared",
     },
     reequips: {},
     relics: {},

@@ -480,8 +480,6 @@ export function afterSetInt(item: Item, flag: ItemBitflag): void {
       });
     });
 
-    console.log(count);
-
     const totalItem = getClosestItem("poeSoulsTotal", item) as ItemInt;
 
     setInt(totalItem.offset, "uint8", count);

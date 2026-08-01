@@ -61,8 +61,6 @@ export function overrideSetInt(item: Item, value: string): boolean {
       return filename + char;
     }, "");
 
-    console.log(value);
-
     setString(itemString.offset, 0xa, "uint8", value, 0x0, {
       encoding: itemString.encoding,
       endCode: itemString.endCode,

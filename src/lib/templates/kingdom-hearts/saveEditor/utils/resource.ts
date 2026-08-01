@@ -578,7 +578,7 @@ export const itemTypes = [
   },
   {
     index: 0x30,
-    name: "Synthesis Items",
+    name: "Synthesis Materials",
     subtypes: [""],
   },
   {
@@ -599,7 +599,7 @@ export const itemTypes = [
 ];
 
 // prettier-ignore
-export const inventory = [
+export const itemList = [
   { index: 0x01, type: 0x00, order:   0, name: "Potion" },
   { index: 0x02, type: 0x00, order:   1, name: "Hi-Potion" },
   { index: 0x03, type: 0x00, order:   2, name: "Ether" },
@@ -861,16 +861,19 @@ export const accessoriesOrder: number[] = [0x0];
 export const itemsOrder: number[] = [0x0];
 export const weaponsOrder: number[] = [0x0];
 
-inventory
+itemList
   .sort((a, b) => a.order - b.order)
   .forEach((item) => {
     switch (item.type >> 0x4) {
       case 0x0:
         itemsOrder.push(item.index);
+        break;
       case 0x5:
         weaponsOrder.push(item.index);
+        break;
       case 0x6:
         accessoriesOrder.push(item.index);
+        break;
     }
   });
 

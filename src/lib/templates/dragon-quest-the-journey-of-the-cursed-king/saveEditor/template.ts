@@ -1558,7 +1558,7 @@ const template: GameJson = {
     },
     progressions: {
       0x0: "-",
-      0x1: "Game Completed",
+      0x1: "Game Cleared",
     },
     screenModes: {
       0x0: "Normal 4:3",
