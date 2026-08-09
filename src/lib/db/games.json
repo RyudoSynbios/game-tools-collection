@@ -747,6 +747,18 @@
     }
   },
   {
+    "id": "kingdom-hearts-ii",
+    "name": "Kingdom Hearts II",
+    "platformIds": ["playstation-2"],
+    "tools": {
+      "saveEditor": {
+        "createdAt": "2026-08-09",
+        "compatibilities": ["Kingdom Hearts HD 2.5 ReMIX"],
+        "regions": ["🇪🇺", "🇺🇸", "🇯🇵", "🇫🇷", "🇩🇪", "🇮🇹", "🇪🇸", "🇦🇺"]
+      }
+    }
+  },
+  {
     "id": "kingdom-hearts-chain-of-memories",
     "name": "Kingdom Hearts: Chain of Memories",
     "platformIds": ["game-boy-advance"],

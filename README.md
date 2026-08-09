@@ -71,6 +71,7 @@ Link to the website: [https://game-tools-collection.com](https://game-tools-coll
 | Half-Minute Hero                                    | PSP            | Save                    | EUR / USA / JAP                               |
 | Holy Magic Century                                  | N64            | Save                    | EUR / USA / JAP / FRA / GER                   |
 | Kingdom Hearts                                      | PS2            | Save                    | EUR / USA / JAP / FRA / GER / ITA / SPA / AUS |
+| Kingdom Hearts II                                   | PS2            | Save                    | EUR / USA / JAP / FRA / GER / ITA / SPA / AUS |
 | Kingdom Hearts: Chain of Memories                   | GBA            | Save                    | EUR / USA / JAP                               |
 | Kirby's Adventure                                   | NES            | Save                    | EUR / USA / JAP / FRA / GER / CAN             |
 | Konami Krazy Racers                                 | GBA            | Save                    | EUR / USA / JAP                               |
