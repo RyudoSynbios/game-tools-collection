@@ -1,12 +1,15 @@
+import { bitToOffset } from "$lib/utils/bytes";
+
 import type {
   Item,
   ItemBitflags,
   ItemChecksum,
   ItemContainer,
   ItemInt,
+  ItemSection,
 } from "$lib/types";
 
-import { treasureList } from "./resource";
+import { materials, synthesisRecipes, treasures } from "./resource";
 
 export function finalMixParseItemAdaptater(item: Item): Item {
   if (item.type === "bitflags") {
@@ -54,15 +57,77 @@ export function finalMixParseItemAdaptater(item: Item): Item {
 
     const [worldIndex] = item.id.splitInt();
 
-    const world = treasureList[worldIndex];
+    const world = treasures[worldIndex];
 
     itemBitflags.flags = itemBitflags.flags.map((flag, index) => ({
       ...flag,
-      label: `${(index + 1).leading0()} ${world.treasures[index].fmItem || world.treasures[index].item}`,
+      label: `${(index + 1).leading0()} ${world.treasures[index].fmItem}`,
       hidden: false,
     }));
 
     return itemBitflags;
+  } else if ("id" in item && item.id === "obtainedMaterials") {
+    const itemBitflags = item as ItemBitflags;
+
+    itemBitflags.flags = itemBitflags.flags.map((flag, index) => ({
+      ...flag,
+      label: materials[index].fmItem!,
+      hidden: false,
+    }));
+
+    return itemBitflags;
+  } else if ("id" in item && item.id === "collectionLists") {
+    const itemBitflags = item as ItemBitflags;
+
+    itemBitflags.flags = itemBitflags.flags.map((flag, index) => {
+      let shift = 0x0;
+
+      if (index >= 12) {
+        shift += 0x2;
+      }
+
+      if (index >= 23) {
+        shift += 0x2;
+      }
+
+      return {
+        ...flag,
+        offset: flag.offset + bitToOffset(flag.bit + shift),
+        bit: (flag.bit + shift) % 8,
+        hidden: false,
+      };
+    });
+
+    return itemBitflags;
+  } else if ("id" in item && item.id === "moogleLevel") {
+    const itemInt = item as ItemInt;
+
+    itemInt.offset += 0x70;
+
+    return itemInt;
+  } else if ("id" in item && item.id === "recipes") {
+    const itemBitflags = item as ItemBitflags;
+
+    itemBitflags.flags = itemBitflags.flags.map((flag, index) => ({
+      ...flag,
+      label: synthesisRecipes[index].fmItem!,
+      hidden: false,
+    }));
+
+    return itemBitflags;
+  } else if ("id" in item && item.id?.match(/material/)) {
+    const itemSection = item as ItemSection;
+
+    const isLogs = item.id === "materialLogs";
+
+    itemSection.items = itemSection.items.map((item, index) => ({
+      ...item,
+      offset: (item as ItemInt).offset + (isLogs ? 0x38 : 0x0),
+      name: materials[index].fmItem!,
+      hidden: false,
+    }));
+
+    return itemSection;
   } else if ("id" in item && item.id === "finalMixFlags") {
     const itemBitflags = item as ItemBitflags;
 
@@ -95,8 +160,7 @@ const shifts = [
   { offset: 0x3740, shift: 0x4 },
   { offset: 0x3748, shift: 0x4 },
   { offset: 0x3750, shift: 0x4 },
-  { offset: 0x3824, shift: 0x38 },
-  { offset: 0x38ec, shift: 0x38 },
+  { offset: 0x394c, shift: 0x70 },
   { offset: 0x3b80, shift: 0x838 },
   { offset: 0x9040, shift: 0x2a60 },
   { offset: 0xacc0, shift: 0xe40 },

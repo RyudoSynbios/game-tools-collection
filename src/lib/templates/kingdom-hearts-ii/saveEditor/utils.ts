@@ -1,7 +1,7 @@
 import { get } from "svelte/store";
 
 import { dataView, gamePlatform, gameRegion } from "$lib/stores";
-import { getInt, getString } from "$lib/utils/bytes";
+import { getInt, getString, setInt } from "$lib/utils/bytes";
 import { formatChecksum } from "$lib/utils/checksum";
 import {
   customGetRegions,
@@ -11,9 +11,11 @@ import {
   resetState,
   unpackFile,
 } from "$lib/utils/common/playstation2";
+import { getClosestItem } from "$lib/utils/parser";
 
 import type {
   Item,
+  ItemBitflags,
   ItemChecksum,
   ItemContainer,
   ItemInt,
@@ -177,6 +179,20 @@ export function overrideGetInt(item: Item): [boolean, number | undefined] {
   }
 
   return [false, undefined];
+}
+
+export function afterSetInt(item: Item): void {
+  if ("id" in item && item.id === "moogleLevel") {
+    const itemInt = item as ItemInt;
+
+    const level = getInt(itemInt.offset, "uint8");
+
+    const flagsItem = getClosestItem("moogleLevelFlags", item) as ItemBitflags;
+
+    flagsItem.flags.forEach((flag, index) => {
+      setInt(flag.offset, "bit", index < level ? 1 : 0, { bit: flag.bit });
+    });
+  }
 }
 
 const dataArray = [
