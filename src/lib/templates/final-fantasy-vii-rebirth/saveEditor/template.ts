@@ -6334,7 +6334,7 @@ const template: GameJson = {
         options: [0x40c, 0x40d, 0x40e, 0x40f, 0x410, 0x411, 0x412],
       },
       {
-        name: "Caith Sith",
+        name: "Cait Sith",
         options: [0x413, 0x414, 0x415, 0x416, 0x417, 0x418, 0x419],
       },
       {

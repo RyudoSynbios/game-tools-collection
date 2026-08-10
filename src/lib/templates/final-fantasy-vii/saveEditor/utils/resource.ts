@@ -425,7 +425,7 @@ export const limitBreakList = [
     ["Gauntlet", "Doom of the Living"],
     ["All Creation"],
   ],
-  // Caith Sith
+  // Cait Sith
   [
     ["Dice"],
     ["Slots"],

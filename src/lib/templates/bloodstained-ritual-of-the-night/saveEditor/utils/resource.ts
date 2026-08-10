@@ -130,19 +130,20 @@ export const bestiary = [
   { id: "N2012", name: "127 Orlok Dracule", isBoss: true },
 ];
 
+// prettier-ignore
 export const itemTypes = [
-  { index: 0x0, location: 0x0, name: "Weapons", max: 99 },
-  { index: 0x1, location: 0x1, name: "Bullets", max: 999 },
-  { index: 0x2, location: 0x3, name: "Heads", max: 99 },
-  { index: 0x3, location: 0x2, name: "Bodies", max: 99 },
-  { index: 0x4, location: 0x4, name: "Accessories", max: 99 },
-  { index: 0x5, location: 0x5, name: "Scarfs", max: 99 },
-  { index: 0x6, location: 0x6, name: "Potions", max: 9 },
-  { index: 0x7, location: 0x6, name: "Foods", max: 99 },
-  { index: 0x8, location: 0x7, name: "Ingredients", max: 99 },
-  { index: 0x9, location: 0x7, name: "Materials", max: 99 },
-  { index: 0xa, location: 0x8, name: "Key Items", max: 1 },
-  { index: 0xb, location: 0x9, name: "Books", max: 1 },
+  { index: 0x0, location: 0x0, name: "Weapons"    , max:  99 },
+  { index: 0x1, location: 0x1, name: "Bullets"    , max: 999 },
+  { index: 0x2, location: 0x3, name: "Heads"      , max:  99 },
+  { index: 0x3, location: 0x2, name: "Bodies"     , max:  99 },
+  { index: 0x4, location: 0x4, name: "Accessories", max:  99 },
+  { index: 0x5, location: 0x5, name: "Scarfs"     , max:  99 },
+  { index: 0x6, location: 0x6, name: "Potions"    , max:   9 },
+  { index: 0x7, location: 0x6, name: "Foods"      , max:  99 },
+  { index: 0x8, location: 0x7, name: "Ingredients", max:  99 },
+  { index: 0x9, location: 0x7, name: "Materials"  , max:  99 },
+  { index: 0xa, location: 0x8, name: "Key Items"  , max:   1 },
+  { index: 0xb, location: 0x9, name: "Books"      , max:   1 },
 ];
 
 export const weaponTypes = [

@@ -327,7 +327,7 @@ const template: GameJson = {
                               dataType: "uint8",
                               resource: "characters",
                               autocomplete: true,
-                              hint: "If selected, Young Cloud and Sephiroth will replace Caith Sith and Vincent.\n Their portraits will not be updated.",
+                              hint: "If selected, Young Cloud and Sephiroth will replace Cait Sith and Vincent.\n Their portraits will not be updated.",
                             },
                             {
                               id: "savePreview-1267-1",
@@ -337,7 +337,7 @@ const template: GameJson = {
                               dataType: "uint8",
                               resource: "characters",
                               autocomplete: true,
-                              hint: "If selected, Young Cloud and Sephiroth will replace Caith Sith and Vincent.\n Their portraits will not be updated.",
+                              hint: "If selected, Young Cloud and Sephiroth will replace Cait Sith and Vincent.\n Their portraits will not be updated.",
                             },
                             {
                               id: "savePreview-1267-2",
@@ -347,7 +347,7 @@ const template: GameJson = {
                               dataType: "uint8",
                               resource: "characters",
                               autocomplete: true,
-                              hint: "If selected, Young Cloud and Sephiroth will replace Caith Sith and Vincent.\n Their portraits will not be updated.",
+                              hint: "If selected, Young Cloud and Sephiroth will replace Cait Sith and Vincent.\n Their portraits will not be updated.",
                             },
                           ],
                         },

@@ -113,6 +113,7 @@ export function overrideParseItem(item: Item): Item {
     const itemString = item as ItemString;
 
     itemString.length = 0x8;
+    itemString.resource = "japanLetters";
 
     return itemString;
   } else if ("id" in item && item.id === "japanExclude") {

@@ -46,14 +46,14 @@ export const gameCategories: {
   {
     name: "Mini-Games",
     games: [
-      { index: 0x15, type: 0x2, name: "Paper Plane"  , max: 999 },
-      { index: 0x16, type: 0x2, name: "Skating Board", max: 999 },
-      { index: 0x14, type: 0x2, name: "Jump Forever" , max: 999 },
+      { index: 0x15, type: 0x2, name: "Paper Plane"  , max:      999 },
+      { index: 0x16, type: 0x2, name: "Skating Board", max:      999 },
+      { index: 0x14, type: 0x2, name: "Jump Forever" , max:      999 },
       { index: 0x10, type: 0x1, name: "Dr. Wario"    , max: 99999999 },
       { index: 0x11, type: 0x1, name: "Fly Swatter"  , max: 99999999 },
       { index: 0x0f, type: 0x1, name: "Sheriff"      , max: 99999999 },
-      { index: 0x12, type: 0x1, name: "Pyoro"        , max: 999999 },
-      { index: 0x13, type: 0x1, name: "Pyoro 2"      , max: 999999 },
+      { index: 0x12, type: 0x1, name: "Pyoro"        , max:   999999 },
+      { index: 0x13, type: 0x1, name: "Pyoro 2"      , max:   999999 },
     ],
   },
 ];

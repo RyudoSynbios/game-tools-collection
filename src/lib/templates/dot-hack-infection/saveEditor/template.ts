@@ -1256,7 +1256,7 @@ const template: GameJson = {
                             { offset: 0x289c, bit: 0, label: "Exposing Net Porn" },
                             { offset: 0x289d, bit: 0, label: "Can Future Phenomena be Predicted?" },
                             { offset: 0x289e, bit: 0, label: "An ALTIMIT Rival?" },
-                            { offset: 0x289f, bit: 0, label: "*j1_ 3s & =BaHJ&lt; (dPQO:Iq" },
+                            { offset: 0x289f, bit: 0, label: "*j1_ 3s & =BaHJ< (dPQO:Iq" },
                             { offset: 0x28a0, bit: 0, label: "Apology" },
                             { offset: 0x28a1, bit: 0, label: "Net Crisis Linked to Terrorism?" },
                             { offset: 0x28a2, bit: 0, label: "Network Crisis Containment" },
