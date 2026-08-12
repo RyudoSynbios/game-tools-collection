@@ -104,6 +104,7 @@ Link to the website: [https://game-tools-collection.com](https://game-tools-coll
 | Pokémon Gold, Silver and Crystal                    | GBC            | Save                    | EUR / USA / JAP / FRA / GER / ITA / SPA / AUS |
 | Pokémon Snap                                        | N64            | Save                    | EUR / USA / JAP / FRA / GER / ITA / SPA / AUS |
 | Pokémon Trading Card Game                           | GBC            | Save                    | EUR / USA / JAP / AUS                         |
+| Pokémon Card GB2: GR Dan Sanjou!                    | GBC            | Save                    | JAP                                           |
 | Rayman                                              | PS             | Save                    | EUR / USA / JAP                               |
 | Rayman 2: The Great Escape                          | N64            | Save                    | EUR / USA                                     |
 | Resident Evil Zero                                  | GC             | Save                    | EUR / USA / JAP                               |

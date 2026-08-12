@@ -1118,6 +1118,17 @@
     }
   },
   {
+    "id": "pokemon-card-gb2",
+    "name": "Pokémon Card GB2: GR Dan Sanjou!",
+    "platformIds": ["game-boy-color"],
+    "tools": {
+      "saveEditor": {
+        "createdAt": "2026-08-12",
+        "regions": ["🇯🇵"]
+      }
+    }
+  },
+  {
     "id": "rayman",
     "name": "Rayman",
     "platformIds": ["playstation"],
