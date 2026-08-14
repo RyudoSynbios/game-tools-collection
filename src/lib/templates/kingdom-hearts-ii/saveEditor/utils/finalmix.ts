@@ -12,12 +12,14 @@ import type {
 import { materials, synthesisRecipes, treasures } from "./resource";
 
 export function finalMixParseItemAdaptater(item: Item): Item {
-  if (item.type === "bitflags") {
-    item.flags.forEach((flag) => {
-      flag.offset = getShift(flag.offset);
-    });
-  } else if ("offset" in item) {
-    item.offset = getShift(item.offset);
+  if (!("id" in item) || !item.id?.match(/finalMixNoShift/)) {
+    if (item.type === "bitflags") {
+      item.flags.forEach((flag) => {
+        flag.offset = getShift(flag.offset);
+      });
+    } else if ("offset" in item) {
+      item.offset = getShift(item.offset);
+    }
   }
 
   if ("id" in item && item.id === "checksum") {
@@ -61,7 +63,7 @@ export function finalMixParseItemAdaptater(item: Item): Item {
 
     itemBitflags.flags = itemBitflags.flags.map((flag, index) => ({
       ...flag,
-      label: `${(index + 1).leading0()} ${world.treasures[index].fmItem}`,
+      label: world.treasures[index].fmItem!,
       hidden: false,
     }));
 
@@ -99,6 +101,19 @@ export function finalMixParseItemAdaptater(item: Item): Item {
     });
 
     return itemBitflags;
+  } else if ("id" in item && item.id === "gummiShips") {
+    const itemContainer = item as ItemContainer;
+
+    itemContainer.instances = 18;
+
+    return itemContainer;
+  } else if ("id" in item && item.id === "gummiCompletionBonus") {
+    const itemBitflags = item as ItemBitflags;
+
+    itemBitflags.flags[5].separator = true;
+    itemBitflags.flags[6].hidden = false;
+
+    return itemBitflags;
   } else if ("id" in item && item.id === "moogleLevel") {
     const itemInt = item as ItemInt;
 
@@ -115,7 +130,7 @@ export function finalMixParseItemAdaptater(item: Item): Item {
     }));
 
     return itemBitflags;
-  } else if ("id" in item && item.id?.match(/material/)) {
+  } else if ("id" in item && item.id?.match(/^material/)) {
     const itemSection = item as ItemSection;
 
     const isLogs = item.id === "materialLogs";
@@ -164,7 +179,7 @@ const shifts = [
   { offset: 0x3b80, shift: 0x838 },
   { offset: 0x9040, shift: 0x2a60 },
   { offset: 0xacc0, shift: 0xe40 },
-  { offset: 0xb383, shift: 0x6c0 },
+  { offset: 0xb380, shift: 0x6c0 },
 ];
 
 function getShift(baseOffset: number): number {

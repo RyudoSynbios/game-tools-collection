@@ -1,7 +1,7 @@
 import { get } from "svelte/store";
 
 import { dataView, gamePlatform, gameRegion } from "$lib/stores";
-import { getInt, getString, setInt } from "$lib/utils/bytes";
+import { getInt, getString, setInt, setString } from "$lib/utils/bytes";
 import { formatChecksum } from "$lib/utils/checksum";
 import {
   customGetRegions,
@@ -19,12 +19,14 @@ import type {
   ItemChecksum,
   ItemContainer,
   ItemInt,
+  ItemSection,
+  ItemString,
   Resource,
 } from "$lib/types";
 
 import { finalMixParseItemAdaptater } from "./utils/finalmix";
 import { japanParseItemAdaptater } from "./utils/japan";
-import { abilityList, itemList } from "./utils/resource";
+import { abilityList, itemList, minigames } from "./utils/resource";
 
 export function setGamePlatform(dataView: DataView, fileName: string): void {
   if (fileName.match(/KHIIFM/)) {
@@ -94,11 +96,21 @@ export function overrideParseItem(item: Item): Item {
     const [max, index] = item.id.splitInt();
 
     itemInt.hidden = $gameRegion !== 7 && index >= max;
+  } else if (
+    "id" in item &&
+    item.id === "name" &&
+    $gamePlatform === 0 &&
+    [2, 7].includes($gameRegion)
+  ) {
+    const itemString = item as ItemString;
+
+    itemString.length = 0x14;
+    itemString.resource = "japanLetters";
   } else if ("id" in item && item.id === "finalMixExclude") {
     const itemInt = item as ItemInt;
 
     itemInt.hidden = $gameRegion === 7;
-  } else if ("id" in item && item.id === "finalMixOnly") {
+  } else if ("id" in item && item.id?.match(/finalMixOnly/)) {
     const itemInt = item as ItemInt;
 
     itemInt.hidden = $gameRegion !== 7;
@@ -169,20 +181,108 @@ export function overrideItem(item: Item): Item {
   return item;
 }
 
-export function overrideGetInt(item: Item): [boolean, number | undefined] {
+export function overrideGetInt(
+  item: Item,
+): [boolean, number | string | undefined] {
   if ("id" in item && item.id?.match(/item-/)) {
     const itemInt = item as ItemInt;
 
     if (itemInt.disabled) {
       return [true, 0x0];
     }
+  } else if ("id" in item && item.id === "name") {
+    const itemString = item as ItemString;
+
+    const count = getInt(itemString.offset - 0x2, "uint16");
+
+    const name = getString(itemString.offset, itemString.length, "uint16", {
+      resource: itemString.resource,
+    }).slice(0, count);
+
+    return [true, name];
+  } else if ("id" in item && item.id?.match(/gummiUpgrades-/)) {
+    const itemInt = item as ItemInt;
+
+    const [, type] = item.id.split("-");
+
+    let int = getInt(itemInt.offset, "uint8");
+
+    switch (type) {
+      case "material":
+        int = 20 + int * 10;
+        break;
+      case "ap":
+        int = 8 + int * 4;
+        break;
+      case "cost":
+        int = 600 + int * 100;
+        break;
+      case "teenyCost":
+        int = 100 + int * 100;
+        break;
+    }
+
+    return [true, int];
   }
 
   return [false, undefined];
 }
 
+export function overrideSetInt(item: Item, value: string): boolean {
+  if ("id" in item && item.id === "name") {
+    const itemString = item as ItemString;
+
+    setInt(itemString.offset - 0x2, "uint16", value.length);
+
+    setString(itemString.offset, itemString.length, "uint16", value, 0x0, {
+      resource: itemString.resource,
+    });
+
+    return true;
+  } else if ("id" in item && item.id?.match(/gummiUpgrades-/)) {
+    const itemInt = item as ItemInt;
+
+    const [, type] = item.id.split("-");
+
+    let int = parseInt(value);
+
+    switch (type) {
+      case "material":
+        int = (int - 20) / 10;
+        break;
+      case "ap":
+        int = (int - 8) / 4;
+        break;
+      case "cost":
+        int = (int - 600) / 100;
+        break;
+      case "teenyCost":
+        int = (int - 100) / 100;
+        break;
+    }
+
+    setInt(itemInt.offset, "uint8", int);
+
+    return true;
+  }
+
+  return false;
+}
+
 export function afterSetInt(item: Item): void {
-  if ("id" in item && item.id === "moogleLevel") {
+  if ("id" in item && item.id?.match(/minigame-/)) {
+    const itemInt = item as ItemInt;
+
+    const [index] = item.id.splitInt();
+
+    const int = getInt(itemInt.offset, "uint32");
+
+    const minigame = minigames.find((minigame) => minigame.index === index);
+
+    console.log(int);
+
+    setInt(itemInt.offset - 0x4, "uint32", int !== 0 ? minigame!.cleared : 0);
+  } else if ("id" in item && item.id === "moogleLevel") {
     const itemInt = item as ItemInt;
 
     const level = getInt(itemInt.offset, "uint8");
@@ -192,7 +292,67 @@ export function afterSetInt(item: Item): void {
     flagsItem.flags.forEach((flag, index) => {
       setInt(flag.offset, "bit", index < level ? 1 : 0, { bit: flag.bit });
     });
+  } else if ("id" in item && item.id?.match(/completionRank-/)) {
+    const itemInt = item as ItemInt;
+
+    const [, type] = item.id.split("-");
+
+    const itemSection = getClosestItem("gummiTreasures", item) as ItemSection;
+    const itemBitflags = itemSection.items[0] as ItemBitflags;
+
+    const rank = getInt(itemInt.offset, "uint8");
+
+    if (type === "ex") {
+      const flag = itemBitflags.flags[6];
+
+      setInt(flag.offset, "bit", rank >= 0x6 ? 1 : 0, { bit: flag.bit });
+    } else {
+      for (let i = 5; i >= 0; i -= 1) {
+        const flag = itemBitflags.flags[i];
+        const index = Math.abs(i - 5);
+
+        setInt(flag.offset, "bit", index < rank ? 1 : 0, { bit: flag.bit });
+      }
+    }
+
+    updateGummiTreasuresPercent(itemInt);
+  } else if ("id" in item && item.id === "gummiTreasuresFlags") {
+    const itemBitflags = item as ItemBitflags;
+
+    updateGummiTreasuresPercent(itemBitflags);
   }
+}
+
+function updateGummiTreasuresPercent(item: ItemBitflags | ItemInt): void {
+  const $gameRegion = get(gameRegion);
+
+  const itemSection = getClosestItem("gummiTreasures", item) as ItemSection;
+  const itemPercents = getClosestItem(
+    "gummiTreasuresPercents",
+    item,
+  ) as ItemSection;
+
+  let count = 0;
+  let total = 0;
+
+  itemSection.items.forEach((item) => {
+    const itemBitflags = item as ItemBitflags;
+
+    itemBitflags.flags.forEach((flag) => {
+      if (!flag.hidden) {
+        count += getInt(flag.offset, "bit", { bit: flag.bit });
+        total += 1;
+      }
+    });
+  });
+
+  itemPercents.items.forEach((item, index) => {
+    const itemInt = item as ItemInt;
+
+    if (index === 0 || $gameRegion === 7) {
+      setInt(itemInt.offset, "float32", (count / total) * 100);
+    }
+  });
 }
 
 const dataArray = [
