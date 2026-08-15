@@ -49,6 +49,7 @@ test.describe(game, () => {
     ["should load a DexDrive save (Japan)"         , "playstation/japan.gme"                  , [            't|["Slot 5"]'                  , "s|5", "i|08$1", "i|00$2"]],
     ["should load a DexDrive save (France)"        , "playstation/france.gme"                 , [            't|["Slot 2"]'                  , "s|2", "i|08$1", "i|21$2"]],
     ["should load a DexDrive save (Germany)"       , "playstation/germany.gme"                , [            't|["Slot 4"]'                  , "s|2", "i|08$1", "i|31$2"]],
+    // Grandia HD Remaster
     ["should load a Grandia HD Remaster save"      , "grandia-hd-remaster/BISLPSP02124GRA-S00", [            't|["Slot 1"]'                  , "s|1", "i|10$1", "i|56$2"]],
   ];
 

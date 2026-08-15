@@ -38,15 +38,16 @@ export function eventsFragment(offset: number, events: EventRange[]): ItemTabs {
                     },
                     resource: "eventProgressions",
                   },
-                  (event.type === "Time" &&
-                    chronoFragment("Time", offset + 0x1 + shift, "uint24")) || {
-                    name: event.type,
-                    offset: offset + 0x1 + shift,
-                    type: "variable",
-                    dataType: "uint24",
-                    bigEndian: true,
-                    max: 99999,
-                  },
+                  event.type === "Time"
+                    ? chronoFragment("Time", offset + 0x1 + shift, "uint24")
+                    : {
+                        name: event.type,
+                        offset: offset + 0x1 + shift,
+                        type: "variable",
+                        dataType: "uint24",
+                        bigEndian: true,
+                        max: 99999,
+                      },
                 ],
               };
             }),

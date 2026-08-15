@@ -111,8 +111,8 @@ const template: GameJson = {
                           type: "variable",
                           dataType: "string",
                           letterDataType: "uint8",
-                          regex: "[ 0-9A-Z]",
                           fallback: 0x20,
+                          regex: "[ 0-9A-Z]",
                           test: true,
                         },
                         {
@@ -123,8 +123,8 @@ const template: GameJson = {
                           type: "variable",
                           dataType: "string",
                           letterDataType: "uint8",
-                          regex: "[ 0-9A-Z]",
                           fallback: 0x20,
+                          regex: "[ 0-9A-Z]",
                           hidden: true,
                         },
                         {
@@ -589,8 +589,8 @@ const template: GameJson = {
                   type: "variable",
                   dataType: "string",
                   letterDataType: "uint8",
-                  regex: "[ 0-9A-Z]",
                   fallback: 0x20,
+                  regex: "[ 0-9A-Z]",
                 },
                 {
                   name: "Playtime",

@@ -429,16 +429,10 @@ const template: GameJson = {
                       items: [
                         {
                           name: "Progression",
-                          type: "section",
-                          background: true,
-                          items: [
-                            {
-                              name: "Completed",
-                              offset: 0x53f,
-                              type: "variable",
-                              dataType: "boolean",
-                            },
-                          ],
+                          offset: 0x53f,
+                          type: "variable",
+                          dataType: "uint8",
+                          resource: "booleanCleared",
                         },
                         {
                           id: "score",
@@ -665,16 +659,10 @@ const template: GameJson = {
                       items: [
                         {
                           name: "Progression",
-                          type: "section",
-                          background: true,
-                          items: [
-                            {
-                              name: "Completed",
-                              offset: 0x2bf,
-                              type: "variable",
-                              dataType: "boolean",
-                            },
-                          ],
+                          offset: 0x2bf,
+                          type: "variable",
+                          dataType: "uint8",
+                          resource: "booleanCleared",
                         },
                         {
                           id: "score",
@@ -867,6 +855,10 @@ const template: GameJson = {
       0x0: "α",
       0x1: "β",
       0x2: "γ",
+    },
+    booleanCleared: {
+      0x0: "-",
+      0x1: "Cleared",
     },
     characters: {
       0x0: "Ryu",
