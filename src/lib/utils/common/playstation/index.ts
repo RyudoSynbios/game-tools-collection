@@ -51,7 +51,7 @@ export function repackFile(): ArrayBufferLike {
   return $dataView.buffer;
 }
 
-export function customGetRegions(): string[] {
+export function customGetRegions(identifier = ""): string[] {
   const regions: string[] = [];
 
   let saves: Save[] = [];
@@ -70,7 +70,11 @@ export function customGetRegions(): string[] {
     const validatorStringified = numberArrayToString(validator);
 
     if (
-      saves.some((save) => save.file.productCode.includes(validatorStringified))
+      saves.some(
+        (save) =>
+          save.file.productCode.includes(validatorStringified) &&
+          (!identifier || save.file.identifier === identifier),
+      )
     ) {
       regions.push(region);
     }
