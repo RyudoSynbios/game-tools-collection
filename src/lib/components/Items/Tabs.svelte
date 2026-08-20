@@ -239,6 +239,7 @@
             class="gtc-tab"
             class:gtc-tab-debug={item.hidden || tab.hidden}
             class:gtc-tab-disabled={tab.disabled}
+            class:gtc-tab-fixedwidth={item.fixedWidth}
             class:gtc-tab-highlight={index === tabIndex}
             title={tab.planned ? "This feature is not yet available" : ""}
             on:click={() => handleTabClick(index)}
@@ -319,6 +320,12 @@
         @apply mb-4 mr-4 block overflow-y-scroll no-scrollbar md:mb-0;
 
         min-width: 200px;
+
+        & .gtc-tab-fixedwidth {
+          @apply block overflow-hidden text-ellipsis whitespace-nowrap;
+
+          width: 200px;
+        }
       }
 
       & > .gtc-tabs-content {

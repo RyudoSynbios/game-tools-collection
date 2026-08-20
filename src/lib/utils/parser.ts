@@ -318,6 +318,7 @@ export function parseContainer(
     indexes: true,
     defaultIndex: item.defaultIndex,
     vertical: item.vertical,
+    fixedWidth: item.fixedWidth,
     onTabChange: item.onTabChange,
     hidden: item.hidden,
     items: [],
