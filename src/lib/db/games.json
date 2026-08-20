@@ -688,6 +688,17 @@
     }
   },
   {
+    "id": "gran-turismo",
+    "name": "Gran Turismo",
+    "platformIds": ["playstation"],
+    "tools": {
+      "saveEditor": {
+        "createdAt": "2026-08-20",
+        "regions": ["🇪🇺", "🇺🇸", "🇯🇵"]
+      }
+    }
+  },
+  {
     "id": "grandia",
     "name": "Grandia",
     "platformIds": ["playstation"],
