@@ -123,12 +123,10 @@ export function overrideParseItem(item: Item): Item {
 
       return itemInt;
     });
-  } else if ("id" in item && item.id?.match(/affection-/)) {
+  } else if ("id" in item && item.id === "affection-0") {
     const itemInt = item as ItemInt;
 
-    const [index] = item.id.splitInt();
-
-    itemInt.hidden = index === 0;
+    itemInt.hidden = true;
 
     return itemInt;
   }

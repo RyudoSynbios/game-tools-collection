@@ -47,7 +47,7 @@ export function getDecompressedData(offset: number): Uint8Array {
   const decompressedLength = getInt(offset + 0x1, "uint16");
 
   if (magic !== 0x10) {
-    debug.warn(`Image in offet 0x${offset.toHex()} is not LZSS compressed.`);
+    debug.warn(`Image in offset 0x${offset.toHex()} is not LZSS compressed.`);
 
     return new Uint8Array(0);
   }

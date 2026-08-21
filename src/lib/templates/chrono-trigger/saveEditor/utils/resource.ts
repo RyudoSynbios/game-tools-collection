@@ -361,10 +361,10 @@ export const progressionList = [
 ];
 
 export const progressions = progressionList.reduce(
-  (items: Resource, item, index) => {
-    items[index] = item.name;
+  (progressions: Resource, progression, index) => {
+    progressions[index] = progression.name;
 
-    return items;
+    return progressions;
   },
   {},
 );

@@ -41,8 +41,8 @@ export const letterList = [
   { index: 0x10, flagIndex: 0x7, order: 11, name: "From Wife of Yeto" },
 ];
 
-export const letters = letterList.reduce((items: Resource, item, index) => {
-  items[0x1 + index] = item.name;
+export const letters = letterList.reduce((letters: Resource, letter, index) => {
+  letters[0x1 + index] = letter.name;
 
-  return items;
+  return letters;
 }, {});

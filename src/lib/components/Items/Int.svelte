@@ -61,7 +61,7 @@
       setIntFromItem(item, newValue);
     }
 
-    if (isLinked(item) && item.id !== "current") {
+    if (isLinked(item) && !item.id?.match(/^current/)) {
       const currentItem = item.parent!.items[0] as ItemInt;
       const maxItem = item.parent!.items[1] as ItemInt;
 
@@ -115,7 +115,7 @@
       item = $gameUtils.overrideItem(item);
     }
 
-    if (isLinked(item) && item.id === "current") {
+    if (isLinked(item) && item.id?.match(/^current/)) {
       const maxItem = item.parent!.items[1] as ItemInt;
 
       const max = getIntFromItem(maxItem);

@@ -58,7 +58,7 @@
 
       filteredOptions = options.filter((option) =>
         words.every((word) =>
-          option.value.toLowerCase().match(word.toLowerCase()),
+          option.value.toLowerCase().includes(word.toLowerCase()),
         ),
       );
     }

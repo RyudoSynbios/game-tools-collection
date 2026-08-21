@@ -111,27 +111,6 @@ export function overrideItem(item: Item): Item {
   return item;
 }
 
-function getFormation(offset: number, index: number): number {
-  const binary = getInt(offset, "uint8").toBinary();
-
-  let int = 0x0;
-
-  let current = 0;
-
-  for (let i = 0; i < 7; i += 1) {
-    if (binary[i] === "1") {
-      if (current === index) {
-        int = 0x1 << (7 - i);
-        break;
-      } else {
-        current += 1;
-      }
-    }
-  }
-
-  return int;
-}
-
 export function overrideGetInt(item: Item): [boolean, number | undefined] {
   if ("id" in item && item.id?.match(/formation-/)) {
     const itemInt = item as ItemInt;
@@ -189,6 +168,27 @@ export function beforeSaving(): ArrayBufferLike {
 
 export function onReset(): void {
   resetState();
+}
+
+function getFormation(offset: number, index: number): number {
+  const binary = getInt(offset, "uint8").toBinary();
+
+  let int = 0x0;
+
+  let current = 0;
+
+  for (let i = 0; i < 7; i += 1) {
+    if (binary[i] === "1") {
+      if (current === index) {
+        int = 0x1 << (7 - i);
+        break;
+      } else {
+        current += 1;
+      }
+    }
+  }
+
+  return int;
 }
 
 export function getSlotNames(): Resource {
