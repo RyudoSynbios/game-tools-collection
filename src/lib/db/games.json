@@ -1195,6 +1195,18 @@
     }
   },
   {
+    "id": "shin-megami-tensei-lucifer-s-call",
+    "name": "Shin Megami Tensei: Lucifer's Call",
+    "metaName": "Shin Megami Tensei: Lucifer's Call (Shin Megami Tensei III: Nocturne)",
+    "platformIds": ["playstation-2"],
+    "tools": {
+      "saveEditor": {
+        "createdAt": "2026-08-27",
+        "regions": ["🇪🇺", "🇺🇸", "🇯🇵", "🇰🇷"]
+      }
+    }
+  },
+  {
     "id": "shining-force",
     "name": "Shining Force",
     "platformIds": ["mega-drive"],
