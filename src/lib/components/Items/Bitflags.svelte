@@ -27,6 +27,11 @@
   function handleInputChange(flag: ItemBitflag, event: Event): void {
     const target = event.target as HTMLInputElement;
 
+    if (item.readonly) {
+      target.checked = !target.checked;
+      return;
+    }
+
     let isOverrided = false;
 
     if (utilsExists("overrideSetInt")) {

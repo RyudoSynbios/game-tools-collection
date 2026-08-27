@@ -199,6 +199,7 @@ export interface ItemBitflags {
   noMargin?: boolean;
   reversed?: boolean;
   hint?: string;
+  readonly?: boolean;
   disabled?: boolean;
   hidden?: boolean;
   flags: ItemBitflag[];
