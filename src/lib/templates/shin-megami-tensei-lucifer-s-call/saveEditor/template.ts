@@ -755,7 +755,7 @@ const template: GameJson = {
                         {
                           id: `magatamaSkills-0-${magatama.index}`,
                           name: "Learned Skills",
-                          offset: 0x1d3c,
+                          offset: 0x1d3c + magatama.index - 0x1,
                           type: "variable",
                           dataType: "uint8",
                           binary: {
@@ -766,7 +766,7 @@ const template: GameJson = {
                         {
                           id: `magatamaSkills-1-${magatama.index}`,
                           name: "Mastered",
-                          offset: 0x1d3c,
+                          offset: 0x1d3c + magatama.index - 0x1,
                           type: "variable",
                           dataType: "bit",
                           bit: 7,

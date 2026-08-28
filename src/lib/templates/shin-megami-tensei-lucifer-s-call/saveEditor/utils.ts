@@ -151,7 +151,7 @@ export function overrideItem(item: Item): Item {
 
     const [, index] = item.id.splitInt();
 
-    const magatamas = getMagatamas(itemInt.offset - 0x41);
+    const magatamas = getMagatamas(itemInt.offset - 0x40 - index);
 
     const magatama = magatamas.find((magatama) => magatama.index === index);
 
@@ -241,24 +241,6 @@ export function overrideGetInt(
     const magatama = magatamas.find((magatama) => magatama.index === index);
 
     return [true, magatama ? 1 : 0];
-  } else if ("id" in item && item.id?.match(/magatamaSkills-/)) {
-    const itemInt = item as ItemInt;
-
-    const [type, index] = item.id.splitInt();
-
-    const magatamas = getMagatamas(itemInt.offset - 0x41);
-
-    const magatama = magatamas.find((magatama) => magatama.index === index);
-
-    let skills = 0;
-    let mastered = 0;
-
-    if (magatama) {
-      skills = magatama.skills & 0x7f;
-      mastered = magatama.skills >> 0x7;
-    }
-
-    return [true, type === 0 ? skills : mastered];
   } else if ("id" in item && item.id === "compendiumRegistered") {
     const itemInt = item as ItemInt;
 
@@ -337,7 +319,8 @@ export function overrideSetInt(item: Item, value: string): boolean {
       }
     } else {
       magatamas[magatamaIndex].index = 0xff;
-      magatamas[magatamaIndex].skills = 0x0;
+
+      setInt(itemInt.offset + 0x40 + index, "uint8", 0x0);
     }
 
     let count = 0;
@@ -348,7 +331,6 @@ export function overrideSetInt(item: Item, value: string): boolean {
         const magatamaIndex = magatama.index === 0xff ? 0x0 : magatama.index;
 
         setInt(itemInt.offset + index, "uint8", magatamaIndex);
-        setInt(itemInt.offset + 0x41 + index, "uint8", magatama.skills);
 
         count += magatama.index !== 0xff ? 1 : 0;
       });
@@ -363,7 +345,7 @@ export function overrideSetInt(item: Item, value: string): boolean {
 
     let int = parseInt(value);
 
-    const magatamas = getMagatamas(itemInt.offset - 0x41);
+    const magatamas = getMagatamas(itemInt.offset - 0x40 - index);
 
     const magatamaIndex = magatamas.findIndex(
       (magatama) => magatama.index === index,
@@ -374,7 +356,7 @@ export function overrideSetInt(item: Item, value: string): boolean {
         int |= 0x80;
       }
 
-      setInt(itemInt.offset + magatamaIndex, "uint8", int);
+      setInt(itemInt.offset, "uint8", int);
     }
 
     return true;
@@ -561,7 +543,6 @@ function getDemonTableInfos(
 
 interface Magatama {
   index: number;
-  skills: number;
   max: number;
 }
 
@@ -570,7 +551,6 @@ function getMagatamas(offset: number): Magatama[] {
 
   for (let i = 0x0; i < 0x19; i += 0x1) {
     const index = getInt(offset + i, "uint8") || 0xff;
-    const skills = getInt(offset + 0x41 + i, "uint8");
 
     const magatama = magatamaList.find((magatama) => magatama.index === index);
 
@@ -580,7 +560,7 @@ function getMagatamas(offset: number): Magatama[] {
       max = magatama.max + (index === 0x1 && isManiax() ? 1 : 0);
     }
 
-    magatamas.push({ index, skills, max });
+    magatamas.push({ index, max });
   }
 
   return magatamas;
