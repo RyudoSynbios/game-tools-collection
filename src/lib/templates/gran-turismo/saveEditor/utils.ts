@@ -210,26 +210,9 @@ export function overrideSetInt(item: Item, value: string): boolean {
 
 export function afterSetInt(item: Item): void {
   if ("id" in item && item.id?.match(/car-/)) {
-    const itemInt = item as ItemInt;
-
     const [index] = item.id.splitInt();
 
-    // Increase garage size
-
-    const slots = getInt(garageOffset + 0x2, "uint16");
-
-    if (index === slots) {
-      setInt(garageOffset + 0x2, "uint16", slots + 1);
-
-      clearCarData(slots + 1);
-    }
-
-    // Update resources
-
-    const carIndex = getInt(itemInt.offset, "uint8");
-
-    updateResources("carNames");
-    updateCarResources(carIndex);
+    cleanGarageData(index);
   }
 }
 
@@ -261,13 +244,58 @@ export function generateChecksum(item: ItemChecksum): number {
 }
 
 export function beforeSaving(): ArrayBufferLike {
-  cleanGarageData();
-
   return repackFile();
 }
 
 export function onReset(): void {
   resetState();
+}
+
+function cleanGarageData(index: number): void {
+  const offset = garageOffset + 0x194 + index * 0x60;
+
+  // Clean garage data
+
+  let currentCar = getInt(garageOffset, "uint16");
+  let carIndex = getInt(offset, "uint8");
+
+  const slots = getInt(garageOffset + 0x2, "uint16");
+
+  // If a car is removed and is not the last one on the list, we shift the data upwards
+  if (carIndex === 0x0 && index + 1 < slots) {
+    for (let i = index; i < 0x64; i += 0x1) {
+      moveCarData(i + 0x1, i);
+    }
+
+    clearCarData(0x63);
+  }
+
+  // Update current car
+
+  if (carIndex === 0x0 && currentCar >= index) {
+    currentCar -= 0x1;
+  }
+
+  setInt(garageOffset, "uint16", currentCar);
+
+  // Update count
+
+  let count = 0;
+
+  const countOffset = garageOffset + 0x194;
+
+  for (let i = 0x0; i < 0x64; i += 0x1) {
+    count += getInt(countOffset + i * 0x60, "uint8") !== 0x0 ? 0x1 : 0x0;
+  }
+
+  setInt(garageOffset + 0x2, "uint16", count);
+
+  // Update names
+
+  carIndex = getInt(offset, "uint8");
+
+  updateResources("carNames");
+  updateCarResources(carIndex);
 }
 
 function clearCarData(index: number): void {
@@ -279,57 +307,6 @@ function clearCarData(index: number): void {
 
   // Price
   setInt(garageOffset + 0x4 + index * 0x4, "uint32", 0x0);
-}
-
-function moveCarData(indexSrc: number, indexDst: number): void {
-  const carOffsetSrc = garageOffset + 0x194 + indexSrc * 0x60;
-  const carOffsetDst = garageOffset + 0x194 + indexDst * 0x60;
-
-  const priceffsetSrc = garageOffset + 0x4 + indexSrc * 0x4;
-  const priceffsetDst = garageOffset + 0x4 + indexDst * 0x4;
-
-  copyInt(carOffsetSrc, carOffsetDst, 0x60); // Car Data
-  copyInt(priceffsetSrc, priceffsetDst, 0x4); // Price
-
-  clearCarData(indexSrc);
-}
-
-function cleanGarageData(): void {
-  const offset = garageOffset + 0x194;
-
-  let currentCar = getInt(garageOffset, "uint16");
-
-  let count = 0;
-  let shifts = 0;
-
-  for (let i = 0x0; i < 0x64; i += 0x1) {
-    const carIndex = getInt(offset + i * 0x60, "uint8");
-
-    if (carIndex !== 0x0) {
-      count += 0x1;
-
-      if (shifts > 0) {
-        moveCarData(i, i - shifts);
-
-        if (currentCar === i) {
-          currentCar = i - shifts;
-        }
-      }
-    } else {
-      shifts += 0x1;
-    }
-  }
-
-  if (count === 0) {
-    currentCar = 0xffff;
-  } else if (currentCar >= count) {
-    currentCar = 0x0;
-  }
-
-  setInt(garageOffset, "uint16", currentCar);
-  setInt(garageOffset + 0x2, "uint16", count);
-
-  updateResources("carNames");
 }
 
 export function getCarNames(): Resource {
@@ -397,6 +374,17 @@ export function getPartResources(carIndex: number): PartResource[] {
   }));
 
   return resources;
+}
+
+function moveCarData(indexSrc: number, indexDst: number): void {
+  const carOffsetSrc = garageOffset + 0x194 + indexSrc * 0x60;
+  const carOffsetDst = garageOffset + 0x194 + indexDst * 0x60;
+
+  const priceffsetSrc = garageOffset + 0x4 + indexSrc * 0x4;
+  const priceffsetDst = garageOffset + 0x4 + indexDst * 0x4;
+
+  copyInt(carOffsetSrc, carOffsetDst, 0x60); // Car Data
+  copyInt(priceffsetSrc, priceffsetDst, 0x4); // Price
 }
 
 export function onCarChange(index: number): void {
