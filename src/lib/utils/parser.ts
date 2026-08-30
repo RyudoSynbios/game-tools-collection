@@ -620,7 +620,7 @@ export function getClosestItem(
   item: Item | ParentItem,
 ): Item | ParentItem | undefined {
   if (!item.parent) {
-    return undefined;
+    return;
   }
 
   let find = undefined;

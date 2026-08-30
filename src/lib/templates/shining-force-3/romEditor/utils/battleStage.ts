@@ -269,21 +269,13 @@ export async function unpackBattleStage(
     const rotationY = -getInt(objectsOffset + 0x4, "int16", { bigEndian: true }, dataView).toEuler(); // prettier-ignore
     const rotationZ = getInt(objectsOffset + 0x6, "int16", { bigEndian: true }, dataView).toEuler(); // prettier-ignore
 
-    let positionX = -getInt(objectsOffset + 0x8, "int16", { bigEndian: true }, dataView); // prettier-ignore
-    let positionY = -getInt(objectsOffset + 0xc, "int16", { bigEndian: true }, dataView); // prettier-ignore
-    let positionZ = getInt(objectsOffset + 0x10, "int16", { bigEndian: true }, dataView); // prettier-ignore
+    const positionX = -getInt(objectsOffset + 0x8, "int32", { bigEndian: true }, dataView) / 0x10000; // prettier-ignore
+    const positionY = -getInt(objectsOffset + 0xc, "int32", { bigEndian: true }, dataView) / 0x10000; // prettier-ignore
+    const positionZ = getInt(objectsOffset + 0x10, "int32", { bigEndian: true }, dataView) / 0x10000; // prettier-ignore
 
-    positionX += -getInt(objectsOffset + 0xa, "uint16", { bigEndian: true }, dataView) / 0x10000; // prettier-ignore
-    positionY += -getInt(objectsOffset + 0xe, "uint16", { bigEndian: true }, dataView) / 0x10000; // prettier-ignore
-    positionZ += getInt(objectsOffset + 0x12, "uint16", { bigEndian: true }, dataView) / 0x10000; // prettier-ignore
-
-    let scaleX = getInt(objectsOffset + 0x14, "int16", { bigEndian: true }, dataView); // prettier-ignore
-    let scaleY = getInt(objectsOffset + 0x18, "int16", { bigEndian: true }, dataView); // prettier-ignore
-    let scaleZ = getInt(objectsOffset + 0x1c, "int16", { bigEndian: true }, dataView); // prettier-ignore
-
-    scaleX += getInt(objectsOffset + 0x16, "uint16", { bigEndian: true }, dataView) / 0x10000; // prettier-ignore
-    scaleY += getInt(objectsOffset + 0x1a, "uint16", { bigEndian: true }, dataView) / 0x10000; // prettier-ignore
-    scaleZ += getInt(objectsOffset + 0x1e, "uint16", { bigEndian: true }, dataView) / 0x10000; // prettier-ignore
+    const scaleX = getInt(objectsOffset + 0x14, "int32", { bigEndian: true }, dataView) / 0x10000; // prettier-ignore
+    const scaleY = getInt(objectsOffset + 0x18, "int32", { bigEndian: true }, dataView) / 0x10000; // prettier-ignore
+    const scaleZ = getInt(objectsOffset + 0x1c, "int32", { bigEndian: true }, dataView) / 0x10000; // prettier-ignore
 
     battleStage.objects.push({
       offset: objectOffset,

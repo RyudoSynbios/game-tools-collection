@@ -582,13 +582,9 @@ export async function unpackMpd(
       const rotationY = -getInt(objectsOffset + i * 0x3c + 0x34, "int16", { bigEndian: true }, dataView).toEuler(); // prettier-ignore
       const rotationZ = getInt(objectsOffset + i * 0x3c + 0x36, "int16", { bigEndian: true }, dataView).toEuler(); // prettier-ignore
 
-      let scaleX = getInt(objectsOffset + i * 0x3c + 0x38, "int16", { bigEndian: true }, dataView); // prettier-ignore
-      let scaleY = getInt(objectsOffset + i * 0x3c + 0x3c, "int16", { bigEndian: true }, dataView); // prettier-ignore
-      let scaleZ = getInt(objectsOffset + i * 0x3c + 0x40, "int16", { bigEndian: true }, dataView); // prettier-ignore
-
-      scaleX += getInt(objectsOffset + i * 0x3c + 0x3a, "uint16", { bigEndian: true }, dataView) / 0x10000; // prettier-ignore
-      scaleY += getInt(objectsOffset + i * 0x3c + 0x3e, "uint16", { bigEndian: true }, dataView) / 0x10000; // prettier-ignore
-      scaleZ += getInt(objectsOffset + i * 0x3c + 0x42, "uint16", { bigEndian: true }, dataView) / 0x10000; // prettier-ignore
+      const scaleX = getInt(objectsOffset + i * 0x3c + 0x38, "int32", { bigEndian: true }, dataView) / 0x10000; // prettier-ignore
+      const scaleY = getInt(objectsOffset + i * 0x3c + 0x3c, "int32", { bigEndian: true }, dataView) / 0x10000; // prettier-ignore
+      const scaleZ = getInt(objectsOffset + i * 0x3c + 0x40, "int32", { bigEndian: true }, dataView) / 0x10000; // prettier-ignore
 
       const unknown = getInt(objectsOffset + i * 0x3c + 0x44, "uint16", { bigEndian: true }, dataView) // prettier-ignore
 

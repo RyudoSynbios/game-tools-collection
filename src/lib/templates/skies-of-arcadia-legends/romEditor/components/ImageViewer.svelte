@@ -16,7 +16,7 @@
   let canvas: Canvas;
 
   async function updateCanvas(): Promise<void> {
-    let dataView = getFileData("image", assetIndex);
+    const dataView = getFileData("image", assetIndex);
 
     const textures: GvrTexture[] = [];
 
