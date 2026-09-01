@@ -2,6 +2,13 @@ import type { Group, Mesh } from "three";
 
 import { getInt, getIntFromArray } from "$lib/utils/bytes";
 import type Canvas from "$lib/utils/canvas";
+import {
+  generateTexture,
+  getDecompressedData,
+  getIndices,
+  getVertices,
+  type Texture,
+} from "$lib/utils/common/saturn/shining";
 import debug from "$lib/utils/debug";
 import { generateUUID } from "$lib/utils/format";
 import {
@@ -15,14 +22,8 @@ import type { MaterialOptions } from "$lib/utils/three";
 
 import type { Palette } from "$lib/types";
 
-import { getDecompressedData, getFileOffset, getScenario } from "../utils";
-import {
-  generateTexture,
-  getIndices,
-  getMaterials,
-  getVertices,
-  type Texture,
-} from "./model";
+import { getFileOffset, getScenario } from "../utils";
+import { getMaterials } from "./model";
 
 export async function addBattlefieldFloor(
   offset: number,

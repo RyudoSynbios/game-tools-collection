@@ -1,7 +1,7 @@
 import { getInt } from "$lib/utils/bytes";
 import type { File } from "$lib/utils/common/iso9660";
 import {
-  getDecompressedIconData,
+  getDecompressedData,
   getImage,
   Image,
   ImagesCanvas,
@@ -15,7 +15,6 @@ import type { Palette } from "$lib/types";
 
 import {
   cache,
-  getDecompressedData,
   getFileOffset,
   getFilteredFiles,
   getScenario,
@@ -170,7 +169,7 @@ export function getIcon(type: "item" | "spell", index: number): Uint8Array {
     offset += getRegionArray(SPELL_ICON_OFFSET_SHIFT);
   }
 
-  const data = getDecompressedIconData(offset, 0x120, file.dataView);
+  const data = getDecompressedData(offset, file.dataView);
 
   return applyPalette(data, cache.mainPalette);
 }

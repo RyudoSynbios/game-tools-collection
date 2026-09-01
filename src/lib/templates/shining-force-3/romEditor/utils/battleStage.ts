@@ -2,14 +2,20 @@ import type { Mesh } from "three";
 
 import { getInt } from "$lib/utils/bytes";
 import type Canvas from "$lib/utils/canvas";
+import {
+  getDecompressedData,
+  getIndices,
+  getVertices,
+  type Texture,
+} from "$lib/utils/common/saturn/shining";
 import { generateUUID } from "$lib/utils/format";
 import { applyPalette, flipTileData, getPalette } from "$lib/utils/graphics";
 import type Three from "$lib/utils/three";
 
 import type { Palette } from "$lib/types";
 
-import { getDecompressedData, getScenario, isDummy } from "../utils";
-import { getIndices, getMaterials, getVertices, type Texture } from "./model";
+import { getScenario, isDummy } from "../utils";
+import { getMaterials } from "./model";
 
 export async function addObject(
   baseOffset: number,

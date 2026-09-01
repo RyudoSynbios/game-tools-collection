@@ -5,6 +5,7 @@
   import Modal from "$lib/components/Modal.svelte";
   import ModelViewer from "$lib/components/ModelViewer.svelte";
   import Canvas from "$lib/utils/canvas";
+  import { type Texture } from "$lib/utils/common/saturn/shining";
   import debug from "$lib/utils/debug";
   import Three from "$lib/utils/three";
 
@@ -19,7 +20,6 @@
     addObject as addBattleStageObject,
     unpackBattleStage,
   } from "../utils/battleStage";
-  import { type Texture } from "../utils/model";
   import {
     addBattlefieldFloor,
     addFloor as addMpdFloor,

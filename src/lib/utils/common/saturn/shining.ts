@@ -1,9 +1,58 @@
-import { byteswap16, getInt } from "$lib/utils/bytes";
+import { getInt, getIntFromArray } from "$lib/utils/bytes";
+import Canvas from "$lib/utils/canvas";
 import { getColor } from "$lib/utils/graphics";
 
-import { ColorType } from "$lib/types";
+import type { ColorType, Palette } from "$lib/types";
 
 import { File } from "../iso9660";
+
+export function getVertices(
+  offset: number,
+  count: number,
+  dataView: DataView,
+): number[] {
+  const vertices = [];
+
+  // prettier-ignore
+  for (let i = 0x0; i < count; i += 0x1) {
+    const x = -getInt(offset + i * 0xc, "int32", { bigEndian: true }, dataView) / 0x10000;
+    const y = -getInt(offset + i * 0xc + 0x4, "int32", { bigEndian: true }, dataView) / 0x10000;
+    const z = getInt(offset + i * 0xc + 0x8, "int32", { bigEndian: true }, dataView) / 0x10000;
+
+    vertices.push(x, y, z);
+  }
+
+  return vertices;
+}
+
+export function getIndices(
+  offset: number,
+  count: number,
+  dataView: DataView,
+): number[] {
+  const indices: number[] = [];
+
+  for (let i = 0x0; i < count; i += 0x1) {
+    for (let j = 0x0; j < 0x4; j += 0x1) {
+      const indice = getInt(
+        offset + i * 0x14 + j * 0x2 + 0xc,
+        "uint16",
+        { bigEndian: true },
+        dataView,
+      );
+
+      indices.push(indice);
+
+      if (j === 0x2) {
+        indices.push(indice);
+      } else if (j === 0x3) {
+        indices.push(indices[indices.length - 0x5]);
+      }
+    }
+  }
+
+  return indices;
+}
 
 export interface Image {
   width: number;
@@ -43,53 +92,116 @@ export function getImage(
   };
 }
 
-export function getDecompressedIconData(
-  offset: number,
-  size: number,
-  dataView: DataView,
+export interface Texture {
+  width: number;
+  height: number;
+  palette?: Palette;
+  rawData: Uint8Array;
+  data: Uint8Array;
+  base64: string;
+}
+
+export function getTextureData(
+  texture: Texture,
+  palette: Palette = [],
 ): Uint8Array {
-  const buffer = new Uint16Array(size);
+  const textureData = [];
 
-  let bufferIndex = 0x0;
+  const usePalette = palette.length > 0;
 
-  let int = getInt(offset, "uint16", { bigEndian: true }, dataView);
+  const length = texture.rawData.length / (usePalette ? 1 : 2);
 
-  offset += 0x2;
+  for (let j = 0x0; j < length; j += 0x1) {
+    let rawColor = 0x0;
+    let color = [];
+
+    if (usePalette) {
+      rawColor = texture.rawData[j];
+      color = palette[rawColor] || [0, 0, 0, 0];
+    } else {
+      rawColor = getIntFromArray(texture.rawData, j * 0x2, "uint16", true);
+      color = getColor(rawColor, "ABGR555");
+    }
+
+    textureData.push(...color);
+  }
+
+  return new Uint8Array(textureData);
+}
+
+export async function generateTexture(
+  texture: Texture,
+  canvas: Canvas,
+  palette: Palette = [],
+): Promise<string> {
+  const data = getTextureData(texture, palette);
+
+  canvas.resize(texture.width, texture.height);
+  canvas.addGraphic("texture", data, texture.width, texture.height);
+
+  const base64 = await canvas.export();
+
+  texture.data = data;
+  texture.base64 = base64;
+
+  return base64;
+}
+
+export function getDecompressedData(
+  offset: number,
+  dataView: DataView,
+): Uint8Array<ArrayBuffer> {
+  const decompressedData: number[] = [];
+
+  let rewindCount = 0;
+  let rewindPosition = 0;
+  let count = 0;
+  let counts: number[] = [];
 
   while (true) {
-    let flags = (int << 0x10) | 0x8000;
+    const byte1 = getInt(offset, "uint8", {}, dataView);
+    const byte2 = getInt(offset + 0x1, "uint8", {}, dataView);
 
-    while (true) {
-      while (true) {
-        int = getInt(offset, "uint16", { bigEndian: true }, dataView);
+    if (counts.length === 0) {
+      const binary = `${byte1.toBinary()}${byte2.toBinary()}`;
 
-        offset += 0x2;
+      counts = binary.split("1").map((i) => i.length * 2);
+    } else {
+      rewindPosition = (byte1 << 4) | (byte2 >> 4);
 
-        if (flags >> 0x1f) {
-          break;
+      rewindCount = 4 + (byte2 & 0xf) * 2;
+
+      if (rewindCount === 4 && rewindPosition === 0) {
+        return new Uint8Array(decompressedData);
+      }
+    }
+
+    offset += 2;
+
+    if (rewindCount && rewindPosition) {
+      while (rewindCount > 0) {
+        const size = decompressedData.length;
+
+        if (rewindPosition % 2 !== 0) {
+          rewindCount += 32;
+          rewindPosition -= 1;
         }
 
-        buffer[bufferIndex++] = byteswap16(int);
+        decompressedData.push(decompressedData[size - rewindPosition]);
 
-        flags <<= 0x1;
+        rewindCount -= 1;
       }
+    }
 
-      flags <<= 0x1;
+    count = counts.shift()!;
 
-      if (flags === 0x0) {
-        break;
-      }
+    while (count > 0) {
+      const value = getInt(offset, "uint8", {}, dataView);
 
-      if (int === 0x0) {
-        return new Uint8Array(buffer.buffer);
-      }
+      decompressedData.push(value);
 
-      const count = (int & 0x1f) + 0x2;
-      let position = bufferIndex - (int >> 0x5);
-
-      for (let i = 0x0; i < count; i += 0x1) {
-        buffer[bufferIndex++] = buffer[position++];
-      }
+      count -= 1;
+      offset += 0x1;
     }
   }
 }

@@ -2,10 +2,16 @@ import type { Mesh } from "three";
 
 import { getInt } from "$lib/utils/bytes";
 import Canvas from "$lib/utils/canvas";
+import {
+  getDecompressedData,
+  getIndices,
+  getVertices,
+  type Texture,
+} from "$lib/utils/common/saturn/shining";
 import type Three from "$lib/utils/three";
 
-import { getDecompressedData, getFilteredFiles } from "../utils";
-import { getIndices, getMaterials, getVertices, type Texture } from "./model";
+import { getFilteredFiles } from "../utils";
+import { getMaterials } from "./model";
 
 export async function addObject(
   baseOffset: number,

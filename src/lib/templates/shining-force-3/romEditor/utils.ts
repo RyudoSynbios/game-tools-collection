@@ -615,65 +615,6 @@ export function getCharacterShifts(): { misc: number; stats: number } {
   return { misc, stats };
 }
 
-export function getDecompressedData(
-  offset: number,
-  dataView: DataView,
-): Uint8Array<ArrayBuffer> {
-  const decompressedData: number[] = [];
-
-  let rewindCount = 0;
-  let rewindPosition = 0;
-  let count = 0;
-  let counts: number[] = [];
-
-  while (true) {
-    const byte1 = getInt(offset, "uint8", {}, dataView);
-    const byte2 = getInt(offset + 0x1, "uint8", {}, dataView);
-
-    if (counts.length === 0) {
-      const binary = `${byte1.toBinary()}${byte2.toBinary()}`;
-
-      counts = binary.split("1").map((i) => i.length * 2);
-    } else {
-      rewindPosition = (byte1 << 4) | (byte2 >> 4);
-
-      rewindCount = 4 + (byte2 & 0xf) * 2;
-
-      if (rewindCount === 4 && rewindPosition === 0) {
-        return new Uint8Array(decompressedData);
-      }
-    }
-
-    offset += 2;
-
-    if (rewindCount && rewindPosition) {
-      while (rewindCount > 0) {
-        const size = decompressedData.length;
-
-        if (rewindPosition % 2 !== 0) {
-          rewindCount += 32;
-          rewindPosition -= 1;
-        }
-
-        decompressedData.push(decompressedData[size - rewindPosition]);
-
-        rewindCount -= 1;
-      }
-    }
-
-    count = counts.shift()!;
-
-    while (count > 0) {
-      const value = getInt(offset, "uint8", {}, dataView);
-
-      decompressedData.push(value);
-
-      count -= 1;
-      offset += 0x1;
-    }
-  }
-}
-
 export function getFileData(type: string, index: number): DataView {
   const files = getFilteredFiles(type);
   const file = iso.getFile(files[index].name);

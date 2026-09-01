@@ -1,7 +1,7 @@
 import { getInt } from "$lib/utils/bytes";
 import { File } from "$lib/utils/common/iso9660";
 import {
-  getDecompressedIconData,
+  getDecompressedData,
   getDecompressedSpriteData,
   getImage,
   Image,
@@ -104,7 +104,7 @@ export function getIcon(type: "item" | "spell", index: number): Uint8Array {
   const pointer = getFileOffset("x07", pointerIndex, file.dataView);
   const offset = getFileOffset("x07", pointer + index * 0x4, file.dataView);
 
-  const data = getDecompressedIconData(offset, 0x120, file.dataView);
+  const data = getDecompressedData(offset, file.dataView);
 
   return applyPalette(data, cache.mainPalette);
 }
@@ -178,7 +178,7 @@ function parseX09File(file: File): Image[] {
     const pointer = getFileOffset("x09", X09_POINTERS.fairyPointers, file.dataView);
     const offset = getFileOffset("x09", pointer + i, file.dataView);
 
-    const data = getDecompressedIconData(offset, 0x240, file.dataView);
+    const data = getDecompressedData(offset, file.dataView);
     const image = applyPalette(data, cache.mainPalette);
 
     images.push({

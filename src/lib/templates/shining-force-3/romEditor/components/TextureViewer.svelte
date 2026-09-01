@@ -2,9 +2,11 @@
   import { onDestroy, onMount } from "svelte";
 
   import Canvas from "$lib/utils/canvas";
+  import {
+    getTextureData,
+    type Texture,
+  } from "$lib/utils/common/saturn/shining";
   import { generateGraphicsSheet } from "$lib/utils/graphics";
-
-  import { getTextureData, type Texture } from "../utils/model";
 
   export let textures: Texture[];
 
