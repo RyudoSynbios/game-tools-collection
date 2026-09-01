@@ -103,7 +103,10 @@ export default class Three {
   };
   private controls: OrbitControls;
   private raycaster: Raycaster;
-  private cache: { [id: string]: string };
+  private cache: {
+    materials: { [id: string]: Material };
+    meshs: { [id: string]: Mesh };
+  };
   private instanceId: string;
   private isLoading: boolean;
   private messageEl: HTMLParagraphElement;
@@ -207,7 +210,10 @@ export default class Three {
 
     // Cache
 
-    this.cache = {};
+    this.cache = {
+      materials: {},
+      meshs: {},
+    };
 
     // Instance
 
@@ -639,7 +645,7 @@ export default class Three {
     }
 
     if (id !== undefined) {
-      this.cache[id] = mesh.uuid;
+      this.cache.meshs[id] = mesh;
     }
 
     return mesh;
@@ -761,11 +767,19 @@ export default class Three {
       materialParams.color = color;
     }
 
-    if (model === "lambert") {
-      return new MeshLambertMaterial(materialParams);
+    let material: MeshBasicMaterial | MeshLambertMaterial;
+
+    if (model === "basic") {
+      material = new MeshBasicMaterial(materialParams);
+    } else {
+      material = new MeshLambertMaterial(materialParams);
     }
 
-    return new MeshBasicMaterial(materialParams);
+    if (id !== undefined) {
+      this.cache.materials[id] = material as Material;
+    }
+
+    return material;
   }
 
   public generateMaterialMap(options: TextureOptions): Texture {
@@ -801,6 +815,20 @@ export default class Three {
     return map;
   }
 
+  public getCachedMaterial(id: string, instanceId: string): Material | null {
+    if (instanceId !== this.instanceId) {
+      return null;
+    }
+
+    if (this.isMaterialCached(id)) {
+      return this.cache.materials[id];
+    } else {
+      debug.warn(`Material ${id} is not cached.`);
+    }
+
+    return null;
+  }
+
   public clone(object: Object3D): Object3D {
     const clone = object.clone();
 
@@ -819,21 +847,15 @@ export default class Three {
     }
 
     if (this.isMeshCached(id)) {
-      const cachedMesh = this.group.getObjectByProperty("uuid", this.cache[id]);
+      const mesh = this.cache.meshs[id].clone() as Mesh;
 
-      if (cachedMesh) {
-        const mesh = cachedMesh.clone() as Mesh;
-
-        if (group) {
-          group.add(mesh);
-        } else {
-          this.group.add(mesh);
-        }
-
-        return mesh;
+      if (group) {
+        group.add(mesh);
       } else {
-        debug.warn(`Mesh ${id} is cached but couldn't be find in scene.`);
+        this.group.add(mesh);
       }
+
+      return mesh;
     } else {
       debug.warn(`Mesh ${id} is not cached.`);
     }
@@ -841,8 +863,12 @@ export default class Three {
     return null;
   }
 
+  public isMaterialCached(id: string): boolean {
+    return Boolean(this.cache.materials[id]);
+  }
+
   public isMeshCached(id: string): boolean {
-    return Boolean(this.cache[id]);
+    return Boolean(this.cache.meshs[id]);
   }
 
   public isGroupEmpty(group: Group): boolean {
@@ -1090,7 +1116,10 @@ export default class Three {
   public reset(): void {
     this.resetCamera();
 
-    this.cache = {};
+    this.cache = {
+      meshs: {},
+      materials: {},
+    };
 
     this.instanceId = generateUUID();
 
