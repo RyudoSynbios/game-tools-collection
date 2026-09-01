@@ -995,6 +995,32 @@ const template: GameJson = {
                     },
                   ],
                 },
+                {
+                  name: "Locations",
+                  items: [
+                    {
+                      id: "assetViewer-location",
+                      instanceId: "locationViewer",
+                      length: 0x2,
+                      type: "container",
+                      instanceType: "tabs",
+                      instances: 0,
+                      resource: "assetLocationNames",
+                      vertical: true,
+                      flex: true,
+                      items: [
+                        {
+                          type: "component",
+                          component: "ModelViewer",
+                          props: {
+                            assetIndex: "locationViewer",
+                            type: "location",
+                          },
+                        },
+                      ],
+                    },
+                  ],
+                },
               ],
             },
           ],
@@ -1005,6 +1031,7 @@ const template: GameJson = {
   resources: {
     assetTxtNames: "getAssetNames('txt')",
     assetImageNames: "getAssetNames('image')",
+    assetLocationNames: "getAssetNames('location')",
     assetSpriteNames: "getAssetNames('sprite')",
     characterNames: "getCharacterNames()",
     characters: {

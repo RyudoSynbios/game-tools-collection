@@ -26,6 +26,7 @@ import type {
 
 import IconCanvas from "./components/IconCanvas.svelte";
 import ImageViewer from "./components/ImageViewer.svelte";
+import ModelViewer from "./components/ModelViewer.svelte";
 import TxtViewer from "./components/TxtViewer.svelte";
 import {
   CHARACTER_NAMES_START_INDEX,
@@ -58,12 +59,19 @@ export let cache: {
 
 export function getComponent(
   component: string,
-): typeof IconCanvas | typeof ImageViewer | typeof TxtViewer | undefined {
+):
+  | typeof IconCanvas
+  | typeof ImageViewer
+  | typeof ModelViewer
+  | typeof TxtViewer
+  | undefined {
   switch (component) {
     case "IconCanvas":
       return IconCanvas;
     case "ImageViewer":
       return ImageViewer;
+    case "ModelViewer":
+      return ModelViewer;
     case "TxtViewer":
       return TxtViewer;
   }
@@ -439,6 +447,8 @@ export function getFilteredFiles(type: string): File[] {
       file.name.match(/.SPR$/)
     ) {
       return type === "image";
+    } else if (file.name.match(/^M\d+.MDX$/)) {
+      return type === "location";
     } else if (file.name.match(/.TXT$/)) {
       return type === "txt";
     } else {
