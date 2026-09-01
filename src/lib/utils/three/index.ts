@@ -63,8 +63,10 @@ export interface GroupOptions {
 }
 
 export interface MaterialOptions {
+  id?: string;
   color?: number;
   depthTest?: boolean;
+  depthWrite?: boolean;
   model?: "basic" | "lambert";
   opacity?: number;
   side?: Side;
@@ -84,6 +86,7 @@ export interface TextureOptions {
   name?: string;
   base64?: string;
   flipY?: boolean;
+  repeat?: [number, number];
   repeatX?: boolean | "mirrored";
   repeatY?: boolean | "mirrored";
 }
@@ -729,15 +732,17 @@ export default class Three {
   public generateMaterial(
     options?: MaterialOptions,
   ): MeshBasicMaterial | MeshLambertMaterial {
-    const color = options?.color !== undefined ? options?.color : 0xffffff;
-    const depthTest =
-      options?.depthTest !== undefined ? options?.depthTest : true;
+    const id = options?.id;
+    const color = options?.color ?? 0xffffff;
+    const depthTest = options?.depthTest ?? true;
+    const depthWrite = options?.depthWrite ?? true;
     const model = options?.model || "basic";
-    const opacity = options?.opacity !== undefined ? options?.opacity : 1;
+    const opacity = options?.opacity ?? 1;
     const side = options?.side || "front";
     const texture = {
       name: options?.texture?.name || "",
       base64: options?.texture?.base64 || "",
+      repeat: options?.texture?.repeat,
       repeatX: options?.texture?.repeatX || false,
       repeatY: options?.texture?.repeatY || false,
     };
@@ -745,6 +750,7 @@ export default class Three {
     const materialParams: MeshBasicMaterialParameters = {
       alphaTest: 0.1,
       depthTest,
+      depthWrite,
       opacity,
       transparent: true,
     };
@@ -786,6 +792,7 @@ export default class Three {
     const texture = {
       name: options?.name || "",
       base64: options?.base64 || "",
+      repeat: options?.repeat,
       repeatX: options?.repeatX || false,
       repeatY: options?.repeatY || false,
     };
@@ -798,6 +805,10 @@ export default class Three {
 
     if (texture.name) {
       map.name = texture.name;
+    }
+
+    if (texture.repeat) {
+      map.repeat.set(texture.repeat[0], texture.repeat[1]);
     }
 
     if (texture.repeatX === "mirrored") {
