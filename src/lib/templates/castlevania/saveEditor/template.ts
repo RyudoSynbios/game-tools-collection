@@ -51,11 +51,11 @@ const template: GameJson = {
               offset: 0x1c8,
               type: "checksum",
               dataType: "uint32",
+              bigEndian: true,
               control: {
                 offsetStart: 0x0,
                 offsetEnd: 0xe4,
               },
-              bigEndian: true,
             },
             {
               id: "checksum2",
@@ -63,11 +63,11 @@ const template: GameJson = {
               offset: 0x1cc,
               type: "checksum",
               dataType: "uint32",
+              bigEndian: true,
               control: {
                 offsetStart: 0x0,
                 offsetEnd: 0xe4,
               },
-              bigEndian: true,
             },
           ],
         },
