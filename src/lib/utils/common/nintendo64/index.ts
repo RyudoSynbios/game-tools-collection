@@ -70,7 +70,7 @@ function getHash(int: number, polynormal: Long, shift: number): Long {
   const hash2 = hash1
     .shiftLeft(0x3f)
     .shiftRightUnsigned(0x1f)
-    .or(hash1.shiftRightUnsigned(1))
+    .or(hash1.shiftRightUnsigned(0x1))
     .xor(hash1.shiftLeft(0x2c).shiftRightUnsigned(0x20));
 
   return hash2.shiftRightUnsigned(0x14).and(long(0xfff)).xor(hash2);
@@ -87,12 +87,12 @@ export function generateRareChecksum(
 ): [Long, Long] {
   let checksum1 = long(0x0);
   let polynormal = long(0x13108b3c1);
-  let shift = 0;
+  let shift = 0x0;
 
   for (
     let i = item.control.offsetStart;
     i < item.control.offsetEnd;
-    i += 0x1, shift += 7
+    i += 0x1, shift += 0x7
   ) {
     const int = getInt(i, "uint8", {}, dataView);
 
@@ -104,9 +104,9 @@ export function generateRareChecksum(
   let checksum2 = checksum1;
 
   for (
-    let i = item.control.offsetEnd - 1;
+    let i = item.control.offsetEnd - 0x1;
     i >= item.control.offsetStart;
-    i -= 0x1, shift += 3
+    i -= 0x1, shift += 0x3
   ) {
     const int = getInt(i, "uint8", {}, dataView);
 
