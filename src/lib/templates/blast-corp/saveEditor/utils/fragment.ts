@@ -3,8 +3,9 @@ import type { ItemChecksum, ItemGroup, ItemTab } from "$lib/types";
 import { timeVehicles, type Level } from "./resource";
 
 export function levelFragment(level: Level): ItemTab {
-  const timesShift = level.index * 0x20;
-  const flagsShift = (level.flagIndex || 0x0) * 0x40;
+  const eepTimesShift = level.index * 0x4;
+  const mpkTimesShift = level.index * 0x20;
+  const mpkFlagsShift = (level.flagIndex || 0x0) * 0x40;
 
   let timeItems: { index: number; name: string }[] = [];
 
@@ -29,28 +30,32 @@ export function levelFragment(level: Level): ItemTab {
         hidden: true,
         items: [
           {
-            name: "Checksum Times",
-            offset: 0x11c + timesShift,
+            id: "checksum-mpk-%index%",
+            name: "Checksum MPK Times",
+            offset: 0x11c + mpkTimesShift,
             type: "checksum",
             dataType: "uint32",
             bigEndian: true,
             control: {
-              offsetStart: 0x100 + timesShift,
-              offsetEnd: 0x120 + timesShift,
+              offsetStart: 0x100 + mpkTimesShift,
+              offsetEnd: 0x120 + mpkTimesShift,
             },
+            disabled: true,
           },
           ...(level.flagIndex !== undefined
             ? [
                 {
-                  name: "Checksum Flags",
-                  offset: 0x8bc + flagsShift,
+                  id: "checksum-mpk-%index%",
+                  name: "Checksum MPK Flags",
+                  offset: 0x8bc + mpkFlagsShift,
                   type: "checksum",
                   dataType: "uint32",
                   bigEndian: true,
                   control: {
-                    offsetStart: 0x880 + flagsShift,
-                    offsetEnd: 0x8c0 + flagsShift,
+                    offsetStart: 0x880 + mpkFlagsShift,
+                    offsetEnd: 0x8c0 + mpkFlagsShift,
                   },
+                  disabled: true,
                 } as ItemChecksum,
               ]
             : []),
@@ -90,8 +95,88 @@ export function levelFragment(level: Level): ItemTab {
         ],
       },
       {
+        id: "section-eep-%index%",
         type: "section",
         flex: true,
+        hidden: true,
+        items: [
+          {
+            name: "Clear Time",
+            type: "group",
+            mode: "chrono",
+            items: [
+              {
+                id: "clearTimeEep",
+                offset: 0x100 + eepTimesShift,
+                type: "variable",
+                dataType: "uint16",
+                bigEndian: true,
+                operations: [
+                  { "*": 6 },
+                  {
+                    convert: {
+                      from: "seconds",
+                      to: "hours",
+                    },
+                  },
+                ],
+                max: 99,
+              },
+              {
+                id: "clearTimeEep",
+                offset: 0x100 + eepTimesShift,
+                type: "variable",
+                dataType: "uint16",
+                bigEndian: true,
+                operations: [
+                  { "/": 10 },
+                  {
+                    convert: {
+                      from: "seconds",
+                      to: "seconds",
+                    },
+                  },
+                ],
+                leadingZeros: 1,
+                max: 59,
+              },
+              {
+                id: "clearTimeEep",
+                offset: 0x100 + eepTimesShift,
+                type: "variable",
+                dataType: "uint16",
+                bigEndian: true,
+                operations: [
+                  { "/": 10 },
+                  {
+                    convert: {
+                      from: "seconds",
+                      to: "milliseconds",
+                    },
+                  },
+                ],
+                leadingZeros: 2,
+                max: 900,
+                step: 100,
+              },
+            ],
+          },
+          {
+            name: "Checksum EEP Time",
+            offset: 0x102 + eepTimesShift,
+            type: "variable",
+            dataType: "uint16",
+            bigEndian: true,
+            hex: true,
+            hidden: true,
+          },
+        ],
+      },
+      {
+        id: "section-mpk-%index%",
+        type: "section",
+        flex: true,
+        hidden: true,
         items: timeItems.map(
           (item) =>
             ({
@@ -100,7 +185,7 @@ export function levelFragment(level: Level): ItemTab {
               mode: "chrono",
               items: [
                 {
-                  offset: 0x100 + timesShift + item.index * 0x2,
+                  offset: 0x100 + mpkTimesShift + item.index * 0x2,
                   type: "variable",
                   dataType: "uint16",
                   bigEndian: true,
@@ -116,7 +201,7 @@ export function levelFragment(level: Level): ItemTab {
                   max: 99,
                 },
                 {
-                  offset: 0x100 + timesShift + item.index * 0x2,
+                  offset: 0x100 + mpkTimesShift + item.index * 0x2,
                   type: "variable",
                   dataType: "uint16",
                   bigEndian: true,
@@ -133,7 +218,7 @@ export function levelFragment(level: Level): ItemTab {
                   max: 59,
                 },
                 {
-                  offset: 0x100 + timesShift + item.index * 0x2,
+                  offset: 0x100 + mpkTimesShift + item.index * 0x2,
                   type: "variable",
                   dataType: "uint16",
                   bigEndian: true,

@@ -29,9 +29,8 @@ const template: GameJson = {
       id: "slots",
       length: 0xe00,
       type: "container",
-      instanceType: "tabs",
-      instances: 4,
-      enumeration: "Slot %d",
+      instanceType: "section",
+      instances: 1,
       disableSubinstanceIf: {
         offset: 0x0,
         type: "variable",
@@ -42,22 +41,15 @@ const template: GameJson = {
       },
       items: [
         {
-          type: "section",
-          flex: true,
-          hidden: true,
-          items: [
-            {
-              name: "Checksum",
-              offset: 0xfc,
-              type: "checksum",
-              dataType: "uint32",
-              bigEndian: true,
-              control: {
-                offsetStart: 0x0,
-                offsetEnd: 0x100,
-              },
-            },
-          ],
+          name: "Checksum",
+          offset: 0xfc,
+          type: "checksum",
+          dataType: "uint32",
+          bigEndian: true,
+          control: {
+            offsetStart: 0x0,
+            offsetEnd: 0x100,
+          },
         },
         {
           type: "tabs",
@@ -79,6 +71,7 @@ const template: GameJson = {
                       letterDataType: "uint8",
                       endCode: 0x0,
                       regex: "[./1-4A-Z]",
+                      test: true,
                     },
                     {
                       id: "progression",
@@ -311,6 +304,13 @@ const template: GameJson = {
       0x1c: "Lunatic Lord of Havoc",
       0x1d: "Armageddon Adept",
       0x1e: "You can stop now.",
+    },
+    slots: {
+      0x0: "Cartridge",
+      0x1: "Slot 1",
+      0x2: "Slot 2",
+      0x3: "Slot 3",
+      0x4: "Slot 4",
     },
   },
   resourcesGroups: {
