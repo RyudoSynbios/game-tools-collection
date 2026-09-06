@@ -1,7 +1,4 @@
-import { get } from "svelte/store";
-
-import { dataView } from "$lib/stores";
-import { getInt, getString } from "$lib/utils/bytes";
+import { getDataView, getInt, getString } from "$lib/utils/bytes";
 import { mergeUint8Arrays, numberArrayToString } from "$lib/utils/format";
 import { getPlatformRegions, getRegionValidator } from "$lib/utils/validator";
 
@@ -198,8 +195,8 @@ export function unpackMpk(dataView: DataView, shift: number): DataView {
   return dataView;
 }
 
-export function repackMpk(): ArrayBufferLike {
-  const $dataView = get(dataView);
+export function repackMpk(dataView?: DataView): ArrayBufferLike {
+  const $dataView = getDataView(dataView);
 
   if (isUnpackedMpk()) {
     saves.forEach((save) => {
