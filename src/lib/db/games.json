@@ -143,6 +143,17 @@
     }
   },
   {
+    "id": "blast-corps",
+    "name": "Blast Corps",
+    "platformIds": ["nintendo-64"],
+    "tools": {
+      "saveEditor": {
+        "createdAt": "2026-09-06",
+        "regions": ["🇪🇺", "🇺🇸", "🇯🇵"]
+      }
+    }
+  },
+  {
     "id": "bloodstained-ritual-of-the-night",
     "name": "Bloodstained: Ritual of the Night",
     "platformIds": ["steam"],
