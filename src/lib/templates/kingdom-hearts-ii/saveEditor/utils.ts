@@ -3,6 +3,7 @@ import { get } from "svelte/store";
 import { dataView, gamePlatform, gameRegion } from "$lib/stores";
 import { getInt, getString, setInt, setString } from "$lib/utils/bytes";
 import { formatChecksum } from "$lib/utils/checksum";
+import { HDReMIXSave } from "$lib/utils/common/kingdomHearts";
 import {
   customGetRegions,
   getRegionSaves,
@@ -28,8 +29,11 @@ import { finalMixParseItemAdaptater } from "./utils/finalmix";
 import { japanParseItemAdaptater } from "./utils/japan";
 import { abilityList, itemList, minigames } from "./utils/resource";
 
+let hdRemixFile: HDReMIXSave;
+
 export function setGamePlatform(dataView: DataView, fileName: string): void {
   if (fileName.match(/KHIIFM/)) {
+    hdRemixFile = new HDReMIXSave("kh2", dataView);
     gamePlatform.set(1);
   } else {
     gamePlatform.set(0);
@@ -46,13 +50,11 @@ export function beforeInitDataView(dataView: DataView): DataView {
   return dataView;
 }
 
-export function overrideGetRegions(dataView: DataView): string[] {
+export function overrideGetRegions(): string[] {
   const $gamePlatform = get(gamePlatform);
 
   if ($gamePlatform === 1) {
-    const saves = getHD25RemixSaves(dataView);
-
-    if (saves.length > 0) {
+    if (hdRemixFile.isInitialized()) {
       return ["finalMix"];
     }
 
@@ -64,6 +66,10 @@ export function overrideGetRegions(dataView: DataView): string[] {
 
 export function onInitFailed(): void {
   resetState();
+
+  if (hdRemixFile?.isInitialized()) {
+    hdRemixFile.destroy();
+  }
 }
 
 export function beforeItemsParsing(): void {
@@ -432,6 +438,10 @@ export function beforeSaving(): ArrayBufferLike {
 
 export function onReset(): void {
   resetState();
+
+  if (hdRemixFile?.isInitialized()) {
+    hdRemixFile.destroy();
+  }
 }
 
 export function getAbilityNames(): Resource {
@@ -494,7 +504,9 @@ export function getSlotNames(): Resource {
     const saves = getHD25RemixSaves();
 
     return saves.reduce((names: Resource, save, index) => {
-      names[index] = `Slot ${parseInt(save.name) + 1}`;
+      const name = save.name.slice(-2);
+
+      names[index] = `Slot ${parseInt(name) + 1}`;
 
       return names;
     }, {});
@@ -511,21 +523,10 @@ export function getSlotNames(): Resource {
   }, {});
 }
 
-function getHD25RemixSaves(
-  dataView?: DataView,
-): { name: string; offset: number }[] {
-  const saves = [];
-
-  for (let i = 0x0; i < 0x63; i += 0x1) {
-    const offset = 0x1d6 + i * 0x158;
-
-    if (getInt(offset, "uint8", {}, dataView) === 0x2d) {
-      saves.push({
-        name: getString(offset + 0x1, 0x2, "uint8", {}, dataView),
-        offset: 0x19690 + i * 0x10fc0,
-      });
-    }
-  }
+function getHD25RemixSaves(): { name: string; offset: number }[] {
+  const saves = hdRemixFile.root.filter(
+    (file) => file.name.match(/BISLPM/) && !file.name.endsWith("-SYS"),
+  );
 
   return saves.sort((a, b) =>
     a.name.localeCompare(b.name, "en", { numeric: true }),

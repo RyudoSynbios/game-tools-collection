@@ -1,7 +1,8 @@
 import { get } from "svelte/store";
 
 import { dataView, gamePlatform, gameRegion } from "$lib/stores";
-import { getInt, getString, setInt } from "$lib/utils/bytes";
+import { getInt, setInt } from "$lib/utils/bytes";
+import { HDReMIXSave } from "$lib/utils/common/kingdomHearts";
 import {
   customGetRegions,
   getFileOffset,
@@ -24,8 +25,11 @@ import type {
 
 import { abilityList, itemList } from "./utils/resource";
 
+let hdRemixFile: HDReMIXSave;
+
 export function setGamePlatform(dataView: DataView, fileName: string): void {
   if (fileName.match(/KHFM/)) {
+    hdRemixFile = new HDReMIXSave("kh1", dataView);
     gamePlatform.set(1);
   } else {
     gamePlatform.set(0);
@@ -42,13 +46,11 @@ export function beforeInitDataView(dataView: DataView): DataView {
   return dataView;
 }
 
-export function overrideGetRegions(dataView: DataView): string[] {
+export function overrideGetRegions(): string[] {
   const $gamePlatform = get(gamePlatform);
 
   if ($gamePlatform === 1) {
-    const saves = getHD15RemixSaves(dataView);
-
-    if (saves.length > 0) {
+    if (hdRemixFile.isInitialized()) {
       return ["finalMix"];
     }
 
@@ -60,6 +62,10 @@ export function overrideGetRegions(dataView: DataView): string[] {
 
 export function onInitFailed(): void {
   resetState();
+
+  if (hdRemixFile?.isInitialized()) {
+    hdRemixFile.destroy();
+  }
 }
 
 export function beforeItemsParsing(): void {
@@ -186,7 +192,18 @@ export function overrideShift(
 
   if ("id" in item && item.id === "time-playtime") {
     if ($gamePlatform === 1) {
-      return [...shifts, 0x16c40];
+      const saves = getHD15RemixSaves();
+      const save = saves[instanceIndex];
+
+      const slotIndex = save.name.slice(-2);
+
+      const systemFile = hdRemixFile.root.find(
+        (file) => file.name === `-${slotIndex}/system.bin`,
+      );
+
+      if (systemFile) {
+        return [systemFile.offset];
+      }
     }
 
     return [...shifts.slice(0, -1), getFileOffset(instanceIndex, "system.bin")];
@@ -287,6 +304,10 @@ export function beforeSaving(): ArrayBufferLike {
 
 export function onReset(): void {
   resetState();
+
+  if (hdRemixFile?.isInitialized()) {
+    hdRemixFile.destroy();
+  }
 }
 
 export function getAbilityNames(): Resource {
@@ -351,7 +372,9 @@ export function getSlotNames(): Resource {
     const saves = getHD15RemixSaves();
 
     return saves.reduce((names: Resource, save, index) => {
-      names[index] = `Slot ${parseInt(save.name)}`;
+      const name = save.name.slice(-2);
+
+      names[index] = `Slot ${parseInt(name)}`;
 
       return names;
     }, {});
@@ -368,21 +391,8 @@ export function getSlotNames(): Resource {
   }, {});
 }
 
-function getHD15RemixSaves(
-  dataView?: DataView,
-): { name: string; offset: number }[] {
-  const saves = [];
-
-  for (let i = 0x0; i < 0x63; i += 0x1) {
-    const offset = 0x1c8 + i * 0x2b0;
-
-    if (getInt(offset, "uint8", {}, dataView) === 0x2d) {
-      saves.push({
-        name: getString(offset + 0x1, 0x2, "uint8", {}, dataView),
-        offset: 0x10d30 + i * 0x2d880,
-      });
-    }
-  }
+function getHD15RemixSaves(): { name: string; offset: number }[] {
+  const saves = hdRemixFile.root.filter((file) => file.name.match(/BISLPS/));
 
   return saves.sort((a, b) =>
     a.name.localeCompare(b.name, "en", { numeric: true }),
