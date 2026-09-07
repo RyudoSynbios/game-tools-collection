@@ -451,6 +451,9 @@ export default class Parser {
       struct.x = this.getInt("float32");
       struct.y = this.getInt("float32");
       struct.z = this.getInt("float32");
+    } else if (type === "Vector2D") {
+      struct.x = this.getInt("float32");
+      struct.y = this.getInt("float32");
     } else {
       this._types[`${path}$ID`] = identifier;
 

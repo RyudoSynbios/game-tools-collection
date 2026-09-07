@@ -123,7 +123,7 @@ export default class Writer {
   }
 
   public setIdentifier(key: string, type: string): void {
-    if (type === "Vector") {
+    if (["Vector", "Vector2D"].includes(type)) {
       this.offset += 0x10;
       return;
     }
@@ -438,14 +438,14 @@ export default class Writer {
     const blockStartOffset = this.offset;
 
     Object.entries(struct).forEach(([childKey, value]) => {
-      if (structType === "Vector") {
+      if (["Vector", "Vector2D"].includes(structType)) {
         this.setInt(float32ToInt(value as number), "uint32");
       } else {
         this.writeProperty(childKey, value, parentKey);
       }
     });
 
-    if (structType !== "Vector") {
+    if (!["Vector", "Vector2D"].includes(structType)) {
       this.setString("None");
     }
 
