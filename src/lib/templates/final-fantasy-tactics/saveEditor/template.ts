@@ -1850,7 +1850,7 @@ const template: GameJson = {
         0xd11b: "…",
         0xd11c: "。",
         0xd11e: "+",
-        0xd11f: "X",
+        0xd11f: "⨯",
         0xd9b9: "◯",
         0xd9bc: "・",
         0xd9bd: ":",
