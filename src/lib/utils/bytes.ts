@@ -200,9 +200,13 @@ export function copyInt(
   offsetSrc: number,
   offsetDst: number,
   length = 0x1,
+  dataViewSrc?: DataView,
+  dataViewAltKeyDst?: string,
 ): void {
   for (let i = 0x0; i < length; i += 0x1) {
-    setInt(offsetDst + i, "uint8", getInt(offsetSrc + i, "uint8"));
+    const srcInt = getInt(offsetSrc + i, "uint8", {}, dataViewSrc);
+
+    setInt(offsetDst + i, "uint8", srcInt, {}, dataViewAltKeyDst);
   }
 }
 
