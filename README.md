@@ -72,6 +72,7 @@ Link to the website: [https://game-tools-collection.com](https://game-tools-coll
 | Grandia II                                          | PS2            | Save                    | EUR / USA / JAP                               |
 | Half-Minute Hero                                    | PSP            | Save                    | EUR / USA / JAP                               |
 | Holy Magic Century                                  | N64            | Save                    | EUR / USA / JAP / FRA / GER                   |
+| Kagero: Deception II                                | PS             | Save                    | EUR / USA / JAP                               |
 | Kingdom Hearts                                      | PS2            | Save                    | EUR / USA / JAP / FRA / GER / ITA / SPA / AUS |
 | Kingdom Hearts II                                   | PS2            | Save                    | EUR / USA / JAP / FRA / GER / ITA / SPA / AUS |
 | Kingdom Hearts: Chain of Memories                   | GBA            | Save                    | EUR / USA / JAP                               |
