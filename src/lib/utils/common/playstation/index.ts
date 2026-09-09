@@ -83,7 +83,7 @@ export function customGetRegions(identifier = ""): string[] {
   return regions;
 }
 
-export function getRegionSaves(): Save[] {
+export function getRegionSaves(sort = true): Save[] {
   const validator = getRegionValidator(0x0);
   const validatorStringified = numberArrayToString(validator);
 
@@ -95,17 +95,23 @@ export function getRegionSaves(): Save[] {
     saves = psv.saves;
   }
 
-  return saves
-    .filter((save) => save.file.productCode.includes(validatorStringified))
-    .sort((a, b) =>
+  const filteredSaves = saves.filter((save) =>
+    save.file.productCode.includes(validatorStringified),
+  );
+
+  if (sort) {
+    return filteredSaves.sort((a, b) =>
       a.file.identifier.localeCompare(b.file.identifier, "en", {
         numeric: true,
       }),
     );
+  }
+
+  return filteredSaves;
 }
 
-export function getSlotShifts(index: number): [boolean, number[]] {
-  const saves = getRegionSaves();
+export function getSlotShifts(index: number, sort = true): [boolean, number[]] {
+  const saves = getRegionSaves(sort);
 
   if (saves[index]) {
     return [true, [saves[index].offset]];
