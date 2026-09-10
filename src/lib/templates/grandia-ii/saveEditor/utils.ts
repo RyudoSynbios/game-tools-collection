@@ -22,7 +22,7 @@ import type {
 } from "$lib/types";
 
 export function setGamePlatform(dataView: DataView): void {
-  const regionValidator = getPlatformRegions("hdremaster").europe as Validator;
+  const regionValidator = getPlatformRegions("hdRemaster").europe as Validator;
   const key = parseInt(getObjKey(regionValidator, 0));
   const validator = regionValidator[key];
 

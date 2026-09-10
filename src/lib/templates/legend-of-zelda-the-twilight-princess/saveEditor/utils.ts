@@ -25,7 +25,7 @@ import type {
 import { itemQuantites, letterList } from "./utils/resource";
 
 export function setGamePlatform(dataView: DataView, fileName: string): void {
-  if (fileName.match(/zeldaTp.dat/)) {
+  if (fileName === "zeldaTp.dat") {
     gamePlatform.set(1);
   } else {
     gamePlatform.set(0);

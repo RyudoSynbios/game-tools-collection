@@ -1317,7 +1317,7 @@ const template: GameJson = {
       0x13: "Mole Mitts",
       0x14: "Roc's Cape",
       0x15: "Pegasus Boots",
-      0x16: "Fire Rod (Unused)",
+      0x16: "Fire Rod (unused)",
       0x17: "Ocarina of Wind",
       0x20: "Empty Bottle",
       0x21: "Butter",

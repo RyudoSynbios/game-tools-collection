@@ -24,7 +24,7 @@ import type {
 import { locationsCoordinates } from "./utils/resource";
 
 export function setGamePlatform(dataView: DataView): void {
-  const regionValidator = getPlatformRegions("hdremaster").japan as Validator;
+  const regionValidator = getPlatformRegions("hdRemaster").japan as Validator;
   const key = parseInt(getObjKey(regionValidator, 0));
   const validator = regionValidator[key];
 

@@ -272,7 +272,7 @@ const template: GameJson = {
                   flex: true,
                   items: [
                     {
-                      name: "Venom (Unused)",
+                      name: "Venom (unused)",
                       type: "bitflags",
                       hidden: true,
                       flags: [

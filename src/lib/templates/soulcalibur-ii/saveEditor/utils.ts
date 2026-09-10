@@ -182,10 +182,8 @@ export function overrideParseContainerItemsShifts(
   shifts: number[],
   index: number,
 ): [boolean, number[] | undefined] {
-  if (item.id === "characterData") {
-    if (index >= 0x14) {
-      return [true, [(index + 1) * item.length]];
-    }
+  if (item.id === "characterData" && index >= 0x14) {
+    return [true, [(index + 1) * item.length]];
   }
 
   return [false, undefined];

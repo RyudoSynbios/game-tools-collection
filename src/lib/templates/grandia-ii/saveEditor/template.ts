@@ -36,7 +36,7 @@ const template: GameJson = {
           ], // "BISLPM-65081G"
         },
       },
-      hdremaster: {
+      hdRemaster: {
         europe: {
           0x0: [0x47, 0x52, 0x41, 0x4e, 0x44, 0x49, 0x41, 0x32], // "GRANDIA2"
         },
