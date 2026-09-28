@@ -4,7 +4,6 @@ import type { GameJson, ItemGroup, ItemInt, ItemSection } from "$lib/types";
 
 import {
   challenges,
-  characters,
   chocoboRaces,
   enemies,
   materias,
@@ -340,10 +339,11 @@ const template: GameJson = {
           name: "Party",
           items: [
             {
+              id: "party",
               length: 0x100,
               type: "container",
               instanceType: "tabs",
-              instances: 9,
+              instances: 11,
               resource: "characters",
               vertical: true,
               items: [
@@ -365,21 +365,21 @@ const template: GameJson = {
                               hidden: true,
                             },
                             {
-                              id: "characterLevel",
+                              id: "characterLevel-%index%",
                               name: "Level",
                               offset: 0x30,
                               type: "variable",
                               dataType: "uint8",
-                              min: 15,
+                              min: 1,
                               max: 70,
                             },
                             {
-                              id: "characterExperience",
+                              id: "characterExperience-%index%",
                               name: "Experience",
                               offset: 0x50,
                               type: "variable",
                               dataType: "uint32",
-                              min: 7200,
+                              min: 0,
                               max: 9999999,
                             },
                             {
@@ -547,6 +547,7 @@ const template: GameJson = {
                       ],
                     },
                     {
+                      id: "equipmentTab-%index%",
                       name: "Equipment",
                       items: [
                         {
@@ -616,6 +617,7 @@ const template: GameJson = {
                       ],
                     },
                     {
+                      id: "abilitiesTab-%index%",
                       name: "Abilities",
                       flex: true,
                       items: [
@@ -6227,7 +6229,19 @@ const template: GameJson = {
       0x0: "-",
       0x1: "Completed",
     },
-    characters,
+    characters: {
+      0x0: "Cloud Strife",
+      0x1: "Barret Wallace",
+      0x2: "Tifa Lockart",
+      0x3: "Aerith Gainsborough",
+      0x4: "Red XIII",
+      0x5: "Yuffie Kisaragi",
+      0x6: "Cait Sith",
+      0x7: "Zack Fair",
+      0x8: "Sephiroth",
+      0x9: "Cloud Strife (Past)",
+      0xa: "Sephiroth (Past)",
+    },
     cloudOutfits: {
       0x0: "Ex-SOLDIER: First Class",
       0x1: "Ocean Chocobo",

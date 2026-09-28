@@ -10,8 +10,10 @@ import {
   Item,
   ItemBitflag,
   ItemBitflags,
+  ItemContainer,
   ItemInt,
   ItemSection,
+  ItemTab,
   Resource,
   ResourceGroups,
 } from "$lib/types";
@@ -27,9 +29,11 @@ import {
   outfits,
   partyLevels,
   pianoPieces,
+  sephirothLevels,
+  zackLevels,
 } from "./utils/resource";
 
-export function overrideParseItem(item: Item): Item {
+export function overrideParseItem(item: Item): Item | ItemTab {
   if ("id" in item && item.id?.match(/relationship-/)) {
     const itemInt = item as ItemInt;
 
@@ -38,9 +42,41 @@ export function overrideParseItem(item: Item): Item {
     itemInt.hidden = ![1, 2, 3, 4, 5].includes(index);
 
     return itemInt;
+  } else if ("id" in item && item.id?.match(/equipmentTab-/)) {
+    const itemTab = item as ItemTab;
+
+    const [index] = item.id.splitInt();
+
+    itemTab.disabled = index >= 0x9;
+
+    return itemTab;
+  } else if ("id" in item && item.id?.match(/abilitiesTab-/)) {
+    const itemTab = item as ItemTab;
+
+    const [index] = item.id.splitInt();
+
+    itemTab.disabled = index >= 0x7;
+
+    return itemTab;
   }
 
   return item;
+}
+
+export function overrideParseContainerItemsShifts(
+  item: ItemContainer,
+  shifts: number[],
+  index: number,
+): [boolean, number[] | undefined] {
+  if (item.id === "party") {
+    if (index === 0x9) {
+      return [true, [0xf * item.length]];
+    } else if (index === 0xa) {
+      return [true, [0x17 * item.length]];
+    }
+  }
+
+  return [false, undefined];
 }
 
 export function overrideShift(item: Item, shifts: number[]): number[] {
@@ -283,24 +319,44 @@ export function overrideSetInt(item: Item, value: string): boolean {
 }
 
 export function afterSetInt(item: Item, flag: ItemBitflag): void {
-  if ("id" in item && item.id === "characterLevel") {
+  if ("id" in item && item.id?.match(/characterLevel-/)) {
     const itemInt = item as ItemInt;
+
+    const [index] = item.id.splitInt();
+
+    let levels = characterLevels;
+
+    if (index === 0x7) {
+      levels = zackLevels;
+    } else if ([0x8, 0xa].includes(index)) {
+      levels = sephirothLevels;
+    }
 
     const level = getInt(itemInt.offset, "uint8");
-    const experience = characterLevels[level - 15] || characterLevels[0];
+    const experience = levels[level - 1] || 0;
 
     setInt(itemInt.offset + 0x20, "uint32", experience);
-  } else if ("id" in item && item.id === "characterExperience") {
+  } else if ("id" in item && item.id?.match(/characterExperience-/)) {
     const itemInt = item as ItemInt;
+
+    const [index] = item.id.splitInt();
+
+    let levels = characterLevels;
+
+    if (index === 0x7) {
+      levels = zackLevels;
+    } else if ([0x8, 0xa].includes(index)) {
+      levels = sephirothLevels;
+    }
 
     const experience = getInt(itemInt.offset, "uint32");
 
-    let level = 15;
+    let level = 1;
 
-    for (let i = 0; i < characterLevels.length; i += 1) {
+    for (let i = 0; i < levels.length; i += 1) {
       if (
-        experience >= characterLevels[i] &&
-        (!characterLevels[i + 1] || experience < characterLevels[i + 1])
+        experience >= levels[i] &&
+        (!levels[i + 1] || experience < levels[i + 1])
       ) {
         level += i;
       }
