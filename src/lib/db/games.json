@@ -364,6 +364,18 @@
     }
   },
   {
+    "id": "devil-may-cry",
+    "name": "Devil May Cry",
+    "platformIds": ["playstation-2"],
+    "tools": {
+      "saveEditor": {
+        "createdAt": "2026-10-01",
+        "compatibilities": ["Devil May Cry HD Collection"],
+        "regions": ["🇪🇺", "🇺🇸", "🇯🇵", "🇰🇷"]
+      }
+    }
+  },
+  {
     "id": "diablo-ii-lord-of-destruction",
     "name": "Diablo II: Lord of Destruction",
     "platformIds": ["windows"],

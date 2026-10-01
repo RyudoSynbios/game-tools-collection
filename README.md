@@ -37,6 +37,7 @@ Link to the website: [https://game-tools-collection.com](https://game-tools-coll
 | Crisis Core -Final Fantasy VII- Reunion             | STEAM          | Save                    | WORLD                                         |
 | CTR: Crash Team Racing                              | PS             | Save                    | EUR / USA / JAP                               |
 | Dead or Alive 2                                     | PS2            | Save                    | EUR / USA / JAP                               |
+| Devil May Cry                                       | PS2            | Save                    | EUR / USA / JAP / KOR                         |
 | Diablo II: Lord of Destruction                      | WIN            | Save                    | WORLD                                         |
 | Diddy Kong Racing                                   | N64            | Save                    | EUR / USA / JAP                               |
 | Dissidia 012: Duodecim Final Fantasy                | PSP            | Save                    | EUR / USA / JAP                               |
