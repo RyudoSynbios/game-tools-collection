@@ -31,7 +31,7 @@ import type {
   ItemSection,
 } from "$lib/types";
 
-import { levelList } from "./utils/resource";
+import { levelFlagList, levelList } from "./utils/resource";
 
 const SAVE_FORMAT = "eep";
 
@@ -247,8 +247,11 @@ export function afterSetInt(item: Item, flag: ItemBitflag): void {
   } else if ("id" in item && item.id?.match(/levelProgression-/)) {
     const itemInt = item as ItemInt;
 
-    const [, index] = item.id.splitInt();
+    const [slotIndex, index] = item.id.splitInt();
 
+    const progression = getInt(itemInt.offset, "uint8");
+
+    updateFlags(itemInt.offset, slotIndex, index, progression);
     updateGlobalProgression(itemInt.offset - index);
   } else if ("id" in item && item.id === "clearTimeEep") {
     const itemInt = item as ItemInt;
@@ -482,4 +485,39 @@ function updateGlobalProgression(offset: number): void {
   setInt(offset + 0x2f, "uint8", 0x5); // Introduction
   setInt(offset + 0x31, "uint8", progression >= 0x5 ? 0x5 : 0x0); // Ending
   setInt(offset + 0x26, "uint8", progression >= 0x7 ? 0x5 : 0x0); // Shuttle Island
+}
+
+function updateFlags(
+  offset: number,
+  slotIndex: number,
+  index: number,
+  progression: number,
+): void {
+  const levelFlags = levelFlagList[index];
+
+  if (isSaveFormatDisplayed("eep", slotIndex) || !levelFlags) {
+    return;
+  }
+
+  const level = levelList.find((level) => level.index === index)!;
+
+  offset += -index + 0x868 + level.flagIndex! * 0x40;
+
+  let progressionFlags = levelFlags[progression];
+
+  switch (progression) {
+    case 0x0:
+      progressionFlags = Array(11).fill(0x0);
+      break;
+    case 0x4:
+      progressionFlags = levelFlags[3];
+      break;
+    case 0x5:
+      progressionFlags = levelFlags[0];
+      break;
+  }
+
+  progressionFlags.forEach((flags, index) => {
+    setInt(offset + index * 0x4, "uint32", flags, { bigEndian: true });
+  });
 }
