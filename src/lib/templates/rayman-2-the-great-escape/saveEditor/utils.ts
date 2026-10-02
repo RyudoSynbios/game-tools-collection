@@ -8,7 +8,6 @@ import {
 import { formatChecksum } from "$lib/utils/checksum";
 import { getHeaderShift } from "$lib/utils/common/nintendo64";
 import {
-  getMpkNoteShift,
   getRegionsFromMpk,
   getSaves,
   repackMpk,
@@ -47,10 +46,6 @@ export function onInitFailed(): void {
   resetMpk();
 }
 
-export function initShifts(): number[] {
-  return getMpkNoteShift();
-}
-
 export function overrideParseContainerItemsShifts(
   item: ItemContainer,
   shifts: number[],
@@ -59,9 +54,11 @@ export function overrideParseContainerItemsShifts(
   if (item.id === "slots") {
     const saves = getSaves();
 
-    if (index > saves.length - 1) {
-      return [true, [-1]];
+    if (saves[index]) {
+      return [true, [saves[index].offset]];
     }
+
+    return [true, [-1]];
   }
 
   return [false, undefined];

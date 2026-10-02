@@ -95,6 +95,7 @@ Link to the website: [https://game-tools-collection.com](https://game-tools-coll
 | Mario Party                                         | N64            | Save                    | EUR / USA / JAP                               |
 | Mario Party 2                                       | N64            | Save                    | EUR / USA / JAP                               |
 | Marvel vs. Capcom 2: New Age of Heroes              | DC             | Save                    | EUR / USA / JAP                               |
+| Micro Machines 64 Turbo                             | N64            | Save                    | EUR / USA                                     |
 | Mission: Impossible                                 | N64            | Save                    | EUR / USA / FRA / GER / ITA / SPA             |
 | Muramasa: The Demon Blade                           | WII            | Save                    | EUR / USA / JAP                               |
 | Mystic Quest Legend                                 | SNES           | Save / Rom              | EUR / USA / JAP / FRA / GER                   |

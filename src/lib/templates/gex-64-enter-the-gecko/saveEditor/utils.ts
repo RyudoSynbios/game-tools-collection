@@ -4,7 +4,6 @@ import { dataViewAlt } from "$lib/stores";
 import { getInt, setInt } from "$lib/utils/bytes";
 import { getHeaderShift } from "$lib/utils/common/nintendo64";
 import {
-  getMpkNoteShift,
   getRegionsFromMpk,
   getSaves,
   repackMpk,
@@ -35,10 +34,6 @@ export function onInitFailed(): void {
   resetMpk();
 }
 
-export function initShifts(): number[] {
-  return getMpkNoteShift();
-}
-
 export function overrideShift(item: Item, shifts: number[]): number[] {
   if ("dataViewAltKey" in item) {
     return [shifts[0] >> 0x4];
@@ -55,11 +50,11 @@ export function overrideParseContainerItemsShifts(
   if (item.id === "slots") {
     const saves = getSaves();
 
-    if (index > saves.length - 1) {
-      return [true, [-1]];
+    if (saves[index]) {
+      return [true, [saves[index].offset]];
     }
 
-    return [true, [saves[index].offset]];
+    return [true, [-1]];
   }
 
   return [false, undefined];

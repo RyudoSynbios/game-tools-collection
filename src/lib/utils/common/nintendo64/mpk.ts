@@ -145,7 +145,7 @@ export function isMpk(dataView: DataView, shift = 0x0): boolean {
 
   checksum &= 0xffff;
 
-  checksum = (checksum << 0x10) | (0xfff2 - checksum);
+  checksum = ((checksum << 0x10) | (0xfff2 - checksum)) >>> 0x0;
 
   return (
     isDexDriveFile(dataView) ||
