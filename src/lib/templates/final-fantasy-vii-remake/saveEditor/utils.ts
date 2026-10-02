@@ -570,8 +570,9 @@ export function getInventoryMateriaNames(type: string): Resource {
     const isSummon = materia >= 0x36b1 && materia <= 0x36ba;
 
     if (materia && (!type || (type === "summons" && isSummon))) {
-      names[i] =
-        `${materias[materia]}${character !== 0x9 ? ` (${characters[character][0]})` : ""}`;
+      const initials = character !== 0x9 ? characters[character][0] : "";
+
+      names[i] = `${materias[materia]}${initials ? ` (${initials})` : ""}`;
     }
   }
 
