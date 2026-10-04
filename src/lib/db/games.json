@@ -1014,6 +1014,17 @@
     }
   },
   {
+    "id": "micro-machines-64-turbo",
+    "name": "Micro Machines 64 Turbo",
+    "platformIds": ["nintendo-64"],
+    "tools": {
+      "saveEditor": {
+        "createdAt": "2026-10-04",
+        "regions": ["🇪🇺", "🇺🇸"]
+      }
+    }
+  },
+  {
     "id": "mission-impossible",
     "name": "Mission: Impossible",
     "platformIds": ["nintendo-64"],
