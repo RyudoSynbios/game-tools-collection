@@ -96,6 +96,17 @@ export function overrideItem(item: Item): Item {
     itemBitflags.hidden = targetedCharacter !== characterIndex;
 
     return itemBitflags;
+  } else if ("id" in item && item.id?.match(/characterWeaponMateria-/)) {
+    const itemInt = item as ItemInt;
+
+    const sectionItem = itemInt.parent?.parent?.parent?.items[0] as ItemSection;
+    const weaponItem = sectionItem.items[0] as ItemInt;
+
+    const weaponIndex = getInt(weaponItem.offset, "uint32");
+
+    itemInt.disabled = weaponIndex === 0xffffffff;
+
+    return itemInt;
   } else if ("id" in item && item.id === "materiaLevel") {
     const itemInt = item as ItemInt;
 
@@ -191,6 +202,10 @@ export function overrideGetInt(item: Item): [boolean, number | undefined] {
     return [true, int];
   } else if ("id" in item && item.id?.match(/characterWeaponMateria-/)) {
     const itemInt = item as ItemInt;
+
+    if (itemInt.disabled) {
+      return [true, 0xffffffff];
+    }
 
     const equippedWeaponItem = getItem(
       item.id.replace("characterWeaponMateria", "equippedWeapon"),

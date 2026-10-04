@@ -704,6 +704,7 @@ const template: GameJson = {
                                   offset: 0x40f50,
                                   type: "variable",
                                   dataType: "uint32",
+                                  overrideShift: { parent: 2, shift: 0x30 },
                                   hidden: true,
                                 },
                                 {
@@ -713,6 +714,7 @@ const template: GameJson = {
                                   type: "variable",
                                   dataType: "uint32",
                                   resource: "weapons",
+                                  overrideShift: { parent: 2, shift: 0x30 },
                                   hidden: true,
                                 },
                                 {
@@ -721,6 +723,7 @@ const template: GameJson = {
                                   offset: 0x40f58,
                                   type: "variable",
                                   dataType: "uint32",
+                                  overrideShift: { parent: 2, shift: 0x30 },
                                   hidden: true,
                                 },
                                 {
@@ -729,6 +732,7 @@ const template: GameJson = {
                                   offset: 0x40f5c,
                                   type: "variable",
                                   dataType: "uint32",
+                                  overrideShift: { parent: 2, shift: 0x30 },
                                   hidden: true,
                                 },
                               ],
@@ -743,6 +747,7 @@ const template: GameJson = {
                                 type: "variable",
                                 dataType: "uint32",
                                 resource: "inventoryMateriaNames",
+                                overrideShift: { parent: 2, shift: 0x30 },
                                 autocomplete: true,
                               })),
                             },
