@@ -255,6 +255,36 @@ export function cloneArrayBuffer(src: ArrayBufferLike): Uint8Array {
   return dest;
 }
 
+export function cloneDataView(dataView: DataView): DataView {
+  const arrayBuffer = new ArrayBuffer(dataView.byteLength);
+
+  new Uint8Array(arrayBuffer).set(new Uint8Array(dataView.buffer));
+
+  return new DataView(arrayBuffer);
+}
+
+export async function dataViewToJson(dataView: DataView): Promise<any> {
+  const buffer = dataView.buffer as ArrayBuffer;
+
+  const blob = new Blob([buffer], {
+    type: "application/octet-stream",
+  });
+
+  const jsonString = await blob.text();
+
+  return JSON.parse(jsonString);
+}
+
+export async function jsonToBuffer(json: any): Promise<ArrayBufferLike> {
+  const string = JSON.stringify(json);
+
+  const blob = new Blob([string]);
+
+  const bytes = await blob.bytes();
+
+  return bytes.buffer;
+}
+
 export function mergeUint8Arrays(...uint8Arrays: Uint8Array[]): Uint8Array {
   const length = uint8Arrays.reduce(
     (length, uint8Array) => (length += uint8Array.length),

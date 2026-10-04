@@ -2,7 +2,7 @@
   import { camelCaseToString, capitalize } from "$lib/utils/format";
 
   export let regions: string[];
-  export let onSubmit: (region: string) => void;
+  export let onSubmit: (region: string) => Promise<void>;
 
   const regionsFormatted = Object.values(regions).reduce(
     (results: { id: string; name: string }[], region) => {
@@ -57,7 +57,7 @@
     <p>Please select the region of your save file:</p>
     <ul>
       {#each regionsFormatted as region}
-        <li on:click={() => onSubmit(region.id)}>
+        <li on:click={async () => await onSubmit(region.id)}>
           {region.name}
         </li>
       {/each}

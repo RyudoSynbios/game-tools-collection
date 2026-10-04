@@ -1,12 +1,7 @@
 import { get } from "svelte/store";
 
 import { dataView, gameTemplate } from "$lib/stores";
-import {
-  cloneDataView,
-  getInt,
-  getIntFromArray,
-  setInt,
-} from "$lib/utils/bytes";
+import { getInt, getIntFromArray, setInt } from "$lib/utils/bytes";
 import { formatChecksum } from "$lib/utils/checksum";
 import { byteswapDataView, getHeaderShift } from "$lib/utils/common/nintendo64";
 import {
@@ -19,7 +14,7 @@ import {
   unpackMpk,
 } from "$lib/utils/common/nintendo64/mpk";
 import { isSrmMpk } from "$lib/utils/common/nintendo64/srm";
-import { isInRange, mergeUint8Arrays } from "$lib/utils/format";
+import { cloneDataView, isInRange, mergeUint8Arrays } from "$lib/utils/format";
 import { getClosestItem, getItem } from "$lib/utils/parser";
 
 import type {

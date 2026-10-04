@@ -17,33 +17,35 @@
   export let flex = false;
 </script>
 
-<div class="gtc-content" class:gtc-content-flex={flex}>
-  {#each items as item}
-    {#if item.type === "bitflags"}
-      <Bitflags {item} />
-    {:else if item.type === "checksum"}
-      <Checksum {item} />
-    {:else if item.type === "component"}
-      <Component {item} />
-    {:else if item.type === "group"}
-      <Group {item} />
-    {:else if item.type === "message"}
-      <Message {item} />
-    {:else if item.type === "section"}
-      <Section {item} />
-    {:else if item.type === "tabs"}
-      <Tabs {item} />
-    {:else if item.type === "variable"}
-      {#if item.dataType === "boolean"}
-        <Boolean {item} />
-      {:else if ["bit", "lower4", "upper4", "int8", "int16", "int24", "int32", "int64", "uint8", "uint16", "uint24", "uint32", "uint64", "float32"].includes(item.dataType) && item.dataType !== "string"}
-        <Int {item} />
-      {:else if item.dataType === "string"}
-        <String {item} />
+{#if items}
+  <div class="gtc-content" class:gtc-content-flex={flex}>
+    {#each items as item}
+      {#if item.type === "bitflags"}
+        <Bitflags {item} />
+      {:else if item.type === "checksum"}
+        <Checksum {item} />
+      {:else if item.type === "component"}
+        <Component {item} />
+      {:else if item.type === "group"}
+        <Group {item} />
+      {:else if item.type === "message"}
+        <Message {item} />
+      {:else if item.type === "section"}
+        <Section {item} />
+      {:else if item.type === "tabs"}
+        <Tabs {item} />
+      {:else if item.type === "variable"}
+        {#if item.dataType === "boolean"}
+          <Boolean {item} />
+        {:else if ["bit", "lower4", "upper4", "int8", "int16", "int24", "int32", "int64", "uint8", "uint16", "uint24", "uint32", "uint64", "float32"].includes(item.dataType) && item.dataType !== "string"}
+          <Int {item} />
+        {:else if item.dataType === "string"}
+          <String {item} />
+        {/if}
       {/if}
-    {/if}
-  {/each}
-</div>
+    {/each}
+  </div>
+{/if}
 
 <style lang="postcss">
   .gtc-content.gtc-content-flex {

@@ -25,6 +25,7 @@ Link to the website: [https://game-tools-collection.com](https://game-tools-coll
 | Bouncer, The                                        | PS2            | Save                    | EUR / USA / JAP                               |
 | Castlevania                                         | N64            | Save                    | EUR / USA / JAP                               |
 | Castlevania: Aria of Sorrow                         | GBA            | Save                    | EUR / USA / JAP                               |
+| Castlevania: Belmont's Curse                        | STEAM          | Save                    | WORLD                                         |
 | Castlevania: Circle of the Moon                     | GBA            | Save / Rom              | EUR / USA / JAP                               |
 | Castlevania: Dawn of Sorrow                         | DS             | Save                    | EUR / USA / JAP                               |
 | Castlevania: Harmony of Dissonance                  | GBA            | Save                    | EUR / USA / JAP                               |

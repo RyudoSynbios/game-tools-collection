@@ -3,14 +3,13 @@ import { get } from "svelte/store";
 import { dataView, gameRegion } from "$lib/stores";
 import {
   bitToOffset,
-  cloneDataView,
   getBitflag,
   getInt,
   setBitflag,
   setBoolean,
   setInt,
 } from "$lib/utils/bytes";
-import { round } from "$lib/utils/format";
+import { cloneDataView, round } from "$lib/utils/format";
 import { getItem } from "$lib/utils/parser";
 
 import type { Item, ItemBitflags, ItemChecksum, ItemInt } from "$lib/types";

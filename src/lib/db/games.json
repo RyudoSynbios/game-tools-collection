@@ -214,6 +214,17 @@
     }
   },
   {
+    "id": "castlevania-belmont-s-curse",
+    "name": "Castlevania: Belmont's Curse",
+    "platformIds": ["steam"],
+    "tools": {
+      "saveEditor": {
+        "createdAt": "2026-10-04",
+        "regions": ["🏳️"]
+      }
+    }
+  },
+  {
     "id": "castlevania-circle-of-the-moon",
     "name": "Castlevania: Circle of the Moon",
     "platformIds": ["game-boy-advance"],

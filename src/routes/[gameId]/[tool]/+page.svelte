@@ -163,7 +163,7 @@
     return isLocalized;
   }
 
-  function initTool(region: string): void {
+  async function initTool(region: string): Promise<void> {
     const regionIndex = getRegionIndex(region);
 
     if (regionIndex !== -1) {
@@ -172,7 +172,7 @@
       $fileName = fileNameTmp;
       $gameRegion = regionIndex;
 
-      enrichGameJson();
+      await enrichGameJson();
 
       uploadSuccess();
     } else {
@@ -220,7 +220,10 @@
     }
 
     if (utilsExists("overrideGetRegions")) {
-      regions = $gameUtils.overrideGetRegions(dataViewTmp, fileHeaderShiftTmp);
+      regions = await $gameUtils.overrideGetRegions(
+        dataViewTmp,
+        fileHeaderShiftTmp,
+      );
     } else {
       regions = getRegions(dataViewTmp as DataView, fileHeaderShiftTmp);
     }
@@ -239,7 +242,7 @@
     }
 
     if (regions.length === 1) {
-      initTool(regions[0]);
+      await initTool(regions[0]);
     } else if (regions.length === 0) {
       if (utilsExists("onInitFailed")) {
         $gameUtils.onInitFailed();
@@ -416,7 +419,10 @@
       </svelte:fragment>
     </Dropzone>
     {#if regions.length > 1}
-      <RegionModal {regions} onSubmit={(region) => initTool(region)} />
+      <RegionModal
+        {regions}
+        onSubmit={async (region) => await initTool(region)}
+      />
     {/if}
   {:else}
     <div class="gtc-tool-banner">
