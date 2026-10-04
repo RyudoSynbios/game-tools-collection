@@ -338,8 +338,8 @@ export function generateChecksum(item: ItemChecksum): number {
     i >= item.control.offsetStart;
     i -= 0x2
   ) {
-    checksum += getInt(i, "uint16");
     checksum %= 0xffff;
+    checksum += getInt(i, "uint16");
   }
 
   return formatChecksum(checksum, item.dataType);
