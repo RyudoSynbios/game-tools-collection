@@ -263,14 +263,6 @@ export function dataTypeToValue(dataType: Exclude<DataType, "string">): number {
   }
 }
 
-export function cloneDataView(dataView: DataView): DataView {
-  const arrayBuffer = new ArrayBuffer(dataView.byteLength);
-
-  new Uint8Array(arrayBuffer).set(new Uint8Array(dataView.buffer));
-
-  return new DataView(arrayBuffer);
-}
-
 export function bitToOffset(bit: number): number {
   return bit >> 0x3;
 }

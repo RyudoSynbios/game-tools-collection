@@ -255,6 +255,14 @@ export function cloneArrayBuffer(src: ArrayBufferLike): Uint8Array {
   return dest;
 }
 
+export function cloneDataView(dataView: DataView): DataView {
+  const arrayBuffer = new ArrayBuffer(dataView.byteLength);
+
+  new Uint8Array(arrayBuffer).set(new Uint8Array(dataView.buffer));
+
+  return new DataView(arrayBuffer);
+}
+
 export function mergeUint8Arrays(...uint8Arrays: Uint8Array[]): Uint8Array {
   const length = uint8Arrays.reduce(
     (length, uint8Array) => (length += uint8Array.length),

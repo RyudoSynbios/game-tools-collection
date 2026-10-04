@@ -1,7 +1,7 @@
 import { get } from "svelte/store";
 
 import { dataView } from "$lib/stores";
-import { cloneDataView, getInt, setInt } from "$lib/utils/bytes";
+import { getInt, setInt } from "$lib/utils/bytes";
 import { getHeaderShift } from "$lib/utils/common/nintendo64";
 import {
   getRegionsFromMpk,
@@ -10,7 +10,11 @@ import {
   resetMpk,
   unpackMpk,
 } from "$lib/utils/common/nintendo64/mpk";
-import { getPartialValue, makeOperations } from "$lib/utils/format";
+import {
+  cloneDataView,
+  getPartialValue,
+  makeOperations,
+} from "$lib/utils/format";
 import { getClosestItem } from "$lib/utils/parser";
 
 import type { Item, ItemBitflag, ItemContainer, ItemInt } from "$lib/types";
