@@ -1153,6 +1153,7 @@ export function intToArray(
 
 export function float32ToInt(float: number): number {
   const tmp = new DataView(new ArrayBuffer(0x4));
+
   tmp.setFloat32(0x0, float);
 
   return tmp.getUint32(0x0);

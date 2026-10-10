@@ -55,7 +55,7 @@ export function overrideParseContainerItemsShifts(
     let offset = -1;
     let bestSaveCount = 0;
 
-    for (let i = 0x0; i < item.length * 0x8; i += item.length) {
+    for (let i = 0x0; i < 0x8 * item.length; i += item.length) {
       const saveIndex = getInt(shift + i + 0x38, "uint32", { bigEndian: true });
       const saveCount = getInt(shift + i + 0x3c, "uint32", { bigEndian: true });
       const check = getInt(shift + i + 0x80, "int32", { bigEndian: true });

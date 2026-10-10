@@ -185,7 +185,7 @@ export function japanParseContainerAdaptater(
     if (index === getCurrentBox()) {
       return [true, [...shifts, -0xfbf]];
     } else if (index >= 4) {
-      return [true, [...shifts, 0x2000 + item.length * (index - 0x4)]];
+      return [true, [...shifts, 0x2000 + (index - 0x4) * item.length]];
     }
   } else if (item.id === "bagItems") {
     return [true, [...shifts, 0x5, index * item.length]];

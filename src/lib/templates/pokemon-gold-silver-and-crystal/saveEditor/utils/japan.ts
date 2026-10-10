@@ -152,7 +152,7 @@ export function japanParseContainerAdaptater(
   }
 
   if (item.id === "boxes" && index >= 6) {
-    return [true, [...shifts, 0x2000 + item.length * (index - 0x6)]];
+    return [true, [...shifts, 0x2000 + (index - 0x6) * item.length]];
   } else if (item.id?.match(/pokemonTabs-box/)) {
     return [true, [...shifts, 0xa, index * item.length]];
   }

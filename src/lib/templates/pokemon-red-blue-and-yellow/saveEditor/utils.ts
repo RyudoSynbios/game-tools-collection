@@ -102,7 +102,7 @@ export function overrideParseContainerItemsShifts(
     if (index === getCurrentBox()) {
       return [true, [...shifts, -0xf40]];
     } else if (index >= 6) {
-      return [true, [...shifts, 0x2000 + item.length * (index - 0x6)]];
+      return [true, [...shifts, 0x2000 + (index - 0x6) * item.length]];
     }
   }
 
@@ -545,13 +545,13 @@ function initPokemon(type: string, offset: number, index: number): void {
 
   const pokemonOffset = getNameOffset(`pokemonName-${type}`, index);
 
-  const trainerSrcOffset = nameItem.offset;
+  const trainerOffsetSrc = nameItem.offset;
   const trainerDstOffset = getNameOffset(`originalTrainer-${type}`, index);
 
-  const noIdSrcOffset = nameItem.offset + 0x6d - japanShift(0xa);
+  const noIdOffsetSrc = nameItem.offset + 0x6d - japanShift(0xa);
 
   setInt(pokemonOffset, "uint8", 0x50); // Pokémon Name
-  copyInt(trainerSrcOffset, trainerDstOffset, nameItem.length); // Trainer Name
+  copyInt(trainerOffsetSrc, trainerDstOffset, nameItem.length); // Trainer Name
 
   setInt(offset + 0x1, "uint16", 0x1, { bigEndian: true }); // HP
   setInt(offset + 0x3, "uint8", 0x0); // Level Preview
@@ -561,7 +561,7 @@ function initPokemon(type: string, offset: number, index: number): void {
   setInt(offset + 0x9, "uint8", 0x0); // Move 2
   setInt(offset + 0xa, "uint8", 0x0); // Move 3
   setInt(offset + 0xb, "uint8", 0x0); // Move 4
-  copyInt(noIdSrcOffset, offset + 0xc, 0x2); // No ID
+  copyInt(noIdOffsetSrc, offset + 0xc, 0x2); // No ID
   setInt(offset + 0xe, "uint24", 0x0, { bigEndian: true }); // Experience
   setInt(offset + 0x11, "uint16", 0x0, { bigEndian: true }); // HP EV
   setInt(offset + 0x13, "uint16", 0x0, { bigEndian: true }); // Attack EV

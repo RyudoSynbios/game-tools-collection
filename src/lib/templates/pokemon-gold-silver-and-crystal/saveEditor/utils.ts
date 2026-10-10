@@ -103,7 +103,7 @@ export function overrideParseContainerItemsShifts(
   const $gameRegion = get(gameRegion);
 
   if (item.id === "boxes" && $gameRegion !== 1 && index >= 7) {
-    return [true, [...shifts, 0x2000 + item.length * (index - 0x7)]];
+    return [true, [...shifts, 0x2000 + (index - 0x7) * item.length]];
   }
 
   return japanParseContainerAdaptater(item, shifts, index);
@@ -886,20 +886,20 @@ function initPokemon(type: string, offset: number, index: number): void {
 
   const pokemonOffset = getNameOffset(`pokemonName-${type}`, index);
 
-  const trainerSrcOffset = nameItem.offset;
+  const trainerOffsetSrc = nameItem.offset;
   const trainerDstOffset = getNameOffset(`originalTrainer-${type}`, index);
 
-  const noIdSrcOffset = nameItem.offset - 0x2;
+  const noIdOffsetSrc = nameItem.offset - 0x2;
 
   setInt(pokemonOffset, "uint8", 0x50); // Pokémon Name
-  copyInt(trainerSrcOffset, trainerDstOffset, nameItem.length); // Trainer Name
+  copyInt(trainerOffsetSrc, trainerDstOffset, nameItem.length); // Trainer Name
 
   setInt(offset + 0x1, "uint8", 0x0); // Held Item
   setInt(offset + 0x2, "uint8", 0x0); // Move 1
   setInt(offset + 0x3, "uint8", 0x0); // Move 2
   setInt(offset + 0x4, "uint8", 0x0); // Move 3
   setInt(offset + 0x5, "uint8", 0x0); // Move 4
-  copyInt(noIdSrcOffset, offset + 0x6, 0x2); // No ID
+  copyInt(noIdOffsetSrc, offset + 0x6, 0x2); // No ID
   setInt(offset + 0x8, "uint24", 0x0, { bigEndian: true }); // Experience
   setInt(offset + 0xb, "uint16", 0x0, { bigEndian: true }); // HP EV
   setInt(offset + 0xd, "uint16", 0x0, { bigEndian: true }); // Attack EV

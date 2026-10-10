@@ -1585,7 +1585,10 @@ const template: GameJson = {
                           flags: challenges.map((challenge, index) => ({
                             offset: byteswapOffset(
                               0x278 + bitToOffset(challenge.index),
-                            ), bit: challenge.index % 8, label: challenge.name, separator:
+                            ),
+                            bit: challenge.index % 8,
+                            label: challenge.name,
+                            separator:
                               index % 32 === 31 &&
                               index !== challenges.length - 1,
                           })),
@@ -1632,7 +1635,9 @@ const template: GameJson = {
                         flags: page.map((movie) => ({
                           offset: byteswapOffset(
                             0x244 + bitToOffset(movie.index),
-                          ), bit: movie.index % 8, label: movie.name,
+                          ),
+                          bit: movie.index % 8,
+                          label: movie.name,
                         })),
                       })),
                     },
@@ -2259,7 +2264,9 @@ const template: GameJson = {
                     flags: page.map((music) => ({
                       offset: byteswapOffset(
                         0x254 + bitToOffset(music.index * 0x2),
-                      ), bit: (music.index * 2) % 8, label: music.name,
+                      ),
+                      bit: (music.index * 2) % 8,
+                      label: music.name,
                     })),
                   })),
                 },

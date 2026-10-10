@@ -288,7 +288,7 @@ export function characterFragment(type: string, offset: number): ItemTabs {
                 dataType: "uint8",
               },
               {
-                name: "Box",
+                name: "Bow",
                 offset: offset + 0x18,
                 type: "variable",
                 dataType: "uint8",
