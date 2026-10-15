@@ -40,7 +40,7 @@ interface ItemParent {
 
 let checksums: ItemChecksum[];
 
-export function enrichGameJson(): void {
+export async function enrichGameJson(): Promise<void> {
   const $fileHeaderShift = get(fileHeaderShift);
   const $gameTemplate = get(gameTemplate);
   const $gameUtils = get(gameUtils) as any;
@@ -58,7 +58,7 @@ export function enrichGameJson(): void {
   }
 
   if (utilsExists("beforeItemsParsing")) {
-    $gameUtils.beforeItemsParsing();
+    await $gameUtils.beforeItemsParsing();
   }
 
   const items = $gameTemplate.items.reduce((items: Item[], item) => {
