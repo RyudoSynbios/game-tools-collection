@@ -641,6 +641,17 @@
     }
   },
   {
+    "id": "fire-emblem-path-of-radiance",
+    "name": "Fire Emblem: Path of Radiance",
+    "platformIds": ["gamecube"],
+    "tools": {
+      "saveEditor": {
+        "createdAt": "2026-10-17",
+        "regions": ["🇪🇺", "🇺🇸", "🇯🇵"]
+      }
+    }
+  },
+  {
     "id": "fire-emblem-the-blazing-blade",
     "name": "Fire Emblem: The Blazing Blade",
     "platformIds": ["game-boy-advance"],
