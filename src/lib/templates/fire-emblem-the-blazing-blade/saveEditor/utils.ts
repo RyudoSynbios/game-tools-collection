@@ -23,7 +23,12 @@ import {
   japanParseContainerAdaptater,
   japanParseItemAdaptater,
 } from "./utils/japan";
-import { chapterList, characterList, supportList } from "./utils/resource";
+import {
+  chapterList,
+  characterList,
+  itemList,
+  supportList,
+} from "./utils/resource";
 
 export function initHeaderShift(dataView: DataView): number {
   return getHeaderShift(dataView);
@@ -114,6 +119,31 @@ export function overrideItem(item: Item): Item {
     });
 
     itemInt.disabled = level === 20;
+
+    return itemInt;
+  } else if ("id" in item && item.id?.match(/durability-/)) {
+    const itemInt = item as ItemInt;
+
+    const [, type] = item.id.split("-");
+
+    let itemIndex = 0x0;
+
+    if (type === "party") {
+      itemIndex = getInt(itemInt.offset - 0x1, "uint16", {
+        binary: {
+          ...itemInt.binary!,
+          bitLength: 8,
+        },
+      });
+    } else if (type === "merlinus") {
+      itemIndex = getInt(itemInt.offset - 0x1, "uint8");
+    }
+
+    const itemType = itemList.find((item) => item.index === itemIndex)?.type;
+
+    itemInt.name = itemType === 0x8 ? "Quantity" : "Durability";
+
+    return itemInt;
   } else if ("id" in item && item.id?.match(/support-/)) {
     const itemInt = item as ItemInt;
 
@@ -178,7 +208,7 @@ export function overrideItem(item: Item): Item {
     itemInt.disabled = turns === 0;
 
     return itemInt;
-  } else if ("id" in item && item.id === "statsChapterPlaytime") {
+  } else if ("id" in item && item.id === "statsChapterTime") {
     const itemInt = item as ItemInt;
 
     const turns = getInt(itemInt.offset - 0x2, "uint16", {
@@ -266,6 +296,26 @@ export function afterSetInt(item: Item, flag: ItemBitflag): void {
       for (let i = 0x0; i < 0x8; i += 0x1) {
         setInt(itemInt.offset + 0x1 + i, "uint8", character.weaponLevels[i]);
       }
+    }
+
+    setInt(itemInt.offset - 0x14, "uint8", character?.class || 0x0, {
+      binary: { bitStart: 0, bitLength: 7 },
+    });
+
+    const level = getInt(itemInt.offset - 0x14, "uint16", {
+      binary: {
+        bitStart: 7,
+        bitLength: 5,
+      },
+    });
+
+    if (level === 0) {
+      setInt(itemInt.offset - 0x14, "uint16", 1, {
+        binary: {
+          bitStart: 7,
+          bitLength: 5,
+        },
+      });
     }
 
     updateCharacterNames(slotIndex);

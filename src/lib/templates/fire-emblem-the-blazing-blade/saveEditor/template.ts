@@ -305,6 +305,7 @@ const template: GameJson = {
                     autocomplete: true,
                   },
                   {
+                    id: "durability-merlinus",
                     name: "Durability",
                     offset: 0x46c5 + index * 0x2,
                     type: "variable",
@@ -410,12 +411,12 @@ const template: GameJson = {
                               },
                             },
                             {
-                              name: "Playtime",
+                              name: "Time",
                               type: "group",
                               mode: "time",
                               items: [
                                 {
-                                  id: "statsChapterPlaytime",
+                                  id: "statsChapterTime",
                                   offset: 0x4bee,
                                   type: "variable",
                                   dataType: "uint16",
@@ -431,7 +432,7 @@ const template: GameJson = {
                                   max: 4,
                                 },
                                 {
-                                  id: "statsChapterPlaytime",
+                                  id: "statsChapterTime",
                                   offset: 0x4bee,
                                   type: "variable",
                                   dataType: "uint16",
@@ -448,7 +449,7 @@ const template: GameJson = {
                                   max: 59,
                                 },
                                 {
-                                  id: "statsChapterPlaytime",
+                                  id: "statsChapterTime",
                                   offset: 0x4bee,
                                   type: "variable",
                                   dataType: "uint16",

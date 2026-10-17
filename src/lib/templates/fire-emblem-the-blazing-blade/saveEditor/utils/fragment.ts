@@ -32,6 +32,7 @@ export function characterFragment(type: string, offset: number): ItemTabs {
                   bitLength: 7,
                 },
                 resource: "classes",
+                size: "lg",
                 autocomplete: true,
               },
               {
@@ -341,6 +342,7 @@ export function characterFragment(type: string, offset: number): ItemTabs {
               autocomplete: true,
             },
             {
+              id: "durability-party",
               name: "Durability",
               offset: offset + 0xc + bitToOffset(2 + index * 14),
               type: "variable",
