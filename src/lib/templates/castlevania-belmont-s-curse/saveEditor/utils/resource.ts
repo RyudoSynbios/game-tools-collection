@@ -51,10 +51,10 @@ export const cardList = [
   { id: "Clue_Leon_BossDoor"            , type: 0x1, name: "A Monster terrorizes Paris" },
   { id: "Clue_JoanArc_TowerLocation"    , type: 0x2, name: "The Warrior is at the top of the Tower" },
   { id: "Clue_JoanArc_TowerShortcut"    , type: 0x2, name: "Carpenter's Crane Sketch" },
-  { id: "Clue_Medusa_CemetaryFountain"  , type: 0x3, name: "???" }, // TODO:
-  { id: "Clue_Medusa_HollowTree"        , type: 0x3, name: "???" }, // TODO:
+  { id: "Clue_Medusa_CemeteryLocation"  , type: 0x3, name: "The roots of the Hollow Tree" },
+  { id: "Clue_Medusa_CanalShortcut"     , type: 0x3, name: "Cemetary Fountain" },
   { id: "Clue_Medusa_SpecialAttack"     , type: 0x3, name: "Guardian's Gaze" },
-  { id: "Clue_Medusa_RomanBaths"        , type: 0x3, name: "???" }, // TODO:
+  { id: "Clue_Medusa_RomanBath"         , type: 0x3, name: "Roman Baths" },
   { id: "Clue_Talos_ArchitectLocation"  , type: 0x4, name: "Builder flees to the Clock Tower" },
   { id: "Clue_Talos_ArchitectShortcut"  , type: 0x4, name: "Blueprints for the Clock Tower" },
   { id: "Clue_Brauner_NotreDamePainting", type: 0x5, name: "A Strange Painting of Notre-Dame" },
@@ -100,7 +100,7 @@ export const keyItemList = [
 export const moveList = [
   { id: "WhipPendulum", moveId: "71276b8978cebc848aaf094a91bee40e", name: "Arcane Whip" },
   { id: "VaniaLight"  , moveId: "de8186906ea0812439ed17a8a49f813a", name: "Holy Light" },
-  { id: "???"         , moveId: ""                                , name: "???" },
+  { id: "LightCrash"  , moveId: "2090f3e7a84872b41a57081bc0090cf0", name: "Smash" },
   { id: "AerialDash"  , moveId: "6f258a566021a4442839fbe32b2b10a5", name: "Aerial Rush" },
   { id: "DoubleJump"  , moveId: "15b5c745d645ff7418900e6df0670fd6", name: "Double Jump" },
 ];
@@ -135,7 +135,7 @@ export const relicList = [
   { id: "Charm_ReduceSpellManaCostSpam"         , name: "Lich's Mark" },
   { id: "Charm_BoostDamageBackReduceDamageFront", name: "Pale Thorn" },
   { id: "Charm_BoostDamageButReduceLife"        , name: "Beelzebub's Seal" },
-  { id: "Charm_BoostManaOnDmgLowLife"           , name: "???" }, // TODO:
+  { id: "DEPRECATED_Charm_BoostManaOnDmgLowLife", name: "Soul Fragment" },
   { id: "Charm_BoostDamagePerEmptyPotion"       , name: "Witch's Brew" },
   { id: "Charm_InvulnerabilityAfterSave"        , name: "Eldritch Talisman" },
   { id: "Charm_ClampMCMana"                     , name: "Infernal Medallion" },
@@ -176,6 +176,18 @@ export const skins = skinList.reduce((skins: Resource, skin, index) => {
 
   return skins;
 }, {});
+
+export const warpRoomList = [
+  { id: "afeda68d5a0c4204da3488bbf7f04900", name: "Catacombs of Paris" },
+  { id: "946565bcb5d5f244e991e1790575a67c", name: "Paris Streets" },
+  { id: "e18ccfe651d904147ba60f4c72f9b146", name: "Holy Innoncents' Cemetery" },
+  { id: "57cb4e79eb2c4e943821705d39709461", name: "Notre-Dame" },
+  { id: "4f7ce84e4688e534aa656a76e6bd9416", name: "Main Hall" },
+  { id: "226c20eca175b104e8fe1a8f4fc2c879", name: "Library" },
+  { id: "c912f1bff8fc06740902f1f67666ae86", name: "Clock Tower" },
+  { id: "b76c5d815e88a8442ad46b1c869efd5f", name: "Hall of Mirrors" },
+  { id: "794afe09823b0e04dac2044bf092cff2", name: "Master's Quarters" },
+];
 
 export const weaponTypes = [
   { index: 0x0, name: "Swords" },

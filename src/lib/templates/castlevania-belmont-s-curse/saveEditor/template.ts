@@ -13,6 +13,7 @@ import {
   relics,
   skinList,
   skins,
+  warpRoomList,
   weaponList,
   weapons,
   weaponsGroups,
@@ -28,7 +29,7 @@ const template: GameJson = {
       },
     },
     text: "Drag 'n' drop here or click to add a save file.",
-    hint: "Designed to work with v1.1.1.\nOther versions may work, but may corrupt the save.\nPlease make a backup before editing.",
+    hint: "Designed to work with v1.1.3.\nOther versions may work, but may corrupt the save.\nPlease make a backup before editing.",
     error: "Not a valid save file.",
   },
   items: [
@@ -151,6 +152,34 @@ const template: GameJson = {
                       max: 59,
                     },
                   ],
+                },
+              ],
+            },
+            {
+              type: "section",
+              flex: true,
+              items: [
+                {
+                  id: "locations-enteredLevels",
+                  name: "Visited Locations",
+                  jsonPath: "playerSave.enteredLevels",
+                  type: "bitflags",
+                  flags: warpRoomList.map((location, index) => ({
+                    offset: index,
+                    bit: 0,
+                    label: location.name,
+                  })),
+                },
+                {
+                  id: "locations-unlockedFastTravelLevels",
+                  name: "Fast Travel Locations",
+                  jsonPath: "playerSave.unlockedFastTravelLevels",
+                  type: "bitflags",
+                  flags: warpRoomList.map((location, index) => ({
+                    offset: index,
+                    bit: 0,
+                    label: location.name,
+                  })),
                 },
               ],
             },

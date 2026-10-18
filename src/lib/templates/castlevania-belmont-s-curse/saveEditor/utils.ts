@@ -19,6 +19,7 @@ import {
   moveList,
   relicList,
   skinList,
+  warpRoomList,
   weaponList,
 } from "./utils/resource";
 
@@ -45,6 +46,8 @@ export async function beforeItemsParsing(): Promise<void> {
 export function overrideGetInt(
   item: Item,
 ): [boolean, number | ItemBitflagChecked[] | undefined] {
+  const $dataJson = get(dataJson);
+
   if ("id" in item && item.id?.match(/equipment-/)) {
     const itemInt = item as ItemInt;
 
@@ -57,6 +60,21 @@ export function overrideGetInt(
     const index = table.findIndex((item) => item.id === itemId);
 
     return [true, index];
+  } else if ("id" in item && item.id?.match("locations")) {
+    const itemBitflags = item as ItemBitflags;
+
+    const [, type] = item.id.split("-");
+
+    const flags = itemBitflags.flags.map((flag) => {
+      return {
+        ...flag,
+        checked: $dataJson.playerSave[type].includes(
+          warpRoomList[flag.offset].id,
+        ),
+      };
+    });
+
+    return [true, flags];
   } else if ("id" in item && item.id?.match(/inventory-/)) {
     const itemBitflags = item as ItemBitflags;
 
@@ -92,6 +110,8 @@ export function overrideSetInt(
   value: boolean | string,
   flag: ItemBitflag,
 ): boolean {
+  const $dataJson = get(dataJson);
+
   if ("id" in item && item.id?.match(/equipment-/)) {
     const itemInt = item as ItemInt;
 
@@ -102,6 +122,22 @@ export function overrideSetInt(
     const table = getInventoryTable(type);
 
     setJsonString(itemInt.jsonPath!, table[index]?.id || "");
+
+    return true;
+  } else if ("id" in item && item.id?.match("locations")) {
+    const [, type] = item.id.split("-");
+
+    const entry = warpRoomList[flag.offset];
+
+    const index = $dataJson.playerSave[type].findIndex(
+      (location: string) => location === entry.id,
+    );
+
+    if (value && index === -1) {
+      $dataJson.playerSave[type].push(warpRoomList[flag.offset].id);
+    } else if (!value && index !== -1) {
+      $dataJson.playerSave[type].splice(index, 1);
+    }
 
     return true;
   } else if ("id" in item && item.id?.match(/inventory-/)) {
