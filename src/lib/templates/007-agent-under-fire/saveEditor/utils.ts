@@ -68,11 +68,9 @@ export function overrideParseItem(item: Item): Item {
 
   if ($gamePlatform === 0) {
     if ("dataType" in item && item.dataType === "bit") {
-      const itemInt = item as ItemInt;
+      item.offset = byteswapOffset(item.offset);
 
-      itemInt.offset = byteswapOffset(itemInt.offset);
-
-      return itemInt;
+      return item;
     } else if ("dataType" in item && item.dataType === "uint32") {
       const itemInt = item as ItemInt;
 

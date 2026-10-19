@@ -29,7 +29,9 @@
     <p>
       The tools present on the site recalculate the checksums every time you
       save, even if you don't edit anything, which can repair your save if it is
-      corrupted.
+      corrupted. Note that if the data has been altered, the recalculated
+      checksum will allow you to load your save file into the game, but the data
+      will remain altered.
     </p>
   </Spoiler>
   <Spoiler
