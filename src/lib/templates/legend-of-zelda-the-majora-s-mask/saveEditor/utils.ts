@@ -52,7 +52,7 @@ export function beforeInitDataView(
   const $gamePlatform = get(gamePlatform);
 
   if ($gamePlatform === 1) {
-    return extractN64SaveFromGCI(dataView, FLA_SIZE);
+    return extractN64SaveFromGCI(dataView, 0x6044, FLA_SIZE);
   }
 
   return byteswapDataView(SAVE_FORMAT, dataView, shift);
@@ -398,7 +398,7 @@ export function beforeSaving(): ArrayBufferLike {
   const $gamePlatform = get(gamePlatform);
 
   if ($gamePlatform === 1) {
-    return injectN64SaveToGCI(FLA_SIZE);
+    return injectN64SaveToGCI(0x6044, FLA_SIZE);
   }
 
   return byteswapDataView(SAVE_FORMAT).buffer;

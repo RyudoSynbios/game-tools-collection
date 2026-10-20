@@ -1,6 +1,6 @@
 import { get } from "svelte/store";
 
-import { dataViewAlt, gamePlatform, gameRegion } from "$lib/stores";
+import { dataViewAlt, gameMetas, gamePlatform, gameRegion } from "$lib/stores";
 import {
   checkNextHiddenFlags,
   getBoolean,
@@ -17,7 +17,11 @@ import { byteswapDataView, getHeaderShift } from "$lib/utils/common/nintendo64";
 import { SRA_SIZE } from "$lib/utils/common/nintendo64/srm";
 import { round } from "$lib/utils/format";
 import { getItem } from "$lib/utils/parser";
-import { getPlatformRegions, getRegions } from "$lib/utils/validator";
+import {
+  checkValidator,
+  getPlatformRegions,
+  getRegions,
+} from "$lib/utils/validator";
 
 import {
   Item,
@@ -58,10 +62,23 @@ export function beforeInitDataView(
   dataView: DataView,
   shift: number,
 ): DataView {
+  const $gameMetas = get(gameMetas);
   const $gamePlatform = get(gamePlatform);
 
   if ($gamePlatform === 1) {
-    return extractN64SaveFromGCI(dataView, SRA_SIZE);
+    const validator = [0x5a, 0x45, 0x4c, 0x44, 0x41, 0x0]; // "ZELDA."
+
+    $gameMetas.offset = 0x0;
+
+    if (checkValidator(validator, 0x30f0, dataView)) {
+      $gameMetas.offset = 0x6044;
+    } else if (checkValidator(validator, 0x3111, dataView)) {
+      $gameMetas.offset = 0x12044;
+    } else {
+      return dataView;
+    }
+
+    return extractN64SaveFromGCI(dataView, $gameMetas.offset, SRA_SIZE);
   }
 
   return byteswapDataView(SAVE_FORMAT, dataView, shift);
@@ -75,7 +92,11 @@ export function overrideGetRegions(
   const $gamePlatform = get(gamePlatform);
 
   if ($gamePlatform === 1) {
-    return getRegions($dataViewAlt.gci);
+    if ($dataViewAlt.gci) {
+      return getRegions($dataViewAlt.gci);
+    }
+
+    return [];
   }
 
   return getRegions(dataView, shift);
@@ -488,10 +509,11 @@ export function generateChecksum(item: ItemChecksum): number {
 }
 
 export function beforeSaving(): ArrayBufferLike {
+  const $gameMetas = get(gameMetas);
   const $gamePlatform = get(gamePlatform);
 
   if ($gamePlatform === 1) {
-    return injectN64SaveToGCI(SRA_SIZE);
+    return injectN64SaveToGCI($gameMetas.offset, SRA_SIZE);
   }
 
   return byteswapDataView(SAVE_FORMAT).buffer;

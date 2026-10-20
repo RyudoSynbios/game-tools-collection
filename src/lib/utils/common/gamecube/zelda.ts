@@ -5,6 +5,7 @@ import { getIntFromArray } from "$lib/utils/bytes";
 
 export function extractN64SaveFromGCI(
   dataView: DataView,
+  offset: number,
   formatSize: number,
 ): DataView {
   const $dataViewAlt = get(dataViewAlt);
@@ -14,7 +15,6 @@ export function extractN64SaveFromGCI(
   const gci = new Uint8Array(dataView.buffer);
   const save = new Uint8Array(formatSize);
 
-  let offset = 0x6044;
   let size = 0x0;
 
   while (size < formatSize) {
@@ -31,14 +31,16 @@ export function extractN64SaveFromGCI(
   return new DataView(save.buffer);
 }
 
-export function injectN64SaveToGCI(formatSize: number): ArrayBufferLike {
+export function injectN64SaveToGCI(
+  offset: number,
+  formatSize: number,
+): ArrayBufferLike {
   const $dataView = get(dataView);
   const $dataViewAlt = get(dataViewAlt);
 
   const gci = new Uint8Array($dataViewAlt.gci.buffer);
   const save = new Uint8Array($dataView.buffer);
 
-  let offset = 0x6044;
   let size = 0x0;
 
   while (size < formatSize) {
