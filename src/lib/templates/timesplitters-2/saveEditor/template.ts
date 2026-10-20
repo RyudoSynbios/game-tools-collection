@@ -7,6 +7,17 @@ import { arcadeLeagues, challengeSets, weapons } from "./utils/resource";
 const template: GameJson = {
   validator: {
     platforms: {
+      gamecube: {
+        europe: {
+          0x0: [0x47, 0x54, 0x53, 0x50, 0x34, 0x46], // "GTSP4F"
+        },
+        usa: {
+          0x0: [0x47, 0x54, 0x53, 0x45, 0x34, 0x46], // "GTSE4F"
+        },
+        korea: {
+          0x0: [0x47, 0x54, 0x53, 0x45, 0x34, 0x46], // "GTSE4F"
+        },
+      },
       playstation2: {
         europe: {
           0x0: [
@@ -38,6 +49,7 @@ const template: GameJson = {
       hidden: true,
       items: [
         {
+          id: "checksum",
           name: "Checksum",
           offset: 0x20f50,
           type: "checksum",
@@ -74,9 +86,10 @@ const template: GameJson = {
               flex: true,
               items: [
                 {
+                  id: "mainName",
                   name: "Name",
                   offset: 0x210,
-                  length: 0x12,
+                  length: 0x8,
                   type: "variable",
                   dataType: "string",
                   letterDataType: "uint8",
@@ -101,6 +114,7 @@ const template: GameJson = {
                           },
                         },
                       ],
+                      min: 0,
                       max: 999,
                     },
                     {
@@ -116,6 +130,7 @@ const template: GameJson = {
                         },
                       ],
                       leadingZeros: 1,
+                      min: 0,
                       max: 59,
                     },
                     {
@@ -131,6 +146,7 @@ const template: GameJson = {
                         },
                       ],
                       leadingZeros: 1,
+                      min: 0,
                       max: 59,
                       test: true,
                     },
@@ -476,6 +492,7 @@ const template: GameJson = {
                                       "Gold",
                                       "Platinum",
                                     ].map((award, index) => ({
+                                      id: `cleared-${index}`,
                                       name: `${award} Cleared`,
                                       offset:
                                         0x1b12 +
@@ -610,6 +627,7 @@ const template: GameJson = {
                                 }),
                               ...["Bronze", "Silver", "Gold", "Platinum"].map(
                                 (award, index) => ({
+                                  id: `cleared-${index}`,
                                   name: `${award} Cleared`,
                                   offset:
                                     0x1b10 +
@@ -640,6 +658,7 @@ const template: GameJson = {
                       name: "General",
                       items: [
                         {
+                          id: "unlockedMiniGames",
                           name: "Unlocked",
                           type: "bitflags",
                           flags: [
@@ -655,6 +674,7 @@ const template: GameJson = {
                       name: "Anaconda",
                       items: [
                         {
+                          id: "minigame-anaconda",
                           length: 0x24,
                           type: "container",
                           instanceType: "section",
@@ -665,7 +685,7 @@ const template: GameJson = {
                             {
                               name: "Name",
                               offset: 0x1b50,
-                              length: 0x12,
+                              length: 0x8,
                               type: "variable",
                               dataType: "string",
                               letterDataType: "uint8",
@@ -673,6 +693,7 @@ const template: GameJson = {
                               regex: "[ !#$%&()*+\-.0-9:;<=>?@A-Z\\[\\]_a-z]",
                             },
                             {
+                              id: "minigameScore",
                               name: "Score",
                               offset: 0x1b70,
                               type: "variable",
@@ -686,6 +707,7 @@ const template: GameJson = {
                       name: "RetroRacer",
                       items: [
                         {
+                          id: "minigame-retroracer",
                           length: 0x24,
                           type: "container",
                           instanceType: "section",
@@ -696,7 +718,7 @@ const template: GameJson = {
                             {
                               name: "Name",
                               offset: 0x1cb8,
-                              length: 0x12,
+                              length: 0x8,
                               type: "variable",
                               dataType: "string",
                               letterDataType: "uint8",
@@ -709,7 +731,7 @@ const template: GameJson = {
                               mode: "chrono",
                               items: [
                                 {
-                                  id: "time",
+                                  id: "minigameTime",
                                   offset: 0x1cd8,
                                   type: "variable",
                                   dataType: "uint32",
@@ -725,7 +747,7 @@ const template: GameJson = {
                                   max: 59,
                                 },
                                 {
-                                  id: "time",
+                                  id: "minigameTime",
                                   offset: 0x1cd8,
                                   type: "variable",
                                   dataType: "uint32",
@@ -742,7 +764,7 @@ const template: GameJson = {
                                   max: 59,
                                 },
                                 {
-                                  id: "time",
+                                  id: "minigameTime",
                                   offset: 0x1cd8,
                                   type: "variable",
                                   dataType: "uint32",
@@ -770,6 +792,7 @@ const template: GameJson = {
                       name: "AstroLander",
                       items: [
                         {
+                          id: "astrolander",
                           length: 0x168,
                           type: "container",
                           instanceType: "tabs",
@@ -777,6 +800,7 @@ const template: GameJson = {
                           resource: "astroLanderDifficulties",
                           items: [
                             {
+                              id: "minigame-astrolander",
                               length: 0x24,
                               type: "container",
                               instanceType: "section",
@@ -787,7 +811,7 @@ const template: GameJson = {
                                 {
                                   name: "Name",
                                   offset: 0x1e20,
-                                  length: 0x12,
+                                  length: 0x8,
                                   type: "variable",
                                   dataType: "string",
                                   letterDataType: "uint8",
@@ -795,6 +819,7 @@ const template: GameJson = {
                                   regex: "[ !#$%&()*+\-.0-9:;<=>?@A-Z\\[\\]_a-z]",
                                 },
                                 {
+                                  id: "minigameScore",
                                   name: "Score",
                                   offset: 0x1e40,
                                   type: "variable",
@@ -1154,6 +1179,7 @@ const template: GameJson = {
                       name: "General",
                       items: [
                         {
+                          id: "ps2Only",
                           type: "section",
                           flex: true,
                           noMargin: true,
@@ -1188,6 +1214,7 @@ const template: GameJson = {
                                       },
                                     },
                                   ],
+                                  min: 0,
                                   max: 999,
                                 },
                                 {
@@ -1203,6 +1230,7 @@ const template: GameJson = {
                                     },
                                   ],
                                   leadingZeros: 1,
+                                  min: 0,
                                   max: 59,
                                 },
                                 {
@@ -1218,6 +1246,7 @@ const template: GameJson = {
                                     },
                                   ],
                                   leadingZeros: 1,
+                                  min: 0,
                                   max: 59,
                                 },
                               ],
@@ -1239,6 +1268,7 @@ const template: GameJson = {
                                       },
                                     },
                                   ],
+                                  min: 0,
                                   max: 999,
                                 },
                                 {
@@ -1254,6 +1284,7 @@ const template: GameJson = {
                                     },
                                   ],
                                   leadingZeros: 1,
+                                  min: 0,
                                   max: 59,
                                 },
                                 {
@@ -1269,6 +1300,7 @@ const template: GameJson = {
                                     },
                                   ],
                                   leadingZeros: 1,
+                                  min: 0,
                                   max: 59,
                                 },
                               ],
@@ -1286,6 +1318,7 @@ const template: GameJson = {
                               type: "variable",
                               dataType: "float32",
                               operations: [{ "/": 1609.34 }, { round: 1 }],
+                              min: 0,
                               max: 999999,
                             },
                             {
@@ -1426,6 +1459,7 @@ const template: GameJson = {
                                       },
                                     },
                                   ],
+                                  min: 0,
                                   max: 999,
                                 },
                                 {
@@ -1441,6 +1475,7 @@ const template: GameJson = {
                                     },
                                   ],
                                   leadingZeros: 1,
+                                  min: 0,
                                   max: 59,
                                 },
                                 {
@@ -1456,6 +1491,7 @@ const template: GameJson = {
                                     },
                                   ],
                                   leadingZeros: 1,
+                                  min: 0,
                                   max: 59,
                                 },
                               ],
@@ -1555,24 +1591,28 @@ const template: GameJson = {
                               offset: 0x191c,
                               type: "variable",
                               dataType: "float32",
+                              min: 0,
                             },
                             {
                               name: "Body shots",
                               offset: 0x1920,
                               type: "variable",
                               dataType: "float32",
+                              min: 0,
                             },
                             {
                               name: "Arms shots",
                               offset: 0x1924,
                               type: "variable",
                               dataType: "float32",
+                              min: 0,
                             },
                             {
                               name: "Legs shots",
                               offset: 0x1928,
                               type: "variable",
                               dataType: "float32",
+                              min: 0,
                             },
                             {
                               name: "???",
@@ -1590,6 +1630,7 @@ const template: GameJson = {
                       flex: true,
                       items: [
                         {
+                          id: "arcadeAwards",
                           type: "bitflags",
                           flags: [
                             { offset: 0x1ab8, bit: 0, label: "Most Lethal" },
@@ -1615,6 +1656,7 @@ const template: GameJson = {
                           ],
                         },
                         {
+                          id: "arcadeAwards",
                           type: "bitflags",
                           flags: [
                             { offset: 0x1acc, bit: 0, label: "Hoarder" },
@@ -1640,6 +1682,7 @@ const template: GameJson = {
                           ],
                         },
                         {
+                          id: "arcadeAwards",
                           type: "bitflags",
                           flags: [
                             { offset: 0x1ae0, bit: 0, label: "Most Peaceful" },
@@ -2861,6 +2904,7 @@ const template: GameJson = {
                                           },
                                         },
                                       ],
+                                      min: 0,
                                       max: 999,
                                     },
                                     {
@@ -2876,6 +2920,7 @@ const template: GameJson = {
                                         },
                                       ],
                                       leadingZeros: 1,
+                                      min: 0,
                                       max: 59,
                                     },
                                     {
@@ -2891,6 +2936,7 @@ const template: GameJson = {
                                         },
                                       ],
                                       leadingZeros: 1,
+                                      min: 0,
                                       max: 59,
                                     },
                                   ],
@@ -4663,6 +4709,7 @@ const template: GameJson = {
               ],
             },
             {
+              id: "ps2Only",
               name: "Options",
               items: [
                 {

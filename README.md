@@ -148,7 +148,7 @@ Link to the website: [https://game-tools-collection.com](https://game-tools-coll
 | Tekken 2                                            | PS             | Save                    | EUR / USA / JAP                               |
 | Tekken 3                                            | PS             | Save                    | EUR / USA / JAP / AUS                         |
 | Theatrhythm Final Fantasy: Curtain Call             | 3DS            | Save                    | EUR / USA / JAP                               |
-| TimeSplitters 2                                     | PS2            | Save                    | EUR / USA / JAP                               |
+| TimeSplitters 2                                     | GC / PS2       | Save                    | EUR / USA / JAP / KOR                         |
 | Tomb Raider II: Starring Lara Croft                 | PS             | Save                    | EUR / USA / JAP / FRA / GER / ITA             |
 | Tony Hawk's Skateboarding                           | PS             | Save                    | EUR / USA / JAP                               |
 | Wario Land: Super Mario Land 3                      | GB             | Save                    | WORLD                                         |

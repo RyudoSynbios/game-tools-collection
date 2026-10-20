@@ -1627,11 +1627,11 @@
   {
     "id": "timesplitters-2",
     "name": "TimeSplitters 2",
-    "platformIds": ["playstation-2"],
+    "platformIds": ["gamecube", "playstation-2"],
     "tools": {
       "saveEditor": {
         "createdAt": "2024-10-15",
-        "regions": ["🇪🇺", "🇺🇸", "🇯🇵"]
+        "regions": ["🇪🇺", "🇺🇸", "🇯🇵", "🇰🇷"]
       }
     }
   },

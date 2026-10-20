@@ -25,6 +25,10 @@ test.describe(game, () => {
 
   // prettier-ignore
   const tests: Test[] = [
+     // GameCube
+    ["should load a standard GC save (Europe)"    , "gamecube/europe.gci"            , [           "c|0x5638ed87"                     , "s|1$1", "i|PASS$1", "i|00$2", "w|01$2", "c|0x8231ba9c"]],
+    ["should load a standard GC save (USA)"       , "gamecube/usa.gci"               , ["r|usa"  , "c|0xd20a4694"                     , "s|1$1", "i|PASS$1", "i|00$2", "w|01$2", "c|0x0603118f"]],
+    ["should load a standard GC save (Korea)"     , "gamecube/korea.gci"             , ["r|korea", "c|0xdd1c9a04"                     , "s|1$1", "i|PASS$1", "i|00$2", "w|01$2", "c|0x0915cd1f"]],
     // PlayStation 2
     ["should load a filled standard save (USA)"   , "playstation-2/filled.ps2"       , ["r|usa"  , "c|0x913caf75", 't|["PASS"]'       , "s|1$1", "i|PASS$1", "i|00$2", "w|01$2", "c|0x2f4cf94b"]],
     ["should load a filled standard save (Japan)" , "playstation-2/filled.ps2"       , ["r|japan", "c|0x9d7e58d9", 't|["FAIL","PASS"]', "s|2$1", "i|PASS$1", "i|00$2", "w|01$2", "c|0x6ce41301"]],

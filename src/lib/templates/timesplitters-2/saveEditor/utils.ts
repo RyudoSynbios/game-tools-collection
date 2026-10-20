@@ -1,8 +1,8 @@
 import { get } from "svelte/store";
 
-import { gameRegion } from "$lib/stores";
+import { dataView, gamePlatform, gameRegion } from "$lib/stores";
 import {
-  bitToOffset,
+  byteswapOffset,
   getBitflag,
   getInt,
   getString,
@@ -13,12 +13,14 @@ import { formatChecksum, generateCrcCcitt } from "$lib/utils/checksum";
 import {
   customGetRegions,
   getFileOffset,
+  isPlaystation2SaveFile,
   repackFile,
   resetState,
   unpackFile,
 } from "$lib/utils/common/playstation2";
 import { round } from "$lib/utils/format";
-import { getItem } from "$lib/utils/parser";
+import { getClosestItem, getItem } from "$lib/utils/parser";
+import { getRegions } from "$lib/utils/validator";
 
 import type {
   Item,
@@ -28,15 +30,36 @@ import type {
   ItemChecksum,
   ItemContainer,
   ItemInt,
+  ItemString,
   Resource,
 } from "$lib/types";
 
-export function beforeInitDataView(dataView: DataView): DataView {
-  return unpackFile(dataView);
+export function setGamePlatform(dataView: DataView): void {
+  if (isPlaystation2SaveFile(dataView)) {
+    gamePlatform.set(1);
+  } else {
+    gamePlatform.set(0);
+  }
 }
 
-export function overrideGetRegions(): string[] {
-  return customGetRegions();
+export function beforeInitDataView(dataView: DataView): DataView {
+  const $gamePlatform = get(gamePlatform);
+
+  if ($gamePlatform === 1) {
+    return unpackFile(dataView);
+  }
+
+  return dataView;
+}
+
+export function overrideGetRegions(dataView: DataView): string[] {
+  const $gamePlatform = get(gamePlatform);
+
+  if ($gamePlatform === 1) {
+    return customGetRegions();
+  }
+
+  return getRegions(dataView);
 }
 
 export function onInitFailed(): void {
@@ -44,13 +67,95 @@ export function onInitFailed(): void {
 }
 
 export function initShifts(shifts: number[]): number[] {
-  return [...shifts, getFileOffset(0)];
+  const $gamePlatform = get(gamePlatform);
+
+  if ($gamePlatform === 1) {
+    return [...shifts, getFileOffset(0)];
+  }
+
+  return [...shifts, 0x668];
 }
 
 export function overrideParseItem(item: Item): Item {
+  const $gamePlatform = get(gamePlatform);
   const $gameRegion = get(gameRegion);
 
-  if ("id" in item && item.id === "profiles") {
+  if ($gamePlatform === 0) {
+    if (item.type === "bitflags" && item.id !== "arcadeAwards") {
+      item.flags.forEach((flag) => {
+        flag.offset = byteswapOffset(flag.offset);
+      });
+    } else if ("dataType" in item && item.dataType === "bit") {
+      item.offset = byteswapOffset(item.offset);
+    } else if (
+      "dataType" in item &&
+      ["int32", "uint32", "float32"].includes(item.dataType)
+    ) {
+      const itemInt = item as ItemInt;
+
+      itemInt.bigEndian = true;
+    }
+
+    if ("id" in item && item.id === "checksum") {
+      const itemChecksum = item as ItemChecksum;
+
+      itemChecksum.offset -= 0x1edfc;
+      itemChecksum.control.offsetStart -= 0x62c;
+      itemChecksum.control.offsetEnd -= 0x1edfc;
+
+      return itemChecksum;
+    } else if ("id" in item && item.id === "profiles") {
+      const itemContainer = item as ItemContainer;
+
+      itemContainer.instanceType = "section";
+      itemContainer.instances = 1;
+      itemContainer.resource = undefined;
+
+      return itemContainer;
+    } else if ("id" in item && item.id === "mainName") {
+      const itemString = item as ItemString;
+
+      itemString.offset += 0x8;
+
+      return itemString;
+    } else if ("id" in item && item.id === "unlockedMiniGames") {
+      const itemBitflags = item as ItemBitflags;
+
+      itemBitflags.flags = itemBitflags.flags.map((flag) => ({
+        ...flag,
+        offset: flag.offset - 0x190,
+      }));
+
+      return itemBitflags;
+    } else if ("id" in item && item.id === "astrolander") {
+      const itemContainer = item as ItemContainer;
+
+      itemContainer.length = 0x118;
+
+      return itemContainer;
+    } else if ("id" in item && item.id?.match(/minigame-/)) {
+      const itemContainer = item as ItemContainer;
+
+      itemContainer.length = 0x1c;
+
+      return itemContainer;
+    } else if (
+      "id" in item &&
+      item.id?.match(/^(minigameScore|minigameTime)$/)
+    ) {
+      const itemInt = item as ItemInt;
+
+      itemInt.offset -= 0x8;
+    }
+  }
+
+  if ("id" in item && item.id === "ps2Only") {
+    const itemInt = item as ItemInt;
+
+    itemInt.hidden = $gamePlatform !== 1;
+
+    return itemInt;
+  } else if ("id" in item && item.id === "profiles") {
     const itemContainer = item as ItemContainer;
 
     const profileCountItem = getItem("profileCount") as ItemInt;
@@ -70,7 +175,11 @@ export function overrideParseItem(item: Item): Item {
     }
 
     itemContainer.instances = instances;
-  } else if ("id" in item && item.id === "time" && $gameRegion !== 0) {
+  } else if (
+    "id" in item &&
+    item.id?.match(/^(time|minigameTime)$/) &&
+    $gameRegion !== 0
+  ) {
     const itemInt = item as ItemInt;
 
     itemInt.operations![0] = { "/": 60 };
@@ -79,6 +188,29 @@ export function overrideParseItem(item: Item): Item {
   }
 
   return item;
+}
+
+export function overrideParseContainerItemsShifts(
+  item: ItemContainer,
+  shifts: number[],
+  index: number,
+): [boolean, number[] | undefined] {
+  const $gamePlatform = get(gamePlatform);
+  if ($gamePlatform === 1) {
+    return [false, undefined];
+  }
+
+  if (item.id?.match(/minigame-/)) {
+    const [, type] = item.id.split("-");
+
+    if (type === "retroracer") {
+      return [true, [...shifts, -0x50, index * item.length]];
+    } else if (type === "astrolander") {
+      return [true, [...shifts, -0xa0, index * item.length]];
+    }
+  }
+
+  return [false, undefined];
 }
 
 export function overrideGetInt(
@@ -147,8 +279,12 @@ export function overrideGetInt(
 
     let int = 0;
 
-    const int1 = getInt(itemInt.offset, "int32");
-    const int2 = getInt(itemInt.offset + 0x4, "int32");
+    const int1 = getInt(itemInt.offset, "int32", {
+      bigEndian: itemInt.bigEndian,
+    });
+    const int2 = getInt(itemInt.offset + 0x4, "int32", {
+      bigEndian: itemInt.bigEndian,
+    });
 
     if (int1 > 0x0 && int2 <= int1) {
       int = Math.floor((int2 / int1) * 100);
@@ -158,8 +294,10 @@ export function overrideGetInt(
   } else if ("id" in item && item.id === "averageSpeed") {
     const itemInt = item as ItemInt;
 
-    const int1 = getInt(itemInt.offset, "float32") / 3600;
+    // prettier-ignore
+    const int1 = getInt(itemInt.offset, "float32", { bigEndian: itemInt.bigEndian }) / 3600;
     const int2 = getInt(itemInt.offset + 0x1a8, "float32", {
+      bigEndian: itemInt.bigEndian,
       operations: [{ "/": 1609.34 }, { round: 1 }],
     });
 
@@ -194,22 +332,26 @@ export function afterSetInt(item: Item, flag: ItemBitflag): void {
     const [, type] = item.id.split("-");
     const [index] = item.id.splitInt();
 
-    const value = getInt(itemInt.offset, "uint32");
+    const value = getInt(itemInt.offset, "uint32", {
+      bigEndian: itemInt.bigEndian,
+    });
 
-    const playCount = getInt(itemInt.offset - 0xc, "uint32");
+    const playCount = getInt(itemInt.offset - 0xc, "uint32", {
+      bigEndian: itemInt.bigEndian,
+    });
 
     if (value > 0x0 && playCount === 0x0) {
-      setInt(itemInt.offset - 0xc, "uint32", 1);
+      setInt(itemInt.offset - 0xc, "uint32", 1, {
+        bigEndian: itemInt.bigEndian,
+      });
     }
 
-    const shift = type === "arcade" ? 0x596 : 0x738;
-
-    const offset = itemInt.offset - index * 0x14 + shift + bitToOffset(index);
+    const clearedItem = getClosestItem("cleared-0", item) as ItemInt;
 
     const bit = ((type === "arcade" ? 5 : 0) + index) % 8;
 
     for (let i = 0x0; i < 0x4; i += 0x1) {
-      setBitflag(offset + i * 0x10, bit, i + 1 <= value);
+      setBitflag(clearedItem.offset + i * 0x10, bit, i + 1 <= value);
     }
   } else if ("id" in item && item.id?.match(/unlockables-/)) {
     const itemBitflags = item as ItemBitflags;
@@ -261,7 +403,14 @@ export function generateChecksum(item: ItemChecksum): number {
 }
 
 export function beforeSaving(): ArrayBufferLike {
-  return repackFile();
+  const $dataView = get(dataView);
+  const $gamePlatform = get(gamePlatform);
+
+  if ($gamePlatform === 1) {
+    return repackFile();
+  }
+
+  return $dataView.buffer;
 }
 
 export function onReset(): void {
@@ -274,12 +423,9 @@ export function getProfileNames(): Resource {
   const profileCountItem = getItem("profileCount") as ItemInt;
 
   for (let i = 0x0; i < 0x10; i += 0x1) {
-    names[i] = getString(
-      profileCountItem.offset + 0x1 + i * 0x1f,
-      0x8,
-      "uint8",
-      { endCode: 0x0 },
-    );
+    const offset = profileCountItem.offset + 0x1 + i * 0x1f;
+
+    names[i] = getString(offset, 0x8, "uint8", { endCode: 0x0 });
   }
 
   return names;
