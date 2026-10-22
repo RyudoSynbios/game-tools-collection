@@ -12,12 +12,12 @@ import { checkValidator, getPlatformRegions, getRegions } from "../validator";
 const magic = [0x53, 0x54, 0x41, 0x54, 0x52, 0x41, 0x4d, 0x30]; // "STATRAM0"
 
 const gameOffsets: { [key: string]: number[] } = {
-  cotm: [0x58e08, 0x50d08, 0x48c08], // Circle of the Moon
-  hod: [0x9d808, 0x95708, 0x8d608], // Harmony of Dissonance
-  aos: [0xe2208, 0xda108, 0xd2008], // Aria of Sorrow
-  dos: [0x68688, 0x58588, 0x48488], // Dawn of Sorrow
-  por: [0xacac8, 0x9c9c8, 0x8c8c8], // Portrait of Ruin
-  ooe: [0xf0f08, 0xe0e08, 0xd0d08, 0x101008], // Order of Ecclesia
+  cotm: [0x58e00, 0x50d00, 0x48c00], // Circle of the Moon
+  hod: [0x9d800, 0x95700, 0x8d600], // Harmony of Dissonance
+  aos: [0xe2200, 0xda100, 0xd2000], // Aria of Sorrow
+  dos: [0x68680, 0x58580, 0x48480], // Dawn of Sorrow
+  por: [0xacac0, 0x9c9c0, 0x8c8c0], // Portrait of Ruin
+  ooe: [0xf0f00, 0xe0e00, 0xd0d00, 0x101000], // Order of Ecclesia
 };
 
 let regions: string[] = [];
@@ -58,6 +58,10 @@ export function extractCastlevaniaCollectionSaves(
     const key = parseInt(getObjKey(regionValidator, 0));
     const validator = regionValidator[key];
 
+    if (hasDataBefore(dataView)) {
+      offset += 0x8;
+    }
+
     if (checkValidator(magic, offset, dataView)) {
       const length = getInt(offset + 0xc, "uint32", {}, dataView);
 
@@ -94,7 +98,11 @@ export function injectCastlevaniaCollectionSaves(game: Game): ArrayBufferLike {
   const $dataViewAlt = get(dataViewAlt);
   const $gameRegion = get(gameRegion);
 
-  const offset = gameOffsets[game][$gameRegion];
+  let offset = gameOffsets[game][$gameRegion];
+
+  if (hasDataBefore($dataViewAlt.collection)) {
+    offset += 0x8;
+  }
 
   const previousLength = getInt(offset + 0xc, "uint32", {}, $dataViewAlt.collection); // prettier-ignore
 
@@ -161,4 +169,8 @@ export function resetState(): void {
   regions = [];
   saveOffsets = [];
   saveLengths = [];
+}
+
+function hasDataBefore(dataView: DataView): boolean {
+  return !checkValidator([0x12, 0x0, 0x1, 0x0], 0x0, dataView);
 }

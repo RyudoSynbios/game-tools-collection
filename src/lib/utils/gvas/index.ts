@@ -1,7 +1,9 @@
 import debug from "$lib/utils/debug";
 import { isObjEmpty } from "$lib/utils/format";
 
-import { getInt, getString } from "../bytes";
+import { DataTypeUInt } from "$lib/types";
+
+import { dataTypeToLength, getInt, getString } from "../bytes";
 import Parser from "./parser";
 import Writer from "./writer";
 
@@ -21,29 +23,20 @@ export enum PropertyType {
 }
 
 export type ArrayProperty = (
-  | boolean
-  | bigint
-  | number
-  | string
-  | StructProperty
+  boolean | bigint | number | string | StructProperty
 )[];
 export type MapProperty = Map<string, boolean | number | StructProperty>;
 export type StructProperty = {
   [key: string]:
-    | boolean
-    | number
-    | string
-    | ArrayProperty
-    | MapProperty
-    | StructProperty;
+    boolean | number | string | ArrayProperty | MapProperty | StructProperty;
 };
 
 export type Json = StructProperty;
 export type Types = { [key: string]: string };
 
-interface Header {
+export interface Header {
   saveVersion: number;
-  packageVersion: number;
+  packageVersions: Record<string, number>[];
   engineVersion: {
     major: number;
     minor: number;
@@ -66,7 +59,7 @@ export default class Gvas {
 
   constructor(dataView: DataView) {
     this.dataView = dataView;
-    this.offset = 0x0;
+    this.offset = 0x4;
     this.bufferSize = 0x1000000;
     this._header = this.getHeader();
     this._json = {};
@@ -91,57 +84,75 @@ export default class Gvas {
       return { saveType: "" } as Header;
     }
 
+    const saveVersion = this.getInt("uint32");
+
+    const packageVersions: Record<string, number>[] = [
+      { ue4: this.getInt("uint32") },
+    ];
+
+    if (saveVersion === 3) {
+      packageVersions.push({ ue5: this.getInt("uint32") });
+    }
+
     const header: Header = {
-      saveVersion: getInt(this.offset + 0x4, "uint32", {}, this.dataView),
-      packageVersion: getInt(this.offset + 0x8, "uint32", {}, this.dataView),
+      saveVersion,
+      packageVersions,
       engineVersion: {
-        major: getInt(this.offset + 0xc, "uint16", {}, this.dataView),
-        minor: getInt(this.offset + 0xe, "uint16", {}, this.dataView),
-        patch: getInt(this.offset + 0x10, "uint16", {}, this.dataView),
-        build: getInt(this.offset + 0x12, "uint32", {}, this.dataView),
-        name: this.getString(this.offset + 0x16),
+        major: this.getInt("uint16"),
+        minor: this.getInt("uint16"),
+        patch: this.getInt("uint16"),
+        build: this.getInt("uint32"),
+        name: this.getString(),
       },
       customVersion: 0x0,
       customUUID: [],
       saveType: "",
     };
 
-    this.offset += header.engineVersion.name.length + 0x1b;
+    header.customVersion = this.getInt("uint32");
 
-    header.customVersion = getInt(this.offset, "uint32", {}, this.dataView);
-
-    const length = getInt(this.offset + 0x4, "uint32", {}, this.dataView);
-
-    this.offset += 0x8;
+    const length = this.getInt("uint32");
 
     for (let i = 0x0; i < length; i += 0x1) {
       header.customUUID.push({
-        uuid: this.getUUID(this.offset),
-        version: getInt(this.offset + 0x10, "uint32", {}, this.dataView),
+        uuid: this.getUUID(),
+        version: this.getInt("uint32"),
       });
-
-      this.offset += 0x14;
     }
 
-    header.saveType = this.getString(this.offset);
+    header.saveType = this.getString();
 
-    this.offset += header.saveType.length + 0x5;
+    if (saveVersion === 3) {
+      this.offset += 0x1;
+    }
 
     return header;
   }
 
-  // prettier-ignore
-  private getString(offset: number): string {
-    const length = getInt(offset, "uint32", {}, this.dataView);
+  private getInt(dataType: DataTypeUInt): number {
+    const int = getInt(this.offset, dataType, {}, this.dataView);
 
-    return getString(offset + 0x4, length, "uint8", { endCode: 0x0 }, this.dataView);
+    this.offset += dataTypeToLength(dataType);
+
+    return int;
   }
 
-  private getUUID(offset: number): string {
+  // prettier-ignore
+  private getString(): string {
+    const length = this.getInt("uint32");
+
+    const string = getString(this.offset, length, "uint8", { endCode: 0x0 }, this.dataView);
+
+    this.offset += length;
+
+    return string;
+  }
+
+  private getUUID(): string {
     let uuid = "";
 
     for (let j = 0x0; j < 0x10; j += 0x4) {
-      uuid += getInt(offset + j, "uint32", {}, this.dataView).toHex(8);
+      uuid += this.getInt("uint32").toHex(8);
     }
 
     return `${uuid.substring(0, 8)}-${uuid.substring(8, 12)}-${uuid.substring(12, 16)}-${uuid.substring(16, 20)}-${uuid.substring(20, 32)}`;
@@ -152,7 +163,7 @@ export default class Gvas {
       return {};
     }
 
-    const parser = new Parser(this.dataView, this.offset);
+    const parser = new Parser(this.header, this.dataView, this.offset);
 
     parser.parse();
 
@@ -179,6 +190,7 @@ export default class Gvas {
     const header = new Uint8Array(this.dataView.buffer.slice(0x0, this.offset));
 
     const writer = new Writer(
+      this.header,
       this.bufferSize,
       this._json,
       this._types,

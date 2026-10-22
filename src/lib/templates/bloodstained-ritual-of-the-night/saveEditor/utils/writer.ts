@@ -10,6 +10,7 @@ export function updateJson(): void {
 
   fieldsToParse.forEach((field) => {
     const writer = new Writer(
+      gvas.header,
       0x10000,
       $dataJson[`${field}Parsed`],
       $dataJson[`${field}Types`],
@@ -29,7 +30,7 @@ export function writeInventoryData(): void {
 
   const inventory = $dataJson.InventoryDataParsed as Inventory;
 
-  const writer = new Writer(0x10000);
+  const writer = new Writer(gvas.header, 0x10000);
 
   for (let i = 0x0; i < 0x2; i += 0x1) {
     writer.setString(inventory.Equipment[0][i]);
@@ -97,7 +98,7 @@ export function writeShardPossession(): void {
 
   const shards = $dataJson.ShardPossessionParsed as Shards;
 
-  const writer = new Writer(0x10000, {}, shardsTypes);
+  const writer = new Writer(gvas.header, 0x10000, {}, shardsTypes);
 
   for (let i = 0x0; i < 0x5; i += 0x1) {
     writer.setString("None");

@@ -9,6 +9,7 @@ import {
 import debug from "$lib/utils/debug";
 
 import {
+  Header,
   PropertyType,
   type ArrayProperty,
   type Json,
@@ -19,6 +20,7 @@ import {
 import { isObjEmpty } from "../format";
 
 export default class Writer {
+  private header: Header;
   private bufferSize: number;
   private json: Json;
   private types: Types;
@@ -27,12 +29,14 @@ export default class Writer {
   private _buffer: Uint8Array;
 
   constructor(
+    header: Header,
     bufferSize: number,
     json: Json = {},
     types: Types = {},
     initData: Uint8Array = new Uint8Array(),
     offset = 0x0,
   ) {
+    this.header = header;
     this.bufferSize = bufferSize;
     this.json = json;
     this.types = types;
