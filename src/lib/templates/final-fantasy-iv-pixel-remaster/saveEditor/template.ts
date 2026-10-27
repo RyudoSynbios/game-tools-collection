@@ -250,7 +250,7 @@ const template: GameJson = {
                       flex: true,
                       items: [
                         {
-                          name: "Battle Count",
+                          name: "Battles",
                           offset: 0x0,
                           jsonPath: "userData.battleCount",
                           type: "variable",
@@ -259,7 +259,7 @@ const template: GameJson = {
                           max: 999999999,
                         },
                         {
-                          name: "Slain Monster Count",
+                          name: "Slain Monsters",
                           offset: 0x0,
                           jsonPath: "userData.monstersKilledCount",
                           type: "variable",
@@ -775,7 +775,7 @@ const template: GameJson = {
               type: "tabs",
               vertical: true,
               items: paginate(bestiary, 20, true).map((page, index) => ({
-                name: getPageRange(page, index),
+                name: getPageRange(page, index, 20),
                 flex: true,
                 items: page.map((enemy) => ({
                   id: `monsterDefeats-${enemy.index}`,

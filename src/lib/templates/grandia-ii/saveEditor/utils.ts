@@ -1,6 +1,6 @@
 import { get } from "svelte/store";
 
-import { dataView, gamePlatform } from "$lib/stores";
+import { dataView, fileName, gamePlatform } from "$lib/stores";
 import { getInt, setInt } from "$lib/utils/bytes";
 import {
   customGetRegions,
@@ -192,12 +192,15 @@ function getFormation(offset: number, index: number): number {
 }
 
 export function getSlotNames(): Resource {
+  const $fileName = get(fileName);
   const $gamePlatform = get(gamePlatform);
 
   const saves = getRegionSaves();
 
   if ($gamePlatform === 1) {
-    return { 0x0: "Slot 1" };
+    const index = parseInt($fileName.substring(9, 12)) + 1;
+
+    return { 0x0: `Slot ${index}` };
   }
 
   const names = saves.reduce((names: Resource, save, index) => {

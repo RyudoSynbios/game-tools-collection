@@ -15,7 +15,7 @@ import type {
   Resource,
 } from "$lib/types";
 
-import { decryptData, encryptData } from "./utils/crypto";
+import { decrypt, encrypt } from "./utils/crypto";
 import { c0, c1, c2, c3, c4, c5, c6, c7 } from "./utils/lookupTable";
 import { materiaList } from "./utils/resource";
 
@@ -32,7 +32,7 @@ export function beforeInitDataView(dataView: DataView): DataView {
 
   const cryptedData = new Uint8Array((json.buf as number[]).slice(0x8));
 
-  const decryptedData = decryptData(cryptedData);
+  const decryptedData = decrypt(cryptedData);
 
   dataViewAlt.set({ save: new DataView(decryptedData.buffer) });
 
@@ -253,7 +253,7 @@ export function beforeChecksum(): void {
 
   const save = new Uint8Array($dataViewAlt.save.buffer);
 
-  const encryptedData = encryptData(save);
+  const encryptedData = encrypt(save);
 
   const newSave = new Uint8Array(encryptedData.length + 0x8);
 

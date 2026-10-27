@@ -62,7 +62,7 @@ export function generateChecksum(offset: number): void {
       if (checksum & 0x8000) {
         checksum = (checksum << 0x1) ^ 0x1021;
       } else {
-        checksum = checksum << 0x1;
+        checksum <<= 0x1;
       }
     }
 

@@ -6,7 +6,7 @@ const BLOCK_SIZE = 0x80;
 
 const KEY = "ewKDrdIrMcAewKDrdE3SfRUL3SL0Fsa4"; // Credit to https://github.com/bucanero
 
-export function decryptData(cryptedData: Uint8Array): Uint8Array {
+export function decrypt(cryptedData: Uint8Array): Uint8Array {
   const cipher = new Rijndael(KEY, "ecb");
 
   const decryptedData = new Uint8Array(
@@ -16,7 +16,7 @@ export function decryptData(cryptedData: Uint8Array): Uint8Array {
   return decryptedData;
 }
 
-export function encryptData(data: Uint8Array): Uint8Array {
+export function encrypt(data: Uint8Array): Uint8Array {
   const cipher = new Rijndael(KEY, "ecb");
 
   const encryptedData = new Uint8Array(

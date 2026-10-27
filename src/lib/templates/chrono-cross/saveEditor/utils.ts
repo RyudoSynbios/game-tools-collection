@@ -246,18 +246,16 @@ export function afterSetInt(item: Item): void {
 
     updateCharacterNames(slotIndex);
 
-    if (index !== 0 || $gameRegion === 1) {
-      return;
-    }
+    if (index === 0 && $gameRegion !== 1) {
+      const savePreviewItem = getItem(
+        `mainCharacterName-${slotIndex}`,
+      ) as ItemString;
 
-    const savePreviewItem = getItem(
-      `mainCharacterName-${slotIndex}`,
-    ) as ItemString;
+      for (let i = 0x0; i < 0xc; i += 0x1) {
+        const int = getInt(itemString.offset + i, "uint8", {}, $dataViewAlt[itemString.dataViewAltKey!]); // prettier-ignore
 
-    for (let i = 0x0; i < 0xc; i += 0x1) {
-      const int = getInt(itemString.offset + i, "uint8", {}, $dataViewAlt[itemString.dataViewAltKey!]); // prettier-ignore
-
-      setInt(savePreviewItem.offset + i, "uint8", int);
+        setInt(savePreviewItem.offset + i, "uint8", int);
+      }
     }
   } else if ("id" in item && item.id?.match(/characterId-/)) {
     const itemInt = item as ItemInt;

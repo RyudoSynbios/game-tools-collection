@@ -111,10 +111,10 @@ export function generateChecksum(item: ItemChecksum): number {
     checksum ^= getInt(i, "uint8") << 0x18;
 
     for (let j = 0; j < 8; j += 1) {
-      if ((checksum & 0x80000000) === 0x0) {
-        checksum = checksum << 0x1;
-      } else {
+      if (checksum & 0x80000000) {
         checksum = (checksum << 0x1) ^ 0x4c11db7;
+      } else {
+        checksum <<= 0x1;
       }
     }
   }

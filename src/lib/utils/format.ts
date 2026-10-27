@@ -272,7 +272,11 @@ export async function dataViewToJson(dataView: DataView): Promise<any> {
 
   const jsonString = await blob.text();
 
-  return JSON.parse(jsonString);
+  try {
+    return JSON.parse(jsonString);
+  } catch (e) {
+    return {};
+  }
 }
 
 export async function jsonToBuffer(json: any): Promise<ArrayBufferLike> {
@@ -391,9 +395,13 @@ export function paginate<T>(array: T[], value: number, isCount = false): T[][] {
   });
 }
 
-export function getPageRange<T>(page: T[], index: number): string {
-  const start = index * 20 + 1;
-  const end = index * 20 + page.length;
+export function getPageRange<T>(
+  page: T[],
+  index: number,
+  length: number,
+): string {
+  const start = index * length + 1;
+  const end = index * length + page.length;
 
   return `${start.leading0(2)}-${end.leading0(2)}`;
 }

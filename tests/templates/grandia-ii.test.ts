@@ -39,7 +39,7 @@ test.describe(game, () => {
     ["should load a PSU save (USA)"                , "playstation-2/usa.psu"                  , [            't|["Slot 6"]'           , "s|1$1", "i|09$1", "i|16$2"]],
     ["should load a PSU save (Japan, Asia)"        , "playstation-2/japanasia.psu"            , [            't|["Slot 2"]'           , "s|1$1", "i|11$1", "i|07$2"]],
     // Grandia II HD Remaster
-    ["should load a Grandia II HD Remaster save"   , "grandia-ii-hd-remaster/GRANDIA2_002.vms", [            't|["Slot 1"]'           , "s|1$1", "i|06$1", "i|10$2"]],
+    ["should load a Grandia II HD Remaster save"   , "grandia-ii-hd-remaster/GRANDIA2_002.vms", [            't|["Slot 3"]'           , "s|1$1", "i|06$1", "i|10$2"]],
   ];
 
   tests.forEach(([title, saveFilePath, args]) => {

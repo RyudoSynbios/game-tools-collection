@@ -335,7 +335,7 @@ export function overrideParseItem(item: Item): Item | ItemTab {
 
     paginate(enemies, 20, true).forEach((page, index) => {
       itemTabs.items.push({
-        name: getPageRange(page, index),
+        name: getPageRange(page, index, 20),
         flex: true,
         items: page.map((enemy) => ({
           ...itemInt,

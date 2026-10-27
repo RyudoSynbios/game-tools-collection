@@ -766,7 +766,7 @@ const template: GameJson = {
                           vertical: true,
                           items: paginate(monsters, 20, true).map(
                             (page, index) => ({
-                              name: getPageRange(page, index),
+                              name: getPageRange(page, index, 20),
                               flex: true,
                               items: page.map((monster) => ({
                                 name: monster.name,
@@ -1164,7 +1164,7 @@ const template: GameJson = {
                           vertical: true,
                           items: paginate(mailList, 20, true).map(
                             (page, pageIndex) => ({
-                              name: getPageRange(page, pageIndex),
+                              name: getPageRange(page, pageIndex, 20),
                               flex: true,
                               items: page.map((_, index) => ({
                                 name: `Mail ${pageIndex * 20 + index + 0x1}`,
