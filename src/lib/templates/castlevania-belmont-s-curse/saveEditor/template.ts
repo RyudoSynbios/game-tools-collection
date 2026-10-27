@@ -347,7 +347,7 @@ const template: GameJson = {
                           dataType: "uint8",
                           resource: "skins",
                           autocomplete: true,
-                          hidden: true,
+                          disabled: true,
                         },
                       ],
                     },
@@ -520,19 +520,19 @@ const template: GameJson = {
                         bit: pageIndex,
                         label: relic.name,
                         separator: index % 6 === 5 && index !== page.length - 1,
-                        disabled: relic.name === "???",
+                        disabled: relic.disabled,
                       })),
                     }),
                   ),
                 },
                 {
                   name: "Skins",
-                  hidden: true,
                   items: [
                     {
                       id: "inventory-skins",
                       jsonPath: "playerSave.itemsInInventory",
                       type: "bitflags",
+                      disabled: true,
                       flags: skinList.map((skin, index) => ({
                         offset: index,
                         bit: 0,
@@ -564,7 +564,6 @@ const template: GameJson = {
                         offset: index,
                         bit: type.index,
                         label: card.name,
-                        disabled: card.name === "???",
                       })),
                   },
                 ],
@@ -585,7 +584,6 @@ const template: GameJson = {
                 offset: index,
                 bit: 0,
                 label: item.name,
-                disabled: item.name === "???",
               })),
             },
             {
