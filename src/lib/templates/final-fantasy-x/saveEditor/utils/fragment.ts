@@ -222,8 +222,6 @@ export function characterFragment(type: string, offset: number): ItemTabs {
       {
         name: "Equipment",
         flex: true,
-        hidden: !isParty,
-        planned: true,
         items: [
           {
             name: "Weapon",
@@ -240,117 +238,6 @@ export function characterFragment(type: string, offset: number): ItemTabs {
             dataType: "uint8",
             resource: "armourNames",
             autocomplete: true,
-          },
-        ],
-      },
-      {
-        name: "Attacks",
-        flex: true,
-        hidden: isParty,
-        items: [
-          {
-            id: "overdrives-0-%index%",
-            type: "bitflags",
-            overrideShift: { parent: 1, shift: 0x0 },
-            flags: [
-              { offset: 0x3db9, bit: 3, label: "Attack", hidden: true },
-              { offset: 0x3db9, bit: 4, label: "<b>Special Attack:</b> Sonic Wings" },
-              { offset: 0x3db9, bit: 5, label: "<b>Overdrive: </b>Energy Blast" },
-              { offset: 0x3db9, bit: 6, label: "<b>Overdrive: </b>Energy Ray" },
-            ],
-          },
-          {
-            id: "overdrives-1-%index%",
-            type: "bitflags",
-            overrideShift: { parent: 1, shift: 0x0 },
-            flags: [
-              { offset: 0x3db9, bit: 7, label: "Attack", hidden: true },
-              { offset: 0x3dba, bit: 0, label: "<b>Special Attack:</b> Meteor Strike" },
-              { offset: 0x3dba, bit: 1, label: "<b>Overdrive:</b> Hellfire" },
-            ],
-          },
-          {
-            id: "overdrives-2-%index%",
-            type: "bitflags",
-            overrideShift: { parent: 1, shift: 0x0 },
-            flags: [
-              { offset: 0x3dba, bit: 2, label: "Attack", hidden: true },
-              { offset: 0x3dba, bit: 3, label: "<b>Special Attack:</b> Aerospark" },
-              { offset: 0x3dba, bit: 4, label: "<b>Overdrive:</b> Thor's Hammer" },
-            ],
-          },
-          {
-            id: "overdrives-3-%index%",
-            type: "bitflags",
-            overrideShift: { parent: 1, shift: 0x0 },
-            flags: [
-              { offset: 0x3dba, bit: 5, label: "Attack", hidden: true },
-              { offset: 0x3dba, bit: 6, label: "<b>Special Attack:</b> Heavenly Strike" },
-              { offset: 0x3dba, bit: 7, label: "<b>Overdrive:</b> Diamond Dust" },
-            ],
-          },
-          {
-            id: "overdrives-4-%index%",
-            type: "bitflags",
-            overrideShift: { parent: 1, shift: 0x0 },
-            flags: [
-              { offset: 0x3dbb, bit: 0, label: "Attack", hidden: true },
-              { offset: 0x3dbb, bit: 1, label: "<b>Special Attack:</b> Impulse" },
-              { offset: 0x3dbb, bit: 2, label: "<b>Overdrive:</b> Mega Flare" },
-            ],
-          },
-          {
-            id: "overdrives-5-%index%",
-            type: "bitflags",
-            overrideShift: { parent: 1, shift: 0x0 },
-            flags: [
-              { offset: 0x3dbb, bit: 3, label: "Attack", hidden: true },
-              { offset: 0x3dbb, bit: 4, label: "<b>Special Attack:</b> Pain" },
-              { offset: 0x3dbb, bit: 5, label: "<b>Overdrive:</b> Oblivion" },
-            ],
-          },
-          {
-            id: "overdrives-6-%index%",
-            type: "bitflags",
-            overrideShift: { parent: 1, shift: 0x0 },
-            flags: [
-              { offset: 0x3dbb, bit: 6, label: "<b>Special Attack:</b> Daigoro" },
-              { offset: 0x3dbb, bit: 7, label: "<b>Special Attack:</b> Kozuka" },
-              { offset: 0x3dbc, bit: 0, label: "<b>Special Attack:</b> Wakizashi" },
-              { offset: 0x3dbc, bit: 1, label: "???", hidden: true },
-              { offset: 0x3dbc, bit: 2, label: "???", hidden: true },
-              { offset: 0x3dbc, bit: 3, label: "???", hidden: true },
-            ],
-          },
-          {
-            id: "overdrives-7-%index%",
-            type: "bitflags",
-            overrideShift: { parent: 1, shift: 0x0 },
-            flags: [
-              { offset: 0x3dbc, bit: 4, label: "???", hidden: true },
-              { offset: 0x3dbc, bit: 5, label: "<b>Special Attack:</b> Camisade" },
-              { offset: 0x3dbd, bit: 2, label: "<b>Overdrive:</b> Delta Attack" },
-            ],
-          },
-          {
-            id: "overdrives-8-%index%",
-            type: "bitflags",
-            overrideShift: { parent: 1, shift: 0x0 },
-            flags: [
-              { offset: 0x3dbc, bit: 6, label: "???", hidden: true },
-              { offset: 0x3dbc, bit: 7, label: "<b>Special Attack:</b> Razzia" },
-              { offset: 0x3dbd, bit: 2, label: "<b>Overdrive:</b> Delta Attack" },
-            ],
-          },
-          {
-            id: "overdrives-9-%index%",
-            type: "bitflags",
-            overrideShift: { parent: 1, shift: 0x0 },
-            flags: [
-              { offset: 0x3dbd, bit: 0, label: "???", hidden: true },
-              { offset: 0x3dbd, bit: 1, label: "<b>Special Attack:</b> Passado" },
-              { offset: 0x3dbd, bit: 2, label: "<b>Overdrive:</b> Delta Attack" },
-            ],
           },
         ],
       },
@@ -491,6 +378,13 @@ export function characterFragment(type: string, offset: number): ItemTabs {
               { offset: 0x3db5, bit: 2, label: "Black Hole" },
               { offset: 0x3db5, bit: 3, label: "Sunburst" },
               { offset: 0x3db5, bit: 4, label: "Ultra Potion" },
+            ],
+          },
+          {
+            id: "overdrives-6-%index%",
+            type: "bitflags",
+            overrideShift: { parent: 1, shift: 0x0 },
+            flags: [
               { offset: 0x3db5, bit: 5, label: "Panacea" },
               { offset: 0x3db5, bit: 6, label: "Ultra Cure" },
               { offset: 0x3db5, bit: 7, label: "Mega Phoenix" },
@@ -555,6 +449,117 @@ export function characterFragment(type: string, offset: number): ItemTabs {
               bit: mode.index % 8,
               label: mode.name,
             })),
+          },
+        ],
+      },
+      {
+        name: "Attacks",
+        flex: true,
+        hidden: isParty,
+        items: [
+          {
+            id: "overdrives-0-%index%",
+            type: "bitflags",
+            overrideShift: { parent: 1, shift: 0x0 },
+            flags: [
+              { offset: 0x3db9, bit: 3, label: "Attack", hidden: true },
+              { offset: 0x3db9, bit: 4, label: "<b>Special Attack:</b> Sonic Wings" },
+              { offset: 0x3db9, bit: 5, label: "<b>Overdrive: </b>Energy Blast" },
+              { offset: 0x3db9, bit: 6, label: "<b>Overdrive: </b>Energy Ray" },
+            ],
+          },
+          {
+            id: "overdrives-1-%index%",
+            type: "bitflags",
+            overrideShift: { parent: 1, shift: 0x0 },
+            flags: [
+              { offset: 0x3db9, bit: 7, label: "Attack", hidden: true },
+              { offset: 0x3dba, bit: 0, label: "<b>Special Attack:</b> Meteor Strike" },
+              { offset: 0x3dba, bit: 1, label: "<b>Overdrive:</b> Hellfire" },
+            ],
+          },
+          {
+            id: "overdrives-2-%index%",
+            type: "bitflags",
+            overrideShift: { parent: 1, shift: 0x0 },
+            flags: [
+              { offset: 0x3dba, bit: 2, label: "Attack", hidden: true },
+              { offset: 0x3dba, bit: 3, label: "<b>Special Attack:</b> Aerospark" },
+              { offset: 0x3dba, bit: 4, label: "<b>Overdrive:</b> Thor's Hammer" },
+            ],
+          },
+          {
+            id: "overdrives-3-%index%",
+            type: "bitflags",
+            overrideShift: { parent: 1, shift: 0x0 },
+            flags: [
+              { offset: 0x3dba, bit: 5, label: "Attack", hidden: true },
+              { offset: 0x3dba, bit: 6, label: "<b>Special Attack:</b> Heavenly Strike" },
+              { offset: 0x3dba, bit: 7, label: "<b>Overdrive:</b> Diamond Dust" },
+            ],
+          },
+          {
+            id: "overdrives-4-%index%",
+            type: "bitflags",
+            overrideShift: { parent: 1, shift: 0x0 },
+            flags: [
+              { offset: 0x3dbb, bit: 0, label: "Attack", hidden: true },
+              { offset: 0x3dbb, bit: 1, label: "<b>Special Attack:</b> Impulse" },
+              { offset: 0x3dbb, bit: 2, label: "<b>Overdrive:</b> Mega Flare" },
+            ],
+          },
+          {
+            id: "overdrives-5-%index%",
+            type: "bitflags",
+            overrideShift: { parent: 1, shift: 0x0 },
+            flags: [
+              { offset: 0x3dbb, bit: 3, label: "Attack", hidden: true },
+              { offset: 0x3dbb, bit: 4, label: "<b>Special Attack:</b> Pain" },
+              { offset: 0x3dbb, bit: 5, label: "<b>Overdrive:</b> Oblivion" },
+            ],
+          },
+          {
+            id: "overdrives-6-%index%",
+            type: "bitflags",
+            overrideShift: { parent: 1, shift: 0x0 },
+            flags: [
+              { offset: 0x3dbb, bit: 6, label: "<b>Special Attack:</b> Daigoro" },
+              { offset: 0x3dbb, bit: 7, label: "<b>Special Attack:</b> Kozuka" },
+              { offset: 0x3dbc, bit: 0, label: "<b>Special Attack:</b> Wakizashi" },
+              { offset: 0x3dbc, bit: 1, label: "???", hidden: true },
+              { offset: 0x3dbc, bit: 2, label: "???", hidden: true },
+              { offset: 0x3dbc, bit: 3, label: "???", hidden: true },
+            ],
+          },
+          {
+            id: "overdrives-7-%index%",
+            type: "bitflags",
+            overrideShift: { parent: 1, shift: 0x0 },
+            flags: [
+              { offset: 0x3dbc, bit: 4, label: "???", hidden: true },
+              { offset: 0x3dbc, bit: 5, label: "<b>Special Attack:</b> Camisade" },
+              { offset: 0x3dbd, bit: 2, label: "<b>Overdrive:</b> Delta Attack" },
+            ],
+          },
+          {
+            id: "overdrives-8-%index%",
+            type: "bitflags",
+            overrideShift: { parent: 1, shift: 0x0 },
+            flags: [
+              { offset: 0x3dbc, bit: 6, label: "???", hidden: true },
+              { offset: 0x3dbc, bit: 7, label: "<b>Special Attack:</b> Razzia" },
+              { offset: 0x3dbd, bit: 2, label: "<b>Overdrive:</b> Delta Attack" },
+            ],
+          },
+          {
+            id: "overdrives-9-%index%",
+            type: "bitflags",
+            overrideShift: { parent: 1, shift: 0x0 },
+            flags: [
+              { offset: 0x3dbd, bit: 0, label: "???", hidden: true },
+              { offset: 0x3dbd, bit: 1, label: "<b>Special Attack:</b> Passado" },
+              { offset: 0x3dbd, bit: 2, label: "<b>Overdrive:</b> Delta Attack" },
+            ],
           },
         ],
       },

@@ -5,6 +5,13 @@ import type { GameJson, ItemSection, Resource } from "$lib/types";
 
 import { characterFragment, chocoboCourseFragment } from "./utils/fragment";
 import {
+  characters,
+  equipmentAbilitiesGroups,
+  equipmentAbilitiesOrder,
+  equipmentAppearances,
+  equipmentAppearancesGroups,
+  equipments,
+  equipmentsGroups,
   itemList,
   itemTypes,
   keyItemList,
@@ -582,9 +589,9 @@ const template: GameJson = {
                     },
                     {
                       name: "Equipment",
-                      planned: true,
                       items: [
                         {
+                          id: "equipments",
                           length: 0x16,
                           type: "container",
                           instanceType: "tabs",
@@ -597,43 +604,62 @@ const template: GameJson = {
                               flex: true,
                               items: [
                                 {
-                                  name: "Name",
-                                  offset: 0x44dc,
-                                  type: "variable",
-                                  dataType: "uint16",
-                                  hidden: true,
-                                },
-                                {
-                                  name: "???",
+                                  name: "Status",
                                   offset: 0x44de,
                                   type: "variable",
                                   dataType: "uint8",
                                   hidden: true,
                                 },
                                 {
-                                  name: "???",
-                                  offset: 0x44df,
+                                  id: "equipment-%parent%-%index%",
+                                  name: "Equipment",
+                                  offset: 0x44dc,
+                                  type: "variable",
+                                  dataType: "uint16",
+                                  resource: "equipments",
+                                  autocomplete: true,
+                                },
+                                {
+                                  name: "Name",
+                                  offset: 0x44dc,
+                                  type: "variable",
+                                  dataType: "uint16",
+                                  hex: true,
+                                  hidden: true,
+                                },
+                                {
+                                  name: "Character",
+                                  offset: 0x44e0,
                                   type: "variable",
                                   dataType: "uint8",
+                                  resource: "characters",
                                   hidden: true,
                                 },
                                 {
                                   name: "Type",
-                                  offset: 0x44e0,
-                                  type: "variable",
-                                  dataType: "uint8",
-                                  hidden: true,
-                                },
-                                {
-                                  name: "Icon",
                                   offset: 0x44e1,
                                   type: "variable",
                                   dataType: "uint8",
+                                  resource: "equipmentTypes",
                                   hidden: true,
                                 },
                                 {
-                                  name: "???",
+                                  name: "Equipped by",
                                   offset: 0x44e2,
+                                  type: "variable",
+                                  dataType: "uint8",
+                                  resource: "characters",
+                                  disabled: true,
+                                },
+                              ],
+                            },
+                            {
+                              type: "section",
+                              flex: true,
+                              items: [
+                                {
+                                  name: "???",
+                                  offset: 0x44df,
                                   type: "variable",
                                   dataType: "uint8",
                                   hidden: true,
@@ -653,25 +679,26 @@ const template: GameJson = {
                                   hidden: true,
                                 },
                                 {
-                                  name: "???",
+                                  name: "Attack",
                                   offset: 0x44e5,
                                   type: "variable",
                                   dataType: "uint8",
-                                  hidden: true,
                                 },
                                 {
-                                  name: "???",
+                                  name: "Critial Hit",
                                   offset: 0x44e6,
                                   type: "variable",
                                   dataType: "uint8",
-                                  hidden: true,
+                                  max: 100,
+                                  suffix: "%",
                                 },
                                 {
                                   name: "Appearance",
                                   offset: 0x44e8,
                                   type: "variable",
                                   dataType: "uint8",
-                                  hidden: true,
+                                  resource: "equipmentAppearances",
+                                  autocomplete: true,
                                 },
                                 {
                                   name: "???",
@@ -683,6 +710,7 @@ const template: GameJson = {
                               ],
                             },
                             {
+                              id: "slots",
                               name: "Slots",
                               offset: 0x44e7,
                               type: "variable",
@@ -693,28 +721,40 @@ const template: GameJson = {
                               flex: true,
                               items: [
                                 {
+                                  id: "slots-equipmentAbility-0",
                                   name: "Ability 1",
                                   offset: 0x44ea,
                                   type: "variable",
                                   dataType: "uint16",
+                                  resource: "equipmentAbilities",
+                                  autocomplete: true,
                                 },
                                 {
+                                  id: "slots-equipmentAbility-1",
                                   name: "Ability 2",
                                   offset: 0x44ec,
                                   type: "variable",
                                   dataType: "uint16",
+                                  resource: "equipmentAbilities",
+                                  autocomplete: true,
                                 },
                                 {
+                                  id: "slots-equipmentAbility-2",
                                   name: "Ability 3",
                                   offset: 0x44ee,
                                   type: "variable",
                                   dataType: "uint16",
+                                  resource: "equipmentAbilities",
+                                  autocomplete: true,
                                 },
                                 {
+                                  id: "slots-equipmentAbility-3",
                                   name: "Ability 4",
                                   offset: 0x44f0,
                                   type: "variable",
                                   dataType: "uint16",
+                                  resource: "equipmentAbilities",
+                                  autocomplete: true,
                                 },
                               ],
                             },
@@ -938,42 +978,6 @@ const template: GameJson = {
                                   ],
                                 },
                                 {
-                                  name: "Equipped Techniques",
-                                  items: [
-                                    {
-                                      id: "slots",
-                                      name: "Slots",
-                                      offset: 0x15be,
-                                      type: "variable",
-                                      dataType: "uint8",
-                                      max: 5,
-                                      overrideShift: {
-                                        parent: 1,
-                                        shift: 0x1,
-                                      },
-                                    },
-                                    {
-                                      type: "section",
-                                      flex: true,
-                                      items: [...Array(5).keys()].map(
-                                        (index) => ({
-                                          id: `slots-technique-${index}`,
-                                          name: `Technique ${index + 1}`,
-                                          offset: 0x1492 + index,
-                                          type: "variable",
-                                          dataType: "uint8",
-                                          resource: "techniques",
-                                          overrideShift: {
-                                            parent: 1,
-                                            shift: 0x5,
-                                          },
-                                          autocomplete: true,
-                                        }),
-                                      ),
-                                    },
-                                  ],
-                                },
-                                {
                                   name: "Learned Techniques",
                                   flex: true,
                                   items: [
@@ -1006,6 +1010,42 @@ const template: GameJson = {
                                           label: technique.name,
                                           separator: index % 10 === 9 && index !== 30,
                                         })),
+                                    },
+                                  ],
+                                },
+                                {
+                                  name: "Equipped Techniques",
+                                  items: [
+                                    {
+                                      id: "slots",
+                                      name: "Slots",
+                                      offset: 0x15be,
+                                      type: "variable",
+                                      dataType: "uint8",
+                                      max: 5,
+                                      overrideShift: {
+                                        parent: 1,
+                                        shift: 0x1,
+                                      },
+                                    },
+                                    {
+                                      type: "section",
+                                      flex: true,
+                                      items: [...Array(5).keys()].map(
+                                        (index) => ({
+                                          id: `slots-technique-${index}`,
+                                          name: `Technique ${index + 1}`,
+                                          offset: 0x1492 + index,
+                                          type: "variable",
+                                          dataType: "uint8",
+                                          resource: "techniques",
+                                          overrideShift: {
+                                            parent: 1,
+                                            shift: 0x5,
+                                          },
+                                          autocomplete: true,
+                                        }),
+                                      ),
                                     },
                                   ],
                                 },
@@ -1290,9 +1330,14 @@ const template: GameJson = {
       0x1: "Default",
     },
     aeonsNames: "getCharacterNames('aeons')",
+    armourNames: "getEquipmentNames('armour')",
     booleanCleared: {
       0x0: "-",
       0x1: "Cleared",
+    },
+    characters: {
+      ...characters,
+      0xff: "-",
     },
     characterNames: "getCharacterNames('party')",
     characterStatus: {
@@ -1303,6 +1348,20 @@ const template: GameJson = {
     cursors: {
       0x0: "Memory",
       0x1: "Default",
+    },
+    equipmentAbilities: "getEquipmentAbilityNames()",
+    equipmentAppearances: {
+      0x0: "-",
+      ...equipmentAppearances,
+    },
+    equipmentNames: "getEquipmentNames()",
+    equipmentTypes: {
+      0x0: "Weapon",
+      0x1: "Armour",
+    },
+    equipments: {
+      ...equipments,
+      0xfffff: "-",
     },
     letters: [...Array(10).keys()].map((index) => {
       // Japan
@@ -1692,12 +1751,19 @@ const template: GameJson = {
       0x0: "-",
       ...techniques,
     },
+    weaponNames: "getEquipmentNames('weapons')",
   },
   resourcesGroups: {
+    equipmentAbilities: equipmentAbilitiesGroups,
+    equipmentAppearances: equipmentAppearancesGroups,
+    equipments: equipmentsGroups,
     prizes: prizesGroups,
   },
   resourcesOrder: {
     characterNames: [0xff],
+    characters: [0xff],
+    equipments: [0xfffff],
+    equipmentAbilities: equipmentAbilitiesOrder,
     players: [0x3c],
   },
 };

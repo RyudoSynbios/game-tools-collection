@@ -18,7 +18,12 @@ import {
   unpackFile,
 } from "$lib/utils/common/playstation2";
 import { isInRange } from "$lib/utils/format";
-import { getClosestItem, getItem, updateResources } from "$lib/utils/parser";
+import {
+  getClosestItem,
+  getItem,
+  getResource,
+  updateResources,
+} from "$lib/utils/parser";
 
 import type {
   Item,
@@ -31,7 +36,7 @@ import type {
   Resource,
 } from "$lib/types";
 
-import { abilityList } from "./utils/resource";
+import { abilityList, equipmentAbilityList } from "./utils/resource";
 
 export function setGamePlatform(dataView: DataView, fileName: string): void {
   if (fileName.match(/^ffx_[0-9]{3}$/)) {
@@ -203,13 +208,30 @@ export function overrideGetInt(item: Item): [boolean, number | undefined] {
     const itemV = inventory.find((item) => item.index === itemIndex);
 
     return [true, itemV?.quantity || 0];
+  } else if ("id" in item && item.id?.match(/equipment-/)) {
+    const itemInt = item as ItemInt;
+
+    const index = getEquipmentIndex(itemInt.offset);
+
+    return [true, index];
   } else if ("id" in item && item.id?.match(/slots-/)) {
     const itemInt = item as ItemInt;
 
     const [, type] = item.id.split("-");
 
     if (itemInt.disabled) {
-      return [true, type === "team" ? 0x3c : 0x0];
+      let int = 0x0;
+
+      switch (type) {
+        case "equipmentAbility":
+          int = 0xff;
+          break;
+        case "team":
+          int = 0x3c;
+          break;
+      }
+
+      return [true, int];
     }
   }
 
@@ -225,6 +247,51 @@ export function overrideSetInt(item: Item, value: string): boolean {
     const quantity = parseInt(value);
 
     updateInventory(itemInt.offset, itemIndex, quantity);
+
+    return true;
+  } else if ("id" in item && item.id?.match(/equipment-/)) {
+    const itemInt = item as ItemInt;
+
+    const index = parseInt(value);
+
+    if (index === 0xfffff) {
+      setInt(itemInt.offset + 0x2, "uint8", 0x0);
+
+      return true;
+    }
+
+    const name = 0x5000 | (index & 0xff);
+    const character = index >> 0xc;
+    const type = (index >> 0x8) & 0xf;
+    const isCelestial = (index & 0xff) === 0x0;
+
+    let unknown = 0x1;
+
+    if (isCelestial) {
+      switch (character) {
+        case 0:
+        case 3:
+        case 4:
+        case 6:
+          unknown = 0x11;
+          break;
+        case 1:
+        case 5:
+          unknown = 0x12;
+          break;
+        case 2:
+          unknown = 0x13;
+          break;
+      }
+    }
+
+    setInt(itemInt.offset, "uint16", name);
+    setInt(itemInt.offset + 0x2, "uint8", 0x1);
+    setInt(itemInt.offset + 0x3, "uint8", isCelestial ? 0x4 : 0x0);
+    setInt(itemInt.offset + 0x4, "uint8", character);
+    setInt(itemInt.offset + 0x5, "uint8", type);
+    setInt(itemInt.offset + 0x8, "uint8", unknown);
+    setInt(itemInt.offset + 0xd, "uint8", 0x40);
 
     return true;
   }
@@ -270,6 +337,10 @@ export function afterSetInt(item: Item): void {
 
     setInt(countItem.offset, "uint32", flags.toBitCount()); // Count
     setInt(countItem.offset + 0x30c4, "uint32", flags); // Obtained Flags
+  } else if ("id" in item && item.id?.match(/equipment-/)) {
+    const [slotIndex] = item.id.splitInt();
+
+    updateEquipmentNames(slotIndex);
   }
 }
 
@@ -374,6 +445,66 @@ export function getCharacterNames(slotIndex: number, type: string): Resource {
   return names;
 }
 
+export function getEquipmentNames(
+  slotIndex: number,
+  type?: "armour" | "weapons",
+): Resource {
+  if (typeof slotIndex === "string") {
+    return {};
+  }
+
+  const names: Resource = {};
+
+  const equipments = getResource("equipments") as Resource;
+
+  const itemInt = getItem(`equipment-${slotIndex}-0`) as ItemInt;
+
+  for (let i = 0x0; i < 0xc8; i += 0x1) {
+    const index = getEquipmentIndex(itemInt.offset + i * 0x16);
+
+    const typeIndex = (index >> 0x8) & 0xf;
+
+    if (
+      index === 0xfffff ||
+      (type === "armour" && typeIndex === 0) ||
+      (type === "weapons" && typeIndex === 1)
+    ) {
+      continue;
+    }
+
+    names[i] = equipments[index];
+  }
+
+  return names;
+}
+
+function getEquipmentIndex(offset: number): number {
+  const status = getInt(offset + 0x2, "uint8");
+
+  if (status === 0x0) {
+    return 0xfffff;
+  }
+
+  const name = getInt(offset, "uint8");
+  const character = getInt(offset + 0x4, "uint8");
+  const type = getInt(offset + 0x5, "uint8");
+
+  return (character << 0xc) | (type << 0x8) | name;
+}
+
+export function getEquipmentAbilityNames(): Resource {
+  const names: Resource = {};
+
+  equipmentAbilityList.forEach((ability) => {
+    if (!ability.international || isInternationalSave())
+      names[ability.index] = ability.name;
+  });
+
+  names[0xff] = "-";
+
+  return names;
+}
+
 export function getSlotNames(): Resource {
   const $fileName = get(fileName);
   const $gamePlatform = get(gamePlatform);
@@ -399,6 +530,7 @@ export function getSlotNames(): Resource {
 
 export function onSlotChange(slotIndex: number): void {
   updateCharacterNames(slotIndex);
+  updateEquipmentNames(slotIndex);
 }
 
 export function updateCharacterNames(slotIndex: number): void {
@@ -407,6 +539,16 @@ export function updateCharacterNames(slotIndex: number): void {
 
   updateResources("characterNames", values1);
   updateResources("aeonsNames", values2);
+}
+
+export function updateEquipmentNames(slotIndex: number): void {
+  const values1 = getEquipmentNames(slotIndex);
+  const values2 = getEquipmentNames(slotIndex, "armour");
+  const values3 = getEquipmentNames(slotIndex, "weapons");
+
+  updateResources("equipmentNames", values1);
+  updateResources("armourNames", values2);
+  updateResources("weaponNames", values3);
 }
 
 function getInventory(offset: number): { index: number; quantity: number }[] {
