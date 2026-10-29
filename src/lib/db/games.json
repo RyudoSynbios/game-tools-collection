@@ -619,6 +619,18 @@
     }
   },
   {
+    "id": "final-fantasy-x",
+    "name": "Final Fantasy X",
+    "platformIds": ["playstation-2"],
+    "tools": {
+      "saveEditor": {
+        "createdAt": "2026-10-29",
+        "compatibilities": ["Final Fantasy X HD Remaster"],
+        "regions": ["🇪🇺", "🇺🇸", "🇯🇵", "🇫🇷", "🇩🇪", "🇮🇹", "🇪🇸", "🇦🇺"]
+      }
+    }
+  },
+  {
     "id": "final-fantasy-tactics",
     "name": "Final Fantasy Tactics",
     "platformIds": ["playstation"],

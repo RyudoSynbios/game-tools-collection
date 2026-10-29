@@ -1,0 +1,637 @@
+import { bitToOffset } from "$lib/utils/bytes";
+
+import type { ItemInt, ItemSection, ItemTabs } from "$lib/types";
+
+import { abilityList, abilityTypes, overdriveModeList } from "./resource";
+
+export function characterFragment(type: string, offset: number): ItemTabs {
+  let nameType = "character";
+  let nameOffset = offset + 0xd80;
+  let isParty = true;
+
+  if (type === "aeons") {
+    nameType = "aeon";
+    nameOffset = offset + 0x980;
+    isParty = false;
+  }
+
+  return {
+    type: "tabs",
+    items: [
+      {
+        name: "Status",
+        items: [
+          {
+            type: "section",
+            flex: true,
+            items: [
+              {
+                id: `${nameType}Name-%parent%-%index%`,
+                name: "Name",
+                offset: nameOffset,
+                length: 0x8,
+                type: "variable",
+                dataType: "string",
+                letterDataType: "uint8",
+                fallback: 0x3a,
+                endCode: 0x0,
+                resource: "letters",
+                overrideShift: {
+                  parent: 1,
+                  shift: 0x14,
+                },
+                test: true,
+              },
+              {
+                name: "Status",
+                offset: offset + 0x2c,
+                type: "variable",
+                dataType: "uint8",
+                resource: "characterStatus",
+              },
+              {
+                name: "Sphere Level",
+                offset: offset + 0x3b,
+                type: "variable",
+                dataType: "uint8",
+                max: 99,
+                hidden: !isParty,
+              },
+              {
+                name: "Used Sphere Level",
+                offset: offset + 0x3c,
+                type: "variable",
+                dataType: "uint8",
+                max: 101,
+                hidden: !isParty,
+              },
+              {
+                name: "AP",
+                offset: offset + 0x18,
+                type: "variable",
+                dataType: "uint32",
+                max: 22000,
+                hidden: !isParty,
+              },
+              ...(isParty
+                ? [
+                    {
+                      id: `relationship-%index%`,
+                      name: "Relationship",
+                      offset: 0x6c,
+                      type: "variable",
+                      dataType: "uint32",
+                      max: 268435454,
+                      overrideShift: {
+                        parent: 1,
+                        shift: 0x4,
+                      },
+                    } as ItemInt,
+                  ]
+                : []),
+            ],
+          },
+          {
+            type: "section",
+            flex: true,
+            items: [
+              {
+                name: "HP",
+                offset: offset + 0x1c,
+                type: "variable",
+                dataType: "uint32",
+                max: 99999,
+              },
+              {
+                name: "MP",
+                offset: offset + 0x20,
+                type: "variable",
+                dataType: "uint32",
+                max: 9999,
+              },
+              {
+                name: "Overdrive Gauge",
+                offset: offset + 0x39,
+                type: "variable",
+                dataType: "uint8",
+                max: isParty ? 100 : 20,
+              },
+              {
+                name: "Max Overdrive",
+                offset: offset + 0x3a,
+                type: "variable",
+                dataType: "uint8",
+                hidden: true,
+              },
+              {
+                name: "Overdrive Mode",
+                offset: offset + 0x38,
+                type: "variable",
+                dataType: "uint8",
+                resource: "overdriveModes",
+                autocomplete: true,
+                hidden: !isParty,
+              },
+              {
+                name: "Battles to go",
+                offset: offset + 0x3d,
+                type: "variable",
+                dataType: "uint8",
+                hidden: isParty,
+              },
+            ],
+          },
+          {
+            type: "section",
+            flex: true,
+            items: [
+              {
+                name: "Base Max HP",
+                offset: offset + 0x4,
+                type: "variable",
+                dataType: "uint32",
+                max: 99999,
+              },
+              {
+                name: "Base Max MP",
+                offset: offset + 0x8,
+                type: "variable",
+                dataType: "uint32",
+                max: 9999,
+              },
+              {
+                name: "Base Strength",
+                offset: offset + 0xc,
+                type: "variable",
+                dataType: "uint8",
+                max: 255,
+              },
+              {
+                name: "Base Defence",
+                offset: offset + 0xd,
+                type: "variable",
+                dataType: "uint8",
+                max: 255,
+              },
+              {
+                name: "Base Magic",
+                offset: offset + 0xe,
+                type: "variable",
+                dataType: "uint8",
+                max: 255,
+              },
+              {
+                name: "Base Magic Defence",
+                offset: offset + 0xf,
+                type: "variable",
+                dataType: "uint8",
+                max: 255,
+              },
+              {
+                name: "Base Agility",
+                offset: offset + 0x10,
+                type: "variable",
+                dataType: "uint8",
+                max: 255,
+              },
+              {
+                name: "Base Luck",
+                offset: offset + 0x11,
+                type: "variable",
+                dataType: "uint8",
+                max: 255,
+              },
+              {
+                name: "Base Evasion",
+                offset: offset + 0x12,
+                type: "variable",
+                dataType: "uint8",
+                max: 255,
+              },
+              {
+                name: "Base Accuracy",
+                offset: offset + 0x13,
+                type: "variable",
+                dataType: "uint8",
+                max: 255,
+              },
+            ],
+          },
+        ],
+      },
+      {
+        name: "Equipment",
+        flex: true,
+        hidden: !isParty,
+        planned: true,
+        items: [
+          {
+            name: "Weapon",
+            offset: offset + 0x2d,
+            type: "variable",
+            dataType: "uint8",
+            resource: "weaponNames",
+            autocomplete: true,
+          },
+          {
+            name: "Armour",
+            offset: offset + 0x2e,
+            type: "variable",
+            dataType: "uint8",
+            resource: "armourNames",
+            autocomplete: true,
+          },
+        ],
+      },
+      {
+        name: "Attacks",
+        flex: true,
+        hidden: isParty,
+        items: [
+          {
+            id: "overdrives-0-%index%",
+            type: "bitflags",
+            overrideShift: { parent: 1, shift: 0x0 },
+            flags: [
+              { offset: 0x3db9, bit: 3, label: "Attack", hidden: true },
+              { offset: 0x3db9, bit: 4, label: "<b>Special Attack:</b> Sonic Wings" },
+              { offset: 0x3db9, bit: 5, label: "<b>Overdrive: </b>Energy Blast" },
+              { offset: 0x3db9, bit: 6, label: "<b>Overdrive: </b>Energy Ray" },
+            ],
+          },
+          {
+            id: "overdrives-1-%index%",
+            type: "bitflags",
+            overrideShift: { parent: 1, shift: 0x0 },
+            flags: [
+              { offset: 0x3db9, bit: 7, label: "Attack", hidden: true },
+              { offset: 0x3dba, bit: 0, label: "<b>Special Attack:</b> Meteor Strike" },
+              { offset: 0x3dba, bit: 1, label: "<b>Overdrive:</b> Hellfire" },
+            ],
+          },
+          {
+            id: "overdrives-2-%index%",
+            type: "bitflags",
+            overrideShift: { parent: 1, shift: 0x0 },
+            flags: [
+              { offset: 0x3dba, bit: 2, label: "Attack", hidden: true },
+              { offset: 0x3dba, bit: 3, label: "<b>Special Attack:</b> Aerospark" },
+              { offset: 0x3dba, bit: 4, label: "<b>Overdrive:</b> Thor's Hammer" },
+            ],
+          },
+          {
+            id: "overdrives-3-%index%",
+            type: "bitflags",
+            overrideShift: { parent: 1, shift: 0x0 },
+            flags: [
+              { offset: 0x3dba, bit: 5, label: "Attack", hidden: true },
+              { offset: 0x3dba, bit: 6, label: "<b>Special Attack:</b> Heavenly Strike" },
+              { offset: 0x3dba, bit: 7, label: "<b>Overdrive:</b> Diamond Dust" },
+            ],
+          },
+          {
+            id: "overdrives-4-%index%",
+            type: "bitflags",
+            overrideShift: { parent: 1, shift: 0x0 },
+            flags: [
+              { offset: 0x3dbb, bit: 0, label: "Attack", hidden: true },
+              { offset: 0x3dbb, bit: 1, label: "<b>Special Attack:</b> Impulse" },
+              { offset: 0x3dbb, bit: 2, label: "<b>Overdrive:</b> Mega Flare" },
+            ],
+          },
+          {
+            id: "overdrives-5-%index%",
+            type: "bitflags",
+            overrideShift: { parent: 1, shift: 0x0 },
+            flags: [
+              { offset: 0x3dbb, bit: 3, label: "Attack", hidden: true },
+              { offset: 0x3dbb, bit: 4, label: "<b>Special Attack:</b> Pain" },
+              { offset: 0x3dbb, bit: 5, label: "<b>Overdrive:</b> Oblivion" },
+            ],
+          },
+          {
+            id: "overdrives-6-%index%",
+            type: "bitflags",
+            overrideShift: { parent: 1, shift: 0x0 },
+            flags: [
+              { offset: 0x3dbb, bit: 6, label: "<b>Special Attack:</b> Daigoro" },
+              { offset: 0x3dbb, bit: 7, label: "<b>Special Attack:</b> Kozuka" },
+              { offset: 0x3dbc, bit: 0, label: "<b>Special Attack:</b> Wakizashi" },
+              { offset: 0x3dbc, bit: 1, label: "???", hidden: true },
+              { offset: 0x3dbc, bit: 2, label: "???", hidden: true },
+              { offset: 0x3dbc, bit: 3, label: "???", hidden: true },
+            ],
+          },
+          {
+            id: "overdrives-7-%index%",
+            type: "bitflags",
+            overrideShift: { parent: 1, shift: 0x0 },
+            flags: [
+              { offset: 0x3dbc, bit: 4, label: "???", hidden: true },
+              { offset: 0x3dbc, bit: 5, label: "<b>Special Attack:</b> Camisade" },
+              { offset: 0x3dbd, bit: 2, label: "<b>Overdrive:</b> Delta Attack" },
+            ],
+          },
+          {
+            id: "overdrives-8-%index%",
+            type: "bitflags",
+            overrideShift: { parent: 1, shift: 0x0 },
+            flags: [
+              { offset: 0x3dbc, bit: 6, label: "???", hidden: true },
+              { offset: 0x3dbc, bit: 7, label: "<b>Special Attack:</b> Razzia" },
+              { offset: 0x3dbd, bit: 2, label: "<b>Overdrive:</b> Delta Attack" },
+            ],
+          },
+          {
+            id: "overdrives-9-%index%",
+            type: "bitflags",
+            overrideShift: { parent: 1, shift: 0x0 },
+            flags: [
+              { offset: 0x3dbd, bit: 0, label: "???", hidden: true },
+              { offset: 0x3dbd, bit: 1, label: "<b>Special Attack:</b> Passado" },
+              { offset: 0x3dbd, bit: 2, label: "<b>Overdrive:</b> Delta Attack" },
+            ],
+          },
+        ],
+      },
+      {
+        name: "Abilities",
+        flex: true,
+        items: abilityTypes.map((type) => ({
+          id: "abilities",
+          name: type.name,
+          type: "bitflags",
+          hidden: type.index === 0x0,
+          flags: abilityList
+            .filter((ability) => ability.type === type.index)
+            .map((ability) => ({
+              offset: offset + 0x3e + bitToOffset(ability.index),
+              bit: ability.index % 8,
+              label: ability.name,
+              hidden: !isParty && ability.aeonExcluded,
+            })),
+        })),
+      },
+      {
+        name: "Overdrives",
+        flex: true,
+        hidden: !isParty,
+        items: [
+          {
+            id: "overdrives-0-%index%",
+            type: "bitflags",
+            overrideShift: { parent: 1, shift: 0x0 },
+            flags: [
+              { offset: 0x3dac, bit: 0, label: "Spiral Cut" },
+              { offset: 0x3dac, bit: 1, label: "Slice & Dice" },
+              { offset: 0x3dac, bit: 2, label: "Energy Rain" },
+              { offset: 0x3dac, bit: 3, label: "Blitz Ace" },
+            ],
+          },
+          {
+            id: "overdrives-2-%index%",
+            type: "bitflags",
+            overrideShift: { parent: 1, shift: 0x0 },
+            flags: [
+              { offset: 0x3dac, bit: 4, label: "Shooting Star" },
+              { offset: 0x3dac, bit: 5, label: "Dragon Fang" },
+              { offset: 0x3dac, bit: 6, label: "Banishing Blade" },
+              { offset: 0x3dac, bit: 7, label: "Tornado" },
+            ],
+          },
+          {
+            id: "overdrives-3-%index%",
+            type: "bitflags",
+            overrideShift: { parent: 1, shift: 0x0 },
+            flags: [
+              { offset: 0x3dad, bit: 0, label: "Jump" },
+              { offset: 0x3dad, bit: 1, label: "Fire Breath" },
+              { offset: 0x3dad, bit: 2, label: "Seed Cannon" },
+              { offset: 0x3dad, bit: 3, label: "Self-Destruct" },
+              { offset: 0x3dad, bit: 4, label: "Thrust Kick" },
+              { offset: 0x3dad, bit: 5, label: "Stone Breath" },
+              { offset: 0x3dad, bit: 6, label: "Aqua Breath" },
+              { offset: 0x3dad, bit: 7, label: "Doom" },
+              { offset: 0x3dae, bit: 0, label: "White Wind" },
+              { offset: 0x3dae, bit: 1, label: "Bad Breath" },
+              { offset: 0x3dae, bit: 2, label: "Mighty Guard" },
+              { offset: 0x3dae, bit: 3, label: "Nova" },
+            ],
+          },
+          {
+            id: "overdrives-4-%index%",
+            type: "bitflags",
+            overrideShift: { parent: 1, shift: 0x0 },
+            flags: [
+              { offset: 0x3dae, bit: 4, label: "Element Reels" },
+              { offset: 0x3dae, bit: 5, label: "Attack Reels" },
+              { offset: 0x3dae, bit: 6, label: "Status Reels" },
+              { offset: 0x3dae, bit: 7, label: "Aurochs Reels" },
+            ],
+          },
+          {
+            id: "overdrives-5-%index%",
+            type: "bitflags",
+            overrideShift: { parent: 1, shift: 0x0 },
+            flags: [
+              { offset: 0x3daf, bit: 0, label: "Blizzard Fury" },
+              { offset: 0x3daf, bit: 1, label: "Fire Fury" },
+              { offset: 0x3daf, bit: 2, label: "Thunder Fury" },
+              { offset: 0x3daf, bit: 3, label: "Water Fury" },
+              { offset: 0x3daf, bit: 4, label: "Fira Fury" },
+              { offset: 0x3daf, bit: 5, label: "Blizzara Fury" },
+              { offset: 0x3daf, bit: 6, label: "Thundara Fury" },
+              { offset: 0x3daf, bit: 7, label: "Watera Fury" },
+              { offset: 0x3db0, bit: 0, label: "Firaga Fury" },
+              { offset: 0x3db0, bit: 1, label: "Blizzaga Fury" },
+              { offset: 0x3db0, bit: 2, label: "Thundaga Fury" },
+              { offset: 0x3db0, bit: 3, label: "Waterga Fury" },
+              { offset: 0x3db0, bit: 4, label: "Bio Fury" },
+              { offset: 0x3db0, bit: 5, label: "Demi Fury" },
+              { offset: 0x3db0, bit: 6, label: "Death Fury" },
+              { offset: 0x3db0, bit: 7, label: "Drain Fury" },
+              { offset: 0x3db1, bit: 0, label: "Osmose Fury" },
+              { offset: 0x3db1, bit: 1, label: "Flare Fury" },
+              { offset: 0x3db1, bit: 2, label: "Ultima Fury" },
+            ],
+          },
+          {
+            id: "overdrives-6-%index%",
+            type: "bitflags",
+            overrideShift: { parent: 1, shift: 0x0 },
+            flags: [
+              { offset: 0x3db1, bit: 3, label: "Grenade" },
+              { offset: 0x3db1, bit: 4, label: "Frag Grenade" },
+              { offset: 0x3db1, bit: 5, label: "Pineapple" },
+              { offset: 0x3db1, bit: 6, label: "Potato Masher" },
+              { offset: 0x3db1, bit: 7, label: "Cluster Bomb" },
+              { offset: 0x3db2, bit: 0, label: "Tallboy" },
+              { offset: 0x3db2, bit: 1, label: "Blaster Mine" },
+              { offset: 0x3db2, bit: 2, label: "Hazardous Shell" },
+              { offset: 0x3db2, bit: 3, label: "Calamity Bomb" },
+              { offset: 0x3db2, bit: 4, label: "Chaos Grenade" },
+              { offset: 0x3db2, bit: 5, label: "Heat Blaster" },
+              { offset: 0x3db2, bit: 6, label: "Firestorm" },
+              { offset: 0x3db2, bit: 7, label: "Burning Soul" },
+              { offset: 0x3db3, bit: 0, label: "Brimstone" },
+              { offset: 0x3db3, bit: 1, label: "Abaddon Flame" },
+              { offset: 0x3db3, bit: 2, label: "Snow Flurry" },
+              { offset: 0x3db3, bit: 3, label: "Icefall" },
+              { offset: 0x3db3, bit: 4, label: "Winter Storm" },
+              { offset: 0x3db3, bit: 5, label: "Black Ice" },
+              { offset: 0x3db3, bit: 6, label: "Krysta" },
+              { offset: 0x3db3, bit: 7, label: "Thunderbolt" },
+              { offset: 0x3db4, bit: 3, label: "Thunderblast" },
+              { offset: 0x3db4, bit: 4, label: "Waterfall" },
+              { offset: 0x3db4, bit: 5, label: "Flash Flood" },
+              { offset: 0x3db4, bit: 6, label: "Tidal Wave" },
+              { offset: 0x3db4, bit: 7, label: "Aqua Toxin" },
+              { offset: 0x3db5, bit: 0, label: "Dark Rain" },
+              { offset: 0x3db5, bit: 1, label: "Nega Burst" },
+              { offset: 0x3db5, bit: 2, label: "Black Hole" },
+              { offset: 0x3db5, bit: 3, label: "Sunburst" },
+              { offset: 0x3db5, bit: 4, label: "Ultra Potion" },
+              { offset: 0x3db5, bit: 5, label: "Panacea" },
+              { offset: 0x3db5, bit: 6, label: "Ultra Cure" },
+              { offset: 0x3db5, bit: 7, label: "Mega Phoenix" },
+              { offset: 0x3db6, bit: 0, label: "Final Phoenix" },
+              { offset: 0x3db6, bit: 1, label: "Elixir" },
+              { offset: 0x3db6, bit: 2, label: "Megalixir" },
+              { offset: 0x3db6, bit: 3, label: "Super Elixir" },
+              { offset: 0x3db6, bit: 4, label: "Final Elixir" },
+              { offset: 0x3db6, bit: 5, label: "NulAll" },
+              { offset: 0x3db6, bit: 6, label: "Mega NulAll" },
+              { offset: 0x3db6, bit: 7, label: "Hyper NulAll" },
+              { offset: 0x3db7, bit: 0, label: "Ultra NulAll" },
+              { offset: 0x3db7, bit: 1, label: "Mighty Wall" },
+              { offset: 0x3db7, bit: 2, label: "Mighty G" },
+              { offset: 0x3db7, bit: 3, label: "Super Mighty G" },
+              { offset: 0x3db7, bit: 4, label: "Hyper Mighty G" },
+              { offset: 0x3db7, bit: 5, label: "Vitality" },
+              { offset: 0x3db7, bit: 6, label: "Mega Vitality" },
+              { offset: 0x3db7, bit: 7, label: "Hyper Vitality" },
+              { offset: 0x3db8, bit: 0, label: "Mana" },
+              { offset: 0x3db8, bit: 1, label: "Mega Mana" },
+              { offset: 0x3db8, bit: 2, label: "Hyper Mana" },
+              { offset: 0x3db8, bit: 3, label: "Freedom" },
+              { offset: 0x3db8, bit: 4, label: "Freedom X" },
+              { offset: 0x3db8, bit: 5, label: "Quartet of 9" },
+              { offset: 0x3db8, bit: 6, label: "Trio of 9999" },
+              { offset: 0x3db8, bit: 7, label: "Hero Drink" },
+              { offset: 0x3db9, bit: 0, label: "Miracle Drink" },
+              { offset: 0x3db9, bit: 1, label: "Hot Spurs" },
+              { offset: 0x3db9, bit: 2, label: "Eccentrick" },
+            ],
+          },
+        ],
+      },
+      {
+        name: "Overdrives Modes",
+        hidden: !isParty,
+        items: [
+          {
+            type: "message",
+            mode: "info",
+            message: "An overdrive mode is learned when the value reaches 0.",
+          },
+          {
+            type: "section",
+            flex: true,
+            items: overdriveModeList.map((mode) => ({
+              id: `overdriveMode-${mode.index}`,
+              name: mode.name,
+              offset: offset + 0x60 + mode.index * 0x2,
+              type: "variable",
+              dataType: "uint16",
+              max: 1000,
+              hidden: mode.index >= 0x11,
+            })),
+          },
+          {
+            type: "bitflags",
+            hidden: true,
+            flags: overdriveModeList.map((mode) => ({
+              offset: offset + 0x88 + bitToOffset(mode.index),
+              bit: mode.index % 8,
+              label: mode.name,
+            })),
+          },
+        ],
+      },
+      {
+        name: "Miscellaneous",
+        flex: true,
+        items: [
+          {
+            name: "Total AP",
+            offset: offset + 0x14,
+            type: "variable",
+            dataType: "uint32",
+            hidden: !isParty,
+          },
+          {
+            name: "Battles",
+            offset: offset + 0x50,
+            type: "variable",
+            dataType: "uint32",
+            hidden: !isParty,
+          },
+          {
+            name: "Slain Enemies",
+            offset: offset + 0x54,
+            type: "variable",
+            dataType: "uint32",
+          },
+        ],
+      },
+    ],
+  };
+}
+
+export function chocoboCourseFragment(
+  name: string,
+  offset: number,
+  bit: number,
+): ItemSection {
+  return {
+    name,
+    type: "section",
+    flex: true,
+    items: [
+      {
+        name: "Status",
+        offset: 0x2bb,
+        type: "variable",
+        dataType: "bit",
+        bit,
+        resource: "booleanCleared",
+      },
+      {
+        name: "Time",
+        type: "group",
+        mode: "chrono",
+        items: [
+          {
+            offset,
+            type: "variable",
+            dataType: "uint8",
+            max: 1,
+          },
+          {
+            offset: offset + 0x1,
+            type: "variable",
+            dataType: "uint8",
+            leadingZeros: 1,
+            max: 59,
+          },
+          {
+            offset: offset + 0x2,
+            type: "variable",
+            dataType: "uint8",
+            max: 9,
+          },
+        ],
+      },
+    ],
+  };
+}

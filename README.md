@@ -60,6 +60,7 @@ Link to the website: [https://game-tools-collection.com](https://game-tools-coll
 | Final Fantasy VII Rebirth                           | STEAM          | Save                    | WORLD                                         |
 | Final Fantasy VIII                                  | PS             | Save                    | EUR / USA / JAP / FRA / GER / ITA / SPA       |
 | Final Fantasy IX                                    | PS             | Save                    | EUR / USA / JAP / FRA / GER / ITA / SPA       |
+| Final Fantasy X                                     | PS2            | Save                    | EUR / USA / JAP / FRA / GER / ITA / SPA / AUS |
 | Final Fantasy Tactics                               | PS             | Save                    | USA / JAP                                     |
 | Final Fight One                                     | GBA            | Save                    | EUR / USA / JAP                               |
 | Fire Emblem: Path of Radiance                       | GC             | Save                    | EUR / USA / JAP                               |
