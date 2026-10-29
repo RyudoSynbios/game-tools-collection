@@ -41,6 +41,7 @@ const template: GameJson = {
           items: [
             {
               type: "message",
+              mode: "info",
               message:
                 "This editor is under development. It will be updated regularly.",
             },

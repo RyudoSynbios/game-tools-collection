@@ -69,6 +69,7 @@ const template: GameJson = {
                 {
                   id: "message",
                   type: "message",
+                  mode: "warning",
                   message:
                     "This save file contains a suspended chapter. You will need to restart the current chapter to see the changes.",
                   hidden: true,
@@ -688,6 +689,7 @@ const template: GameJson = {
                           items: [
                             {
                               type: "message",
+                              mode: "warning",
                               message:
                                 "Some skills can cause the game to crash.",
                             },

@@ -418,6 +418,7 @@ const template: GameJson = {
                       items: [
                         {
                           id: "message",
+                          mode: "warning",
                           type: "message",
                           message:
                             "This section is designed to work with the original game. Some flags may not work with the Director's Cut version.",

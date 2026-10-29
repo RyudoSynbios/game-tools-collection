@@ -48,6 +48,7 @@ const template: GameJson = {
             {
               id: "message",
               type: "message",
+              mode: "warning",
               message:
                 "This file is a suspended save. You will need to return to title screen and reload the save to see the changes.",
               hidden: true,

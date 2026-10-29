@@ -1784,6 +1784,7 @@ const template: GameJson = {
                       items: [
                         {
                           type: "message",
+                          mode: "info",
                           message:
                             "Note that Din's Pearl is required to start receiving letters.",
                         },

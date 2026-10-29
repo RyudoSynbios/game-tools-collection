@@ -357,6 +357,7 @@ export interface ItemIntCondition {
 export interface ItemMessage {
   id?: string;
   type: "message";
+  mode: "info" | "warning";
   message: string;
   hidden?: boolean;
   parent?: ParentItem;

@@ -1,4 +1,5 @@
 <script lang="ts">
+  import InfoIcon from "$lib/assets/Info.svelte";
   import WarningIcon from "$lib/assets/Warning.svelte";
   import {
     dataJson,
@@ -24,18 +25,35 @@
 </script>
 
 {#if !item.hidden || ($isDebug && $debugOptions.showHiddenItems)}
-  <div class="gtc-message" class:gtc-message-debug={item.hidden}>
-    <WarningIcon />
+  <div
+    class="gtc-message"
+    class:gtc-message-debug={item.hidden}
+    class:gtc-message-info={item.mode === "info"}
+    class:gtc-message-warning={item.mode === "warning"}
+  >
+    {#if item.mode === "info"}
+      <InfoIcon />
+    {:else if item.mode === "warning"}
+      <WarningIcon />
+    {/if}
     <p>{@html item.message}</p>
   </div>
 {/if}
 
 <style lang="postcss">
   .gtc-message {
-    @apply mb-4 flex h-fit w-full items-center rounded bg-amber-900 p-2 text-sm text-amber-500;
+    @apply mb-4 flex h-fit w-full items-center rounded p-2 text-sm;
 
     &.gtc-message-debug {
-      @apply bg-orange-950 text-orange-800;
+      @apply !bg-orange-950 !text-orange-800;
+    }
+
+    &.gtc-message-info {
+      @apply bg-blue-900 text-blue-500;
+    }
+
+    &.gtc-message-warning {
+      @apply bg-amber-900 text-amber-500;
     }
 
     & :global(svg) {

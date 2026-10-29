@@ -184,6 +184,7 @@ export function familiarFragment(type: string, offset: number): ItemSection {
       items: [
         {
           type: "message",
+          mode: "warning",
           message: "Stats are reset every time you enter the tower.",
         },
         ...status,
