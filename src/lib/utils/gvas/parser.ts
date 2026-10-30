@@ -9,6 +9,7 @@ import debug from "$lib/utils/debug";
 import type { DataTypeInt, DataTypeUInt } from "$lib/types";
 
 import {
+  Header,
   PropertyType,
   type ArrayProperty,
   type Json,
@@ -18,12 +19,14 @@ import {
 } from ".";
 
 export default class Parser {
+  private header: Header;
   private dataView: DataView;
   private offset: number;
   private _json: Json;
   private _types: Types;
 
-  constructor(dataView: DataView, offset = 0x0) {
+  constructor(header: Header, dataView: DataView, offset = 0x0) {
+    this.header = header;
     this.dataView = dataView;
     this.offset = offset;
     this._json = {};
@@ -109,6 +112,10 @@ export default class Parser {
   private parseProperty(parent: StructProperty, path: string): void {
     const propertyName = this.getString();
     const propertyType = this.getString();
+
+    console.log("parseProperty", propertyName, propertyType);
+
+    console.log(this.offset.toHex(), propertyName, propertyType);
 
     path += `${path !== "" ? "." : ""}${propertyName}`;
 
@@ -430,13 +437,32 @@ export default class Parser {
     if (!isArray) {
       // const blockLength = this.getInt("uint32");
 
-      this.offset += 0x8;
+      if (this.header.saveVersion === 2) {
+        this.offset += 0x8;
+      } else if (this.header.saveVersion === 3) {
+        this.offset += 0x4;
+      }
+
+      console.log(this.offset.toHex(), this.getString(false));
 
       type = this.getString();
-      identifier += this.getIdentifier();
 
-      this.offset += 0x1;
+      if (this.header.saveVersion === 2) {
+        identifier += this.getIdentifier();
+
+        this.offset += 0x1;
+      } else {
+        identifier = `${this.getInt("uint32")}`;
+      }
     }
+
+    console.log(this.offset.toHex(), {
+      path,
+      isArray,
+      type,
+      parentType,
+      identifier,
+    });
 
     let pathType = `${PropertyType.Struct}:${type}`;
 
@@ -457,12 +483,16 @@ export default class Parser {
     } else {
       this._types[`${path}$ID`] = identifier;
 
+      console.log("WHILE", this.offset.toHex());
+
       while (this.getString(false) !== "None") {
         this.parseProperty(struct, path);
       }
 
       this.offset += 0x9;
     }
+
+    console.log("END STRUCT", this.offset.toHex());
 
     return struct;
   }
