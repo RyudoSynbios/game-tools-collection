@@ -27,6 +27,8 @@ import {
 
 import type {
   Item,
+  ItemBitflag,
+  ItemBitflagChecked,
   ItemBitflags,
   ItemChecksum,
   ItemContainer,
@@ -36,7 +38,11 @@ import type {
   Resource,
 } from "$lib/types";
 
-import { abilityList, equipmentAbilityList } from "./utils/resource";
+import {
+  abilityList,
+  equipmentAbilityList,
+  locationList,
+} from "./utils/resource";
 
 export function setGamePlatform(dataView: DataView, fileName: string): void {
   if (fileName.match(/^ffx_[0-9]{3}$/)) {
@@ -116,6 +122,16 @@ export function overrideParseItem(item: Item): Item {
     itemBitflags.hidden = targetedCharacter !== characterIndex;
 
     return itemBitflags;
+  } else if ("id" in item && item.id?.match(/yojimbo-/)) {
+    const itemInt = item as ItemInt;
+
+    const [characterIndex] = item.id.splitInt();
+
+    if (!itemInt.hidden) {
+      itemInt.hidden = characterIndex !== 6;
+    }
+
+    return itemInt;
   } else if ("id" in item && item.id?.match(/relationship-/)) {
     const itemInt = item as ItemInt;
 
@@ -197,8 +213,22 @@ export function overrideItem(item: Item): Item {
   return item;
 }
 
-export function overrideGetInt(item: Item): [boolean, number | undefined] {
-  if ("id" in item && item.id?.match(/quantity-/)) {
+export function overrideGetInt(
+  item: Item,
+): [boolean, number | ItemBitflagChecked[] | undefined] {
+  if ("id" in item && item.id === "location") {
+    const itemInt = item as ItemInt;
+
+    const locationIndex = getInt(itemInt.offset, "uint16");
+
+    const location = locationList.find(
+      (location) => location.index === locationIndex,
+    );
+
+    if (!location) {
+      return [true, 0xfff];
+    }
+  } else if ("id" in item && item.id?.match(/quantity-/)) {
     const itemInt = item as ItemInt;
 
     const [itemIndex] = item.id.splitInt();
@@ -233,12 +263,27 @@ export function overrideGetInt(item: Item): [boolean, number | undefined] {
 
       return [true, int];
     }
+  } else if ("id" in item && item.id === "belgemineAeons") {
+    const itemBitflags = item as ItemBitflags;
+
+    const count = getInt(itemBitflags.flags[0].offset, "uint8");
+
+    const flags = itemBitflags.flags.map((flag, index) => ({
+      ...flag,
+      checked: index < count,
+    }));
+
+    return [true, flags];
   }
 
   return [false, undefined];
 }
 
-export function overrideSetInt(item: Item, value: string): boolean {
+export function overrideSetInt(
+  item: Item,
+  value: string,
+  flag: ItemBitflag,
+): boolean {
   if ("id" in item && item.id?.match(/quantity-/)) {
     const itemInt = item as ItemInt;
 
@@ -294,6 +339,18 @@ export function overrideSetInt(item: Item, value: string): boolean {
     setInt(itemInt.offset + 0xd, "uint8", 0x40);
 
     return true;
+  } else if ("id" in item && item.id === "belgemineAeons") {
+    const itemBitflags = item as ItemBitflags;
+
+    let count = itemBitflags.flags.findIndex((f) => f.label === flag.label);
+
+    if (value) {
+      count += 1;
+    }
+
+    setInt(flag.offset, "uint8", count);
+
+    return true;
   }
 
   return false;
@@ -304,6 +361,19 @@ export function afterSetInt(item: Item): void {
     const itemInt = item as ItemInt;
 
     copyInt(itemInt.offset, itemInt.offset - 0xec, 0x4);
+  } else if ("id" in item && item.id === "location") {
+    const itemInt = item as ItemInt;
+
+    const locationIndex = getInt(itemInt.offset, "uint16");
+
+    const location = locationList.find(
+      (location) => location.index === locationIndex,
+    );
+
+    if (location) {
+      setInt(itemInt.offset - 0x2, "uint8", location.spawn);
+      setInt(itemInt.offset - 0xe2, "uint16", location.preview);
+    }
   } else if ("id" in item && item.id?.match(/Name-/)) {
     const itemString = item as ItemString;
 
@@ -328,6 +398,12 @@ export function afterSetInt(item: Item): void {
     const offset = itemInt.offset - index * 0x2 + 0x28 + bitToOffset(index);
 
     setInt(offset, "bit", count === 0 ? 1 : 0, { bit: index % 8 });
+  } else if ("id" in item && item.id === "yojimbo-6-choice") {
+    const itemInt = item as ItemInt;
+
+    const mode = getInt(itemInt.offset, "uint8") - 0x1;
+
+    setInt(itemInt.offset + 0x3b20, "uint8", mode === -1 ? 0x2 : mode);
   } else if ("id" in item && item.id?.match(/keyItems-/)) {
     const sectionItem = getClosestItem("alBhedPrimerSection", item, ) as ItemSection; // prettier-ignore
     const countItem = sectionItem.items[0] as ItemInt;
@@ -341,6 +417,14 @@ export function afterSetInt(item: Item): void {
     const [slotIndex] = item.id.splitInt();
 
     updateEquipmentNames(slotIndex);
+  } else if ("id" in item && item.id === "jechtSpheres") {
+    const itemBitflags = item as ItemBitflags;
+
+    const offset = itemBitflags.flags[0].offset;
+
+    const count = getInt(offset, "uint16").toBitCount();
+
+    setInt(offset + 0x3, "uint8", count);
   }
 }
 

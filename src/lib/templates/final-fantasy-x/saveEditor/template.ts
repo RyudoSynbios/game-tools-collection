@@ -15,6 +15,9 @@ import {
   itemList,
   itemTypes,
   keyItemList,
+  locations,
+  locationsGroups,
+  locationsOrder,
   monsterList,
   monsterRegions,
   overdriveModes,
@@ -152,12 +155,6 @@ const template: GameJson = {
                       name: "General",
                       items: [
                         {
-                          type: "message",
-                          mode: "info",
-                          message:
-                            "This editor is under development. An update will be available soon.",
-                        },
-                        {
                           type: "section",
                           flex: true,
                           items: [
@@ -175,23 +172,6 @@ const template: GameJson = {
                               dataType: "uint16",
                               max: 3250,
                               hint: "Changing this value may softlock your save. Note the current value before changing it if you want to restore your progression.",
-                            },
-                            {
-                              name: "Location",
-                              offset: 0xfa,
-                              type: "variable",
-                              dataType: "uint16",
-                              resource: "locations",
-                              size: "lg",
-                              autocomplete: true,
-                              hidden: true,
-                            },
-                            {
-                              name: "Spawn",
-                              offset: 0x4c,
-                              type: "variable",
-                              dataType: "uint16",
-                              hidden: true,
                             },
                             {
                               name: "Playtime",
@@ -245,18 +225,29 @@ const template: GameJson = {
                               ],
                             },
                             {
+                              id: "location",
+                              name: "Location",
+                              offset: 0xfa,
+                              type: "variable",
+                              dataType: "uint16",
+                              resource: "locations",
+                              size: "lg",
+                              autocomplete: true,
+                              hint: 'Some locations are only accessible based on the "Progress" field.',
+                            },
+                            {
+                              name: "Spawn",
+                              offset: 0xf8,
+                              type: "variable",
+                              dataType: "uint8",
+                              hidden: true,
+                            },
+                            {
                               name: "Gil",
                               offset: 0x3d88,
                               type: "variable",
                               dataType: "uint32",
                               max: 999999999,
-                            },
-                            {
-                              name: "Battles",
-                              offset: 0x3d54,
-                              type: "variable",
-                              dataType: "uint32",
-                              max: 268435455,
                             },
                           ],
                         },
@@ -287,7 +278,7 @@ const template: GameJson = {
                             },
                             {
                               name: "Location (Save Preview)",
-                              offset: 0x4e,
+                              offset: 0x18,
                               type: "variable",
                               dataType: "uint16",
                               hidden: true,
@@ -1107,12 +1098,94 @@ const template: GameJson = {
                   vertical: true,
                   items: [
                     {
+                      name: "Baaj Temple",
+                      flex: true,
+                      items: [
+                        {
+                          name: "Obtained Treasures",
+                          type: "bitflags",
+                          flags: [
+                            { offset: 0xc9c, bit: 0, label: "Besaid Temple" },
+                            { offset: 0xc9c, bit: 1, label: "Kilika Temple" },
+                            { offset: 0xc9c, bit: 2, label: "Djose Temple" },
+                            { offset: 0xc9c, bit: 3, label: "Macalania Temple" },
+                            { offset: 0xc9c, bit: 4, label: "Bevelle Temple" },
+                            { offset: 0xc9c, bit: 5, label: "Zanarkand Temple" },
+                          ],
+                        },
+                        {
+                          name: "Chamber of the Fayth",
+                          offset: 0xc9c,
+                          type: "variable",
+                          dataType: "bit",
+                          bit: 6,
+                          resource: "baajDoors",
+                        },
+                      ],
+                    },
+                    {
+                      name: "Belgemine",
+                      flex: true,
+                      items: [
+                        {
+                          id: "belgemineAeons",
+                          name: "Defeated Aeons",
+                          type: "bitflags",
+                          flags: [
+                            { offset: 0xc70, bit: 0, label: "Valefor" },
+                            { offset: 0xc70, bit: 0, label: "Ifrit" },
+                            { offset: 0xc70, bit: 0, label: "Ixion" },
+                            { offset: 0xc70, bit: 0, label: "Shiva" },
+                            { offset: 0xc70, bit: 0, label: "Bahamut" },
+                            { offset: 0xc70, bit: 0, label: "Yojimbo" },
+                            { offset: 0xc70, bit: 0, label: "Anima" },
+                            { offset: 0xc70, bit: 0, label: "Magus Sisters" },
+                          ],
+                        },
+                        {
+                          name: "Belgemine Status",
+                          offset: 0x340,
+                          type: "variable",
+                          dataType: "bit",
+                          bit: 3,
+                          resource: "belgemineStatus",
+                        },
+                      ],
+                    },
+                    {
                       name: "Chocobo Training Course",
                       items: [
                         chocoboCourseFragment("Wobbly Chocobo", 0x2d4, 1),
                         chocoboCourseFragment("Dodger Chocobo", 0x2d7, 3),
                         chocoboCourseFragment("Hyper Dodger Chocobo", 0x2da, 4),
                         chocoboCourseFragment("Catcher Chocobo", 0x2dd, 5),
+                      ],
+                    },
+                    {
+                      name: "Jecht Spheres",
+                      items: [
+                        {
+                          name: "Jecht's Sphere Count",
+                          offset: 0xcbf,
+                          type: "variable",
+                          dataType: "uint8",
+                          hidden: true,
+                        },
+                        {
+                          id: "jechtSpheres",
+                          type: "bitflags",
+                          flags: [
+                            { offset: 0xcbc, bit: 0, label: "Besaid Village" },
+                            { offset: 0xcbc, bit: 5, label: "S.S. Liki - Bridge" },
+                            { offset: 0xcbc, bit: 4, label: "Stadium - Basement A" },
+                            { offset: 0xcbc, bit: 3, label: "Highroad - Oldroad, South" },
+                            { offset: 0xcbd, bit: 0, label: "Mushroom Rock - Precipice" },
+                            { offset: 0xcbc, bit: 2, label: "Moonflow - South Wharf" },
+                            { offset: 0xcbc, bit: 1, label: "Thunder Plains - South" },
+                            { offset: 0xcbc, bit: 7, label: "Macalania Woods - South" },
+                            { offset: 0xcbc, bit: 6, label: "Gagazet - Mountain Trail" },
+                          ],
+                        },
                       ],
                     },
                     {
@@ -1210,31 +1283,98 @@ const template: GameJson = {
                     },
                     {
                       name: "Thunder Plains",
+                      items: [
+                        {
+                          name: "Lightning Bolts",
+                          type: "section",
+                          flex: true,
+                          items: [
+                            {
+                              name: "Total Bolts Struck",
+                              offset: 0x43c,
+                              type: "variable",
+                              dataType: "uint16",
+                            },
+                            {
+                              name: "Total Dodged Bolts",
+                              offset: 0x43e,
+                              type: "variable",
+                              dataType: "uint16",
+                            },
+                            {
+                              name: "Consecutive Dodged Bolts",
+                              offset: 0x440,
+                              type: "variable",
+                              dataType: "uint16",
+                            },
+                          ],
+                        },
+                        {
+                          name: "Cactuar Stones",
+                          type: "section",
+                          flex: true,
+                          items: [
+                            {
+                              name: "Activated Cactuar Stones",
+                              type: "bitflags",
+                              flags: [
+                                { offset: 0x431, bit: 2, label: "Thunder Plains - North" },
+                                { offset: 0x431, bit: 0, label: "Thunder Plains - South 1" },
+                                { offset: 0x431, bit: 1, label: "Thunder Plains - South 2" },
+                              ],
+                            },
+                            {
+                              name: "Ghost Cactuar Chest",
+                              offset: 0x433,
+                              type: "variable",
+                              dataType: "bit",
+                              bit: 0,
+                              resource: "ghostCactuarChests",
+                            },
+                          ],
+                        },
+                      ],
+                    },
+                    {
+                      name: "Village of the Cactuars",
                       flex: true,
                       items: [
                         {
-                          name: "Total Bolts Struck",
-                          offset: 0x43c,
+                          name: "Progression",
+                          offset: 0xcc3,
                           type: "variable",
-                          dataType: "uint16",
+                          dataType: "uint8",
+                          resource: "villageCactuarsProgressions",
+                          autocomplete: true,
                         },
                         {
-                          name: "Total Dodged Bolts",
-                          offset: 0x43e,
+                          name: "Personalized Spheres",
+                          offset: 0xcc5,
                           type: "variable",
-                          dataType: "uint16",
-                        },
-                        {
-                          name: "Consecutive Dodged Bolts",
-                          offset: 0x440,
-                          type: "variable",
-                          dataType: "uint16",
+                          dataType: "uint8",
+                          max: 9,
                         },
                       ],
                     },
                     {
                       name: "Miscellaneous",
+                      flex: true,
                       items: [
+                        {
+                          name: "Battles",
+                          offset: 0x3d54,
+                          type: "variable",
+                          dataType: "uint32",
+                          max: 268435455,
+                        },
+                        {
+                          name: "Gil lend to O'aka",
+                          offset: 0xc60,
+                          type: "variable",
+                          dataType: "float32",
+                          min: 0,
+                          max: 2147483647,
+                        },
                         {
                           name: "Rikku Outfit",
                           offset: 0x111,
@@ -1331,6 +1471,14 @@ const template: GameJson = {
     },
     aeonsNames: "getCharacterNames('aeons')",
     armourNames: "getEquipmentNames('armour')",
+    baajDoors: {
+      0x0: "Closed",
+      0x1: "Open",
+    },
+    belgemineStatus: {
+      0x0: "-",
+      0x1: "Sending Performed",
+    },
     booleanCleared: {
       0x0: "-",
       0x1: "Cleared",
@@ -1362,6 +1510,10 @@ const template: GameJson = {
     equipments: {
       ...equipments,
       0xfffff: "-",
+    },
+    ghostCactuarChests: {
+      0x0: "-",
+      0x1: "Appeared",
     },
     letters: [...Array(10).keys()].map((index) => {
       // Japan
@@ -1719,6 +1871,7 @@ const template: GameJson = {
         0xcf: "ü",
       };
     }),
+    locations,
     optionBoolean: {
       0x0: "Off",
       0x1: "On",
@@ -1751,20 +1904,66 @@ const template: GameJson = {
       0x0: "-",
       ...techniques,
     },
+    villageCactuarsProgressions: {
+      0x0: "-",
+      0x1: "Tomay appeared",
+      0x2: "Tomay found",
+      0x3: "Rovivea appeared",
+      0x4: "Rovivea found",
+      0x5: "Chava appeared",
+      0x6: "Chava found",
+      0x7: "Alek and Aloja appeared",
+      0x8: "Alek and Aloja found",
+      0x9: "Vachella appeared",
+      0xa: "Vachella found",
+      0xb: "Robeya appeared",
+      0xc: "Robeya found",
+      0xd: "Isrra appeared",
+      0xe: "Isrra found",
+      0xf: "Elio appeared",
+      0x10: "Elio found",
+      0x11: "Flaile found",
+      0x12: "Sandstorm gone",
+      0x19: "Elio on airship deck",
+    },
     weaponNames: "getEquipmentNames('weapons')",
+    yojimboMotivationModes: {
+      0x0: "-",
+      0x1: "To train as a summoner",
+      0x2: "To gain the power to destroy fiends",
+      0x3: "To defeat the most powerful of enemies",
+    },
   },
   resourcesGroups: {
     equipmentAbilities: equipmentAbilitiesGroups,
     equipmentAppearances: equipmentAppearancesGroups,
     equipments: equipmentsGroups,
+    locations: locationsGroups,
     prizes: prizesGroups,
+    villageCactuarsProgressions: [
+      { name: "Tomay", options: [0x1, 0x2] },
+      { name: "Rovivea", options: [0x3, 0x4] },
+      { name: "Chava", options: [0x5, 0x6] },
+      { name: "Alek and Aloja", options: [0x7, 0x8] },
+      { name: "Vachella", options: [0x9, 0xa] },
+      { name: "Robeya", options: [0xb, 0xc] },
+      { name: "Isrra", options: [0xd, 0xe] },
+      { name: "Elio", options: [0xf, 0x10, 0x19] },
+      { name: "Flaile", options: [0x11] },
+      { name: "Sandstorm", options: [0x12] },
+    ],
   },
   resourcesOrder: {
     characterNames: [0xff],
     characters: [0xff],
     equipments: [0xfffff],
     equipmentAbilities: equipmentAbilitiesOrder,
+    locations: locationsOrder,
     players: [0x3c],
+    villageCactuarsProgressions: [
+      0x0, 0x1, 0x2, 0x3, 0x4, 0x5, 0x6, 0x7, 0x8, 0x9, 0xa, 0xb, 0xc, 0xd, 0xe,
+      0xf, 0x19, 0x10, 0x11, 0x12,
+    ],
   },
 };
 
