@@ -75,6 +75,40 @@ export function overrideGetInt(
     });
 
     return [true, flags];
+  } else if ("id" in item && item.id === "arcanas") {
+    const itemInt = item as ItemInt;
+
+    const entry = arcanaList[itemInt.offset];
+
+    const int = hasItem(entry.id) ? 0x1 : 0x0;
+
+    return [true, int];
+  } else if ("id" in item && item.id?.match(/arcanas-/)) {
+    const itemBitflags = item as ItemBitflags;
+
+    const [, type] = item.id.split("-");
+    const [arcanaIndex] = item.id.splitInt();
+
+    let table: { id: string; name: string }[] = [];
+    let array: string[] = [];
+
+    switch (type) {
+      case "blessings":
+        table = arcanaList[arcanaIndex].blessings;
+        array = $dataJson.playerSave.arcanaUnlockedTalents;
+        break;
+      case "tasks":
+        table = arcanaList[arcanaIndex].tasks;
+        array = $dataJson.playerSave.arcanaCompletedTasks;
+        break;
+    }
+
+    const flags = itemBitflags.flags.map((flag) => ({
+      ...flag,
+      checked: array.includes(table[flag.offset].id),
+    }));
+
+    return [true, flags];
   } else if ("id" in item && item.id?.match(/inventory-/)) {
     const itemBitflags = item as ItemBitflags;
 
@@ -138,6 +172,43 @@ export function overrideSetInt(
     } else if (!value && index !== -1) {
       $dataJson.playerSave[type].splice(index, 1);
     }
+
+    return true;
+  } else if ("id" in item && item.id === "arcanas") {
+    const itemInt = item as ItemInt;
+
+    const entry = arcanaList[itemInt.offset];
+
+    updateInventory(entry.id, value === "1");
+
+    return true;
+  } else if ("id" in item && item.id?.match(/arcanas-/)) {
+    const [, type] = item.id.split("-");
+    const [arcanaIndex] = item.id.splitInt();
+
+    let table: { id: string; name: string }[] = [];
+    let array: string[] = [];
+
+    switch (type) {
+      case "blessings":
+        table = arcanaList[arcanaIndex].blessings;
+        array = $dataJson.playerSave.arcanaUnlockedTalents;
+        break;
+      case "tasks":
+        table = arcanaList[arcanaIndex].tasks;
+        array = $dataJson.playerSave.arcanaCompletedTasks;
+        break;
+    }
+
+    const index = array.findIndex((item) => item === table[flag.offset].id);
+
+    if (value && index === -1) {
+      array.push(table[flag.offset].id);
+    } else if (index !== -1) {
+      array.splice(index, 1);
+    }
+
+    dataJson.set($dataJson);
 
     return true;
   } else if ("id" in item && item.id?.match(/inventory-/)) {

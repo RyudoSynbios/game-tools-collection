@@ -469,27 +469,66 @@ const template: GameJson = {
           ],
         },
         {
+          name: "Arcanas",
+          items: [
+            {
+              type: "tabs",
+              vertical: true,
+              items: arcanaList.map((arcana, index) => ({
+                name: arcana.name,
+                items: [
+                  {
+                    id: "arcanas",
+                    name: "Status",
+                    offset: index,
+                    jsonPath: "playerSave.itemsInInventory",
+                    type: "variable",
+                    dataType: "uint8",
+                    resource: "booleanAcquired",
+                  },
+                  {
+                    type: "section",
+                    flex: true,
+                    items: [
+                      {
+                        id: `arcanas-blessings-${index}`,
+                        name: "Blessings",
+                        jsonPath: "playerSave.arcanaUnlockedTalents",
+                        type: "bitflags",
+                        fixedWidth: true,
+                        flags: arcana.blessings.map((blessing, index) => ({
+                          offset: index,
+                          bit: 0,
+                          label: blessing.name,
+                        })),
+                      },
+                      {
+                        id: `arcanas-tasks-${index}`,
+                        name: "Works of Mercy",
+                        jsonPath: "playerSave.arcanaCompletedTasks",
+                        type: "bitflags",
+                        fixedWidth: true,
+                        flags: arcana.tasks.map((task, index) => ({
+                          offset: index,
+                          bit: 0,
+                          label: task.name,
+                          disabled: task.name === "???",
+                        })),
+                      },
+                    ],
+                  },
+                ],
+              })),
+            },
+          ],
+        },
+        {
           name: "Inventory",
           items: [
             {
               type: "tabs",
               vertical: true,
               items: [
-                {
-                  name: "Arcanas",
-                  items: [
-                    {
-                      id: "inventory-arcanas",
-                      jsonPath: "playerSave.itemsInInventory",
-                      type: "bitflags",
-                      flags: arcanaList.map((arcana, index) => ({
-                        offset: index,
-                        bit: 0,
-                        label: arcana.name,
-                      })),
-                    },
-                  ],
-                },
                 {
                   name: "Armoury",
                   flex: true,
@@ -605,6 +644,10 @@ const template: GameJson = {
   ],
   resources: {
     arcanas,
+    booleanAcquired: {
+      0x0: "-",
+      0x1: "Acquired",
+    },
     relics: {
       "-1": "-",
       ...relics,
