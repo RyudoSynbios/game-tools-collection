@@ -5,15 +5,17 @@ import type { GameJson } from "$lib/types";
 import {
   arcanaList,
   arcanas,
+  areaList,
   cardList,
   cardTypes,
   keyItemList,
+  locations,
+  locationsGroups,
   moveList,
   relicList,
   relics,
   skinList,
   skins,
-  warpRoomList,
   weaponList,
   weapons,
   weaponsGroups,
@@ -39,12 +41,6 @@ const template: GameJson = {
         {
           name: "General",
           items: [
-            {
-              type: "message",
-              mode: "info",
-              message:
-                "This editor is under development. It will be updated regularly.",
-            },
             {
               type: "section",
               flex: true,
@@ -154,6 +150,89 @@ const template: GameJson = {
                     },
                   ],
                 },
+                {
+                  id: "location",
+                  name: "Location",
+                  offset: 0x0,
+                  jsonPath: "playerSave.levelId",
+                  type: "variable",
+                  dataType: "uint8",
+                  resource: "locations",
+                  size: "xl",
+                  autocomplete: true,
+                },
+              ],
+            },
+            {
+              type: "section",
+              flex: true,
+              noMargin: true,
+              hidden: true,
+              items: [
+                {
+                  name: "Level ID",
+                  offset: 0x0,
+                  jsonPath: "playerSave.levelId",
+                  length: 0x20,
+                  type: "variable",
+                  dataType: "string",
+                  letterDataType: "uint8",
+                  size: "lg",
+                  hidden: true,
+                },
+                {
+                  name: "Last Save District ID",
+                  offset: 0x0,
+                  jsonPath: "playerSave.lastSaveRoomValidDistrictGuid",
+                  length: 0x20,
+                  type: "variable",
+                  dataType: "string",
+                  letterDataType: "uint8",
+                  size: "lg",
+                  hidden: true,
+                },
+                {
+                  name: "Last Save Room ID",
+                  offset: 0x0,
+                  jsonPath: "playerSave.lastUsedSaveRoomId",
+                  length: 0x20,
+                  type: "variable",
+                  dataType: "string",
+                  letterDataType: "uint8",
+                  size: "lg",
+                  hidden: true,
+                },
+              ],
+            },
+            {
+              type: "section",
+              flex: true,
+              hidden: true,
+              items: [
+                {
+                  name: "Position X",
+                  offset: 0x0,
+                  jsonPath: "playerSave.position.x",
+                  type: "variable",
+                  dataType: "float32",
+                  hidden: true,
+                },
+                {
+                  name: "Position Y",
+                  offset: 0x0,
+                  jsonPath: "playerSave.position.y",
+                  type: "variable",
+                  dataType: "float32",
+                  hidden: true,
+                },
+                {
+                  name: "Position Z",
+                  offset: 0x0,
+                  jsonPath: "playerSave.position.z",
+                  type: "variable",
+                  dataType: "float32",
+                  hidden: true,
+                },
               ],
             },
             {
@@ -165,10 +244,10 @@ const template: GameJson = {
                   name: "Visited Locations",
                   jsonPath: "playerSave.enteredLevels",
                   type: "bitflags",
-                  flags: warpRoomList.map((location, index) => ({
+                  flags: areaList.map((area, index) => ({
                     offset: index,
                     bit: 0,
-                    label: location.name,
+                    label: area.name,
                   })),
                 },
                 {
@@ -176,10 +255,10 @@ const template: GameJson = {
                   name: "Fast Travel Locations",
                   jsonPath: "playerSave.unlockedFastTravelLevels",
                   type: "bitflags",
-                  flags: warpRoomList.map((location, index) => ({
+                  flags: areaList.map((area, index) => ({
                     offset: index,
                     bit: 0,
-                    label: location.name,
+                    label: area.name,
                   })),
                 },
               ],
@@ -648,6 +727,7 @@ const template: GameJson = {
       0x0: "-",
       0x1: "Acquired",
     },
+    locations,
     relics: {
       "-1": "-",
       ...relics,
@@ -656,6 +736,7 @@ const template: GameJson = {
     weapons,
   },
   resourcesGroups: {
+    locations: locationsGroups,
     weapons: weaponsGroups,
   },
   resourcesOrder: {

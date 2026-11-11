@@ -2,7 +2,7 @@ import { get } from "svelte/store";
 
 import { dataJson, dataView } from "$lib/stores";
 import { dataViewToJson, jsonToBuffer } from "$lib/utils/format";
-import { getJsonString, setJsonString } from "$lib/utils/json";
+import { getJsonString, setJsonInt, setJsonString } from "$lib/utils/json";
 
 import type {
   Item,
@@ -14,12 +14,13 @@ import type {
 
 import {
   arcanaList,
+  areaList,
   cardList,
   keyItemList,
+  locationList,
   moveList,
   relicList,
   skinList,
-  warpRoomList,
   weaponList,
 } from "./utils/resource";
 
@@ -48,7 +49,28 @@ export function overrideGetInt(
 ): [boolean, number | ItemBitflagChecked[] | undefined] {
   const $dataJson = get(dataJson);
 
-  if ("id" in item && item.id?.match(/equipment-/)) {
+  if ("id" in item && item.id === "location") {
+    const saveRoomId = getJsonString("playerSave.lastUsedSaveRoomId");
+
+    const locationIndex = locationList.findIndex(
+      (location) => location.id === saveRoomId,
+    );
+
+    return [true, locationIndex];
+  } else if ("id" in item && item.id?.match(/locations-/)) {
+    const itemBitflags = item as ItemBitflags;
+
+    const [, type] = item.id.split("-");
+
+    const flags = itemBitflags.flags.map((flag) => {
+      return {
+        ...flag,
+        checked: $dataJson.playerSave[type].includes(areaList[flag.offset].id),
+      };
+    });
+
+    return [true, flags];
+  } else if ("id" in item && item.id?.match(/equipment-/)) {
     const itemInt = item as ItemInt;
 
     const [, type] = item.id.split("-");
@@ -60,21 +82,6 @@ export function overrideGetInt(
     const index = table.findIndex((item) => item.id === itemId);
 
     return [true, index];
-  } else if ("id" in item && item.id?.match("locations")) {
-    const itemBitflags = item as ItemBitflags;
-
-    const [, type] = item.id.split("-");
-
-    const flags = itemBitflags.flags.map((flag) => {
-      return {
-        ...flag,
-        checked: $dataJson.playerSave[type].includes(
-          warpRoomList[flag.offset].id,
-        ),
-      };
-    });
-
-    return [true, flags];
   } else if ("id" in item && item.id === "arcanas") {
     const itemInt = item as ItemInt;
 
@@ -146,7 +153,35 @@ export function overrideSetInt(
 ): boolean {
   const $dataJson = get(dataJson);
 
-  if ("id" in item && item.id?.match(/equipment-/)) {
+  if ("id" in item && item.id === "location") {
+    const index = parseInt(value as string);
+
+    const location = locationList[index];
+
+    setJsonString("playerSave.levelId", location.area);
+    setJsonString("playerSave.lastSaveRoomValidDistrictGuid", location.district); // prettier-ignore
+    setJsonString("playerSave.lastUsedSaveRoomId", location.id);
+    setJsonInt("playerSave.position.x", "float32", location.coordinates[0]);
+    setJsonInt("playerSave.position.y", "float32", location.coordinates[1]);
+
+    return true;
+  } else if ("id" in item && item.id?.match(/locations-/)) {
+    const [, type] = item.id.split("-");
+
+    const entry = areaList[flag.offset];
+
+    const index = $dataJson.playerSave[type].findIndex(
+      (location: string) => location === entry.id,
+    );
+
+    if (value && index === -1) {
+      $dataJson.playerSave[type].push(areaList[flag.offset].id);
+    } else if (!value && index !== -1) {
+      $dataJson.playerSave[type].splice(index, 1);
+    }
+
+    return true;
+  } else if ("id" in item && item.id?.match(/equipment-/)) {
     const itemInt = item as ItemInt;
 
     const [, type] = item.id.split("-");
@@ -156,22 +191,6 @@ export function overrideSetInt(
     const table = getInventoryTable(type);
 
     setJsonString(itemInt.jsonPath!, table[index]?.id || "");
-
-    return true;
-  } else if ("id" in item && item.id?.match("locations")) {
-    const [, type] = item.id.split("-");
-
-    const entry = warpRoomList[flag.offset];
-
-    const index = $dataJson.playerSave[type].findIndex(
-      (location: string) => location === entry.id,
-    );
-
-    if (value && index === -1) {
-      $dataJson.playerSave[type].push(warpRoomList[flag.offset].id);
-    } else if (!value && index !== -1) {
-      $dataJson.playerSave[type].splice(index, 1);
-    }
 
     return true;
   } else if ("id" in item && item.id === "arcanas") {

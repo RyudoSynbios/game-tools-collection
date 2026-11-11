@@ -551,6 +551,273 @@ export const keyItemList = [
   { id: "NotreDameKey"          , name: "Brauner's Paintbrush" },
 ];
 
+export const areaList = [
+  { id: "946565bcb5d5f244e991e1790575a67c", name: "Paris Streets" },
+  { id: "e18ccfe651d904147ba60f4c72f9b146", name: "Holy Innocents' Cemetery" },
+  { id: "afeda68d5a0c4204da3488bbf7f04900", name: "Catacombs of Paris" },
+  { id: "4f7ce84e4688e534aa656a76e6bd9416", name: "Main Hall" },
+  { id: "226c20eca175b104e8fe1a8f4fc2c879", name: "Library" },
+  { id: "c912f1bff8fc06740902f1f67666ae86", name: "Clock Tower" },
+  { id: "57cb4e79eb2c4e943821705d39709461", name: "Notre-Dame" },
+  { id: "b76c5d815e88a8442ad46b1c869efd5f", name: "Hall of Mirrors" },
+  { id: "794afe09823b0e04dac2044bf092cff2", name: "Master's Quarters" },
+];
+
+export const locationList = [
+  {
+    id: "World_Biome_01_Streets_Poor_StreetsPoor_SaveRoom02_uid78",
+    area: "946565bcb5d5f244e991e1790575a67c",
+    district: "9766b0fbf241fb34c9c566c286814916",
+    name: "Paris Streets: Central Sewer Drain",
+    coordinates: [36, -10.989999771118164],
+  },
+  {
+    id: "World_Biome_01_Streets_Poor_StreetsPoor_SaveRoom07_uid126",
+    area: "946565bcb5d5f244e991e1790575a67c",
+    district: "d93fac4970f971c4fae58ada42e6abf5",
+    name: "Paris Streets: Burned District",
+    coordinates: [228, 41.01000214],
+  },
+  {
+    id: "World_Biome_01_Streets_Poor_StreetsPoor_SaveRoom04_uid87",
+    area: "946565bcb5d5f244e991e1790575a67c",
+    district: "6958c12f2a9ccd24e9b4b82e1a026a0c",
+    name: "Paris Streets: Prison Tower",
+    coordinates: [132, 67.01000214],
+  },
+  {
+    id: "World_Biome_01_Streets_Poor_StreetsPoor_SaveRoom08_uid140",
+    area: "946565bcb5d5f244e991e1790575a67c",
+    district: "2e77bb34ede6bbb4c8bbf70742afcc81",
+    name: "Paris Streets: Undercity",
+    coordinates: [-132, 28.00999832],
+  },
+  {
+    id: "World_Biome_01_Streets_Poor_StreetsPoor_SaveRoom05_uid107",
+    area: "946565bcb5d5f244e991e1790575a67c",
+    district: "33b84dec2d6cb9c4aa1880846b86b241",
+    name: "Paris Streets: Gate to the Stone Bridge",
+    coordinates: [516, 28.00999832],
+  },
+  {
+    id: "World_Biome_02_InnocentsCemetery_Cemetery_SaveRoom050_uid123",
+    area: "e18ccfe651d904147ba60f4c72f9b146",
+    district: "ffe06bf5afe78e241bedb4d2d29bc1f9",
+    name: "Holy Innocents' Cemetery: Cloister",
+    coordinates: [396, 262.0099792],
+  },
+  {
+    id: "World_Biome_02_InnocentsCemetery_Cemetery_SaveRoom020_uid70",
+    area: "e18ccfe651d904147ba60f4c72f9b146",
+    district: "5a6460c78d8478641a09b377ae227794",
+    name: "Holy Innocents' Cemetery: Pauper's Grave",
+    coordinates: [-60, 262.0099792],
+  },
+  {
+    id: "World_Biome_02_InnocentsCemetery_Cemetery_SaveRoom040_uid99",
+    area: "e18ccfe651d904147ba60f4c72f9b146",
+    district: "823b40c612cc53443b77effda9aa052c",
+    name: "Holy Innocents' Cemetery: Ancient Sewers",
+    coordinates: [228, 184.0099945],
+  },
+  {
+    id: "World_Biome_02_InnocentsCemetery_Cemetery_SaveRoom_060_uid142",
+    area: "e18ccfe651d904147ba60f4c72f9b146",
+    district: "4c397d1ca6aa4354fad002058dcef6b8",
+    name: "Holy Innocents' Cemetery: Overgrown Crypt",
+    coordinates: [-108, 210.0099945],
+  },
+  {
+    id: "World_Biome_03_Catacombs_Catacombs_SaveRoom02_uid68",
+    area: "afeda68d5a0c4204da3488bbf7f04900",
+    district: "f000481461c3e3f4595c2c900957fcfa",
+    name: "Catacombs of Paris: Quarry Elevator",
+    coordinates: [204, 145.0099945],
+  },
+  {
+    id: "World_Biome_03_Catacombs_Catacombs_SaveRoom03_uid92",
+    area: "afeda68d5a0c4204da3488bbf7f04900",
+    district: "5b046b1c8ac019440bb166b9eebe2ec1",
+    name: "Catacombs of Paris: Realm of Old Night",
+    coordinates: [84, 28.00999832],
+  },
+  {
+    id: "World_Biome_06_MainHall_MainHall_SaveRoom_080_uid268",
+    area: "4f7ce84e4688e534aa656a76e6bd9416",
+    district: "e24ec65451be6f9448bb05d27ebc9cf6",
+    name: "Main Hall: Entrance Corridor",
+    coordinates: [348, 54.01000214],
+  },
+  {
+    id: "World_Biome_06_MainHall_MainHall_SaveRoom_030_uid221",
+    area: "4f7ce84e4688e534aa656a76e6bd9416",
+    district: "0418c634ea0a2094aba9a896961fa123",
+    name: "Main Hall: Boudoirs",
+    coordinates: [420, 28.00999832],
+  },
+  {
+    id: "World_Biome_06_MainHall_MainHall_SaveRoom_010_uid91",
+    area: "4f7ce84e4688e534aa656a76e6bd9416",
+    district: "f3521b2fd5933464eae60a820c3ff94c",
+    name: "Main Hall: Ballrooms",
+    coordinates: [540, 54.01000214],
+  },
+  {
+    id: "World_Biome_06_MainHall_MainHall_SaveRoom_020_uid132",
+    area: "4f7ce84e4688e534aa656a76e6bd9416",
+    district: "ade3047fc119b884bb741f8067ec86b1",
+    name: "Main Hall: Elevator Tower",
+    coordinates: [444, 106.0100021],
+  },
+  {
+    id: "World_Biome_06_MainHall_MainHall_SaveRoom_040_uid223",
+    area: "4f7ce84e4688e534aa656a76e6bd9416",
+    district: "fcd5b1cae013e7b4d8f23588c4824c4c",
+    name: "Main Hall: Waterworks",
+    coordinates: [420, -127.9899979],
+  },
+  {
+    id: "World_Biome_06_MainHall_MainHall_SaveRoom_070_uid264",
+    area: "4f7ce84e4688e534aa656a76e6bd9416",
+    district: "77bafe934c6dbf840ba74b01748731a7",
+    name: "Main Hall: Torture Chambers",
+    coordinates: [540, -127.9899979],
+  },
+  {
+    id: "World_Biome_06_MainHall_MainHall_SaveRoom_060_uid167",
+    area: "4f7ce84e4688e534aa656a76e6bd9416",
+    district: "d7a913f2ccd9e00429bcdf2c5b73fd3c",
+    name: "Main Hall: Servants' Quarters",
+    coordinates: [540, -101.9899979],
+  },
+  {
+    id: "World_Biome_06_MainHall_MainHall_SaveRoom_090_uid269",
+    area: "4f7ce84e4688e534aa656a76e6bd9416",
+    district: "e07ea1f8e98c19244869e6a3df6e510c",
+    name: "Main Hall: Storerooms",
+    coordinates: [348, -101.9899979],
+  },
+  {
+    id: "World_Biome_06_MainHall_MainHall_SaveRoom_050_uid149",
+    area: "4f7ce84e4688e534aa656a76e6bd9416",
+    district: "71be74fb4cb8ccb43aca3adc81afeee2",
+    name: "Main Hall: Archives",
+    coordinates: [444, -49.98999786],
+  },
+  {
+    id: "World_Biome_09_ClockTower_ClockTower02_SaveRoom01_uid52",
+    area: "c912f1bff8fc06740902f1f67666ae86",
+    district: "ab19f742c1c210346ae868d5f41ca92a",
+    name: "Clock Tower: Foundry Apex",
+    coordinates: [348, 158.0099945],
+  },
+  {
+    id: "World_Biome_09_ClockTower_ClockTower02_SaveRoom04_uid83",
+    area: "c912f1bff8fc06740902f1f67666ae86",
+    district: "663268b4e696b6f41b763ccc9ca95840",
+    name: "Clock Tower: Mechanic's Ascent",
+    coordinates: [108, 184.0099945],
+  },
+  {
+    id: "World_Biome_09_ClockTower_ClockTower_MVP_SaveRoom01_uid149",
+    area: "c912f1bff8fc06740902f1f67666ae86",
+    district: "5a61b6d4c732fe14ba3b78e60e82a1af",
+    name: "Clock Tower: Eastern Summit",
+    coordinates: [348, 379.0099792],
+  },
+  {
+    id: "World_Biome_08_Library_Library_SaveRoom_01_uid140",
+    area: "226c20eca175b104e8fe1a8f4fc2c879",
+    district: "70e226ec6a3a6004ca5766b8d63eec93",
+    name: "Library: Rhetoric Shelves",
+    coordinates: [132, 93.01000214],
+  },
+  {
+    id: "World_Biome_08_Library_Library_SaveRoom_02_uid141",
+    area: "226c20eca175b104e8fe1a8f4fc2c879",
+    district: "de51ab05641b5fe4a9de43e464aa9471",
+    name: "Library: Exhibition Room",
+    coordinates: [228, 119.0100021],
+  },
+  {
+    id: "World_Biome_05_NotreDame_NotreDame_MVP_SaveRoom_010_uid140",
+    area: "57cb4e79eb2c4e943821705d39709461",
+    district: "2c4d07c74eaeff84ebb3a1e00233e138",
+    name: "Notre-Dame: Notre-Dame Undercroft",
+    coordinates: [420, -23.99000168],
+  },
+  {
+    id: "World_Biome_05_NotreDame_NotreDame_MVP_SaveRoom_020_uid141",
+    area: "57cb4e79eb2c4e943821705d39709461",
+    district: "ee9c6a0e800b6364990e68502e6d47fc",
+    name: "Notre-Dame: West Triforium",
+    coordinates: [324, 67.01000214],
+  },
+  {
+    id: "World_Biome_05_NotreDame_NotreDame_MVP_SaveRoom_030_uid142",
+    area: "57cb4e79eb2c4e943821705d39709461",
+    district: "aa23ad742c4e1364ab6259039fd1a1c6",
+    name: "Notre-Dame: East Gallery",
+    coordinates: [492, 41.01000214],
+  },
+  {
+    id: "World_Biome_10_HallOfMirrors_HallOfMirrors_MVP_SaveRoom_03_uid132",
+    area: "b76c5d815e88a8442ad46b1c869efd5f",
+    district: "aadb42b4436ff034c8172a7e22e14034",
+    name: "Hall of Mirrors: Nightmare Atrium",
+    coordinates: [252, 184.0099945],
+  },
+  {
+    id: "World_Biome_10_HallOfMirrors_HallOfMirrorsV2_SaveRoom01_uid58",
+    area: "b76c5d815e88a8442ad46b1c869efd5f",
+    district: "e36a2882106aba948ae49e6af757c47e",
+    name: "Hall of Mirrors: Threshold of Vision",
+    coordinates: [156, 197.0099945],
+  },
+  {
+    id: "World_Biome_10_HallOfMirrors_HallOfMirrors_MVP_SaveRoom_02_uid118",
+    area: "b76c5d815e88a8442ad46b1c869efd5f",
+    district: "1be0cebe1c1fca044ac528f59273dd94",
+    name: "Hall of Mirrors: Familiar Way",
+    coordinates: [156, 2.00999999],
+  },
+  {
+    id: "World_Biome_10_HallOfMirrors_HallOfMirrorsV2_SaveRoom04_uid87",
+    area: "b76c5d815e88a8442ad46b1c869efd5f",
+    district: "1b14ba9506ad34f49aa84afb9ea546b1",
+    name: "Hall of Mirrors: The Descent Into Memory",
+    coordinates: [156, 106.01000213623047],
+  },
+  {
+    id: "World_Biome_10_HallOfMirrors_HallOfMirrors_MVP_SaveRoom_04_uid136",
+    area: "b76c5d815e88a8442ad46b1c869efd5f",
+    district: "dafa393f3276c1242b7710eea8c3333a",
+    name: "Hall of Mirrors: Heart of the Maze",
+    coordinates: [156, 67.01000214],
+  },
+  {
+    id: "World_Biome_11_MasterQuarter_MastersQuarters_SaveRoom_uid4",
+    area: "794afe09823b0e04dac2044bf092cff2",
+    district: "9bef70d037436004a95ea3e35d417afc",
+    name: "Master's Quarters: Sanctuary of Solitude",
+    coordinates: [-60, 2.010000228881836],
+  },
+];
+
+export const locations: Resource = {};
+
+export const locationsGroups: ResourceGroups = areaList.map((area) => ({
+  name: area.name,
+  options: [],
+}));
+
+locationList.forEach((location, index) => {
+  const area = areaList.findIndex((area) => area.id === location.area);
+
+  locations[index] = location.name;
+  locationsGroups[area].options.push(index);
+});
+
 // prettier-ignore
 export const moveList = [
   { id: "WhipPendulum", moveId: "71276b8978cebc848aaf094a91bee40e", name: "Arcane Whip" },
@@ -631,18 +898,6 @@ export const skins = skinList.reduce((skins: Resource, skin, index) => {
 
   return skins;
 }, {});
-
-export const warpRoomList = [
-  { id: "afeda68d5a0c4204da3488bbf7f04900", name: "Catacombs of Paris" },
-  { id: "946565bcb5d5f244e991e1790575a67c", name: "Paris Streets" },
-  { id: "e18ccfe651d904147ba60f4c72f9b146", name: "Holy Innoncents' Cemetery" },
-  { id: "57cb4e79eb2c4e943821705d39709461", name: "Notre-Dame" },
-  { id: "4f7ce84e4688e534aa656a76e6bd9416", name: "Main Hall" },
-  { id: "226c20eca175b104e8fe1a8f4fc2c879", name: "Library" },
-  { id: "c912f1bff8fc06740902f1f67666ae86", name: "Clock Tower" },
-  { id: "b76c5d815e88a8442ad46b1c869efd5f", name: "Hall of Mirrors" },
-  { id: "794afe09823b0e04dac2044bf092cff2", name: "Master's Quarters" },
-];
 
 export const weaponTypes = [
   { index: 0x0, name: "Swords" },
