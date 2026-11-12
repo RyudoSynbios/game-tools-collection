@@ -897,6 +897,13 @@ const template: GameJson = {
                               dataType: "uint8",
                               disabled: true,
                             },
+                            {
+                              name: "Whacka Hit Count",
+                              offset: 0x112b,
+                              type: "variable",
+                              dataType: "uint8",
+                              max: 8,
+                            },
                           ],
                         },
                         {

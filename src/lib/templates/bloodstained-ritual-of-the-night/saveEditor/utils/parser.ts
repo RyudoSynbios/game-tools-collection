@@ -17,7 +17,7 @@ export function parseJson(): StructProperty {
     const data = new Uint8Array(json[field] as number[]);
     const dataView = new DataView(data.buffer);
 
-    const parser = new Parser(dataView);
+    const parser = new Parser(gvas.header, dataView);
 
     parser.parse();
 
@@ -68,7 +68,7 @@ export function parseInventoryData(json: StructProperty): Inventory {
     Inventory: [],
   };
 
-  const parser = new Parser(dataView);
+  const parser = new Parser(gvas.header, dataView);
 
   // Skip the first unused fields
   parser.getString();
@@ -131,7 +131,7 @@ export function parseShardPossession(json: StructProperty): Shards {
     m_UpStatus: new Map(),
   };
 
-  const parser = new Parser(dataView);
+  const parser = new Parser(gvas.header, dataView);
 
   // prettier-ignore
   for (let i = 0x0; i < 0x5; i += 0x1) {

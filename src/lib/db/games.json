@@ -631,6 +631,17 @@
     }
   },
   {
+    "id": "final-fantasy-resonance",
+    "name": "Final Fantasy Resonance",
+    "platformIds": ["steam"],
+    "tools": {
+      "saveEditor": {
+        "createdAt": "2026-10-21",
+        "regions": ["🏳️"]
+      }
+    }
+  },
+  {
     "id": "final-fantasy-tactics",
     "name": "Final Fantasy Tactics",
     "platformIds": ["playstation"],
@@ -1457,6 +1468,18 @@
       "saveEditor": {
         "createdAt": "2026-06-03",
         "regions": ["🇪🇺", "🇺🇸", "🇯🇵", "🇰🇷"]
+      }
+    }
+  },
+  {
+    "id": "stranded-kids",
+    "name": "Stranded Kids",
+    "metaName": "Stranded Kids (Survival Kids)",
+    "platformIds": ["game-boy-color"],
+    "tools": {
+      "saveEditor": {
+        "createdAt": "2026-11-09",
+        "regions": ["🇪🇺", "🇺🇸", "🇯🇵"]
       }
     }
   },
