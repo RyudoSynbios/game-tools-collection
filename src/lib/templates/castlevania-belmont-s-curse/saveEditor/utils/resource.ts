@@ -15,7 +15,10 @@ export const arcanaList = [
         id: "1c26d19acd6d910448748388f5f044be",
         name: "Hit 20 time with this spell.",
       },
-      { id: "a96860c17952b15458739e186029b33f", name: "???" },
+      {
+        id: "a96860c17952b15458739e186029b33f",
+        name: "???",
+      },
     ],
   },
   {
@@ -429,7 +432,10 @@ export const arcanaList = [
       },
     ],
     tasks: [
-      { id: "42cc4d2bdabd3084fb9302ed6c2dec2b", name: "Use 34 Save Rooms." },
+      {
+        id: "42cc4d2bdabd3084fb9302ed6c2dec2b",
+        name: "Use 34 Save Rooms.",
+      },
       {
         id: "6f98fa9fff5b67e468d918fd31ee1c50",
         name: "Heal 1000 of health with this spell.",
