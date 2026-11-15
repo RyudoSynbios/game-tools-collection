@@ -282,7 +282,7 @@ export function overrideSetInt(
   return false;
 }
 
-export function afterSetInt(item: Item): void {
+export function afterSetInt(item: Item, flag: ItemBitflag): void {
   if ("id" in item && item.id?.match(/savePreview-/)) {
     const itemInt = item as ItemInt;
 
@@ -303,6 +303,24 @@ export function afterSetInt(item: Item): void {
     });
 
     setInt(itemBitflags.flags[0].offset + 0x185, "uint8", count);
+  } else if ("id" in item && item.id === "tattleLog") {
+    const itemBitflags = item as ItemBitflags;
+
+    const checked = getInt(flag.offset, "bit", { bit: flag.bit });
+
+    const index = itemBitflags.flags.findIndex(
+      (item) => item.offset === flag.offset && item.bit === flag.bit,
+    );
+
+    for (let i = 1; i < 9; i += 1) {
+      const flag = itemBitflags.flags[index + i];
+
+      if (!flag || !flag.label.match(/->/)) {
+        break;
+      }
+
+      setInt(flag.offset, "bit", checked, { bit: flag.bit });
+    }
   } else if ("id" in item && item.id === "quizzes") {
     const itemInt = item as ItemInt;
 
