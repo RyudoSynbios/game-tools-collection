@@ -1610,6 +1610,13 @@ const template: GameJson = {
                               max: 300,
                               step: 100,
                             },
+                            {
+                              name: "Whacka Hit Count",
+                              offset: 0x12891,
+                              type: "variable",
+                              dataType: "uint8",
+                              max: 8,
+                            },
                           ],
                         },
                       ],
