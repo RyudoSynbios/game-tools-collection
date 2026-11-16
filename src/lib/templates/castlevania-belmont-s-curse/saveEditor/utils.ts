@@ -52,11 +52,11 @@ export function overrideGetInt(
   if ("id" in item && item.id === "location") {
     const saveRoomId = getJsonString("playerSave.lastUsedSaveRoomId");
 
-    const locationIndex = locationList.findIndex(
+    const index = locationList.findIndex(
       (location) => location.id === saveRoomId,
     );
 
-    return [true, locationIndex];
+    return [true, index];
   } else if ("id" in item && item.id?.match(/locations-/)) {
     const itemBitflags = item as ItemBitflags;
 

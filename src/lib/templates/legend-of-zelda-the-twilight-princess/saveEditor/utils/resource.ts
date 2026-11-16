@@ -39,7 +39,7 @@ export const letterList = [
   { index: 0x0e, flagIndex: 0x5, order:  6, name: "Now open for business!" },
   { index: 0x0f, flagIndex: 0x6, order: 13, name: "Update" },
   { index: 0x10, flagIndex: 0x7, order: 11, name: "From Wife of Yeto" },
-];
+].sort((a, b) => a.order - b.order);
 
 export const letters = letterList.reduce((letters: Resource, letter, index) => {
   letters[0x1 + index] = letter.name;

@@ -355,18 +355,18 @@ export function overrideSetInt(item: Item, value: string): boolean {
   if ("id" in item && item.id === "location") {
     const itemInt = item as ItemInt;
 
-    const int = parseInt(value);
+    const index = parseInt(value);
 
     let locationType = 0x1;
 
-    if (int === 0x1) {
+    if (index === 0x1) {
       locationType = 0x3;
     }
 
     setInt(itemInt.offset - 0x2, "uint16", locationType);
-    setInt(itemInt.offset, "uint16", int);
+    setInt(itemInt.offset, "uint16", index);
 
-    const location = locationList[int];
+    const location = locationList.find((location) => location.index === index);
 
     if (location) {
       if (locationType === 0x1) {

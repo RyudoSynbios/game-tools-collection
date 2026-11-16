@@ -529,11 +529,9 @@ const template: GameJson = {
                       type: "tabs",
                       vertical: true,
                       items: cardCollections.map((collection) => {
-                        const cards = cardList
-                          .filter(
-                            (card) => card.collection === collection.index,
-                          )
-                          .sort((a, b) => a.order - b.order);
+                        const cards = cardList.filter(
+                          (card) => card.collection === collection.index,
+                        );
 
                         return {
                           name: collection.name,

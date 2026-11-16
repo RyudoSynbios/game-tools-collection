@@ -92,9 +92,9 @@ export function overrideItem(item: Item): Item {
       offset -= 0xd;
     }
 
-    const locationIndex = getInt(offset, "uint16");
+    const index = getInt(offset, "uint16");
 
-    const location = locationItems[locationIndex];
+    const location = locationItems[index];
 
     if (location) {
       let hasItems = false;

@@ -201,7 +201,7 @@ export function overrideItem(item: Item): Item {
 
     const [index] = item.id.splitInt();
 
-    const slotsItem = getClosestItem("slots", item) as ItemInt;
+    const slotsItem = getClosestItem("limitSlots", item) as ItemInt;
 
     const int = getInt(slotsItem.offset, "uint8");
 
@@ -219,11 +219,9 @@ export function overrideGetInt(
   if ("id" in item && item.id === "location") {
     const itemInt = item as ItemInt;
 
-    const locationIndex = getInt(itemInt.offset, "uint16");
+    const index = getInt(itemInt.offset, "uint16");
 
-    const location = locationList.find(
-      (location) => location.index === locationIndex,
-    );
+    const location = locationList.find((location) => location.index === index);
 
     if (!location) {
       return [true, 0xfff];
@@ -364,11 +362,9 @@ export function afterSetInt(item: Item): void {
   } else if ("id" in item && item.id === "location") {
     const itemInt = item as ItemInt;
 
-    const locationIndex = getInt(itemInt.offset, "uint16");
+    const index = getInt(itemInt.offset, "uint16");
 
-    const location = locationList.find(
-      (location) => location.index === locationIndex,
-    );
+    const location = locationList.find((location) => location.index === index);
 
     if (location) {
       setInt(itemInt.offset - 0x2, "uint8", location.spawn);

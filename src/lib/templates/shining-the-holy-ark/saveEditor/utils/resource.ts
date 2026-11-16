@@ -1,22 +1,22 @@
 import type { Resource, ResourceGroups } from "$lib/types";
 
 const itemTypes = [
-  { index: 0x0, name: "Katanas" },
-  { index: 0x1, name: "Swords" },
-  { index: 0x2, name: "Daggers" },
-  { index: 0x3, name: "Axes" },
-  { index: 0x4, name: "Rods" },
-  { index: 0x5, name: "Claws" },
-  { index: 0x6, name: "Armor" },
-  { index: 0x7, name: "Robes" },
-  { index: 0x8, name: "Garments" },
-  { index: 0x9, name: "Plates" },
-  { index: 0xa, name: "Gauntlets" },
-  { index: 0xb, name: "Shields" },
-  { index: 0xc, name: "Ninja Greaves" },
-  { index: 0xd, name: "Circlets" },
-  { index: 0xe, name: "Helmets" },
-  { index: 0xf, name: "Accessories" },
+  { index: 0x00, name: "Katanas" },
+  { index: 0x01, name: "Swords" },
+  { index: 0x02, name: "Daggers" },
+  { index: 0x03, name: "Axes" },
+  { index: 0x04, name: "Rods" },
+  { index: 0x05, name: "Claws" },
+  { index: 0x06, name: "Armor" },
+  { index: 0x07, name: "Robes" },
+  { index: 0x08, name: "Garments" },
+  { index: 0x09, name: "Plates" },
+  { index: 0x0a, name: "Gauntlets" },
+  { index: 0x0b, name: "Shields" },
+  { index: 0x0c, name: "Ninja Greaves" },
+  { index: 0x0d, name: "Circlets" },
+  { index: 0x0e, name: "Helmets" },
+  { index: 0x0f, name: "Accessories" },
   { index: 0x10, name: "Items" },
   { index: 0x11, name: "Key Items" },
   { index: 0x12, name: "Miscellaneous" },
@@ -247,28 +247,18 @@ itemList.forEach((item) => {
 });
 
 // prettier-ignore
-export const locationList: {
-  [key: number]: {
-    unknowns: number[];
-    order: number;
-    name: string;
-  };
-} = {
-  0x067: { unknowns: [0x00ae, 0x0000, 0x0000, 0x0000], order: 3, name: "Far East Village" },
-  0x074: { unknowns: [0x00ae, 0x0000, 0x0000, 0x0050], order: 1, name: "Town of Enrich" },
-  0x08a: { unknowns: [0x00ae, 0x0000, 0x0000, 0x0050], order: 0, name: "Desire Village" },
-  0x091: { unknowns: [0x00ae, 0x0000, 0x0000, 0x0050], order: 4, name: "Mirage Village" },
-  0x216: { unknowns: [0x0004, 0xfe98, 0xff74, 0x03e8], order: 2, name: "Dungeon Well" },
-};
+export const locationList = [
+  { index: 0x067, unknowns: [0x00ae, 0x0000, 0x0000, 0x0000], order: 3, name: "Far East Village" },
+  { index: 0x074, unknowns: [0x00ae, 0x0000, 0x0000, 0x0050], order: 1, name: "Town of Enrich" },
+  { index: 0x08a, unknowns: [0x00ae, 0x0000, 0x0000, 0x0050], order: 0, name: "Desire Village" },
+  { index: 0x091, unknowns: [0x00ae, 0x0000, 0x0000, 0x0050], order: 4, name: "Mirage Village" },
+  { index: 0x216, unknowns: [0x0004, 0xfe98, 0xff74, 0x03e8], order: 2, name: "Dungeon Well" },
+].sort((a, b) => a.order - b.order);
 
 export const locations: Resource = {};
 export const locationsOrder: number[] = [];
 
-Object.entries(locationList)
-  .sort(([, a], [, b]) => a.order - b.order)
-  .forEach(([key, location]) => {
-    const index = parseInt(key);
-
-    locations[index] = location.name;
-    locationsOrder.push(index);
-  });
+locationList.forEach((location) => {
+  locations[location.index] = location.name;
+  locationsOrder.push(location.index);
+});

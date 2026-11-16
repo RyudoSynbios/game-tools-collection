@@ -250,7 +250,7 @@ export const cardList = [
   { index: 0xe2, type: 0x7, collection: 0x1, order: 105, prefix: "B50", name: "Pokémon Flute" },
   { index: 0xe3, type: 0x7, collection: 0x3, order: 206, prefix: "D50", name: "Gambler" },
   { index: 0xe4, type: 0x7, collection: 0x3, order: 207, prefix: "D51", name: "Recycle" },
-];
+].sort((a, b) => a.order - b.order);
 
 export const cards = cardList.reduce((cards: Resource, card) => {
   cards[card.index] = card.name;

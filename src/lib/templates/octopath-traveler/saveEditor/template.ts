@@ -7,7 +7,7 @@ import {
   bows,
   daggers,
   headgears,
-  inventory,
+  itemList,
   itemTypes,
   jobs,
   jobSkills,
@@ -761,7 +761,7 @@ const template: GameJson = {
               items: itemTypes.map((type) => ({
                 name: type.name,
                 flex: true,
-                items: inventory
+                items: itemList
                   .filter((item) => item.type === type.index)
                   .map((item) => ({
                     id: `inventory-${item.index}`,

@@ -204,19 +204,15 @@ export function overrideSetInt(
 
     const index = parseInt(value);
 
-    const location = locationList[index];
+    const location = locationList.find((location) => location.index === index);
 
-    setInt(itemInt.offset, "uint32", index, { bigEndian: true });
-
-    setInt(itemInt.offset + 0xe7e, "int16", location.coordinates[0], {
-      bigEndian: true,
-    });
-    setInt(itemInt.offset + 0xe80, "int16", location.coordinates[1], {
-      bigEndian: true,
-    });
-    setInt(itemInt.offset + 0xe82, "int16", location.coordinates[2], {
-      bigEndian: true,
-    });
+    // prettier-ignore
+    if (location) {
+      setInt(itemInt.offset, "uint32", index, { bigEndian: true });
+      setInt(itemInt.offset + 0xe7e, "int16", location.coordinates[0], { bigEndian: true });
+      setInt(itemInt.offset + 0xe80, "int16", location.coordinates[1], { bigEndian: true });
+      setInt(itemInt.offset + 0xe82, "int16", location.coordinates[2], { bigEndian: true });
+    }
 
     return true;
   } else if ("id" in item && item.id === "spirits") {

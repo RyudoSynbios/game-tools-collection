@@ -979,7 +979,7 @@ function updateLocation(offset: number, value = 0x0): void {
 
   setInt(offset - 0x2, "uint16", locationType);
 
-  const location = locationList[value];
+  const location = locationList.find((location) => location.index === value);
 
   if (location) {
     let preview = location.preview;

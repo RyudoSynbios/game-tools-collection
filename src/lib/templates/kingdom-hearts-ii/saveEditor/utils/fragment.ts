@@ -335,13 +335,13 @@ export function worldLandingPointsFragment(index: number): ItemBitflag[] {
         { offset: 0x10b4, bit: 2, label: "Cave of the Dead" },
         { offset: 0x10b4, bit: 3, label: "The Lock" },
         { offset: 0x10b3, bit: 7, label: "Coliseum Gates" },
-        // { offset: 0x10B4, bit: 1, label: "Coliseum Foyer (disabled)" },
+        // { offset: 0x10b4, bit: 1, label: "Coliseum Foyer (disabled)" },
       ];
 
     case 0x7: // Agrabah
       return [
         { offset: 0x10b0, bit: 6, label: "The Peddler's Shop" },
-        // { offset: 0x10B0, bit: 0, label: "The Peddler's Shop (disabled)" },
+        // { offset: 0x10b0, bit: 0, label: "The Peddler's Shop (disabled)" },
         { offset: 0x10b0, bit: 1, label: "Palace Walls" },
         { offset: 0x10b0, bit: 3, label: "Stone Guardians" },
         { offset: 0x10b0, bit: 5, label: "Chasm of Challenges" },
@@ -352,7 +352,7 @@ export function worldLandingPointsFragment(index: number): ItemBitflag[] {
       return [
         { offset: 0x10b5, bit: 0, label: "Bamboo Grove" },
         { offset: 0x10b5, bit: 1, label: "Village" },
-        // { offset: 0x10B5, bit: 3, label: "Village (disabled)" },
+        // { offset: 0x10b5, bit: 3, label: "Village (disabled)" },
         { offset: 0x10b5, bit: 2, label: "Throne Room" },
       ];
 
@@ -373,7 +373,7 @@ export function worldLandingPointsFragment(index: number): ItemBitflag[] {
         { offset: 0x10b2, bit: 4, label: "Gummi Hangar" },
         { offset: 0x10b2, bit: 1, label: "Library" },
         { offset: 0x10b2, bit: 3, label: "Hall of the Cornerstone" },
-        // { offset: 0x10B2, bit: 2, label: "The Hall of the Cornerstone (disabled)" },
+        // { offset: 0x10b2, bit: 2, label: "The Hall of the Cornerstone (disabled)" },
       ];
 
     case 0xe: // Halloween Town
@@ -387,10 +387,10 @@ export function worldLandingPointsFragment(index: number): ItemBitflag[] {
       return [
         { offset: 0x10b1, bit: 3, label: "Rampart" },
         { offset: 0x10b1, bit: 5, label: "The Black Pearl" },
-        // { offset: 0x10B1, bit: 6, label: "Isla de Muerta: Rock Face (disabled)" },
-        // { offset: 0x10B2, bit: 0, label: "Isla de Muerta: Rock Face (disabled)" },
+        // { offset: 0x10b1, bit: 6, label: "Isla de Muerta: Rock Face (disabled)" },
+        // { offset: 0x10b2, bit: 0, label: "Isla de Muerta: Rock Face (disabled)" },
         { offset: 0x10b1, bit: 4, label: "The Interceptor" },
-        // { offset: 0x10B1, bit: 7, label: "Ship Graveyard: The Interceptor's Hold (disabled)" },
+        // { offset: 0x10b1, bit: 7, label: "Ship Graveyard: The Interceptor's Hold (disabled)" },
       ];
 
     case 0x12: // The World That Never Was

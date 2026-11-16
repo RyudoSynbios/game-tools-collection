@@ -1869,7 +1869,6 @@ const template: GameJson = {
                               name: "Received",
                               type: "bitflags",
                               flags: letterList
-                                .sort((a, b) => a.order - b.order)
                                 .map((letter) => ({
                                   offset:
                                     0x4166 + bitToOffset(letter.flagIndex),
@@ -1881,7 +1880,6 @@ const template: GameJson = {
                               name: "Read",
                               type: "bitflags",
                               flags: letterList
-                                .sort((a, b) => a.order - b.order)
                                 .map((letter) => ({
                                   offset:
                                     0x416e + bitToOffset(letter.flagIndex),

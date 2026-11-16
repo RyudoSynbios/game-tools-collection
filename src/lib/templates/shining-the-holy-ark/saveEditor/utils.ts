@@ -217,14 +217,16 @@ export function afterSetInt(item: Item): void {
   if ("id" in item && item.id === "location") {
     const itemInt = item as ItemInt;
 
-    const int = getInt(itemInt.offset, "uint16", { bigEndian: true });
+    const index = getInt(itemInt.offset, "uint16", { bigEndian: true });
 
-    const location = locationList[int];
+    const location = locationList.find((location) => location.index === index);
 
-    setInt(itemInt.offset - 0x4f8, "uint8", location.unknowns[0]);
-    setInt(itemInt.offset + 0x4, "uint16", location.unknowns[1], { bigEndian: true });
-    setInt(itemInt.offset + 0x8, "uint16", location.unknowns[2], { bigEndian: true });
-    setInt(itemInt.offset + 0xc, "uint16", location.unknowns[3], { bigEndian: true });
+    if (location) {
+      setInt(itemInt.offset - 0x4f8, "uint8", location.unknowns[0]);
+      setInt(itemInt.offset + 0x4, "uint16", location.unknowns[1], { bigEndian: true });
+      setInt(itemInt.offset + 0x8, "uint16", location.unknowns[2], { bigEndian: true });
+      setInt(itemInt.offset + 0xc, "uint16", location.unknowns[3], { bigEndian: true });
+    }
   }
 }
 

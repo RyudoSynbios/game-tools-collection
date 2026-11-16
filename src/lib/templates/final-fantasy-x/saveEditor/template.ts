@@ -52,6 +52,12 @@ const template: GameJson = {
             0x30, 0x46, 0x46, 0x30, 0x34, 0x32, 0x38,
           ], // "BISLPS-25050FF0428"
         },
+        japanInternational: {
+          0x0: [
+            0x42, 0x49, 0x53, 0x4c, 0x50, 0x53, 0x2d, 0x32, 0x35, 0x30, 0x38,
+            0x38, 0x46, 0x46, 0x30, 0x39, 0x30, 0x36,
+          ], // "BISLPS-25088FF0906"
+        },
         france: {
           0x0: [
             0x42, 0x45, 0x53, 0x43, 0x45, 0x53, 0x2d, 0x35, 0x30, 0x34, 0x39,
@@ -75,12 +81,6 @@ const template: GameJson = {
             0x42, 0x45, 0x53, 0x43, 0x45, 0x53, 0x2d, 0x35, 0x30, 0x34, 0x39,
             0x34, 0x46, 0x46, 0x30, 0x39, 0x30, 0x36,
           ], // "BESCES-50494FF0906"
-        },
-        japanInternational: {
-          0x0: [
-            0x42, 0x49, 0x53, 0x4c, 0x50, 0x53, 0x2d, 0x32, 0x35, 0x30, 0x38,
-            0x38, 0x46, 0x46, 0x30, 0x39, 0x30, 0x36,
-          ], // "BISLPS-25088FF0906"
         },
         asiaInternational: {
           0x0: [
@@ -701,7 +701,7 @@ const template: GameJson = {
                               ],
                             },
                             {
-                              id: "slots",
+                              id: "limitSlots",
                               name: "Slots",
                               offset: 0x44e7,
                               type: "variable",
@@ -1008,7 +1008,7 @@ const template: GameJson = {
                                   name: "Equipped Techniques",
                                   items: [
                                     {
-                                      id: "slots",
+                                      id: "limitSlots",
                                       name: "Slots",
                                       offset: 0x15be,
                                       type: "variable",
@@ -1058,7 +1058,7 @@ const template: GameJson = {
                           vertical: true,
                           items: [
                             {
-                              id: "slots",
+                              id: "limitSlots",
                               name: "Slots",
                               offset: 0xcb4,
                               type: "variable",
@@ -1243,7 +1243,6 @@ const template: GameJson = {
                                         (monster) =>
                                           monster.region === region.index,
                                       )
-                                      .sort((a, b) => a.order - b.order)
                                       .map((monster) => ({
                                         name: monster.name,
                                         offset: 0x424c + monster.index,

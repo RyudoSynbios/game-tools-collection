@@ -1155,7 +1155,7 @@ shardList.forEach((item, index) => {
   }
 });
 
-export const areas = [
+export const areaList = [
   { index: 0x00, areaId: "ACT01_SIP", name: "Galleon Minerva" },
   { index: 0x01, areaId: "ACT02_VIL", name: "Arvantville" },
   { index: 0x02, areaId: "ACT03_ENT", name: "Entrance" },
@@ -1210,11 +1210,10 @@ export const locationList = [
 ];
 
 export const locations: Resource = {};
-export const locationsGroups: ResourceGroups = [];
-
-areas.forEach((area) => {
-  locationsGroups.push({ name: area.name, options: [] });
-});
+export const locationsGroups: ResourceGroups = areaList.map((area) => ({
+  name: area.name,
+  options: [],
+}));
 
 locationList.forEach((location, index) => {
   locations[index] = location.name;

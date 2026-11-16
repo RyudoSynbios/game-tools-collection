@@ -7,7 +7,7 @@ export const itemTypes = [
   { index: 0x3, name: "Badges" },
 ];
 
-export const inventory = [
+export const itemList = [
   // { index: 0x001, type: 0x0, name: "Jump" },
   // { index: 0x002, type: 0x0, name: "Spin Jump" },
   // { index: 0x003, type: 0x0, name: "Tornado Jump" },
@@ -348,7 +348,12 @@ export const inventory = [
   { index: 0x152, type: 0x3, name: "Attack FX F (unused)" },
   { index: 0x153, type: 0x3, name: "Attack FX F (unused)" },
   { index: 0x154, type: 0x3, name: "Attack FX F (unused)" },
-];
+].sort((a, b) => {
+  const aIsUnused = a.name.match(/unused/) ? 1 : 0;
+  const bIsUnused = b.name.match(/unused/) ? 1 : 0;
+
+  return aIsUnused - bIsUnused;
+});
 
 export const badges: { index: number; name: string }[] = [];
 
@@ -365,27 +370,20 @@ export const itemsGroups: ResourceGroups = itemTypes
     options: [],
   }));
 
-inventory
-  .sort((a, b) => {
-    const aIsUnused = a.name.match(/Unused/) ? 1 : 0;
-    const bIsUnused = b.name.match(/Unused/) ? 1 : 0;
+itemList.forEach((item) => {
+  if (item.type === 0x0) {
+    keyItems[item.index] = item.name;
+    keyItemsOrder.push(item.index);
+  } else if (item.type === 0x3) {
+    badges.push({ index: item.index, name: item.name });
+  } else {
+    items[item.index] = item.name;
+    itemsGroups[item.type - 0x1].options.push(item.index);
+    itemsOrder.push(item.index);
+  }
+});
 
-    return aIsUnused - bIsUnused;
-  })
-  .forEach((item) => {
-    if (item.type === 0x0) {
-      keyItems[item.index] = item.name;
-      keyItemsOrder.push(item.index);
-    } else if (item.type === 0x3) {
-      badges.push({ index: item.index, name: item.name });
-    } else {
-      items[item.index] = item.name;
-      itemsGroups[item.type - 0x1].options.push(item.index);
-      itemsOrder.push(item.index);
-    }
-  });
-
-export const areas = [
+export const areaList = [
   { index: 0x0, name: "Goomba Village" },
   { index: 0x1, name: "Goomba Road" },
   { index: 0x2, name: "Toad Town" },
@@ -416,76 +414,64 @@ export const areas = [
 ];
 
 // prettier-ignore
-export const locationList: {
-  [key: number]: {
-    area: number;
-    coordinates: number[];
-    order: number;
-    name: string;
-  };
-} = {
-  0x000001: { area: 0x00, coordinates: [  248,    0,   80], order:  0, name: "Goomba Village (Village)" },
-  0x000003: { area: 0x00, coordinates: [    0,    0,    0], order:  1, name: "Goomba Village (Forest)" },
-  0x000006: { area: 0x01, coordinates: [  510,    0,  120], order:  2, name: "Goomba Road" },
-  0x010002: { area: 0x02, coordinates: [  280,   20, -128], order:  3, name: "Toad Town (Entrance)" },
-  0x010006: { area: 0x02, coordinates: [ -146,    0, -368], order:  4, name: "Toad Town (Port)" },
-  0x020005: { area: 0x03, coordinates: [  125,  -10,  -72], order:  8, name: "Toad Town Tunnels" },
-  0x060000: { area: 0x04, coordinates: [  428,    0,  126], order:  5, name: "Koopa Village" },
-  0x070000: { area: 0x05, coordinates: [ -918,    0,   80], order:  6, name: "Koopa Bros. Fortress (Entrance)" },
-  0x070009: { area: 0x05, coordinates: [ 1490,  -75,  140], order:  7, name: "Koopa Bros. Fortress (near Koopa Bros.)" },
-  0x080005: { area: 0x06, coordinates: [ -522,   20,  116], order:  9, name: "Mt. Rugged (Train Station)" },
-  0x080001: { area: 0x06, coordinates: [ -650,   63,  376], order: 10, name: "Mt. Rugged (Ascent)" },
-  0x0a0031: { area: 0x07, coordinates: [  146,    0, -370], order: 11, name: "Dry Dry Desert" },
-  0x090000: { area: 0x08, coordinates: [ -204,    0,  -46], order: 12, name: "Dry Dry Outpost" },
-  0x0b0000: { area: 0x09, coordinates: [ -530,    0,   42], order: 13, name: "Dry Dry Ruins (Entrance)" },
-  0x0b0010: { area: 0x09, coordinates: [  564, -910,   98], order: 14, name: "Dry Dry Ruins (near Tutankoopa)" },
-  0x0c0009: { area: 0x0a, coordinates: [ -178,    0,  -46], order: 15, name: "Forever Forest" },
-  0x0c000a: { area: 0x0b, coordinates: [  220,    0,  -76], order: 16, name: "Boo's Mansion" },
-  0x0e0001: { area: 0x0c, coordinates: [  250,  176,  128], order: 17, name: "Gusty Gulch" },
-  0x0f0000: { area: 0x0d, coordinates: [  -62,    0, -240], order: 18, name: "Tubba Blubba's Castle (Entrance)" },
-  0x0f0011: { area: 0x0d, coordinates: [ -300,    0,   82], order: 19, name: "Tubba Blubba's Castle (near Tubba Blubba)" },
-  0x100002: { area: 0x0e, coordinates: [ -250,    0,   52], order: 20, name: "Shy Guy's Toy Box (Blue Station)" },
-  0x100005: { area: 0x0e, coordinates: [ -200,    0,  300], order: 21, name: "Shy Guy's Toy Box (Pink Station)" },
-  0x100007: { area: 0x0e, coordinates: [ -350,    0,   50], order: 22, name: "Shy Guy's Toy Box (Green Station)" },
-  0x100009: { area: 0x0e, coordinates: [  150,    0,   60], order: 23, name: "Shy Guy's Toy Box (Red Station)" },
-  0x110003: { area: 0x0f, coordinates: [  100,    0,  -20], order: 24, name: "Yoshi's Village" },
-  0x110011: { area: 0x10, coordinates: [    0,    0,    0], order: 25, name: "Jade Jungle" },
-  0x120002: { area: 0x11, coordinates: [  365,  470,  140], order: 26, name: "Mt. Lavalava (Entrance)" },
-  0x12000c: { area: 0x11, coordinates: [ -420,   25,  -76], order: 27, name: "Mt. Lavalava (near Lava Piranha)" },
-  0x130000: { area: 0x12, coordinates: [  108,    0, -100], order: 28, name: "Flower Fields" },
-  0x140001: { area: 0x13, coordinates: [  160,    0,  200], order: 29, name: "Shiver City" },
-  0x140005: { area: 0x14, coordinates: [ -250,   60,  140], order: 30, name: "Starborn Valley" },
-  0x140006: { area: 0x15, coordinates: [-1350, -120, -120], order: 31, name: "Shiver Mountain (Entrance)" },
-  0x140009: { area: 0x15, coordinates: [ -250,  810, -210], order: 32, name: "Shiver Mountain (near Crystal Palace)" },
-  0x150002: { area: 0x16, coordinates: [ -200,    0,  200], order: 33, name: "Crystal Palace (Entrance)" },
-  0x15001f: { area: 0x16, coordinates: [  166,    0,  -42], order: 34, name: "Crystal Palace (near Crystal King)" },
-  0x050003: { area: 0x17, coordinates: [  200,    0,  280], order: 35, name: "Star Haven" },
-  0x160018: { area: 0x18, coordinates: [  120,    0,   90], order: 36, name: "Bowser's Castle (Entrance)" },
-  0x160006: { area: 0x18, coordinates: [ 1400,   30, -880], order: 37, name: "Bowser's Castle (Part 1)" },
-  0x16000d: { area: 0x18, coordinates: [    0,  -50,    0], order: 38, name: "Bowser's Castle (Part 2)" },
-  0x160027: { area: 0x18, coordinates: [  380,   53,  198], order: 39, name: "Bowser's Castle (Part 3)" },
-  0x16000e: { area: 0x18, coordinates: [    0,  -50,    0], order: 40, name: "Bowser's Castle (Part 4)" },
-  0x170002: { area: 0x19, coordinates: [ -100,    0,  -40], order: 41, name: "Princess Peach's Castle (Entrance)" },
-  0x040012: { area: 0x19, coordinates: [  -25,    0,  -50], order: 42, name: "Princess Peach's Castle (near Bowser)" },
-  0x00000b: { area: 0x1a, coordinates: [    0,    0,    0], order: 43, name: "First Play" },
-  0x170003: { area: 0x1a, coordinates: [    0,    0,    0], order: 44, name: "Event" },
-  0x1b0000: { area: 0x1a, coordinates: [    0,    0,    0], order: 45, name: "Debug Room" },
-};
+export const locationList = [
+  { index: 0x000001, area: 0x00, coordinates: [  248,    0,   80], order:  0, name: "Goomba Village (Village)" },
+  { index: 0x000003, area: 0x00, coordinates: [    0,    0,    0], order:  1, name: "Goomba Village (Forest)" },
+  { index: 0x000006, area: 0x01, coordinates: [  510,    0,  120], order:  2, name: "Goomba Road" },
+  { index: 0x010002, area: 0x02, coordinates: [  280,   20, -128], order:  3, name: "Toad Town (Entrance)" },
+  { index: 0x010006, area: 0x02, coordinates: [ -146,    0, -368], order:  4, name: "Toad Town (Port)" },
+  { index: 0x020005, area: 0x03, coordinates: [  125,  -10,  -72], order:  8, name: "Toad Town Tunnels" },
+  { index: 0x060000, area: 0x04, coordinates: [  428,    0,  126], order:  5, name: "Koopa Village" },
+  { index: 0x070000, area: 0x05, coordinates: [ -918,    0,   80], order:  6, name: "Koopa Bros. Fortress (Entrance)" },
+  { index: 0x070009, area: 0x05, coordinates: [ 1490,  -75,  140], order:  7, name: "Koopa Bros. Fortress (near Koopa Bros.)" },
+  { index: 0x080005, area: 0x06, coordinates: [ -522,   20,  116], order:  9, name: "Mt. Rugged (Train Station)" },
+  { index: 0x080001, area: 0x06, coordinates: [ -650,   63,  376], order: 10, name: "Mt. Rugged (Ascent)" },
+  { index: 0x0a0031, area: 0x07, coordinates: [  146,    0, -370], order: 11, name: "Dry Dry Desert" },
+  { index: 0x090000, area: 0x08, coordinates: [ -204,    0,  -46], order: 12, name: "Dry Dry Outpost" },
+  { index: 0x0b0000, area: 0x09, coordinates: [ -530,    0,   42], order: 13, name: "Dry Dry Ruins (Entrance)" },
+  { index: 0x0b0010, area: 0x09, coordinates: [  564, -910,   98], order: 14, name: "Dry Dry Ruins (near Tutankoopa)" },
+  { index: 0x0c0009, area: 0x0a, coordinates: [ -178,    0,  -46], order: 15, name: "Forever Forest" },
+  { index: 0x0c000a, area: 0x0b, coordinates: [  220,    0,  -76], order: 16, name: "Boo's Mansion" },
+  { index: 0x0e0001, area: 0x0c, coordinates: [  250,  176,  128], order: 17, name: "Gusty Gulch" },
+  { index: 0x0f0000, area: 0x0d, coordinates: [  -62,    0, -240], order: 18, name: "Tubba Blubba's Castle (Entrance)" },
+  { index: 0x0f0011, area: 0x0d, coordinates: [ -300,    0,   82], order: 19, name: "Tubba Blubba's Castle (near Tubba Blubba)" },
+  { index: 0x100002, area: 0x0e, coordinates: [ -250,    0,   52], order: 20, name: "Shy Guy's Toy Box (Blue Station)" },
+  { index: 0x100005, area: 0x0e, coordinates: [ -200,    0,  300], order: 21, name: "Shy Guy's Toy Box (Pink Station)" },
+  { index: 0x100007, area: 0x0e, coordinates: [ -350,    0,   50], order: 22, name: "Shy Guy's Toy Box (Green Station)" },
+  { index: 0x100009, area: 0x0e, coordinates: [  150,    0,   60], order: 23, name: "Shy Guy's Toy Box (Red Station)" },
+  { index: 0x110003, area: 0x0f, coordinates: [  100,    0,  -20], order: 24, name: "Yoshi's Village" },
+  { index: 0x110011, area: 0x10, coordinates: [    0,    0,    0], order: 25, name: "Jade Jungle" },
+  { index: 0x120002, area: 0x11, coordinates: [  365,  470,  140], order: 26, name: "Mt. Lavalava (Entrance)" },
+  { index: 0x12000c, area: 0x11, coordinates: [ -420,   25,  -76], order: 27, name: "Mt. Lavalava (near Lava Piranha)" },
+  { index: 0x130000, area: 0x12, coordinates: [  108,    0, -100], order: 28, name: "Flower Fields" },
+  { index: 0x140001, area: 0x13, coordinates: [  160,    0,  200], order: 29, name: "Shiver City" },
+  { index: 0x140005, area: 0x14, coordinates: [ -250,   60,  140], order: 30, name: "Starborn Valley" },
+  { index: 0x140006, area: 0x15, coordinates: [-1350, -120, -120], order: 31, name: "Shiver Mountain (Entrance)" },
+  { index: 0x140009, area: 0x15, coordinates: [ -250,  810, -210], order: 32, name: "Shiver Mountain (near Crystal Palace)" },
+  { index: 0x150002, area: 0x16, coordinates: [ -200,    0,  200], order: 33, name: "Crystal Palace (Entrance)" },
+  { index: 0x15001f, area: 0x16, coordinates: [  166,    0,  -42], order: 34, name: "Crystal Palace (near Crystal King)" },
+  { index: 0x050003, area: 0x17, coordinates: [  200,    0,  280], order: 35, name: "Star Haven" },
+  { index: 0x160018, area: 0x18, coordinates: [  120,    0,   90], order: 36, name: "Bowser's Castle (Entrance)" },
+  { index: 0x160006, area: 0x18, coordinates: [ 1400,   30, -880], order: 37, name: "Bowser's Castle (Part 1)" },
+  { index: 0x16000d, area: 0x18, coordinates: [    0,  -50,    0], order: 38, name: "Bowser's Castle (Part 2)" },
+  { index: 0x160027, area: 0x18, coordinates: [  380,   53,  198], order: 39, name: "Bowser's Castle (Part 3)" },
+  { index: 0x16000e, area: 0x18, coordinates: [    0,  -50,    0], order: 40, name: "Bowser's Castle (Part 4)" },
+  { index: 0x170002, area: 0x19, coordinates: [ -100,    0,  -40], order: 41, name: "Princess Peach's Castle (Entrance)" },
+  { index: 0x040012, area: 0x19, coordinates: [  -25,    0,  -50], order: 42, name: "Princess Peach's Castle (near Bowser)" },
+  { index: 0x00000b, area: 0x1a, coordinates: [    0,    0,    0], order: 43, name: "First Play" },
+  { index: 0x170003, area: 0x1a, coordinates: [    0,    0,    0], order: 44, name: "Event" },
+  { index: 0x1b0000, area: 0x1a, coordinates: [    0,    0,    0], order: 45, name: "Debug Room" },
+].sort((a, b) => a.order - b.order);
 
 export const locations: Resource = {};
-export const locationsGroups: ResourceGroups = [];
+export const locationsGroups: ResourceGroups = areaList.map((area) => ({
+  name: area.name,
+  options: [],
+}));
 export const locationsOrder: number[] = [];
 
-areas.forEach((area) => {
-  locationsGroups.push({ name: area.name, options: [] });
+locationList.forEach((location) => {
+  locations[location.index] = location.name;
+  locationsGroups[location.area].options.push(location.index);
+  locationsOrder.push(location.index);
 });
-
-Object.entries(locationList)
-  .sort(([, a], [, b]) => a.order - b.order)
-  .forEach(([key, location]) => {
-    const index = parseInt(key);
-
-    locations[index] = location.name;
-    locationsGroups[location.area].options.push(index);
-    locationsOrder.push(index);
-  });

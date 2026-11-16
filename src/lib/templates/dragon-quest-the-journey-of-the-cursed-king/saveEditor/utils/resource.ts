@@ -86,7 +86,7 @@ export const itemTypes = [
   { index: 0x10, name: "Important Items" },
 ];
 
-export const inventory = [
+export const itemList = [
   { index: 0x001, type: 0x00, name: "Cypress stick" },
   { index: 0x002, type: 0x00, name: "Soldier's sword" },
   { index: 0x003, type: 0x00, name: "Copper sword" },
@@ -483,7 +483,7 @@ export const itemsGroups: ResourceGroups = itemTypes.map((type) => ({
   options: [],
 }));
 
-inventory.forEach((item) => {
+itemList.forEach((item) => {
   items[item.index] = item.name;
   itemsGroups[item.type].options.push(item.index);
 });
@@ -845,7 +845,7 @@ export const recipeList = [
 
 export const recipes = recipeList.reduce(
   (recipes: { index: number; type: number; name: string }[], recipe) => {
-    const item = inventory.find((item) => item.index === recipe.item);
+    const item = itemList.find((item) => item.index === recipe.item);
 
     if (item) {
       recipes.push({ index: recipe.index, type: item.type, name: item.name });

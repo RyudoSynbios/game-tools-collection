@@ -6,7 +6,7 @@ import {
   locations,
   locationsGroups,
   locationsOrder,
-  worlds,
+  worldList,
 } from "./utils/resource";
 
 const template: GameJson = {
@@ -332,7 +332,7 @@ const template: GameJson = {
                     },
                   ],
                 },
-                ...worlds.map((world) => ({
+                ...worldList.map((world) => ({
                   name: world.name,
                   flex: true,
                   hidden: world.index === 0x0,

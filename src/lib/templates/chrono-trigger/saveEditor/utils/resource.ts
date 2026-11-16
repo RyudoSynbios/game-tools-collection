@@ -29,7 +29,7 @@ export const itemTypes = [
   { index: 0xb, name: "Key Items" },
 ];
 
-export const inventory = [
+export const itemList = [
   { index: 0x01, type: 0x0, name: "Wood Sword" },
   { index: 0x02, type: 0x0, name: "Iron Blade" },
   { index: 0x03, type: 0x0, name: "Steel Saber" },
@@ -261,7 +261,7 @@ export const weaponsGroups: ResourceGroups = itemTypes
     options: [],
   }));
 
-inventory.forEach((item) => {
+itemList.forEach((item) => {
   items[item.index] = item.name;
   itemsGroups[item.type].options.push(item.index);
 

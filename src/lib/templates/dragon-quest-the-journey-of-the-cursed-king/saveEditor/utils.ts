@@ -32,7 +32,7 @@ import type {
 import {
   attributes,
   characterLevels,
-  inventory,
+  itemList,
   levelAbilities,
   monsters,
 } from "./utils/resource";
@@ -195,11 +195,11 @@ export function overrideSetInt(item: Item, value: string): boolean {
 
     const previous = getInt(itemInt.offset, "uint16");
 
-    const previousEquipment = inventory.find(
+    const previousEquipment = itemList.find(
       (item) => item.index === previous && item.type <= 0xe,
     );
 
-    const equipment = inventory.find(
+    const equipment = itemList.find(
       (item) => item.index === itemIndex && item.type <= 0xe,
     );
 
@@ -417,7 +417,7 @@ function getEquipment(
 
   const itemIndex = getInt(offset, "uint16");
 
-  return inventory.find((item) => item.index === itemIndex && item.type <= 0xe);
+  return itemList.find((item) => item.index === itemIndex && item.type <= 0xe);
 }
 
 function getEquipmentOffset(offset: number, type: number): number {

@@ -342,7 +342,7 @@ export const itemList = [
   { index: 0x6f, type: 0x1              , name: "Aquamarine" },
 ];
 
-const areas = [
+const areaList = [
   { index: 0x00, name: "Shinjuku Medical Center" },
   { index: 0x01, name: "Shibuya" },
   { index: 0x02, name: "Amala Network 1" },
@@ -429,12 +429,11 @@ export const locationList = [
   { index: 0x0001900, area: 0x15, name: "Labyrinth of Amala"            , maniax: true },
 ];
 
-export const locationsGroups: ResourceGroups = [];
+export const locationsGroups: ResourceGroups = areaList.map((area) => ({
+  name: area.name,
+  options: [],
+}));
 export const locationsOrder: number[] = [];
-
-areas.forEach((area) => {
-  locationsGroups.push({ name: area.name, options: [] });
-});
 
 locationList.forEach((location) => {
   locationsGroups[location.area].options.push(location.index);
@@ -476,7 +475,7 @@ export const specialItemList = [
   { index: 0x1e, name: "Black Visor"   , maniax: true },
   { index: 0x1f, name: "Afterlife Bell", maniax: true },
   { index: 0x20, name: "Star Key"      , maniax: true },
-]
+];
 
 // prettier-ignore
 export const magatamaList = [

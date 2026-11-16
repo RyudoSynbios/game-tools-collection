@@ -220,11 +220,9 @@ export function afterSetInt(item: Item, flag: ItemBitflag): void {
   if ("id" in item && item.id === "location") {
     const itemInt = item as ItemInt;
 
-    const locationIndex = getInt(itemInt.offset, "uint16", { bigEndian: true });
+    const index = getInt(itemInt.offset, "uint16", { bigEndian: true });
 
-    const location = locationList.find(
-      (location) => location.index === locationIndex,
-    );
+    const location = locationList.find((location) => location.index === index);
 
     if (location) {
       setInt(itemInt.offset + 0x4, "uint8", location.preview);

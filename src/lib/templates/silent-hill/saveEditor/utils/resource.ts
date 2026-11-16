@@ -118,7 +118,7 @@ itemList.forEach((item) => {
   itemsOrder.push(item.index);
 });
 
-export const areas = [
+export const areaList = [
   { index: 0x0, name: "Residential area" },
   { index: 0x1, name: "Midwich Elementary School" },
   { index: 0x2, name: "Shopping district" },
@@ -164,11 +164,10 @@ export const locationList = [
 ];
 
 export const locations: Resource = {};
-export const locationsGroups: ResourceGroups = [];
-
-areas.forEach((area) => {
-  locationsGroups.push({ name: area.name, options: [] });
-});
+export const locationsGroups: ResourceGroups = areaList.map((area) => ({
+  name: area.name,
+  options: [],
+}));
 
 locationList.forEach((location) => {
   locations[location.index] = location.name;

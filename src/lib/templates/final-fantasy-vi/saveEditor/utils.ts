@@ -510,12 +510,12 @@ export function afterSetInt(item: Item): void {
 
     const resources = getResources();
 
-    const locationIndex = getInt(itemInt.offset, "uint16", {
+    const index = getInt(itemInt.offset, "uint16", {
       binary: itemInt.binary,
     });
 
     const location = resources.locations.find(
-      (location) => location.index === locationIndex,
+      (location) => location.index === index,
     );
 
     if (location) {
@@ -618,13 +618,9 @@ function generateResources(): void {
   const heads: Resource = { 0xff: "-" };
   const relics: Resource = { 0xff: "-" };
 
-  const handsGroups: ResourceGroups = [];
-
-  resources.itemTypes
+  const handsGroups: ResourceGroups = resources.itemTypes
     .filter((type) => isInRange(type.index, 0x0, 0xa))
-    .forEach((type) => {
-      handsGroups.push({ name: type.name, options: [] });
-    });
+    .map((type) => ({ name: type.name, options: [] }));
 
   resources.items.forEach((item) => {
     if (isInRange(item.type, 0x0, 0xa)) {
@@ -652,12 +648,11 @@ function generateResources(): void {
   // Locations
 
   const locations: Resource = {};
-  const locationsGroups: ResourceGroups = [];
+  const locationsGroups: ResourceGroups = resources.areas.map((area) => ({
+    name: area.name,
+    options: [],
+  }));
   const locationsOrder: number[] = [];
-
-  resources.areas.forEach((area) => {
-    locationsGroups.push({ name: area.name, options: [] });
-  });
 
   resources.locations
     .sort((a, b) => a.order - b.order)

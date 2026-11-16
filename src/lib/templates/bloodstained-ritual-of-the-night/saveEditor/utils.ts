@@ -24,7 +24,7 @@ import type {
 } from "$lib/types";
 
 import { parseJson } from "./utils/parser";
-import { areas, itemList, locationList, shardList } from "./utils/resource";
+import { areaList, itemList, locationList, shardList } from "./utils/resource";
 import { updateJson } from "./utils/writer";
 
 enum EPBGameLevel {
@@ -299,7 +299,7 @@ export function overrideSetInt(item: Item, value: string): boolean {
     const index = parseInt(value);
 
     const location = locationList[index];
-    const area = areas.find((area) => area.index === location.area);
+    const area = areaList.find((area) => area.index === location.area);
 
     setJsonString("RoomID", location.roomId);
     setJsonString("AreaID", area!.areaId);
@@ -433,7 +433,7 @@ function obfuscateData(data: Uint8Array): Uint8Array {
   const obfuscatedData = new Uint8Array(data.length);
 
   for (let i = 0x0; i < data.length; i += 0x1) {
-    obfuscatedData[i] = data[i] ^ (0x3a + i) % 0xff;
+    obfuscatedData[i] = data[i] ^ ((0x3a + i) % 0xff);
   }
 
   return obfuscatedData;

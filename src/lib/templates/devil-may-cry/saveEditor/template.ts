@@ -381,7 +381,6 @@ const template: GameJson = {
                   flex: true,
                   items: itemList
                     .filter((item) => item.type === 0x2)
-                    .sort((a, b) => a.order - b.order)
                     .map((item) => ({
                       id: `item-variable-${item.index}`,
                       name: item.name,
@@ -401,7 +400,6 @@ const template: GameJson = {
                       type: "bitflags",
                       flags: itemList
                         .filter((item) => item.type === 0x0)
-                        .sort((a, b) => a.order - b.order)
                         .map((item) => ({
                           offset: 0x250,
                           bit: item.index,
@@ -414,7 +412,6 @@ const template: GameJson = {
                       type: "bitflags",
                       flags: itemList
                         .filter((item) => item.type === 0x1)
-                        .sort((a, b) => a.order - b.order)
                         .map((item) => ({
                           offset: 0x250,
                           bit: item.index,
@@ -427,7 +424,6 @@ const template: GameJson = {
                       type: "bitflags",
                       flags: itemList
                         .filter((item) => item.type === 0x3)
-                        .sort((a, b) => a.order - b.order)
                         .map((item) => ({
                           offset: 0x250,
                           bit: item.index,
@@ -440,7 +436,6 @@ const template: GameJson = {
                       type: "bitflags",
                       flags: itemList
                         .filter((item) => item.type === 0x4)
-                        .sort((a, b) => a.order - b.order)
                         .map((item) => ({
                           offset: 0x250,
                           bit: item.index,

@@ -159,7 +159,7 @@ const itemList = [
   // { index: 0xfc, name: "TM52 Fly" }, // Unused
   // { index: 0xfd, name: "TM53 Surf" }, // Unused
   // { index: 0xfe, name: "TM54 Strength" }, // Unused
-];
+].sort((a, b) => a.order - b.order);
 
 export const items: Resource = {};
 export const itemsGroups: ResourceGroups = itemTypes.map((type) => ({
@@ -168,13 +168,11 @@ export const itemsGroups: ResourceGroups = itemTypes.map((type) => ({
 }));
 export const itemsOrder: number[] = [0x0];
 
-itemList
-  .sort((a, b) => a.order - b.order)
-  .forEach((item) => {
-    items[item.index] = item.name;
-    itemsGroups[item.type].options.push(item.index);
-    itemsOrder.push(item.index);
-  });
+itemList.forEach((item) => {
+  items[item.index] = item.name;
+  itemsGroups[item.type].options.push(item.index);
+  itemsOrder.push(item.index);
+});
 
 export const moveList = getMoveList(1);
 

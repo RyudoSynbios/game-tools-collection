@@ -229,7 +229,6 @@ const template: GameJson = {
                   vertical: true,
                   items: levelList
                     .filter((level) => level.type === type.index)
-                    .sort((a, b) => a.order - b.order)
                     .map((level) => levelFragment(level)),
                 } as ItemTabs,
               ],

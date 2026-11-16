@@ -648,7 +648,7 @@ const template: GameJson = {
               ],
             },
             {
-              name: "Mini-games",
+              name: "Mini-Games",
               items: [
                 {
                   type: "tabs",
