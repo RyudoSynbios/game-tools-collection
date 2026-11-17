@@ -333,7 +333,7 @@ export function afterSetInt(item: Item, flag: ItemBitflag): void {
     }
 
     const level = getInt(itemInt.offset, "uint8");
-    const experience = levels[level - 1] || 0;
+    const experience = levels[level - 1] || levels[0];
 
     setInt(itemInt.offset + 0x20, "uint32", experience);
   } else if ("id" in item && item.id?.match(/characterExperience-/)) {

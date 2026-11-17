@@ -309,7 +309,7 @@ export function afterSetInt(item: Item): void {
     const characterCurve = characterLevels[characterIndex];
 
     const level = getInt(itemInt.offset, "uint16");
-    const experience = characterCurve[level - 1] || 0;
+    const experience = characterCurve[level] || characterCurve[0];
 
     setInt(itemInt.offset + 0x8, "uint32", experience);
   } else if ("id" in item && item.id?.match(/experience-/)) {
@@ -321,18 +321,18 @@ export function afterSetInt(item: Item): void {
 
     const experience = getInt(itemInt.offset, "uint32");
 
-    let level = 0;
+    let level = 1;
 
     for (let i = 0; i < characterCurve.length; i += 1) {
       if (
         experience >= characterCurve[i] &&
         (!characterCurve[i + 1] || experience < characterCurve[i + 1])
       ) {
-        level += i + 1;
+        level += i;
       }
     }
 
-    setInt(itemInt.offset - 0x8, "uint16", level);
+    setInt(itemInt.offset - 0x8, "uint16", level - 1);
   } else if ("id" in item && item.id === "bagItem") {
     const itemInt = item as ItemInt;
 

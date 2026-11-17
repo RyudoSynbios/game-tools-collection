@@ -391,6 +391,7 @@ const template: GameJson = {
                                         type: "variable",
                                         jsonPath: `userData.ownedCharacterList.target[${index}].parameter.addtionalMaxHp`,
                                         dataType: "uint32",
+                                        min: 1,
                                         max: 9999,
                                       },
                                     ],

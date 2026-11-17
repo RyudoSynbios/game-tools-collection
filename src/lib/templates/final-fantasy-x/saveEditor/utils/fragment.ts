@@ -146,14 +146,14 @@ export function characterFragment(type: string, offset: number): ItemTabs {
             flex: true,
             items: [
               {
-                name: "Base Max HP",
+                name: "Base HP",
                 offset: offset + 0x4,
                 type: "variable",
                 dataType: "uint32",
                 max: 99999,
               },
               {
-                name: "Base Max MP",
+                name: "Base MP",
                 offset: offset + 0x8,
                 type: "variable",
                 dataType: "uint32",

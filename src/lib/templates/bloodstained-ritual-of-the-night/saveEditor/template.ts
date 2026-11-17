@@ -317,6 +317,7 @@ const template: GameJson = {
                           jsonPath: "StatusDataParsed.HitPoint",
                           type: "variable",
                           dataType: "uint32",
+                          min: 1,
                           max: 9999,
                         },
                         {
