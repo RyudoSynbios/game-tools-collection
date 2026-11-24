@@ -1605,6 +1605,17 @@
     }
   },
   {
+    "id": "tales-of-phantasia",
+    "name": "Tales of Phantasia",
+    "platformIds": ["playstation"],
+    "tools": {
+      "saveEditor": {
+        "createdAt": "2026-11-24",
+        "regions": ["🇯🇵"]
+      }
+    }
+  },
+  {
     "id": "tekken",
     "name": "Tekken",
     "platformIds": ["playstation"],
