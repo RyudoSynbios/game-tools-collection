@@ -1072,7 +1072,6 @@ const template: GameJson = {
                             item.type === (type.index | subTypeIndex) &&
                             item.invIndex,
                         )
-                        .sort((a, b) => a.order - b.order)
                         .map((item) => ({
                           id: item.finalMix ? "finalMixOnly" : undefined,
                           name: item.name,

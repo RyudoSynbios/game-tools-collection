@@ -21,7 +21,7 @@ export function capitalize(string: string): string {
 }
 
 export function camelCaseToString(string: string): string {
-  return string.replace(/([a-z])([A-Z])/, "$1 $2");
+  return string.replace(/([a-z])([A-Z])/g, "$1 $2");
 }
 
 export function lowerize(string: string): string {

@@ -52,22 +52,20 @@ export function overrideGetInt(
   if ("id" in item && item.id === "location") {
     const saveRoomId = getJsonString("playerSave.lastUsedSaveRoomId");
 
-    const locationIndex = locationList.findIndex(
+    const index = locationList.findIndex(
       (location) => location.id === saveRoomId,
     );
 
-    return [true, locationIndex];
+    return [true, index];
   } else if ("id" in item && item.id?.match(/locations-/)) {
     const itemBitflags = item as ItemBitflags;
 
     const [, type] = item.id.split("-");
 
-    const flags = itemBitflags.flags.map((flag) => {
-      return {
-        ...flag,
-        checked: $dataJson.playerSave[type].includes(areaList[flag.offset].id),
-      };
-    });
+    const flags = itemBitflags.flags.map((flag) => ({
+      ...flag,
+      checked: $dataJson.playerSave[type].includes(areaList[flag.offset].id),
+    }));
 
     return [true, flags];
   } else if ("id" in item && item.id?.match(/equipment-/)) {

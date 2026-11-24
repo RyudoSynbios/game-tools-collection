@@ -23,7 +23,7 @@ export const itemTypes = [
 ];
 
 // prettier-ignore
-export const inventory = [
+export const itemList = [
   { index: 0x012e, type: 0xc, name: "Book of Scripture" },
   { index: 0x0770, type: 0x0, name: "Healing Grape" },
   { index: 0x0771, type: 0x0, name: "Healing Grape (M)" },
@@ -993,7 +993,7 @@ export const shields: Resource = {};
 export const staves: Resource = {};
 export const swords: Resource = {};
 
-inventory.forEach((item) => {
+itemList.forEach((item) => {
   switch (item.type) {
     case 0x1:
       swords[item.index] = item.name;

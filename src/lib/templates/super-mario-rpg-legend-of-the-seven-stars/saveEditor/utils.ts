@@ -98,11 +98,9 @@ export function afterSetInt(item: Item): void {
   if ("id" in item && item.id === "location") {
     const itemInt = item as ItemInt;
 
-    const locationIndex = getInt(itemInt.offset, "uint16");
+    const index = getInt(itemInt.offset, "uint16");
 
-    const location = locationList.find(
-      (location) => location.index === locationIndex,
-    );
+    const location = locationList.find((location) => location.index === index);
 
     if (location) {
       setInt(itemInt.offset + 0x11, "uint8", location.coordinates[0]);

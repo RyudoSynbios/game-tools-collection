@@ -218,9 +218,9 @@ export function afterSetInt(item: Item): void {
     const characterLevels = getCharacterExperienceCurve();
 
     const level = getInt(itemInt.offset, "uint8");
-    const experience = characterLevels[level - 2] || 0;
+    const experience = characterLevels[level - 1] || characterLevels[0];
 
-    let nextExperience = characterLevels[level - 1] || 0;
+    let nextExperience = characterLevels[level] || characterLevels[0];
 
     if (nextExperience > 0) {
       nextExperience -= experience;
@@ -242,11 +242,11 @@ export function afterSetInt(item: Item): void {
         experience >= characterLevels[i] &&
         (!characterLevels[i + 1] || experience < characterLevels[i + 1])
       ) {
-        level += i + 1;
+        level += i;
       }
     }
 
-    let nextExperience = characterLevels[level - 1] || 0;
+    let nextExperience = characterLevels[level] || characterLevels[0];
 
     if (nextExperience > 0) {
       nextExperience -= experience;
@@ -325,11 +325,11 @@ export function getEquipmentBonusStatsNames(): Resource {
 }
 
 function getCharacterExperienceCurve(): number[] {
-  const experiences: number[] = [];
+  const experiences: number[] = [0];
 
   const offset = getRegionArray(CHARACTERS_EXPERIENCE_CURVE_OFFSET);
 
-  let experience = 0x0;
+  let experience = 0;
 
   for (let i = 0x0; i < 0x62; i += 0x1) {
     experience += getInt(offset + i * 0x2, "uint16");

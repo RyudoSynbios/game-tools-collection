@@ -436,18 +436,16 @@ const template: GameJson = {
                       dataType: "uint32",
                       hidden: true,
                     },
-
                     {
-                      name: "Base Max MP",
+                      name: "Base MP",
                       dataViewAltKey: "save",
                       offset: 0x8a25,
                       type: "variable",
                       dataType: "uint32",
                       hidden: true,
                     },
-
                     {
-                      name: "Base Max AP",
+                      name: "Base AP",
                       dataViewAltKey: "save",
                       offset: 0x8a31,
                       type: "variable",

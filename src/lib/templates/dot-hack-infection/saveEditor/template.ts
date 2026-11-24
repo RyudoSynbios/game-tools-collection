@@ -30,7 +30,7 @@ import {
   legs,
   mailList,
   monsters,
-  players,
+  playerList,
   tbWeapons,
   wmWeapons,
 } from "./utils/resource";
@@ -749,7 +749,7 @@ const template: GameJson = {
                       id: "ryuBook3",
                       name: "Ryu Book III",
                       flex: true,
-                      items: players.map(() => ({
+                      items: playerList.map(() => ({
                         name: "Dummy",
                         offset: 0x686a,
                         type: "variable",

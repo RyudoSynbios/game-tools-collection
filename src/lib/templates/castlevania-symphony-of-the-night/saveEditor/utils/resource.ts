@@ -454,22 +454,12 @@ export const handList = [
 ];
 
 export const hands: Resource = {};
-export const handsGroups: ResourceGroups = [];
+export const handsGroups: ResourceGroups = handTypes.map((hand) => ({
+  name: hand.name,
+  options: [],
+}));
 
-handTypes.forEach((type) => {
-  const group: { name: string; options: number[] } = {
-    name: type.name,
-    options: [],
-  };
-
-  handList.forEach((item) => {
-    if (item.type !== type.index) {
-      return;
-    }
-
-    hands[item.index] = item.name;
-    group.options.push(item.index);
-  });
-
-  handsGroups.push(group);
+handList.forEach((item) => {
+  hands[item.index] = item.name;
+  handsGroups[item.type].options.push(item.index);
 });

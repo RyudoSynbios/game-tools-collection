@@ -1,7 +1,7 @@
 import type { Resource, ResourceGroups } from "$lib/types";
 
 export const characterLevels = [
-  20, 60, 130, 240, 400, 620, 920, 1320, 1840, 2490, 3280, 4220, 5320, 6590,
+  0, 20, 60, 130, 240, 400, 620, 920, 1320, 1840, 2490, 3280, 4220, 5320, 6590,
   8040, 9680, 11520, 13570, 15840, 18340, 21080, 24070, 27320, 30840, 34640,
   38730, 43120, 47820, 52840, 58190, 63880, 69920, 76320, 83090, 90240, 97780,
   105720, 114070, 122840, 132040, 141680, 151770, 162320, 173340, 184840,
@@ -29,7 +29,7 @@ export const itemTypes = [
   { index: 0xb, name: "Key Items" },
 ];
 
-export const inventory = [
+export const itemList = [
   { index: 0x01, type: 0x0, name: "Wood Sword" },
   { index: 0x02, type: 0x0, name: "Iron Blade" },
   { index: 0x03, type: 0x0, name: "Steel Saber" },
@@ -261,7 +261,7 @@ export const weaponsGroups: ResourceGroups = itemTypes
     options: [],
   }));
 
-inventory.forEach((item) => {
+itemList.forEach((item) => {
   items[item.index] = item.name;
   itemsGroups[item.type].options.push(item.index);
 

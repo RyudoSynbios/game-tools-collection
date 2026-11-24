@@ -157,8 +157,8 @@ const template: GameJson = {
                 {
                   id: "location",
                   name: "Location",
-                  jsonPath: "RoomID",
                   offset: 0x0,
+                  jsonPath: "RoomID",
                   type: "variable",
                   dataType: "uint32",
                   resource: "locations",
@@ -317,6 +317,7 @@ const template: GameJson = {
                           jsonPath: "StatusDataParsed.HitPoint",
                           type: "variable",
                           dataType: "uint32",
+                          min: 1,
                           max: 9999,
                         },
                         {

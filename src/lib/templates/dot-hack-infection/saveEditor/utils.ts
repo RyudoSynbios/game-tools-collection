@@ -26,7 +26,7 @@ import type {
   Resource,
 } from "$lib/types";
 
-import { mailList, players } from "./utils/resource";
+import { mailList, playerList } from "./utils/resource";
 
 export function beforeInitDataView(dataView: DataView): DataView {
   return unpackFile(dataView);
@@ -100,13 +100,13 @@ export function overrideParseItem(item: Item): Item {
     const itemTab = item as ItemTab;
 
     if (isExtendedSave()) {
-      players.sort((a, b) => a.order - b.order);
+      playerList.sort((a, b) => a.order - b.order);
     }
 
     itemTab.items.map((subitem, index) => {
       const itemInt = subitem as ItemInt;
 
-      itemInt.name = `${(index + 1).leading0()} ${players[index].name}`;
+      itemInt.name = `${(index + 1).leading0()} ${playerList[index].name}`;
       itemInt.offset += index;
 
       if (isExtendedSave()) {

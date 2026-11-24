@@ -855,27 +855,25 @@ export const itemList = [
   { index: 0xfd, type: 0x30, order:  57, name: "Mythril Shard"      },
   { index: 0xfe, type: 0x30, order:  58, name: "Mythril"            },
   { index: 0xff, type: 0x30, order:  60, name: "Orichalcum"         },
-];
+].sort((a, b) => a.order - b.order);
 
 export const accessoriesOrder: number[] = [0x0];
 export const itemsOrder: number[] = [0x0];
 export const weaponsOrder: number[] = [0x0];
 
-itemList
-  .sort((a, b) => a.order - b.order)
-  .forEach((item) => {
-    switch (item.type >> 0x4) {
-      case 0x0:
-        itemsOrder.push(item.index);
-        break;
-      case 0x5:
-        weaponsOrder.push(item.index);
-        break;
-      case 0x6:
-        accessoriesOrder.push(item.index);
-        break;
-    }
-  });
+itemList.forEach((item) => {
+  switch (item.type >> 0x4) {
+    case 0x0:
+      itemsOrder.push(item.index);
+      break;
+    case 0x5:
+      weaponsOrder.push(item.index);
+      break;
+    case 0x6:
+      accessoriesOrder.push(item.index);
+      break;
+  }
+});
 
 // prettier-ignore
 export const heartlessList = [

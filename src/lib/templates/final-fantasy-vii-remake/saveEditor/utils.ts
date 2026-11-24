@@ -306,7 +306,7 @@ export function afterSetInt(item: Item, flag: ItemBitflag): void {
     const characterCurve = characterLevels[characterIndex];
 
     const level = getInt(itemInt.offset, "uint8");
-    const experience = characterCurve[level - 2] || 0;
+    const experience = characterCurve[level - 1] || characterCurve[0];
 
     setInt(itemInt.offset + 0x20, "uint32", experience);
   } else if ("id" in item && item.id?.match(/characterExperience-/)) {
@@ -325,7 +325,7 @@ export function afterSetInt(item: Item, flag: ItemBitflag): void {
         experience >= characterCurve[i] &&
         (!characterCurve[i + 1] || experience < characterCurve[i + 1])
       ) {
-        level += i + 1;
+        level += i;
       }
     }
 

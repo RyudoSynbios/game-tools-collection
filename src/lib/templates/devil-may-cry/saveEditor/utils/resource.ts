@@ -64,4 +64,4 @@ export const itemList = [
   { index: 0x603, type: 0x3, order: 30, name: "Quicksilver" },
   { index: 0x604, type: 0x3, order: 34, name: "Philosopher's Stone" },
   { index: 0x606, type: 0x3, order: 33, name: "Perfect Amulet" },
-];
+].sort((a, b) => a.order - b.order);

@@ -969,22 +969,22 @@ export function updateGuardianForceNames(slotIndex: number): void {
   updateResources("guardianForceNames", values);
 }
 
-function updateLocation(offset: number, value = 0x0): void {
+function updateLocation(offset: number, index = 0x0): void {
   let locationType = 0x1;
 
   // If location is World Map, we force the Location Type
-  if (value === 0x0) {
+  if (index === 0x0) {
     locationType = 0x2;
   }
 
   setInt(offset - 0x2, "uint16", locationType);
 
-  const location = locationList[value];
+  const location = locationList.find((location) => location.index === index);
 
   if (location) {
     let preview = location.preview;
 
-    if (value === 0x0) {
+    if (index === 0x0) {
       setInt(offset - 0xd3e, "uint16", 0x1);
       setInt(offset + 0x51e, "uint32", location.coordinates[0]);
       setInt(offset + 0x522, "uint32", location.coordinates[1]);
@@ -992,7 +992,7 @@ function updateLocation(offset: number, value = 0x0): void {
       return;
     }
 
-    if (value === 0x5f) {
+    if (index === 0x5f) {
       const disc = getInt(offset + 0xea, "uint8");
       preview = discStartPreviews[disc - 1].preview;
     }

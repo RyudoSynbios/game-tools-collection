@@ -1188,21 +1188,21 @@ const template: GameJson = {
                           hidden: true,
                           items: [
                             {
-                              name: "Base Max Bombs",
+                              name: "Base Bombs",
                               offset: 0x4141,
                               type: "variable",
                               dataType: "uint8",
                               hidden: true,
                             },
                             {
-                              name: "Base Max Water Bombs",
+                              name: "Base Water Bombs",
                               offset: 0x4142,
                               type: "variable",
                               dataType: "uint8",
                               hidden: true,
                             },
                             {
-                              name: "Base Max Bomblings",
+                              name: "Base Bomblings",
                               offset: 0x4146,
                               type: "variable",
                               dataType: "uint8",
@@ -1869,7 +1869,6 @@ const template: GameJson = {
                               name: "Received",
                               type: "bitflags",
                               flags: letterList
-                                .sort((a, b) => a.order - b.order)
                                 .map((letter) => ({
                                   offset:
                                     0x4166 + bitToOffset(letter.flagIndex),
@@ -1881,7 +1880,6 @@ const template: GameJson = {
                               name: "Read",
                               type: "bitflags",
                               flags: letterList
-                                .sort((a, b) => a.order - b.order)
                                 .map((letter) => ({
                                   offset:
                                     0x416e + bitToOffset(letter.flagIndex),

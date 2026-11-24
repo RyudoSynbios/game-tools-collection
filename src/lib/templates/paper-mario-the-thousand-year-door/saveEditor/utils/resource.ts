@@ -7,7 +7,7 @@ export const itemTypes = [
   { index: 0x3, name: "Badges" },
 ];
 
-export const inventory = [
+export const itemList = [
   { index: 0x001, type: 0x0, name: "Strange Sack" },
   { index: 0x002, type: 0x0, name: "Paper Mode" },
   { index: 0x003, type: 0x0, name: "Tube Mode" },
@@ -349,7 +349,7 @@ export const itemsGroups: ResourceGroups = itemTypes
     options: [],
   }));
 
-inventory.forEach((item) => {
+itemList.forEach((item) => {
   if (item.type === 0x0) {
     importantThings[item.index] = item.name;
   } else if (item.type === 0x3) {
@@ -360,7 +360,7 @@ inventory.forEach((item) => {
   }
 });
 
-export const areas = [
+export const areaList = [
   { index: 0x0, name: "Rogueport" },
   { index: 0x1, name: "Rogueport Sewers" },
   { index: 0x2, name: "Petalburg" },
@@ -422,11 +422,10 @@ export const locationList = [
 ];
 
 export const locations: Resource = {};
-export const locationsGroups: ResourceGroups = [];
-
-areas.forEach((area) => {
-  locationsGroups.push({ name: area.name, options: [] });
-});
+export const locationsGroups: ResourceGroups = areaList.map((area) => ({
+  name: area.name,
+  options: [],
+}));
 
 locationList.forEach((location, index) => {
   locations[index] = location.name;

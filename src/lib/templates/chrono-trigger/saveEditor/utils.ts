@@ -266,9 +266,9 @@ export function afterSetInt(item: Item): void {
     const itemInt = item as ItemInt;
 
     const level = getInt(itemInt.offset, "uint8");
-    const experience = characterLevels[level - 2] || 0;
+    const experience = characterLevels[level - 1] || characterLevels[0];
 
-    let nextExperience = characterLevels[level - 1] || 0;
+    let nextExperience = characterLevels[level] || characterLevels[0];
 
     if (nextExperience > 0) {
       nextExperience -= experience;
@@ -288,11 +288,11 @@ export function afterSetInt(item: Item): void {
         experience >= characterLevels[i] &&
         (!characterLevels[i + 1] || experience < characterLevels[i + 1])
       ) {
-        level += i + 1;
+        level += i;
       }
     }
 
-    let nextExperience = characterLevels[level - 1] || 0;
+    let nextExperience = characterLevels[level] || characterLevels[0];
 
     if (nextExperience > 0) {
       nextExperience -= experience;

@@ -179,7 +179,7 @@ export const abilityList = [
   { index: 0x254, type: 0x2, order: 168, name: "Protect"             , finalMix: true },
   { index: 0x255, type: 0x2, order: 169, name: "Protectra"           , finalMix: true },
   { index: 0x256, type: 0x2, order: 170, name: "Protectga"           , finalMix: true },
-];
+].sort((a, b) => a.order - b.order);
 
 export const abilitiesGroups: ResourceGroups = abilityTypes.map((type) => ({
   name: type.name,
@@ -187,12 +187,10 @@ export const abilitiesGroups: ResourceGroups = abilityTypes.map((type) => ({
 }));
 export const abilitiesOrder: number[] = [0x0];
 
-abilityList
-  .sort((a, b) => a.order - b.order)
-  .forEach((ability) => {
-    abilitiesGroups[ability.type].options.push(ability.index);
-    abilitiesOrder.push(ability.index);
-  });
+abilityList.forEach((ability) => {
+  abilitiesGroups[ability.type].options.push(ability.index);
+  abilitiesOrder.push(ability.index);
+});
 
 export const itemTypes = [
   {
@@ -558,7 +556,7 @@ export const itemList = [
   { index: 0x257, invIndex: 0x135, type: 0x30, order: 139, name: "Executive's Ring"           , finalMix: true },
   { index: 0x258, invIndex: 0x136, type: 0x11, order:  53, name: "Shaman's Relic+"            , finalMix: true },
   { index: 0x259, invIndex: 0x137, type: 0x12, order:  74, name: "Akashic Record+"            , finalMix: true },
-];
+].sort((a, b) => a.order - b.order);
 
 export const weaponsGroups: ResourceGroups = weaponTypes.map((type) => ({
   name: type.name,
@@ -570,25 +568,23 @@ export const armorOrder: number[] = [0x0];
 export const itemsOrder: number[] = [0x0];
 export const weaponsOrder: number[] = [0x0];
 
-itemList
-  .sort((a, b) => a.order - b.order)
-  .forEach((item) => {
-    switch (item.type >> 0x4) {
-      case 0x0:
-        itemsOrder.push(item.index);
-        break;
-      case 0x1:
-        weaponsGroups[item.type & 0xf].options.push(item.index);
-        weaponsOrder.push(item.index);
-        break;
-      case 0x2:
-        armorOrder.push(item.index);
-        break;
-      case 0x3:
-        accessoriesOrder.push(item.index);
-        break;
-    }
-  });
+itemList.forEach((item) => {
+  switch (item.type >> 0x4) {
+    case 0x0:
+      itemsOrder.push(item.index);
+      break;
+    case 0x1:
+      weaponsGroups[item.type & 0xf].options.push(item.index);
+      weaponsOrder.push(item.index);
+      break;
+    case 0x2:
+      armorOrder.push(item.index);
+      break;
+    case 0x3:
+      accessoriesOrder.push(item.index);
+      break;
+  }
+});
 
 export const gummiBlockTypes = [
   { index: 0x0, name: "Cockpit Gummies" },

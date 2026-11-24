@@ -1,6 +1,6 @@
 import type { Resource, ResourceGroups } from "$lib/types";
 
-export const worlds = [
+export const worldList = [
   { index: 0x0, name: "World Map" },
   { index: 0x1, name: "Lake Orangatanga" },
   { index: 0x2, name: "Kremwood Forest" },
@@ -128,12 +128,11 @@ export const levels: Level[] = [
 ];
 
 export const locations: Resource = {};
-export const locationsGroups: ResourceGroups = [];
+export const locationsGroups: ResourceGroups = worldList.map((world) => ({
+  name: world.name,
+  options: [],
+}));
 export const locationsOrder: number[] = [0x0];
-
-worlds.forEach((world) => {
-  locationsGroups.push({ name: world.name, options: [] });
-});
 
 levels.forEach((level) => {
   const index = (level.location! << 0x10) | level.world;

@@ -446,11 +446,14 @@ export const locationList = [
   { index: 0x2a, name: "Germinas Peak" },
 ];
 
-export const locations: Resource = {};
+export const locations = locationList.reduce(
+  (locations: Resource, location) => {
+    locations[location.index] = location.name;
 
-locationList.forEach((location) => {
-  locations[location.index] = location.name;
-});
+    return locations;
+  },
+  {},
+);
 
 // prettier-ignore
 export const persons = [

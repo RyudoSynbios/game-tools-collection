@@ -161,6 +161,7 @@ const template: GameJson = {
                                       type: "variable",
                                       dataType: "uint16",
                                       bigEndian: true,
+                                      min: 1,
                                       max: 99,
                                     },
                                   ],

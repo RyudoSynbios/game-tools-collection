@@ -275,7 +275,7 @@ export const itemList = [
   // { index: 0xfc, name: "Teru-Sama" }, // Unused
   // { index: 0xfd, name: "Teru-Sama" }, // Unused
   // { index: 0xfe, name: "Teru-Sama" }, // Unused
-];
+].sort((a, b) => a.order - b.order);
 
 export const bagItems: Resource = {};
 export const items: Resource = {};
@@ -297,33 +297,31 @@ export const itemsOrder: number[] = [0x0];
 export const keyItemsOrder: number[] = [0x0];
 export const pokeballsOrder: number[] = [0x0];
 
-itemList
-  .sort((a, b) => a.order - b.order)
-  .forEach((item) => {
-    items[item.index] = item.name;
-    itemsGroups[item.type].options.push(item.index);
-    itemsOrder.push(item.index);
+itemList.forEach((item) => {
+  items[item.index] = item.name;
+  itemsGroups[item.type].options.push(item.index);
+  itemsOrder.push(item.index);
 
-    if (item.type === 0x8) {
-      mails[item.index] = item.name;
-    }
+  if (item.type === 0x8) {
+    mails[item.index] = item.name;
+  }
 
-    switch (item.location) {
-      case 0x0:
-        bagItems[item.index] = item.name;
-        bagItemsOrder.push(item.index);
-        bagItemsGroups[item.type].options.push(item.index);
-        break;
-      case 0x1:
-        pokeballs[item.index] = item.name;
-        pokeballsOrder.push(item.index);
-        break;
-      case 0x2:
-        keyItems[item.index] = item.name;
-        keyItemsOrder.push(item.index);
-        break;
-    }
-  });
+  switch (item.location) {
+    case 0x0:
+      bagItems[item.index] = item.name;
+      bagItemsOrder.push(item.index);
+      bagItemsGroups[item.type].options.push(item.index);
+      break;
+    case 0x1:
+      pokeballs[item.index] = item.name;
+      pokeballsOrder.push(item.index);
+      break;
+    case 0x2:
+      keyItems[item.index] = item.name;
+      keyItemsOrder.push(item.index);
+      break;
+  }
+});
 
 export const moveList = getMoveList(2);
 

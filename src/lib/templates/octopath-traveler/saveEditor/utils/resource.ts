@@ -22,7 +22,7 @@ export const itemTypes = [
   { index: 0xd, name: "Knowledge" },
 ];
 
-export const inventory = [
+export const itemList = [
   { index: 0x001, type: 0x0, name: "Healing Grape" },
   { index: 0x002, type: 0x0, name: "Healing Grape (M)" },
   { index: 0x003, type: 0x0, name: "Healing Grape Bunch" },
@@ -700,7 +700,7 @@ export const shields: Resource = {};
 export const staves: Resource = {};
 export const swords: Resource = {};
 
-inventory.forEach((item) => {
+itemList.forEach((item) => {
   switch (item.type) {
     case 0x1:
       swords[item.index] = item.name;

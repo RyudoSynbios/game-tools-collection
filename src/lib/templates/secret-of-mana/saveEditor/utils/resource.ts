@@ -110,8 +110,11 @@ export const locationList = [
   { index: 0x18, preview: 0x1a, spawns: [0x3a9, 0x3ac]              , name: "Pure Land (Thunder Dragon)" },
 ];
 
-export const locations: Resource = {};
+export const locations = locationList.reduce(
+  (locations: Resource, location) => {
+    locations[location.index] = location.name;
 
-locationList.forEach((location) => {
-  locations[location.index] = location.name;
-});
+    return locations;
+  },
+  {},
+);

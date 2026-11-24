@@ -1674,7 +1674,7 @@ export const keyItemList = [
   { index: 0x33, order: 49, name: "Flower Sceptre" },
 ].sort((a, b) => a.order - b.order);
 
-export const areas = [
+export const areaList = [
   { index: 0x00, name: "Zanarkand" },
   { index: 0x01, name: "Baaj Temple" },
   { index: 0x02, name: "Salvage Ship" },
@@ -2016,7 +2016,7 @@ export const locationList = [
 ].sort((a, b) => a.order - b.order);
 
 export const locations: Resource = {};
-export const locationsGroups: ResourceGroups = areas.map((type) => ({
+export const locationsGroups: ResourceGroups = areaList.map((type) => ({
   name: type.name,
   options: [],
 }));
@@ -2186,7 +2186,7 @@ export const monsterList = [
   { index: 0x88, region: 0xe, order: 125, name: "Sleep Sprout" },
   { index: 0x89, region: 0xd, order: 111, name: "Don Tonberry" },
   { index: 0x8a, region: 0xd, order: 108, name: "Espada" },
-];
+].sort((a, b) => a.order - b.order);
 
 export const playerList = [
   { index: 0x00, name: "Tidus" },

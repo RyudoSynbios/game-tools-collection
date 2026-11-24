@@ -469,6 +469,7 @@ const template: GameJson = {
                                       offset: 0x3,
                                       type: "variable",
                                       dataType: "uint16",
+                                      min: 1,
                                       max: 999,
                                     },
                                   ],

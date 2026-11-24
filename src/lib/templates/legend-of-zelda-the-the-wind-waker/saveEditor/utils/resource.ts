@@ -12,7 +12,7 @@ export const itemQuantites: {
   },
 };
 
-const areas = [
+const areaList = [
   { index: 0x0, name: "Great Sea" },
   { index: 0x1, name: "Pirate Ship" },
   { index: 0x2, name: "Forsaken Fortress" },
@@ -104,11 +104,10 @@ export const locationList = [
 ];
 
 export const locations: Resource = {};
-export const locationsGroups: ResourceGroups = [];
-
-areas.forEach((area) => {
-  locationsGroups.push({ name: area.name, options: [] });
-});
+export const locationsGroups: ResourceGroups = areaList.map((area) => ({
+  name: area.name,
+  options: [],
+}));
 
 locationList.forEach((location, index) => {
   locations[index] = location.name;

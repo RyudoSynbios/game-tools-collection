@@ -736,7 +736,7 @@ const template: GameJson = {
                                   hidden: true,
                                 },
                                 {
-                                  name: "Base Max MP",
+                                  name: "Base MP",
                                   offset: 0x9fe,
                                   type: "variable",
                                   dataType: "uint16",

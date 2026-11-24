@@ -538,6 +538,7 @@ const template: GameJson = {
                                       offset: 0xaa3a,
                                       type: "variable",
                                       dataType: "uint16",
+                                      min: 1,
                                       max: 999,
                                       overrideShift: {
                                         parent: -1,

@@ -6,7 +6,7 @@ import { formatChecksum } from "$lib/utils/checksum";
 
 import type { Item, ItemChecksum, ItemInt, ItemString } from "$lib/types";
 
-import { levels } from "./utils/resource";
+import { characterLevels } from "./utils/resource";
 
 export function overrideGetRegions(dataView: DataView): string[] {
   const $gameTemplate = get(gameTemplate);
@@ -146,10 +146,10 @@ export function afterSetInt(item: Item): void {
   if ("id" in item && item.id === "level") {
     const itemInt = item as ItemInt;
 
-    const curve = levels[$gameRegion === 2 ? 1 : 0];
+    const levels = characterLevels[$gameRegion === 2 ? 1 : 0];
 
     const level = getInt(itemInt.offset, "uint8");
-    const experience = curve[level - 1] || 0;
+    const experience = levels[level] || levels[0];
 
     setInt(itemInt.offset + 0x6, "uint16", experience);
   } else if ("id" in item && item.id === "equippedMagic") {

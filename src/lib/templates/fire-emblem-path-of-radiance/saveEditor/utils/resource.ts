@@ -139,7 +139,13 @@ export const characterList = [
   { index: 0x134, type: 0x2, class: 0x43           , name: "Tomenami" },
   { index: 0x138, type: 0x1, class: 0x52           , name: "Rajaion" },
   { index: 0x13a, type: 0x2, class: 0x71           , name: "Naesala" },
-];
+].sort((a, b) => {
+  if (a.order || b.order) {
+    return (a.order ?? 99) - (b.order ?? 99);
+  }
+
+  return a.name.localeCompare(b.name, "en", { numeric: true });
+});
 
 export const characters: Resource = {};
 export const charactersGroups: ResourceGroups = characterTypes.map((type) => ({
@@ -148,19 +154,11 @@ export const charactersGroups: ResourceGroups = characterTypes.map((type) => ({
 }));
 export const charactersOrder: number[] = [0x0];
 
-characterList
-  .sort((a, b) => {
-    if (a.order || b.order) {
-      return (a.order ?? 99) - (b.order ?? 99);
-    }
-
-    return a.name.localeCompare(b.name, "en", { numeric: true });
-  })
-  .forEach((character) => {
-    characters[character.index] = character.name;
-    charactersGroups[character.type].options.push(character.index);
-    charactersOrder.push(character.index);
-  });
+characterList.forEach((character) => {
+  characters[character.index] = character.name;
+  charactersGroups[character.type].options.push(character.index);
+  charactersOrder.push(character.index);
+});
 
 export const classes = {
   0x01: "Ranger",
@@ -470,7 +468,7 @@ export const itemList = [
   { index: 0xb9, type: 0xa, order: 128,                                 name: "Demi Band" },
   { index: 0xba, type: 0xa, order: 129,                                 name: "Laguz Band" },
   { index: 0xbb, type: 0xb, order: 172,                                 name: "Coin" },
-];
+].sort((a, b) => a.order - b.order);
 
 export const convoyItems: Resource = {};
 export const items: Resource = {};
@@ -497,23 +495,21 @@ export const convoyItemsOrder: number[] = [0x0];
 export const itemsOrder: number[] = [0x0];
 export const weaponsOrder: number[] = [0x0];
 
-itemList
-  .sort((a, b) => a.order - b.order)
-  .forEach((item) => {
-    convoyItems[item.index] = item.name;
-    convoyItemsGroups[item.type].options.push(item.index);
-    convoyItemsOrder.push(item.index);
+itemList.forEach((item) => {
+  convoyItems[item.index] = item.name;
+  convoyItemsGroups[item.type].options.push(item.index);
+  convoyItemsOrder.push(item.index);
 
-    if (item.type <= 0x9) {
-      weapons[item.index] = item.name;
-      weaponsGroups[item.type].options.push(item.index);
-      weaponsOrder.push(item.index);
-    } else {
-      items[item.index] = item.name;
-      itemsGroups[item.type - 0xa].options.push(item.index);
-      itemsOrder.push(item.index);
-    }
-  });
+  if (item.type <= 0x9) {
+    weapons[item.index] = item.name;
+    weaponsGroups[item.type].options.push(item.index);
+    weaponsOrder.push(item.index);
+  } else {
+    items[item.index] = item.name;
+    itemsGroups[item.type - 0xa].options.push(item.index);
+    itemsOrder.push(item.index);
+  }
+});
 
 // prettier-ignore
 export const supportList = [

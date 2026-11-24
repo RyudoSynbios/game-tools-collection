@@ -3,7 +3,7 @@ import { formatChecksum, generateCrcCcitt } from "$lib/utils/checksum";
 
 import { Item, ItemChecksum, ItemInt } from "$lib/types";
 
-import { levels, locations } from "./utils/resource";
+import { characterLevels, locations } from "./utils/resource";
 
 export function overrideShift(item: Item, shifts: number[]): number[] {
   if ("id" in item && item.id === "inventoryShift") {
@@ -38,10 +38,10 @@ export function overrideGetInt(item: Item): [boolean, number | undefined] {
 
     let level = 1;
 
-    for (let i = 0; i < levels.length; i += 1) {
+    for (let i = 0; i < characterLevels.length; i += 1) {
       if (
-        experience >= levels[i] &&
-        (!levels[i + 1] || experience < levels[i + 1])
+        experience >= characterLevels[i] &&
+        (!characterLevels[i + 1] || experience < characterLevels[i + 1])
       ) {
         level += i;
       }
@@ -87,7 +87,7 @@ export function overrideSetInt(item: Item, value: string): boolean {
 
     const level = parseInt(value);
 
-    const experience = levels[level - 1] || levels[0];
+    const experience = characterLevels[level - 1] || characterLevels[0];
 
     setInt(itemInt.offset, "uint32", experience, { bigEndian: true });
 

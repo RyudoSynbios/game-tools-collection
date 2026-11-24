@@ -32,7 +32,7 @@ import type {
 import {
   attributes,
   characterLevels,
-  inventory,
+  itemList,
   levelAbilities,
   monsters,
 } from "./utils/resource";
@@ -195,11 +195,11 @@ export function overrideSetInt(item: Item, value: string): boolean {
 
     const previous = getInt(itemInt.offset, "uint16");
 
-    const previousEquipment = inventory.find(
+    const previousEquipment = itemList.find(
       (item) => item.index === previous && item.type <= 0xe,
     );
 
-    const equipment = inventory.find(
+    const equipment = itemList.find(
       (item) => item.index === itemIndex && item.type <= 0xe,
     );
 
@@ -309,7 +309,7 @@ export function afterSetInt(item: Item): void {
     const characterCurve = characterLevels[characterIndex];
 
     const level = getInt(itemInt.offset, "uint16");
-    const experience = characterCurve[level - 1] || 0;
+    const experience = characterCurve[level] || characterCurve[0];
 
     setInt(itemInt.offset + 0x8, "uint32", experience);
   } else if ("id" in item && item.id?.match(/experience-/)) {
@@ -321,18 +321,18 @@ export function afterSetInt(item: Item): void {
 
     const experience = getInt(itemInt.offset, "uint32");
 
-    let level = 0;
+    let level = 1;
 
     for (let i = 0; i < characterCurve.length; i += 1) {
       if (
         experience >= characterCurve[i] &&
         (!characterCurve[i + 1] || experience < characterCurve[i + 1])
       ) {
-        level += i + 1;
+        level += i;
       }
     }
 
-    setInt(itemInt.offset - 0x8, "uint16", level);
+    setInt(itemInt.offset - 0x8, "uint16", level - 1);
   } else if ("id" in item && item.id === "bagItem") {
     const itemInt = item as ItemInt;
 
@@ -417,7 +417,7 @@ function getEquipment(
 
   const itemIndex = getInt(offset, "uint16");
 
-  return inventory.find((item) => item.index === itemIndex && item.type <= 0xe);
+  return itemList.find((item) => item.index === itemIndex && item.type <= 0xe);
 }
 
 function getEquipmentOffset(offset: number, type: number): number {

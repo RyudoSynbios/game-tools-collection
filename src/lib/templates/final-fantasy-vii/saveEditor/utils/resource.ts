@@ -360,11 +360,10 @@ export const weapons: Resource = {};
 export const armors: Resource = {};
 export const accessories: Resource = {};
 
-export const weaponsGroups: ResourceGroups = [];
-
-weaponTypes.forEach((type) => {
-  weaponsGroups.push({ name: type.name, options: [] });
-});
+export const weaponsGroups: ResourceGroups = weaponTypes.map((type) => ({
+  name: type.name,
+  options: [],
+}));
 
 itemList.forEach((item) => {
   switch (item.type) {
@@ -446,7 +445,7 @@ export const limitBreakList = [
   ],
 ];
 
-const areas = [
+const areaList = [
   { index: 0x0, name: "World Map" },
   { index: 0x1, name: "Midgar" },
   { index: 0x2, name: "Kalm" },
@@ -465,84 +464,72 @@ const areas = [
 ];
 
 // prettier-ignore
-export const locationList: {
-  [key: number]: {
-    area: number;
-    coordinates: [number, number, number];
-    order: number;
-    name: string;
-  };
-} = {
-  0x001: { area: 0x0, coordinates: [185636,  307, 123325], order:  0, name: "World Map" },
-  0x041: { area: 0xe, coordinates: [     0,    0,      0], order: 49, name: "Debug Map" },
-  0x049: { area: 0xa, coordinates: [  -159,   13,   -298], order: 43, name: "Highwind" },
-  0x058: { area: 0xc, coordinates: [  -375,   13,     55], order: 45, name: "Hallway" },
-  0x067: { area: 0xe, coordinates: [     0,    3,      0], order: 48, name: "Disc Start" },
-  0x06e: { area: 0xe, coordinates: [     0, -156,      8], order: 50, name: "BLACKBGI" },
-  0x07c: { area: 0x1, coordinates: [    98,   36,   1570], order:  1, name: "No.1 Reactor" },
-  0x080: { area: 0x1, coordinates: [ -1541,   20,   2524], order:  5, name: "No.5 Reactor (platform)" },
-  0x083: { area: 0x1, coordinates: [    75,   36,   1597], order:  4, name: "No.5 Reactor (gates area)" },
-  0x090: { area: 0x1, coordinates: [  2006,   71,  -3217], order:  9, name: "Train Graveyard" },
-  0x09c: { area: 0x1, coordinates: [  -354,  231,    658], order:  2, name: "Sector 7 Slums" },
-  0x0a9: { area: 0x1, coordinates: [   -99,   11,    462], order:  3, name: "Lower Sector 4 Plate" },
-  0x0ad: { area: 0x1, coordinates: [  -546,   79,    188], order:  6, name: "Sector 5 Slum" },
-  0x0bb: { area: 0x1, coordinates: [   203,  137,   -188], order:  7, name: "Aeris's House" },
-  0x0c3: { area: 0x1, coordinates: [   432,   61,   1128], order:  8, name: "Wall Market" },
-  0x0e3: { area: 0x1, coordinates: [   548,   99,  -2446], order: 10, name: "Shinra Bldg." },
-  0x0f7: { area: 0x1, coordinates: [ -1163, -278,    245], order: 11, name: "Shinra Bldg. 64f." },
-  0x100: { area: 0x1, coordinates: [  -106,  283,    766], order: 12, name: "Shinra Bldg. 67f." },
-  0x102: { area: 0x1, coordinates: [  -106,  283,    766], order: 13, name: "Shinra Bldg. 67f. (cells)" },
-  0x108: { area: 0x1, coordinates: [   201,  228,   -439], order: 14, name: "Shinra Bldg. 69f." },
-  0x13d: { area: 0x6, coordinates: [   678,  261,   -519], order: 32, name: "Mt. Nibel" },
-  0x14c: { area: 0x2, coordinates: [   267,   15,   -107], order: 19, name: "Cloud's Past" },
-  0x163: { area: 0x3, coordinates: [  1084,    5,    426], order: 20, name: "Fort Condor" },
-  0x178: { area: 0x3, coordinates: [    19,   21,    219], order: 22, name: "Junon Inn" },
-  0x182: { area: 0x3, coordinates: [  -626,    6,   -259], order: 21, name: "Junon Airport Path" },
-  0x18a: { area: 0x3, coordinates: [  2201,   21,   -586], order: 25, name: "Junon Path" },
-  0x18d: { area: 0x3, coordinates: [  -386,    8,   -305], order: 24, name: "Junon Branch, 2f." },
-  0x198: { area: 0x3, coordinates: [   -58,    7,    473], order: 27, name: "Inside Submarine" },
-  0x1a6: { area: 0x3, coordinates: [    53,   16,    386], order: 26, name: "Underwater Reactor" },
-  0x1b4: { area: 0x3, coordinates: [  -116,   46,  -1149], order: 23, name: "Cargo Ship" },
-  0x1ce: { area: 0x4, coordinates: [ -2026,  219,     -5], order: 28, name: "Mt. Corel" },
-  0x1d9: { area: 0x4, coordinates: [   871,   74,   1475], order: 30, name: "Corel Prison" },
-  0x1f0: { area: 0x4, coordinates: [  -716,   26,     55], order: 29, name: "Ropeway Station" },
-  0x211: { area: 0x5, coordinates: [   123,   78,   -332], order: 31, name: "Cosmo Canyon" },
-  0x243: { area: 0xb, coordinates: [  -596,   34,   1105], order: 44, name: "Wutai" },
-  0x25d: { area: 0x7, coordinates: [   -56,   32,     83], order: 33, name: "Temple of the Ancients (pillar room)" },
-  0x25e: { area: 0x7, coordinates: [    -7,   61,   1465], order: 34, name: "Temple of the Ancients (boulder area)" },
-  0x262: { area: 0x7, coordinates: [   551,   66,    126], order: 35, name: "Temple of the Ancients (gates area)" },
-  0x279: { area: 0x8, coordinates: [  -151,   40,   -131], order: 36, name: "Forgotten Capital" },
-  0x286: { area: 0x8, coordinates: [   673,  235,    751], order: 37, name: "Forgotten City" },
-  0x2af: { area: 0x9, coordinates: [   166,    5,     50], order: 38, name: "Base of Gaea's Cliff" },
-  0x2b5: { area: 0x9, coordinates: [  -125,   65,   1112], order: 39, name: "Inside of Gaea's Cli" },
-  0x2bb: { area: 0x9, coordinates: [   -91,   17,    249], order: 40, name: "Inside of Gaea's Cli (near Schizo)" },
-  0x2bf: { area: 0x9, coordinates: [  -373,   44,  -1046], order: 41, name: "Whirlwind Maze" },
-  0x2c1: { area: 0x9, coordinates: [    99,  173,   1170], order: 42, name: "Whirlwind Maze (near Jenova∙DEATH)" },
-  0x2dc: { area: 0x1, coordinates: [   267,   24,   -208], order: 15, name: "Midgar, Sector 8" },
-  0x2dd: { area: 0x1, coordinates: [  -273,  116,   1624], order: 16, name: "Sector 8, Underground" },
-  0x2e0: { area: 0x1, coordinates: [   -97,  216,   -298], order: 17, name: "Winding Tunnel" },
-  0x2e3: { area: 0x1, coordinates: [ -4103,   35,  18431], order: 18, name: "Midgar, Sector 8 (near Proud Clod)" },
-  0x2eb: { area: 0xd, coordinates: [  -481,   71,    861], order: 46, name: "Inside Northern Cave" },
-  0x2fc: { area: 0xd, coordinates: [   560,  129,    364], order: 47, name: "Bottom of Nothern Cave" },
-};
+export const locationList = [
+  { index: 0x001, area: 0x0, coordinates: [185636,  307, 123325], order:  0, name: "World Map" },
+  { index: 0x041, area: 0xe, coordinates: [     0,    0,      0], order: 49, name: "Debug Map" },
+  { index: 0x049, area: 0xa, coordinates: [  -159,   13,   -298], order: 43, name: "Highwind" },
+  { index: 0x058, area: 0xc, coordinates: [  -375,   13,     55], order: 45, name: "Hallway" },
+  { index: 0x067, area: 0xe, coordinates: [     0,    3,      0], order: 48, name: "Disc Start" },
+  { index: 0x06e, area: 0xe, coordinates: [     0, -156,      8], order: 50, name: "BLACKBGI" },
+  { index: 0x07c, area: 0x1, coordinates: [    98,   36,   1570], order:  1, name: "No.1 Reactor" },
+  { index: 0x080, area: 0x1, coordinates: [ -1541,   20,   2524], order:  5, name: "No.5 Reactor (platform)" },
+  { index: 0x083, area: 0x1, coordinates: [    75,   36,   1597], order:  4, name: "No.5 Reactor (gates area)" },
+  { index: 0x090, area: 0x1, coordinates: [  2006,   71,  -3217], order:  9, name: "Train Graveyard" },
+  { index: 0x09c, area: 0x1, coordinates: [  -354,  231,    658], order:  2, name: "Sector 7 Slums" },
+  { index: 0x0a9, area: 0x1, coordinates: [   -99,   11,    462], order:  3, name: "Lower Sector 4 Plate" },
+  { index: 0x0ad, area: 0x1, coordinates: [  -546,   79,    188], order:  6, name: "Sector 5 Slum" },
+  { index: 0x0bb, area: 0x1, coordinates: [   203,  137,   -188], order:  7, name: "Aeris's House" },
+  { index: 0x0c3, area: 0x1, coordinates: [   432,   61,   1128], order:  8, name: "Wall Market" },
+  { index: 0x0e3, area: 0x1, coordinates: [   548,   99,  -2446], order: 10, name: "Shinra Bldg." },
+  { index: 0x0f7, area: 0x1, coordinates: [ -1163, -278,    245], order: 11, name: "Shinra Bldg. 64f." },
+  { index: 0x100, area: 0x1, coordinates: [  -106,  283,    766], order: 12, name: "Shinra Bldg. 67f." },
+  { index: 0x102, area: 0x1, coordinates: [  -106,  283,    766], order: 13, name: "Shinra Bldg. 67f. (cells)" },
+  { index: 0x108, area: 0x1, coordinates: [   201,  228,   -439], order: 14, name: "Shinra Bldg. 69f." },
+  { index: 0x13d, area: 0x6, coordinates: [   678,  261,   -519], order: 32, name: "Mt. Nibel" },
+  { index: 0x14c, area: 0x2, coordinates: [   267,   15,   -107], order: 19, name: "Cloud's Past" },
+  { index: 0x163, area: 0x3, coordinates: [  1084,    5,    426], order: 20, name: "Fort Condor" },
+  { index: 0x178, area: 0x3, coordinates: [    19,   21,    219], order: 22, name: "Junon Inn" },
+  { index: 0x182, area: 0x3, coordinates: [  -626,    6,   -259], order: 21, name: "Junon Airport Path" },
+  { index: 0x18a, area: 0x3, coordinates: [  2201,   21,   -586], order: 25, name: "Junon Path" },
+  { index: 0x18d, area: 0x3, coordinates: [  -386,    8,   -305], order: 24, name: "Junon Branch, 2f." },
+  { index: 0x198, area: 0x3, coordinates: [   -58,    7,    473], order: 27, name: "Inside Submarine" },
+  { index: 0x1a6, area: 0x3, coordinates: [    53,   16,    386], order: 26, name: "Underwater Reactor" },
+  { index: 0x1b4, area: 0x3, coordinates: [  -116,   46,  -1149], order: 23, name: "Cargo Ship" },
+  { index: 0x1ce, area: 0x4, coordinates: [ -2026,  219,     -5], order: 28, name: "Mt. Corel" },
+  { index: 0x1d9, area: 0x4, coordinates: [   871,   74,   1475], order: 30, name: "Corel Prison" },
+  { index: 0x1f0, area: 0x4, coordinates: [  -716,   26,     55], order: 29, name: "Ropeway Station" },
+  { index: 0x211, area: 0x5, coordinates: [   123,   78,   -332], order: 31, name: "Cosmo Canyon" },
+  { index: 0x243, area: 0xb, coordinates: [  -596,   34,   1105], order: 44, name: "Wutai" },
+  { index: 0x25d, area: 0x7, coordinates: [   -56,   32,     83], order: 33, name: "Temple of the Ancients (pillar room)" },
+  { index: 0x25e, area: 0x7, coordinates: [    -7,   61,   1465], order: 34, name: "Temple of the Ancients (boulder area)" },
+  { index: 0x262, area: 0x7, coordinates: [   551,   66,    126], order: 35, name: "Temple of the Ancients (gates area)" },
+  { index: 0x279, area: 0x8, coordinates: [  -151,   40,   -131], order: 36, name: "Forgotten Capital" },
+  { index: 0x286, area: 0x8, coordinates: [   673,  235,    751], order: 37, name: "Forgotten City" },
+  { index: 0x2af, area: 0x9, coordinates: [   166,    5,     50], order: 38, name: "Base of Gaea's Cliff" },
+  { index: 0x2b5, area: 0x9, coordinates: [  -125,   65,   1112], order: 39, name: "Inside of Gaea's Cli" },
+  { index: 0x2bb, area: 0x9, coordinates: [   -91,   17,    249], order: 40, name: "Inside of Gaea's Cli (near Schizo)" },
+  { index: 0x2bf, area: 0x9, coordinates: [  -373,   44,  -1046], order: 41, name: "Whirlwind Maze" },
+  { index: 0x2c1, area: 0x9, coordinates: [    99,  173,   1170], order: 42, name: "Whirlwind Maze (near Jenova∙DEATH)" },
+  { index: 0x2dc, area: 0x1, coordinates: [   267,   24,   -208], order: 15, name: "Midgar, Sector 8" },
+  { index: 0x2dd, area: 0x1, coordinates: [  -273,  116,   1624], order: 16, name: "Sector 8, Underground" },
+  { index: 0x2e0, area: 0x1, coordinates: [   -97,  216,   -298], order: 17, name: "Winding Tunnel" },
+  { index: 0x2e3, area: 0x1, coordinates: [ -4103,   35,  18431], order: 18, name: "Midgar, Sector 8 (near Proud Clod)" },
+  { index: 0x2eb, area: 0xd, coordinates: [  -481,   71,    861], order: 46, name: "Inside Northern Cave" },
+  { index: 0x2fc, area: 0xd, coordinates: [   560,  129,    364], order: 47, name: "Bottom of Nothern Cave" },
+].sort((a, b) => a.order - b.order);
 
 export const locations: Resource = {};
-export const locationsGroups: ResourceGroups = [];
+export const locationsGroups: ResourceGroups = areaList.map((area) => ({
+  name: area.name,
+  options: [],
+}));
 export const locationsOrder: number[] = [];
 
-areas.forEach((area) => {
-  locationsGroups.push({ name: area.name, options: [] });
+locationList.forEach((location) => {
+  locations[location.index] = location.name;
+  locationsGroups[location.area].options.push(location.index);
+  locationsOrder.push(location.index);
 });
-
-Object.entries(locationList)
-  .sort(([, a], [, b]) => a.order - b.order)
-  .forEach(([key, location]) => {
-    const index = parseInt(key);
-
-    locations[index] = location.name;
-    locationsGroups[location.area].options.push(index);
-    locationsOrder.push(index);
-  });
 
 export const materiaTypes = [
   { index: 0x0, name: "Magic Materia" },

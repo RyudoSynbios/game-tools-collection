@@ -271,7 +271,7 @@ itemList.forEach((item) => {
   }
 });
 
-const areas = [
+const areaList = [
   { index: 0x00, name: "Mario's Pad" },
   { index: 0x01, name: "Mushroom Kingdom" },
   { index: 0x02, name: "Bandit's Way" },
@@ -345,10 +345,10 @@ export const locationList = [
   { index: 0x1fc, area: 0x15, preview: 0x37, coordinates: [29, 15], layers: [152,   8], name: "Factory (Part 4)" },
   { index: 0x1d8, area: 0x15, preview: 0x37, coordinates: [11, 48], layers: [104,  36], name: "Factory (near Smithy)" },
   { index: 0x000, area: 0x16, preview: 0x00, coordinates: [10, 16], layers: [248,   9], name: "Debug Map" },
-]
+];
 
 export const locations: Resource = {};
-export const locationsGroups: ResourceGroups = areas.map((area) => ({
+export const locationsGroups: ResourceGroups = areaList.map((area) => ({
   name: area.name,
   options: [],
 }));

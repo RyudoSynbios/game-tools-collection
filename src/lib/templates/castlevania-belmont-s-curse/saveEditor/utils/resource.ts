@@ -811,7 +811,6 @@ export const locationList = [
 ];
 
 export const locations: Resource = {};
-
 export const locationsGroups: ResourceGroups = areaList.map((area) => ({
   name: area.name,
   options: [],

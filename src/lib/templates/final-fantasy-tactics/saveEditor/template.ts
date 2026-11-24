@@ -57,21 +57,14 @@ const template: GameJson = {
       onTabChange: "onSlotChange(%d)",
       items: [
         {
-          type: "section",
-          flex: true,
-          hidden: true,
-          items: [
-            {
-              name: "Checksum",
-              offset: 0x118,
-              type: "checksum",
-              dataType: "uint64",
-              control: {
-                offsetStart: 0x0,
-                offsetEnd: 0x0,
-              },
-            },
-          ],
+          name: "Checksum",
+          offset: 0x118,
+          type: "checksum",
+          dataType: "uint64",
+          control: {
+            offsetStart: 0x0,
+            offsetEnd: 0x0,
+          },
         },
         {
           type: "tabs",

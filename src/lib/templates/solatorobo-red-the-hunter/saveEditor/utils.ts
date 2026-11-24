@@ -89,27 +89,29 @@ export function afterSetInt(item: Item, flag: ItemBitflag): void {
   } else if ("id" in item && item.id === "location") {
     const itemInt = item as ItemInt;
 
-    const int = getInt(itemInt.offset, "uint8");
+    const index = getInt(itemInt.offset, "uint8");
 
-    const location = locationList[int];
+    const location = locationList.find((location) => location.index === index);
 
-    setInt(itemInt.offset - 0x163, "uint8", location.preview);
-    setInt(itemInt.offset - 0x133, "uint8", location.preview);
-    setInt(itemInt.offset - 0x128, "uint8", location.preview);
+    if (location) {
+      setInt(itemInt.offset - 0x163, "uint8", location.preview);
+      setInt(itemInt.offset - 0x133, "uint8", location.preview);
+      setInt(itemInt.offset - 0x128, "uint8", location.preview);
 
-    // We force Red to mount Dahak
-    setInt(itemInt.offset - 0x118, "bit", 0, { bit: 0 });
+      // We force Red to mount Dahak
+      setInt(itemInt.offset - 0x118, "bit", 0, { bit: 0 });
 
-    setInt(itemInt.offset + 0x1, "uint8", location.area);
-    setInt(itemInt.offset + 0x2, "uint8", location.zone);
+      setInt(itemInt.offset + 0x1, "uint8", location.area);
+      setInt(itemInt.offset + 0x2, "uint8", location.zone);
 
-    setInt(itemInt.offset + 0xb, "uint32", location.coordinates[0]);
-    setInt(itemInt.offset + 0xf, "uint32", location.coordinates[1]);
-    setInt(itemInt.offset + 0x13, "uint32", location.coordinates[2]);
+      setInt(itemInt.offset + 0xb, "uint32", location.coordinates[0]);
+      setInt(itemInt.offset + 0xf, "uint32", location.coordinates[1]);
+      setInt(itemInt.offset + 0x13, "uint32", location.coordinates[2]);
 
-    setInt(itemInt.offset + 0x1b, "uint32", location.coordinates[0]);
-    setInt(itemInt.offset + 0x1f, "uint32", location.coordinates[1]);
-    setInt(itemInt.offset + 0x23, "uint32", location.coordinates[2]);
+      setInt(itemInt.offset + 0x1b, "uint32", location.coordinates[0]);
+      setInt(itemInt.offset + 0x1f, "uint32", location.coordinates[1]);
+      setInt(itemInt.offset + 0x23, "uint32", location.coordinates[2]);
+    }
   } else if ("id" in item && item.id === "pendingQuest") {
     const itemInt = item as ItemInt;
 
