@@ -40,6 +40,10 @@ test.describe(game, () => {
     ["should load a PSU save (USA)"              , "playstation-2/usa.psu"   , [            "c|0x0000002a0000000f", "s|6$1", "s|30$2", "i|29", "w|30", "c|0x0000002b0000000f"]],
     ["should load a PSU save (Japan)"            , "playstation-2/japan.psu" , [            "c|0x000000290000000f", "s|6$1", "s|63$2", "i|62", "w|63", "c|0x0000002a0000000f"]],
     ["should load a PSU save (Korea)"            , "playstation-2/korea.psu" , [            "c|0x000000290000000f", "s|6$1", "s|73$2", "i|72", "w|73", "c|0x0000002a0000000f"]],
+    // Wii
+    ["should load a standard Wii save (Europe)"  , "wii/europe/DBZT2"        , [            "c|0x000000de00000010", "s|6$1", "s|78$2", "i|77", "w|78", "c|0x000000df00000010"]],
+    ["should load a standard Wii save (USA)"     , "wii/usa/DBZT2"           , [            "c|0x0000002a0000000f", "s|6$1", "s|40$2", "i|39", "w|40", "c|0x0000002b0000000f"]],
+    ["should load a standard Wii save (Japan)"   , "wii/japan/DBZSN"         , [            "c|0x000000d700000010", "s|6$1", "s|67$2", "i|66", "w|67", "c|0x000000d800000010"]],
   ];
 
   tests.forEach(([title, saveFilePath, args]) => {

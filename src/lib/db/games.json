@@ -477,7 +477,7 @@
   {
     "id": "dragon-ball-z-budokai-tenkaichi-2",
     "name": "Dragon Ball Z: Budokai Tenkaichi 2",
-    "platformIds": ["playstation-2"],
+    "platformIds": ["wii", "playstation-2"],
     "tools": {
       "saveEditor": {
         "createdAt": "2025-09-14",

@@ -1,10 +1,16 @@
-import type { GameJson } from "$lib/types";
+import { isInRange, paginate } from "$lib/utils/format";
+
+import type { GameJson, ItemBitflags } from "$lib/types";
 
 import { zItemList, zItems, zItemsGroups, zItemTypes } from "./utils/resource";
 
 const template: GameJson = {
   validator: {
     platforms: {
+      wii: {
+        europe_japan: true,
+        usa: true,
+      },
       playstation2: {
         europe: {
           0x0: [
@@ -76,22 +82,37 @@ const template: GameJson = {
               name: "Unlocked Characters",
               type: "section",
               flex: true,
-              items: [...Array(5).keys()].map((index) => ({
-                id: "unlockedCharacters",
-                type: "bitflags",
-                flags: zItemList
-                  .filter(
-                    (zItem) =>
-                      zItem.index >= 0x1ae + index * 0x1a &&
-                      zItem.index <= 0x1ae + (index + 0x1) * 0x1a - 0x1 &&
-                      zItem.index <= 0x22e,
-                  )
-                  .map((zItem) => ({
-                    offset: 0x1f30 + zItem.index * 0x4,
-                    bit: 0,
-                    label: zItem.name,
-                  })),
-              })),
+              items: [
+                ...paginate(
+                  zItemList.filter((zItem) =>
+                    isInRange(zItem.index, 0x1ae, 0x22e),
+                  ),
+                  4,
+                ).map(
+                  (page) =>
+                    ({
+                      id: "unlockedCharacters",
+                      type: "bitflags",
+                      flags: page.map((zItem) => ({
+                        offset: 0x1f30 + zItem.index * 0x4,
+                        bit: 0,
+                        label: zItem.name,
+                      })),
+                    }) as ItemBitflags,
+                ),
+                {
+                  id: "extraCharacters",
+                  type: "bitflags",
+                  hidden: true,
+                  flags: [
+                    { offset: 0x808, bit: 1, label: "Pilaf Machine" },
+                    { offset: 0x808, bit: 2, label: "Demon King Piccolo" },
+                    { offset: 0x808, bit: 3, label: "Cyborg Tao" },
+                    { offset: 0x808, bit: 4, label: "Appule" },
+                    { offset: 0x808, bit: 5, label: "Frieza Soldier" },
+                  ],
+                },
+              ],
             },
           ],
         },
@@ -2151,6 +2172,10 @@ const template: GameJson = {
                       resource: "characters",
                       size: "lg",
                       autocomplete: true,
+                      overrideShift: {
+                        parent: 1,
+                        shift: 0x3c,
+                      },
                     },
                     {
                       id: "ubzCharacterTag-%parent%-0",
@@ -2161,6 +2186,10 @@ const template: GameJson = {
                       resource: "characters",
                       size: "lg",
                       autocomplete: true,
+                      overrideShift: {
+                        parent: 1,
+                        shift: 0x3c,
+                      },
                     },
                     {
                       id: "ubzCharacterTag-%parent%-1",
@@ -2171,6 +2200,10 @@ const template: GameJson = {
                       resource: "characters",
                       size: "lg",
                       autocomplete: true,
+                      overrideShift: {
+                        parent: 1,
+                        shift: 0x3c,
+                      },
                     },
                     {
                       name: "Maximum Point",
@@ -2180,6 +2213,10 @@ const template: GameJson = {
                       operations: [{ "*": 100 }],
                       max: 6553500,
                       step: 100,
+                      overrideShift: {
+                        parent: 1,
+                        shift: 0x3c,
+                      },
                     },
                   ],
                 },
@@ -2375,11 +2412,12 @@ const template: GameJson = {
           name: "Evolution Z",
           items: [
             {
+              id: "evolutionZ",
               length: 0x22,
               type: "container",
               instanceType: "tabs",
               instances: 73,
-              resource: "ezCharacters",
+              resource: "characterNames",
               vertical: true,
               items: [
                 {
@@ -2503,6 +2541,7 @@ const template: GameJson = {
                           ],
                         },
                         {
+                          id: "ps2Only",
                           name: "Buttons",
                           type: "section",
                           flex: true,
@@ -2558,6 +2597,70 @@ const template: GameJson = {
                             },
                             {
                               name: "R2",
+                              offset: 0x1028,
+                              type: "variable",
+                              dataType: "uint32",
+                              resource: "controllerActions",
+                            },
+                          ],
+                        },
+                        {
+                          id: "wiiOnly",
+                          name: "Buttons",
+                          type: "section",
+                          flex: true,
+                          items: [
+                            {
+                              name: "X",
+                              offset: 0x100c,
+                              type: "variable",
+                              dataType: "uint32",
+                              resource: "controllerActions",
+                            },
+                            {
+                              name: "B",
+                              offset: 0x1010,
+                              type: "variable",
+                              dataType: "uint32",
+                              resource: "controllerActions",
+                            },
+                            {
+                              name: "A",
+                              offset: 0x1014,
+                              type: "variable",
+                              dataType: "uint32",
+                              resource: "controllerActions",
+                            },
+                            {
+                              name: "Y",
+                              offset: 0x1018,
+                              type: "variable",
+                              dataType: "uint32",
+                              resource: "controllerActions",
+                            },
+                            {
+                              name: "C-Up",
+                              offset: 0x101c,
+                              type: "variable",
+                              dataType: "uint32",
+                              resource: "controllerActions",
+                            },
+                            {
+                              name: "L",
+                              offset: 0x1020,
+                              type: "variable",
+                              dataType: "uint32",
+                              resource: "controllerActions",
+                            },
+                            {
+                              name: "Z",
+                              offset: 0x1024,
+                              type: "variable",
+                              dataType: "uint32",
+                              resource: "controllerActions",
+                            },
+                            {
+                              name: "R",
                               offset: 0x1028,
                               type: "variable",
                               dataType: "uint32",
@@ -2694,6 +2797,7 @@ const template: GameJson = {
       0x1: "Type B",
       0x2: "Type C",
     },
+    characterNames: "getCharacterNames()",
     characters: {
       0x0: "Goku",
       0x1: "Super Saiyan Goku",
@@ -2851,81 +2955,6 @@ const template: GameJson = {
     },
     empty: {
       0x0: "-",
-    },
-    ezCharacters: {
-      0x0: "Goku",
-      0x1: "Kid Gohan",
-      0x2: "Teen Gohan",
-      0x3: "Gohan",
-      0x4: "Ultimate Gohan",
-      0x5: "Piccolo",
-      0x6: "Krillin",
-      0x7: "Yamcha",
-      0x8: "Tien",
-      0x9: "Chiaotzu",
-      0xa: "Vegeta",
-      0xb: "Vegeta (second form)",
-      0xc: "Trunks (Sword)",
-      0xd: "Trunks",
-      0xe: "Goten",
-      0xf: "Kid Trunks",
-      0x10: "Vegeta (second form) [Majin]",
-      0x11: "Hercule",
-      0x12: "Videl",
-      0x13: "Supreme Kai",
-      0x14: "Bardock",
-      0x15: "Raditz",
-      0x16: "Saibamen",
-      0x17: "Nappa",
-      0x18: "Vegeta (Scouter)",
-      0x19: "Cui",
-      0x1a: "Dodoria",
-      0x1b: "Zarbon",
-      0x1c: "Guldo",
-      0x1d: "Recoome",
-      0x1e: "Burter",
-      0x1f: "Jeice",
-      0x20: "Ginyu",
-      0x21: "Frieza [1st Form]",
-      0x22: "Mecha Frieza",
-      0x23: "Dr. Gero",
-      0x24: "Android #19",
-      0x25: "Android #18",
-      0x26: "Android #17",
-      0x27: "Android #16",
-      0x28: "Cell [1st Form]",
-      0x29: "Cell Jr.",
-      0x2a: "Demon King Dabura",
-      0x2b: "Majin Buu",
-      0x2c: "Majin Buu (Pure Evil)",
-      0x2d: "Super Buu",
-      0x2e: "Kid Buu",
-      0x2f: "Garlic Jr.",
-      0x30: "Turles",
-      0x31: "Slug",
-      0x32: "Salza",
-      0x33: "Cooler",
-      0x34: "Meta-Cooler",
-      0x35: "Android 13",
-      0x36: "Broly",
-      0x37: "Zangya",
-      0x38: "Bojack",
-      0x39: "Janemba",
-      0x3a: "Hirudegarn",
-      0x3b: "Tapion",
-      0x3c: "Pikkon",
-      0x3d: "Yajirobe",
-      0x3e: "General Tao",
-      0x3f: "Goku [Super Saiyan 4]",
-      0x40: "Vegeta (second form) [Super Saiyan 4]",
-      0x41: "Pan",
-      0x42: "Uub",
-      0x43: "Baby Vegeta",
-      0x44: "Super 17",
-      0x45: "Syn Shenron",
-      0x46: "Kid Goku",
-      0x47: "Master Roshi",
-      0x48: "Grandpa Gohan",
     },
     logics: {
       0x0: "Balance",
