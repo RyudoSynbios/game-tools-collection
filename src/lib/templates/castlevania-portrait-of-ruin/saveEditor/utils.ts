@@ -1,7 +1,8 @@
+import { sha1 } from "js-sha1";
 import { get } from "svelte/store";
 
-import { dataView, fileHeaderShift, gameRegion } from "$lib/stores";
-import { byteswap32, getInt, setInt } from "$lib/utils/bytes";
+import { dataView, fileHeaderShift, gameMetas, gameRegion } from "$lib/stores";
+import { getInt, getIntFromArray, setInt } from "$lib/utils/bytes";
 import { formatChecksum } from "$lib/utils/checksum";
 import {
   customGetRegions,
@@ -12,7 +13,6 @@ import {
   resetState,
 } from "$lib/utils/common/castlevania";
 import { getHeaderShift } from "$lib/utils/common/nintendoDs";
-import { clone } from "$lib/utils/format";
 import { getShift } from "$lib/utils/parser";
 
 import type {
@@ -322,11 +322,11 @@ export function afterSetInt(item: Item, flag: ItemBitflag): void {
   }
 }
 
-let checksums: number[] = [];
-let buffer = new Uint32Array(0x10);
-
-// It seems to be a SHA-1 hash generator
+// prettier-ignore
 export function generateChecksum(item: ItemChecksum): number {
+  const $dataView = get(dataView);
+  const $gameMetas = get(gameMetas);
+
   const [index] = item.id!.splitInt();
 
   if (isCastlevaniaCollectionSave(GAME)) {
@@ -334,35 +334,18 @@ export function generateChecksum(item: ItemChecksum): number {
   }
 
   if (index !== 0) {
-    return formatChecksum(checksums[index], item.dataType);
+    const checksum = getIntFromArray($gameMetas.hash, index * 0x4, "uint32", true);
+
+    return formatChecksum(checksum, item.dataType);
   }
 
-  checksums = [0x67452301, 0xefcdab89, 0x98badcfe, 0x10325476, 0xc3d2e1f0];
-  buffer = new Uint32Array(0x10);
+  $gameMetas.hash = sha1.array(new Uint8Array(
+    $dataView.buffer.slice(item.control.offsetStart, item.control.offsetEnd),
+  ));
 
-  let offset = item.control.offsetStart;
-  let length = item.control.offsetEnd - item.control.offsetStart;
+  const checksum = getIntFromArray($gameMetas.hash, 0x0, "uint32", true);
 
-  buffer[0xf] = byteswap32(length * 0x8);
-
-  while (offset + 0x40 <= item.control.offsetEnd) {
-    hash(offset);
-
-    offset += 0x40;
-    length -= 0x40;
-  }
-
-  const count = Math.floor(length / 0x4);
-
-  for (let i = 0x0; i < count; i += 0x1) {
-    buffer[i] = getInt(offset + i * 0x4, "uint32");
-  }
-
-  buffer[count] = 0x80 << ((length % 0x4) * 0x8);
-
-  hash(0x0, buffer);
-
-  return formatChecksum(checksums[0], item.dataType);
+  return formatChecksum(checksum, item.dataType);
 }
 
 export function beforeSaving(): ArrayBufferLike {
@@ -389,98 +372,4 @@ function getExperience(level: number): number {
   }
 
   return experience;
-}
-
-// prettier-ignore
-function hash(offset: number, buffer?: Uint32Array): void {
-  const constants = [0x5a827999, 0x6ed9eba1, 0x8f1bbcdc, 0xca62c1d6];
-  const mask = 0x00ff00ff;
-
-  let tmp1 = 0x0;
-  let tmp2 = 0x0;
-  let tmp3 = 0x0;
-  let tmp4 = 0x0;
-
-  const array: number[] = [];
-
-  const checksumTmp = clone(checksums);
-
-  for (let i = 0x0; i < 0x10; i += 0x1) {
-    tmp1 = checksumTmp[0];
-    tmp3 = checksumTmp[3];
-    checksumTmp[3] = checksumTmp[2];
-    checksumTmp[2] = buffer ? buffer[offset] : getInt(offset, "uint32");
-    checksumTmp[2] = (mask & ((checksumTmp[2] >>> 0x18) | (checksumTmp[2] << 0x8))) | ((checksumTmp[2] & mask) >>> 0x8) | ((checksumTmp[2] & mask) << 0x18);
-    array[i] = checksumTmp[2];
-    array[i + 0x10] = checksumTmp[2];
-    checksumTmp[0] = constants[0] + checksumTmp[4] + ((tmp1 >>> 0x1b) | (tmp1 << 0x5)) + checksumTmp[2] + (((checksumTmp[3] ^ tmp3) & checksumTmp[1]) ^ tmp3);
-    checksumTmp[2] = (checksumTmp[1] >>> 0x2) | (checksumTmp[1] << 0x1e);
-    checksumTmp[1] = tmp1;
-    checksumTmp[4] = tmp3;
-    offset += buffer ? 0x1 : 0x4;
-  }
-
-  for (let i = 0x0; i < 0x4; i += 0x1) {
-    checksumTmp[4] = checksumTmp[3];
-    checksumTmp[3] = checksumTmp[2];
-    checksumTmp[1] = checksumTmp[0];
-    checksumTmp[2] = array[i] ^ array[i + 0x2] ^ array[i + 0x8] ^ array[i + 0xd];
-    checksumTmp[2] = (checksumTmp[2] >>> 0x1f) | (checksumTmp[2] << 0x1);
-    array[i] = checksumTmp[2];
-    array[i + 0x10] = checksumTmp[2];
-    checksumTmp[0] = checksumTmp[2] + tmp3 + constants[0] + ((checksumTmp[1] >>> 0x1b) | (checksumTmp[1] << 0x5)) + (((checksumTmp[3] ^ checksumTmp[4]) & tmp1) ^ checksumTmp[4]);
-    checksumTmp[2] = (tmp1 >>> 0x2) | (tmp1 << 0x1e);
-    tmp1 = checksumTmp[1];
-    tmp3 = checksumTmp[4];
-  }
-
-  for (let i = 0x4; i < 0x18; i += 0x1) {
-    const iModulo = i % 0x10;
-
-    tmp1 = checksumTmp[0];
-    tmp3 = checksumTmp[3];
-    checksumTmp[3] = checksumTmp[2];
-    checksumTmp[2] = array[iModulo] ^ array[iModulo + 0x2] ^ array[iModulo + 0x8] ^ array[iModulo + 0xd];
-    checksumTmp[2] = (checksumTmp[2] >>> 0x1f) | (checksumTmp[2] << 0x1);
-    array[iModulo] = checksumTmp[2];
-    array[iModulo + 0x10] = checksumTmp[2];
-    checksumTmp[0] = checksumTmp[2] + checksumTmp[4] + constants[1] + ((tmp1 >>> 0x1b) | (tmp1 << 0x5)) + (checksumTmp[1] ^ checksumTmp[3] ^ tmp3);
-    checksumTmp[2] = (checksumTmp[1] >>> 0x2) | (checksumTmp[1] << 0x1e);
-    checksumTmp[1] = tmp1;
-    checksumTmp[4] = tmp3;
-  }
-
-  for (let i = 0x8; i < 0x1c; i += 0x1) {
-    const iModulo = i % 0x10;
-
-    tmp2 = checksumTmp[0];
-    tmp4 = checksumTmp[3];
-    checksumTmp[3] = checksumTmp[2];
-    checksumTmp[2] = array[iModulo] ^ array[iModulo + 0x2] ^ array[iModulo + 0x8] ^ array[iModulo + 0xd];
-    checksumTmp[2] = (checksumTmp[2] >>> 0x1f) | (checksumTmp[2] << 0x1);
-    array[iModulo] = checksumTmp[2];
-    array[iModulo + 0x10] = checksumTmp[2];
-    checksumTmp[0] = checksumTmp[2] + tmp3 + constants[2] + ((tmp2 >>> 0x1b) | (tmp2 << 0x5)) + (((tmp1 | checksumTmp[3]) & tmp4) | (tmp1 & checksumTmp[3]));
-    checksumTmp[2] = (tmp1 >>> 0x2) | (tmp1 << 0x1e);
-    tmp1 = tmp2;
-    tmp3 = tmp4;
-  }
-
-  for (let i = 0xc; i < 0x20; i += 0x1) {
-    checksumTmp[4] = checksumTmp[3];
-    checksumTmp[3] = checksumTmp[2];
-    checksumTmp[1] = checksumTmp[0];
-    checksumTmp[2] = array[i] ^ array[i + 0x2] ^ array[i + 0x8] ^ array[i + 0xd];
-    checksumTmp[2] = (checksumTmp[2] >>> 0x1f) | (checksumTmp[2] << 0x1);
-    array[i] = checksumTmp[2];
-    array[i + 0x10] = checksumTmp[2];
-    checksumTmp[0] = checksumTmp[2] + tmp4 + constants[3] + ((checksumTmp[1] >>> 0x1b) | (checksumTmp[1] << 0x5)) + (tmp2 ^ checksumTmp[3] ^ checksumTmp[4]);
-    checksumTmp[2] = (tmp2 >>> 0x2) | (tmp2 << 0x1e);
-    tmp2 = checksumTmp[1];
-    tmp4 = checksumTmp[4];
-  }
-
-  for (let i = 0x0; i < 0x5; i += 0x1) {
-    checksums[i] += checksumTmp[i];
-  }
 }

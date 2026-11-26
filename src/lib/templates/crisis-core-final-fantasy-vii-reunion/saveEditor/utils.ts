@@ -30,9 +30,9 @@ export function beforeInitDataView(dataView: DataView): DataView {
 
   const json = gvas.parseToJson();
 
-  const cryptedData = new Uint8Array((json.buf as number[]).slice(0x8));
+  const encryptedData = new Uint8Array((json.buf as number[]).slice(0x8));
 
-  const decryptedData = decrypt(cryptedData);
+  const decryptedData = decrypt(encryptedData);
 
   dataViewAlt.set({ save: new DataView(decryptedData.buffer) });
 

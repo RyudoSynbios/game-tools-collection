@@ -1164,6 +1164,17 @@
     }
   },
   {
+    "id": "pokemon-colosseum",
+    "name": "Pokémon Colosseum",
+    "platformIds": ["gamecube"],
+    "tools": {
+      "saveEditor": {
+        "createdAt": "2026-11-27",
+        "regions": ["🇪🇺", "🇺🇸", "🇯🇵"]
+      }
+    }
+  },
+  {
     "id": "pokemon-red-blue-and-yellow",
     "name": "Pokémon Red, Blue and Yellow",
     "platformIds": ["game-boy"],

@@ -26,10 +26,6 @@ const template: GameJson = {
         offsetStart: 0x40,
         offsetEnd: 0x1203c,
       },
-      overrideShift: {
-        parent: 1,
-        shift: 0x0,
-      },
     },
     {
       type: "tabs",

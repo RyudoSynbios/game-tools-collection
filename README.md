@@ -108,6 +108,7 @@ Link to the website: [https://game-tools-collection.com](https://game-tools-coll
 | Octopath Traveler II                                | SWITCH / STEAM | Save                    | WORLD                                         |
 | Paper Mario                                         | N64            | Save                    | EUR / USA / JAP                               |
 | Paper Mario: The Thousand-Year Door                 | GC             | Save                    | EUR / USA / JAP                               |
+| Pokémon Colosseum                                   | GC             | Save                    | EUR / USA / JAP                               |
 | Pokémon Red, Blue and Yellow                        | GB             | Save                    | EUR / USA / JAP / FRA / GER / ITA / SPA       |
 | Pokémon Gold, Silver and Crystal                    | GBC            | Save                    | EUR / USA / JAP / FRA / GER / ITA / SPA / AUS |
 | Pokémon Snap                                        | N64            | Save                    | EUR / USA / JAP / FRA / GER / ITA / SPA / AUS |

@@ -421,10 +421,7 @@ export function beforeSaving(): ArrayBufferLike {
 
   const obfuscatedData = obfuscateData(new Uint8Array(gvas.writeToBuffer()));
 
-  const hash = md5.create();
-  hash.update(obfuscatedData);
-
-  const checksum = new Uint8Array(hash.arrayBuffer());
+  const checksum = new Uint8Array(md5.arrayBuffer(obfuscatedData));
 
   return mergeUint8Arrays(obfuscatedData, checksum).buffer;
 }
