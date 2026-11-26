@@ -62,10 +62,10 @@ export function characterFragment(type: string, offset: number): ItemTabs {
               },
               {
                 name: "Status",
-                offset: offset + 0x4,
+                offset: offset + 0x3,
                 type: "variable",
                 dataType: "bit",
-                bit: 4,
+                bit: 7,
                 resource: "status",
               },
             ],
